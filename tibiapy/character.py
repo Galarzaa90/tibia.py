@@ -80,6 +80,7 @@ def parse_character(content):
                     # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                     continue
         elif "Account Information" in header.text:
+            char["account_information"] = {}
             for row in rows:
                 cols_raw = row.find_all('td')
                 cols = [ele.text.strip() for ele in cols_raw]
@@ -88,7 +89,7 @@ def parse_character(content):
                 field, value = cols
                 field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
                 value = value.replace("\xa0", " ")
-                char[field] = value
+                char["account_information"][field] = value
         elif "Characters" in header.text:
             char["chars"] = []
             for row in rows:
