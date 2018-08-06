@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup, SoupStrainer
 
 death_regexp = re.compile(r'Level (\d+) by ([^.]+)')
 house_regexp = re.compile(r'paid until (.*)')
+guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
 def parse_character(content):
     parsed_content = BeautifulSoup(content, 'html.parser', parse_only=SoupStrainer("div", class_="BoxContent"))
@@ -97,10 +98,16 @@ def parse_character(content):
                     continue
                 _name, world, status, __, __ = cols
                 _name = _name.replace("\xa0", " ").split(". ")[1]
-                char['chars'].append({'name': _name, 'world': world, 'status': status})
+                char['chars'].append({'name': _name, 'world': world, 'status': "offline" if not status else status})
     # Converting values to int
     char["level"] = int(char["level"])
     char["achievement_points"] = int(char["achievement_points"])
+    if "guild_membership" in char:
+        m = guild_regexp.match(char["guild_membership"])
+        char["guild_membership"] = {
+            'rank': m.group(1),
+            'guild': m.group(2)
+        }
     return char
 
 
