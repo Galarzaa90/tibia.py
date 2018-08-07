@@ -10,6 +10,11 @@ class Character(metaclass=abc.ABCMeta):
     @property
     def url(self):
         """
-        Returns the URL of the character's information page at Tibia.com
+        The URL of the character's information page on Tibia.com
+
+        Returns
+        ---------
+        str:
+            The character's URL.
         """
         return tibiapy.CHARACTER_URL + urllib.parse.quote(self.name.encode('iso-8859-1'))

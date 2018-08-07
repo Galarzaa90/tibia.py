@@ -14,7 +14,8 @@ guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 class Character(tibiapy.abc.Character):
     """Represents a Tibia character
 
-
+    Attributes
+    ---------------
     name: :class:`str`
         The name of the character.
 
@@ -188,11 +189,17 @@ class Character(tibiapy.abc.Character):
     def parse_to_json(content, indent=None):
         """Static method that creates a JSON string from the html content of the character's page.
 
-        :param str content: The HTML content of the page.
-        :param int indent: The number of spaces to indent the output with.
-        :return: A json string representing the character
-        :rtype: str
-        """
+        Parameters
+        -------------
+        content: str
+            The HTML content of the page.
+        indent: int
+            The number of spaces to indent the output with.
+
+        Returns
+        ------------
+        :class:`str`
+            A string in JSON format."""
         char_dict = Character._parse(content)
         return json.dumps(char_dict, indent=indent)
 
@@ -200,8 +207,16 @@ class Character(tibiapy.abc.Character):
     def from_content(content):
         """Creates an instance of the class from the html content of the character's page.
 
-        :param str content: The HTML content of the page.
-        :return: An instance of :class:`Character`
+
+        Parameters
+        -----------
+        content: str
+            The HTML content of the page.
+
+        Returns
+        ----------
+        :class:`Character`
+            The character contained in the page.
         """
         char = Character._parse(content)
         try:
@@ -226,5 +241,16 @@ class Character(tibiapy.abc.Character):
 
     @staticmethod
     def get_url(name):
+        """Gets the Tibia.com URl for a given character name.
+
+        Parameters
+        ------------
+        name: str
+            The name of the character
+
+        Returns
+        --------
+        str
+            The URL to the character's page"""
         return tibiapy.CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
 
