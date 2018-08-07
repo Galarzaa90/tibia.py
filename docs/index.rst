@@ -21,8 +21,11 @@ Indices and tables
 * :ref:`search`
 
 
+
 Classes
 ==================
 
+
 .. autoclass:: Character
+   :inherited-members:
    :members:

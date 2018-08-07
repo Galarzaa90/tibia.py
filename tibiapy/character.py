@@ -53,6 +53,12 @@ class Character(tibiapy.abc.Character):
 
     deaths: :class:`list`
         The character's recent deaths.
+
+    account_information: :class:`dict`
+        The character's account information, if visible.
+
+    other_characters: :class:`list` of :class:`dict`
+        Other characters in the same account, if visible.
     """
     __slots__ = ("former_names", "sex", "vocation", "achievement_points", "former_world", "residence", "house",
                  "guild_membership", "last_login", "account_status", "achievements", "deaths", "account_information",
@@ -183,12 +189,20 @@ class Character(tibiapy.abc.Character):
         """Static method that creates a JSON string from the html content of the character's page.
 
         :param str content: The HTML content of the page.
-        :param int indent: The number of spaces to indent the output with."""
+        :param int indent: The number of spaces to indent the output with.
+        :return: A json string representing the character
+        :rtype: str
+        """
         char_dict = Character._parse(content)
         return json.dumps(char_dict, indent=indent)
 
     @staticmethod
     def from_content(content):
+        """Creates an instance of the class from the html content of the character's page.
+
+        :param str content: The HTML content of the page.
+        :return: An instance of :class:`Character`
+        """
         char = Character._parse(content)
         try:
             character = Character()
