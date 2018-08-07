@@ -25,7 +25,25 @@ Indices and tables
 Classes
 ==================
 
-
+Character
+----------
 .. autoclass:: Character
    :inherited-members:
    :members:
+
+Death
+-----------
+.. autoclass:: Death
+   :members:
+
+Guild
+-----------
+.. autoclass:: Guild
+   :members:
+
+Guild Member
+-----------
+.. autoclass:: GuildMember
+   :members:
+   :inherited-members:
+

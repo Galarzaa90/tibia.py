@@ -52,7 +52,7 @@ class Character(tibiapy.abc.Character):
     achievements: :class:`list` of :class:`dict`
         The achievement chosen to be displayed.
 
-    deaths: :class:`list`
+    deaths: :class:`list` of :class:`Death`
         The character's recent deaths.
 
     account_information: :class:`dict`
@@ -234,6 +234,11 @@ class Character(tibiapy.abc.Character):
             character.guild_membership = char["guild_membership"]
             character.last_login = char["last_login"]
             character.account_information = char["account_information"]
+            character.deaths = []
+            for d in char["deaths"]:
+                death = Death(d["level"], d["killer"], d["time"], d["by_player"])
+                death.name = character.name
+                character.deaths.append(death)
         except KeyError:
             return None
 
@@ -253,4 +258,3 @@ class Character(tibiapy.abc.Character):
         str
             The URL to the character's page"""
         return tibiapy.CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
-
