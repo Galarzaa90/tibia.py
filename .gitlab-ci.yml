@@ -8,7 +8,7 @@ pages:
     - pip install Sphinx
     - cd docs
     - make html
-    - cp -r _build ../public
+    - cp -r _build/html ../public
   artifacts:
     paths:
       - public
