@@ -21,6 +21,8 @@ docs/_build
 # Distribution / Packaging
 build/
 dist/
+*.egg-info/
+*.egg
 
 # Testing
 output.json
