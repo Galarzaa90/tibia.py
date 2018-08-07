@@ -1,0 +1,11 @@
+image: python:3.6
+
+pages:
+  script:
+    - pip install Sphinx
+    - cd docs
+    - make html
+    - cp _build ../public
+  artifacts:
+    paths:
+      - public
