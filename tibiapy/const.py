@@ -1,0 +1,1 @@
+CHARACTER_URL = "https://secure.tibia.com/community/?subtopic=characters&name="

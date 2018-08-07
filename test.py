@@ -6,11 +6,12 @@ import requests
 from tibiapy import Character
 
 if __name__ == "__main__":
-    r = requests.get("https://secure.tibia.com/community/?subtopic=characters&name=Ondskan")
+    r = requests.get("https://secure.tibia.com/community/?subtopic=characters&name=General+Jay")
     start = time.perf_counter()
     char = Character._parse(r.text)
     dt = (time.perf_counter() - start) * 1000.0
     with open("output.json", "w") as f:
         f.write(json.dumps(char, indent=4))
 
+    character = Character.from_content(r.text)
     print("Parsed in {0:2f} ms".format(dt))
