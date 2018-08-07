@@ -1,3 +1,6 @@
+from .utils import parse_tibia_datetime
+
+
 class Death:
     """
     Represents a death by a character
@@ -27,7 +30,10 @@ class Death:
     def __init__(self, level, killer, time, by_player, **kwargs):
         self.level = level
         self.killer = killer
-        self.time = time
+        if time is not None:
+            self.time = parse_tibia_datetime(time)
+        else:
+            self.time = time
         self.by_player = by_player
         self.participants = kwargs.get("participants", [])
         self.name = kwargs.get("name")

@@ -1,4 +1,4 @@
-from . import abc
+from . import abc, utils
 from .character import Character
 from .guild import Guild, GuildMember
 from .others import Death

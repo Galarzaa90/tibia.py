@@ -5,6 +5,8 @@ import urllib.parse
 from bs4 import BeautifulSoup, SoupStrainer
 
 import tibiapy
+from .others import Death
+from .utils import parse_tibia_datetime
 
 death_regexp = re.compile(r'Level (\d+) by ([^.]+)')
 house_regexp = re.compile(r'paid until (.*)')
@@ -41,9 +43,9 @@ class Character(tibiapy.abc.Character):
         The house currently owned by the character.
 
     guild_membership: Optional[:class:`dict`]
-        The guild the character is a member of.
+        The guild the character is a member of. The dictionary contains a key for the rank and a key for the name.
 
-    last_login: Optional[:class:`str`]
+    last_login: Optional[:class:`datetime.datetime`]
         The last time the character logged in.
 
     account_status: :class:`str`
@@ -185,6 +187,16 @@ class Character(tibiapy.abc.Character):
         char["other_characters"] = other_characters
         return char
 
+    @property
+    def guild_name(self):
+        """Returns the name of the guild the character belongs to, or `None`."""
+        return None if self.guild_membership is None else self.guild_membership["name"]
+
+    @property
+    def guild_rank(self):
+        """Returns the character's rank in the guild they belong to, or `None`."""
+        return None if self.guild_membership is None else self.guild_membership["rank"]
+
     @staticmethod
     def parse_to_json(content, indent=None):
         """Static method that creates a JSON string from the html content of the character's page.
@@ -232,14 +244,18 @@ class Character(tibiapy.abc.Character):
             character.residence = char["residence"]
             character.house = char["house"]
             character.guild_membership = char["guild_membership"]
-            character.last_login = char["last_login"]
+            if "never" in char["last_login"]:
+                character.last_login = None
+            else:
+                character.last_login = parse_tibia_datetime(char["last_login"])
             character.account_information = char["account_information"]
             character.deaths = []
             for d in char["deaths"]:
-                death = Death(d["level"], d["killer"], d["time"], d["by_player"])
+                death = Death(d["level"], d["killer"], d["time"], d["is_player"])
                 death.name = character.name
                 character.deaths.append(death)
-        except KeyError:
+        except KeyError as e:
+            print(e)
             return None
 
         return character
