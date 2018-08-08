@@ -4,27 +4,60 @@
    contain the root `toctree` directive.
 .. currentmodule:: tibiapy
 
-Welcome to Tibia.py's documentation!
-====================================
+
+Tibia.py is a libray for parsing HTML content from Tibia.com_. into python objects.
+
+This library only performs parsing, to fetch content you need to use external libraries.
+
+.. code-block:: python
+
+   import aiohttp
+   import requests
+   import tibiapy
+
+   # Asynchronously
+   async def get_character(name):
+      url = tibiapy.Character.get_url(name)
+
+      try:
+         async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+               content = await resp.text()
+      character = tibiapy.Character.from_content(content)
+      return character
+
+   # Synchronously
+   def get_character_sync(name):
+      url = tibiapy.Character.get_url(name)
+
+      r = requests.get(url)
+      content = r.text()
+      character = tibiapy.Character.from_content(content)
+      return character
+
+
+
+.. _Tibia.com: https://www.tibia.com/news/?subtopic=latestnews
+
 
 .. toctree::
+   :hidden:
    :maxdepth: 2
-   :caption: Contents:
 
+   index
 
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
+
 
 
 
 Classes
 ==================
-
 Character
 ----------
 .. autoclass:: Character
@@ -41,18 +74,22 @@ Guild
 .. autoclass:: Guild
    :members:
 
+
+
+Auxiliary Classes
+==================
+
 Guild Member
--------------
+-----------------
 .. autoclass:: GuildMember
    :members:
    :inherited-members:
 
 Guild Invite
--------------
+-----------------
 .. autoclass:: GuildInvite
    :members:
    :inherited-members:
-
 
 Utility functions
 ==================
