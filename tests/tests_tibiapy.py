@@ -5,7 +5,7 @@ from tibiapy import Guild
 
 class TestTibiaPy(unittest.TestCase):
     def testGuilds(self):
-        with open("resources/GuildActive.html") as f:
+        with open("resources/GuildActive.txt") as f:
             content = f.read()
         guild = Guild.from_content(content)
         self.assertTrue(guild.active)
