@@ -1,3 +1,4 @@
+import json
 import re
 
 from bs4 import BeautifulSoup, SoupStrainer
@@ -42,7 +43,11 @@ class Guild:
         The guild's homepage
     members: :class:`list`
         List of guild members.
+    invites: :class:`list`
+        List of invited characters.
     """
+    __slots__ = ("name", "logo_url", "description", "world", "founded", "active", "guildhall", "open_applications",
+                 "disband_condition", "disband_date", "homepage", "members", "invites")
 
     @staticmethod
     def _parse(content):
@@ -62,7 +67,7 @@ class Guild:
             description = m.group("desc").strip()
             guild["description"] =  description if description else None
             guild["world"] = m.group("world")
-            guild["founded_date"] = m.group("date").replace("\xa0", " ")
+            guild["founded"] = m.group("date").replace("\xa0", " ")
             guild["active"] = "currently active" in m.group("status")
 
         m = applications_regex.search(info_container.text)
@@ -88,6 +93,86 @@ class Guild:
         else:
             guild["disband_condition"] = None
             guild["disband_date"] = None
+
+        member_rows = parsed_content.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+        guild["members"] = []
+        guild["invites"] = []
+        previous_rank = ""
+        for row in member_rows:
+            columns = row.find_all('td')
+            values = (c.text.replace("\u00a0", " ") for c in columns)
+            # Current member
+            if len(columns) == 6:
+                rank, name, vocation, level, joined, status = values
+                rank = previous_rank if rank == " " else rank
+                previous_rank = rank
+                guild["members"].append({
+                    "rank": rank,
+                    "name": name,
+                    "vocation": vocation,
+                    "level": int(level),
+                    "joined": joined,
+                    "online": status == "online"
+                })
+            # Invited character
+            if len(columns) == 2:
+                name, invite = values
+                guild["invites"].append({
+                    "name": name,
+                    "invite": invite
+                })
+
+        return guild
+
+    @staticmethod
+    def parse_to_json(content, indent=None):
+        """Static method that creates a JSON string from the html content of the guild's page.
+
+        Parameters
+        -------------
+        content: str
+            The HTML content of the page.
+        indent: int
+            The number of spaces to indent the output with.
+
+        Returns
+        ------------
+        :class:`str`
+            A string in JSON format."""
+        char_dict = Guild._parse(content)
+        return json.dumps(char_dict, indent=indent)
+
+    @staticmethod
+    def from_content(content):
+        """Creates an instance of the class from the html content of the guild's page.
+
+
+        Parameters
+        -----------
+        content: str
+            The HTML content of the page.
+
+        Returns
+        ----------
+        :class:`Guild`
+            The character contained in the page.
+        """
+        _guild = Guild._parse(content)
+
+        guild = Guild()
+        guild.name = _guild["name"]
+        guild.description = _guild["description"]
+        guild.logo_url = _guild["logo_url"]
+        guild.world = _guild["world"]
+        guild.founded = _guild["founded"]
+        guild.active = _guild["active"]
+        guild.guildhall = _guild["guildhall"]
+        guild.open_applications = _guild["open_applications"]
+        guild.disband_condition = _guild["disband_condition"]
+        guild.disband_date = _guild["disband_date"]
+        guild.homepage = _guild["homepage"]
+        guild.members = _guild["members"]
+        guild.invites = _guild["invites"]
         return guild
 
 
