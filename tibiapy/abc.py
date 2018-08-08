@@ -1,11 +1,11 @@
 import abc
 import urllib.parse
 
-import tibiapy
+from .const import CHARACTER_URL
 
 
 class Character(metaclass=abc.ABCMeta):
-    __slots__ = ("name", "world", "level")
+    __slots__ = ("name", )
 
     def __eq__(self, o: object) -> bool:
         """Two characters are considered equal if their names are equal."""
@@ -16,6 +16,6 @@ class Character(metaclass=abc.ABCMeta):
     @property
     def url(self):
         """
-        The URL of the character's information page on Tibia.com
+        :class:`str`: The URL of the character's information page on Tibia.com
         """
-        return tibiapy.CHARACTER_URL + urllib.parse.quote(self.name.encode('iso-8859-1'))
+        return CHARACTER_URL + urllib.parse.quote(self.name.encode('iso-8859-1'))

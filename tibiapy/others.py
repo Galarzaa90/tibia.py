@@ -16,7 +16,7 @@ class Death:
     killer: :class:`str`
         The main killer.
 
-    time: :class:`str`
+    time: :class:`datetime.datetime`
         The time at which the death occurred.
 
     by_player: :class:`bool`

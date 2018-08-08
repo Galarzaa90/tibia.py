@@ -4,7 +4,7 @@ import urllib.parse
 
 from bs4 import BeautifulSoup, SoupStrainer
 
-import tibiapy
+from . import abc
 from .others import Death
 from .utils import parse_tibia_datetime
 
@@ -13,7 +13,7 @@ house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
 
-class Character(tibiapy.abc.Character):
+class Character(abc.Character):
     """Represents a Tibia character
 
     Attributes
@@ -30,8 +30,14 @@ class Character(tibiapy.abc.Character):
     vocation: :class:`str`
         The character's vocation.
 
+    level: :class:`int`
+        The character's level.
+
     achievement_points: :class:`int`
         The total of points the character has.
+
+    world: :class:`str`
+        The character's current world
 
     former_world: Optional[:class:`str`]
         The previous world where the character was in.
@@ -63,13 +69,23 @@ class Character(tibiapy.abc.Character):
     other_characters: :class:`list` of :class:`dict`
         Other characters in the same account, if visible.
     """
-    __slots__ = ("former_names", "sex", "vocation", "achievement_points", "former_world", "residence", "house",
-                 "guild_membership", "last_login", "account_status", "achievements", "deaths", "account_information",
-                 "other_characters")
+    __slots__ = ("former_names", "sex", "vocation", "level", "achievement_points", "world", "former_world", "residence",
+                 "house", "guild_membership", "last_login", "account_status", "achievements", "deaths",
+                 "account_information", "other_characters")
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             setattr(self, k, v)
+
+    @property
+    def guild_name(self):
+        """Optional[:class:`str`]: The name of the guild the character belongs to, or `None`."""
+        return None if self.guild_membership is None else self.guild_membership["name"]
+
+    @property
+    def guild_rank(self):
+        """Optional[:class:`str`]: The character's rank in the guild they belong to, or `None`."""
+        return None if self.guild_membership is None else self.guild_membership["rank"]
 
     @staticmethod
     def _parse(content):
@@ -142,7 +158,7 @@ class Character(tibiapy.abc.Character):
                         killer = death_link.text.strip().replace("\xa0", " ")
                     try:
                         deaths.append({'time': death_time, 'level': int(level), 'killer': killer,
-                                               'is_player': death_player})
+                                       'is_player': death_player})
                     except ValueError:
                         # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                         continue
@@ -166,7 +182,8 @@ class Character(tibiapy.abc.Character):
                         continue
                     _name, world, status, __, __ = cols
                     _name = _name.replace("\xa0", " ").split(". ")[1]
-                    other_characters.append({'name': _name, 'world': world, 'status': "offline" if not status else status})
+                    other_characters.append(
+                        {'name': _name, 'world': world, 'status': "offline" if not status else status})
         # Converting values to int
         char["level"] = int(char["level"])
         char["achievement_points"] = int(char["achievement_points"])
@@ -186,16 +203,6 @@ class Character(tibiapy.abc.Character):
         char["account_information"] = account_information
         char["other_characters"] = other_characters
         return char
-
-    @property
-    def guild_name(self):
-        """Returns the name of the guild the character belongs to, or `None`."""
-        return None if self.guild_membership is None else self.guild_membership["name"]
-
-    @property
-    def guild_rank(self):
-        """Returns the character's rank in the guild they belong to, or `None`."""
-        return None if self.guild_membership is None else self.guild_membership["rank"]
 
     @staticmethod
     def parse_to_json(content, indent=None):

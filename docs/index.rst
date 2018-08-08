@@ -47,6 +47,12 @@ Guild Member
    :members:
    :inherited-members:
 
+Guild Invite
+-------------
+.. autoclass:: GuildInvite
+   :members:
+   :inherited-members:
+
 
 Utility functions
 ==================
