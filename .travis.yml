@@ -12,11 +12,11 @@ install:
   - pip install -U -r requirements.txt
   - pip install -U setuptools
   - pip install -U Sphinx
-  - cd docs
-  - make html
 
 script:
   - python setup.py sdist
+  - cd docs
+  - make html
 
 deploy:
   provider: pages
