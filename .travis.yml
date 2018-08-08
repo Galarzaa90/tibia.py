@@ -1,10 +1,7 @@
 language: python
 
 python:
-  - "3.4"
-  - "3.5"
   - "3.6"
-  - "3.7-dev"
 
 cache: pip
 
@@ -14,6 +11,18 @@ git:
 install:
   - pip install -U -r requirements.txt
   - pip install -U setuptools
+  - pip install -U Sphinx
+  - cd docs
+  - make html
 
 script:
   - python setup.py sdist
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github-token: $GITHUB_TOKEN
+  local-dir: docs/_build/html
+  keep-history: true
+  on:
+      branch: master
