@@ -11,7 +11,7 @@ def parse_tibia_datetime(datetime_str):
 
     Returns
     -----------
-    :class:`datetime`
+    :class:`datetime.datetime`
         The represented datetime, in UTC.
     """
     datetime_str = datetime_str.replace(",", "").replace("&#160;", " ")
@@ -32,3 +32,19 @@ def parse_tibia_datetime(datetime_str):
     # Add/subtract hours to get the real time
     t = t - dt.timedelta(hours=utc_offset)
     return t.replace(tzinfo=dt.timezone.utc)
+
+
+def parse_tibia_date(date_str):
+    """Parses a date from the format used in Tibia.com
+
+    Parameters
+    -----------
+    date_str: str
+        The date as represented in Tibia.com
+
+    Returns
+    -----------
+    :class:`datetime.date`
+        The represended date."""
+    t = dt.datetime.strptime(date_str.strip(), "%b %d %Y")
+    return t.date()

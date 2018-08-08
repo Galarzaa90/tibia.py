@@ -155,7 +155,7 @@ class Guild:
         Returns
         ----------
         :class:`Guild`
-            The character contained in the page.
+            The guild contained in the page.
         """
         _guild = Guild._parse(content)
 

@@ -52,3 +52,5 @@ Utility functions
 ==================
 .. autofunction:: tibiapy.utils.parse_tibia_datetime
 
+.. autofunction:: tibiapy.utils.parse_tibia_date
+
