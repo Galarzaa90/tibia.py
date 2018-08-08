@@ -28,10 +28,9 @@ import aiohttp
 async def get_character(name):
   url = tibiapy.Character.get_url(name)
 
-  try:
-     async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resp:
-           content = await resp.text()
+  async with aiohttp.ClientSession() as session:
+    async with session.get(url) as resp:
+    content = await resp.text()
   character = tibiapy.Character.from_content(content)
   return character
 
