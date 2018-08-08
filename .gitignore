@@ -1,5 +1,28 @@
-venv/
-.idea/
-output.json
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*$py.class
 
+# IDE files
+.idea/
+.vscode/
+
+# Enviroments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Sphinx documentation
 docs/_build
+
+# Distribution / Packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Testing
+output.json

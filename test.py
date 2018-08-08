@@ -3,9 +3,10 @@ import time
 
 import requests
 
-from tibiapy import Character
+from tibiapy import Character, Guild
 
 if __name__ == "__main__":
+    """
     r = requests.get("https://secure.tibia.com/community/?subtopic=characters&name=General+Jay")
     start = time.perf_counter()
     char = Character._parse(r.text)
@@ -15,3 +16,12 @@ if __name__ == "__main__":
 
     character = Character.from_content(r.text)
     print("Parsed in {0:2f} ms".format(dt))
+    """
+    r = requests.get("https://secure.tibia.com/community/?subtopic=guilds&page=view&GuildName=Wolf+of+Darkness")
+    guild = Guild._parse(r.text)
+    with open("output.json", "w") as f:
+        f.write(json.dumps(guild, indent=4))
+    print(guild)
+
+    guild = Guild.from_content(r.text)
+    print("done")

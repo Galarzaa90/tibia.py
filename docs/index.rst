@@ -28,8 +28,8 @@ Classes
 Character
 ----------
 .. autoclass:: Character
-   :inherited-members:
    :members:
+   :inherited-members:
 
 Death
 -----------
@@ -42,8 +42,15 @@ Guild
    :members:
 
 Guild Member
------------
+-------------
 .. autoclass:: GuildMember
    :members:
    :inherited-members:
+
+
+Utility functions
+==================
+.. autofunction:: tibiapy.utils.parse_tibia_datetime
+
+.. autofunction:: tibiapy.utils.parse_tibia_date
 

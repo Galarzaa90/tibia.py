@@ -7,6 +7,12 @@ import tibiapy
 class Character(metaclass=abc.ABCMeta):
     __slots__ = ("name", "world", "level")
 
+    def __eq__(self, o: object) -> bool:
+        """Two characters are considered equal if their names are equal."""
+        if isinstance(o, self.__class__):
+            return self.name.lower() == o.name.lower()
+        return False
+
     @property
     def url(self):
         """

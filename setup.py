@@ -21,7 +21,7 @@ with open('README.md') as f:
     readme = f.read()
 
 setup(
-    name='Tibia.py',
+    name='tibia.py',
     version=get_version("tibiapy"),
     author='Galarzaa90',
     author_email="allan.galarza@gmail.com",
@@ -34,8 +34,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Console',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
@@ -45,8 +44,12 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Games/Entertainment :: Role-Playing',
         'Topic :: Internet',
+        'Topic :: Software Development',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Text Processing :: Markup :: HTML',
         'Topic :: Utilities'
     ]
 )
