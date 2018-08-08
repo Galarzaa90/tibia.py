@@ -1,0 +1,11 @@
+dl.describe > dt,
+dl.function > dt,
+dl.attribute > dt,
+dl.classmethod > dt,
+dl.method > dt,
+dl.class > dt,
+dl.staticmethod > dt,
+dl.exception > dt {
+  background-color: #eff0f2;
+  padding: 1px 10px;
+}
