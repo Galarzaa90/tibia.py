@@ -5,6 +5,7 @@ import urllib.parse
 from bs4 import BeautifulSoup, SoupStrainer
 
 from . import abc
+from .const import CHARACTER_URL
 from .others import Death
 from .utils import parse_tibia_datetime
 
@@ -96,11 +97,15 @@ class Character(abc.Character):
         deaths = []
         account_information = {}
         other_characters = []
+        if len(tables) == 1:
+            # This happens when an unsupported symbol was in the name.
+            # Should I handle this as a separate case?
+            return {}
         for table in tables:
             header = table.find('td')
             rows = table.find_all('tr')
             if "Could not find" in header.text:
-                return None
+                return {}
             if "Character Information" in header.text:
                 for row in rows:
                     cols_raw = row.find_all('td')
@@ -187,12 +192,16 @@ class Character(abc.Character):
         # Converting values to int
         char["level"] = int(char["level"])
         char["achievement_points"] = int(char["achievement_points"])
+        if "house" not in char:
+            char["house"] = None
         if "guild_membership" in char:
             m = guild_regexp.match(char["guild_membership"])
             char["guild_membership"] = {
                 'rank': m.group(1),
                 'guild': m.group(2)
             }
+        else:
+            char["guild_membership"] = None
         if "former_names" in char:
             former_names = [fn.strip() for fn in char["former_names"].split(",")]
             char["former_names"] = former_names
@@ -234,10 +243,12 @@ class Character(abc.Character):
 
         Returns
         ----------
-        :class:`Character`
-            The character contained in the page.
+        Optional[:class:`Character`]
+            The character contained in the page, or None if the character doesn't exist.
         """
         char = Character._parse(content)
+        if not char:
+            return None
         try:
             character = Character()
             character.name = char["name"]
@@ -280,4 +291,4 @@ class Character(abc.Character):
         --------
         str
             The URL to the character's page"""
-        return tibiapy.CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
+        return CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))

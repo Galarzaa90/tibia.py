@@ -5,8 +5,8 @@ import urllib.parse
 from bs4 import BeautifulSoup, SoupStrainer
 
 from . import abc
-from .utils import parse_tibia_date
 from .const import GUILD_URL
+from .utils import parse_tibia_date
 
 founded_regex = re.compile(r'(?P<desc>.*)The guild was founded on (?P<world>\w+) on (?P<date>[^.]+)\.\nIt is (?P<status>[^.]+).',
                            re.DOTALL)
@@ -80,12 +80,14 @@ class Guild:
     @staticmethod
     def _parse(content):
         if "An internal error has occurred" in content:
-            return None
+            return {}
         guild = {}
         parsed_content = BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
                                        parse_only=SoupStrainer("div", class_="BoxContent"))
 
         logo = parsed_content.find('img', {'height': '64'})
+        if logo is None:
+            return {}
         header = parsed_content.find('h1')
         guild["name"] = header.text
         guild["logo_url"] = logo["src"]
@@ -191,11 +193,12 @@ class Guild:
 
         Returns
         ----------
-        :class:`Guild`
-            The guild contained in the page.
+        Optional[:class:`Guild`]
+            The guild contained in the page or None if it doesn't exist.
         """
         _guild = Guild._parse(content)
-
+        if not _guild:
+            return None
         guild = Guild()
         guild.name = _guild["name"]
         guild.description = _guild["description"]
@@ -218,6 +221,21 @@ class Guild:
         for invite in _guild["invites"]:
             guild.invites.append(GuildInvite(name=invite["name"], date=parse_tibia_date(invite["date"])))
         return guild
+
+    @staticmethod
+    def get_url(name):
+        """Gets the Tibia.com URL for a given guild name.
+
+        Parameters
+        ------------
+        name: str
+            The name of the guild
+
+        Returns
+        --------
+        str
+            The URL to the guild's page"""
+        return GUILD_URL + urllib.parse.quote(name.encode('iso-8859-1'))
 
 
 class GuildMember(abc.Character):
