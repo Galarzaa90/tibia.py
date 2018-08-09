@@ -4,6 +4,9 @@
    contain the root `toctree` directive.
 .. currentmodule:: tibiapy
 
+Tibia.py
+===============
+
 
 Tibia.py is a libray for parsing HTML content from Tibia.com_. into python objects.
 
@@ -97,3 +100,9 @@ Utility functions
 
 .. autofunction:: tibiapy.utils.parse_tibia_date
 
+Exceptions
+==================
+
+.. autoexception:: TibiapyException
+
+.. autoexception:: InvalidContent

@@ -40,8 +40,8 @@
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">SoupStrainer</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">abc</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">parse_tibia_date</span>
 <span class="kn">from</span> <span class="nn">.const</span> <span class="k">import</span> <span class="n">GUILD_URL</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">parse_tibia_date</span>
 
 <span class="n">founded_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;desc&gt;.*)The guild was founded on (?P&lt;world&gt;\w+) on (?P&lt;date&gt;[^.]+)\.\nIt is (?P&lt;status&gt;[^.]+).&#39;</span><span class="p">,</span>
                            <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
@@ -115,12 +115,14 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;An internal error has occurred&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="p">{}</span>
         <span class="n">guild</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="s1">&#39;lxml&#39;</span><span class="p">,</span>
                                        <span class="n">parse_only</span><span class="o">=</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;BoxContent&quot;</span><span class="p">))</span>
 
         <span class="n">logo</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;64&#39;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">logo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">)</span>
         <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">text</span>
         <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;logo_url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logo</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
@@ -226,11 +228,12 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
-<span class="sd">        :class:`Guild`</span>
-<span class="sd">            The guild contained in the page.</span>
+<span class="sd">        Optional[:class:`Guild`]</span>
+<span class="sd">            The guild contained in the page or None if it doesn&#39;t exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_guild</span> <span class="o">=</span> <span class="n">Guild</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_guild</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="n">guild</span> <span class="o">=</span> <span class="n">Guild</span><span class="p">()</span>
         <span class="n">guild</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="n">guild</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span>
@@ -252,7 +255,22 @@
         <span class="n">guild</span><span class="o">.</span><span class="n">invites</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">invite</span> <span class="ow">in</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]:</span>
             <span class="n">guild</span><span class="o">.</span><span class="n">invites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GuildInvite</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">invite</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">date</span><span class="o">=</span><span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">invite</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])))</span>
-        <span class="k">return</span> <span class="n">guild</span></div></div>
+        <span class="k">return</span> <span class="n">guild</span></div>
+
+<div class="viewcode-block" id="Guild.get_url"><a class="viewcode-back" href="../../index.html#tibiapy.Guild.get_url">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the Tibia.com URL for a given guild name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ------------</span>
+<span class="sd">        name: str</span>
+<span class="sd">            The name of the guild</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        str</span>
+<span class="sd">            The URL to the guild&#39;s page&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">GUILD_URL</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="GuildMember"><a class="viewcode-back" href="../../index.html#tibiapy.GuildMember">[docs]</a><span class="k">class</span> <span class="nc">GuildMember</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Character</span><span class="p">):</span>
@@ -324,10 +342,12 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Indices and tables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Tibia.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html#indices-and-tables">Indices and tables</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html#classes">Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html#auxiliary-classes">Auxiliary Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html#utility-functions">Utility functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html#exceptions">Exceptions</a></li>
 </ul>
 
 <div class="relations">
