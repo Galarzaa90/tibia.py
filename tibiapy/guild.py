@@ -2,7 +2,7 @@ import json
 import re
 import urllib.parse
 from collections import OrderedDict
-from typing import Optional
+from typing import Optional, List
 
 from bs4 import BeautifulSoup, SoupStrainer
 
@@ -55,9 +55,20 @@ class Guild:
     __slots__ = ("name", "logo_url", "description", "world", "founded", "active", "guildhall", "open_applications",
                  "disband_condition", "disband_date", "homepage", "members", "invites")
 
-    def __init__(self, ** kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+    def __init__(self, name, world,** kwargs):
+        self.name = name
+        self.world = world
+        self.logo_url = kwargs.get("logo_url")
+        self.description = kwargs.get("description")
+        self.founded = kwargs.get("founded")
+        self.active = kwargs.get("active", False)
+        self.guildhall = kwargs.get("guildhall")
+        self.open_applications = kwargs.get("open_applications", False)
+        self.disband_condition = kwargs.get("disband_condition")
+        self.disband_date = kwargs.get("disband_date")
+        self.homepage = kwargs.get("homepage")
+        self.members = kwargs.get("members", [])
+        self.invites = kwargs.get("invites", [])
 
     @property
     def member_count(self):
@@ -269,9 +280,14 @@ class GuildMember(abc.Character):
     """
     __slots__ = ("name", "rank", "title", "level", "vocation", "joined", "online")
 
-    def __init__(self, ** kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+    def __init__(self, name, rank, **kwargs):
+        self.name = name
+        self.rank = rank
+        self.title = kwargs.get("title")
+        self.vocation = kwargs.get("vocation")
+        self.level = kwargs.get("level", 0)
+        self.joined = kwargs.get("joined")
+        self.online = kwargs.get("online", False)
 
 
 class GuildInvite(abc.Character):
@@ -287,6 +303,6 @@ class GuildInvite(abc.Character):
 
     __slots__ = ("date", )
 
-    def __init__(self, ** kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+    def __init__(self, name, date=None):
+        self.name = name
+        self.date = date
