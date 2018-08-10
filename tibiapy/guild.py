@@ -1,6 +1,8 @@
 import json
 import re
 import urllib.parse
+from collections import OrderedDict
+from typing import Optional
 
 from bs4 import BeautifulSoup, SoupStrainer
 
@@ -65,7 +67,7 @@ class Guild:
     @property
     def ranks(self):
         """List[:class:`str`]: Ranks in their hierarchical order."""
-        return list({m["rank"] for m in self.members})
+        return list(OrderedDict.fromkeys((m.rank for m in self.members)))
 
     @property
     def online_members(self):
@@ -182,7 +184,7 @@ class Guild:
         return json.dumps(char_dict, indent=indent)
 
     @staticmethod
-    def from_content(content):
+    def from_content(content) -> Optional['Guild']:
         """Creates an instance of the class from the html content of the guild's page.
 
 

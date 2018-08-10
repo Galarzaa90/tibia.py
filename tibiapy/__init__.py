@@ -1,8 +1,7 @@
 from . import abc, utils
-from .character import Character
+from .character import Character, Death, OtherCharacter
 from .const import *
 from .errors import *
 from .guild import Guild, GuildMember, GuildInvite
-from .others import Death
 
 __version__ = '0.1.0a3'

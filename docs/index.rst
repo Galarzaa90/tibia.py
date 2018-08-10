@@ -82,15 +82,21 @@ Guild
 Auxiliary Classes
 ==================
 
+Guild Invite
+-----------------
+.. autoclass:: GuildInvite
+   :members:
+   :inherited-members:
+
 Guild Member
 -----------------
 .. autoclass:: GuildMember
    :members:
    :inherited-members:
 
-Guild Invite
+Other Character
 -----------------
-.. autoclass:: GuildInvite
+.. autoclass:: OtherCharacter
    :members:
    :inherited-members:
 

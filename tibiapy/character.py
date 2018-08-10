@@ -1,14 +1,15 @@
 import json
 import re
 import urllib.parse
+from typing import Optional
 
 from bs4 import BeautifulSoup, SoupStrainer
 
 from . import abc
 from .const import CHARACTER_URL
-from .others import Death
 from .utils import parse_tibia_datetime
 
+deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 death_regexp = re.compile(r'Level (\d+) by ([^.]+)')
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
@@ -21,6 +22,9 @@ class Character(abc.Character):
     ---------------
     name: :class:`str`
         The name of the character.
+
+    deletion_date: Optional[:class:`datetime.datetime`]
+        The date where the character will be deleted.
 
     former_names: :class:`list`
         Previous names of this character.
@@ -46,6 +50,9 @@ class Character(abc.Character):
     residence: :class:`str`
         The current hometown of the character.
 
+    married_to: Optional[:class:`str`]
+        The name of the character's spouse/husband.
+
     house: Optional[:class:`dict`]
         The house currently owned by the character.
 
@@ -54,6 +61,9 @@ class Character(abc.Character):
 
     last_login: Optional[:class:`datetime.datetime`]
         The last time the character logged in.
+
+    comment: Optional[:class:`str`]
+        The displayed comment.
 
     account_status: :class:`str`
         Whether the character's account is Premium or Free.
@@ -67,12 +77,12 @@ class Character(abc.Character):
     account_information: :class:`dict`
         The character's account information, if visible.
 
-    other_characters: :class:`list` of :class:`dict`
+    other_characters: List[:class:`OtherCharacter`]
         Other characters in the same account, if visible.
     """
     __slots__ = ("former_names", "sex", "vocation", "level", "achievement_points", "world", "former_world", "residence",
-                 "house", "guild_membership", "last_login", "account_status", "achievements", "deaths",
-                 "account_information", "other_characters")
+                 "married_to", "house", "guild_membership", "last_login", "account_status", "comment", "achievements",
+                 "deaths", "account_information", "other_characters", "deletion_date")
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -81,7 +91,7 @@ class Character(abc.Character):
     @property
     def guild_name(self):
         """Optional[:class:`str`]: The name of the guild the character belongs to, or `None`."""
-        return None if self.guild_membership is None else self.guild_membership["name"]
+        return None if self.guild_membership is None else self.guild_membership["guild"]
 
     @property
     def guild_rank(self):
@@ -95,8 +105,8 @@ class Character(abc.Character):
         char = {}
         achievements = []
         deaths = []
-        account_information = {}
         other_characters = []
+        account_information = {}
         if len(tables) == 1:
             # This happens when an unsupported symbol was in the name.
             # Should I handle this as a separate case?
@@ -168,7 +178,6 @@ class Character(abc.Character):
                         # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                         continue
             elif "Account Information" in header.text:
-                account_information = {}
                 for row in rows:
                     cols_raw = row.find_all('td')
                     cols = [ele.text.strip() for ele in cols_raw]
@@ -179,7 +188,6 @@ class Character(abc.Character):
                     value = value.replace("\xa0", " ")
                     account_information[field] = value
             elif "Characters" in header.text:
-                other_characters = []
                 for row in rows:
                     cols_raw = row.find_all('td')
                     cols = [ele.text.strip() for ele in cols_raw]
@@ -188,8 +196,13 @@ class Character(abc.Character):
                     _name, world, status, __, __ = cols
                     _name = _name.replace("\xa0", " ").split(". ")[1]
                     other_characters.append(
-                        {'name': _name, 'world': world, 'status': "offline" if not status else status})
+                        {'name': _name, 'world': world, 'online': status == "online", 'deleted': status == "deleted"})
         # Converting values to int
+        m = deleted_regexp.match(char["name"])
+        if m:
+            char["name"] = m.group(1)
+            char["deletion_date"] = m.group(2)
+        char["deletion_date"] = None
         char["level"] = int(char["level"])
         char["achievement_points"] = int(char["achievement_points"])
         if "house" not in char:
@@ -207,6 +220,8 @@ class Character(abc.Character):
             char["former_names"] = former_names
         else:
             char["former_names"] = []
+        if "married_to" not in char:
+            char["married_to"] = None
         char["achievements"] = achievements
         char["deaths"] = deaths
         char["account_information"] = account_information
@@ -232,7 +247,7 @@ class Character(abc.Character):
         return json.dumps(char_dict, indent=indent)
 
     @staticmethod
-    def from_content(content):
+    def from_content(content) -> Optional['Character']:
         """Creates an instance of the class from the html content of the character's page.
 
 
@@ -252,6 +267,10 @@ class Character(abc.Character):
         try:
             character = Character()
             character.name = char["name"]
+            if char["deletion_date"]:
+                character.deletion_date = parse_tibia_datetime(char["deletion_date"])
+            else:
+                character.deletion_date = None
             character.former_names = char["former_names"]
             character.sex = char["sex"]
             character.vocation = char["vocation"]
@@ -261,13 +280,24 @@ class Character(abc.Character):
             character.former_world = char.get("former_world")
             character.residence = char["residence"]
             character.house = char["house"]
+            character.married_to = char["married_to"]
+            character.comment = char.get("comment")
+            character.account_status = char["account_status"]
             character.guild_membership = char["guild_membership"]
+
+            character.other_characters = []
+            if char["other_characters"]:
+                for o_char in char["other_characters"]:
+                    character.other_characters.append(OtherCharacter(o_char["name"], o_char["world"], o_char["online"],
+                                                                     o_char["deleted"]))
+
             if "never" in char["last_login"]:
                 character.last_login = None
             else:
                 character.last_login = parse_tibia_datetime(char["last_login"])
             character.account_information = char["account_information"]
             character.deaths = []
+            character.achievements = char["achievements"]
             for d in char["deaths"]:
                 death = Death(d["level"], d["killer"], d["time"], d["is_player"])
                 death.name = character.name
@@ -292,3 +322,67 @@ class Character(abc.Character):
         str
             The URL to the character's page"""
         return CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
+
+class Death:
+    """
+    Represents a death by a character
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the character this death belongs to.
+
+    level: :class:`int`
+        The level at which the level occurred.
+
+    killer: :class:`str`
+        The main killer.
+
+    date: :class:`datetime.datetime`
+        The time at which the death occurred.
+
+    by_player: :class:`bool`
+        True if the killer is a player, False otherwise.
+
+    participants: :class:`list`
+        List of all participants in the death.
+    """
+    __slots__ = ("name", "level", "killer", "date", "by_player", "participants")
+
+    def __init__(self, level, killer, date, by_player, **kwargs):
+        self.level = level
+        self.killer = killer
+        if date is not None:
+            self.date = parse_tibia_datetime(date)
+        else:
+            self.date = date
+        self.by_player = by_player
+        self.participants = kwargs.get("participants", [])
+        self.name = kwargs.get("name")
+
+
+class OtherCharacter(abc.Character):
+    """
+    Represents other character's displayed in the Character's information page.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character.
+
+    world: :class:`str`
+        The name of the world.
+
+    online: :class:`bool`
+        Whether the character is online or not.
+
+    deleted: :class:`bool`
+        Whether the character is scheduled for deletion or not.
+    """
+    __slots__ = ("world", "online", "deleted")
+
+    def __init__(self, name, world, online = False, deleted = False):
+        self.name = name
+        self.world = world
+        self.online = online
+        self.deleted = deleted
