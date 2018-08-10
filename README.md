@@ -9,11 +9,21 @@ No fetching is done by this module, you must provide the html content.
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tibia.py.svg)
 ![PyPI - License](https://img.shields.io/pypi/l/tibia.py.svg)
 
+## Under development
+This API is still under early development, meaning breaking changes might be introduced at any time without notice.
+Once the first release has been done, [semantic versioning](https://semver.org/) guidelines will be followed.
+
 ## Installing
 Install and update using pip
 
 ```commandline
 pip install tibia.py
+```
+
+Installing the latest version form GitHub
+
+```commandline
+pip install git+https://github.com/Galarzaa90/tibia.py.git -U
 ```
 
 ## Usage
