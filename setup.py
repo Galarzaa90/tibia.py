@@ -4,8 +4,8 @@ import sys
 
 from setuptools import setup, find_packages
 
-if sys.version_info < (3,4):
-    sys.exit('Sorry, Python < 3.4 is not supported')
+if sys.version_info < (3,5):
+    sys.exit('Sorry, Python < 3.5 is not supported')
 
 
 def get_version(package):

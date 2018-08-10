@@ -4,4 +4,4 @@ from .const import *
 from .errors import *
 from .guild import Guild, GuildMember, GuildInvite
 
-__version__ = '0.1.0a4'
+__version__ = '0.1.0a5'

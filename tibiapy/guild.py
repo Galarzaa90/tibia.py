@@ -212,11 +212,9 @@ class Guild:
         _guild = Guild._parse(content)
         if not _guild:
             return None
-        guild = Guild()
-        guild.name = _guild["name"]
+        guild = Guild(_guild["name"], _guild["world"])
         guild.description = _guild["description"]
         guild.logo_url = _guild["logo_url"]
-        guild.world = _guild["world"]
         guild.founded = parse_tibia_date(_guild["founded"])
         guild.active = _guild["active"]
         guild.guildhall = _guild["guildhall"]
@@ -226,13 +224,13 @@ class Guild:
         guild.homepage = _guild["homepage"]
         guild.members = []
         for member in _guild["members"]:
-            guild.members.append(GuildMember(rank=member["rank"], name=member["name"], level=member["level"],
+            guild.members.append(GuildMember(member["name"], member["rank"], level=member["level"],
                                              vocation=member["vocation"], title=member["title"],
                                              online=member["online"], joined=parse_tibia_date(member["joined"])))
 
         guild.invites = []
         for invite in _guild["invites"]:
-            guild.invites.append(GuildInvite(name=invite["name"], date=parse_tibia_date(invite["date"])))
+            guild.invites.append(GuildInvite(invite["name"], parse_tibia_date(invite["date"])))
         return guild
 
     @staticmethod
