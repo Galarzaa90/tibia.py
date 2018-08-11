@@ -16,3 +16,13 @@ class TestTibiaPy(unittest.TestCase):
         self.assertIsNotNone(guild.description)
         self.assertTrue(guild.members)
         self.assertIsInstance(guild.members[0].level, int)
+
+    def testGuildMembers(self):
+        with open("resources/homepage.txt") as f:
+            content = f.read()
+
+        parsed_content = Guild.beautiful_soup(content)
+        guild = {}
+        Guild.parse_guild_homepage(guild, parsed_content)
+        self.assertIsNotNone(guild["homepage"], "Guild homepage must exist")
+        self.assertTrue("tibiammo.reddit.com", guild["homepage"])

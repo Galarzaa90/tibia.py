@@ -94,49 +94,47 @@ class Guild:
     def _parse(content):
         if "An internal error has occurred" in content:
             return {}
+
+        parsed_content = Guild.beautiful_soup(content)
         guild = {}
-        parsed_content = BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
+
+        if not Guild.parse_guild_logo(guild, parsed_content):
+            return {}
+
+        Guild.parse_guild_name(guild, parsed_content)
+
+        info_container = parsed_content.find("div", id="GuildInformationContainer")
+        Guild.parse_guild_info(guild, info_container)
+        Guild.parse_guild_applications(guild, info_container)
+        Guild.parse_guild_homepage(guild, info_container)
+        Guild.parse_guild_guildhall(guild, info_container)
+        Guild.parse_guild_disband_info(guild, info_container)
+        Guild.parse_guild_members(guild, parsed_content)
+
+        return guild
+
+    @staticmethod
+    def beautiful_soup(content):
+        return BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
                                        parse_only=SoupStrainer("div", class_="BoxContent"))
 
-        logo = parsed_content.find('img', {'height': '64'})
-        if logo is None:
-            return {}
+    @staticmethod
+    def parse_guild_name(guild, parsed_content):
         header = parsed_content.find('h1')
         guild["name"] = header.text
-        guild["logo_url"] = logo["src"]
-        info_container = parsed_content.find("div", id="GuildInformationContainer")
-        m = founded_regex.search(info_container.text)
-        if m:
-            description = m.group("desc").strip()
-            guild["description"] = description if description else None
-            guild["world"] = m.group("world")
-            guild["founded"] = m.group("date").replace("\xa0", " ")
-            guild["active"] = "currently active" in m.group("status")
 
-        m = applications_regex.search(info_container.text)
-        if m:
-            guild["open_applications"] = m.group(1) == "opened"
+    @staticmethod
+    def parse_guild_logo(guild, parsed_content):
+        logo_img = parsed_content.find('img', {'height': '64'})
 
-        m = homepage_regex.search(info_container.text)
-        if m:
-            guild["homepage"] = m.group(1)
-        else:
-            guild["homepage"] = None
+        if logo_img is None:
+            return False
 
-        m = guildhall_regex.search(info_container.text)
-        if m:
-            guild["guildhall"] = {"name": m.group("name"), "paid_until": m.group("date").replace("\xa0", " ")}
-        else:
-            guild["guildhall"] = None
+        guild["logo_url"] = logo_img["src"]
+        return True
 
-        m = disband_regex.search(info_container.text)
-        if m:
-            guild["disband_condition"] = m.group(2)
-            guild["disband_date"] = m.group(1).replace("\xa0", " ")
-        else:
-            guild["disband_condition"] = None
-            guild["disband_date"] = None
-
+    @staticmethod
+    def parse_guild_members(guild, parsed_content):
         member_rows = parsed_content.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
         guild["members"] = []
         guild["invites"] = []
@@ -174,7 +172,47 @@ class Guild:
                     "date": date
                 })
 
-        return guild
+    @staticmethod
+    def parse_guild_disband_info(guild, info_container):
+        m = disband_regex.search(info_container.text)
+        if m:
+            guild["disband_condition"] = m.group(2)
+            guild["disband_date"] = m.group(1).replace("\xa0", " ")
+        else:
+            guild["disband_condition"] = None
+            guild["disband_date"] = None
+
+    @staticmethod
+    def parse_guild_guildhall(guild, info_container):
+        m = guildhall_regex.search(info_container.text)
+        if m:
+            guild["guildhall"] = {"name": m.group("name"), "paid_until": m.group("date").replace("\xa0", " ")}
+        else:
+            guild["guildhall"] = None
+
+    @staticmethod
+    def parse_guild_homepage(guild, info_container):
+        m = homepage_regex.search(info_container.text)
+        if m:
+            guild["homepage"] = m.group(1)
+        else:
+            guild["homepage"] = None
+
+    @staticmethod
+    def parse_guild_applications(guild, info_container):
+        m = applications_regex.search(info_container.text)
+        if m:
+            guild["open_applications"] = m.group(1) == "opened"
+
+    @staticmethod
+    def parse_guild_info(guild, info_container):
+        m = founded_regex.search(info_container.text)
+        if m:
+            description = m.group("desc").strip()
+            guild["description"] = description if description else None
+            guild["world"] = m.group("world")
+            guild["founded"] = m.group("date").replace("\xa0", " ")
+            guild["active"] = "currently active" in m.group("status")
 
     @staticmethod
     def parse_to_json(content, indent=None):
