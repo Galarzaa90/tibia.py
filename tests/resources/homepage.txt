@@ -1,10 +1,10 @@
 <div class="BoxContent">
-	<div id="GuildInformationContainer">Founded by Redditors of like mind, we help all those we can. We are always recruiting any players that can speak English, no matter your level.
-	Be respectful of other players and you'll fit right in!<br/><br/>
-	The guild was founded on Gladera on Jul 23 2015.<br/>
-	It is currently active.<br/>
-	Guild is opened for applications.<br/>
-	The official homepage is at <a href="http://tibiammo.reddit.com" target="_blank">tibiammo.reddit.com</a>.<br/>
-	Their home on Gladera is Sky Lane, Guild 1. The rent is paid until Aug 26 2018.<br/>
-	</div>
+<div id="GuildInformationContainer">Founded by Redditors of like mind, we help all those we can. We are always recruiting any players that can speak English, no matter your level.
+Be respectful of other players and you'll fit right in!<br/><br/>
+The guild was founded on Gladera on Jul 23 2015.<br/>
+It is currently active.<br/>
+Guild is opened for applications.<br/>
+The official homepage is at <a href="http://tibiammo.reddit.com" target="_blank">tibiammo.reddit.com</a>.<br/>
+Their home on Gladera is Sky Lane, Guild 1. The rent is paid until Aug 26 2018.<br/>
+</div>
 </div>
