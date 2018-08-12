@@ -1,7 +1,7 @@
 import unittest
 import os.path
 
-from tibiapy import Guild
+from tibiapy import Guild, GuildMember
 
 MY_PATH = os.path.abspath(os.path.dirname(__file__))
 RESOURCES_PATH = os.path.join(MY_PATH, "resources/")
@@ -24,6 +24,28 @@ class TestTibiaPy(unittest.TestCase):
         self.assertIsNotNone(guild.description)
         self.assertTrue(guild.members)
         self.assertIsInstance(guild.members[0].level, int)
+
+        mock_member = self.create_mock_member("Emperor Andrew", "Leader", None, "Elite Knight", 441, "")
+        self.compare_member(guild.members[0], mock_member)
+
+        mock_member = self.create_mock_member("Galarzaa Fidera", "Keeper", "Gallan", "Paladin", 285, "")
+        self.compare_member(guild.members[4], mock_member)
+
+        mock_member = self.create_mock_member("Tschas", "Mentor", None, "Druid", 205, "")
+        self.compare_member(guild.members[52], mock_member)
+
+    @staticmethod
+    def create_mock_member(name, rank, title, vocation, level, online):
+        return GuildMember(name, rank, level=level,
+                                             vocation=vocation, title=title,
+                                             online=online, joined="")
+
+    def compare_member(self, member, mock_member):
+        self.assertEqual(mock_member.level, member.level, "Incorrect level")
+        self.assertEqual(mock_member.name, member.name, "Incorrect name")
+        self.assertEqual(mock_member.rank, member.rank, "Incorrect rank")
+        self.assertEqual(mock_member.title, member.title, "Incorrect title")
+        self.assertEqual(mock_member.vocation, member.vocation, "Incorrect vocation")
 
     def testGuildNoDisbandInfo(self):
         Guild.parse_guild_disband_info(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
@@ -52,6 +74,26 @@ class TestTibiaPy(unittest.TestCase):
         self.assertEqual("Gladera", GUILD["world"], "Incorrect world")
         self.assertEqual("Jul 23 2015", GUILD["founded"], "Incorrect founding date")
         self.assertTrue(GUILD["active"], "Guild should be active")
+
+    def testInvitationDate(self):
+        guild = {"invites": []}
+        name = "Tschas"
+        date = "Invitation Date"
+        values = name, date
+        Guild.parse_invited_member(guild, values)
+        self.assertIsNotNone(guild["invites"])
+        self.assertListEqual(guild["invites"], [])
+
+    def testInvitedMember(self):
+        guild = {"invites": []}
+        name = "Tschas"
+        date = "Jun 20 2018"
+        values = name, date
+        Guild.parse_invited_member(guild, values)
+        self.assertIsNotNone(guild["invites"])
+        self.assertIsNotNone(guild["invites"][0])
+        self.assertEqual(guild["invites"][0]["name"], name)
+        self.assertEqual(guild["invites"][0]["date"], date)
 
     @staticmethod
     def _get_parsed_content(resource):

@@ -11,6 +11,9 @@ from . import abc, InvalidContent, GUILD_LIST_URL
 from .const import GUILD_URL
 from .utils import parse_tibia_date
 
+COLS_INVITED_MEMBER = 2
+COLS_GUILD_MEMBER = 6
+
 founded_regex = re.compile(r'(?P<desc>.*)The guild was founded on (?P<world>\w+) on (?P<date>[^.]+)\.\nIt is (?P<status>[^.]+).',
                            re.DOTALL)
 applications_regex = re.compile(r'Guild is (\w+) for applications\.')
@@ -141,7 +144,6 @@ class Guild:
     @staticmethod
     def parse_guild_logo(guild, parsed_content):
         logo_img = parsed_content.find('img', {'height': '64'})
-
         if logo_img is None:
             return False
 
@@ -153,39 +155,44 @@ class Guild:
         member_rows = parsed_content.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
         guild["members"] = []
         guild["invites"] = []
-        previous_rank = ""
+        previous_rank = {}
         for row in member_rows:
             columns = row.find_all('td')
             values = (c.text.replace("\u00a0", " ") for c in columns)
-            # Current member
-            if len(columns) == 6:
-                rank, name, vocation, level, joined, status = values
-                rank = previous_rank if rank == " " else rank
-                previous_rank = rank
-                m = title_regex.match(name)
-                if m:
-                    name = m.group(1)
-                    title = m.group(2)
-                else:
-                    title = None
-                guild["members"].append({
-                    "rank": rank,
-                    "name": name,
-                    "title": title,
-                    "vocation": vocation,
-                    "level": int(level),
-                    "joined": joined,
-                    "online": status == "online"
-                })
-            # Invited character
-            if len(columns) == 2:
-                name, date = values
-                if date == "Invitation Date":
-                    continue
-                guild["invites"].append({
-                    "name": name,
-                    "date": date
-                })
+            if len(columns) == COLS_GUILD_MEMBER:
+                Guild.parse_current_member(guild, previous_rank, values)
+            if len(columns) == COLS_INVITED_MEMBER:
+                Guild.parse_invited_member(guild, values)
+
+    @staticmethod
+    def parse_invited_member(guild, values):
+        name, date = values
+        if date != "Invitation Date":
+            guild["invites"].append({
+                "name": name,
+                "date": date
+            })
+
+    @staticmethod
+    def parse_current_member(guild, previous_rank, values):
+        rank, name, vocation, level, joined, status = values
+        rank = previous_rank[1] if rank == " " else rank
+        previous_rank[1] = rank
+        m = title_regex.match(name)
+        if m:
+            name = m.group(1)
+            title = m.group(2)
+        else:
+            title = None
+        guild["members"].append({
+            "rank": rank,
+            "name": name,
+            "title": title,
+            "vocation": vocation,
+            "level": int(level),
+            "joined": joined,
+            "online": status == "online"
+        })
 
     @staticmethod
     def parse_guild_disband_info(guild, info_container):
