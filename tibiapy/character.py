@@ -1,3 +1,4 @@
+import datetime
 import json
 import re
 import urllib.parse
@@ -84,9 +85,27 @@ class Character(abc.Character):
                  "married_to", "house", "guild_membership", "last_login", "account_status", "comment", "achievements",
                  "deaths", "account_information", "other_characters", "deletion_date")
 
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+    def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
+        self.name = name
+        self.former_names = kwargs.get("former_names", [])
+        self.sex = sex
+        self.vocation = vocation
+        self.level = level
+        self.achievement_points = kwargs.get("achievement_points", 0)
+        self.world = world
+        self.former_world = kwargs.get("former_world")
+        self.residence = kwargs.get("residence")
+        self.married_to = kwargs.get("married_to")
+        self.house = kwargs.get("house")
+        self.guild_membership = kwargs.get("guild_membership")
+        self.last_login = kwargs.get("last_login")
+        self.account_status = kwargs.get("account_status")
+        self.comment = kwargs.get("comment")
+        self.achievements = kwargs.get("achievements",[])
+        self.deaths = kwargs.get("deaths", [])
+        self.account_information = kwargs.get("account_information")
+        self.other_characters = kwargs.get("other_characters", [])
+        self.deletion_date = kwargs.get("deletion_date")
 
     @property
     def guild_name(self):
@@ -261,52 +280,39 @@ class Character(abc.Character):
         Optional[:class:`Character`]
             The character contained in the page, or None if the character doesn't exist.
         """
-        char = Character._parse(content)
-        if not char:
+        char_json = Character._parse(content)
+        if not char_json:
             return None
         try:
-            character = Character()
-            character.name = char["name"]
-            if char["deletion_date"]:
-                character.deletion_date = parse_tibia_datetime(char["deletion_date"])
+            if char_json["deletion_date"]:
+                char_json["deletion_date"] = parse_tibia_datetime(char_json["deletion_date"])
             else:
-                character.deletion_date = None
-            character.former_names = char["former_names"]
-            character.sex = char["sex"]
-            character.vocation = char["vocation"]
-            character.level = char["level"]
-            character.achievement_points = char["achievement_points"]
-            character.world = char["world"]
-            character.former_world = char.get("former_world")
-            character.residence = char["residence"]
-            character.house = char["house"]
-            character.married_to = char["married_to"]
-            character.comment = char.get("comment")
-            character.account_status = char["account_status"]
-            character.guild_membership = char["guild_membership"]
+                char_json["deletion_date"] = None
 
-            character.other_characters = []
-            if char["other_characters"]:
-                for o_char in char["other_characters"]:
-                    character.other_characters.append(OtherCharacter(o_char["name"], o_char["world"], o_char["online"],
-                                                                     o_char["deleted"]))
-
-            if "never" in char["last_login"]:
-                character.last_login = None
+            # Some attributes require converting
+            if "never" in char_json["last_login"]:
+                char_json["last_login"] = None
             else:
-                character.last_login = parse_tibia_datetime(char["last_login"])
-            character.account_information = char["account_information"]
-            character.deaths = []
-            character.achievements = char["achievements"]
-            for d in char["deaths"]:
-                death = Death(d["level"], d["killer"], d["time"], d["is_player"])
-                death.name = character.name
-                character.deaths.append(death)
+                char_json["last_login"] = parse_tibia_datetime(char_json["last_login"])
+            deaths = []
+            for d in char_json["deaths"]:
+                death = Death(**d)
+                death.name = char_json["name"]
+                deaths.append(death)
+            char_json["deaths"] = deaths
+            other_characters = []
+            if char_json["other_characters"]:
+                for o_char in char_json["other_characters"]:
+                    other_characters.append(OtherCharacter(**o_char))
+            char_json["other_characters"] = other_characters
+
+            char = Character(**char_json)
+
         except KeyError as e:
             print(e)
             return None
 
-        return character
+        return char
 
     @staticmethod
     def get_url(name):
@@ -338,27 +344,42 @@ class Death:
     killer: :class:`str`
         The main killer.
 
-    date: :class:`datetime.datetime`
+    time: :class:`datetime.datetime`
         The time at which the death occurred.
 
-    by_player: :class:`bool`
+    is_player: :class:`bool`
         True if the killer is a player, False otherwise.
 
     participants: :class:`list`
         List of all participants in the death.
     """
-    __slots__ = ("name", "level", "killer", "date", "by_player", "participants")
+    __slots__ = ("name", "level", "killer", "time", "is_player", "participants")
 
-    def __init__(self, level, killer, date, by_player, **kwargs):
+    def __init__(self, level=0, killer=None, time=None, is_player=False, name=None, participants=None):
+        self.name = name
         self.level = level
         self.killer = killer
-        if date is not None:
-            self.date = parse_tibia_datetime(date)
+        if isinstance(time, datetime.datetime):
+            self.time = time
+        elif isinstance(time, str):
+            self.time = parse_tibia_datetime(time)
         else:
-            self.date = date
-        self.by_player = by_player
-        self.participants = kwargs.get("participants", [])
-        self.name = kwargs.get("name")
+            self.time = None
+        self.is_player = is_player
+        self.participants = participants or []
+
+    def __repr__(self) -> str:
+        attributes = ""
+        for attr in self.__slots__:
+            v = getattr(self, attr)
+            if isinstance(v, int) and v == 0:
+                continue
+            if isinstance(v, list) and len(v) == 0:
+                continue
+            if v is None:
+                continue
+            attributes += f",{attr}={v.__repr__()}"
+        return "{0.__class__.__name__}({1}".format(self, attributes)
 
 
 class OtherCharacter(abc.Character):
@@ -381,8 +402,9 @@ class OtherCharacter(abc.Character):
     """
     __slots__ = ("world", "online", "deleted")
 
-    def __init__(self, name, world, online = False, deleted = False):
+    def __init__(self, name=None, world=None, online = False, deleted = False):
         self.name = name
         self.world = world
         self.online = online
         self.deleted = deleted
+

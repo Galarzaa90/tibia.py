@@ -49,7 +49,7 @@ if __name__ == "__main__":
             print("Deaths")
             print("------")
             for death in char.deaths:
-                print("\t- %s - Died at Level %d by %s" % (death.date, death.level, death.killer))
+                print("\t- %s - Died at Level %d by %s" % (death.time, death.level, death.killer))
 
         if char.account_information:
             print("Account Information")
@@ -63,7 +63,6 @@ if __name__ == "__main__":
             for other_char in char.other_characters:
                 print("\t- %s - %s - %s" % (other_char.name, other_char.world, "online" if other_char.online else
                 ("deleted" if other_char.deleted else "offline")))
-
 
     r = requests.get(tibiapy.Guild.get_url("Redd Alliance"))
     start = time.perf_counter()
@@ -98,14 +97,14 @@ if __name__ == "__main__":
         print("Online: %d/%d" % (len(guild.online_members), guild.member_count))
         for member in guild.members:
             print("\t- %s - %s%s - %s %d - %s" % (member.rank, member.name,
-                                                  "" if not member.title else " (%s)".format(member.title),
+                                                  "" if not member.title else " (%s)" % member.title,
                                                   member.vocation, member.level, member.joined))
 
         print("Invites")
         print("-------")
         if guild.invites:
             for invite in guild.invites:
-                print("\t- %s - $s" % (invite.name, invite.date))
+                print("\t- %s - %s" % (invite.name, invite.date))
         else:
             print("There are currently no invited characters.")
 

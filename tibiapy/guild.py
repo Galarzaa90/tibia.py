@@ -1,3 +1,4 @@
+import datetime
 import json
 import re
 import urllib.parse
@@ -55,7 +56,7 @@ class Guild:
     __slots__ = ("name", "logo_url", "description", "world", "founded", "active", "guildhall", "open_applications",
                  "disband_condition", "disband_date", "homepage", "members", "invites")
 
-    def __init__(self, name, world,** kwargs):
+    def __init__(self, name=None, world=None,**kwargs):
         self.name = name
         self.world = world
         self.logo_url = kwargs.get("logo_url")
@@ -69,6 +70,21 @@ class Guild:
         self.homepage = kwargs.get("homepage")
         self.members = kwargs.get("members", [])
         self.invites = kwargs.get("invites", [])
+
+    def __repr__(self) -> str:
+        attributes = ""
+        for attr in self.__slots__:
+            if attr in ["name"]:
+                continue
+            v = getattr(self, attr)
+            if isinstance(v, int) and v == 0:
+                continue
+            if isinstance(v, list) and len(v) == 0:
+                continue
+            if v is None:
+                continue
+            attributes += f",{attr}={v.__repr__()}"
+        return "{0.__class__.__name__}({0.name!r}{1}".format(self, attributes)
 
     @property
     def member_count(self):
@@ -247,28 +263,19 @@ class Guild:
         Optional[:class:`Guild`]
             The guild contained in the page or None if it doesn't exist.
         """
-        _guild = Guild._parse(content)
-        if not _guild:
+        guild_json = Guild._parse(content)
+        if not guild_json:
             return None
-        guild = Guild(_guild["name"], _guild["world"])
-        guild.description = _guild["description"]
-        guild.logo_url = _guild["logo_url"]
-        guild.founded = parse_tibia_date(_guild["founded"])
-        guild.active = _guild["active"]
-        guild.guildhall = _guild["guildhall"]
-        guild.open_applications = _guild["open_applications"]
-        guild.disband_condition = _guild["disband_condition"]
-        guild.disband_date = _guild["disband_date"]
-        guild.homepage = _guild["homepage"]
-        guild.members = []
-        for member in _guild["members"]:
-            guild.members.append(GuildMember(member["name"], member["rank"], level=member["level"],
-                                             vocation=member["vocation"], title=member["title"],
-                                             online=member["online"], joined=parse_tibia_date(member["joined"])))
+        members = []
+        for member in guild_json["members"]:
+            members.append(GuildMember(**member))
+        guild_json["members"] = members
 
-        guild.invites = []
-        for invite in _guild["invites"]:
-            guild.invites.append(GuildInvite(invite["name"], parse_tibia_date(invite["date"])))
+        invites = []
+        for invite in guild_json["invites"]:
+            invites.append(GuildInvite(**invite))
+        guild_json["invites"] = invites
+        guild = Guild(**guild_json)
         return guild
 
     @staticmethod
@@ -316,14 +323,22 @@ class GuildMember(abc.Character):
     """
     __slots__ = ("name", "rank", "title", "level", "vocation", "joined", "online")
 
-    def __init__(self, name, rank, **kwargs):
+    def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, joined=None, online=False):
         self.name = name
         self.rank = rank
-        self.title = kwargs.get("title")
-        self.vocation = kwargs.get("vocation")
-        self.level = kwargs.get("level", 0)
-        self.joined = kwargs.get("joined")
-        self.online = kwargs.get("online", False)
+        self.title = title
+        self.vocation = vocation
+        self.level = level
+        self.joined = joined
+        self.online = online
+        if isinstance(joined, datetime.datetime):
+            self.joined = joined.date()
+        elif isinstance(joined, datetime.date):
+            self.joined = joined
+        elif isinstance(joined, str):
+            self.joined = parse_tibia_date(joined)
+        else:
+            self.joined = None
 
 
 class GuildInvite(abc.Character):
@@ -339,6 +354,13 @@ class GuildInvite(abc.Character):
 
     __slots__ = ("date", )
 
-    def __init__(self, name, date=None):
+    def __init__(self, name=None, date=None):
         self.name = name
-        self.date = date
+        if isinstance(date, datetime.datetime):
+            self.date = date.date()
+        elif isinstance(date, datetime.date):
+            self.date = date
+        elif isinstance(date, str):
+            self.date = parse_tibia_date(date)
+        else:
+            self.date = None

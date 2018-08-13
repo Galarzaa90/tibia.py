@@ -13,6 +13,21 @@ class Character(metaclass=abc.ABCMeta):
             return self.name.lower() == o.name.lower()
         return False
 
+    def __repr__(self) -> str:
+        attributes = ""
+        for attr in self.__slots__:
+            if attr in ["name"]:
+                continue
+            v = getattr(self, attr)
+            if isinstance(v, int) and v == 0:
+                continue
+            if isinstance(v, list) and len(v) == 0:
+                continue
+            if v is None:
+                continue
+            attributes += f",{attr}={v.__repr__()}"
+        return "{0.__class__.__name__}({0.name!r}{1}".format(self, attributes)
+
     @property
     def url(self):
         """
