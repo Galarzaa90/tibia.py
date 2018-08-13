@@ -33,7 +33,8 @@
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.guild</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
@@ -90,7 +91,7 @@
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;logo_url&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;world&quot;</span><span class="p">,</span> <span class="s2">&quot;founded&quot;</span><span class="p">,</span> <span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="s2">&quot;guildhall&quot;</span><span class="p">,</span> <span class="s2">&quot;open_applications&quot;</span><span class="p">,</span>
                  <span class="s2">&quot;disband_condition&quot;</span><span class="p">,</span> <span class="s2">&quot;disband_date&quot;</span><span class="p">,</span> <span class="s2">&quot;homepage&quot;</span><span class="p">,</span> <span class="s2">&quot;members&quot;</span><span class="p">,</span> <span class="s2">&quot;invites&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span><span class="o">**</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logo_url</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logo_url&quot;</span><span class="p">)</span>
@@ -104,6 +105,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">homepage</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;homepage&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">members</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;members&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">invites</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;invites&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">attributes</span> <span class="o">+=</span> <span class="n">f</span><span class="s2">&quot;,</span><span class="si">{attr}</span><span class="s2">={v.__repr__()}&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0.__class__.__name__}</span><span class="s2">(</span><span class="si">{0.name!r}{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">member_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -282,28 +298,19 @@
 <span class="sd">        Optional[:class:`Guild`]</span>
 <span class="sd">            The guild contained in the page or None if it doesn&#39;t exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_guild</span> <span class="o">=</span> <span class="n">Guild</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">_guild</span><span class="p">:</span>
+        <span class="n">guild_json</span> <span class="o">=</span> <span class="n">Guild</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">guild_json</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">guild</span> <span class="o">=</span> <span class="n">Guild</span><span class="p">(</span><span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">])</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">logo_url</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;logo_url&quot;</span><span class="p">]</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">founded</span> <span class="o">=</span> <span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;founded&quot;</span><span class="p">])</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;active&quot;</span><span class="p">]</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">guildhall</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;guildhall&quot;</span><span class="p">]</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">open_applications</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;open_applications&quot;</span><span class="p">]</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">disband_condition</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;disband_condition&quot;</span><span class="p">]</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">disband_date</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;disband_date&quot;</span><span class="p">]</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">homepage</span> <span class="o">=</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;homepage&quot;</span><span class="p">]</span>
-        <span class="n">guild</span><span class="o">.</span><span class="n">members</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]:</span>
-            <span class="n">guild</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GuildMember</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">member</span><span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">],</span> <span class="n">level</span><span class="o">=</span><span class="n">member</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">],</span>
-                                             <span class="n">vocation</span><span class="o">=</span><span class="n">member</span><span class="p">[</span><span class="s2">&quot;vocation&quot;</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">member</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">],</span>
-                                             <span class="n">online</span><span class="o">=</span><span class="n">member</span><span class="p">[</span><span class="s2">&quot;online&quot;</span><span class="p">],</span> <span class="n">joined</span><span class="o">=</span><span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="s2">&quot;joined&quot;</span><span class="p">])))</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">guild_json</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]:</span>
+            <span class="n">members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GuildMember</span><span class="p">(</span><span class="o">**</span><span class="n">member</span><span class="p">))</span>
+        <span class="n">guild_json</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">members</span>
 
-        <span class="n">guild</span><span class="o">.</span><span class="n">invites</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">invite</span> <span class="ow">in</span> <span class="n">_guild</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]:</span>
-            <span class="n">guild</span><span class="o">.</span><span class="n">invites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GuildInvite</span><span class="p">(</span><span class="n">invite</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">invite</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])))</span>
+        <span class="n">invites</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">invite</span> <span class="ow">in</span> <span class="n">guild_json</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]:</span>
+            <span class="n">invites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GuildInvite</span><span class="p">(</span><span class="o">**</span><span class="n">invite</span><span class="p">))</span>
+        <span class="n">guild_json</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">invites</span>
+        <span class="n">guild</span> <span class="o">=</span> <span class="n">Guild</span><span class="p">(</span><span class="o">**</span><span class="n">guild_json</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">guild</span></div>
 
 <div class="viewcode-block" id="Guild.get_url"><a class="viewcode-back" href="../../index.html#tibiapy.Guild.get_url">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -351,14 +358,22 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;rank&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;vocation&quot;</span><span class="p">,</span> <span class="s2">&quot;joined&quot;</span><span class="p">,</span> <span class="s2">&quot;online&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">joined</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">online</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vocation&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">joined</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;joined&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;online&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">vocation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">joined</span> <span class="o">=</span> <span class="n">joined</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="n">online</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">joined</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joined</span> <span class="o">=</span> <span class="n">joined</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">joined</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joined</span> <span class="o">=</span> <span class="n">joined</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">joined</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joined</span> <span class="o">=</span> <span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">joined</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">joined</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="GuildInvite"><a class="viewcode-back" href="../../index.html#tibiapy.GuildInvite">[docs]</a><span class="k">class</span> <span class="nc">GuildInvite</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Character</span><span class="p">):</span>
@@ -374,9 +389,16 @@
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span></div>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="kc">None</span></div>
 </pre></div>
 
           </div>
