@@ -108,4 +108,16 @@ if __name__ == "__main__":
         else:
             print("There are currently no invited characters.")
 
-    print("")
+    world = "Gladera"
+    r = requests.get(tibiapy.Guild.get_world_list_url(world))
+    start = time.perf_counter()
+    guilds = tibiapy.Guild.list_from_content(r.text, True)
+    print("Guilds in Gladera")
+    print("=================")
+    for g in guilds:
+        print("\tName: %s" % g.name)
+        print("\tStatus: %s" % ("Active" if g.active else "In formation"))
+        if g.description:
+            print("\t%s" % g.description)
+        print()
+    dt = time.perf_counter() - start

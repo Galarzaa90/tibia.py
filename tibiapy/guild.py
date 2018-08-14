@@ -7,7 +7,7 @@ from typing import Optional, List
 
 from bs4 import BeautifulSoup, SoupStrainer
 
-from . import abc
+from . import abc, InvalidContent, GUILD_LIST_URL
 from .const import GUILD_URL
 from .utils import parse_tibia_date
 
@@ -126,7 +126,6 @@ class Guild:
         Guild.parse_guild_guildhall(guild, info_container)
         Guild.parse_guild_disband_info(guild, info_container)
         Guild.parse_guild_members(guild, parsed_content)
-
         return guild
 
     @staticmethod
@@ -231,8 +230,90 @@ class Guild:
             guild["active"] = "currently active" in m.group("status")
 
     @staticmethod
+    def _parse_guild_list(content, active_only=False):
+        parsed_content = Guild.beautiful_soup(content)
+        selected_world = parsed_content.find('option', selected=True)
+        try:
+            if "choose world" in selected_world.text:
+                return None
+            world = selected_world.text
+        except AttributeError:
+            raise InvalidContent("Content does not belong to world guild list.")
+        containers = parsed_content.find_all('div', class_="TableContainer")
+        try:
+            # First TableContainer contains world selector.
+            containers = containers[1:]
+        except IndexError:
+            raise InvalidContent("Content does not belong to world guild list.")
+        guilds = []
+        for container in containers:
+            header = container.find('div', class_="Text")
+            active = "Active" in header.text
+            if active_only and not active:
+                return guilds
+            rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+            for row in rows:
+                columns = row.find_all('td')
+                if columns[0].text == "Logo":
+                    continue
+                logo_img = columns[0].find('img')["src"]
+                description_lines = columns[1].get_text("\n").split("\n", 1)
+                name = description_lines[0]
+                description = None
+                if len(description_lines) > 1:
+                    description = description_lines[1].replace("\r","").replace("\n"," ")
+                guilds.append({"logo_url": logo_img, "name": name, "description": description, "active": active,
+                               "world": world})
+        return guilds
+
+    @staticmethod
+    def json_list_from_content(content, active_only=False, indent=None):
+        """
+        Creates a JSON string from the html content of the world guilds' page.
+
+        Parameters
+        ----------
+        content: str
+            The html content of the page.
+        active_only: bool
+            Whether to only show active guilds or not.
+        indent: int
+            The number of spaces to indent the output with.
+
+        Returns
+        -------
+        :class:`str`
+            A string in JSON format.
+        """
+        list_json = Guild._parse_guild_list(content, active_only)
+        return json.dumps(list_json, indent=indent)
+
+    @staticmethod
+    def list_from_content(content, active_only=False):
+        """
+        Gets a list of guilds from the html content of the world guilds' page.
+
+        The :class:`Guild` objects in the list only contain the attributes:
+        :attr:`name`, :attr:`logo_url`, :attr:`world` and if available, :attr:`description`
+
+        Parameters
+        ----------
+        content: str
+            The html content of the page.
+        active_only: bool
+            Whether to only show active guilds or not.
+
+        Returns
+        -------
+        List[:class:`Guild`]
+            List of guilds in the current world.
+        """
+        guild_list = Guild._parse_guild_list(content, active_only)
+        return [Guild(**g) for g in guild_list]
+
+    @staticmethod
     def parse_to_json(content, indent=None):
-        """Static method that creates a JSON string from the html content of the guild's page.
+        """Creates a JSON string from the html content of the guild's page.
 
         Parameters
         -------------
@@ -292,6 +373,22 @@ class Guild:
         str
             The URL to the guild's page"""
         return GUILD_URL + urllib.parse.quote(name.encode('iso-8859-1'))
+
+    @staticmethod
+    def get_world_list_url(world):
+        """Gets the Tibia.com URL for the guild section of a specific world.
+
+        Parameters
+        ----------
+        world: str
+            The name of the world
+
+        Returns
+        -------
+        str
+            The URL to the guild's page
+        """
+        return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
 
 
 class GuildMember(abc.Character):
