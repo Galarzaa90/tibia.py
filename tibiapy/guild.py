@@ -114,35 +114,35 @@ class Guild:
         if "An internal error has occurred" in content:
             return {}
 
-        parsed_content = Guild.beautiful_soup(content)
+        parsed_content = Guild._beautiful_soup(content)
         guild = {}
 
-        if not Guild.parse_guild_logo(guild, parsed_content):
+        if not Guild._parse_guild_logo(guild, parsed_content):
             return {}
 
-        Guild.parse_guild_name(guild, parsed_content)
+        Guild._parse_guild_name(guild, parsed_content)
 
         info_container = parsed_content.find("div", id="GuildInformationContainer")
-        Guild.parse_guild_info(guild, info_container)
-        Guild.parse_guild_applications(guild, info_container)
-        Guild.parse_guild_homepage(guild, info_container)
-        Guild.parse_guild_guildhall(guild, info_container)
-        Guild.parse_guild_disband_info(guild, info_container)
-        Guild.parse_guild_members(guild, parsed_content)
+        Guild._parse_guild_info(guild, info_container)
+        Guild._parse_guild_applications(guild, info_container)
+        Guild._parse_guild_homepage(guild, info_container)
+        Guild._parse_guild_guildhall(guild, info_container)
+        Guild._parse_guild_disband_info(guild, info_container)
+        Guild._parse_guild_members(guild, parsed_content)
         return guild
 
     @staticmethod
-    def beautiful_soup(content):
+    def _beautiful_soup(content):
         return BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
                                        parse_only=SoupStrainer("div", class_="BoxContent"))
 
     @staticmethod
-    def parse_guild_name(guild, parsed_content):
+    def _parse_guild_name(guild, parsed_content):
         header = parsed_content.find('h1')
         guild["name"] = header.text
 
     @staticmethod
-    def parse_guild_logo(guild, parsed_content):
+    def _parse_guild_logo(guild, parsed_content):
         logo_img = parsed_content.find('img', {'height': '64'})
         if logo_img is None:
             return False
@@ -151,7 +151,7 @@ class Guild:
         return True
 
     @staticmethod
-    def parse_guild_members(guild, parsed_content):
+    def _parse_guild_members(guild, parsed_content):
         member_rows = parsed_content.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
         guild["members"] = []
         guild["invites"] = []
@@ -160,12 +160,12 @@ class Guild:
             columns = row.find_all('td')
             values = (c.text.replace("\u00a0", " ") for c in columns)
             if len(columns) == COLS_GUILD_MEMBER:
-                Guild.parse_current_member(guild, previous_rank, values)
+                Guild._parse_current_member(guild, previous_rank, values)
             if len(columns) == COLS_INVITED_MEMBER:
-                Guild.parse_invited_member(guild, values)
+                Guild._parse_invited_member(guild, values)
 
     @staticmethod
-    def parse_invited_member(guild, values):
+    def _parse_invited_member(guild, values):
         name, date = values
         if date != "Invitation Date":
             guild["invites"].append({
@@ -174,7 +174,7 @@ class Guild:
             })
 
     @staticmethod
-    def parse_current_member(guild, previous_rank, values):
+    def _parse_current_member(guild, previous_rank, values):
         rank, name, vocation, level, joined, status = values
         rank = previous_rank[1] if rank == " " else rank
         previous_rank[1] = rank
@@ -195,7 +195,7 @@ class Guild:
         })
 
     @staticmethod
-    def parse_guild_disband_info(guild, info_container):
+    def _parse_guild_disband_info(guild, info_container):
         m = disband_regex.search(info_container.text)
         if m:
             guild["disband_condition"] = m.group(2)
@@ -205,7 +205,7 @@ class Guild:
             guild["disband_date"] = None
 
     @staticmethod
-    def parse_guild_guildhall(guild, info_container):
+    def _parse_guild_guildhall(guild, info_container):
         m = guildhall_regex.search(info_container.text)
         if m:
             guild["guildhall"] = {"name": m.group("name"), "paid_until": m.group("date").replace("\xa0", " ")}
@@ -213,7 +213,7 @@ class Guild:
             guild["guildhall"] = None
 
     @staticmethod
-    def parse_guild_homepage(guild, info_container):
+    def _parse_guild_homepage(guild, info_container):
         m = homepage_regex.search(info_container.text)
         if m:
             guild["homepage"] = m.group(1)
@@ -221,13 +221,13 @@ class Guild:
             guild["homepage"] = None
 
     @staticmethod
-    def parse_guild_applications(guild, info_container):
+    def _parse_guild_applications(guild, info_container):
         m = applications_regex.search(info_container.text)
         if m:
             guild["open_applications"] = m.group(1) == "opened"
 
     @staticmethod
-    def parse_guild_info(guild, info_container):
+    def _parse_guild_info(guild, info_container):
         m = founded_regex.search(info_container.text)
         if m:
             description = m.group("desc").strip()
@@ -238,7 +238,7 @@ class Guild:
 
     @staticmethod
     def _parse_guild_list(content, active_only=False):
-        parsed_content = Guild.beautiful_soup(content)
+        parsed_content = Guild._beautiful_soup(content)
         selected_world = parsed_content.find('option', selected=True)
         try:
             if "choose world" in selected_world.text:

@@ -25,22 +25,20 @@ class TestTibiaPy(unittest.TestCase):
         self.assertTrue(guild.members)
         self.assertIsInstance(guild.members[0].level, int)
 
-        mock_member = self.create_mock_member("Emperor Andrew", "Leader", None, "Elite Knight", 441, "")
-        self.compare_member(guild.members[0], mock_member)
+        mock_member = self._create_mock_member("Emperor Andrew", "Leader", None, "Elite Knight", 441, "", "Mar 20 2017")
+        self._compare_member(guild.members[0], mock_member)
 
-        mock_member = self.create_mock_member("Galarzaa Fidera", "Keeper", "Gallan", "Paladin", 285, "")
-        self.compare_member(guild.members[4], mock_member)
+        mock_member = self._create_mock_member("Galarzaa Fidera", "Keeper", "Gallan", "Paladin", 285, "", "Nov 04 2014")
+        self._compare_member(guild.members[4], mock_member)
 
-        mock_member = self.create_mock_member("Tschas", "Mentor", None, "Druid", 205, "")
-        self.compare_member(guild.members[52], mock_member)
+        mock_member = self._create_mock_member("Tschas", "Mentor", None, "Druid", 205, "", "Jul 26 2016")
+        self._compare_member(guild.members[52], mock_member)
 
     @staticmethod
-    def create_mock_member(name, rank, title, vocation, level, online):
-        return GuildMember(name, rank, level=level,
-                                             vocation=vocation, title=title,
-                                             online=online, joined="")
+    def _create_mock_member(name, rank, title, vocation, level, online, joined):
+        return GuildMember(name, rank, level=level, vocation=vocation, title=title, online=online, joined=joined)
 
-    def compare_member(self, member, mock_member):
+    def _compare_member(self, member, mock_member):
         self.assertEqual(mock_member.level, member.level, "Incorrect level")
         self.assertEqual(mock_member.name, member.name, "Incorrect name")
         self.assertEqual(mock_member.rank, member.rank, "Incorrect rank")
@@ -48,28 +46,28 @@ class TestTibiaPy(unittest.TestCase):
         self.assertEqual(mock_member.vocation, member.vocation, "Incorrect vocation")
 
     def testGuildNoDisbandInfo(self):
-        Guild.parse_guild_disband_info(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
+        Guild._parse_guild_disband_info(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
         self.assertIsNone(GUILD["disband_condition"], "Guild should not be under disband warning")
         self.assertIsNone(GUILD["disband_date"], "Guild should not have disband date")
 
     def testGuildHasGuildhall(self):
-        Guild.parse_guild_guildhall(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
+        Guild._parse_guild_guildhall(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
         guildhall = GUILD["guildhall"]
         self.assertIsNotNone(guildhall, "Guild should have guildhall")
         self.assertEqual(guildhall["name"], "Sky Lane, Guild 1", "Guildhall should have name")
         self.assertEqual(guildhall["paid_until"], "Aug 26 2018", "Guildhall should have payment date")
 
     def testGuildHomepageOk(self):
-        Guild.parse_guild_homepage(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
+        Guild._parse_guild_homepage(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
         self.assertIsNotNone(GUILD["homepage"], "Guild homepage must exist")
         self.assertEqual("tibiammo.reddit.com", GUILD["homepage"])
 
     def testGuildApplicationsOpen(self):
-        Guild.parse_guild_applications(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
+        Guild._parse_guild_applications(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
         self.assertTrue(GUILD["open_applications"], "Guild should be open to applications")
 
     def testGuildInfoOk(self):
-        Guild.parse_guild_info(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
+        Guild._parse_guild_info(GUILD, self._get_parsed_content(PATH_GOOD_GUILD_INFO))
         self.assertIsNotNone(GUILD["description"], "Guild description must exist")
         self.assertEqual("Gladera", GUILD["world"], "Incorrect world")
         self.assertEqual("Jul 23 2015", GUILD["founded"], "Incorrect founding date")
@@ -80,7 +78,7 @@ class TestTibiaPy(unittest.TestCase):
         name = "Tschas"
         date = "Invitation Date"
         values = name, date
-        Guild.parse_invited_member(guild, values)
+        Guild._parse_invited_member(guild, values)
         self.assertIsNotNone(guild["invites"])
         self.assertListEqual(guild["invites"], [])
 
@@ -89,7 +87,7 @@ class TestTibiaPy(unittest.TestCase):
         name = "Tschas"
         date = "Jun 20 2018"
         values = name, date
-        Guild.parse_invited_member(guild, values)
+        Guild._parse_invited_member(guild, values)
         self.assertIsNotNone(guild["invites"])
         self.assertIsNotNone(guild["invites"][0])
         self.assertEqual(guild["invites"][0]["name"], name)
@@ -99,4 +97,4 @@ class TestTibiaPy(unittest.TestCase):
     def _get_parsed_content(resource):
         with open(RESOURCES_PATH + resource) as f:
             content = f.read()
-        return Guild.beautiful_soup(content)
+        return Guild._beautiful_soup(content)
