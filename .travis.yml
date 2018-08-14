@@ -21,6 +21,8 @@ before_script:
 script:
   - python setup.py sdist bdist_wheel
   - coverage run setup.py test
+  - cd docs
+  - make html
 
 after_script:
   - coverage report
