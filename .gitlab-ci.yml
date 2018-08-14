@@ -2,6 +2,32 @@ image: python:3.6
 
 before_script:
   - pip install -r requirements.txt
+  - pip install -U setuptools wheel
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - python setup.py sdist bdist_wheel
+  artifacts:
+    name: tibia.py_dist
+    paths:
+      - dist/
+
+test:
+  stage: test
+  script:
+      - pip install coverage
+      - coverage run setup.py test
+      - coverage report
+      - coverage html
+  artifacts:
+    name: Coverage_Report
+    paths:
+      - htmlcov/
 
 pages:
   script:

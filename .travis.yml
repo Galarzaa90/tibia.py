@@ -23,6 +23,7 @@ script:
   - coverage run setup.py test
   - cd docs
   - make html
+  - cd ..
 
 after_script:
   - coverage report
