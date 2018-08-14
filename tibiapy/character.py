@@ -378,7 +378,7 @@ class Death:
                 continue
             if v is None:
                 continue
-            attributes += f",{attr}={v.__repr__()}"
+            attributes += "%s=%r" % (attr, v)
         return "{0.__class__.__name__}({1}".format(self, attributes)
 
 

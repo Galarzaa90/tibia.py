@@ -25,7 +25,7 @@ class Character(metaclass=abc.ABCMeta):
                 continue
             if v is None:
                 continue
-            attributes += f",{attr}={v.__repr__()}"
+            attributes += ",%s=%r" % (attr, v)
         return "{0.__class__.__name__}({0.name!r}{1}".format(self, attributes)
 
     @property
