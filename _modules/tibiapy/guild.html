@@ -46,6 +46,9 @@
 <span class="kn">from</span> <span class="nn">.const</span> <span class="k">import</span> <span class="n">GUILD_URL</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">parse_tibia_date</span>
 
+<span class="n">COLS_INVITED_MEMBER</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">COLS_GUILD_MEMBER</span> <span class="o">=</span> <span class="mi">6</span>
+
 <span class="n">founded_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;desc&gt;.*)The guild was founded on (?P&lt;world&gt;\w+) on (?P&lt;date&gt;[^.]+)\.\nIt is (?P&lt;status&gt;[^.]+).&#39;</span><span class="p">,</span>
                            <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
 <span class="n">applications_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Guild is (\w+) for applications\.&#39;</span><span class="p">)</span>
@@ -176,7 +179,6 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_guild_logo</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
         <span class="n">logo_img</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;64&#39;</span><span class="p">})</span>
-
         <span class="k">if</span> <span class="n">logo_img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
@@ -188,39 +190,44 @@
         <span class="n">member_rows</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;#D4C0A1&quot;</span><span class="p">,</span> <span class="s2">&quot;#F1E0C6&quot;</span><span class="p">]})</span>
         <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">previous_rank</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">previous_rank</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">member_rows</span><span class="p">:</span>
             <span class="n">columns</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">)</span>
-            <span class="c1"># Current member</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
-                <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">joined</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">values</span>
-                <span class="n">rank</span> <span class="o">=</span> <span class="n">previous_rank</span> <span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span> <span class="k">else</span> <span class="n">rank</span>
-                <span class="n">previous_rank</span> <span class="o">=</span> <span class="n">rank</span>
-                <span class="n">m</span> <span class="o">=</span> <span class="n">title_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-                    <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="n">title</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s2">&quot;rank&quot;</span><span class="p">:</span> <span class="n">rank</span><span class="p">,</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-                    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
-                    <span class="s2">&quot;vocation&quot;</span><span class="p">:</span> <span class="n">vocation</span><span class="p">,</span>
-                    <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
-                    <span class="s2">&quot;joined&quot;</span><span class="p">:</span> <span class="n">joined</span><span class="p">,</span>
-                    <span class="s2">&quot;online&quot;</span><span class="p">:</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;online&quot;</span>
-                <span class="p">})</span>
-            <span class="c1"># Invited character</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">name</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">values</span>
-                <span class="k">if</span> <span class="n">date</span> <span class="o">==</span> <span class="s2">&quot;Invitation Date&quot;</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-                    <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span>
-                <span class="p">})</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="n">COLS_GUILD_MEMBER</span><span class="p">:</span>
+                <span class="n">Guild</span><span class="o">.</span><span class="n">parse_current_member</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">previous_rank</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="n">COLS_INVITED_MEMBER</span><span class="p">:</span>
+                <span class="n">Guild</span><span class="o">.</span><span class="n">parse_invited_member</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_invited_member</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="k">if</span> <span class="n">date</span> <span class="o">!=</span> <span class="s2">&quot;Invitation Date&quot;</span><span class="p">:</span>
+            <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span>
+            <span class="p">})</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_current_member</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">previous_rank</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">joined</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">previous_rank</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span> <span class="k">else</span> <span class="n">rank</span>
+        <span class="n">previous_rank</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rank</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">title_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;rank&quot;</span><span class="p">:</span> <span class="n">rank</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+            <span class="s2">&quot;vocation&quot;</span><span class="p">:</span> <span class="n">vocation</span><span class="p">,</span>
+            <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
+            <span class="s2">&quot;joined&quot;</span><span class="p">:</span> <span class="n">joined</span><span class="p">,</span>
+            <span class="s2">&quot;online&quot;</span><span class="p">:</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;online&quot;</span>
+        <span class="p">})</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_guild_disband_info</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
