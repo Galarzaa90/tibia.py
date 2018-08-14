@@ -353,7 +353,7 @@ class Death:
     participants: :class:`list`
         List of all participants in the death.
     """
-    __slots__ = ("name", "level", "killer", "time", "is_player", "participants")
+    __slots__ = ("level", "killer", "time", "is_player", "name", "participants")
 
     def __init__(self, level=0, killer=None, time=None, is_player=False, name=None, participants=None):
         self.name = name
@@ -371,15 +371,17 @@ class Death:
     def __repr__(self) -> str:
         attributes = ""
         for attr in self.__slots__:
+            if attr in ["level", "killer"]:
+                continue
             v = getattr(self, attr)
-            if isinstance(v, int) and v == 0:
+            if isinstance(v, int) and v == 0 and type(v) is not bool:
                 continue
             if isinstance(v, list) and len(v) == 0:
                 continue
             if v is None:
                 continue
-            attributes += "%s=%r" % (attr, v)
-        return "{0.__class__.__name__}({1}".format(self, attributes)
+            attributes += ",%s=%r" % (attr, v)
+        return "{0.__class__.__name__}({0.level!r},{0.killer!r}{1})".format(self, attributes)
 
 
 class OtherCharacter(abc.Character):

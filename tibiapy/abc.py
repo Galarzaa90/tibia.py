@@ -19,7 +19,7 @@ class Character(metaclass=abc.ABCMeta):
             if attr in ["name"]:
                 continue
             v = getattr(self, attr)
-            if isinstance(v, int) and v == 0:
+            if isinstance(v, int) and v == 0 and type(v) is not bool:
                 continue
             if isinstance(v, list) and len(v) == 0:
                 continue

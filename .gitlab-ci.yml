@@ -30,6 +30,7 @@ test:
       - htmlcov/
 
 pages:
+  stage: build
   script:
     - pip install Sphinx
     - cd docs
