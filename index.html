@@ -434,9 +434,60 @@
 </dd></dl>
 
 <dl class="staticmethod">
+<dt id="tibiapy.Guild.json_list_from_content">
+<em class="property">static </em><code class="descname">json_list_from_content</code><span class="sig-paren">(</span><em>content</em>, <em>active_only=False</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.json_list_from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.json_list_from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a JSON string from the html content of the world guilds’ page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The html content of the page.</li>
+<li><strong>active_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to only show active guilds or not.</li>
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of spaces to indent the output with.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A string in JSON format.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="tibiapy.Guild.list_from_content">
+<em class="property">static </em><code class="descname">list_from_content</code><span class="sig-paren">(</span><em>content</em>, <em>active_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.list_from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.list_from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of guilds from the html content of the world guilds’ page.</p>
+<p>The <a class="reference internal" href="#tibiapy.Guild" title="tibiapy.Guild"><code class="xref py py-class docutils literal notranslate"><span class="pre">Guild</span></code></a> objects in the list only contain the attributes:
+<a class="reference internal" href="#tibiapy.Guild.name" title="tibiapy.Guild.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">name</span></code></a>, <a class="reference internal" href="#tibiapy.Guild.logo_url" title="tibiapy.Guild.logo_url"><code class="xref py py-attr docutils literal notranslate"><span class="pre">logo_url</span></code></a>, <a class="reference internal" href="#tibiapy.Guild.world" title="tibiapy.Guild.world"><code class="xref py py-attr docutils literal notranslate"><span class="pre">world</span></code></a> and if available, <a class="reference internal" href="#tibiapy.Guild.description" title="tibiapy.Guild.description"><code class="xref py py-attr docutils literal notranslate"><span class="pre">description</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The html content of the page.</li>
+<li><strong>active_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to only show active guilds or not.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of guilds in the current world.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List[<a class="reference internal" href="#tibiapy.Guild" title="tibiapy.Guild"><code class="xref py py-class docutils literal notranslate"><span class="pre">Guild</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
 <dt id="tibiapy.Guild.parse_to_json">
 <em class="property">static </em><code class="descname">parse_to_json</code><span class="sig-paren">(</span><em>content</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.parse_to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.parse_to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Static method that creates a JSON string from the html content of the guild’s page.</p>
+<dd><p>Creates a JSON string from the html content of the guild’s page.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -484,6 +535,24 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the guild</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the guild’s page</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="tibiapy.Guild.get_world_list_url">
+<em class="property">static </em><code class="descname">get_world_list_url</code><span class="sig-paren">(</span><em>world</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.get_world_list_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.get_world_list_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Tibia.com URL for the guild section of a specific world.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the world</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the guild’s page</td>
 </tr>
