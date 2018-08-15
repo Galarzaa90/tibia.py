@@ -27,7 +27,7 @@ docs:
   artifacts:
     name: Tibia.py_Sphinx
     paths:
-      - _build/
+      - docs/_build/
 
 coverage:
   stage: test
@@ -48,7 +48,7 @@ pages:
     - coverage
   script:
     - mv htmlcov/ public/coverage/
-    - mv _build/html public/
+    - mv docs/_build/html public/
   artifacts:
     paths:
       - public
