@@ -7,6 +7,7 @@ before_script:
 stages:
   - build
   - test
+  - deploy
 
 build:
   stage: build
@@ -17,7 +18,18 @@ build:
     paths:
       - dist/
 
-test:
+docs:
+  stage: build
+  script:
+    - pip install Sphinx
+    - cd docs
+    - make html
+  artifacts:
+    name: Tibia.py_Sphinx
+    paths:
+      - _build/
+
+coverage:
   stage: test
   script:
       - pip install coverage
@@ -30,12 +42,15 @@ test:
       - htmlcov/
 
 pages:
-  stage: build
+  stage: deploy
+  dependencies:
+    - docs
+    - coverage
   script:
-    - pip install Sphinx
-    - cd docs
-    - make html
-    - cp -r _build/html ../public
+    - mv htmlcov/ public/coverage/
+    - mv _build/html public/
   artifacts:
     paths:
       - public
+  only:
+    - master
