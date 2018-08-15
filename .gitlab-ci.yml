@@ -47,8 +47,9 @@ pages:
     - docs
     - coverage
   script:
+    - mkdir public
     - mv htmlcov/ public/coverage/
-    - mv docs/_build/html public/
+    - mv docs/_build/html/* public/
   artifacts:
     paths:
       - public
