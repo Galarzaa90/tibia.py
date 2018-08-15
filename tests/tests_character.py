@@ -5,7 +5,7 @@ from tibiapy.utils import parse_tibia_datetime
 PATH_CHARACTER_RESOURCE = "character.txt"
 
 
-class TestTibiaPy(TestTibiaPy):
+class TestCharacter(TestTibiaPy):
 
     def testGuilds(self):
         character = Character.from_content(self._get_parsed_content(PATH_CHARACTER_RESOURCE, False))

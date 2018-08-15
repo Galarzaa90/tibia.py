@@ -64,7 +64,15 @@ class Guild:
         self.world = world
         self.logo_url = kwargs.get("logo_url")
         self.description = kwargs.get("description")
-        self.founded = kwargs.get("founded")
+        _founded = kwargs.get("founded")
+        if isinstance(_founded, datetime.datetime):
+            self.founded = _founded.date()
+        elif isinstance(_founded, datetime.date):
+            self.founded = _founded
+        elif isinstance(_founded, str):
+            self.founded = parse_tibia_date(_founded)
+        else:
+            self.founded = None
         self.active = kwargs.get("active", False)
         self.guildhall = kwargs.get("guildhall")
         self.open_applications = kwargs.get("open_applications", False)
@@ -80,7 +88,7 @@ class Guild:
             if attr in ["name"]:
                 continue
             v = getattr(self, attr)
-            if isinstance(v, int) and v == 0 and type(v) is not bool:
+            if isinstance(v, int) and v == 0 and not isinstance(v, bool):
                 continue
             if isinstance(v, list) and len(v) == 0:
                 continue

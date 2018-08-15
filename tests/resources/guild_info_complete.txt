@@ -1,0 +1,10 @@
+<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
+<div id="GuildInformationContainer">Founded by Redditors of like mind, we help all those we can. We are always recruiting any players that can speak English, no matter your level.
+Be respectful of other players and you'll fit right in!<BR><BR>
+The guild was founded on Gladera on Jul&#160;23&#160;2015.<BR>
+It is currently active.<BR>
+Guild is opened for applications.<BR>
+The official homepage is at <A HREF="http://tibiammo.reddit.com" TARGET="_blank">tibiammo.reddit.com</A>.<BR>
+Their home on Gladera is Sky Lane, Guild 1. The rent is paid until Aug&#160;26&#160;2018.<BR>
+</div>
+</div>
