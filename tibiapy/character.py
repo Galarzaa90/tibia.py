@@ -119,6 +119,10 @@ class Character(abc.Character):
         return self.guild_membership["rank"] if self.guild_membership else None
 
     @staticmethod
+    def _beautiful_soup(content):
+        return bs4.BeautifulSoup(content, 'html.parser', parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+
+    @staticmethod
     def _parse(content):
         """
         Parses the character's page HTML content into a dictionary.
@@ -132,7 +136,7 @@ class Character(abc.Character):
         -------
         :class:`dict[str, Any]`
         """
-        parsed_content = bs4.BeautifulSoup(content, 'html.parser', parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+        parsed_content = Character._beautiful_soup(content)
         tables = Character._parse_tables(parsed_content)
         char = {}
         if "Character Information" in tables.keys():
@@ -336,6 +340,35 @@ class Character(abc.Character):
             title = table.find("td").text
             output[title] = table.find_all("tr")[1:]
         return output
+
+    @staticmethod
+    def _split_list(items, separator=",", last_separator=" and "):
+        """
+        Splits a string listing elements into an actual list.
+
+        Parameters
+        ----------
+        items: :class:`str`
+            A string listing elements.
+        separator: :class:`str`
+            The separator between each item. A comma by default.
+        last_separator: :class:`str`
+            The separator used for the last imte. ' and ' by default.
+
+        Returns
+        -------
+        List[str]
+            A list containing each one of the items.
+        """
+        if items is None:
+            return None
+        items = items.split(separator)
+        last_item = items[-1]
+        last_split = last_item.split(last_separator)
+        if len(last_split) > 1:
+            items[-1] = last_split[0]
+            items.append(last_split[1])
+        return [e.strip() for e in items]
 
     @staticmethod
     def parse_to_json(content, indent=None):

@@ -8,6 +8,7 @@ PATH_CHARACTER_RESOURCE = "character_regular.txt"
 FILE_CHARACTER_NOT_FOUND = "character_not_found.txt"
 FILE_CHARACTER_FORMER_NAMES = "character_former_names.txt"
 FILE_CHARACTER_DELETION = "character_deletion.txt"
+FILE_CHARACTER_DEATHS_COMPLEX = "character_deaths_complex.txt"
 
 
 class TestCharacter(TestTibiaPy):
@@ -53,3 +54,11 @@ class TestCharacter(TestTibiaPy):
         self.assertEqual("Expendable Dummy", char.name)
         self.assertIsNotNone(char.deletion_date)
         self.assertIsInstance(char.deletion_date, datetime.datetime)
+
+    def testCharacterComplexDeaths(self):
+        content = self._load_resource(FILE_CHARACTER_DEATHS_COMPLEX)
+        parsed_content = Character._beautiful_soup(content)
+        tables = Character._parse_tables(parsed_content)
+        self.assertTrue("Character Deaths" in tables.keys())
+        char = {}
+        Character._parse_deaths(char, tables["Character Deaths"])

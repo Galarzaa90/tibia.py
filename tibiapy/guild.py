@@ -142,7 +142,7 @@ class Guild:
     @staticmethod
     def _beautiful_soup(content):
         return BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                                       parse_only=SoupStrainer("div", class_="BoxContent"))
+                             parse_only=SoupStrainer("div", class_="BoxContent"))
 
     @staticmethod
     def _parse_guild_name(guild, parsed_content):
