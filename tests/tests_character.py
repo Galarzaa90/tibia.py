@@ -7,7 +7,7 @@ from tibiapy.utils import parse_tibia_datetime
 PATH_CHARACTER_RESOURCE = "character_regular.txt"
 FILE_CHARACTER_NOT_FOUND = "character_not_found.txt"
 FILE_CHARACTER_FORMER_NAMES = "character_former_names.txt"
-FILE_CHARACTER_DELETION = "Character_deletion.txt"
+FILE_CHARACTER_DELETION = "character_deletion.txt"
 
 
 class TestCharacter(TestTibiaPy):
