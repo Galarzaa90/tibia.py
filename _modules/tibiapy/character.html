@@ -243,7 +243,7 @@
 <span class="sd">        rows: :class:`List[bs4.Tag]`</span>
 <span class="sd">            A list of all rows contained in the table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">INT_ROWS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;achievement_points&quot;</span><span class="p">]</span>
+        <span class="n">int_rows</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;achievement_points&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
             <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">ele</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">]</span>
@@ -264,7 +264,7 @@
                     <span class="s2">&quot;paid_until&quot;</span><span class="p">:</span> <span class="n">paid_until</span>
                 <span class="p">}</span>
                 <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">INT_ROWS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">int_rows</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="n">char</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">deleted_regexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
@@ -486,6 +486,7 @@
 <span class="sd">        str</span>
 <span class="sd">            The URL to the character&#39;s page&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">CHARACTER_URL</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div></div>
+
 
 <div class="viewcode-block" id="Death"><a class="viewcode-back" href="../../index.html#tibiapy.Death">[docs]</a><span class="k">class</span> <span class="nc">Death</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
