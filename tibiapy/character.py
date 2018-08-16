@@ -2,9 +2,10 @@ import datetime
 import json
 import re
 import urllib.parse
-from typing import Optional
+from collections import OrderedDict
+from typing import Optional, List
 
-from bs4 import BeautifulSoup, SoupStrainer
+import bs4
 
 from . import abc
 from .const import CHARACTER_URL
@@ -119,113 +120,121 @@ class Character(abc.Character):
 
     @staticmethod
     def _parse(content):
-        parsed_content = BeautifulSoup(content, 'html.parser', parse_only=SoupStrainer("div", class_="BoxContent"))
-        tables = parsed_content.find_all('table', attrs={"width": "100%"})
+        """
+        Parses the character's page HTML content into a dictionary.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the character's page.
+
+        Returns
+        -------
+        :class:`dict[str, Any]`
+        """
+        parsed_content = bs4.BeautifulSoup(content, 'html.parser', parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+        tables = Character._parse_tables(parsed_content)
         char = {}
-        achievements = []
-        deaths = []
-        other_characters = []
-        account_information = {}
-        if len(tables) == 1:
-            # This happens when an unsupported symbol was in the name.
-            # Should I handle this as a separate case?
+        if "Character Information" in tables.keys():
+            Character._parse_character_information(char, tables["Character Information"])
+        else:
             return {}
-        for table in tables:
-            header = table.find('td')
-            rows = table.find_all('tr')
-            if "Could not find" in header.text:
-                return {}
-            if "Character Information" in header.text:
-                for row in rows:
-                    cols_raw = row.find_all('td')
-                    cols = [ele.text.strip() for ele in cols_raw]
-                    if len(cols) != 2:
-                        continue
-                    field, value = cols
-                    field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
-                    value = value.replace("\xa0", " ")
-                    # This is a special case cause we need to see the link
-                    if field == "house":
-                        house_text = value
-                        paid_until = house_regexp.search(house_text).group(1)
-                        house_link = cols_raw[1].find('a')
-                        url = urllib.parse.urlparse(house_link["href"])
-                        query = urllib.parse.parse_qs(url.query)
-                        char["house"] = {
-                            "town": query["town"][0],
-                            "id": int(query["houseid"][0]),
-                            "name": house_link.text.strip(),
-                            "paid_until": paid_until
-                        }
-                        continue
-                    char[field] = value
-            elif "Achievements" in header.text:
-                for row in rows:
-                    cols = row.find_all('td')
-                    if len(cols) != 2:
-                        continue
-                    field, value = cols
-                    grade = str(field).count("achievement-grade-symbol")
-                    achievement = value.text.strip()
-                    achievements.append({
-                        "grade": grade,
-                        "name": achievement
-                    })
-            elif "Deaths" in header.text:
-                for row in rows:
-                    cols_raw = row.find_all('td')
-                    cols = [ele.text.strip() for ele in cols_raw]
-                    if len(cols) != 2:
-                        continue
-                    death_time, death = cols
-                    death_time = death_time.replace("\xa0", " ")
-                    death_info = death_regexp.search(death)
-                    if death_info:
-                        level = death_info.group(1)
-                        killer = death_info.group(2)
-                    else:
-                        continue
-                    death_link = cols_raw[1].find('a')
-                    death_player = False
-                    if death_link:
-                        death_player = True
-                        killer = death_link.text.strip().replace("\xa0", " ")
-                    try:
-                        deaths.append({'time': death_time, 'level': int(level), 'killer': killer,
-                                       'is_player': death_player})
-                    except ValueError:
-                        # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
-                        continue
-            elif "Account Information" in header.text:
-                for row in rows:
-                    cols_raw = row.find_all('td')
-                    cols = [ele.text.strip() for ele in cols_raw]
-                    if len(cols) != 2:
-                        continue
-                    field, value = cols
-                    field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
-                    value = value.replace("\xa0", " ")
-                    account_information[field] = value
-            elif "Characters" in header.text:
-                for row in rows:
-                    cols_raw = row.find_all('td')
-                    cols = [ele.text.strip() for ele in cols_raw]
-                    if len(cols) != 5:
-                        continue
-                    _name, world, status, __, __ = cols
-                    _name = _name.replace("\xa0", " ").split(". ")[1]
-                    other_characters.append(
-                        {'name': _name, 'world': world, 'online': status == "online", 'deleted': status == "deleted"})
-        # Converting values to int
+        Character._parse_achievements(char, tables.get("Account Achievements", []))
+        Character._parse_deaths(char, tables.get("Character Deaths", []))
+        Character._parse_account_information(char, tables.get("Account Information", []))
+        Character._parse_other_characters(char, tables.get("Characters", []))
+        return char
+
+    @staticmethod
+    def _parse_account_information(char, rows):
+        """
+        Parses the character's account information
+
+        Parameters
+        ----------
+        char: :class:`dict`[str,Any]
+            Dictionary where information will be stored.
+        rows: :class:`List[bs4.Tag]`
+            A list of all rows contained in the table.
+        """
+        char["account_information"] = {}
+        for row in rows:
+            cols_raw = row.find_all('td')
+            cols = [ele.text.strip() for ele in cols_raw]
+            field, value = cols
+            field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
+            value = value.replace("\xa0", " ")
+            char["account_information"][field] = value
+
+    @staticmethod
+    def _parse_achievements(char, rows):
+        """
+        Parses the character's displayed achievements
+
+        Parameters
+        ----------
+        char: :class:`dict`[str,Any]
+            Dictionary where information will be stored.
+        rows: :class:`List[bs4.Tag]`
+            A list of all rows contained in the table.
+        """
+        achievements = []
+        for row in rows:
+            cols = row.find_all('td')
+            if len(cols) != 2:
+                continue
+            field, value = cols
+            grade = str(field).count("achievement-grade-symbol")
+            achievement = value.text.strip()
+            achievements.append({
+                "grade": grade,
+                "name": achievement
+            })
+        char["achievements"] = achievements
+
+    @staticmethod
+    def _parse_character_information(char, rows):
+        """
+        Parses the character's basic information.
+
+        Parameters
+        ----------
+        char: :class:`dict`[str,Any]
+            Dictionary where information will be stored.
+        rows: :class:`List[bs4.Tag]`
+            A list of all rows contained in the table.
+        """
+        INT_ROWS = ["level", "achievement_points"]
+        for row in rows:
+            cols_raw = row.find_all('td')
+            cols = [ele.text.strip() for ele in cols_raw]
+            field, value = cols
+            field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
+            value = value.replace("\xa0", " ")
+            # This is a special case cause we need to see the link
+            if field == "house":
+                house_text = value
+                paid_until = house_regexp.search(house_text).group(1)
+                house_link = cols_raw[1].find('a')
+                url = urllib.parse.urlparse(house_link["href"])
+                query = urllib.parse.parse_qs(url.query)
+                char["house"] = {
+                    "town": query["town"][0],
+                    "id": int(query["houseid"][0]),
+                    "name": house_link.text.strip(),
+                    "paid_until": paid_until
+                }
+                continue
+            if field in INT_ROWS:
+                value = int(value)
+            char[field] = value
         m = deleted_regexp.match(char["name"])
         if m:
             char["name"] = m.group(1)
             char["deletion_date"] = m.group(2)
-        char["deletion_date"] = None
-        char["level"] = int(char["level"])
-        char["achievement_points"] = int(char["achievement_points"])
-        if "house" not in char:
-            char["house"] = None
+        else:
+            char["deletion_date"] = None
+
         if "guild_membership" in char:
             m = guild_regexp.match(char["guild_membership"])
             char["guild_membership"] = {
@@ -234,18 +243,99 @@ class Character(abc.Character):
             }
         else:
             char["guild_membership"] = None
+
         if "former_names" in char:
             former_names = [fn.strip() for fn in char["former_names"].split(",")]
             char["former_names"] = former_names
         else:
             char["former_names"] = []
+
         if "married_to" not in char:
             char["married_to"] = None
-        char["achievements"] = achievements
+
+    @staticmethod
+    def _parse_deaths(char, rows):
+        """
+        Parses the character's recent deaths
+
+        Parameters
+        ----------
+        char: :class:`dict`[str,Any]
+            Dictionary where information will be stored.
+        rows: :class:`List[bs4.Tag]`
+            A list of all rows contained in the table.
+        """
+        deaths = []
+        for row in rows:
+            cols_raw = row.find_all('td')
+            cols = [ele.text.strip() for ele in cols_raw]
+            if len(cols) != 2:
+                continue
+            death_time, death = cols
+            death_time = death_time.replace("\xa0", " ")
+            death_info = death_regexp.search(death)
+            if death_info:
+                level = death_info.group(1)
+                killer = death_info.group(2)
+            else:
+                continue
+            death_link = cols_raw[1].find('a')
+            death_player = False
+            if death_link:
+                death_player = True
+                killer = death_link.text.strip().replace("\xa0", " ")
+            try:
+                deaths.append({'time': death_time, 'level': int(level), 'killer': killer,
+                               'is_player': death_player})
+            except ValueError:
+                # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
+                continue
         char["deaths"] = deaths
-        char["account_information"] = account_information
-        char["other_characters"] = other_characters
-        return char
+
+    @staticmethod
+    def _parse_other_characters(char, rows):
+        """
+        Parses the character's other visible characters.
+
+        Parameters
+        ----------
+        char: :class:`dict`[str,Any]
+            Dictionary where information will be stored.
+        rows: :class:`List[bs4.Tag]`
+            A list of all rows contained in the table.
+        """
+        char["other_characters"] = []
+        for row in rows:
+            cols_raw = row.find_all('td')
+            cols = [ele.text.strip() for ele in cols_raw]
+            if len(cols) != 5:
+                continue
+            _name, world, status, __, __ = cols
+            _name = _name.replace("\xa0", " ").split(". ")[1]
+            char["other_characters"].append(
+                {'name': _name, 'world': world, 'online': status == "online", 'deleted': status == "deleted"})
+
+    @staticmethod
+    def _parse_tables(parsed_content):
+        """
+        Parses the information tables contained in a character's page.
+
+        Parameters
+        ----------
+        parsed_content: :class:`bs4.BeautifulSoup`
+            A :class:`BeautifulSoup` object containing all the content.
+
+        Returns
+        -------
+        :class:`OrderedDict`[str, List[:class:`bs4.Tag`]]
+            A dictionary containing all the table rows, with the table headers as keys.
+        """
+        tables = parsed_content.find_all('table', attrs={"width": "100%"})
+        output = OrderedDict()
+        for table in tables:
+            title = table.find("td").text
+            output[title] = table.find_all("tr")[1:]
+        return output
 
     @staticmethod
     def parse_to_json(content, indent=None):
