@@ -1,0 +1,15 @@
+<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
+  <TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
+  <TR><TD BGCOLOR="#505050" CLASS=white><B>Could not find character</B></TD></TR>
+  <TR><TD BGCOLOR="#D4C0A1"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Character <b>afasfagf</b> does not exist.</TD></TR></TABLE></TD></TR>
+  </TABLE>
+  <br /><br />  <FORM ACTION="https://www.tibia.com/community/?subtopic=characters" METHOD=post>
+  <TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
+  <TR><TD BGCOLOR="#505050" CLASS=white><B>Search Character</B></TD></TR>
+  <TR><TD BGCOLOR="#D4C0A1"><TABLE BORDER=0 CELLPADDING=1><TR>
+  <TD>Name:</TD><TD><INPUT NAME="name" VALUE="afasfagf"SIZE=29 MAXLENGTH=29></TD>
+  <TD><INPUT TYPE=image NAME="Submit" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD>
+  </TR></TABLE></TD></TR>
+  </TABLE>
+  </FORM>
+          </div>

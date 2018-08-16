@@ -111,12 +111,12 @@ class Character(abc.Character):
     @property
     def guild_name(self):
         """Optional[:class:`str`]: The name of the guild the character belongs to, or `None`."""
-        return None if self.guild_membership is None else self.guild_membership["guild"]
+        return self.guild_membership["guild"] if self.guild_membership else None
 
     @property
     def guild_rank(self):
         """Optional[:class:`str`]: The character's rank in the guild they belong to, or `None`."""
-        return None if self.guild_membership is None else self.guild_membership["rank"]
+        return self.guild_membership["rank"] if self.guild_membership else None
 
     @staticmethod
     def _parse(content):

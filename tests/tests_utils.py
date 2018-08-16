@@ -3,7 +3,7 @@ import datetime
 import tibiapy.utils
 from tests.tests_tibiapy import TestTibiaPy
 
-PATH_CHARACTER_RESOURCE = "character.txt"
+PATH_CHARACTER_RESOURCE = "character_regular.txt"
 
 
 class TestUtils(TestTibiaPy):
