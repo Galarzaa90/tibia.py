@@ -220,8 +220,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The HTML content of the page.</li>
-<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of spaces to indent the output with.</li>
+<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</li>
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of spaces to indent the output with.</li>
 </ul>
 </td>
 </tr>
@@ -284,7 +284,7 @@
 <h2>Death<a class="headerlink" href="#death" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="tibiapy.Death">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Death</code><span class="sig-paren">(</span><em>level=0</em>, <em>killer=None</em>, <em>time=None</em>, <em>is_player=False</em>, <em>name=None</em>, <em>participants=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Death"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Death" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Death</code><span class="sig-paren">(</span><em>name=None</em>, <em>level=0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Death"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Death" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a death by a character</p>
 <dl class="attribute">
 <dt id="tibiapy.Death.name">
@@ -295,13 +295,19 @@
 <dl class="attribute">
 <dt id="tibiapy.Death.level">
 <code class="descname">level</code><a class="headerlink" href="#tibiapy.Death.level" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The level at which the level occurred.</p>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The level at which the death occurred.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="tibiapy.Death.killer">
-<code class="descname">killer</code><a class="headerlink" href="#tibiapy.Death.killer" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The main killer.</p>
+<dt id="tibiapy.Death.killers">
+<code class="descname">killers</code><a class="headerlink" href="#tibiapy.Death.killers" title="Permalink to this definition">¶</a></dt>
+<dd><p>List[<a class="reference internal" href="#tibiapy.Killer" title="tibiapy.Killer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Killer</span></code></a>] – A list of all the killers involved.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Death.assists">
+<code class="descname">assists</code><a class="headerlink" href="#tibiapy.Death.assists" title="Permalink to this definition">¶</a></dt>
+<dd><p>List[<a class="reference internal" href="#tibiapy.Killer" title="tibiapy.Killer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Killer</span></code></a>] – A list of characters that were involved, without dealing damage.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -311,15 +317,16 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="tibiapy.Death.is_player">
-<code class="descname">is_player</code><a class="headerlink" href="#tibiapy.Death.is_player" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – True if the killer is a player, False otherwise.</p>
+<dt id="tibiapy.Death.killer">
+<code class="descname">killer</code><a class="headerlink" href="#tibiapy.Death.killer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional[<a class="reference internal" href="#tibiapy.Killer" title="tibiapy.Killer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Killer</span></code></a>] – The first killer in the list.</p>
+<p>This is usually the killer that gave the killing blow.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="tibiapy.Death.participants">
-<code class="descname">participants</code><a class="headerlink" href="#tibiapy.Death.participants" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> – List of all participants in the death.</p>
+<dt id="tibiapy.Death.by_player">
+<code class="descname">by_player</code><a class="headerlink" href="#tibiapy.Death.by_player" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the kill involves other characters.</p>
 </dd></dl>
 
 </dd></dl>
@@ -652,6 +659,39 @@
 </dd></dl>
 
 </div>
+<div class="section" id="killer">
+<h2>Killer<a class="headerlink" href="#killer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tibiapy.Killer">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Killer</code><span class="sig-paren">(</span><em>name=None</em>, <em>player=False</em>, <em>summon=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Killer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Killer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a killer.</p>
+<p>A killer can be:</p>
+<ol class="loweralpha simple">
+<li>Another character.</li>
+<li>A creature.</li>
+<li>A creature summoned by a character.</li>
+</ol>
+<dl class="attribute">
+<dt id="tibiapy.Killer.name">
+<code class="descname">name</code><a class="headerlink" href="#tibiapy.Killer.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the killer.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Killer.player">
+<code class="descname">player</code><a class="headerlink" href="#tibiapy.Killer.player" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the killer is a player or not.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Killer.summon">
+<code class="descname">summon</code><a class="headerlink" href="#tibiapy.Killer.summon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The name of the summoned creature, if applicable.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="other-character">
 <h2>Other Character<a class="headerlink" href="#other-character" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -781,6 +821,7 @@
 <li class="toctree-l1"><a class="reference internal" href="#auxiliary-classes">Auxiliary Classes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#guild-invite">Guild Invite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#guild-member">Guild Member</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#killer">Killer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#other-character">Other Character</a></li>
 </ul>
 </li>

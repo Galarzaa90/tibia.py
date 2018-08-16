@@ -47,7 +47,15 @@
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">parse_tibia_datetime</span>
 
 <span class="n">deleted_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([^,]+), will be deleted at (.*)&#39;</span><span class="p">)</span>
-<span class="n">death_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Level (\d+) by ([^.]+)&#39;</span><span class="p">)</span>
+<span class="c1"># Extracts the death&#39;s level and killers.</span>
+<span class="n">death_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Level (?P&lt;level&gt;\d+) by (?P&lt;killers&gt;.*)\.&lt;/td&gt;&#39;</span><span class="p">)</span>
+<span class="c1"># From the killers list, filters out the assists.</span>
+<span class="n">death_assisted</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;killers&gt;.+)\.&lt;br/&gt;Assisted by (?P&lt;assists&gt;.+)&#39;</span><span class="p">)</span>
+<span class="c1"># From a killer entry, extracts the summoned creature</span>
+<span class="n">death_summon</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;summon&gt;.+) of &lt;a[^&gt;]+&gt;(?P&lt;name&gt;[^&lt;]+)&lt;/a&gt;&#39;</span><span class="p">)</span>
+<span class="c1"># Extracts the contents of a tag</span>
+<span class="n">link_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&gt;([^&lt;]+)&lt;&#39;</span><span class="p">)</span>
+
 <span class="n">house_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;paid until (.*)&#39;</span><span class="p">)</span>
 <span class="n">guild_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([\s\w]+)\sof the\s(.+)&#39;</span><span class="p">)</span>
 
@@ -306,26 +314,41 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">deaths</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-            <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
-            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">ele</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">]</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">death_time</span><span class="p">,</span> <span class="n">death</span> <span class="o">=</span> <span class="n">cols</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
+            <span class="n">death_time</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">death</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
             <span class="n">death_time</span> <span class="o">=</span> <span class="n">death_time</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
             <span class="n">death_info</span> <span class="o">=</span> <span class="n">death_regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">death</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">death_info</span><span class="p">:</span>
-                <span class="n">level</span> <span class="o">=</span> <span class="n">death_info</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">killer</span> <span class="o">=</span> <span class="n">death_info</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">death_info</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;level&quot;</span><span class="p">))</span>
+                <span class="n">killers_str</span> <span class="o">=</span> <span class="n">death_info</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">death_link</span> <span class="o">=</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
-            <span class="n">death_player</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">death_link</span><span class="p">:</span>
-                <span class="n">death_player</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">killer</span> <span class="o">=</span> <span class="n">death_link</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">assists</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># Check if the killers list contains assists</span>
+            <span class="n">assist_match</span> <span class="o">=</span> <span class="n">death_assisted</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">killers_str</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">assist_match</span><span class="p">:</span>
+                <span class="c1"># Filter out assists</span>
+                <span class="n">killers_str</span> <span class="o">=</span> <span class="n">assist_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">)</span>
+                <span class="c1"># Split assists into a list.</span>
+                <span class="n">assists</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">_split_list</span><span class="p">(</span><span class="n">assist_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">))</span>
+            <span class="n">killers</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">_split_list</span><span class="p">(</span><span class="n">killers_str</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">killer</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">killers</span><span class="p">):</span>
+                <span class="c1"># If the killer contains a link, it is a player.</span>
+                <span class="k">if</span> <span class="s2">&quot;href&quot;</span> <span class="ow">in</span> <span class="n">killer</span><span class="p">:</span>
+                    <span class="n">killer_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">link_content</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">killer</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">killer_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">killer</span><span class="p">,</span> <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+                <span class="c1"># Check if it contains a summon.</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">death_summon</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">killer</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                    <span class="n">killer_dict</span><span class="p">[</span><span class="s2">&quot;summon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;summon&quot;</span><span class="p">)</span>
+                <span class="n">killers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">killer_dict</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">assist</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">assists</span><span class="p">):</span>
+                <span class="c1"># Extract names from character links in assists list.</span>
+                <span class="n">assists</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">link_content</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">assist</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">deaths</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">death_time</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">),</span> <span class="s1">&#39;killer&#39;</span><span class="p">:</span> <span class="n">killer</span><span class="p">,</span>
-                               <span class="s1">&#39;is_player&#39;</span><span class="p">:</span> <span class="n">death_player</span><span class="p">})</span>
+                <span class="n">deaths</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">death_time</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="n">level</span><span class="p">,</span> <span class="s1">&#39;killers&#39;</span><span class="p">:</span> <span class="n">killers</span><span class="p">,</span> <span class="s1">&#39;assists&#39;</span><span class="p">:</span> <span class="n">assists</span><span class="p">})</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="c1"># Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.</span>
                 <span class="k">continue</span>
@@ -388,11 +411,11 @@
 <span class="sd">        separator: :class:`str`</span>
 <span class="sd">            The separator between each item. A comma by default.</span>
 <span class="sd">        last_separator: :class:`str`</span>
-<span class="sd">            The separator used for the last imte. &#39; and &#39; by default.</span>
+<span class="sd">            The separator used for the last item. &#39; and &#39; by default.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        List[str]</span>
+<span class="sd">        List[:class:`str`]</span>
 <span class="sd">            A list containing each one of the items.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -411,9 +434,9 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        -------------</span>
-<span class="sd">        content: str</span>
+<span class="sd">        content: :class:`str`</span>
 <span class="sd">            The HTML content of the page.</span>
-<span class="sd">        indent: int</span>
+<span class="sd">        indent: :class:`int`</span>
 <span class="sd">            The number of spaces to indent the output with.</span>
 
 <span class="sd">        Returns</span>
@@ -498,39 +521,40 @@
 <span class="sd">        The name of the character this death belongs to.</span>
 
 <span class="sd">    level: :class:`int`</span>
-<span class="sd">        The level at which the level occurred.</span>
+<span class="sd">        The level at which the death occurred.</span>
 
-<span class="sd">    killer: :class:`str`</span>
-<span class="sd">        The main killer.</span>
+<span class="sd">    killers: List[:class:`Killer`]</span>
+<span class="sd">        A list of all the killers involved.</span>
+
+<span class="sd">    assists: List[:class:`Killer`]</span>
+<span class="sd">        A list of characters that were involved, without dealing damage.</span>
 
 <span class="sd">    time: :class:`datetime.datetime`</span>
 <span class="sd">        The time at which the death occurred.</span>
-
-<span class="sd">    is_player: :class:`bool`</span>
-<span class="sd">        True if the killer is a player, False otherwise.</span>
-
-<span class="sd">    participants: :class:`list`</span>
-<span class="sd">        List of all participants in the death.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;killer&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;is_player&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;participants&quot;</span><span class="p">)</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;killers&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;assists&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">killer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_player</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">participants</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">killer</span> <span class="o">=</span> <span class="n">killer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">killers</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">killers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Killer</span><span class="p">(</span><span class="o">**</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assists</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assists</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assists</span> <span class="o">=</span> <span class="p">[</span><span class="n">Killer</span><span class="p">(</span><span class="o">**</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assists</span><span class="p">]</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_player</span> <span class="o">=</span> <span class="n">is_player</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">participants</span> <span class="o">=</span> <span class="n">participants</span> <span class="ow">or</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">attributes</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;killer&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;level&quot;</span><span class="p">]:</span>
                 <span class="k">continue</span>
             <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -540,8 +564,59 @@
             <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">attributes</span> <span class="o">+=</span> <span class="s2">&quot;,</span><span class="si">%s</span><span class="s2">=</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0.__class__.__name__}</span><span class="s2">(</span><span class="si">{0.level!r}</span><span class="s2">,</span><span class="si">{0.killer!r}{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0.__class__.__name__}</span><span class="s2">(</span><span class="si">{0.name!r}</span><span class="s2">,</span><span class="si">{0.level!r}{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">killer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Optional[:class:`Killer`]: The first killer in the list.</span>
+
+<span class="sd">        This is usually the killer that gave the killing blow.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">by_player</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the kill involves other characters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="n">k</span><span class="o">.</span><span class="n">player</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">k</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Killer"><a class="viewcode-back" href="../../index.html#tibiapy.Killer">[docs]</a><span class="k">class</span> <span class="nc">Killer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a killer.</span>
+
+<span class="sd">    A killer can be:</span>
+
+<span class="sd">    a) Another character.</span>
+<span class="sd">    b) A creature.</span>
+<span class="sd">    c) A creature summoned by a character.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    -----------</span>
+<span class="sd">    name: :class:`str`</span>
+<span class="sd">        The name of the killer.</span>
+<span class="sd">    player: :class:`bool`</span>
+<span class="sd">        Whether the killer is a player or not.</span>
+<span class="sd">    summon: Optional[:class:`str`]</span>
+<span class="sd">        The name of the summoned creature, if applicable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;player&quot;</span><span class="p">,</span> <span class="s2">&quot;summon&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">player</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">summon</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">player</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">summon</span> <span class="o">=</span> <span class="n">summon</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">attributes</span> <span class="o">+=</span> <span class="s2">&quot;,</span><span class="si">%s</span><span class="s2">=</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0.__class__.__name__}</span><span class="s2">(</span><span class="si">{0.name!r}{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OtherCharacter"><a class="viewcode-back" href="../../index.html#tibiapy.OtherCharacter">[docs]</a><span class="k">class</span> <span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Character</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
