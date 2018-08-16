@@ -208,7 +208,7 @@ class Character(abc.Character):
         rows: :class:`List[bs4.Tag]`
             A list of all rows contained in the table.
         """
-        INT_ROWS = ["level", "achievement_points"]
+        int_rows = ["level", "achievement_points"]
         for row in rows:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
@@ -229,7 +229,7 @@ class Character(abc.Character):
                     "paid_until": paid_until
                 }
                 continue
-            if field in INT_ROWS:
+            if field in int_rows:
                 value = int(value)
             char[field] = value
         m = deleted_regexp.match(char["name"])
@@ -451,6 +451,7 @@ class Character(abc.Character):
         str
             The URL to the character's page"""
         return CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
+
 
 class Death:
     """

@@ -4,7 +4,7 @@ from tests.tests_tibiapy import TestTibiaPy
 from tibiapy import Character
 from tibiapy.utils import parse_tibia_datetime
 
-PATH_CHARACTER_RESOURCE = "character_regular.txt"
+FILE_CHARACTER_RESOURCE = "character_regular.txt"
 FILE_CHARACTER_NOT_FOUND = "character_not_found.txt"
 FILE_CHARACTER_FORMER_NAMES = "character_former_names.txt"
 FILE_CHARACTER_DELETION = "character_deletion.txt"
@@ -13,7 +13,7 @@ FILE_CHARACTER_DEATHS_COMPLEX = "character_deaths_complex.txt"
 
 class TestCharacter(TestTibiaPy):
     def testGuilds(self):
-        character = Character.from_content(self._get_parsed_content(PATH_CHARACTER_RESOURCE, False))
+        character = Character.from_content(self._get_parsed_content(FILE_CHARACTER_RESOURCE, False))
         self._compare_character(Character("Tschas", "Gladera", "Druid", 205, "female"), character)
         self.assertIsNotNone(character.guild_membership)
         self.assertEqual("Redd Alliance", character.guild_membership["guild"])
@@ -54,6 +54,7 @@ class TestCharacter(TestTibiaPy):
         self.assertEqual("Expendable Dummy", char.name)
         self.assertIsNotNone(char.deletion_date)
         self.assertIsInstance(char.deletion_date, datetime.datetime)
+        self.assertEqual(parse_tibia_datetime("Oct 08 2018 22:17:00 CEST"), char.deletion_date)
 
     def testCharacterComplexDeaths(self):
         content = self._load_resource(FILE_CHARACTER_DEATHS_COMPLEX)
