@@ -177,7 +177,7 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_beautiful_soup</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="s1">&#39;lxml&#39;</span><span class="p">,</span>
-                                       <span class="n">parse_only</span><span class="o">=</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;BoxContent&quot;</span><span class="p">))</span>
+                             <span class="n">parse_only</span><span class="o">=</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;BoxContent&quot;</span><span class="p">))</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_name</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>

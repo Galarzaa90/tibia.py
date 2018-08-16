@@ -154,6 +154,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_beautiful_soup</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">,</span> <span class="n">parse_only</span><span class="o">=</span><span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;BoxContent&quot;</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses the character&#39;s page HTML content into a dictionary.</span>
@@ -167,7 +171,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`dict[str, Any]`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">,</span> <span class="n">parse_only</span><span class="o">=</span><span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;BoxContent&quot;</span><span class="p">))</span>
+        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">_beautiful_soup</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="n">tables</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">_parse_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">)</span>
         <span class="n">char</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="s2">&quot;Character Information&quot;</span> <span class="ow">in</span> <span class="n">tables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -371,6 +375,35 @@
             <span class="n">title</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
             <span class="n">output</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">return</span> <span class="n">output</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_split_list</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">last_separator</span><span class="o">=</span><span class="s2">&quot; and &quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Splits a string listing elements into an actual list.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        items: :class:`str`</span>
+<span class="sd">            A string listing elements.</span>
+<span class="sd">        separator: :class:`str`</span>
+<span class="sd">            The separator between each item. A comma by default.</span>
+<span class="sd">        last_separator: :class:`str`</span>
+<span class="sd">            The separator used for the last imte. &#39; and &#39; by default.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List[str]</span>
+<span class="sd">            A list containing each one of the items.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator</span><span class="p">)</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">last_split</span> <span class="o">=</span> <span class="n">last_item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">last_separator</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_split</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">last_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_split</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>
 
 <div class="viewcode-block" id="Character.parse_to_json"><a class="viewcode-back" href="../../index.html#tibiapy.Character.parse_to_json">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_to_json</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
