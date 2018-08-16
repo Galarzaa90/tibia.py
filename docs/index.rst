@@ -94,6 +94,11 @@ Guild Member
    :members:
    :inherited-members:
 
+Killer
+----------------
+.. autoclass:: Killer
+   :members:
+
 Other Character
 -----------------
 .. autoclass:: OtherCharacter

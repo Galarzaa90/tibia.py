@@ -12,7 +12,15 @@ from .const import CHARACTER_URL
 from .utils import parse_tibia_datetime
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
-death_regexp = re.compile(r'Level (\d+) by ([^.]+)')
+# Extracts the death's level and killers.
+death_regexp = re.compile(r'Level (?P<level>\d+) by (?P<killers>.*)\.</td>')
+# From the killers list, filters out the assists.
+death_assisted = re.compile(r'(?P<killers>.+)\.<br/>Assisted by (?P<assists>.+)')
+# From a killer entry, extracts the summoned creature
+death_summon = re.compile(r'(?P<summon>.+) of <a[^>]+>(?P<name>[^<]+)</a>')
+# Extracts the contents of a tag
+link_content = re.compile(r'>([^<]+)<')
+
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
@@ -271,26 +279,41 @@ class Character(abc.Character):
         """
         deaths = []
         for row in rows:
-            cols_raw = row.find_all('td')
-            cols = [ele.text.strip() for ele in cols_raw]
-            if len(cols) != 2:
-                continue
-            death_time, death = cols
+            cols = row.find_all('td')
+            death_time = cols[0].text.strip()
+            death = str(cols[1]).replace("\xa0", " ")
             death_time = death_time.replace("\xa0", " ")
             death_info = death_regexp.search(death)
             if death_info:
-                level = death_info.group(1)
-                killer = death_info.group(2)
+                level = int(death_info.group("level"))
+                killers_str = death_info.group("killers")
             else:
                 continue
-            death_link = cols_raw[1].find('a')
-            death_player = False
-            if death_link:
-                death_player = True
-                killer = death_link.text.strip().replace("\xa0", " ")
+            assists = []
+            # Check if the killers list contains assists
+            assist_match = death_assisted.search(killers_str)
+            if assist_match:
+                # Filter out assists
+                killers_str = assist_match.group("killers")
+                # Split assists into a list.
+                assists = Character._split_list(assist_match.group("assists"))
+            killers = Character._split_list(killers_str)
+            for (i, killer) in enumerate(killers):
+                # If the killer contains a link, it is a player.
+                if "href" in killer:
+                    killer_dict = {"name": link_content.search(killer).group(1), "player": True}
+                else:
+                    killer_dict = {"name": killer, "player": False}
+                # Check if it contains a summon.
+                m = death_summon.search(killer)
+                if m:
+                    killer_dict["summon"] = m.group("summon")
+                killers[i] = killer_dict
+            for (i, assist) in enumerate(assists):
+                # Extract names from character links in assists list.
+                assists[i] = {"name": link_content.search(assist).group(1), "player": True}
             try:
-                deaths.append({'time': death_time, 'level': int(level), 'killer': killer,
-                               'is_player': death_player})
+                deaths.append({'time': death_time, 'level': level, 'killers': killers, 'assists': assists})
             except ValueError:
                 # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                 continue
@@ -353,11 +376,11 @@ class Character(abc.Character):
         separator: :class:`str`
             The separator between each item. A comma by default.
         last_separator: :class:`str`
-            The separator used for the last imte. ' and ' by default.
+            The separator used for the last item. ' and ' by default.
 
         Returns
         -------
-        List[str]
+        List[:class:`str`]
             A list containing each one of the items.
         """
         if items is None:
@@ -376,9 +399,9 @@ class Character(abc.Character):
 
         Parameters
         -------------
-        content: str
+        content: :class:`str`
             The HTML content of the page.
-        indent: int
+        indent: :class:`int`
             The number of spaces to indent the output with.
 
         Returns
@@ -463,39 +486,40 @@ class Death:
         The name of the character this death belongs to.
 
     level: :class:`int`
-        The level at which the level occurred.
+        The level at which the death occurred.
 
-    killer: :class:`str`
-        The main killer.
+    killers: List[:class:`Killer`]
+        A list of all the killers involved.
+
+    assists: List[:class:`Killer`]
+        A list of characters that were involved, without dealing damage.
 
     time: :class:`datetime.datetime`
         The time at which the death occurred.
-
-    is_player: :class:`bool`
-        True if the killer is a player, False otherwise.
-
-    participants: :class:`list`
-        List of all participants in the death.
     """
-    __slots__ = ("level", "killer", "time", "is_player", "name", "participants")
+    __slots__ = ("level", "killers", "time", "assists", "name")
 
-    def __init__(self, level=0, killer=None, time=None, is_player=False, name=None, participants=None):
+    def __init__(self, name=None, level=0, **kwargs):
         self.name = name
         self.level = level
-        self.killer = killer
+        self.killers = kwargs.get("killers", [])
+        if self.killers and isinstance(self.killers[0], dict):
+            self.killers = [Killer(**k) for k in self.killers]
+        self.assists = kwargs.get("assists", [])
+        if self.assists and isinstance(self.assists[0], dict):
+            self.assists = [Killer(**k) for k in self.assists]
+        time = kwargs.get("time")
         if isinstance(time, datetime.datetime):
             self.time = time
         elif isinstance(time, str):
             self.time = parse_tibia_datetime(time)
         else:
             self.time = None
-        self.is_player = is_player
-        self.participants = participants or []
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         attributes = ""
         for attr in self.__slots__:
-            if attr in ["level", "killer"]:
+            if attr in ["name", "level"]:
                 continue
             v = getattr(self, attr)
             if isinstance(v, int) and v == 0 and not isinstance(v, bool):
@@ -505,8 +529,59 @@ class Death:
             if v is None:
                 continue
             attributes += ",%s=%r" % (attr, v)
-        return "{0.__class__.__name__}({0.level!r},{0.killer!r}{1})".format(self, attributes)
+        return "{0.__class__.__name__}({0.name!r},{0.level!r}{1})".format(self, attributes)
 
+    @property
+    def killer(self):
+        """Optional[:class:`Killer`]: The first killer in the list.
+
+        This is usually the killer that gave the killing blow."""
+        return self.killers[0] if self.killers else None
+
+    @property
+    def by_player(self):
+        """:class:`bool`: Whether the kill involves other characters."""
+        return any([k.player and self.name != k.name for k in self.killers])
+
+class Killer:
+    """
+    Represents a killer.
+
+    A killer can be:
+
+    a) Another character.
+    b) A creature.
+    c) A creature summoned by a character.
+
+    Attributes
+    -----------
+    name: :class:`str`
+        The name of the killer.
+    player: :class:`bool`
+        Whether the killer is a player or not.
+    summon: Optional[:class:`str`]
+        The name of the summoned creature, if applicable.
+    """
+    __slots__ = ("name", "player", "summon")
+    def __init__(self, name=None, player=False, summon=None):
+        self.name = name
+        self.player = player
+        self.summon = summon
+
+    def __repr__(self):
+        attributes = ""
+        for attr in self.__slots__:
+            if attr in ["name"]:
+                continue
+            v = getattr(self, attr)
+            if isinstance(v, int) and v == 0 and not isinstance(v, bool):
+                continue
+            if isinstance(v, list) and len(v) == 0:
+                continue
+            if v is None:
+                continue
+            attributes += ",%s=%r" % (attr, v)
+        return "{0.__class__.__name__}({0.name!r}{1})".format(self, attributes)
 
 class OtherCharacter(abc.Character):
     """

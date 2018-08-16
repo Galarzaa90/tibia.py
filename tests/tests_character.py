@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import Character
+from tibiapy import Character, Death, Killer
 from tibiapy.utils import parse_tibia_datetime
 
 FILE_CHARACTER_RESOURCE = "character_regular.txt"
@@ -58,8 +58,16 @@ class TestCharacter(TestTibiaPy):
 
     def testCharacterComplexDeaths(self):
         content = self._load_resource(FILE_CHARACTER_DEATHS_COMPLEX)
-        parsed_content = Character._beautiful_soup(content)
-        tables = Character._parse_tables(parsed_content)
-        self.assertTrue("Character Deaths" in tables.keys())
-        char = {}
-        Character._parse_deaths(char, tables["Character Deaths"])
+        char = Character.from_content(content)
+        self.assertTrue(char.deaths)
+        self.assertEqual(len(char.deaths), 19)
+
+    def testDeathTypes(self):
+        assisted_suicide = Death("Galarzaa", 280, killers=[Killer("Galarzaa", True), Killer("a pixy")],
+                                 time=datetime.datetime.now())
+        self.assertEqual(assisted_suicide.killer, assisted_suicide.killers[0])
+        self.assertFalse(assisted_suicide.by_player)
+
+        spawn_invasion = Death("Galarza", 270, killers=[Killer("a demon"), Killer("Nezune", True)])
+        self.assertEqual(spawn_invasion.killer, spawn_invasion.killers[0])
+        self.assertTrue(spawn_invasion.by_player)
