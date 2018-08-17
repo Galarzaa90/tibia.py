@@ -69,9 +69,9 @@
 <span class="sd">        The name of the character.</span>
 
 <span class="sd">    deletion_date: Optional[:class:`datetime.datetime`]</span>
-<span class="sd">        The date where the character will be deleted.</span>
+<span class="sd">        The date where the character will be deleted if it is scheduled for deletion.</span>
 
-<span class="sd">    former_names: :class:`list`</span>
+<span class="sd">    former_names: List[:class:`str`]</span>
 <span class="sd">        Previous names of this character.</span>
 
 <span class="sd">    sex: :class:`str`</span>
@@ -90,7 +90,7 @@
 <span class="sd">        The character&#39;s current world</span>
 
 <span class="sd">    former_world: Optional[:class:`str`]</span>
-<span class="sd">        The previous world where the character was in.</span>
+<span class="sd">        The previous world where the character was in, in the last 6 months.</span>
 
 <span class="sd">    residence: :class:`str`</span>
 <span class="sd">        The current hometown of the character.</span>
@@ -105,7 +105,7 @@
 <span class="sd">        The guild the character is a member of. The dictionary contains a key for the rank and a key for the name.</span>
 
 <span class="sd">    last_login: Optional[:class:`datetime.datetime`]</span>
-<span class="sd">        The last time the character logged in.</span>
+<span class="sd">        The last time the character logged in. It will be None if the character has never logged in.</span>
 
 <span class="sd">    comment: Optional[:class:`str`]</span>
 <span class="sd">        The displayed comment.</span>
@@ -113,10 +113,10 @@
 <span class="sd">    account_status: :class:`str`</span>
 <span class="sd">        Whether the character&#39;s account is Premium or Free.</span>
 
-<span class="sd">    achievements: :class:`list` of :class:`dict`</span>
-<span class="sd">        The achievement chosen to be displayed.</span>
+<span class="sd">    achievements: List[:class:`dict`]</span>
+<span class="sd">        The achievements chosen to be displayed.</span>
 
-<span class="sd">    deaths: :class:`list` of :class:`Death`</span>
+<span class="sd">    deaths: List[:class:`Death`]</span>
 <span class="sd">        The character&#39;s recent deaths.</span>
 
 <span class="sd">    account_information: :class:`dict`</span>
@@ -163,6 +163,17 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_beautiful_soup</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses HTML content into a BeautifulSoup object.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`bs4.BeautifulSoup`: The parsed content.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">,</span> <span class="n">parse_only</span><span class="o">=</span><span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;BoxContent&quot;</span><span class="p">))</span>
 
     <span class="nd">@staticmethod</span>
@@ -178,6 +189,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        :class:`dict[str, Any]`</span>
+<span class="sd">            A dictionary containing all the character&#39;s information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">_beautiful_soup</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="n">tables</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">_parse_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">)</span>
@@ -201,7 +213,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        char: :class:`dict`[str,Any]</span>
 <span class="sd">            Dictionary where information will be stored.</span>
-<span class="sd">        rows: :class:`List[bs4.Tag]`</span>
+<span class="sd">        rows: List[:class:`bs4.Tag`]</span>
 <span class="sd">            A list of all rows contained in the table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">char</span><span class="p">[</span><span class="s2">&quot;account_information&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -222,7 +234,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        char: :class:`dict`[str,Any]</span>
 <span class="sd">            Dictionary where information will be stored.</span>
-<span class="sd">        rows: :class:`List[bs4.Tag]`</span>
+<span class="sd">        rows: List[:class:`bs4.Tag`]</span>
 <span class="sd">            A list of all rows contained in the table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">achievements</span> <span class="o">=</span> <span class="p">[]</span>
@@ -248,7 +260,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        char: :class:`dict`[str,Any]</span>
 <span class="sd">            Dictionary where information will be stored.</span>
-<span class="sd">        rows: :class:`List[bs4.Tag]`</span>
+<span class="sd">        rows: List[:class:`bs4.Tag`]</span>
 <span class="sd">            A list of all rows contained in the table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">int_rows</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;achievement_points&quot;</span><span class="p">]</span>
@@ -309,7 +321,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        char: :class:`dict`[str,Any]</span>
 <span class="sd">            Dictionary where information will be stored.</span>
-<span class="sd">        rows: :class:`List[bs4.Tag]`</span>
+<span class="sd">        rows: List[:class:`bs4.Tag`]</span>
 <span class="sd">            A list of all rows contained in the table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">deaths</span> <span class="o">=</span> <span class="p">[]</span>
@@ -363,7 +375,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        char: :class:`dict`[str,Any]</span>
 <span class="sd">            Dictionary where information will be stored.</span>
-<span class="sd">        rows: :class:`List[bs4.Tag]`</span>
+<span class="sd">        rows: List[:class:`bs4.Tag`]</span>
 <span class="sd">            A list of all rows contained in the table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">char</span><span class="p">[</span><span class="s2">&quot;other_characters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -428,32 +440,28 @@
             <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_split</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>
 
-<div class="viewcode-block" id="Character.parse_to_json"><a class="viewcode-back" href="../../index.html#tibiapy.Character.parse_to_json">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">parse_to_json</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Static method that creates a JSON string from the html content of the character&#39;s page.</span>
+<div class="viewcode-block" id="Character.get_url"><a class="viewcode-back" href="../../index.html#tibiapy.Character.get_url">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the Tibia.com URl for a given character name.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        -------------</span>
-<span class="sd">        content: :class:`str`</span>
-<span class="sd">            The HTML content of the page.</span>
-<span class="sd">        indent: :class:`int`</span>
-<span class="sd">            The number of spaces to indent the output with.</span>
+<span class="sd">        ------------</span>
+<span class="sd">        name: str</span>
+<span class="sd">            The name of the character</span>
 
 <span class="sd">        Returns</span>
-<span class="sd">        ------------</span>
-<span class="sd">        :class:`str`</span>
-<span class="sd">            A string in JSON format.&quot;&quot;&quot;</span>
-        <span class="n">char_dict</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">char_dict</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span></div>
+<span class="sd">        --------</span>
+<span class="sd">        str</span>
+<span class="sd">            The URL to the character&#39;s page&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">CHARACTER_URL</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Character.from_content"><a class="viewcode-back" href="../../index.html#tibiapy.Character.from_content">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;Character&#39;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Creates an instance of the class from the html content of the character&#39;s page.</span>
 
-
 <span class="sd">        Parameters</span>
 <span class="sd">        -----------</span>
-<span class="sd">        content: str</span>
+<span class="sd">        content: :class:`str`</span>
 <span class="sd">            The HTML content of the page.</span>
 
 <span class="sd">        Returns</span>
@@ -495,20 +503,24 @@
 
         <span class="k">return</span> <span class="n">char</span></div>
 
-<div class="viewcode-block" id="Character.get_url"><a class="viewcode-back" href="../../index.html#tibiapy.Character.get_url">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets the Tibia.com URl for a given character name.</span>
+<div class="viewcode-block" id="Character.parse_to_json"><a class="viewcode-back" href="../../index.html#tibiapy.Character.parse_to_json">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_to_json</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Static method that creates a JSON string from the html content of the character&#39;s page.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ------------</span>
-<span class="sd">        name: str</span>
-<span class="sd">            The name of the character</span>
+<span class="sd">        -------------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of the page.</span>
+<span class="sd">        indent: :class:`int`</span>
+<span class="sd">            The number of spaces to indent the output with.</span>
 
 <span class="sd">        Returns</span>
-<span class="sd">        --------</span>
-<span class="sd">        str</span>
-<span class="sd">            The URL to the character&#39;s page&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">CHARACTER_URL</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div></div>
+<span class="sd">        ------------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            A string in JSON format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">char_dict</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">char_dict</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Death"><a class="viewcode-back" href="../../index.html#tibiapy.Death">[docs]</a><span class="k">class</span> <span class="nc">Death</span><span class="p">:</span>

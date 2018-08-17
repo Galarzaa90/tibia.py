@@ -88,13 +88,13 @@
 <dl class="attribute">
 <dt id="tibiapy.Character.deletion_date">
 <code class="descname">deletion_date</code><a class="headerlink" href="#tibiapy.Character.deletion_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>] – The date where the character will be deleted.</p>
+<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>] – The date where the character will be deleted if it is scheduled for deletion.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="tibiapy.Character.former_names">
 <code class="descname">former_names</code><a class="headerlink" href="#tibiapy.Character.former_names" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> – Previous names of this character.</p>
+<dd><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – Previous names of this character.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -130,7 +130,7 @@
 <dl class="attribute">
 <dt id="tibiapy.Character.former_world">
 <code class="descname">former_world</code><a class="headerlink" href="#tibiapy.Character.former_world" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The previous world where the character was in.</p>
+<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The previous world where the character was in, in the last 6 months.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -160,7 +160,7 @@
 <dl class="attribute">
 <dt id="tibiapy.Character.last_login">
 <code class="descname">last_login</code><a class="headerlink" href="#tibiapy.Character.last_login" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>] – The last time the character logged in.</p>
+<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>] – The last time the character logged in. It will be None if the character has never logged in.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -178,13 +178,13 @@
 <dl class="attribute">
 <dt id="tibiapy.Character.achievements">
 <code class="descname">achievements</code><a class="headerlink" href="#tibiapy.Character.achievements" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> – The achievement chosen to be displayed.</p>
+<dd><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>] – The achievements chosen to be displayed.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="tibiapy.Character.deaths">
 <code class="descname">deaths</code><a class="headerlink" href="#tibiapy.Character.deaths" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.Death" title="tibiapy.Death"><code class="xref py py-class docutils literal notranslate"><span class="pre">Death</span></code></a> – The character’s recent deaths.</p>
+<dd><p>List[<a class="reference internal" href="#tibiapy.Death" title="tibiapy.Death"><code class="xref py py-class docutils literal notranslate"><span class="pre">Death</span></code></a>] – The character’s recent deaths.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -212,6 +212,42 @@
 </dd></dl>
 
 <dl class="staticmethod">
+<dt id="tibiapy.Character.get_url">
+<em class="property">static </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Character.get_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Tibia.com URl for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the character</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="tibiapy.Character.from_content">
+<em class="property">static </em><code class="descname">from_content</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span> &#x2192; Union[_ForwardRef('Character'), NoneType]<a class="reference internal" href="_modules/tibiapy/character.html#Character.from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character.from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of the class from the html content of the character’s page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The character contained in the page, or None if the character doesn’t exist.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Optional[<a class="reference internal" href="#tibiapy.Character" title="tibiapy.Character"><code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
 <dt id="tibiapy.Character.parse_to_json">
 <em class="property">static </em><code class="descname">parse_to_json</code><span class="sig-paren">(</span><em>content</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Character.parse_to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character.parse_to_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Static method that creates a JSON string from the html content of the character’s page.</p>
@@ -230,42 +266,6 @@
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Character.from_content">
-<em class="property">static </em><code class="descname">from_content</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span> &#x2192; Union[_ForwardRef('Character'), NoneType]<a class="reference internal" href="_modules/tibiapy/character.html#Character.from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character.from_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates an instance of the class from the html content of the character’s page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The HTML content of the page.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The character contained in the page, or None if the character doesn’t exist.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Optional[<a class="reference internal" href="#tibiapy.Character" title="tibiapy.Character"><code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Character.get_url">
-<em class="property">static </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Character.get_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character.get_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the Tibia.com URl for a given character name.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the character</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
 </tr>
 </tbody>
 </table>
@@ -423,46 +423,21 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="tibiapy.Guild.ranks">
-<code class="descname">ranks</code><a class="headerlink" href="#tibiapy.Guild.ranks" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – Ranks in their hierarchical order.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="tibiapy.Guild.online_members">
 <code class="descname">online_members</code><a class="headerlink" href="#tibiapy.Guild.online_members" title="Permalink to this definition">¶</a></dt>
 <dd><p>List[<a class="reference internal" href="#tibiapy.GuildMember" title="tibiapy.GuildMember"><code class="xref py py-class docutils literal notranslate"><span class="pre">GuildMember</span></code></a>] – List of currently online members.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="tibiapy.Guild.ranks">
+<code class="descname">ranks</code><a class="headerlink" href="#tibiapy.Guild.ranks" title="Permalink to this definition">¶</a></dt>
+<dd><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – Ranks in their hierarchical order.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="tibiapy.Guild.url">
 <code class="descname">url</code><a class="headerlink" href="#tibiapy.Guild.url" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the guild’s information page.</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Guild.json_list_from_content">
-<em class="property">static </em><code class="descname">json_list_from_content</code><span class="sig-paren">(</span><em>content</em>, <em>active_only=False</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.json_list_from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.json_list_from_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a JSON string from the html content of the world guilds’ page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The html content of the page.</li>
-<li><strong>active_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to only show active guilds or not.</li>
-<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of spaces to indent the output with.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A string in JSON format.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="staticmethod">
@@ -485,30 +460,6 @@
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List[<a class="reference internal" href="#tibiapy.Guild" title="tibiapy.Guild"><code class="xref py py-class docutils literal notranslate"><span class="pre">Guild</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Guild.parse_to_json">
-<em class="property">static </em><code class="descname">parse_to_json</code><span class="sig-paren">(</span><em>content</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.parse_to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.parse_to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a JSON string from the html content of the guild’s page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The HTML content of the page.</li>
-<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of spaces to indent the output with.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A string in JSON format.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -564,6 +515,55 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the guild’s page</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="tibiapy.Guild.json_list_from_content">
+<em class="property">static </em><code class="descname">json_list_from_content</code><span class="sig-paren">(</span><em>content</em>, <em>active_only=False</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.json_list_from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.json_list_from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a JSON string from the html content of the world guilds’ page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The html content of the page.</li>
+<li><strong>active_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Whether to only show active guilds or not.</li>
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of spaces to indent the output with.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A string in JSON format.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="tibiapy.Guild.parse_to_json">
+<em class="property">static </em><code class="descname">parse_to_json</code><span class="sig-paren">(</span><em>content</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.parse_to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.parse_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a JSON string from the html content of the guild’s page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The HTML content of the page.</li>
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of spaces to indent the output with.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A string in JSON format.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
 </tr>
 </tbody>
 </table>
