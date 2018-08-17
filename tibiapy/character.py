@@ -34,9 +34,9 @@ class Character(abc.Character):
         The name of the character.
 
     deletion_date: Optional[:class:`datetime.datetime`]
-        The date where the character will be deleted.
+        The date where the character will be deleted if it is scheduled for deletion.
 
-    former_names: :class:`list`
+    former_names: List[:class:`str`]
         Previous names of this character.
 
     sex: :class:`str`
@@ -55,7 +55,7 @@ class Character(abc.Character):
         The character's current world
 
     former_world: Optional[:class:`str`]
-        The previous world where the character was in.
+        The previous world where the character was in, in the last 6 months.
 
     residence: :class:`str`
         The current hometown of the character.
@@ -70,7 +70,7 @@ class Character(abc.Character):
         The guild the character is a member of. The dictionary contains a key for the rank and a key for the name.
 
     last_login: Optional[:class:`datetime.datetime`]
-        The last time the character logged in.
+        The last time the character logged in. It will be None if the character has never logged in.
 
     comment: Optional[:class:`str`]
         The displayed comment.
@@ -78,10 +78,10 @@ class Character(abc.Character):
     account_status: :class:`str`
         Whether the character's account is Premium or Free.
 
-    achievements: :class:`list` of :class:`dict`
-        The achievement chosen to be displayed.
+    achievements: List[:class:`dict`]
+        The achievements chosen to be displayed.
 
-    deaths: :class:`list` of :class:`Death`
+    deaths: List[:class:`Death`]
         The character's recent deaths.
 
     account_information: :class:`dict`
@@ -128,6 +128,17 @@ class Character(abc.Character):
 
     @staticmethod
     def _beautiful_soup(content):
+        """
+        Parses HTML content into a BeautifulSoup object.
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content.
+
+        Returns
+        -------
+        :class:`bs4.BeautifulSoup`: The parsed content.
+        """
         return bs4.BeautifulSoup(content, 'html.parser', parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
 
     @staticmethod
@@ -143,6 +154,7 @@ class Character(abc.Character):
         Returns
         -------
         :class:`dict[str, Any]`
+            A dictionary containing all the character's information.
         """
         parsed_content = Character._beautiful_soup(content)
         tables = Character._parse_tables(parsed_content)
@@ -166,7 +178,7 @@ class Character(abc.Character):
         ----------
         char: :class:`dict`[str,Any]
             Dictionary where information will be stored.
-        rows: :class:`List[bs4.Tag]`
+        rows: List[:class:`bs4.Tag`]
             A list of all rows contained in the table.
         """
         char["account_information"] = {}
@@ -187,7 +199,7 @@ class Character(abc.Character):
         ----------
         char: :class:`dict`[str,Any]
             Dictionary where information will be stored.
-        rows: :class:`List[bs4.Tag]`
+        rows: List[:class:`bs4.Tag`]
             A list of all rows contained in the table.
         """
         achievements = []
@@ -213,7 +225,7 @@ class Character(abc.Character):
         ----------
         char: :class:`dict`[str,Any]
             Dictionary where information will be stored.
-        rows: :class:`List[bs4.Tag]`
+        rows: List[:class:`bs4.Tag`]
             A list of all rows contained in the table.
         """
         int_rows = ["level", "achievement_points"]
@@ -274,7 +286,7 @@ class Character(abc.Character):
         ----------
         char: :class:`dict`[str,Any]
             Dictionary where information will be stored.
-        rows: :class:`List[bs4.Tag]`
+        rows: List[:class:`bs4.Tag`]
             A list of all rows contained in the table.
         """
         deaths = []
@@ -328,7 +340,7 @@ class Character(abc.Character):
         ----------
         char: :class:`dict`[str,Any]
             Dictionary where information will be stored.
-        rows: :class:`List[bs4.Tag]`
+        rows: List[:class:`bs4.Tag`]
             A list of all rows contained in the table.
         """
         char["other_characters"] = []
@@ -394,31 +406,27 @@ class Character(abc.Character):
         return [e.strip() for e in items]
 
     @staticmethod
-    def parse_to_json(content, indent=None):
-        """Static method that creates a JSON string from the html content of the character's page.
+    def get_url(name):
+        """Gets the Tibia.com URl for a given character name.
 
         Parameters
-        -------------
-        content: :class:`str`
-            The HTML content of the page.
-        indent: :class:`int`
-            The number of spaces to indent the output with.
+        ------------
+        name: str
+            The name of the character
 
         Returns
-        ------------
-        :class:`str`
-            A string in JSON format."""
-        char_dict = Character._parse(content)
-        return json.dumps(char_dict, indent=indent)
+        --------
+        str
+            The URL to the character's page"""
+        return CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
 
     @staticmethod
     def from_content(content) -> Optional['Character']:
         """Creates an instance of the class from the html content of the character's page.
 
-
         Parameters
         -----------
-        content: str
+        content: :class:`str`
             The HTML content of the page.
 
         Returns
@@ -461,19 +469,23 @@ class Character(abc.Character):
         return char
 
     @staticmethod
-    def get_url(name):
-        """Gets the Tibia.com URl for a given character name.
+    def parse_to_json(content, indent=None):
+        """Static method that creates a JSON string from the html content of the character's page.
 
         Parameters
-        ------------
-        name: str
-            The name of the character
+        -------------
+        content: :class:`str`
+            The HTML content of the page.
+        indent: :class:`int`
+            The number of spaces to indent the output with.
 
         Returns
-        --------
-        str
-            The URL to the character's page"""
-        return CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
+        ------------
+        :class:`str`
+            A string in JSON format.
+        """
+        char_dict = Character._parse(content)
+        return json.dumps(char_dict, indent=indent)
 
 
 class Death:

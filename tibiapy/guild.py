@@ -5,7 +5,7 @@ import urllib.parse
 from collections import OrderedDict
 from typing import Optional, List
 
-from bs4 import BeautifulSoup, SoupStrainer
+import bs4
 
 from . import abc, InvalidContent, GUILD_LIST_URL
 from .const import GUILD_URL
@@ -103,14 +103,14 @@ class Guild:
         return len(self.members)
 
     @property
-    def ranks(self):
-        """List[:class:`str`]: Ranks in their hierarchical order."""
-        return list(OrderedDict.fromkeys((m.rank for m in self.members)))
-
-    @property
     def online_members(self):
         """List[:class:`GuildMember`]: List of currently online members."""
         return list(filter(lambda m: m.online, self.members))
+
+    @property
+    def ranks(self):
+        """List[:class:`str`]: Ranks in their hierarchical order."""
+        return list(OrderedDict.fromkeys((m.rank for m in self.members)))
 
     @property
     def url(self):
@@ -118,7 +118,36 @@ class Guild:
         return GUILD_URL + urllib.parse.quote(self.name.encode('iso-8859-1'))
 
     @staticmethod
+    def _beautiful_soup(content):
+        """
+        Parses HTML content into a BeautifulSoup object.
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content.
+
+        Returns
+        -------
+        :class:`bs4.BeautifulSoup`: The parsed content.
+        """
+        return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
+                                 parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+
+    @staticmethod
     def _parse(content):
+        """
+        Parses the guild's page HTML content into a dictionary.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the guild's page.
+
+        Returns
+        -------
+        :class:`dict[str, Any]`
+            A dictionary containing all the guild's information.
+        """
         if "An internal error has occurred" in content:
             return {}
 
@@ -140,49 +169,21 @@ class Guild:
         return guild
 
     @staticmethod
-    def _beautiful_soup(content):
-        return BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                             parse_only=SoupStrainer("div", class_="BoxContent"))
-
-    @staticmethod
-    def _parse_guild_name(guild, parsed_content):
-        header = parsed_content.find('h1')
-        guild["name"] = header.text
-
-    @staticmethod
-    def _parse_guild_logo(guild, parsed_content):
-        logo_img = parsed_content.find('img', {'height': '64'})
-        if logo_img is None:
-            return False
-
-        guild["logo_url"] = logo_img["src"]
-        return True
-
-    @staticmethod
-    def _parse_guild_members(guild, parsed_content):
-        member_rows = parsed_content.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
-        guild["members"] = []
-        guild["invites"] = []
-        previous_rank = {}
-        for row in member_rows:
-            columns = row.find_all('td')
-            values = (c.text.replace("\u00a0", " ") for c in columns)
-            if len(columns) == COLS_GUILD_MEMBER:
-                Guild._parse_current_member(guild, previous_rank, values)
-            if len(columns) == COLS_INVITED_MEMBER:
-                Guild._parse_invited_member(guild, values)
-
-    @staticmethod
-    def _parse_invited_member(guild, values):
-        name, date = values
-        if date != "Invitation Date":
-            guild["invites"].append({
-                "name": name,
-                "date": date
-            })
-
-    @staticmethod
     def _parse_current_member(guild, previous_rank, values):
+        """
+        Parses the column texts of a member row into a member dictionary.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        previous_rank
+        values
+
+        Returns
+        -------
+
+        """
         rank, name, vocation, level, joined, status = values
         rank = previous_rank[1] if rank == " " else rank
         previous_rank[1] = rank
@@ -201,6 +202,12 @@ class Guild:
             "joined": joined,
             "online": status == "online"
         })
+
+    @staticmethod
+    def _parse_guild_applications(guild, info_container):
+        m = applications_regex.search(info_container.text)
+        if m:
+            guild["open_applications"] = m.group(1) == "opened"
 
     @staticmethod
     def _parse_guild_disband_info(guild, info_container):
@@ -227,12 +234,6 @@ class Guild:
             guild["homepage"] = m.group(1)
         else:
             guild["homepage"] = None
-
-    @staticmethod
-    def _parse_guild_applications(guild, info_container):
-        m = applications_regex.search(info_container.text)
-        if m:
-            guild["open_applications"] = m.group(1) == "opened"
 
     @staticmethod
     def _parse_guild_info(guild, info_container):
@@ -282,26 +283,41 @@ class Guild:
         return guilds
 
     @staticmethod
-    def json_list_from_content(content, active_only=False, indent=None):
-        """
-        Creates a JSON string from the html content of the world guilds' page.
+    def _parse_guild_logo(guild, parsed_content):
+        logo_img = parsed_content.find('img', {'height': '64'})
+        if logo_img is None:
+            return False
 
-        Parameters
-        ----------
-        content: str
-            The html content of the page.
-        active_only: bool
-            Whether to only show active guilds or not.
-        indent: int
-            The number of spaces to indent the output with.
+        guild["logo_url"] = logo_img["src"]
+        return True
 
-        Returns
-        -------
-        :class:`str`
-            A string in JSON format.
-        """
-        list_json = Guild._parse_guild_list(content, active_only)
-        return json.dumps(list_json, indent=indent)
+    @staticmethod
+    def _parse_guild_members(guild, parsed_content):
+        member_rows = parsed_content.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+        guild["members"] = []
+        guild["invites"] = []
+        previous_rank = {}
+        for row in member_rows:
+            columns = row.find_all('td')
+            values = (c.text.replace("\u00a0", " ") for c in columns)
+            if len(columns) == COLS_GUILD_MEMBER:
+                Guild._parse_current_member(guild, previous_rank, values)
+            if len(columns) == COLS_INVITED_MEMBER:
+                Guild._parse_invited_member(guild, values)
+
+    @staticmethod
+    def _parse_guild_name(guild, parsed_content):
+        header = parsed_content.find('h1')
+        guild["name"] = header.text
+
+    @staticmethod
+    def _parse_invited_member(guild, values):
+        name, date = values
+        if date != "Invitation Date":
+            guild["invites"].append({
+                "name": name,
+                "date": date
+            })
 
     @staticmethod
     def list_from_content(content, active_only=False):
@@ -325,24 +341,6 @@ class Guild:
         """
         guild_list = Guild._parse_guild_list(content, active_only)
         return [Guild(**g) for g in guild_list]
-
-    @staticmethod
-    def parse_to_json(content, indent=None):
-        """Creates a JSON string from the html content of the guild's page.
-
-        Parameters
-        -------------
-        content: str
-            The HTML content of the page.
-        indent: int
-            The number of spaces to indent the output with.
-
-        Returns
-        ------------
-        :class:`str`
-            A string in JSON format."""
-        char_dict = Guild._parse(content)
-        return json.dumps(char_dict, indent=indent)
 
     @staticmethod
     def from_content(content) -> Optional['Guild']:
@@ -404,6 +402,46 @@ class Guild:
             The URL to the guild's page
         """
         return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
+
+    @staticmethod
+    def json_list_from_content(content, active_only=False, indent=None):
+        """
+        Creates a JSON string from the html content of the world guilds' page.
+
+        Parameters
+        ----------
+        content: str
+            The html content of the page.
+        active_only: bool
+            Whether to only show active guilds or not.
+        indent: int
+            The number of spaces to indent the output with.
+
+        Returns
+        -------
+        :class:`str`
+            A string in JSON format.
+        """
+        list_json = Guild._parse_guild_list(content, active_only)
+        return json.dumps(list_json, indent=indent)
+
+    @staticmethod
+    def parse_to_json(content, indent=None):
+        """Creates a JSON string from the html content of the guild's page.
+
+        Parameters
+        -------------
+        content: str
+            The HTML content of the page.
+        indent: int
+            The number of spaces to indent the output with.
+
+        Returns
+        ------------
+        :class:`str`
+            A string in JSON format."""
+        char_dict = Guild._parse(content)
+        return json.dumps(char_dict, indent=indent)
 
 
 class GuildMember(abc.Character):

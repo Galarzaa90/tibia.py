@@ -5,6 +5,14 @@ from .const import CHARACTER_URL
 
 
 class Character(metaclass=abc.ABCMeta):
+    """Base class for all character classes.
+
+    Implements common properties.
+
+    Attributes
+    ----------
+    name: :class:`str`
+    """
     __slots__ = ("name", )
 
     def __eq__(self, o: object) -> bool:
