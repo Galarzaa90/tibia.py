@@ -70,4 +70,5 @@ class TestCharacter(TestTibiaPy):
 
         spawn_invasion = Death("Galarza", 270, killers=[Killer("a demon"), Killer("Nezune", True)])
         self.assertEqual(spawn_invasion.killer, spawn_invasion.killers[0])
+        self.assertIsNone(spawn_invasion.killer.url)
         self.assertTrue(spawn_invasion.by_player)
