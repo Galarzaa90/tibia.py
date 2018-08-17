@@ -4,14 +4,10 @@ An API to parse Tibia.com content into object oriented data.
 No fetching is done by this module, you must provide the html content.
 
 ![Travis (.org)](https://img.shields.io/travis/Galarzaa90/tibia.py.svg)
-[![GitHub (pre-)release](https://img.shields.io/github/release/Galarzaa90/tibia.py/all.svg)](https://github.com/Galarzaa90/tibiawiki-sql/releases)
+[![coverage report](https://gitlab.com/Galarzaa90/tibia.py/badges/master/coverage.svg)](https://galarzaa90.gitlab.io/tibia.py/coverage/)
 [![PyPI](https://img.shields.io/pypi/v/tibia.py.svg)](https://pypi.python.org/pypi/tibia.py/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tibia.py.svg)
 ![PyPI - License](https://img.shields.io/pypi/l/tibia.py.svg)
-
-## Under development
-This API is still under early development, meaning breaking changes might be introduced at any time without notice.
-Once the first release has been done, [semantic versioning](https://semver.org/) guidelines will be followed.
 
 ## Installing
 Install and update using pip
