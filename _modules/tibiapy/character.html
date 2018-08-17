@@ -590,6 +590,7 @@
         <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the kill involves other characters.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="n">k</span><span class="o">.</span><span class="n">player</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">k</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">])</span></div>
 
+
 <div class="viewcode-block" id="Killer"><a class="viewcode-back" href="../../index.html#tibiapy.Killer">[docs]</a><span class="k">class</span> <span class="nc">Killer</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a killer.</span>
@@ -610,6 +611,7 @@
 <span class="sd">        The name of the summoned creature, if applicable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;player&quot;</span><span class="p">,</span> <span class="s2">&quot;summon&quot;</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">player</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">summon</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">player</span>
@@ -628,7 +630,15 @@
             <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="n">attributes</span> <span class="o">+=</span> <span class="s2">&quot;,</span><span class="si">%s</span><span class="s2">=</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0.__class__.__name__}</span><span class="s2">(</span><span class="si">{0.name!r}{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0.__class__.__name__}</span><span class="s2">(</span><span class="si">{0.name!r}{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Optional[:class:`str`]: The URL of the character’s information page on Tibia.com, if applicable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="k">else</span> <span class="kc">None</span></div>
+
 
 <div class="viewcode-block" id="OtherCharacter"><a class="viewcode-back" href="../../index.html#tibiapy.OtherCharacter">[docs]</a><span class="k">class</span> <span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Character</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

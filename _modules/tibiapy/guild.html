@@ -156,6 +156,7 @@
     <span class="k">def</span> <span class="nf">_beautiful_soup</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses HTML content into a BeautifulSoup object.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        content: :class:`str`</span>
@@ -163,7 +164,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`bs4.BeautifulSoup`: The parsed content.</span>
+<span class="sd">        :class:`bs4.BeautifulSoup`</span>
+<span class="sd">            The parsed content.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="s1">&#39;lxml&#39;</span><span class="p">,</span>
                                  <span class="n">parse_only</span><span class="o">=</span><span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;BoxContent&quot;</span><span class="p">))</span>
@@ -212,12 +214,10 @@
 <span class="sd">        ----------</span>
 <span class="sd">        guild: :class:`dict`[str, Any]</span>
 <span class="sd">            Dictionary where information will be stored.</span>
-<span class="sd">        previous_rank</span>
-<span class="sd">        values</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-
+<span class="sd">        previous_rank: :class:`dict`[int, str]</span>
+<span class="sd">            The last rank present in the rows.</span>
+<span class="sd">        values: tuple[:class:`str`]</span>
+<span class="sd">            A list of row contents.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">joined</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">values</span>
         <span class="n">rank</span> <span class="o">=</span> <span class="n">previous_rank</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span> <span class="k">else</span> <span class="n">rank</span>
@@ -240,12 +240,32 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_applications</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the guild&#39;s application info.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        info_container: :class:`bs4.Tag`</span>
+<span class="sd">            The parsed content of the information container.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">applications_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
             <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;open_applications&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;opened&quot;</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_disband_info</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the guild&#39;s disband info, if available.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        info_container: :class:`bs4.Tag`</span>
+<span class="sd">            The parsed content of the information container.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">disband_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
             <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;disband_condition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -256,6 +276,16 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_guildhall</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the guild&#39;s guildhall info.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        info_container: :class:`bs4.Tag`</span>
+<span class="sd">            The parsed content of the information container.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">guildhall_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
             <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;guildhall&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span> <span class="s2">&quot;paid_until&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)}</span>
@@ -264,6 +294,16 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_homepage</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the guild&#39;s homepage info.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        info_container: :class:`bs4.Tag`</span>
+<span class="sd">            The parsed content of the information container.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">homepage_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
             <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;homepage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -272,6 +312,16 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_info</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the guild&#39;s general information.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        info_container: :class:`bs4.Tag`</span>
+<span class="sd">            The parsed content of the information container.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">founded_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
             <span class="n">description</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;desc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -282,6 +332,21 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_list</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">active_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the contents of a world&#39;s guild list page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of the page.</span>
+<span class="sd">        active_only: :class:`bool`</span>
+<span class="sd">            Whether to only show active guilds.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List[:class:`dict`[str, Any]]</span>
+<span class="sd">            A list of guild dictionaries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">Guild</span><span class="o">.</span><span class="n">_beautiful_soup</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="n">selected_world</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">,</span> <span class="n">selected</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -319,6 +384,21 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_logo</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the guild&#39;s logo.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        parsed_content: :class:`bs4.Tag`</span>
+<span class="sd">            The parsed content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`bool`</span>
+<span class="sd">            Whether the logo was found or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logo_img</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;64&#39;</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">logo_img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -328,13 +408,23 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_members</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the guild&#39;s member and invited list.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        parsed_content: :class:`bs4.Tag`</span>
+<span class="sd">            The parsed content of the guild&#39;s page</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">member_rows</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;#D4C0A1&quot;</span><span class="p">,</span> <span class="s2">&quot;#F1E0C6&quot;</span><span class="p">]})</span>
         <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">previous_rank</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">member_rows</span><span class="p">:</span>
             <span class="n">columns</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="n">COLS_GUILD_MEMBER</span><span class="p">:</span>
                 <span class="n">Guild</span><span class="o">.</span><span class="n">_parse_current_member</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">previous_rank</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="n">COLS_INVITED_MEMBER</span><span class="p">:</span>
@@ -342,11 +432,31 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_guild_name</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the guild&#39;s name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        parsed_content: :class:`bs4.Tag`</span>
+<span class="sd">            The parsed content of guild&#39;s page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">)</span>
         <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">text</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_invited_member</span><span class="p">(</span><span class="n">guild</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the column texts of an invited row into a invited dictionary.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        guild: :class:`dict`[str, Any]</span>
+<span class="sd">            Dictionary where information will be stored.</span>
+<span class="sd">        values: tuple[:class:`str`]</span>
+<span class="sd">            A list of row contents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">values</span>
         <span class="k">if</span> <span class="n">date</span> <span class="o">!=</span> <span class="s2">&quot;Invitation Date&quot;</span><span class="p">:</span>
             <span class="n">guild</span><span class="p">[</span><span class="s2">&quot;invites&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
@@ -364,9 +474,9 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        content: str</span>
+<span class="sd">        content: :class:`str`</span>
 <span class="sd">            The html content of the page.</span>
-<span class="sd">        active_only: bool</span>
+<span class="sd">        active_only: :class:`bool`</span>
 <span class="sd">            Whether to only show active guilds or not.</span>
 
 <span class="sd">        Returns</span>
@@ -381,10 +491,9 @@
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;Guild&#39;</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Creates an instance of the class from the html content of the guild&#39;s page.</span>
 
-
 <span class="sd">        Parameters</span>
 <span class="sd">        -----------</span>
-<span class="sd">        content: str</span>
+<span class="sd">        content: :class:`str`</span>
 <span class="sd">            The HTML content of the page.</span>
 
 <span class="sd">        Returns</span>
@@ -413,12 +522,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ------------</span>
-<span class="sd">        name: str</span>
+<span class="sd">        name: :class:`str`</span>
 <span class="sd">            The name of the guild</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        --------</span>
-<span class="sd">        str</span>
+<span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the guild&#39;s page&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">GUILD_URL</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div>
 
@@ -428,12 +537,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        world: str</span>
+<span class="sd">        world: :class:`str`</span>
 <span class="sd">            The name of the world</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        str</span>
+<span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the guild&#39;s page</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">GUILD_LIST_URL</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div>
@@ -445,11 +554,11 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        content: str</span>
+<span class="sd">        content: :class:`str`</span>
 <span class="sd">            The html content of the page.</span>
-<span class="sd">        active_only: bool</span>
+<span class="sd">        active_only: :class:`bool`</span>
 <span class="sd">            Whether to only show active guilds or not.</span>
-<span class="sd">        indent: int</span>
+<span class="sd">        indent: :class:`int`</span>
 <span class="sd">            The number of spaces to indent the output with.</span>
 
 <span class="sd">        Returns</span>
@@ -466,15 +575,16 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        -------------</span>
-<span class="sd">        content: str</span>
+<span class="sd">        content: :class:`str`</span>
 <span class="sd">            The HTML content of the page.</span>
-<span class="sd">        indent: int</span>
+<span class="sd">        indent: :class:`int`</span>
 <span class="sd">            The number of spaces to indent the output with.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ------------</span>
 <span class="sd">        :class:`str`</span>
-<span class="sd">            A string in JSON format.&quot;&quot;&quot;</span>
+<span class="sd">            A string in JSON format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">char_dict</span> <span class="o">=</span> <span class="n">Guild</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">char_dict</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span></div></div>
 
@@ -535,8 +645,8 @@
 <span class="sd">        The name of the character</span>
 
 <span class="sd">    date: :class:`datetime.date`</span>
-<span class="sd">        The day when the character was invited.&quot;&quot;&quot;</span>
-
+<span class="sd">        The day when the character was invited.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
