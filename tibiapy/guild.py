@@ -121,6 +121,7 @@ class Guild:
     def _beautiful_soup(content):
         """
         Parses HTML content into a BeautifulSoup object.
+
         Parameters
         ----------
         content: :class:`str`
@@ -128,7 +129,8 @@ class Guild:
 
         Returns
         -------
-        :class:`bs4.BeautifulSoup`: The parsed content.
+        :class:`bs4.BeautifulSoup`
+            The parsed content.
         """
         return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
                                  parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
@@ -177,12 +179,10 @@ class Guild:
         ----------
         guild: :class:`dict`[str, Any]
             Dictionary where information will be stored.
-        previous_rank
-        values
-
-        Returns
-        -------
-
+        previous_rank: :class:`dict`[int, str]
+            The last rank present in the rows.
+        values: tuple[:class:`str`]
+            A list of row contents.
         """
         rank, name, vocation, level, joined, status = values
         rank = previous_rank[1] if rank == " " else rank
@@ -205,12 +205,32 @@ class Guild:
 
     @staticmethod
     def _parse_guild_applications(guild, info_container):
+        """
+        Parses the guild's application info.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        info_container: :class:`bs4.Tag`
+            The parsed content of the information container.
+        """
         m = applications_regex.search(info_container.text)
         if m:
             guild["open_applications"] = m.group(1) == "opened"
 
     @staticmethod
     def _parse_guild_disband_info(guild, info_container):
+        """
+        Parses the guild's disband info, if available.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        info_container: :class:`bs4.Tag`
+            The parsed content of the information container.
+        """
         m = disband_regex.search(info_container.text)
         if m:
             guild["disband_condition"] = m.group(2)
@@ -221,6 +241,16 @@ class Guild:
 
     @staticmethod
     def _parse_guild_guildhall(guild, info_container):
+        """
+        Parses the guild's guildhall info.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        info_container: :class:`bs4.Tag`
+            The parsed content of the information container.
+        """
         m = guildhall_regex.search(info_container.text)
         if m:
             guild["guildhall"] = {"name": m.group("name"), "paid_until": m.group("date").replace("\xa0", " ")}
@@ -229,6 +259,16 @@ class Guild:
 
     @staticmethod
     def _parse_guild_homepage(guild, info_container):
+        """
+        Parses the guild's homepage info.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        info_container: :class:`bs4.Tag`
+            The parsed content of the information container.
+        """
         m = homepage_regex.search(info_container.text)
         if m:
             guild["homepage"] = m.group(1)
@@ -237,6 +277,16 @@ class Guild:
 
     @staticmethod
     def _parse_guild_info(guild, info_container):
+        """
+        Parses the guild's general information.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        info_container: :class:`bs4.Tag`
+            The parsed content of the information container.
+        """
         m = founded_regex.search(info_container.text)
         if m:
             description = m.group("desc").strip()
@@ -247,6 +297,21 @@ class Guild:
 
     @staticmethod
     def _parse_guild_list(content, active_only=False):
+        """
+        Parses the contents of a world's guild list page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+        active_only: :class:`bool`
+            Whether to only show active guilds.
+
+        Returns
+        -------
+        List[:class:`dict`[str, Any]]
+            A list of guild dictionaries.
+        """
         parsed_content = Guild._beautiful_soup(content)
         selected_world = parsed_content.find('option', selected=True)
         try:
@@ -284,6 +349,21 @@ class Guild:
 
     @staticmethod
     def _parse_guild_logo(guild, parsed_content):
+        """
+        Parses the guild's logo.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        parsed_content: :class:`bs4.Tag`
+            The parsed content of the page.
+
+        Returns
+        -------
+        :class:`bool`
+            Whether the logo was found or not.
+        """
         logo_img = parsed_content.find('img', {'height': '64'})
         if logo_img is None:
             return False
@@ -293,13 +373,23 @@ class Guild:
 
     @staticmethod
     def _parse_guild_members(guild, parsed_content):
+        """
+        Parses the guild's member and invited list.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        parsed_content: :class:`bs4.Tag`
+            The parsed content of the guild's page
+        """
         member_rows = parsed_content.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
         guild["members"] = []
         guild["invites"] = []
         previous_rank = {}
         for row in member_rows:
             columns = row.find_all('td')
-            values = (c.text.replace("\u00a0", " ") for c in columns)
+            values = tuple(c.text.replace("\u00a0", " ") for c in columns)
             if len(columns) == COLS_GUILD_MEMBER:
                 Guild._parse_current_member(guild, previous_rank, values)
             if len(columns) == COLS_INVITED_MEMBER:
@@ -307,11 +397,31 @@ class Guild:
 
     @staticmethod
     def _parse_guild_name(guild, parsed_content):
+        """
+        Parses the guild's name.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        parsed_content: :class:`bs4.Tag`
+            The parsed content of guild's page.
+        """
         header = parsed_content.find('h1')
         guild["name"] = header.text
 
     @staticmethod
     def _parse_invited_member(guild, values):
+        """
+        Parses the column texts of an invited row into a invited dictionary.
+
+        Parameters
+        ----------
+        guild: :class:`dict`[str, Any]
+            Dictionary where information will be stored.
+        values: tuple[:class:`str`]
+            A list of row contents.
+        """
         name, date = values
         if date != "Invitation Date":
             guild["invites"].append({
@@ -329,9 +439,9 @@ class Guild:
 
         Parameters
         ----------
-        content: str
+        content: :class:`str`
             The html content of the page.
-        active_only: bool
+        active_only: :class:`bool`
             Whether to only show active guilds or not.
 
         Returns
@@ -346,10 +456,9 @@ class Guild:
     def from_content(content) -> Optional['Guild']:
         """Creates an instance of the class from the html content of the guild's page.
 
-
         Parameters
         -----------
-        content: str
+        content: :class:`str`
             The HTML content of the page.
 
         Returns
@@ -378,12 +487,12 @@ class Guild:
 
         Parameters
         ------------
-        name: str
+        name: :class:`str`
             The name of the guild
 
         Returns
         --------
-        str
+        :class:`str`
             The URL to the guild's page"""
         return GUILD_URL + urllib.parse.quote(name.encode('iso-8859-1'))
 
@@ -393,12 +502,12 @@ class Guild:
 
         Parameters
         ----------
-        world: str
+        world: :class:`str`
             The name of the world
 
         Returns
         -------
-        str
+        :class:`str`
             The URL to the guild's page
         """
         return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
@@ -410,11 +519,11 @@ class Guild:
 
         Parameters
         ----------
-        content: str
+        content: :class:`str`
             The html content of the page.
-        active_only: bool
+        active_only: :class:`bool`
             Whether to only show active guilds or not.
-        indent: int
+        indent: :class:`int`
             The number of spaces to indent the output with.
 
         Returns
@@ -431,15 +540,16 @@ class Guild:
 
         Parameters
         -------------
-        content: str
+        content: :class:`str`
             The HTML content of the page.
-        indent: int
+        indent: :class:`int`
             The number of spaces to indent the output with.
 
         Returns
         ------------
         :class:`str`
-            A string in JSON format."""
+            A string in JSON format.
+        """
         char_dict = Guild._parse(content)
         return json.dumps(char_dict, indent=indent)
 
@@ -500,8 +610,8 @@ class GuildInvite(abc.Character):
         The name of the character
 
     date: :class:`datetime.date`
-        The day when the character was invited."""
-
+        The day when the character was invited.
+    """
     __slots__ = ("date", )
 
     def __init__(self, name=None, date=None):

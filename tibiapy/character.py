@@ -555,6 +555,7 @@ class Death:
         """:class:`bool`: Whether the kill involves other characters."""
         return any([k.player and self.name != k.name for k in self.killers])
 
+
 class Killer:
     """
     Represents a killer.
@@ -575,6 +576,7 @@ class Killer:
         The name of the summoned creature, if applicable.
     """
     __slots__ = ("name", "player", "summon")
+
     def __init__(self, name=None, player=False, summon=None):
         self.name = name
         self.player = player
@@ -594,6 +596,14 @@ class Killer:
                 continue
             attributes += ",%s=%r" % (attr, v)
         return "{0.__class__.__name__}({0.name!r}{1})".format(self, attributes)
+
+    @property
+    def url(self):
+        """
+        Optional[:class:`str`]: The URL of the character’s information page on Tibia.com, if applicable.
+        """
+        return Character.get_url(self.name) if self.player else None
+
 
 class OtherCharacter(abc.Character):
     """
