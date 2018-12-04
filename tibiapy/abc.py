@@ -1,7 +1,7 @@
 import abc
 import urllib.parse
 
-from .const import CHARACTER_URL
+from .const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
 
 
 class Character(metaclass=abc.ABCMeta):
@@ -42,3 +42,10 @@ class Character(metaclass=abc.ABCMeta):
         :class:`str`: The URL of the character's information page on Tibia.com
         """
         return CHARACTER_URL + urllib.parse.quote(self.name.encode('iso-8859-1'))
+
+    @property
+    def url_tibiadata(self):
+        """
+        :class:`str`: The URL of the character's information on TibiaData
+        """
+        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(self.name.encode('iso-8859-1'))

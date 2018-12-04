@@ -5,64 +5,11 @@ import requests
 import tibiapy
 
 if __name__ == "__main__":
-    r = requests.get(tibiapy.Character.get_url("Sindrum"))
+    r = requests.get(tibiapy.Character.get_url_tibiadata("Sindrum"))
     start = time.perf_counter()
-    char = tibiapy.Character.from_content(r.text)
+    char = tibiapy.Character.from_tibiadata(r.text)
     dt = time.perf_counter() - start
-    print("Parsed in {0:.2f} ms".format(dt))
-    print("Character Information")
-    print("=======================")
-    if char is None:
-        print("Character doesn't exist")
-    else:
-        print("Name:",char.name)
-        if char.deletion_date:
-            print("Scheduled for deletion:", char.deletion_date)
-        if char.former_names:
-            print("Former names:", ", ".join(char.former_names))
-        print("Vocation:", char.vocation)
-        print("Level:", char.level)
-        print("Achievement Points:", char.achievement_points)
-        print("World:", char.world)
-        if char.former_world:
-            print("Former world:", char.former_world)
-        print("Residence:", char.residence)
-        if  char.married_to:
-            print("Married to:", char.married_to)
-        if char.guild_membership:
-            print("Guild membership:", "%s of the %s" % (char.guild_rank, char.guild_name))
-        if char.last_login:
-            print("Last login:", char.last_login)
-        else:
-            print("Last login:", "Never")
-        if char.comment:
-            print("Comment:", char.comment)
-        print("Account status:", char.account_status)
-        print("")
-        if char.achievements:
-            print("Account Achievements")
-            print("--------------------")
-            for achievement in char.achievements:
-                print("\t- %s (Grade %d)" % (achievement["name"], achievement["grade"]))
 
-        if char.deaths:
-            print("Deaths")
-            print("------")
-            for death in char.deaths:
-                print("\t- %s - Died at Level %d by %s" % (death.time, death.level, death.killer))
-
-        if char.account_information:
-            print("Account Information")
-            print("-------------------")
-            print("Loyalty Title:", char.account_information["loyalty_title"])
-            print("Created:", char.account_information["created"])
-
-        if char.other_characters:
-            print("Other Characters")
-            print("----------------")
-            for other_char in char.other_characters:
-                print("\t- %s - %s - %s" % (other_char.name, other_char.world, "online" if other_char.online else
-                ("deleted" if other_char.deleted else "offline")))
 
     r = requests.get(tibiapy.Guild.get_url("Redd Alliance"))
     start = time.perf_counter()

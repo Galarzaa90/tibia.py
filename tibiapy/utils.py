@@ -1,4 +1,4 @@
-import datetime as dt
+import datetime
 
 
 def parse_tibia_datetime(datetime_str):
@@ -21,7 +21,7 @@ def parse_tibia_datetime(datetime_str):
 
         # Convert time string to time object
         # Removing timezone cause CEST and CET are not supported
-        t = dt.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M:%S")
+        t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M:%S")
 
         # Getting the offset
         if tz == "CET":
@@ -31,8 +31,8 @@ def parse_tibia_datetime(datetime_str):
         else:
             return None
         # Add/subtract hours to get the real time
-        t = t - dt.timedelta(hours=utc_offset)
-        return t.replace(tzinfo=dt.timezone.utc)
+        t = t - datetime.timedelta(hours=utc_offset)
+        return t.replace(tzinfo=datetime.timezone.utc)
     except ValueError:
         return None
 
@@ -50,7 +50,45 @@ def parse_tibia_date(date_str):
     :class:`datetime.date`
         The represended date."""
     try:
-        t = dt.datetime.strptime(date_str.strip(), "%b %d %Y")
+        t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")
         return t.date()
     except ValueError:
         return None
+
+def parse_tibiadata_datetime(date_dict):
+    """Parses time objects from the TibiaData API.
+
+    Time objects are made of a dictionary with three keys:
+        date: contains a string representation of the time
+        timezone: a string representation of the timezone the date time is based on
+        timezone_type: the type of representation used in the timezone key
+
+
+
+    Parameters
+    ----------
+    date_dict:
+        Dictionary representing the time object.
+
+    Returns
+    -------
+    :class:`datetime.date`:
+        The represented datetime, in UTC.
+    """
+    try:
+        t = datetime.datetime.strptime(date_dict["date"], "%Y-%m-%d %H:%M:%S.%f")
+    except (KeyError, ValueError):
+        return None
+
+    if date_dict["timezone_type"] == 2:
+        if date_dict["timezone"] == "CET":
+            timezone_offset = 1
+        elif date_dict["timezone"] == "CEST":
+            timezone_offset = 2
+        else:
+            return None
+    else:
+        timezone_offset = 1
+    # We substract the offset to convert the time to UTC
+    t = t - datetime.timedelta(hours=timezone_offset)
+    return t.replace(tzinfo=datetime.timezone.utc)

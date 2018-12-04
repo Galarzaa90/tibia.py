@@ -3,13 +3,13 @@ import json
 import re
 import urllib.parse
 from collections import OrderedDict
-from typing import Optional, List
+from typing import List, Optional
 
 import bs4
 
 from . import abc
-from .const import CHARACTER_URL
-from .utils import parse_tibia_datetime
+from .const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
+from .utils import parse_tibia_datetime, parse_tibiadata_datetime
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
@@ -20,10 +20,13 @@ death_assisted = re.compile(r'(?P<killers>.+)\.<br/>Assisted by (?P<assists>.+)'
 death_summon = re.compile(r'(?P<summon>.+) of <a[^>]+>(?P<name>[^<]+)</a>')
 # Extracts the contents of a tag
 link_content = re.compile(r'>([^<]+)<')
+# Extracts reason from TibiaData death
+death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists>.+))?', re.DOTALL)
 
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
+#
 
 class Character(abc.Character):
     """Represents a Tibia character
@@ -32,61 +35,42 @@ class Character(abc.Character):
     ---------------
     name: :class:`str`
         The name of the character.
-
     deletion_date: Optional[:class:`datetime.datetime`]
         The date where the character will be deleted if it is scheduled for deletion.
-
     former_names: List[:class:`str`]
         Previous names of this character.
-
     sex: :class:`str`
         The character's gender, either "male" or "female"
-
     vocation: :class:`str`
         The character's vocation.
-
     level: :class:`int`
         The character's level.
-
     achievement_points: :class:`int`
         The total of points the character has.
-
     world: :class:`str`
-        The character's current world
-
+        The character's current world.
     former_world: Optional[:class:`str`]
         The previous world where the character was in, in the last 6 months.
-
     residence: :class:`str`
         The current hometown of the character.
-
     married_to: Optional[:class:`str`]
         The name of the character's spouse/husband.
-
     house: Optional[:class:`dict`]
         The house currently owned by the character.
-
     guild_membership: Optional[:class:`dict`]
         The guild the character is a member of. The dictionary contains a key for the rank and a key for the name.
-
     last_login: Optional[:class:`datetime.datetime`]
         The last time the character logged in. It will be None if the character has never logged in.
-
     comment: Optional[:class:`str`]
         The displayed comment.
-
     account_status: :class:`str`
         Whether the character's account is Premium or Free.
-
     achievements: List[:class:`dict`]
         The achievements chosen to be displayed.
-
-    deaths: List[:class:`Death`]
+    deaths: lsit of  :class:`Death`
         The character's recent deaths.
-
     account_information: :class:`dict`
         The character's account information, if visible.
-
     other_characters: List[:class:`OtherCharacter`]
         Other characters in the same account, if visible.
     """
@@ -126,8 +110,8 @@ class Character(abc.Character):
         """Optional[:class:`str`]: The character's rank in the guild they belong to, or `None`."""
         return self.guild_membership["rank"] if self.guild_membership else None
 
-    @staticmethod
-    def _beautiful_soup(content):
+    @classmethod
+    def _beautiful_soup(cls, content):
         """
         Parses HTML content into a BeautifulSoup object.
         Parameters
@@ -141,8 +125,8 @@ class Character(abc.Character):
         """
         return bs4.BeautifulSoup(content, 'html.parser', parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
 
-    @staticmethod
-    def _parse(content):
+    @classmethod
+    def _parse(cls, content):
         """
         Parses the character's page HTML content into a dictionary.
 
@@ -156,21 +140,21 @@ class Character(abc.Character):
         :class:`dict[str, Any]`
             A dictionary containing all the character's information.
         """
-        parsed_content = Character._beautiful_soup(content)
-        tables = Character._parse_tables(parsed_content)
+        parsed_content = cls._beautiful_soup(content)
+        tables = cls._parse_tables(parsed_content)
         char = {}
         if "Character Information" in tables.keys():
-            Character._parse_character_information(char, tables["Character Information"])
+            cls._parse_character_information(char, tables["Character Information"])
         else:
             return {}
-        Character._parse_achievements(char, tables.get("Account Achievements", []))
-        Character._parse_deaths(char, tables.get("Character Deaths", []))
-        Character._parse_account_information(char, tables.get("Account Information", []))
-        Character._parse_other_characters(char, tables.get("Characters", []))
+        cls._parse_achievements(char, tables.get("Account Achievements", []))
+        cls._parse_deaths(char, tables.get("Character Deaths", []))
+        cls._parse_account_information(char, tables.get("Account Information", []))
+        cls._parse_other_characters(char, tables.get("Characters", []))
         return char
 
-    @staticmethod
-    def _parse_account_information(char, rows):
+    @classmethod
+    def _parse_account_information(cls, char, rows):
         """
         Parses the character's account information
 
@@ -190,8 +174,8 @@ class Character(abc.Character):
             value = value.replace("\xa0", " ")
             char["account_information"][field] = value
 
-    @staticmethod
-    def _parse_achievements(char, rows):
+    @classmethod
+    def _parse_achievements(cls, char, rows):
         """
         Parses the character's displayed achievements
 
@@ -216,8 +200,8 @@ class Character(abc.Character):
             })
         char["achievements"] = achievements
 
-    @staticmethod
-    def _parse_character_information(char, rows):
+    @classmethod
+    def _parse_character_information(cls, char, rows):
         """
         Parses the character's basic information.
 
@@ -277,8 +261,8 @@ class Character(abc.Character):
         if "married_to" not in char:
             char["married_to"] = None
 
-    @staticmethod
-    def _parse_deaths(char, rows):
+    @classmethod
+    def _parse_deaths(cls, char, rows):
         """
         Parses the character's recent deaths
 
@@ -308,18 +292,10 @@ class Character(abc.Character):
                 # Filter out assists
                 killers_str = assist_match.group("killers")
                 # Split assists into a list.
-                assists = Character._split_list(assist_match.group("assists"))
-            killers = Character._split_list(killers_str)
-            for (i, killer) in enumerate(killers):
-                # If the killer contains a link, it is a player.
-                if "href" in killer:
-                    killer_dict = {"name": link_content.search(killer).group(1), "player": True}
-                else:
-                    killer_dict = {"name": killer, "player": False}
-                # Check if it contains a summon.
-                m = death_summon.search(killer)
-                if m:
-                    killer_dict["summon"] = m.group("summon")
+                assists = cls._split_list(assist_match.group("assists"))
+            killers = cls._split_list(killers_str)
+            for i, killer in enumerate(killers):
+                killer_dict = cls._parse_killer(killer)
                 killers[i] = killer_dict
             for (i, assist) in enumerate(assists):
                 # Extract names from character links in assists list.
@@ -331,8 +307,32 @@ class Character(abc.Character):
                 continue
         char["deaths"] = deaths
 
-    @staticmethod
-    def _parse_other_characters(char, rows):
+    @classmethod
+    def _parse_killer(cls, killer):
+        """Parses a killer into a dictionary.
+
+        Parameters
+        ----------
+        killer: :class:`str`
+            The killer's raw HTML string.
+
+        Returns
+        -------
+        :class:`dict`: A dictionary containing the killer's info.
+        """
+        # If the killer contains a link, it is a player.
+        if "href" in killer:
+            killer_dict = {"name": link_content.search(killer).group(1), "player": True}
+        else:
+            killer_dict = {"name": killer, "player": False}
+        # Check if it contains a summon.
+        m = death_summon.search(killer)
+        if m:
+            killer_dict["summon"] = m.group("summon")
+        return killer_dict
+
+    @classmethod
+    def _parse_other_characters(cls, char, rows):
         """
         Parses the character's other visible characters.
 
@@ -354,8 +354,8 @@ class Character(abc.Character):
             char["other_characters"].append(
                 {'name': _name, 'world': world, 'online': status == "online", 'deleted': status == "deleted"})
 
-    @staticmethod
-    def _parse_tables(parsed_content):
+    @classmethod
+    def _parse_tables(cls, parsed_content):
         """
         Parses the information tables contained in a character's page.
 
@@ -376,8 +376,9 @@ class Character(abc.Character):
             output[title] = table.find_all("tr")[1:]
         return output
 
-    @staticmethod
-    def _split_list(items, separator=",", last_separator=" and "):
+    # Todo: This might be turned into a function if it's needed elsewhere
+    @classmethod
+    def _split_list(cls, items, separator=",", last_separator=" and "):
         """
         Splits a string listing elements into an actual list.
 
@@ -405,8 +406,8 @@ class Character(abc.Character):
             items.append(last_split[1])
         return [e.strip() for e in items]
 
-    @staticmethod
-    def get_url(name):
+    @classmethod
+    def get_url(cls, name):
         """Gets the Tibia.com URl for a given character name.
 
         Parameters
@@ -420,8 +421,23 @@ class Character(abc.Character):
             The URL to the character's page"""
         return CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
 
-    @staticmethod
-    def from_content(content) -> Optional['Character']:
+    @classmethod
+    def get_url_tibiadata(cls, name):
+        """Gets the Tibia.com URl for a given character name.
+
+        Parameters
+        ------------
+        name: str
+            The name of the character
+
+        Returns
+        --------
+        str
+            The URL to the character's page"""
+        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
+
+    @classmethod
+    def from_content(cls, content) -> Optional['Character']:
         """Creates an instance of the class from the html content of the character's page.
 
         Parameters
@@ -434,7 +450,7 @@ class Character(abc.Character):
         Optional[:class:`Character`]
             The character contained in the page, or None if the character doesn't exist.
         """
-        char_json = Character._parse(content)
+        char_json = cls._parse(content)
         if not char_json:
             return None
         try:
@@ -460,16 +476,90 @@ class Character(abc.Character):
                     other_characters.append(OtherCharacter(**o_char))
             char_json["other_characters"] = other_characters
 
-            char = Character(**char_json)
+            char = cls(**char_json)
 
         except KeyError as e:
             print(e)
             return None
+        return char
+
+    @classmethod
+    def from_tibiadata(cls, content):
+        """Builds a character object from a TibiaData character response"""
+        try:
+            json_content = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        character = json_content["characters"]
+        character_data = character["data"]
+        char = cls()
+        if "error" in character:
+            return None
+        try:
+            char.name = character_data["name"]
+            char.world = character_data["world"]
+            char.level = character_data["level"]
+            char.achievement_points = character_data["achievement_points"]
+            char.sex = character_data["sex"]
+            char.vocation = character_data["vocation"]
+            char.residence = character_data["residence"]
+            char.account_status = character_data["account_status"]
+        except KeyError:
+            return None
+        char.former_names = character_data.get("former_names", [])
+        if "deleted" in character_data:
+            char.deletion_date = parse_tibiadata_datetime(character_data["deleted"])
+        char.married_to = character_data.get("married_to")
+        char.former_world = character_data.get("former_world")
+        if "guild" in character_data:
+            char.guild_membership = {"rank": character_data["guild"]["rank"], "guild": character_data["guild"]["name"]}
+        char.house = character_data.get("house")
+        char.comment = character_data.get("comment")
+        if len(character_data["last_login"]) > 0:
+            char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])
+        for achievement in character["achievements"]:
+            char.achievements.append({"grade": achievement["stars"], "name": achievement["name"]})
+
+        cls._parse_deaths_tibiadata(char, character.get("deaths", []))
+
+        for other_char in character["other_characters"]:
+            char.other_characters.append(OtherCharacter(other_char["name"], other_char["world"],
+                                                        other_char["status"] == "online",
+                                                        other_char["status"] == "deleted"))
+
+        if character["account_information"]:
+            char.account_information = {}
+            for key, value in character["account_information"].items():
+                if key == "created":
+                    value = parse_tibiadata_datetime(value)
+                char.account_information[key] = value
 
         return char
 
-    @staticmethod
-    def parse_to_json(content, indent=None):
+    @classmethod
+    def _parse_deaths_tibiadata(cls, char, deaths):
+        for death in deaths:
+            level = death["level"]
+            death_time = parse_tibiadata_datetime(death["date"])
+            print(death["reason"])
+            m = death_reason.search(death["reason"])
+            killers_str = []
+            assists_str = []
+            killers = []
+            assists = []
+            if m and m.group("killers"):
+                killers_str = [k.strip() for k in cls._split_list(m.group("killers").strip())]
+            if m and m.group("assists"):
+                assists_str = [a.strip() for a in cls._split_list(m.group("assists").strip())]
+            for killer in killers_str:
+                killers.append(Killer(killer, killer in death["involved"]))
+            for assist in assists_str:
+                assists.append(Killer(assist, assist in death["involved"]))
+            char.deaths.append(Death(char.name, level, time=death_time, killers=killers, assists=assists))
+
+
+    @classmethod
+    def parse_to_json(cls, content, indent=None):
         """Static method that creates a JSON string from the html content of the character's page.
 
         Parameters
@@ -484,7 +574,7 @@ class Character(abc.Character):
         :class:`str`
             A string in JSON format.
         """
-        char_dict = Character._parse(content)
+        char_dict = cls._parse(content)
         return json.dumps(char_dict, indent=indent)
 
 
@@ -496,16 +586,12 @@ class Death:
     -----------
     name: :class:`str`
         The name of the character this death belongs to.
-
     level: :class:`int`
         The level at which the death occurred.
-
     killers: List[:class:`Killer`]
         A list of all the killers involved.
-
     assists: List[:class:`Killer`]
         A list of characters that were involved, without dealing damage.
-
     time: :class:`datetime.datetime`
         The time at which the death occurred.
     """
@@ -613,13 +699,10 @@ class OtherCharacter(abc.Character):
     ----------
     name: :class:`str`
         The name of the character.
-
     world: :class:`str`
         The name of the world.
-
     online: :class:`bool`
         Whether the character is online or not.
-
     deleted: :class:`bool`
         Whether the character is scheduled for deletion or not.
     """
