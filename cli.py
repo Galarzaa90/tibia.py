@@ -8,14 +8,14 @@ try:
     import colorama
     colorama.init()
 except ImportError:
-    print("Use as a command-line interface requires optional dependencies: click and requests")
+    print("Use as a command-line interface requires optional dependencies: click, requests and colorama")
     exit()
 
 RED = '\033[91m'
 BOLD = '\033[1m'
 CEND = '\033[0m'
 
-@click.group(context_settings={'help_option_names': ['-h', '--help']})
+@click.group(context_settings={'help_option_names': ['-h', '--hel']})
 @click.version_option(__version__, '-V', '--version')
 def cli():
     pass
@@ -24,6 +24,7 @@ def cli():
 @click.argument('name', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 def char(name, tibiadata):
+    """Displays information about a Tibia character."""
     name = " ".join(name)
     if tibiadata:
         r = requests.get(Character.get_url_tibiadata(name))
@@ -41,6 +42,7 @@ def char(name, tibiadata):
 @click.argument('name', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 def guild(name, tibiadata):
+    """Displays information about a Tibia guild."""
     name = " ".join(name)
     if tibiadata:
         r = requests.get(Guild.get_url_tibiadata(name))
@@ -52,6 +54,24 @@ def guild(name, tibiadata):
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
     guild_content = print_guild(guild)
+    print(guild_content)
+
+@cli.command(name="guilds")
+@click.argument('world', nargs=-1)
+@click.option("-td", "--tibiadata", default=False, is_flag=True)
+def guilds(world, tibiadata):
+    """Displays the list of guilds for a specific world"""
+    world = " ".join(world)
+    if tibiadata:
+        r = requests.get(Guild.get_world_list_url_tibiadata(world))
+        guilds = Guild.list_from_tibiadata(r.text)
+    else:
+        r = requests.get(Guild.get_world_list_url(world))
+        guilds = Guild.list_from_content(r.text)
+    start = time.perf_counter()
+    dt = time.perf_counter() - start
+    print("Parsed in {0:.2f} ms".format(dt))
+    guild_content = print_guilds(guilds)
     print(guild_content)
 
 def get_field(field, content):
@@ -162,5 +182,19 @@ def print_guild(guild):
         content += "There are currently no invited characters."
     return content
 
-if __name__ == '__main__':  # pragma: no cover
+def print_guilds(guilds):
+    content = build_header("Guild List", "=")
+    if guilds is None:
+        content += "No guilds."
+        return content
+    for g in guilds:
+        content += get_field("Name", g.name)
+        content += get_field("Status", "Active" if g.active else "In formation")
+        content += get_field("Logo URL", g.logo_url)
+        if g.description:
+            content += get_field("Description", g.description)
+        content += "-----\n"
+    return content
+
+if __name__ == "__main__":
     cli()

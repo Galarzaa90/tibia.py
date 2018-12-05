@@ -23,7 +23,8 @@ with open('README.md') as f:
 extras_require = {
     'cli': [
         'click',
-        'requests'
+        'requests',
+        'colorama'
     ],
     'docs': [
         'sphinx==1.7.9',
@@ -39,10 +40,6 @@ setup(
     license='Apache 2.0',
     install_requires=requirements,
     extras_require=extras_require,
-    entry_points='''
-        [console_scripts]
-        tibiapy=tibiapy.__main__:cli
-    ''',
     description="API that parses website content into python data.",
     long_description=readme,
     long_description_content_type="text/markdown",

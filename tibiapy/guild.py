@@ -7,7 +7,7 @@ from typing import List, Optional
 
 import bs4
 
-from . import GUILD_LIST_URL, InvalidContent, abc
+from . import GUILD_LIST_URL, GUILD_LIST_URL_TIBIADATA, InvalidContent, abc
 from .const import GUILD_URL, GUILD_URL_TIBIADATA
 from .utils import parse_tibia_date, parse_tibiadata_date
 
@@ -456,6 +456,8 @@ class Guild:
             List of guilds in the current world.
         """
         guild_list = cls._parse_guild_list(content, active_only)
+        if guild_list is None:
+            return None
         return [cls(**g) for g in guild_list]
 
     @classmethod
@@ -534,6 +536,22 @@ class Guild:
         return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
 
     @classmethod
+    def get_world_list_url_tibiadata(cls, world):
+        """Gets the TibiaData.com URL for the guild list of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page
+        """
+        return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
+
+    @classmethod
     def json_list_from_content(cls, content, active_only=False, indent=None):
         """
         Creates a JSON string from the html content of the world guilds' page.
@@ -610,6 +628,24 @@ class Guild:
         for invited in guild_obj["invited"]:
             guild.invites.append(GuildInvite(invited["name"], parse_tibiadata_date(invited["invited"])))
         return guild
+
+    @classmethod
+    def list_from_tibiadata(cls, content):
+        """Builds a character object from a TibiaData character response"""
+        try:
+            json_content = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        guilds_obj = json_content["guilds"]
+        guilds = []
+        for guild in guilds_obj["active"]:
+            guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
+                              description=guild["desc"], active=True))
+        for guild in guilds_obj["formation"]:
+            guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
+                              description=guild["desc"], active=False))
+
+        return guilds
 
 
 class GuildMember(abc.Character):
