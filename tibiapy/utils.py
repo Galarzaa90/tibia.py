@@ -92,3 +92,22 @@ def parse_tibiadata_datetime(date_dict):
     # We substract the offset to convert the time to UTC
     t = t - datetime.timedelta(hours=timezone_offset)
     return t.replace(tzinfo=datetime.timezone.utc)
+
+
+def parse_tibiadata_date(date_str):
+    """Parses a date from the format used in TibiaData
+
+    Parameters
+    -----------
+    date_str: str
+        The date as represented in Tibia.com
+
+    Returns
+    -----------
+    :class:`datetime.date`
+        The represended date."""
+    try:
+        t = datetime.datetime.strptime(date_str.strip(), "%Y-%m-%d")
+        return t.date()
+    except ValueError:
+        return None
