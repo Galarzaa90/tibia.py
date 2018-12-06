@@ -55,6 +55,24 @@ def parse_tibia_date(date_str):
     except ValueError:
         return None
 
+def parse_tibia_full_date(date_str):
+    """Parses a date from the format used in Tibia.com
+
+    Parameters
+    -----------
+    date_str: str
+        The date as represented in Tibia.com
+
+    Returns
+    -----------
+    :class:`datetime.date`
+        The represended date."""
+    try:
+        t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y")
+        return t.date()
+    except ValueError:
+        return None
+
 def parse_tibiadata_datetime(date_dict):
     """Parses time objects from the TibiaData API.
 

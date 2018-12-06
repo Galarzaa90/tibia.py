@@ -1,6 +1,6 @@
 import time
 
-from tibiapy import Character, Guild, __version__
+from tibiapy import Character, Guild, World, __version__
 
 try:
     import click
@@ -73,6 +73,18 @@ def guilds(world, tibiadata):
     print("Parsed in {0:.2f} ms".format(dt))
     guild_content = print_guilds(guilds)
     print(guild_content)
+
+@cli.command(name="world")
+@click.argument('name', nargs=-1)
+def world(name):
+    name = " ".join(name)
+    r = requests.get(World.get_url(name))
+    world = World.from_content(r.text)
+    start = time.perf_counter()
+    dt = time.perf_counter() - start
+    print("Parsed in {0:.2f} ms".format(dt))
+    world_content = print_world(world)
+    print(world_content)
 
 def get_field(field, content):
     return "{0}{1}:{2} {3}\n".format(BOLD, field, CEND, content)
@@ -195,6 +207,35 @@ def print_guilds(guilds):
             content += get_field("Description", g.description)
         content += "-----\n"
     return content
+
+def print_world(world):
+    content = build_header("World", "=")
+    if world is None:
+        content += "World doesn't exist."
+        return content
+    content += get_field("Name", world.name)
+    content += get_field("Status", world.status)
+    content += get_field("Online count", world.online_count)
+    content += get_field("Online record", "%d players on %s" % (world.record_count, world.record_date))
+    content += get_field("Creation Date", world.creation_date)
+    content += get_field("Location", world.location)
+    content += get_field("PvP Type", world.pvp_type)
+    content += get_field("Transfer Type", world.transfer_type)
+    content += get_field("World Type", world.type)
+    if not world.battleye_protected:
+        content += get_field("Battleye Protected", "Not protected")
+    else:
+        content += get_field("Battleye Protected", "Protected since %s." % (world.battleye_date or "release"))
+    if world.world_quest_titles:
+        content += build_header("World Quest Titles")
+        for quest in world.world_quest_titles:
+            content += "- %s\n" % quest
+
+    content += build_header("Players Online")
+    for player in world.players_online:
+        content += "- %s - Level %d %s\n" % (player.name, player.level, player.vocation)
+    return content
+
 
 if __name__ == "__main__":
     cli()

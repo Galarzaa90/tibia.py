@@ -4,3 +4,4 @@ GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildNam
 GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
 GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
 GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
+WORLD_URL = "https://www.tibia.com/community/?subtopic=worlds&world=%s"

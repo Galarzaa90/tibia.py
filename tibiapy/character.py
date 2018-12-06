@@ -714,3 +714,13 @@ class OtherCharacter(abc.Character):
         self.online = online
         self.deleted = deleted
 
+
+class OnlineCharacter(abc.Character):
+    """Representes an online character."""
+    __slots__ = ("name", "world", "vocation", "level")
+
+    def __init__(self, name, world, level, vocation):
+        self.name = name
+        self.world = world
+        self.level = int(level)
+        self.vocation = vocation
