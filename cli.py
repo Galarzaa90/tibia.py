@@ -23,7 +23,8 @@ def cli():
 @cli.command(name="char")
 @click.argument('name', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
-def char(name, tibiadata):
+@click.option("-js", "--json", default=False, is_flag=True)
+def char(name, tibiadata, json):
     """Displays information about a Tibia character."""
     name = " ".join(name)
     if tibiadata:
@@ -35,13 +36,16 @@ def char(name, tibiadata):
     start = time.perf_counter()
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
-    char_content = print_character(char)
-    print(char_content)
+    if json:
+        print(char.to_json(2))
+    else:
+        print(build_character(char))
 
 @cli.command(name="guild")
 @click.argument('name', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
-def guild(name, tibiadata):
+@click.option("-js", "--json", default=False, is_flag=True)
+def guild(name, tibiadata, json):
     """Displays information about a Tibia guild."""
     name = " ".join(name)
     if tibiadata:
@@ -53,13 +57,16 @@ def guild(name, tibiadata):
     start = time.perf_counter()
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
-    guild_content = print_guild(guild)
-    print(guild_content)
+    if json:
+        print(guild.to_json(2))
+    else:
+        print(build_guild(guild))
 
 @cli.command(name="guilds")
 @click.argument('world', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
-def guilds(world, tibiadata):
+@click.option("-js", "--json", default=False, is_flag=True)
+def guilds(world, tibiadata, json):
     """Displays the list of guilds for a specific world"""
     world = " ".join(world)
     if tibiadata:
@@ -71,20 +78,26 @@ def guilds(world, tibiadata):
     start = time.perf_counter()
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
-    guild_content = print_guilds(guilds)
-    print(guild_content)
+    if json:
+        import json as _json
+        print(_json.dumps(guilds, default=dict, indent=2))
+    else:
+        print(get_guilds_string(guilds))
 
 @cli.command(name="world")
 @click.argument('name', nargs=-1)
-def world(name):
+@click.option("-js", "--json", default=False, is_flag=True)
+def world(name, json):
     name = " ".join(name)
     r = requests.get(World.get_url(name))
     world = World.from_content(r.text)
     start = time.perf_counter()
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
-    world_content = print_world(world)
-    print(world_content)
+    if json:
+        print(world.to_json(2))
+    else:
+        print(print_world(world))
 
 def get_field(field, content):
     return "{0}{1}:{2} {3}\n".format(BOLD, field, CEND, content)
@@ -93,7 +106,7 @@ def build_header(title, separator="-"):
     return "{2}{0}\n{1}\n{3}".format(title, len(title)*separator, BOLD, CEND)
 
 
-def print_character(character: Character):
+def build_character(character: Character):
     content = build_header("Character", "=")
     if character is None:
         content += "{0}Character doesn't exist{1}".format(RED, CEND)
@@ -154,7 +167,7 @@ def print_character(character: Character):
             ("deleted" if other_char.deleted else "offline"))
     return content
 
-def print_guild(guild):
+def build_guild(guild):
     content = build_header("Guild Information", "=")
     if guild is None:
         content += "{0}Guild doesn't exist{1}".format(RED, CEND)
@@ -194,7 +207,7 @@ def print_guild(guild):
         content += "There are currently no invited characters."
     return content
 
-def print_guilds(guilds):
+def get_guilds_string(guilds):
     content = build_header("Guild List", "=")
     if guilds is None:
         content += "No guilds."

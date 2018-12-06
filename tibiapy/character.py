@@ -557,28 +557,7 @@ class Character(abc.Character):
                 assists.append(Killer(assist, assist in death["involved"]))
             char.deaths.append(Death(char.name, level, time=death_time, killers=killers, assists=assists))
 
-
-    @classmethod
-    def parse_to_json(cls, content, indent=None):
-        """Static method that creates a JSON string from the html content of the character's page.
-
-        Parameters
-        -------------
-        content: :class:`str`
-            The HTML content of the page.
-        indent: :class:`int`
-            The number of spaces to indent the output with.
-
-        Returns
-        ------------
-        :class:`str`
-            A string in JSON format.
-        """
-        char_dict = cls._parse(content)
-        return json.dumps(char_dict, indent=indent)
-
-
-class Death:
+class Death(abc.Serializable):
     """
     Represents a death by a character
 
@@ -642,7 +621,7 @@ class Death:
         return any([k.player and self.name != k.name for k in self.killers])
 
 
-class Killer:
+class Killer(abc.Serializable):
     """
     Represents a killer.
 

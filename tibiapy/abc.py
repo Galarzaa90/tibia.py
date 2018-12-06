@@ -1,10 +1,46 @@
 import abc
+import datetime
+import json
 import urllib.parse
 
 from .const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
 
 
-class Character(metaclass=abc.ABCMeta):
+class Serializable(metaclass=abc.ABCMeta):
+    def keys(self):
+        return list(self.__slots__)
+
+    def __getitem__(self, item):
+        try:
+            return getattr(self, item)
+        except AttributeError:
+            raise KeyError(item) from None
+
+    @staticmethod
+    def _try_dict(obj):
+        try:
+            if isinstance(obj, datetime.datetime):
+                return obj.isoformat()
+            return {k:v for k,v in dict(obj).items() if v is not None}
+        except TypeError:
+            return str(obj)
+
+    def to_json(self, indent=None):
+        """Gets the object's JSON representation.
+
+        Parameters
+        ----------
+        indent: :class:`int`, optional
+            Number of spaces used as indentation, ``None`` will return the shortest possible string.
+
+        Returns
+        -------
+        :class:`str`
+            JSON representation of the object.
+        """
+        return json.dumps({k:v for k,v in dict(self).items() if v is not None}, indent=indent, default=self._try_dict)
+
+class Character(Serializable, metaclass=abc.ABCMeta):
     """Base class for all character classes.
 
     Implements common properties.

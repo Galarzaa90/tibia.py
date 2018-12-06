@@ -71,13 +71,19 @@ Death
 -----------
 .. autoclass:: Death
    :members:
+   :inherited-members:
 
 Guild
 -----------
 .. autoclass:: Guild
    :members:
+   :inherited-members:
 
-
+World
+-----
+.. autoclass:: World
+   :members:
+   :inherited-members:
 
 Auxiliary Classes
 ==================
@@ -105,11 +111,11 @@ Other Character
    :members:
    :inherited-members:
 
-Utility functions
-==================
-.. autofunction:: tibiapy.utils.parse_tibia_datetime
-
-.. autofunction:: tibiapy.utils.parse_tibia_date
+Online Character
+----------------
+.. autoclass:: OnlineCharacter
+   :members:
+   :inherited-members:
 
 Exceptions
 ==================
@@ -117,3 +123,8 @@ Exceptions
 .. autoexception:: TibiapyException
 
 .. autoexception:: InvalidContent
+
+Utility functions
+==================
+.. automodule:: tibiapy.utils
+   :members:

@@ -24,7 +24,7 @@ disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
 
 
-class Guild:
+class Guild(abc.Serializable):
     """
     Represents a Tibia guild.
 
@@ -550,47 +550,6 @@ class Guild:
             The URL to the guild's page
         """
         return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
-
-    @classmethod
-    def json_list_from_content(cls, content, active_only=False, indent=None):
-        """
-        Creates a JSON string from the html content of the world guilds' page.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The html content of the page.
-        active_only: :class:`bool`
-            Whether to only show active guilds or not.
-        indent: :class:`int`
-            The number of spaces to indent the output with.
-
-        Returns
-        -------
-        :class:`str`
-            A string in JSON format.
-        """
-        list_json = cls._parse_guild_list(content, active_only)
-        return json.dumps(list_json, indent=indent)
-
-    @classmethod
-    def parse_to_json(cls, content, indent=None):
-        """Creates a JSON string from the html content of the guild's page.
-
-        Parameters
-        -------------
-        content: :class:`str`
-            The HTML content of the page.
-        indent: :class:`int`
-            The number of spaces to indent the output with.
-
-        Returns
-        ------------
-        :class:`str`
-            A string in JSON format.
-        """
-        char_dict = cls._parse(content)
-        return json.dumps(char_dict, indent=indent)
 
     @classmethod
     def from_tibiadata(cls, content):
