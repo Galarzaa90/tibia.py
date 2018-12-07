@@ -110,6 +110,11 @@ class Character(abc.Character):
         """Optional[:class:`str`]: The character's rank in the guild they belong to, or `None`."""
         return self.guild_membership["rank"] if self.guild_membership else None
 
+    @property
+    def deleted(self):
+        """:class:`bool`: Whether the character is scheduled for deletion or not."""
+        return self.deletion_date is not None
+
     @classmethod
     def _beautiful_soup(cls, content):
         """

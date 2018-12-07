@@ -11,6 +11,7 @@ FILE_CHARACTER_DELETION = "character_deletion.txt"
 FILE_CHARACTER_DEATHS_COMPLEX = "character_deaths_complex.txt"
 
 FILE_CHARACTER_TIBIADATA = "character_tibiadata.txt"
+FILE_CHARACTER_TIBIADATA_DELETED = "character_tibiadata_deleted.txt"
 FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character_tibiadata_not_found.txt"
 
 
@@ -86,6 +87,17 @@ class TestCharacter(TestTibiaPy):
         self.assertIsInstance(char.last_login, datetime.datetime)
 
         self.assertTrue(char.deaths[5].by_player)
+
+    def testCharacterTibiaDataDeleted(self):
+        content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA_DELETED, False)
+        char = Character.from_tibiadata(content)
+
+        self.assertEqual(char.url_tibiadata, Character.get_url_tibiadata(char.name))
+        self.assertIsInstance(char, Character)
+        self.assertTrue(char.deleted)
+        self.assertIsInstance(char.deletion_date, datetime.datetime)
+        self.assertIsNone(char.guild_name)
+        self.assertIsNone(char.last_login)
 
     def testCharacterTibiaDataNotFound(self):
         content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA_NOT_FOUND, False)
