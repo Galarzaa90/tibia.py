@@ -86,11 +86,16 @@ def guilds(world, tibiadata, json):
 
 @cli.command(name="world")
 @click.argument('name', nargs=-1)
+@click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def world(name, json):
+def world(name, tibiadata, json):
     name = " ".join(name)
-    r = requests.get(World.get_url(name))
-    world = World.from_content(r.text)
+    if tibiadata:
+        r = requests.get(World.get_url_tibiadata(name))
+        world = World.from_tibiadata(r.text)
+    else:
+        r = requests.get(World.get_url(name))
+        world = World.from_content(r.text)
     start = time.perf_counter()
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
@@ -100,10 +105,15 @@ def world(name, json):
         print(print_world(world))
 
 @cli.command(name="worlds")
+@click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def worlds(json):
-    r = requests.get(WorldOverview.get_url())
-    worlds = WorldOverview.from_content(r.text)
+def worlds(tibiadata, json):
+    if tibiadata:
+        r = requests.get(WorldOverview.get_url_tibiadata())
+        worlds = WorldOverview.from_tibiadata(r.text)
+    else:
+        r = requests.get(WorldOverview.get_url())
+        worlds = WorldOverview.from_content(r.text)
     start = time.perf_counter()
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
@@ -248,6 +258,7 @@ def print_world(world):
     content += get_field("PvP Type", world.pvp_type)
     content += get_field("Transfer Type", world.transfer_type)
     content += get_field("World Type", world.type)
+    content += get_field("Premium Only", "Yes" if world.premium_only else "No")
     if not world.battleye_protected:
         content += get_field("Battleye Protected", "Not protected")
     else:

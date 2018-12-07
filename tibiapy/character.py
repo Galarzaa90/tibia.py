@@ -3,13 +3,13 @@ import json
 import re
 import urllib.parse
 from collections import OrderedDict
-from typing import List, Optional
+from typing import List
 
 import bs4
 
-from . import abc
-from .const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
-from .utils import parse_tibia_datetime, parse_tibiadata_datetime
+from tibiapy import abc
+from tibiapy.const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
+from tibiapy.utils import parse_tibia_datetime, parse_tibiadata_datetime
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
@@ -437,7 +437,7 @@ class Character(abc.Character):
         return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
 
     @classmethod
-    def from_content(cls, content) -> Optional['Character']:
+    def from_content(cls, content):
         """Creates an instance of the class from the html content of the character's page.
 
         Parameters
@@ -447,7 +447,7 @@ class Character(abc.Character):
 
         Returns
         ----------
-        Optional[:class:`Character`]
+        :class:`Character`
             The character contained in the page, or None if the character doesn't exist.
         """
         char_json = cls._parse(content)

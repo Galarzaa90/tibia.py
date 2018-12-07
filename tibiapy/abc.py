@@ -3,7 +3,7 @@ import datetime
 import json
 import urllib.parse
 
-from .const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
+from tibiapy.const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
 
 
 class Serializable(metaclass=abc.ABCMeta):

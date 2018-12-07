@@ -3,13 +3,13 @@ import json
 import re
 import urllib.parse
 from collections import OrderedDict
-from typing import List, Optional
+from typing import List
 
 import bs4
 
-from . import GUILD_LIST_URL, GUILD_LIST_URL_TIBIADATA, InvalidContent, abc
-from .const import GUILD_URL, GUILD_URL_TIBIADATA
-from .utils import parse_tibia_date, parse_tibiadata_date
+from tibiapy import InvalidContent, abc
+from tibiapy.const import GUILD_LIST_URL, GUILD_LIST_URL_TIBIADATA, GUILD_URL, GUILD_URL_TIBIADATA
+from tibiapy.utils import parse_tibia_date, parse_tibiadata_date
 
 COLS_INVITED_MEMBER = 2
 COLS_GUILD_MEMBER = 6
@@ -461,7 +461,7 @@ class Guild(abc.Serializable):
         return [cls(**g) for g in guild_list]
 
     @classmethod
-    def from_content(cls, content) -> Optional['Guild']:
+    def from_content(cls, content):
         """Creates an instance of the class from the html content of the guild's page.
 
         Parameters
@@ -471,7 +471,7 @@ class Guild(abc.Serializable):
 
         Returns
         ----------
-        Optional[:class:`Guild`]
+        :class:`Guild`
             The guild contained in the page or None if it doesn't exist.
         """
         guild_json = cls._parse(content)

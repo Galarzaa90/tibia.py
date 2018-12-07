@@ -4,10 +4,10 @@ from collections import OrderedDict
 
 import bs4
 
-from tibiapy import abc
+from tibiapy import WORLD_URL_TIBIADATA, abc
 from tibiapy.character import OnlineCharacter
 from tibiapy.const import WORLD_URL
-from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date
+from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date, parse_tibiadata_datetime
 
 record_regexp = re.compile(r'(?P<count>\d+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
@@ -53,7 +53,7 @@ class World(abc.Serializable):
     """
     __slots__ = ("name", "status", "online_count", "record_count", "record_date", "location", "pvp_type",
                  "creation_date", "transfer_type", "world_quest_titles", "battleye_protected", "battleye_date", "type",
-                 "players_online", "premium_only")
+                 "premium_only", "players_online")
 
     def __init__(self, name, **kwargs):
         self.name = name
@@ -92,6 +92,22 @@ class World(abc.Serializable):
             The URL to the world's information page.
         """
         return WORLD_URL % name.title()
+
+    @classmethod
+    def get_url_tibiadata(cls, name):
+        """Gets the URL to the World's information page on TibiaData.com.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the world's information page on TibiaData.com.
+        """
+        return WORLD_URL_TIBIADATA % name.title()
     
     @classmethod
     def from_content(cls, content):
@@ -109,6 +125,54 @@ class World(abc.Serializable):
         """
         world = cls._parse(content)
         return world
+
+    @classmethod
+    def from_tibiadata(cls, content):
+        """Parses a TibiaData.com response into a :class:`World`
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The raw JSON content from TibiaData
+
+        Returns
+        -------
+        :class:`World`
+            The World described in the page, or ``None``.
+        """
+        try:
+            json_data = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        try:
+            world_data = json_data["world"]
+            world_info = world_data["world_information"]
+            world = cls(world_info["name"])
+            world.online_count = world_info["players_online"]
+            world.status = "Online" if world.online_count > 0 else "Offline"
+            world.record_count = world_info["online_record"]["players"]
+            world.record_date = parse_tibiadata_datetime(world_info["online_record"]["date"])
+            try:
+                world.creation_date = "%s/%s" % (world_info["creation_date"][-2:], world_info["creation_date"][2:4])
+            except IndexError:
+                world.creation_date = world_info["creation_date"]
+            world.location = world_info["location"]
+            world.pvp_type = world_info["pvp_type"]
+            world.premium_only = "premium_type" in world_info
+            world.world_quest_titles = world_info.get("world_quest_titles", [])
+            if "Not protected" in world_info["battleye_status"]:
+                world.battleye_protected = False
+            else:
+                world.battleye_protected = True
+                m = battleye_regexp.search(world_info["battleye_status"])
+                if m:
+                    world.battleye_date = parse_tibia_full_date(m.group(1))
+            world.type = world_info.get("Game World Type:", "Regular")
+            for player in world_data.get("players_online", []):
+                world.players_online.append(OnlineCharacter(player["name"], world.name, player["level"], player["vocation"]))
+            return world
+        except KeyError:
+            return None
 
     @classmethod
     def _beautiful_soup(cls, content):
