@@ -77,6 +77,11 @@ class World(abc.Serializable):
         """:class:`str`: URL to the world's information page on Tibia.com."""
         return self.get_url(self.name)
 
+    @property
+    def url_tibiadata(self):
+        """:class:`str`: URL to the world's information page on TibiaData.com."""
+        return self.get_url_tibiadata(self.name)
+
     @classmethod
     def get_url(cls, name):
         """Gets the URL to the World's information page on Tibia.com.
@@ -160,13 +165,7 @@ class World(abc.Serializable):
             world.pvp_type = world_info["pvp_type"]
             world.premium_only = "premium_type" in world_info
             world.world_quest_titles = world_info.get("world_quest_titles", [])
-            if "Not protected" in world_info["battleye_status"]:
-                world.battleye_protected = False
-            else:
-                world.battleye_protected = True
-                m = battleye_regexp.search(world_info["battleye_status"])
-                if m:
-                    world.battleye_date = parse_tibia_full_date(m.group(1))
+            world._parse_battleye_status(world_info.get("battleye_status", ""))
             world.type = world_info.get("Game World Type:", "Regular")
             for player in world_data.get("players_online", []):
                 world.players_online.append(OnlineCharacter(player["name"], world.name, player["level"], player["vocation"]))
@@ -200,7 +199,7 @@ class World(abc.Serializable):
         world = cls(selected_world.text)
         world._parse_world_info(tables.get("World Information", []))
 
-        online_table = tables.get("Players Online")
+        online_table = tables.get("Players Online", [])
         world.players_online = []
         for row in online_table[1:]:
             cols_raw = row.find_all('td')
@@ -225,7 +224,10 @@ class World(abc.Serializable):
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
             value = value.replace("\xa0", " ")
             world_info[field] = value
-        self.online_count = world_info.pop("players_online")
+        try:
+            self.online_count = int(world_info.pop("players_online"))
+        except KeyError:
+            self.online_count = 0
         m = record_regexp.match(world_info.pop("online_record"))
         if m:
             self.record_count = int(m.group("count"))
@@ -233,17 +235,29 @@ class World(abc.Serializable):
         if "world_quest_titles" in world_info:
             self.world_quest_titles = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
         self.type = world_info.pop("game_world_type")
-        m = battleye_regexp.search(world_info.pop("battleye_status"))
-        if m:
-            self.battleye_protected = True
-            self.battleye_date = parse_tibia_full_date(m.group(1))
-        else:
-            self.battleye_date = False
+        self._parse_battleye_status(world_info.pop("battleye_status"))
+        self.premium_only = "premium_type" in world_info
         for k, v in world_info.items():
             try:
                 setattr(self, k, v)
             except AttributeError:
                 pass
+
+    def _parse_battleye_status(self, battleye_string):
+        """Parses the battleye string and applies the results.
+
+        Parameters
+        ----------
+        battleye_string: :class:`str`
+            String containing the world's Battleye Status.
+        """
+        m = battleye_regexp.search(battleye_string)
+        if m:
+            self.battleye_protected = True
+            self.battleye_date = parse_tibia_full_date(m.group(1))
+        else:
+            self.battleye_protected = False
+            self.battleye_date = None
 
     @classmethod
     def _parse_tables(cls, parsed_content):
