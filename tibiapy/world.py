@@ -1,3 +1,4 @@
+import json
 import re
 from collections import OrderedDict
 
@@ -10,6 +11,8 @@ from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date
 
 record_regexp = re.compile(r'(?P<count>\d+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
+
+
 
 class World(abc.Serializable):
     """Represents a tibia game server.
@@ -45,10 +48,12 @@ class World(abc.Serializable):
         The world's type.
     players_online: :obj:`list` of :class:`OnlineCharacter`.
         A list of characters currently online in the server.
+    premium_only: :class:`bool`
+        Whether only premium account players are allowed to play in this server.
     """
     __slots__ = ("name", "status", "online_count", "record_count", "record_date", "location", "pvp_type",
                  "creation_date", "transfer_type", "world_quest_titles", "battleye_protected", "battleye_date", "type",
-                 "players_online")
+                 "players_online", "premium_only")
 
     def __init__(self, name, **kwargs):
         self.name = name
@@ -65,15 +70,7 @@ class World(abc.Serializable):
         self.battleye_date = kwargs.get("battleye_date")
         self.type = kwargs.get("type")
         self.players_online = kwargs.get("players_online", [])
-
-    def keys(self):
-        return list(self.__slots__)
-
-    def __getitem__(self, item):
-        try:
-            return getattr(self, item)
-        except AttributeError as e:
-            raise KeyError(item) from None
+        self.premium_only = kwargs.get("premium_only", False)
 
     @property
     def url(self):
@@ -207,3 +204,172 @@ class World(abc.Serializable):
             inner_table = table.find("div", attrs={'class': 'InnerTableContainer'})
             output[title] = inner_table.find_all("tr")
         return output
+
+class WorldOverview(abc.Serializable):
+    """Container class for the World Overview.
+
+    Attributes
+    ----------
+    record_count: :class:`int`
+        The overall player online record.
+    record_date: :class:`datetime.date`
+        The date where the record was achieved.
+    worlds: :class:`list` of :class:`World`
+        List of worlds, with limited info.
+    """
+    __slots__ = ("record_count", "record_date", "worlds")
+
+    def __init__(self, **kwargs):
+        self.record_count = kwargs.get("record_count", 0)
+        self.record_date = kwargs.get("record_date", 0)
+        self.worlds = kwargs.get("worlds", [])
+
+    @property
+    def total_online(self):
+        """:class:`int`: Total players online across all worlds."""
+        return sum(w.online_count for w in self.worlds)
+
+    @classmethod
+    def get_url(cls):
+        """
+        Gets the URL to the World Overview page in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the World Overview's page.
+        """
+        return "https://www.tibia.com/community/?subtopic=worlds"
+
+    @classmethod
+    def get_url_tibiadata(cls):
+        """
+        Gets the URL to the World Overview page in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the World Overview's page.
+        """
+        return "https://api.tibiadata.com/v2/worlds.json"
+
+    @classmethod
+    def from_content(cls, content):
+        """Parses the content of the World Overview section from Tibia.com into an object of this class.
+
+        Notes
+        -----
+        The :class:`World` elements contained in the attribute ``worlds`` only contain the following attributes:
+
+        - :py:attr:`World.name`
+        - :py:attr:`World.online_count`
+        - :py:attr:`World.location`
+        - :py:attr:`World.pvp_type`
+        - :py:attr:`World.battleye_protected`
+        - :py:attr:`World.battleye_date`
+        - :py:attr:`World.premium_only`
+        - :py:attr:`World.type`
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the World Overview page in Tibia.com
+
+        Returns
+        -------
+        :class:`WorldOverview`
+            An instance of this class containing all the information.
+        """
+        parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
+                          parse_only=bs4.SoupStrainer("div", class_="TableContentAndRightShadow"))
+        world_overview = cls()
+        rows = parsed_content.find_all("tr")
+        m = record_regexp.search(rows[0].text)
+        if not m:
+            return None
+        world_overview.record_count = int(m.group("count"))
+        world_overview.record_date = parse_tibia_datetime(m.group("date"))
+        world_rows = rows[2:]
+        world_overview._parse_worlds(world_rows)
+        return world_overview
+
+    def _parse_worlds(self, world_rows):
+        for world_row in world_rows:
+            cols = world_row.find_all("td")
+            name = cols[0].text.strip()
+            online = int(cols[1].text.strip())
+            location = cols[2].text.replace("\u00a0", " ").strip()
+            pvp = cols[3].text.strip()
+
+            battleye_icon = cols[4].find("span", attrs={"class": "HelperDivIndicator"})
+            battleye_protected = False
+            battleye_date = None
+            if battleye_icon is not None:
+                battleye_protected = True
+                m = battleye_regexp.search(battleye_icon["onmouseover"])
+                if m:
+                    battleye_date = parse_tibia_full_date(m.group(1))
+
+            additional_info = cols[5].text.strip()
+            premium, transfer_type, world_type = self._parse_additional_info(additional_info)
+            self.worlds.append(World(name, online_count=online, location=location, pvp_type=pvp,
+                                     transfer_type=transfer_type, type=world_type, premium_only=premium,
+                                     battleye_protected=battleye_protected, battleye_date=battleye_date))
+
+    @classmethod
+    def _parse_additional_info(cls, additional_info):
+        if "blocked" in additional_info:
+            transfer_type = "blocked"
+        elif "locked" in additional_info:
+            transfer_type = "locked"
+        else:
+            transfer_type = "open"
+        if "experimental" in additional_info:
+            world_type = "Experimental"
+        else:
+            world_type = "Regular"
+        premium = "premium" in additional_info
+        return premium, transfer_type, world_type
+
+    @classmethod
+    def from_tibiadata(cls, content):
+        """Parses the content of the World Overview section from Tibiaata.com into an object of this class.
+
+        Notes
+        -----
+        Due to TibiaData limitations, the resulting object only contains the :py:attr:`worlds` attribute.
+        Also, :class:`World` elements contained in the attribute ``worlds`` only contain the following attributes:
+
+        - :py:attr:`World.name`
+        - :py:attr:`World.online_count`
+        - :py:attr:`World.location`
+        - :py:attr:`World.pvp_type`
+        - :py:attr:`World.premium_only`
+        - :py:attr:`World.type`
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the World Overview page in Tibia.com
+
+        Returns
+        -------
+        :class:`WorldOverview`
+            An instance of this class containing all the information.
+        """
+        try:
+            json_data = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        try:
+            worlds = json_data["worlds"]["allworlds"]
+            world_overview = cls()
+            for world in worlds:
+                premium, transfer_type, world_type = cls._parse_additional_info(world["additional"])
+                world_overview.worlds.append(World(world["name"], players_online=world["online"],
+                                                   location=world["location"], pvp_type=world["worldtype"],
+                                                   premium_only=premium, transfer_type=transfer_type, type=world_type))
+        except KeyError:
+            return None
+
+

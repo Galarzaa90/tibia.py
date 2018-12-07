@@ -3,6 +3,6 @@ from tibiapy.character import Character, Death, Killer, OnlineCharacter, OtherCh
 from tibiapy.const import *
 from tibiapy.errors import *
 from tibiapy.guild import Guild, GuildInvite, GuildMember
-from tibiapy.world import World
+from tibiapy.world import World, WorldOverview
 
 __version__ = '0.1.0'

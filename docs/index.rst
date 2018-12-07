@@ -85,6 +85,12 @@ World
    :members:
    :inherited-members:
 
+WorldOverview
+-------------
+.. autoclass:: WorldOverview
+   :members:
+   :inherited-members:
+
 Auxiliary Classes
 ==================
 

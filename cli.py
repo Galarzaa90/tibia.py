@@ -1,6 +1,6 @@
 import time
 
-from tibiapy import Character, Guild, World, __version__
+from tibiapy import Character, Guild, World, WorldOverview, __version__
 
 try:
     import click
@@ -98,6 +98,19 @@ def world(name, json):
         print(world.to_json(2))
     else:
         print(print_world(world))
+
+@cli.command(name="worlds")
+@click.option("-js", "--json", default=False, is_flag=True)
+def worlds(json):
+    r = requests.get(WorldOverview.get_url())
+    worlds = WorldOverview.from_content(r.text)
+    start = time.perf_counter()
+    dt = time.perf_counter() - start
+    print("Parsed in {0:.2f} ms".format(dt))
+    if json:
+        print(worlds.to_json(2))
+    else:
+        print(print_world_overview(worlds))
 
 def get_field(field, content):
     return "{0}{1}:{2} {3}\n".format(BOLD, field, CEND, content)
@@ -247,6 +260,17 @@ def print_world(world):
     content += build_header("Players Online")
     for player in world.players_online:
         content += "- %s - Level %d %s\n" % (player.name, player.level, player.vocation)
+    return content
+
+def print_world_overview(world_overview):
+    content = build_header("Game World Overview", "=")
+    content += get_field("Total online", world_overview.total_online)
+    content += get_field("Overall Maximum", "%d players on %s" % (world_overview.record_count,
+                                                                  world_overview.record_date))
+
+    content += build_header("Worlds")
+    for world in world_overview.worlds:
+        content += "%s - %d Online - %s - %s\n" % (world.name, world.online_count, world.location, world.pvp_type)
     return content
 
 
