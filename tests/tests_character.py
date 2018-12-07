@@ -10,6 +10,9 @@ FILE_CHARACTER_FORMER_NAMES = "character_former_names.txt"
 FILE_CHARACTER_DELETION = "character_deletion.txt"
 FILE_CHARACTER_DEATHS_COMPLEX = "character_deaths_complex.txt"
 
+FILE_CHARACTER_TIBIADATA = "character_tibiadata.txt"
+FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character_tibiadata_not_found.txt"
+
 
 class TestCharacter(TestTibiaPy):
     def testGuilds(self):
@@ -72,3 +75,23 @@ class TestCharacter(TestTibiaPy):
         self.assertEqual(spawn_invasion.killer, spawn_invasion.killers[0])
         self.assertIsNone(spawn_invasion.killer.url)
         self.assertTrue(spawn_invasion.by_player)
+        
+    def testCharacterTibiaData(self):
+        content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA, False)
+        char = Character.from_tibiadata(content)
+
+        self.assertEqual(char.url_tibiadata, Character.get_url_tibiadata(char.name))
+        self.assertIsInstance(char, Character)
+        self.assertIsNotNone(char.guild_name)
+        self.assertIsInstance(char.last_login, datetime.datetime)
+
+        self.assertTrue(char.deaths[5].by_player)
+
+    def testCharacterTibiaDataNotFound(self):
+        content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA_NOT_FOUND, False)
+        char = Character.from_tibiadata(content)
+        self.assertIsNone(char)
+
+    def testCharacterTibiaDataInvalidJson(self):
+        char = Character.from_tibiadata("<html><b>Not a json string</b></html>")
+        self.assertIsNone(char)

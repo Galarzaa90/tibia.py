@@ -1,0 +1,1 @@
+{"characters":{"error":"Character does not exist.","data":{"status":"offline"}},"information":{"api_version":2,"execution_time":0.0299,"last_updated":"2018-12-07 23:21:33","timestamp":"2018-12-07 23:21:33"}}

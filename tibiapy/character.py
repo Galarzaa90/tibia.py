@@ -541,20 +541,20 @@ class Character(abc.Character):
         for death in deaths:
             level = death["level"]
             death_time = parse_tibiadata_datetime(death["date"])
-            print(death["reason"])
             m = death_reason.search(death["reason"])
             killers_str = []
             assists_str = []
             killers = []
             assists = []
+            involved = [i["name"] for i in death["involved"]]
             if m and m.group("killers"):
                 killers_str = [k.strip() for k in cls._split_list(m.group("killers").strip())]
             if m and m.group("assists"):
                 assists_str = [a.strip() for a in cls._split_list(m.group("assists").strip())]
             for killer in killers_str:
-                killers.append(Killer(killer, killer in death["involved"]))
+                killers.append(Killer(killer, killer in involved))
             for assist in assists_str:
-                assists.append(Killer(assist, assist in death["involved"]))
+                assists.append(Killer(assist, assist in involved))
             char.deaths.append(Death(char.name, level, time=death_time, killers=killers, assists=assists))
 
 class Death(abc.Serializable):
