@@ -14,10 +14,10 @@ class Serializable(abc.ABC):
     def __slots_inherited__(cls):
         slots = []
         for base in cls.__bases__:
-            for slot in base.__slots__:
+            for slot in getattr(base,"__slots__", []):
                 if slot not in slots:
                     slots.append(slot)
-        for slot in cls.__slots__:
+        for slot in getattr(cls, "__slots__", []):
             if slot not in slots:
                 slots.append(slot)
         return tuple(slots)
