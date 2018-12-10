@@ -84,19 +84,7 @@ class Guild(abc.Serializable):
         self.invites = kwargs.get("invites", [])
 
     def __repr__(self) -> str:
-        attributes = ""
-        for attr in self.__slots__:
-            if attr in ["name"]:
-                continue
-            v = getattr(self, attr)
-            if isinstance(v, int) and v == 0 and not isinstance(v, bool):
-                continue
-            if isinstance(v, list) and len(v) == 0:
-                continue
-            if v is None:
-                continue
-            attributes += ",%s=%r" % (attr, v)
-        return "{0.__class__.__name__}({0.name!r}{1}".format(self, attributes)
+        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r}>".format(self)
 
     @property
     def member_count(self):
@@ -553,7 +541,7 @@ class Guild(abc.Serializable):
 
     @classmethod
     def from_tibiadata(cls, content):
-        """Builds a character object from a TibiaData character response"""
+        """Builds a guild object from a TibiaData character response"""
         try:
             json_content = json.loads(content)
         except json.JSONDecodeError:
@@ -582,8 +570,8 @@ class Guild(abc.Serializable):
             for member in rank["characters"]:
                 guild.members.append(GuildMember(member["name"], rank_name, member["nick"] or None,
                                                  member["level"], member["vocation"],
-                                                 parse_tibiadata_date(member["joined"]),
-                                                 member["status"] == "online"))
+                                                 joined=parse_tibiadata_date(member["joined"]),
+                                                 online=member["status"] == "online"))
         for invited in guild_obj["invited"]:
             guild.invites.append(GuildInvite(invited["name"], parse_tibiadata_date(invited["invited"])))
         return guild
@@ -615,35 +603,29 @@ class GuildMember(abc.Character):
     --------------
     rank: :class:`str`
         The rank the member belongs to
-
     name: :class:`str`
         The name of the guild member.
-
-    title: Optional[:class:`str`]
+    title: :class:`str`, optional
         The member's title.
-
     level: :class:`int`
         The member's level.
-
     vocation: :class:`str`
         The member's vocation.
-
     joined: :class:`datetime.date`
         The day the member joined the guild.
-
     online: :class:`bool`
         Whether the member is online or not.
     """
     __slots__ = ("name", "rank", "title", "level", "vocation", "joined", "online")
 
-    def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, joined=None, online=False):
+    def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, **kwargs):
         self.name = name
         self.rank = rank
         self.title = title
         self.vocation = vocation
         self.level = level
-        self.joined = joined
-        self.online = online
+        joined = kwargs.get("joined")
+        self.online = kwargs.get("online")
         if isinstance(joined, datetime.datetime):
             self.joined = joined.date()
         elif isinstance(joined, datetime.date):
@@ -677,3 +659,7 @@ class GuildInvite(abc.Character):
             self.date = parse_tibia_date(date)
         else:
             self.date = None
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} " \
+               "date={0.date!r}>".format(self)

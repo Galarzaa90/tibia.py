@@ -37,7 +37,7 @@ def char(name, tibiadata, json):
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
-        print(char.to_json(2))
+        print(char.to_json(indent=2))
     else:
         print(build_character(char))
 
@@ -58,7 +58,7 @@ def guild(name, tibiadata, json):
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
-        print(guild.to_json(2))
+        print(guild.to_json(indent=2))
     else:
         print(build_guild(guild))
 
@@ -100,7 +100,7 @@ def world(name, tibiadata, json):
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
-        print(world.to_json(2))
+        print(world.to_json(indent=2))
     else:
         print(print_world(world))
 
@@ -118,7 +118,7 @@ def worlds(tibiadata, json):
     dt = time.perf_counter() - start
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
-        print(worlds.to_json(2))
+        print(worlds.to_json(indent=2))
     else:
         print(print_world_overview(worlds))
 
@@ -129,7 +129,7 @@ def build_header(title, separator="-"):
     return "{2}{0}\n{1}\n{3}".format(title, len(title)*separator, BOLD, CEND)
 
 
-def build_character(character: Character):
+def build_character(character: Character):  # NOSONAR
     content = build_header("Character", "=")
     if character is None:
         content += "{0}Character doesn't exist{1}".format(RED, CEND)
@@ -190,7 +190,7 @@ def build_character(character: Character):
             ("deleted" if other_char.deleted else "offline"))
     return content
 
-def build_guild(guild):
+def build_guild(guild):  # NOSONAR
     content = build_header("Guild Information", "=")
     if guild is None:
         content += "{0}Guild doesn't exist{1}".format(RED, CEND)

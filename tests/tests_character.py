@@ -16,7 +16,14 @@ FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character_tibiadata_not_found.txt"
 
 
 class TestCharacter(TestTibiaPy):
-    def testGuilds(self):
+    def _compare_character(self, mock_character, character):
+        self.assertEqual(mock_character.name, character.name)
+        self.assertEqual(mock_character.world, character.world)
+        self.assertEqual(mock_character.vocation, character.vocation)
+        self.assertEqual(mock_character.level, character.level)
+        self.assertEqual(mock_character.sex, character.sex)
+
+    def testCharacter(self):
         character = Character.from_content(self._get_parsed_content(FILE_CHARACTER_RESOURCE, False))
         self._compare_character(Character("Tschas", "Gladera", "Druid", 205, "female"), character)
         self.assertIsNotNone(character.guild_membership)
@@ -32,13 +39,6 @@ class TestCharacter(TestTibiaPy):
         self.assertEqual(0, character.deaths.__len__())
         self.assertEqual(parse_tibia_datetime("Apr 22 2018, 16:00:38 CEST"), character.last_login)
         self.assertEqual(character.url, Character.get_url(character.name))
-
-    def _compare_character(self, mock_character, character):
-        self.assertEqual(mock_character.name, character.name)
-        self.assertEqual(mock_character.world, character.world)
-        self.assertEqual(mock_character.vocation, character.vocation)
-        self.assertEqual(mock_character.level, character.level)
-        self.assertEqual(mock_character.sex, character.sex)
 
     def testCharacterNotFound(self):
         content = self._load_resource(FILE_CHARACTER_NOT_FOUND)

@@ -4,11 +4,18 @@
    contain the root `toctree` directive.
 .. currentmodule:: tibiapy
 
+.. toctree::
+   :hidden:
+   :maxdepth: 3
+
+   api
+
+========
 Tibia.py
-===============
+========
 
 
-Tibia.py is a libray for parsing HTML content from Tibia.com_. into python objects.
+Tibia.py is a library for parsing HTML content from Tibia.com_. into python objects.
 
 This library only performs parsing, to fetch content you need to use external libraries.
 
@@ -43,11 +50,7 @@ This library only performs parsing, to fetch content you need to use external li
 .. _Tibia.com: https://www.tibia.com/news/?subtopic=latestnews
 
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
 
-   index
 
 
 Indices and tables
@@ -57,80 +60,3 @@ Indices and tables
 * :ref:`search`
 
 
-
-
-Classes
-==================
-Character
-----------
-.. autoclass:: Character
-   :members:
-   :inherited-members:
-
-Death
------------
-.. autoclass:: Death
-   :members:
-   :inherited-members:
-
-Guild
------------
-.. autoclass:: Guild
-   :members:
-   :inherited-members:
-
-World
------
-.. autoclass:: World
-   :members:
-   :inherited-members:
-
-WorldOverview
--------------
-.. autoclass:: WorldOverview
-   :members:
-   :inherited-members:
-
-Auxiliary Classes
-==================
-
-Guild Invite
------------------
-.. autoclass:: GuildInvite
-   :members:
-   :inherited-members:
-
-Guild Member
------------------
-.. autoclass:: GuildMember
-   :members:
-   :inherited-members:
-
-Killer
-----------------
-.. autoclass:: Killer
-   :members:
-
-Other Character
------------------
-.. autoclass:: OtherCharacter
-   :members:
-   :inherited-members:
-
-Online Character
-----------------
-.. autoclass:: OnlineCharacter
-   :members:
-   :inherited-members:
-
-Exceptions
-==================
-
-.. autoexception:: TibiapyException
-
-.. autoexception:: InvalidContent
-
-Utility functions
-==================
-.. automodule:: tibiapy.utils
-   :members:

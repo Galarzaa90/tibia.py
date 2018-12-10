@@ -4,6 +4,10 @@ import datetime
 def parse_tibia_datetime(datetime_str):
     """Parses date and time from the format used in Tibia.com
 
+    Accepted format:
+
+    - ``MMM DD YYYY, HH:mm:ss ZZZ``, e.g. ``Dec 10 2018, 21:53:37 CET``.
+
     Parameters
     -------------
     datetime_str: str
@@ -40,6 +44,10 @@ def parse_tibia_datetime(datetime_str):
 def parse_tibia_date(date_str):
     """Parses a date from the format used in Tibia.com
 
+    Accepted format:
+
+    - ``MMM DD YYYY``, e.g. ``Jul 23 2015``
+
     Parameters
     -----------
     date_str: str
@@ -48,7 +56,7 @@ def parse_tibia_date(date_str):
     Returns
     -----------
     :class:`datetime.date`
-        The represended date."""
+        The represented date."""
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")
         return t.date()
@@ -56,7 +64,11 @@ def parse_tibia_date(date_str):
         return None
 
 def parse_tibia_full_date(date_str):
-    """Parses a date from the format used in Tibia.com
+    """Parses a date in the fuller format used in Tibia.com
+
+    Accepted format:
+
+    - ``MMMM DD, YYYY``, e.g. ``July, 23 2015``
 
     Parameters
     -----------
@@ -80,7 +92,6 @@ def parse_tibiadata_datetime(date_dict):
         date: contains a string representation of the time
         timezone: a string representation of the timezone the date time is based on
         timezone_type: the type of representation used in the timezone key
-
 
 
     Parameters
@@ -107,13 +118,13 @@ def parse_tibiadata_datetime(date_dict):
             return None
     else:
         timezone_offset = 1
-    # We substract the offset to convert the time to UTC
+    # We subtract the offset to convert the time to UTC
     t = t - datetime.timedelta(hours=timezone_offset)
     return t.replace(tzinfo=datetime.timezone.utc)
 
 
 def parse_tibiadata_date(date_str):
-    """Parses a date from the format used in TibiaData
+    """Parses a date from the format used in TibiaData.
 
     Parameters
     -----------

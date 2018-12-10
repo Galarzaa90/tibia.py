@@ -55,14 +55,14 @@ class World(abc.Serializable):
                  "creation_date", "transfer_type", "world_quest_titles", "battleye_protected", "battleye_date", "type",
                  "premium_only", "players_online")
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, location=None, pvp_type=None, **kwargs):
         self.name = name
+        self.location = location
+        self.pvp_type = pvp_type
         self.status = kwargs.get("status")
         self.online_count = kwargs.get("online_count", 0)
         self.record_count = kwargs.get("record_count",0)
         self.record_date = kwargs.get("record_date")
-        self.location = kwargs.get("location")
-        self.pvp_type = kwargs.get("pvp_type")
         self.creation_date = kwargs.get("creation_date")
         self.transfer_type = kwargs.get("transfer_type", "open")
         self.world_quest_titles = kwargs.get("world_quest_titles", [])
@@ -73,7 +73,7 @@ class World(abc.Serializable):
         self.premium_only = kwargs.get("premium_only", False)
 
     def __repr__(self):
-        return "<World name=%r online_count=%d>" % (self.name, self.online_count)
+        return "<{0.__class__.__name__} name={0.name!r} location={0.location!r} pvp_type={0.pvp_type!r}>".format(self)
 
     @property
     def url(self):
@@ -402,10 +402,9 @@ class WorldOverview(abc.Serializable):
 
             additional_info = cols[5].text.strip()
             premium, transfer_type, world_type = self._parse_additional_info(additional_info)
-            self.worlds.append(World(name, online_count=online, location=location, pvp_type=pvp,
-                                     transfer_type=transfer_type, type=world_type, premium_only=premium,
-                                     battleye_protected=battleye_protected, battleye_date=battleye_date,
-                                      status=status))
+            self.worlds.append(World(name, location, pvp, online_count=online, transfer_type=transfer_type,
+                                     type=world_type, premium_only=premium, battleye_protected=battleye_protected,
+                                     battleye_date=battleye_date, status=status))
 
     @classmethod
     def _parse_additional_info(cls, additional_info):
@@ -457,9 +456,9 @@ class WorldOverview(abc.Serializable):
             world_overview = cls()
             for world in worlds:
                 premium, transfer_type, world_type = cls._parse_additional_info(world["additional"])
-                world_overview.worlds.append(World(world["name"], online_count=world["online"],
-                                                   location=world["location"], pvp_type=world["worldtype"],
-                                                   premium_only=premium, transfer_type=transfer_type, type=world_type))
+                world_overview.worlds.append(World(world["name"], world["location"], world["worldtype"],
+                                                   online_count=world["online"], premium_only=premium,
+                                                   transfer_type=transfer_type, type=world_type))
             return world_overview
         except KeyError:
             return None

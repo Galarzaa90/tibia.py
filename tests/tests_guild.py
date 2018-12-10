@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import Guild, GuildMember, GuildInvite
+from tibiapy import Guild, GuildInvite, GuildMember
 
 FILE_GUILD_FULL = "guild_full.txt"
 FILE_GUILD_INFO_COMPLETE = "guild_info_complete.txt"
@@ -9,6 +9,8 @@ FILE_GUILD_INFO_MINIMUM = "guild_info_minimum.txt"
 FILE_GUILD_INFO_DISBANDING = "guild_info_disbanding.txt"
 FILE_GUILD_INFO_FORMATION = "guild_info_formation.txt"
 FILE_GUILD_LIST = "guild_list.txt"
+
+FILE_GUILD_TIBIADATA = "guild_tibiadata.txt"
 
 class TestsGuild(TestTibiaPy):
     def setUp(self):
@@ -150,3 +152,9 @@ class TestsGuild(TestTibiaPy):
         self.assertIsInstance(Guild(founded=datetime.datetime.now()).founded, datetime.date)
         self.assertIsNone(Guild(founded=None).founded)
         self.assertIsNone(Guild(founded="Jul 20").founded)
+
+    def testGuildTibiaData(self):
+        content = self._get_parsed_content(FILE_GUILD_TIBIADATA, False)
+        guild = Guild.from_tibiadata(content)
+
+        self.assertIsInstance(guild, Guild)
