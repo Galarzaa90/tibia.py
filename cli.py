@@ -27,14 +27,20 @@ def cli():
 def char(name, tibiadata, json):
     """Displays information about a Tibia character."""
     name = " ".join(name)
+    start = time.perf_counter()
     if tibiadata:
         r = requests.get(Character.get_url_tibiadata(name))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         char = Character.from_tibiadata(r.text)
     else:
         r = requests.get(Character.get_url(name))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         char = Character.from_content(r.text)
-    start = time.perf_counter()
-    dt = time.perf_counter() - start
+    dt = (time.perf_counter() - start) * 1000.0
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
         print(char.to_json(indent=2))
@@ -48,14 +54,20 @@ def char(name, tibiadata, json):
 def guild(name, tibiadata, json):
     """Displays information about a Tibia guild."""
     name = " ".join(name)
+    start = time.perf_counter()
     if tibiadata:
         r = requests.get(Guild.get_url_tibiadata(name))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         guild = Guild.from_tibiadata(r.text)
     else:
         r = requests.get(Guild.get_url(name))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         guild = Guild.from_content(r.text)
-    start = time.perf_counter()
-    dt = time.perf_counter() - start
+    dt = (time.perf_counter() - start) * 1000.0
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
         print(guild.to_json(indent=2))
@@ -69,14 +81,20 @@ def guild(name, tibiadata, json):
 def guilds(world, tibiadata, json):
     """Displays the list of guilds for a specific world"""
     world = " ".join(world)
+    start = time.perf_counter()
     if tibiadata:
         r = requests.get(Guild.get_world_list_url_tibiadata(world))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         guilds = Guild.list_from_tibiadata(r.text)
     else:
         r = requests.get(Guild.get_world_list_url(world))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         guilds = Guild.list_from_content(r.text)
-    start = time.perf_counter()
-    dt = time.perf_counter() - start
+    dt = (time.perf_counter() - start) * 1000.0
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
         import json as _json
@@ -90,14 +108,20 @@ def guilds(world, tibiadata, json):
 @click.option("-js", "--json", default=False, is_flag=True)
 def world(name, tibiadata, json):
     name = " ".join(name)
+    start = time.perf_counter()
     if tibiadata:
         r = requests.get(World.get_url_tibiadata(name))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         world = World.from_tibiadata(r.text)
     else:
         r = requests.get(World.get_url(name))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         world = World.from_content(r.text)
-    start = time.perf_counter()
-    dt = time.perf_counter() - start
+    dt = (time.perf_counter() - start) * 1000.0
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
         print(world.to_json(indent=2))
@@ -108,14 +132,20 @@ def world(name, tibiadata, json):
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
 def worlds(tibiadata, json):
+    start = time.perf_counter()
     if tibiadata:
         r = requests.get(WorldOverview.get_url_tibiadata())
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         worlds = WorldOverview.from_tibiadata(r.text)
     else:
         r = requests.get(WorldOverview.get_url())
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         worlds = WorldOverview.from_content(r.text)
-    start = time.perf_counter()
-    dt = time.perf_counter() - start
+    dt = (time.perf_counter() - start) * 1000.0
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
         print(worlds.to_json(indent=2))
@@ -128,15 +158,22 @@ def worlds(tibiadata, json):
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
 def house(id, world, tibiadata, json):
+    start = time.perf_counter()
     if tibiadata:
-        pass
-        #  r = requests.get(House.get_url_tibiadata(name))
+        r = requests.get(House.get_url_tibiadata(int(id), world))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        print("TibiaData parsing not supported for Houses yet.")
+        return
+        # start = time.perf_counter()
         #  house = House.from_tibiadata(r.text)
     else:
         r = requests.get(House.get_url(int(id), world))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
         house = House.from_content(r.text)
-    start = time.perf_counter()
-    dt = time.perf_counter() - start
+    dt = (time.perf_counter() - start) * 1000.0
     print("Parsed in {0:.2f} ms".format(dt))
     if json:
         print(house.to_json(indent=2))
@@ -308,7 +345,28 @@ def print_world_overview(world_overview):
 
 def print_house(house):
     content = build_header("House", "=")
-
+    content += get_field("Name", house.name)
+    content += get_field("World", house.world)
+    content += get_field("Beds", house.beds)
+    content += get_field("Size", "%d SQM" % house.size)
+    content += get_field("Rent", "%d gold monthly" % house.rent)
+    content += get_field("Type", house.type.title())
+    content += get_field("Status", house.status.title())
+    if house.status == "auctioned":
+        content += get_field("Highest bid", "%d gold by %s, auction ends on %s" %
+                                            (house.highest_bid, house.highest_bidder, house.auction_end)
+        if house.highest_bidder else "None")
+    else:
+        content += get_field("Rented by", "%s, paid until %s" % (house.owner, house.paid_until))
+        if house.transfer_date:
+            transfer = "Moving out on %s" % house.transfer_date
+            if house.transferee:
+                transfer += " and transfering to %s for %d gold" % (house.transferee, house.transfer_price)
+                if house.transfer_accepted:
+                    transfer += "."
+                else:
+                    transfer += ", if accepted."
+            content += get_field("Moving", transfer)
     return content
 
 

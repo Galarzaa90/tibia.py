@@ -2,7 +2,7 @@ import re
 
 import bs4
 
-from tibiapy import abc
+from tibiapy import Character, abc
 from tibiapy.utils import parse_number_words, parse_tibia_datetime
 
 URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
@@ -39,8 +39,8 @@ class House(abc.Serializable):
         The monthly rent paid for the house.
     world: :class:`str`
         The world of the house.
-    state: :class:`str`
-        The renting state of the house, can be ``rented`` or ``auctioned``.
+    status: :class:`str`
+        The renting status of the house, can be ``rented`` or ``auctioned``.
     owner: :class:`str`
         The current owner of the house, if any.
     owner_sex: :class:`str`
@@ -62,7 +62,7 @@ class House(abc.Serializable):
     auction_end: :class:`datetime.datetime`
         The date where the auction will end.
     """
-    __slots__ = ("name", "id", "world", "image_url", "beds", "type", "size", "rent", "state", "owner", "owner_sex",
+    __slots__ = ("name", "id", "world", "image_url", "beds", "type", "size", "rent", "status", "owner", "owner_sex",
                  "paid_until", "transfer_date", "transferee", "transfer_price", "transfer_accepted", "highest_bid",
                  "highest_bidder", "auction_end")
 
@@ -74,7 +74,7 @@ class House(abc.Serializable):
         self.type = kwargs.get("type", "house")
         self.size = kwargs.get("size", 0)
         self.rent = kwargs.get("rent", 0)
-        self.state = kwargs.get("state")
+        self.status = kwargs.get("status")
         self.owner = kwargs.get("owner")
         self.owner_sex = kwargs.get("owner_sex")
         self.paid_until = kwargs.get("paid_until")
@@ -84,6 +84,16 @@ class House(abc.Serializable):
         self.transfer_accepted = kwargs.get("transfer_accepted", False)
         self.highest_bid = kwargs.get("highest_bid", 0)
         self.highest_bidder = kwargs.get("highest_bidder")
+
+    @property
+    def owner_url(self):
+        """:class:`str`: The URL to the Tibia.com page of the house's owner, if applicable."""
+        return Character.get_url(self.owner) if self.owner is not None else None
+
+    @property
+    def transferee_url(self):
+        """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
+        return Character.get_url(self.transferee) if self.transferee is not None else None
 
     @property
     def url(self):
@@ -143,12 +153,12 @@ class House(abc.Serializable):
 
         m = rented_regex.search(state)
         if m:
-            house.state = "rented"
+            house.status = "rented"
             house.owner = m.group("owner")
             house.owner_sex = "male" if m.group("pronoun") == "He" else "female"
             house.paid_until = parse_tibia_datetime(m.group("paid_until"))
         else:
-            house.state = "auctioned"
+            house.status = "auctioned"
 
         m = transfer_regex.search(state)
         if m:
@@ -166,8 +176,6 @@ class House(abc.Serializable):
         if m:
             house.highest_bid = int(m.group("highest_bid"))
             house.highest_bidder = m.group("bidder")
-
-        print(house.to_json(indent=2))
         return house
 
 
@@ -203,4 +211,4 @@ class House(abc.Serializable):
         -------
         The URL to the house in TibiaData.com
         """
-        return URL_HOUSE % (world, house_id)
+        return URL_HOUSE_TIBIADATA % (world, house_id)
