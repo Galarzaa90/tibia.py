@@ -3,8 +3,8 @@ import datetime
 import json
 import urllib.parse
 
-from tibiapy.const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
-
+CHARACTER_URL = "https://www.tibia.com/community/?subtopic=characters&name=%s"
+CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
 
 class Serializable(abc.ABC):
     """Implements methods to make a class convertible to JSON.
@@ -83,11 +83,41 @@ class Character(Serializable, metaclass=abc.ABCMeta):
         """
         :class:`str`: The URL of the character's information page on Tibia.com
         """
-        return CHARACTER_URL + urllib.parse.quote(self.name.encode('iso-8859-1'))
+        return self.get_url(self.name)
 
     @property
     def url_tibiadata(self):
         """
         :class:`str`: The URL of the character's information on TibiaData
         """
-        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(self.name.encode('iso-8859-1'))
+        return self.get_url_tibiadata(self.name)
+
+    @classmethod
+    def get_url(cls, name):
+        """Gets the Tibia.com URL for a given character name.
+
+        Parameters
+        ------------
+        name: :class:`str`
+            The name of the character
+
+        Returns
+        --------
+        :class:`str`
+            The URL to the character's page."""
+        return CHARACTER_URL % urllib.parse.quote(name.encode('iso-8859-1'))
+
+    @classmethod
+    def get_url_tibiadata(cls, name):
+        """Gets the TibiaData.com URL for a given character name.
+
+        Parameters
+        ------------
+        name: :class:`str`
+            The name of the character
+
+        Returns
+        --------
+        :class:`str`
+            The URL to the character's page on TibiaData."""
+        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))

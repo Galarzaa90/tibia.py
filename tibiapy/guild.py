@@ -7,8 +7,8 @@ from typing import List
 
 import bs4
 
-from tibiapy import InvalidContent, abc
-from tibiapy.const import GUILD_LIST_URL, GUILD_LIST_URL_TIBIADATA, GUILD_URL, GUILD_URL_TIBIADATA
+from tibiapy import abc
+from tibiapy.errors import InvalidContent
 from tibiapy.utils import parse_tibia_date, parse_tibiadata_date
 
 COLS_INVITED_MEMBER = 2
@@ -23,6 +23,10 @@ disband_regex = re.compile(r'It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).')
 disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
 
+GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName="
+GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
+GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
+GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
 
 class Guild(abc.Serializable):
     """

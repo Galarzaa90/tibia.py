@@ -8,7 +8,7 @@ from typing import List
 import bs4
 
 from tibiapy import abc
-from tibiapy.const import CHARACTER_URL, CHARACTER_URL_TIBIADATA
+from tibiapy.guild import Guild
 from tibiapy.utils import parse_tibia_datetime, parse_tibiadata_datetime
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
@@ -26,7 +26,7 @@ death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
-#
+
 
 class Character(abc.Character):
     """Represents a Tibia character
@@ -101,19 +101,29 @@ class Character(abc.Character):
         self.deletion_date = kwargs.get("deletion_date")
 
     @property
+    def deleted(self):
+        """:class:`bool`: Whether the character is scheduled for deletion or not."""
+        return self.deletion_date is not None
+
+    @property
     def guild_name(self):
-        """Optional[:class:`str`]: The name of the guild the character belongs to, or `None`."""
+        """:class:`str`: The name of the guild the character belongs to, or ``None``."""
         return self.guild_membership["guild"] if self.guild_membership else None
 
     @property
     def guild_rank(self):
-        """Optional[:class:`str`]: The character's rank in the guild they belong to, or `None`."""
+        """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
         return self.guild_membership["rank"] if self.guild_membership else None
 
     @property
-    def deleted(self):
-        """:class:`bool`: Whether the character is scheduled for deletion or not."""
-        return self.deletion_date is not None
+    def guild_url(self):
+        """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
+        return Guild.get_url(self.guild_membership["guild"]) if self.guild_membership else None
+
+    @property
+    def married_to_url(self):
+        """:class:`str`: The URL to the husband/spouse information page on Tibia.com, if applicable."""
+        return self.get_url(self.married_to) if self.married_to else None
 
     @classmethod
     def _beautiful_soup(cls, content):
@@ -410,36 +420,6 @@ class Character(abc.Character):
             items[-1] = last_split[0]
             items.append(last_split[1])
         return [e.strip() for e in items]
-
-    @classmethod
-    def get_url(cls, name):
-        """Gets the Tibia.com URl for a given character name.
-
-        Parameters
-        ------------
-        name: str
-            The name of the character
-
-        Returns
-        --------
-        str
-            The URL to the character's page"""
-        return CHARACTER_URL + urllib.parse.quote(name.encode('iso-8859-1'))
-
-    @classmethod
-    def get_url_tibiadata(cls, name):
-        """Gets the Tibia.com URl for a given character name.
-
-        Parameters
-        ------------
-        name: str
-            The name of the character
-
-        Returns
-        --------
-        str
-            The URL to the character's page"""
-        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
 
     @classmethod
     def from_content(cls, content):

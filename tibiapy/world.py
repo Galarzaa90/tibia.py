@@ -4,14 +4,16 @@ from collections import OrderedDict
 
 import bs4
 
-from tibiapy import WORLD_URL_TIBIADATA, abc
+from tibiapy import abc
 from tibiapy.character import OnlineCharacter
-from tibiapy.const import WORLD_URL
 from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date, parse_tibiadata_datetime
 
 record_regexp = re.compile(r'(?P<count>\d+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
 
+
+WORLD_URL = "https://www.tibia.com/community/?subtopic=worlds&world=%s"
+WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
 
 class World(abc.Serializable):
