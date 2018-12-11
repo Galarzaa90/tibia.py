@@ -25,6 +25,12 @@ Guild
    :members:
    :inherited-members:
 
+House
+-----------
+.. autoclass:: House
+   :members:
+   :inherited-members:
+
 World
 -----
 .. autoclass:: World

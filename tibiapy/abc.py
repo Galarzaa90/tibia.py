@@ -26,10 +26,13 @@ class Serializable(abc.ABC):
         return list(self.__slots_inherited__())
 
     def __getitem__(self, item):
-        try:
-            return getattr(self, item)
-        except AttributeError:
-            raise KeyError(item) from None
+        if item in self.keys():
+            try:
+                return getattr(self, item)
+            except AttributeError:
+                return None
+        else:
+            raise KeyError(item)
 
     @staticmethod
     def _try_dict(obj):

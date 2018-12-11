@@ -1,6 +1,6 @@
 import time
 
-from tibiapy import Character, Guild, World, WorldOverview, __version__
+from tibiapy import Character, Guild, House, World, WorldOverview, __version__
 
 try:
     import click
@@ -122,6 +122,27 @@ def worlds(tibiadata, json):
     else:
         print(print_world_overview(worlds))
 
+@cli.command(name="house")
+@click.argument('id')
+@click.argument('world')
+@click.option("-td", "--tibiadata", default=False, is_flag=True)
+@click.option("-js", "--json", default=False, is_flag=True)
+def house(id, world, tibiadata, json):
+    if tibiadata:
+        pass
+        #  r = requests.get(House.get_url_tibiadata(name))
+        #  house = House.from_tibiadata(r.text)
+    else:
+        r = requests.get(House.get_url(int(id), world))
+        house = House.from_content(r.text)
+    start = time.perf_counter()
+    dt = time.perf_counter() - start
+    print("Parsed in {0:.2f} ms".format(dt))
+    if json:
+        print(house.to_json(indent=2))
+    else:
+        print(print_house(house))
+
 def get_field(field, content):
     return "{0}{1}:{2} {3}\n".format(BOLD, field, CEND, content)
 
@@ -140,6 +161,7 @@ def build_character(character: Character):  # NOSONAR
         content += get_field("Scheduled for deletion", character.deletion_date)
     if character.former_names:
         content += get_field("Former names", ",".join(character.former_names))
+    content += get_field("Sex", character.sex)
     content += get_field("Vocation", character.vocation)
     content += get_field("Level", character.level)
     content += get_field("Achievement Points", character.achievement_points)
@@ -282,6 +304,11 @@ def print_world_overview(world_overview):
     content += build_header("Worlds")
     for world in world_overview.worlds:
         content += "%s - %d Online - %s - %s\n" % (world.name, world.online_count, world.location, world.pvp_type)
+    return content
+
+def print_house(house):
+    content = build_header("House", "=")
+
     return content
 
 
