@@ -3,6 +3,7 @@ import re
 import bs4
 
 from tibiapy import Character, abc
+from tibiapy.enums import Sex, HouseStatus
 from tibiapy.utils import parse_number_words, parse_tibia_datetime
 
 URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
@@ -164,12 +165,12 @@ class House(abc.Serializable):
         """
         m = rented_regex.search(status)
         if m:
-            self.status = "rented"
+            self.status = HouseStatus.RENTED
             self.owner = m.group("owner")
-            self.owner_sex = "male" if m.group("pronoun") == "He" else "female"
+            self.owner_sex = Sex.MALE if m.group("pronoun") == "He" else Sex.FEMALE
             self.paid_until = parse_tibia_datetime(m.group("paid_until"))
         else:
-            self.status = "auctioned"
+            self.status = HouseStatus.AUCTIONED
 
         m = transfer_regex.search(status)
         if m:
