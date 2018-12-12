@@ -151,33 +151,42 @@ class House(abc.Serializable):
             house.rent = int(m.group("rent"))
             house.size = int(m.group("size"))
 
-        m = rented_regex.search(state)
-        if m:
-            house.status = "rented"
-            house.owner = m.group("owner")
-            house.owner_sex = "male" if m.group("pronoun") == "He" else "female"
-            house.paid_until = parse_tibia_datetime(m.group("paid_until"))
-        else:
-            house.status = "auctioned"
-
-        m = transfer_regex.search(state)
-        if m:
-            house.transfer_date = parse_tibia_datetime(m.group("transfer_date"))
-            house.transfer_accepted = m.group("verb") == "will"
-            house.transferee = m.group("transferee")
-            price = m.group("transfer_price")
-            house.transfer_price = int(price) if price is not None else 0
-
-        m = auction_regex.search(state)
-        if m:
-            house.auction_end = parse_tibia_datetime(m.group("auction_end"))
-
-        m = bid_regex.search(state)
-        if m:
-            house.highest_bid = int(m.group("highest_bid"))
-            house.highest_bidder = m.group("bidder")
+        house._parse_status(state)
         return house
 
+    def _parse_status(self, status):
+        """Parses the house's state description and applies the corresponding values
+
+        Parameters
+        ----------
+        status: :class:`str`
+            Plain text string containing the current renting state of the house.
+        """
+        m = rented_regex.search(status)
+        if m:
+            self.status = "rented"
+            self.owner = m.group("owner")
+            self.owner_sex = "male" if m.group("pronoun") == "He" else "female"
+            self.paid_until = parse_tibia_datetime(m.group("paid_until"))
+        else:
+            self.status = "auctioned"
+
+        m = transfer_regex.search(status)
+        if m:
+            self.transfer_date = parse_tibia_datetime(m.group("transfer_date"))
+            self.transfer_accepted = m.group("verb") == "will"
+            self.transferee = m.group("transferee")
+            price = m.group("transfer_price")
+            self.transfer_price = int(price) if price is not None else 0
+
+        m = auction_regex.search(status)
+        if m:
+            self.auction_end = parse_tibia_datetime(m.group("auction_end"))
+
+        m = bid_regex.search(status)
+        if m:
+            self.highest_bid = int(m.group("highest_bid"))
+            self.highest_bidder = m.group("bidder")
 
     @classmethod
     def get_url(cls, house_id, world):
