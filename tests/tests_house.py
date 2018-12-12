@@ -2,7 +2,7 @@ import json
 
 from tests.tests_tibiapy import TestTibiaPy
 from tibiapy import House
-from tibiapy.enums.house_status import HouseStatus
+from tibiapy.enums.tibia_enums import HouseStatus
 
 FILE_HOUSE_FULL = "house_full.txt"
 FILE_HOUSE_STATUS_TRANSFER = "house_status_transfer.txt"

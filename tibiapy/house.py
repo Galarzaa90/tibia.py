@@ -3,8 +3,7 @@ import re
 import bs4
 
 from tibiapy import Character, abc
-from tibiapy.enums.gender import Gender
-from tibiapy.enums.house_status import HouseStatus
+from tibiapy.enums.tibia_enums import Gender, HouseStatus
 from tibiapy.utils import parse_number_words, parse_tibia_datetime
 
 URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
