@@ -2,9 +2,11 @@ import json
 
 from tests.tests_tibiapy import TestTibiaPy
 from tibiapy import House
+from tibiapy.enums.house_status import HouseStatus
 
 FILE_HOUSE_FULL = "house_full.txt"
 FILE_HOUSE_STATUS_TRANSFER = "house_status_transfer.txt"
+
 
 class TestsGuild(TestTibiaPy):
     def setUp(self):
@@ -22,7 +24,7 @@ class TestsGuild(TestTibiaPy):
         self.assertEqual(house.name, "Sorcerer's Avenue Labs 2e")
         self.assertEqual(house.beds, 1)
         self.assertTrue(house.rent, 715)
-        self.assertEqual(house.status, "auctioned")
+        self.assertEqual(house.status, HouseStatus.AUCTIONED)
         self.assertEqual(house.url, House.get_url(house.id, house.world))
         self.assertIsNone(house.owner)
         self.assertIsNone(house.owner_url)
@@ -38,7 +40,7 @@ class TestsGuild(TestTibiaPy):
         house = House("Name")
         house._parse_status(content)
 
-        self.assertEqual(house.status, "rented")
+        self.assertEqual(house.status, HouseStatus.RENTED)
         self.assertEqual(house.owner, "Xenaris mag")
         self.assertEqual(house.transferee, "Ivarr Bezkosci")
         self.assertIsNotNone(house.transferee_url)
