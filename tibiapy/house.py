@@ -3,6 +3,7 @@ import re
 import bs4
 
 from tibiapy import Character, abc
+from tibiapy.enums.gender import Gender
 from tibiapy.enums.house_status import HouseStatus
 from tibiapy.utils import parse_number_words, parse_tibia_datetime
 
@@ -167,7 +168,7 @@ class House(abc.Serializable):
         if m:
             self.status = HouseStatus.RENTED
             self.owner = m.group("owner")
-            self.owner_sex = "male" if m.group("pronoun") == "He" else "female"
+            self.owner_sex = Gender.MALE if m.group("pronoun") == "He" else Gender.FEMALE
             self.paid_until = parse_tibia_datetime(m.group("paid_until"))
         else:
             self.status = HouseStatus.AUCTIONED
