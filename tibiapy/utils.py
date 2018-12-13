@@ -63,6 +63,7 @@ def parse_tibia_date(date_str):
     except ValueError:
         return None
 
+
 def parse_tibia_full_date(date_str):
     """Parses a date in the fuller format used in Tibia.com
 
@@ -84,6 +85,7 @@ def parse_tibia_full_date(date_str):
         return t.date()
     except ValueError:
         return None
+
 
 def parse_tibiadata_datetime(date_dict):
     """Parses time objects from the TibiaData API.
@@ -141,12 +143,13 @@ def parse_tibiadata_date(date_str):
     except ValueError:
         return None
 
+
 def parse_number_words(textnum):
     numwords = {}
     units = [
-    "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
-    "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
-    "sixteen", "seventeen", "eighteen", "nineteen",
+        "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
+        "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+        "sixteen", "seventeen", "eighteen", "nineteen",
     ]
 
     tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]

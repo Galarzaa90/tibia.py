@@ -18,6 +18,7 @@ moving_regex = re.compile(r'\w+ will move out on (?P<move_date>[^(]+)')
 bid_regex = re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
 auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).')
 
+
 class House(abc.HouseWithId):
     """Represents a house in a specific world.
 

@@ -18,6 +18,3 @@ class TestTibiaPy(unittest.TestCase):
     def _get_parsed_content(resource, beautiful_soup=True):
         content = TestTibiaPy._load_resource(resource)
         return tibiapy.Guild._beautiful_soup(content) if beautiful_soup else content
-
-
-

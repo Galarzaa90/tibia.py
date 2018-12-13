@@ -288,6 +288,7 @@ class World(abc.Serializable):
             output[title] = inner_table.find_all("tr")
         return output
 
+
 class WorldOverview(abc.Serializable):
     """Container class for the World Overview.
 
@@ -368,7 +369,7 @@ class WorldOverview(abc.Serializable):
             An instance of this class containing all the information.
         """
         parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                          parse_only=bs4.SoupStrainer("div", class_="TableContentAndRightShadow"))
+                                           parse_only=bs4.SoupStrainer("div", class_="TableContentAndRightShadow"))
         world_overview = cls()
         rows = parsed_content.find_all("tr")
         m = record_regexp.search(rows[0].text)
@@ -464,5 +465,3 @@ class WorldOverview(abc.Serializable):
             return world_overview
         except KeyError:
             return None
-
-

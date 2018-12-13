@@ -544,6 +544,7 @@ class Character(abc.Character):
                 assists.append(Killer(assist, assist in involved))
             char.deaths.append(Death(char.name, level, time=death_time, killers=killers, assists=assists))
 
+
 class Death(abc.Serializable):
     """
     Represents a death by a character
@@ -674,7 +675,7 @@ class OtherCharacter(abc.Character):
     """
     __slots__ = ("world", "online", "deleted")
 
-    def __init__(self, name=None, world=None, online = False, deleted = False):
+    def __init__(self, name=None, world=None, online=False, deleted=False):
         self.name = name
         self.world = world
         self.online = online

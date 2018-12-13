@@ -14,8 +14,8 @@ from tibiapy.utils import parse_tibia_date, parse_tibiadata_date
 COLS_INVITED_MEMBER = 2
 COLS_GUILD_MEMBER = 6
 
-founded_regex = re.compile(r'(?P<desc>.*)The guild was founded on (?P<world>\w+) on (?P<date>[^.]+)\.\nIt is (?P<status>[^.]+).',
-                           re.DOTALL)
+founded_regex = re.compile(
+    r'(?P<desc>.*)The guild was founded on (?P<world>\w+) on (?P<date>[^.]+)\.\nIt is (?P<status>[^.]+).', re.DOTALL)
 applications_regex = re.compile(r'Guild is (\w+) for applications\.')
 homepage_regex = re.compile(r'The official homepage is at ([\w.]+)\.')
 guildhall_regex = re.compile(r'Their home on \w+ is (?P<name>[^.]+). The rent is paid until (?P<date>[^.]+)')
@@ -27,6 +27,7 @@ GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildNam
 GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
 GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
 GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
+
 
 class Guild(abc.Serializable):
     """

@@ -12,6 +12,7 @@ FILE_GUILD_LIST = "guild_list.txt"
 
 FILE_GUILD_TIBIADATA = "guild_tibiadata.txt"
 
+
 class TestsGuild(TestTibiaPy):
     def setUp(self):
         self.guild = {}

@@ -12,6 +12,7 @@ FILE_WORLD_LIST = "world_list.txt"
 FILE_WORLD_LIST_OFFLINE = "world_list_offline.txt"
 FILE_WORLD_LIST_TIBIADATA = "world_list_tibiadata.txt"
 
+
 class TestsGuild(TestTibiaPy):
     def setUp(self):
         self.guild = {}
@@ -78,7 +79,6 @@ class TestsGuild(TestTibiaPy):
         self.assertGreater(worlds.total_online, 0)
         self.assertIsNotNone(worlds.record_date)
         self.assertIsNotNone(worlds.record_count)
-
 
     def testWorldOverviewOffline(self):
         content = self._get_parsed_content(FILE_WORLD_LIST_OFFLINE, False)
