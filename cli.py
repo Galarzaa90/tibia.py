@@ -163,10 +163,8 @@ def house(id, world, tibiadata, json):
         r = requests.get(House.get_url_tibiadata(int(id), world))
         dt = (time.perf_counter() - start) * 1000.0
         print("Fetched in {0:.2f} ms".format(dt))
-        print("TibiaData parsing not supported for Houses yet.")
-        return
-        # start = time.perf_counter()
-        #  house = House.from_tibiadata(r.text)
+        start = time.perf_counter()
+        house = House.from_tibiadata(r.text)
     else:
         r = requests.get(House.get_url(int(id), world))
         dt = (time.perf_counter() - start) * 1000.0
@@ -351,7 +349,7 @@ def print_house(house):
     content += get_field("Size", "%d SQM" % house.size)
     content += get_field("Rent", "%d gold monthly" % house.rent)
     content += get_field("Type", house.type.title())
-    content += get_field("Status", house.status.title())
+    content += get_field("Status", house.status)
     if house.status == "auctioned":
         content += get_field("Highest bid", "%d gold by %s, auction ends on %s" %
                                             (house.highest_bid, house.highest_bidder, house.auction_end)

@@ -9,7 +9,8 @@ import bs4
 
 from tibiapy import abc
 from tibiapy.guild import Guild
-from tibiapy.utils import parse_tibia_datetime, parse_tibiadata_datetime
+from tibiapy.house import CharacterHouse
+from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
@@ -55,7 +56,7 @@ class Character(abc.Character):
         The current hometown of the character.
     married_to: Optional[:class:`str`]
         The name of the character's spouse/husband.
-    house: Optional[:class:`dict`]
+    house: Optional[:class:`CharacterHouse`]
         The house currently owned by the character.
     guild_membership: Optional[:class:`dict`]
         The guild the character is a member of. The dictionary contains a key for the rank and a key for the name.
@@ -238,15 +239,12 @@ class Character(abc.Character):
             if field == "house":
                 house_text = value
                 paid_until = house_regexp.search(house_text).group(1)
+                paid_until_date = parse_tibia_date(paid_until)
                 house_link = cols_raw[1].find('a')
                 url = urllib.parse.urlparse(house_link["href"])
                 query = urllib.parse.parse_qs(url.query)
-                char["house"] = {
-                    "town": query["town"][0],
-                    "id": int(query["houseid"][0]),
-                    "name": house_link.text.strip(),
-                    "paid_until": paid_until
-                }
+                char["house"] = CharacterHouse(int(query["houseid"][0]), house_link.text.strip(), query["town"][0],
+                                               char["name"], paid_until_date)
                 continue
             if field in int_rows:
                 value = int(value)
@@ -498,7 +496,10 @@ class Character(abc.Character):
         char.former_world = character_data.get("former_world")
         if "guild" in character_data:
             char.guild_membership = {"rank": character_data["guild"]["rank"], "guild": character_data["guild"]["name"]}
-        char.house = character_data.get("house")
+        if "house" in character_data:
+            house = character_data["house"]
+            paid_until_date = parse_tibiadata_date(house["paid"])
+            char.house = CharacterHouse(house["houseid"], house["name"], house["town"], char.name, paid_until_date)
         char.comment = character_data.get("comment")
         if len(character_data["last_login"]) > 0:
             char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])

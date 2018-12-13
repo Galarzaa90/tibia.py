@@ -1,13 +1,12 @@
+import json
 import re
 
 import bs4
 
-from tibiapy import Character, abc
-from tibiapy.enums import Sex, HouseStatus
+import tibiapy.character
+from tibiapy import abc
+from tibiapy.enums import HouseStatus, HouseType, Sex, try_enum
 from tibiapy.utils import parse_number_words, parse_tibia_datetime
-
-URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
-URL_HOUSE_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
 
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
@@ -19,15 +18,15 @@ moving_regex = re.compile(r'\w+ will move out on (?P<move_date>[^(]+)')
 bid_regex = re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
 auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).')
 
-class House(abc.Serializable):
+class House(abc.HouseWithId):
     """Represents a house in a specific world.
 
     Attributes
     ----------
-    name: :class:`str`
-        The name of the house.
     id: :class:`int`
         The internal ID of the house. This is used on the website to identify houses.
+    name: :class:`str`
+        The name of the house.
     image_url: :class:`str`
         The URL to the house's minimap image.
     beds: :class:`int`
@@ -63,7 +62,7 @@ class House(abc.Serializable):
     auction_end: :class:`datetime.datetime`
         The date where the auction will end.
     """
-    __slots__ = ("name", "id", "world", "image_url", "beds", "type", "size", "rent", "status", "owner", "owner_sex",
+    __slots__ = ("id", "image_url", "beds", "type", "size", "rent", "owner", "owner_sex",
                  "paid_until", "transfer_date", "transferee", "transfer_price", "transfer_accepted", "highest_bid",
                  "highest_bidder", "auction_end")
 
@@ -72,7 +71,7 @@ class House(abc.Serializable):
         self.world = world
         self.image_url = kwargs.get("image_url")
         self.beds = kwargs.get("beds", 0)
-        self.type = kwargs.get("type", "house")
+        self.type = kwargs.get("type", HouseType.HOUSE)
         self.size = kwargs.get("size", 0)
         self.rent = kwargs.get("rent", 0)
         self.status = kwargs.get("status")
@@ -89,22 +88,14 @@ class House(abc.Serializable):
     @property
     def owner_url(self):
         """:class:`str`: The URL to the Tibia.com page of the house's owner, if applicable."""
-        return Character.get_url(self.owner) if self.owner is not None else None
+        return tibiapy.Character.get_url(self.owner) if self.owner is not None else None
 
     @property
     def transferee_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
-        return Character.get_url(self.transferee) if self.transferee is not None else None
+        return tibiapy.Character.get_url(self.transferee) if self.transferee is not None else None
 
-    @property
-    def url(self):
-        """:class:`str`: The URL to the Tibia.com page of the house."""
-        return self.get_url(self.id, self.world) if self.id and self.world else None
 
-    @property
-    def url_tibiadata(self):
-        """:class:`str`: The URL to the TibiaData.com page of the house."""
-        return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None
 
     @classmethod
     def from_content(cls, content):
@@ -139,7 +130,7 @@ class House(abc.Serializable):
         house.id = int(id_regex.search(house.image_url).group(1))
         m = bed_regex.search(beds)
         if m:
-            house.type = "guildhall" if m.group("type") in ["guildhall", "clanhall"] else "house"
+            house.type = HouseType.GUILDHALL if m.group("type") in ["guildhall", "clanhall"] else HouseType.HOUSE
             beds_word = m.group("beds")
             if beds_word == "no":
                 house.beds = 0
@@ -154,6 +145,44 @@ class House(abc.Serializable):
 
         house._parse_status(state)
         return house
+
+    @classmethod
+    def from_tibiadata(cls, content):
+        """
+        Parses a TibiaData response into a House object.
+        Parameters
+        ----------
+        content: :class:`str`
+            The JSON content of the TibiaData response.
+
+        Returns
+        -------
+        :class:`House`
+            The house contained in the response, if found.
+        """
+        try:
+            json_content = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        try:
+            house_json = json_content["house"]
+            if not house_json["name"]:
+                return None
+            house = cls(house_json["name"], house_json["world"])
+
+            house.type = try_enum(HouseType, house_json["type"])
+            house.beds = house_json["beds"]
+            house.size = house_json["size"]
+            house.size = house_json["size"]
+            house.rent = house_json["rent"]
+            house.image_url = house_json["img"]
+
+            # Parsing the original status string is easier than dealing with TibiaData fields
+            house._parse_status(house_json["status"]["original"])
+        except KeyError:
+            return None
+        return house
+
 
     def _parse_status(self, status):
         """Parses the house's state description and applies the corresponding values
@@ -189,36 +218,25 @@ class House(abc.Serializable):
             self.highest_bid = int(m.group("highest_bid"))
             self.highest_bidder = m.group("bidder")
 
-    @classmethod
-    def get_url(cls, house_id, world):
-        """ Gets the Tibia.com URL for house with the given id and world.
+class CharacterHouse(abc.HouseWithId):
+    __slots__ = ("town", "owner", "paid_until_date")
 
-        Parameters
-        ----------
-        house_id: :class:`int`
-            The internal id of the house.
-        world: :class:`str`
-            The world of the house.
+    def __init__(self, _id, name, town=None, owner=None, paid_until_date=None):
+        self.id = _id
+        self.name = name
+        self.town = town
+        self.owner = owner
+        self.paid_until_date = paid_until_date
+        self.status = HouseStatus.RENTED
+        self.type = HouseType.HOUSE
 
-        Returns
-        -------
-        The URL to the house in Tibia.com
-        """
-        return URL_HOUSE % (house_id, world)
 
-    @classmethod
-    def get_url_tibiadata(cls, house_id, world):
-        """ Gets the TibiaData.com URL for house with the given id and world.
-
-        Parameters
-        ----------
-        house_id: :class:`int`
-            The internal id of the house.
-        world: :class:`str`
-            The world of the house.
-
-        Returns
-        -------
-        The URL to the house in TibiaData.com
-        """
-        return URL_HOUSE_TIBIADATA % (world, house_id)
+class GuildHouse(abc.House):
+    __slots__ = ("owner", "paid_until_date")
+    def __init__(self, name, town=None, owner=None, paid_until_date=None):
+        self.name = name
+        self.town = town
+        self.owner = owner
+        self.paid_until_date = paid_until_date
+        self.status = HouseStatus.RENTED
+        self.type = HouseType.GUILDHALL
