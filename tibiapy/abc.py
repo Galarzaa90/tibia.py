@@ -209,7 +209,7 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
 
 
 class BaseHouseWithId(BaseHouse):
-    """A derivate of :class:`BaseHouse`
+    """A derivative of :class:`BaseHouse`
 
     Implements the :py:attr:`id` attribute and dependant functions and properties.
 

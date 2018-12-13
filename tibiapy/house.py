@@ -40,17 +40,17 @@ class House(abc.BaseHouseWithId):
         The monthly rent paid for the house.
     world: :class:`str`
         The world of the house.
-    status: :class:`str`
+    status: :class:`.HouseStatus`
         The renting status of the house, can be ``rented`` or ``auctioned``.
     owner: :class:`str`
         The current owner of the house, if any.
     owner_sex: :class:`str`
         The sex of the owner of the house, if applicable.
-    paid_until: :class:`datetime.datetime`
+    paid_until: :class:`datetime.datetime`, optional
         The date the last paid rent is due.
-    transfer_date: :class:`datetime.datetime`
+    transfer_date: :class:`datetime.datetime`, optional
         The date when the owner will move out of the house, if applicable.
-    transferee: :class:`str`
+    transferee: :class:`str`, optional
         The character who will receive the house when the owner moves, if applicable.
     transfer_price: :class:`int`
         The price that will be paid from the transferee to the owner for the house transfer.
@@ -58,9 +58,9 @@ class House(abc.BaseHouseWithId):
         Whether the house transfer has already been accepted or not.
     highest_bid: :class:`int`
         The currently highest bid on the house if it is being auctioned.
-    highest_bidder: :class:`str`
+    highest_bidder: :class:`str`, optional
         The character that holds the highest bid.
-    auction_end: :class:`datetime.datetime`
+    auction_end: :class:`datetime.datetime`, optional
         The date where the auction will end.
     """
     __slots__ = ("image_url", "beds", "type", "size", "rent", "owner", "owner_sex",
@@ -95,7 +95,6 @@ class House(abc.BaseHouseWithId):
     def transferee_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
         return tibiapy.Character.get_url(self.transferee) if self.transferee is not None else None
-
 
     @classmethod
     def from_content(cls, content):
@@ -150,6 +149,7 @@ class House(abc.BaseHouseWithId):
     def from_tibiadata(cls, content):
         """
         Parses a TibiaData response into a House object.
+
         Parameters
         ----------
         content: :class:`str`
@@ -219,6 +219,25 @@ class House(abc.BaseHouseWithId):
 
 
 class CharacterHouse(abc.BaseHouseWithId):
+    """Represents a House owned by a character.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The internal ID of the house. This is used on the website to identify houses.
+    name: :class:`str`
+        The name of the house.
+    world: :class:`str`
+        The name of the world where the house is.
+    status: :class:`.HouseStatus`
+        The current status of the house. This is always :py:attr:`.HouseStatus.RENTED` for this class.
+    type: :class:`.HouseType`
+        The type of the house. This is always :py:attr:`.HouseType.HOUSE` for this class.
+    town: :class:`str`
+        The town where the city is located in.
+    owner: :class:`str`
+        The owner of the house.
+    """
     __slots__ = ("town", "owner", "paid_until_date")
 
     def __init__(self, _id, name, town=None, owner=None, paid_until_date=None):
@@ -232,6 +251,22 @@ class CharacterHouse(abc.BaseHouseWithId):
 
 
 class GuildHouse(abc.BaseHouse):
+    """Represents a House owned by a guild.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the guildhall.
+    world: :class:`str`
+        The name of the world where the guildhall is.
+    status: :class:`.HouseStatus`
+        The current status of the guildhall. This is always :py:attr:`.HouseStatus.RENTED` for this class.
+    type: :class:`.HouseType`
+        The type of the guildhall. This is always :py:attr:`.HouseType.GUILDHALL` for this class.
+    town: :class:`str`
+        The town where the city is located in.
+    owner: :class:`str`
+        The owner of the guildhall."""
     __slots__ = ("owner", "paid_until_date")
 
     def __init__(self, name, town=None, owner=None, paid_until_date=None):

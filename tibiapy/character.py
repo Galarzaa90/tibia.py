@@ -42,7 +42,7 @@ class Character(abc.BaseCharacter):
         Previous names of this character.
     sex: :class:`str`
         The character's gender, either "male" or "female"
-    vocation: :class:`str`
+    vocation: :class:`.Vocation`
         The character's vocation.
     level: :class:`int`
         The character's level.
@@ -102,7 +102,7 @@ class Character(abc.BaseCharacter):
         self.deletion_date = kwargs.get("deletion_date")
 
     @property
-    def deleted(self):
+    def deleted(self) -> bool:
         """:class:`bool`: Whether the character is scheduled for deletion or not."""
         return self.deletion_date is not None
 

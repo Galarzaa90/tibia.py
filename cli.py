@@ -15,16 +15,18 @@ RED = '\033[91m'
 BOLD = '\033[1m'
 CEND = '\033[0m'
 
+
 @click.group(context_settings={'help_option_names': ['-h', '--hel']})
 @click.version_option(__version__, '-V', '--version')
 def cli():
     pass
 
+
 @cli.command(name="char")
 @click.argument('name', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def char(name, tibiadata, json):
+def cli_char(name, tibiadata, json):
     """Displays information about a Tibia character."""
     name = " ".join(name)
     start = time.perf_counter()
@@ -47,11 +49,12 @@ def char(name, tibiadata, json):
     else:
         print(build_character(char))
 
+
 @cli.command(name="guild")
 @click.argument('name', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def guild(name, tibiadata, json):
+def cli_guild(name, tibiadata, json):
     """Displays information about a Tibia guild."""
     name = " ".join(name)
     start = time.perf_counter()
@@ -74,11 +77,12 @@ def guild(name, tibiadata, json):
     else:
         print(build_guild(guild))
 
+
 @cli.command(name="guilds")
 @click.argument('world', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def guilds(world, tibiadata, json):
+def cli_guilds(world, tibiadata, json):
     """Displays the list of guilds for a specific world"""
     world = " ".join(world)
     start = time.perf_counter()
@@ -102,11 +106,12 @@ def guilds(world, tibiadata, json):
     else:
         print(get_guilds_string(guilds))
 
+
 @cli.command(name="world")
 @click.argument('name', nargs=-1)
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def world(name, tibiadata, json):
+def cli_world(name, tibiadata, json):
     name = " ".join(name)
     start = time.perf_counter()
     if tibiadata:
@@ -128,10 +133,11 @@ def world(name, tibiadata, json):
     else:
         print(print_world(world))
 
+
 @cli.command(name="worlds")
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def worlds(tibiadata, json):
+def cli_worlds(tibiadata, json):
     start = time.perf_counter()
     if tibiadata:
         r = requests.get(WorldOverview.get_url_tibiadata())
@@ -152,12 +158,13 @@ def worlds(tibiadata, json):
     else:
         print(print_world_overview(worlds))
 
+
 @cli.command(name="house")
 @click.argument('id')
 @click.argument('world')
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def house(id, world, tibiadata, json):
+def cli_house(id, world, tibiadata, json):
     start = time.perf_counter()
     if tibiadata:
         r = requests.get(House.get_url_tibiadata(int(id), world))
@@ -178,8 +185,10 @@ def house(id, world, tibiadata, json):
     else:
         print(print_house(house))
 
+
 def get_field(field, content):
     return "{0}{1}:{2} {3}\n".format(BOLD, field, CEND, content)
+
 
 def build_header(title, separator="-"):
     return "{2}{0}\n{1}\n{3}".format(title, len(title)*separator, BOLD, CEND)
@@ -247,6 +256,7 @@ def build_character(character: Character):  # NOSONAR
             ("deleted" if other_char.deleted else "offline"))
     return content
 
+
 def build_guild(guild):  # NOSONAR
     content = build_header("Guild Information", "=")
     if guild is None:
@@ -287,6 +297,7 @@ def build_guild(guild):  # NOSONAR
         content += "There are currently no invited characters."
     return content
 
+
 def get_guilds_string(guilds):
     content = build_header("Guild List", "=")
     if guilds is None:
@@ -300,6 +311,7 @@ def get_guilds_string(guilds):
             content += get_field("Description", g.description)
         content += "-----\n"
     return content
+
 
 def print_world(world):
     content = build_header("World", "=")
@@ -330,6 +342,7 @@ def print_world(world):
         content += "- %s - Level %d %s\n" % (player.name, player.level, player.vocation)
     return content
 
+
 def print_world_overview(world_overview):
     content = build_header("Game World Overview", "=")
     content += get_field("Total online", world_overview.total_online)
@@ -340,6 +353,7 @@ def print_world_overview(world_overview):
     for world in world_overview.worlds:
         content += "%s - %d Online - %s - %s\n" % (world.name, world.online_count, world.location, world.pvp_type)
     return content
+
 
 def print_house(house):
     content = build_header("House", "=")

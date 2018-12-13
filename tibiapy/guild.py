@@ -103,8 +103,8 @@ class Guild(abc.Serializable):
         return list(filter(lambda m: m.online, self.members))
 
     @property
-    def ranks(self):
-        """List[:class:`str`]: Ranks in their hierarchical order."""
+    def ranks(self) -> List[str]:
+        """:class:`list` of :class:`str`: Ranks in their hierarchical order."""
         return list(OrderedDict.fromkeys((m.rank for m in self.members)))
 
     @property
@@ -113,7 +113,7 @@ class Guild(abc.Serializable):
         return GUILD_URL + urllib.parse.quote(self.name.encode('iso-8859-1'))
 
     @property
-    def url_tibadata(self):
+    def url_tibiadata(self):
         """:class:`str`: The URL to the guild on TibiaData."""
         return GUILD_URL_TIBIADATA % urllib.parse.quote(self.name.encode('iso-8859-1'))
 
@@ -342,7 +342,7 @@ class Guild(abc.Serializable):
                 name = description_lines[0]
                 description = None
                 if len(description_lines) > 1:
-                    description = description_lines[1].replace("\r","").replace("\n"," ")
+                    description = description_lines[1].replace("\r", "").replace("\n", " ")
                 guilds.append({"logo_url": logo_img, "name": name, "description": description, "active": active,
                                "world": world})
         return guilds
@@ -490,7 +490,7 @@ class Guild(abc.Serializable):
         Parameters
         ------------
         name: :class:`str`
-            The name of the guild
+            The name of the guild.
 
         Returns
         --------
@@ -500,12 +500,12 @@ class Guild(abc.Serializable):
 
     @classmethod
     def get_url_tibiadata(cls, name):
-        """Gets the TibiData.com URL for a given guild name.
+        """Gets the TibiaData.com URL for a given guild name.
 
         Parameters
         ------------
         name: :class:`str`
-            The name of the guild
+            The name of the guild.
 
         Returns
         --------
@@ -520,7 +520,7 @@ class Guild(abc.Serializable):
         Parameters
         ----------
         world: :class:`str`
-            The name of the world
+            The name of the world.
 
         Returns
         -------
@@ -536,18 +536,29 @@ class Guild(abc.Serializable):
         Parameters
         ----------
         world: :class:`str`
-            The name of the world
+            The name of the world.
 
         Returns
         -------
         :class:`str`
-            The URL to the guild's page
+            The URL to the guild's page.
         """
         return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
 
     @classmethod
     def from_tibiadata(cls, content):
-        """Builds a guild object from a TibiaData character response"""
+        """Builds a guild object from a TibiaData character response.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The json string from the TibiaData response.
+
+        Returns
+        -------
+        :class:`Guild`
+            The guild contained in the description or ``None``.
+        """
         try:
             json_content = json.loads(content)
         except json.JSONDecodeError:
@@ -583,8 +594,19 @@ class Guild(abc.Serializable):
         return guild
 
     @classmethod
-    def list_from_tibiadata(cls, content):
-        """Builds a character object from a TibiaData character response"""
+    def list_from_tibiadata(cls, content) -> List['Guild']:
+        """Builds a character object from a TibiaData character response.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            A string containing the JSON response from TibiaData.
+
+        Returns
+        -------
+        :class:`list` of :class:`Guild`
+            The list of guilds contained.
+        """
         try:
             json_content = json.loads(content)
         except json.JSONDecodeError:
@@ -615,7 +637,7 @@ class GuildMember(abc.BaseCharacter):
         The member's title.
     level: :class:`int`
         The member's level.
-    vocation: :class:`str`
+    vocation: :class:`.Vocation`
         The member's vocation.
     joined: :class:`datetime.date`
         The day the member joined the guild.
