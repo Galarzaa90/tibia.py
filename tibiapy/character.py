@@ -8,7 +8,7 @@ from typing import List
 import bs4
 
 from tibiapy import abc
-from tibiapy.enums import AccountStatus, try_enum, Sex
+from tibiapy.enums import AccountStatus, try_enum, Sex, Vocation
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime
@@ -83,7 +83,7 @@ class Character(abc.Character):
         self.name = name
         self.former_names = kwargs.get("former_names", [])
         self.sex = try_enum(Sex, sex)
-        self.vocation = vocation
+        self.vocation = try_enum(Vocation, vocation)
         self.level = level
         self.achievement_points = kwargs.get("achievement_points", 0)
         self.world = world
@@ -484,7 +484,7 @@ class Character(abc.Character):
             char.level = character_data["level"]
             char.achievement_points = character_data["achievement_points"]
             char.sex = character_data["sex"]
-            char.vocation = character_data["vocation"]
+            char.vocation = try_enum(Vocation, character_data["vocation"])
             char.residence = character_data["residence"]
             char.account_status = character_data["account_status"]
         except KeyError:
@@ -689,4 +689,4 @@ class OnlineCharacter(abc.Character):
         self.name = name
         self.world = world
         self.level = int(level)
-        self.vocation = vocation
+        self.vocation = try_enum(Vocation, vocation)

@@ -2,7 +2,7 @@ import datetime
 
 from tests.tests_tibiapy import TestTibiaPy
 from tibiapy import Character, Death, Killer
-from tibiapy.enums import AccountStatus, Sex
+from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.utils import parse_tibia_datetime
 
 FILE_CHARACTER_RESOURCE = "character_regular.txt"
@@ -26,7 +26,7 @@ class TestCharacter(TestTibiaPy):
 
     def testCharacter(self):
         character = Character.from_content(self._get_parsed_content(FILE_CHARACTER_RESOURCE, False))
-        self._compare_character(Character("Tschas", "Gladera", "Druid", 205, Sex.FEMALE), character)
+        self._compare_character(Character("Tschas", "Gladera", Vocation.DRUID, 205, Sex.FEMALE), character)
         self.assertIsNotNone(character.guild_membership)
         self.assertEqual("Redd Alliance", character.guild_membership["guild"])
         self.assertEqual("Mentor", character.guild_membership["rank"])

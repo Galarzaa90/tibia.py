@@ -2,13 +2,13 @@ from enum import Enum
 
 
 class Sex(Enum):
-    FEMALE = "female"
     MALE = "male"
+    FEMALE = "female"
 
 
 class HouseStatus(Enum):
-    AUCTIONED = "auctioned"
     RENTED = "rented"
+    AUCTIONED = "auctioned"
 
 
 class HouseType(Enum):
@@ -19,6 +19,17 @@ class HouseType(Enum):
 class AccountStatus(Enum):
     FREE_ACCOUNT = "Free Account"
     PREMIUM_ACCOUNT = "Premium Account"
+
+
+class Vocation(Enum):
+    DRUID = "Druid"
+    KNIGHT = "Knight"
+    PALADIN = "Paladin"
+    SORCERER = "Sorcerer"
+    ELDER_DRUID = "Elder Druid"
+    ELITE_KNIGHT = "Elite Knight"
+    ROYAL_PALADIN = "Royal Paladin"
+    MASTER_SORCERER = "Master Sorcerer"
 
 
 def try_enum(cls, val):

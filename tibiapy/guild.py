@@ -8,6 +8,7 @@ from typing import List
 import bs4
 
 from tibiapy import abc
+from tibiapy.enums import try_enum, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import parse_tibia_date, parse_tibiadata_date
 
@@ -627,7 +628,7 @@ class GuildMember(abc.Character):
         self.name = name
         self.rank = rank
         self.title = title
-        self.vocation = vocation
+        self.vocation = try_enum(Vocation, vocation)
         self.level = level
         joined = kwargs.get("joined")
         self.online = kwargs.get("online")
