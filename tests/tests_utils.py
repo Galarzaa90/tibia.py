@@ -45,4 +45,3 @@ class TestUtils(TestTibiaPy):
     def testTibiaDateInvalid(self):
         date = tibiapy.utils.parse_tibia_date("8 Nov 2018")
         self.assertIsNone(date)
-

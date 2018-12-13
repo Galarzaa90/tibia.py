@@ -18,6 +18,7 @@ moving_regex = re.compile(r'\w+ will move out on (?P<move_date>[^(]+)')
 bid_regex = re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
 auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).')
 
+
 class House(abc.HouseWithId):
     """Represents a house in a specific world.
 
@@ -96,7 +97,6 @@ class House(abc.HouseWithId):
         return tibiapy.Character.get_url(self.transferee) if self.transferee is not None else None
 
 
-
     @classmethod
     def from_content(cls, content):
         """Parses a Tibia.com response into a House object.
@@ -112,7 +112,7 @@ class House(abc.HouseWithId):
             The house contained in the page, or None if the house doesn't exist.
         """
         parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                                 parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+                                           parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
         image_column, desc_column, *_ = parsed_content.find_all('td')
         if "Error" in image_column:
             return None
@@ -183,7 +183,6 @@ class House(abc.HouseWithId):
             return None
         return house
 
-
     def _parse_status(self, status):
         """Parses the house's state description and applies the corresponding values
 
@@ -218,6 +217,7 @@ class House(abc.HouseWithId):
             self.highest_bid = int(m.group("highest_bid"))
             self.highest_bidder = m.group("bidder")
 
+
 class CharacterHouse(abc.HouseWithId):
     __slots__ = ("town", "owner", "paid_until_date")
 
@@ -233,6 +233,7 @@ class CharacterHouse(abc.HouseWithId):
 
 class GuildHouse(abc.House):
     __slots__ = ("owner", "paid_until_date")
+
     def __init__(self, name, town=None, owner=None, paid_until_date=None):
         self.name = name
         self.town = town

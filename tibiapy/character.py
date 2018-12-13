@@ -8,6 +8,7 @@ from typing import List
 import bs4
 
 from tibiapy import abc
+from tibiapy.enums import AccountStatus, try_enum, Sex, Vocation
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime
@@ -26,7 +27,6 @@ death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists
 
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
-
 
 
 class Character(abc.Character):
@@ -82,8 +82,8 @@ class Character(abc.Character):
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
         self.name = name
         self.former_names = kwargs.get("former_names", [])
-        self.sex = sex
-        self.vocation = vocation
+        self.sex = try_enum(Sex, sex)
+        self.vocation = try_enum(Vocation, vocation)
         self.level = level
         self.achievement_points = kwargs.get("achievement_points", 0)
         self.world = world
@@ -93,7 +93,7 @@ class Character(abc.Character):
         self.house = kwargs.get("house")
         self.guild_membership = kwargs.get("guild_membership")
         self.last_login = kwargs.get("last_login")
-        self.account_status = kwargs.get("account_status")
+        self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
         self.comment = kwargs.get("comment")
         self.achievements = kwargs.get("achievements",[])
         self.deaths = kwargs.get("deaths", [])
@@ -484,7 +484,7 @@ class Character(abc.Character):
             char.level = character_data["level"]
             char.achievement_points = character_data["achievement_points"]
             char.sex = character_data["sex"]
-            char.vocation = character_data["vocation"]
+            char.vocation = try_enum(Vocation, character_data["vocation"])
             char.residence = character_data["residence"]
             char.account_status = character_data["account_status"]
         except KeyError:
@@ -542,6 +542,7 @@ class Character(abc.Character):
             for assist in assists_str:
                 assists.append(Killer(assist, assist in involved))
             char.deaths.append(Death(char.name, level, time=death_time, killers=killers, assists=assists))
+
 
 class Death(abc.Serializable):
     """
@@ -673,7 +674,7 @@ class OtherCharacter(abc.Character):
     """
     __slots__ = ("world", "online", "deleted")
 
-    def __init__(self, name=None, world=None, online = False, deleted = False):
+    def __init__(self, name=None, world=None, online=False, deleted=False):
         self.name = name
         self.world = world
         self.online = online
@@ -688,4 +689,4 @@ class OnlineCharacter(abc.Character):
         self.name = name
         self.world = world
         self.level = int(level)
-        self.vocation = vocation
+        self.vocation = try_enum(Vocation, vocation)
