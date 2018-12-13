@@ -22,6 +22,7 @@ class AccountStatus(Enum):
 
 
 class Vocation(Enum):
+    NONE = "None"
     DRUID = "Druid"
     KNIGHT = "Knight"
     PALADIN = "Paladin"
