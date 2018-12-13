@@ -11,14 +11,6 @@ URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=
 URL_HOUSE_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
 
 
-class EnumEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Enum):
-            return {"__enum__": str(obj)}
-        return json.JSONEncoder.default(self, obj)
-
-
-
 class Serializable(abc.ABC):
     """Implements methods to make a class convertible to JSON.
 
@@ -28,6 +20,7 @@ class Serializable(abc.ABC):
         slots = []
         for base in cls.__bases__:
             try:
+                # noinspection PyUnresolvedReferences
                 slots.extend(base.__slots_inherited__())
             except AttributeError:
                 continue
