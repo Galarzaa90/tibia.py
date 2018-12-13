@@ -8,6 +8,7 @@ from typing import List
 import bs4
 
 from tibiapy import abc
+from tibiapy.enums import AccountStatus, try_enum, Sex
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime
@@ -82,7 +83,7 @@ class Character(abc.Character):
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
         self.name = name
         self.former_names = kwargs.get("former_names", [])
-        self.sex = sex
+        self.sex = try_enum(Sex, sex)
         self.vocation = vocation
         self.level = level
         self.achievement_points = kwargs.get("achievement_points", 0)
@@ -93,7 +94,7 @@ class Character(abc.Character):
         self.house = kwargs.get("house")
         self.guild_membership = kwargs.get("guild_membership")
         self.last_login = kwargs.get("last_login")
-        self.account_status = kwargs.get("account_status")
+        self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
         self.comment = kwargs.get("comment")
         self.achievements = kwargs.get("achievements",[])
         self.deaths = kwargs.get("deaths", [])

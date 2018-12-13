@@ -16,6 +16,11 @@ class HouseType(Enum):
     GUILDHALL = "guildhall"
 
 
+class AccountStatus(Enum):
+    FREE_ACCOUNT = "Free Account"
+    PREMIUM_ACCOUNT = "Premium Account"
+
+
 def try_enum(cls, val):
     """Attempts to convert a value into their enum value
 

@@ -183,7 +183,6 @@ class House(abc.HouseWithId):
             return None
         return house
 
-
     def _parse_status(self, status):
         """Parses the house's state description and applies the corresponding values
 
@@ -218,6 +217,7 @@ class House(abc.HouseWithId):
             self.highest_bid = int(m.group("highest_bid"))
             self.highest_bidder = m.group("bidder")
 
+
 class CharacterHouse(abc.HouseWithId):
     __slots__ = ("town", "owner", "paid_until_date")
 
@@ -233,6 +233,7 @@ class CharacterHouse(abc.HouseWithId):
 
 class GuildHouse(abc.House):
     __slots__ = ("owner", "paid_until_date")
+
     def __init__(self, name, town=None, owner=None, paid_until_date=None):
         self.name = name
         self.town = town
