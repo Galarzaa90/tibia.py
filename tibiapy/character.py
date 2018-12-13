@@ -29,7 +29,6 @@ house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
 
-
 class Character(abc.Character):
     """Represents a Tibia character
 

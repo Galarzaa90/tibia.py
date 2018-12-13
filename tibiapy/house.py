@@ -97,7 +97,6 @@ class House(abc.HouseWithId):
         return tibiapy.Character.get_url(self.transferee) if self.transferee is not None else None
 
 
-
     @classmethod
     def from_content(cls, content):
         """Parses a Tibia.com response into a House object.
@@ -113,7 +112,7 @@ class House(abc.HouseWithId):
             The house contained in the page, or None if the house doesn't exist.
         """
         parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                                 parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+                                           parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
         image_column, desc_column, *_ = parsed_content.find_all('td')
         if "Error" in image_column:
             return None
