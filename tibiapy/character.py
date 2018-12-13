@@ -8,7 +8,7 @@ from typing import List
 import bs4
 
 from tibiapy import abc
-from tibiapy.enums import AccountStatus, try_enum, Sex, Vocation
+from tibiapy.enums import AccountStatus, Sex, Vocation, try_enum
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime
@@ -29,16 +29,16 @@ house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
 
-class Character(abc.Character):
-    """Represents a Tibia character
+class Character(abc.BaseCharacter):
+    """Represents a Tibia character.
 
     Attributes
     ---------------
     name: :class:`str`
         The name of the character.
-    deletion_date: Optional[:class:`datetime.datetime`]
+    deletion_date: :class:`datetime.datetime`, optional
         The date where the character will be deleted if it is scheduled for deletion.
-    former_names: List[:class:`str`]
+    former_names: :class:`list` of :class:`str`, optional
         Previous names of this character.
     sex: :class:`str`
         The character's gender, either "male" or "female"
@@ -50,29 +50,29 @@ class Character(abc.Character):
         The total of points the character has.
     world: :class:`str`
         The character's current world.
-    former_world: Optional[:class:`str`]
+    former_world: :class:`str`, optional
         The previous world where the character was in, in the last 6 months.
     residence: :class:`str`
         The current hometown of the character.
-    married_to: Optional[:class:`str`]
+    married_to: :class:`str`, optional
         The name of the character's spouse/husband.
-    house: Optional[:class:`CharacterHouse`]
+    house: :class:`CharacterHouse`, optional
         The house currently owned by the character.
-    guild_membership: Optional[:class:`dict`]
+    guild_membership: :class:`dict`, optional
         The guild the character is a member of. The dictionary contains a key for the rank and a key for the name.
-    last_login: Optional[:class:`datetime.datetime`]
-        The last time the character logged in. It will be None if the character has never logged in.
-    comment: Optional[:class:`str`]
+    last_login: :class:`datetime.datetime`, optional
+        The last time the character logged in. It will be ``None`` if the character has never logged in.
+    comment: :class:`str`, optional
         The displayed comment.
-    account_status: :class:`str`
+    account_status: :class:`AccountStatus`
         Whether the character's account is Premium or Free.
-    achievements: List[:class:`dict`]
+    achievements: :class:`list` of :class:`dict`
         The achievements chosen to be displayed.
-    deaths: lsit of  :class:`Death`
+    deaths: list of  :class:`Death`
         The character's recent deaths.
-    account_information: :class:`dict`
+    account_information: :class:`dict`, optional
         The character's account information, if visible.
-    other_characters: List[:class:`OtherCharacter`]
+    other_characters: :class:`list` of :class:`OtherCharacter`, optional
         Other characters in the same account, if visible.
     """
     __slots__ = ("former_names", "sex", "vocation", "level", "achievement_points", "world", "former_world", "residence",
@@ -95,7 +95,7 @@ class Character(abc.Character):
         self.last_login = kwargs.get("last_login")
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
         self.comment = kwargs.get("comment")
-        self.achievements = kwargs.get("achievements",[])
+        self.achievements = kwargs.get("achievements", [])
         self.deaths = kwargs.get("deaths", [])
         self.account_information = kwargs.get("account_information")
         self.other_characters = kwargs.get("other_characters", [])
@@ -657,7 +657,7 @@ class Killer(abc.Serializable):
         return Character.get_url(self.name) if self.player else None
 
 
-class OtherCharacter(abc.Character):
+class OtherCharacter(abc.BaseCharacter):
     """
     Represents other character's displayed in the Character's information page.
 
@@ -681,7 +681,7 @@ class OtherCharacter(abc.Character):
         self.deleted = deleted
 
 
-class OnlineCharacter(abc.Character):
+class OnlineCharacter(abc.BaseCharacter):
     """Representes an online character."""
     __slots__ = ("name", "world", "vocation", "level")
 

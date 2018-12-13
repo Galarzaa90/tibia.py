@@ -2,26 +2,35 @@ from enum import Enum
 
 
 class Sex(Enum):
+    """Character genders."""
     MALE = "male"
     FEMALE = "female"
 
 
 class HouseStatus(Enum):
+    """Renting statuses of a house."""
     RENTED = "rented"
     AUCTIONED = "auctioned"
 
 
 class HouseType(Enum):
+    """
+    The types of house available.
+    """
     HOUSE = "house"
     GUILDHALL = "guildhall"
 
 
 class AccountStatus(Enum):
+    """Possible account statuses."""
     FREE_ACCOUNT = "Free Account"
     PREMIUM_ACCOUNT = "Premium Account"
 
 
 class Vocation(Enum):
+    """
+    The possible vocation types.
+    """
     NONE = "None"
     DRUID = "Druid"
     KNIGHT = "Knight"

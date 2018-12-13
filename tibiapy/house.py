@@ -19,7 +19,7 @@ bid_regex = re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and
 auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).')
 
 
-class House(abc.HouseWithId):
+class House(abc.BaseHouseWithId):
     """Represents a house in a specific world.
 
     Attributes
@@ -63,7 +63,7 @@ class House(abc.HouseWithId):
     auction_end: :class:`datetime.datetime`
         The date where the auction will end.
     """
-    __slots__ = ("id", "image_url", "beds", "type", "size", "rent", "owner", "owner_sex",
+    __slots__ = ("image_url", "beds", "type", "size", "rent", "owner", "owner_sex",
                  "paid_until", "transfer_date", "transferee", "transfer_price", "transfer_accepted", "highest_bid",
                  "highest_bidder", "auction_end")
 
@@ -218,7 +218,7 @@ class House(abc.HouseWithId):
             self.highest_bidder = m.group("bidder")
 
 
-class CharacterHouse(abc.HouseWithId):
+class CharacterHouse(abc.BaseHouseWithId):
     __slots__ = ("town", "owner", "paid_until_date")
 
     def __init__(self, _id, name, town=None, owner=None, paid_until_date=None):
@@ -231,7 +231,7 @@ class CharacterHouse(abc.HouseWithId):
         self.type = HouseType.HOUSE
 
 
-class GuildHouse(abc.House):
+class GuildHouse(abc.BaseHouse):
     __slots__ = ("owner", "paid_until_date")
 
     def __init__(self, name, town=None, owner=None, paid_until_date=None):

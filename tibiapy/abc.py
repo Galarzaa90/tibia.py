@@ -12,9 +12,12 @@ URL_HOUSE_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
 
 
 class Serializable(abc.ABC):
-    """Implements methods to make a class convertible to JSON.
+    """Contains methods to make a class convertible to JSON.
 
-    Note that there's no way to convert JSON strings back to their original object and that some data might be lost."""
+    .. note::
+        | There's no way to convert JSON strings back to their original object.
+        | Attempting to do so may result in data loss.
+    """
     @classmethod
     def __slots_inherited__(cls):
         slots = []
@@ -68,14 +71,24 @@ class Serializable(abc.ABC):
         return json.dumps({k:v for k,v in dict(self).items() if v is not None}, indent=indent, sort_keys=sort_keys,
                           default=self._try_dict)
 
-class Character(Serializable, metaclass=abc.ABCMeta):
+
+class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
     """Base class for all character classes.
 
-    Implements common properties.
+    Implements common properties methods for characters.
+
+    The following implement this class:
+
+    - :class:`.Character`
+    - :class:`.GuildInvite`
+    - :class:`.GuildMember`
+    - :class:`.OnlineCharacter`
+    - :class:`.OtherCharacter`
 
     Attributes
     ----------
     name: :class:`str`
+        The name of the character.
     """
     __slots__ = ("name", )
 
@@ -132,8 +145,33 @@ class Character(Serializable, metaclass=abc.ABCMeta):
             The URL to the character's page on TibiaData."""
         return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
 
-class House(Serializable, metaclass=abc.ABCMeta):
+
+class BaseHouse(Serializable, metaclass=abc.ABCMeta):
+    """Base class for all house classes
+
+    The following implement this class:
+
+    - :class:`.abc.BaseHouseWithId`
+    - :class:`.GuildHouse`
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the house.
+    world: :class:`str`
+        The name of the world where the house is.
+    status: :class:`.HouseStatus`
+        The current status of the house.
+    type: :class:`.HouseType`
+        The type of the house.
+    """
     __slots__ = ("name", "world", "status", "type")
+
+    def __eq__(self, o: object) -> bool:
+        """Two houses are considered equal if their names are equal."""
+        if isinstance(o, self.__class__):
+            return self.name.lower() == o.name.lower()
+        return False
 
     @classmethod
     def get_url(cls, house_id, world):
@@ -169,8 +207,37 @@ class House(Serializable, metaclass=abc.ABCMeta):
         """
         return URL_HOUSE_TIBIADATA % (world, house_id)
 
-class HouseWithId(House):
+
+class BaseHouseWithId(BaseHouse):
+    """A derivate of :class:`BaseHouse`
+
+    Implements the :py:attr:`id` attribute and dependant functions and properties.
+
+    The following implement this class:
+
+    - :class:`.House`
+    - :class:`.CharacterHouse`
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The internal ID of the house. This is used on the website to identify houses.
+    name: :class:`str`
+        The name of the house.
+    world: :class:`str`
+        The name of the world where the house is.
+    status: :class:`.HouseStatus`
+        The current status of the house.
+    type: :class:`.HouseType`
+        The type of the house.
+    """
     __slots__ = ("id",)
+
+    def __eq__(self, o: object) -> bool:
+        """Two houses are considered equal if their names or ids are equal."""
+        if isinstance(o, self.__class__):
+            return self.name.lower() == o.name.lower() or self.id == o.id
+        return False
 
     @property
     def url(self):

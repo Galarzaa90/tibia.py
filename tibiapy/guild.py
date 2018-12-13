@@ -8,7 +8,7 @@ from typing import List
 import bs4
 
 from tibiapy import abc
-from tibiapy.enums import try_enum, Vocation
+from tibiapy.enums import Vocation, try_enum
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import parse_tibia_date, parse_tibiadata_date
 
@@ -37,10 +37,10 @@ class Guild(abc.Serializable):
     Attributes
     ------------
     name: :class:`str`
-        The name of the guild. Names are case sensitive.
+        The name of the guild.
     logo_url: :class:`str`
         The URL to the guild's logo.
-    description: Optional[:class:`str`]
+    description: :class:`str`, optional
         The description of the guild.
     world: :class:`str`
         The world where this guild is in.
@@ -48,25 +48,25 @@ class Guild(abc.Serializable):
         The day the guild was founded.
     active: :class:`bool`
         Whether the guild is active or still in formation.
-    guildhall: Optional[:class:`dict`]
-        The guild's guildhall.
+    guildhall: :class:`GuildHouse`, optional
+        The guild's guildhall if any.
     open_applications: :class:`bool`
         Whether applications are open or not.
-    disband_condition: Optional[:class:`str`]
+    disband_condition: :class:`str`, optional
         The reason why the guild will get disbanded.
-    disband_date: Optional[:class:`str`]
+    disband_date: :class:`datetime.datetime`, optional
         The date when the guild will be disbanded if the condition hasn't been meet.
-    homepage: :class:`str`
-        The guild's homepage
-    members: List[:class:`GuildMember`]
+    homepage: :class:`str`, optional
+        The guild's homepage, if any.
+    members: :class:`list` of :class:`GuildMember`
         List of guild members.
-    invites: List[:class:`GuildInvite`]
+    invites: :class:`list` of :class:`GuildInvite`
         List of invited characters.
     """
     __slots__ = ("name", "logo_url", "description", "world", "founded", "active", "guildhall", "open_applications",
                  "disband_condition", "disband_date", "homepage", "members", "invites")
 
-    def __init__(self, name=None, world=None,**kwargs):
+    def __init__(self, name=None, world=None, **kwargs):
         self.name = name
         self.world = world
         self.logo_url = kwargs.get("logo_url")
@@ -89,7 +89,7 @@ class Guild(abc.Serializable):
         self.members = kwargs.get("members", [])
         self.invites = kwargs.get("invites", [])
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} world={0.world!r}>".format(self)
 
     @property
@@ -98,8 +98,8 @@ class Guild(abc.Serializable):
         return len(self.members)
 
     @property
-    def online_members(self):
-        """List[:class:`GuildMember`]: List of currently online members."""
+    def online_members(self) -> List['GuildMember']:
+        """:class:`list` of :class:`GuildMember`: List of currently online members."""
         return list(filter(lambda m: m.online, self.members))
 
     @property
@@ -601,7 +601,7 @@ class Guild(abc.Serializable):
         return guilds
 
 
-class GuildMember(abc.Character):
+class GuildMember(abc.BaseCharacter):
     """
     Represents a guild member.
 
@@ -642,7 +642,7 @@ class GuildMember(abc.Character):
             self.joined = None
 
 
-class GuildInvite(abc.Character):
+class GuildInvite(abc.BaseCharacter):
     """Represents an invited character
 
     Attributes
