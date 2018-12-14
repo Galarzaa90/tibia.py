@@ -13,7 +13,7 @@ FILE_WORLD_LIST_OFFLINE = "world_list_offline.txt"
 FILE_WORLD_LIST_TIBIADATA = "world_list_tibiadata.txt"
 
 
-class TestsGuild(TestTibiaPy):
+class TestWorld(TestTibiaPy):
     def setUp(self):
         self.guild = {}
 
@@ -30,12 +30,12 @@ class TestsGuild(TestTibiaPy):
         self.assertEqual(world.name, "Premia")
         self.assertEqual(world.status, "Online")
         self.assertTrue(world.premium_only)
-        self.assertEqual(len(world.players_online), world.online_count)
+        self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(World.get_url(world.name), world.url)
 
         world_json_raw = world.to_json()
         world_json = json.loads(world_json_raw)
-        self.assertEqual(len(world.players_online), len(world_json["players_online"]))
+        self.assertEqual(len(world.online_players), len(world_json["online_players"]))
 
     def testWorldNotFound(self):
         content = self._get_parsed_content(FILE_WORLD_NOT_FOUND, False)
@@ -51,7 +51,7 @@ class TestsGuild(TestTibiaPy):
         self.assertEqual(world.name, "Antica")
         self.assertEqual(world.status, "Offline")
         self.assertEqual(world.online_count, 0)
-        self.assertEqual(len(world.players_online), 0)
+        self.assertEqual(len(world.online_players), 0)
 
     def testWorldTibiadata(self):
         content = self._get_parsed_content(FILE_WORLD_TIBIADATA, False)
@@ -62,7 +62,7 @@ class TestsGuild(TestTibiaPy):
         self.assertEqual(world.status, "Online")
         self.assertFalse(world.premium_only)
         self.assertFalse(world.battleye_protected)
-        self.assertEqual(world.online_count, len(world.players_online))
+        self.assertEqual(world.online_count, len(world.online_players))
         self.assertEqual(World.get_url_tibiadata(world.name), world.url_tibiadata)
 
     def testWorldTibiaDataInvalidJson(self):
