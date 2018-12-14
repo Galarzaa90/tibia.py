@@ -6,6 +6,7 @@ import bs4
 
 from tibiapy import abc
 from tibiapy.character import OnlineCharacter
+from tibiapy.enums import PvpTypes, TransferType, WorldLocation, try_enum
 from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date, parse_tibiadata_datetime
 
 record_regexp = re.compile(r'(?P<count>\d+) players \(on (?P<date>[^)]+)\)')
@@ -33,7 +34,7 @@ class World(abc.Serializable):
         The date where the online record was achieved.
     location: :class:`str`
         The physical location of the game servers.
-    pvp_type: :class:`str`
+    pvp_type: :class:`.PvpType`
         The type of PvP in the world.
     creation_date: :class:`str`
         The month and year the world was created. In MM/YY format.
@@ -48,30 +49,30 @@ class World(abc.Serializable):
         If this is ``None`` and the world is proyected, it means the world was protected from the beginning.
     type: :class:`str`
         The world's type.
-    players_online: :obj:`list` of :class:`OnlineCharacter`.
+    online_players: :obj:`list` of :class:`OnlineCharacter`.
         A list of characters currently online in the server.
     premium_only: :class:`bool`
         Whether only premium account players are allowed to play in this server.
     """
     __slots__ = ("name", "status", "online_count", "record_count", "record_date", "location", "pvp_type",
                  "creation_date", "transfer_type", "world_quest_titles", "battleye_protected", "battleye_date", "type",
-                 "premium_only", "players_online")
+                 "premium_only", "online_players")
 
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
         self.name = name
-        self.location = location
-        self.pvp_type = pvp_type
+        self.location = try_enum(WorldLocation, location)
+        self.pvp_type = try_enum(PvpTypes, pvp_type)
         self.status = kwargs.get("status")
         self.online_count = kwargs.get("online_count", 0)
-        self.record_count = kwargs.get("record_count",0)
+        self.record_count = kwargs.get("record_count", 0)
         self.record_date = kwargs.get("record_date")
         self.creation_date = kwargs.get("creation_date")
-        self.transfer_type = kwargs.get("transfer_type", "open")
+        self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
         self.world_quest_titles = kwargs.get("world_quest_titles", [])
         self.battleye_protected = kwargs.get("battleye_protected", False)
         self.battleye_date = kwargs.get("battleye_date")
         self.type = kwargs.get("type")
-        self.players_online = kwargs.get("players_online", [])
+        self.online_players = kwargs.get("online_players", [])
         self.premium_only = kwargs.get("premium_only", False)
 
     def __repr__(self):
@@ -173,7 +174,8 @@ class World(abc.Serializable):
             world._parse_battleye_status(world_info.get("battleye_status", ""))
             world.type = world_info.get("Game World Type:", "Regular")
             for player in world_data.get("players_online", []):
-                world.players_online.append(OnlineCharacter(player["name"], world.name, player["level"], player["vocation"]))
+                world.online_players.append(OnlineCharacter(player["name"], world.name, player["level"],
+                                                            player["vocation"]))
             return world
         except KeyError:
             return None
@@ -205,11 +207,11 @@ class World(abc.Serializable):
         world._parse_world_info(tables.get("World Information", []))
 
         online_table = tables.get("Players Online", [])
-        world.players_online = []
+        world.online_players = []
         for row in online_table[1:]:
             cols_raw = row.find_all('td')
             name, level, vocation = (c.text.replace('\xa0', ' ').strip() for c in cols_raw)
-            world.players_online.append(OnlineCharacter(name, world.name, int(level), vocation))
+            world.online_players.append(OnlineCharacter(name, world.name, int(level), vocation))
 
         return world
 
