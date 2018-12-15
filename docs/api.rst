@@ -55,6 +55,12 @@ House
    :members:
    :inherited-members:
 
+ListedHouse
+-----
+.. autoclass:: ListedHouse
+   :members:
+   :inherited-members:
+
 World
 -----
 .. autoclass:: World

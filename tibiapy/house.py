@@ -1,5 +1,7 @@
+import datetime
 import json
 import re
+import urllib.parse
 
 import bs4
 
@@ -17,6 +19,11 @@ transfer_regex = re.compile(r'\w+ will move out on (?P<transfer_date>[^(]+)\([^)
 moving_regex = re.compile(r'\w+ will move out on (?P<move_date>[^(]+)')
 bid_regex = re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
 auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).')
+
+list_header_regex = re.compile(r'Available (?P<type>[\w\s]+) in (?P<town>[\w\s\']+) on (?P<world>\w+)')
+list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<time_unit>day|hour)s? left\)')
+
+HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s"
 
 
 class House(abc.BaseHouseWithId):
@@ -276,3 +283,118 @@ class GuildHouse(abc.BaseHouse):
         self.paid_until_date = paid_until_date
         self.status = HouseStatus.RENTED
         self.type = HouseType.GUILDHALL
+
+
+class ListedHouse(abc.BaseHouseWithId):
+    """Representes a house from the house list in Tibia.com.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The internal ID of the house. This is used on the website to identify houses.
+    name: :class:`str`
+        The name of the house.
+    world: :class:`str`
+        The name of the world where the house is.
+    status: :class:`.HouseStatus`
+        The current status of the house.
+    type: :class:`.HouseType`
+        The type of the house."""
+    __slots__ = ("town", "size", "rent", "time_left", "highest_bid")
+
+    def __init__(self, name, world, houseid, **kwargs):
+        self.name = name
+        self.id = houseid
+        self.world = world
+        self.status = kwargs.get("status")
+        self.type = kwargs.get("type")
+        self.town = kwargs.get("town")
+        self.size = kwargs.get("size", 0)
+        self.rent = kwargs.get("rent", 0)
+        self.time_left = kwargs.get("time_left")
+        self.highest_bid = kwargs.get("highest_bid", 0)
+
+    @classmethod
+    def list_from_content(cls, content):
+        """Parses the content of a house list from Tibia.com into a list of houses
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The raw HTML response from the house list.
+
+        Returns
+        -------
+        :class:`list` of :class:`ListedHouse`
+        """
+        parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
+                                           parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+        table = parsed_content.find("table")
+        header, *rows = table.find_all("tr")
+        m = list_header_regex.match(header.text.strip())
+        if not m:
+            return None
+        town = m.group("town")
+        world = m.group("world")
+        house_type = HouseType.GUILDHALL if m.group("type") == "Guildhalls" else HouseType.HOUSE
+        houses = []
+        for row in rows[1:]:
+            cols = row.find_all("td")
+            if len(cols) != 6:
+                continue
+            name = cols[0].text.replace('\u00a0', ' ')
+            house = ListedHouse(name, world, 0, town=town, type=house_type)
+            size = cols[1].text.replace('sqm', '')
+            house.size = int(size)
+            rent = cols[2].text.replace('gold', '')
+            house.rent = int(rent)
+            status = cols[3].text.replace('\xa0', ' ')
+            house._parse_status(status)
+            id_input = cols[5].find("input", {'name': 'houseid'})
+            house.id = int(id_input["value"])
+            houses.append(house)
+        print(json.dumps(houses, default=cls._try_dict, indent=2))
+
+    def _parse_status(self, status):
+        """
+        Parses the status string found in the table and applies the corresponding values.
+
+        Parameters
+        ----------
+        status: :class:`str`
+            The string containing the status.
+        """
+        if "rented" in status:
+            self.status = HouseStatus.RENTED
+        else:
+            m = list_auction_regex.search(status)
+            if m:
+                self.bid = int(m.group('bid'))
+                if m.group("time_unit") == "day":
+                    self.time_left = datetime.timedelta(days=int(m.group("time_left")))
+                else:
+                    self.time_left = datetime.timedelta(seconds=int(m.group("time_left")) * 60 * 60)
+            self.status = HouseStatus.AUCTIONED
+
+    @classmethod
+    def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE):
+        """
+        Gets the URL to the house list on Tibia.com with the specified parameters.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+        town: :class:`str`
+            The name of the town.
+        house_type: :class:`.HouseType`
+            Whether to search for houses or guildhalls.
+
+        Returns
+        -------
+
+        """
+        house_type = "%ss" % house_type.value
+        return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
+
+

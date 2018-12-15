@@ -1,6 +1,8 @@
 import time
 
 from tibiapy import Character, Guild, House, World, WorldOverview, __version__
+from tibiapy.enums import HouseType
+from tibiapy.house import ListedHouse
 
 try:
     import click
@@ -184,6 +186,36 @@ def cli_house(id, world, tibiadata, json):
         print(house.to_json(indent=2))
     else:
         print(print_house(house))
+
+@cli.command(name="houses")
+@click.argument('world')
+@click.argument('town', nargs=-1)
+@click.option("-td", "--tibiadata", default=False, is_flag=True)
+@click.option("-js", "--json", default=False, is_flag=True)
+@click.option("-gh", "--guildhalls", default=False, is_flag=True)
+def cli_houses(world, town, tibiadata, json, guildhalls):
+    town = " ".join(town)
+    start = time.perf_counter()
+    house_type = HouseType.GUILDHALL if guildhalls else HouseType.HOUSE
+    if tibiadata:
+        # r = requests.get(ListedHouse.get_url_tibiadata(int(id), world))
+        # dt = (time.perf_counter() - start) * 1000.0
+        # print("Fetched in {0:.2f} ms".format(dt))
+        # start = time.perf_counter()
+        # house = ListedHouse.from_tibiadata(r.text)
+        return
+    else:
+        r = requests.get(ListedHouse.get_list_url(world, town, house_type))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
+        houses = ListedHouse.list_from_content(r.text)
+    dt = (time.perf_counter() - start) * 1000.0
+    print("Parsed in {0:.2f} ms".format(dt))
+    # if json:
+    #     print(house.to_json(indent=2))
+    # else:
+    #     print(print_house(house))
 
 
 def get_field(field, content):
