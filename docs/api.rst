@@ -56,7 +56,7 @@ House
    :inherited-members:
 
 ListedHouse
------
+-----------
 .. autoclass:: ListedHouse
    :members:
    :inherited-members:

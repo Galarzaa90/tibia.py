@@ -175,7 +175,7 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, house_id, world):
-        """ Gets the Tibia.com URL for house with the given id and world.
+        """ Gets the Tibia.com URL for a house with the given id and world.
 
         Parameters
         ----------
@@ -192,7 +192,7 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url_tibiadata(cls, house_id, world):
-        """ Gets the TibiaData.com URL for house with the given id and world.
+        """ Gets the TibiaData.com URL for a house with the given id and world.
 
         Parameters
         ----------

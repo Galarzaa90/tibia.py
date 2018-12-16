@@ -286,7 +286,7 @@ class GuildHouse(abc.BaseHouse):
 
 
 class ListedHouse(abc.BaseHouseWithId):
-    """Representes a house from the house list in Tibia.com.
+    """Represents a house from the house list in Tibia.com.
 
     Attributes
     ----------
@@ -299,7 +299,19 @@ class ListedHouse(abc.BaseHouseWithId):
     status: :class:`.HouseStatus`
         The current status of the house.
     type: :class:`.HouseType`
-        The type of the house."""
+        The type of house.
+    town: :class:`str`
+        The town where the house is located.
+    size: :class:`int`
+        The size of the house in SQM.
+    rent: :class:`int`
+        The monthly rent of the house, in gold coins.
+    time_left: :class:`datetime.timedelta`, optional
+        The number of days or hours left until the bid ends, if it has started.
+        This is not an exact measure, it is rounded to hours or days.
+    highest_bid: :class:`int`
+        The highest bid so far, if the auction has started.
+    """
     __slots__ = ("town", "size", "rent", "time_left", "highest_bid")
 
     def __init__(self, name, world, houseid, **kwargs):
