@@ -21,19 +21,12 @@ class HouseType(Enum):
     GUILDHALL = "guildhall"
 
 
-class PvpTypes(Enum):
+class PvpType(Enum):
     """The possible PvP types a World can have."""
     OPEN_PVP = "Open PvP"
     OPTIONAL_PVP = "Optional PvP"
     RETRO_OPEN_PVP = "Retro Open PvP"
     RETRO_HARDCORE_PVP = "Retro Hardcore PvP"
-
-
-class WorldLocation(Enum):
-    """The possible physical locations for servers."""
-    EUROPE = "Europe"
-    NORTH_AMERICA = "North America"
-    SOUTH_AMERICA = "South America"
 
 
 class Sex(Enum):
@@ -62,6 +55,13 @@ class Vocation(Enum):
     ELITE_KNIGHT = "Elite Knight"
     ROYAL_PALADIN = "Royal Paladin"
     MASTER_SORCERER = "Master Sorcerer"
+
+
+class WorldLocation(Enum):
+    """The possible physical locations for servers."""
+    EUROPE = "Europe"
+    NORTH_AMERICA = "North America"
+    SOUTH_AMERICA = "South America"
 
 
 def try_enum(cls, val, default=None):

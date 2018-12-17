@@ -24,11 +24,23 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: tibiapy.enums.PvpType
+    :members:
+    :undoc-members:
+
 .. autoclass:: tibiapy.enums.Sex
     :members:
     :undoc-members:
 
+.. autoclass:: tibiapy.enums.TransferType
+    :members:
+    :undoc-members:
+
 .. autoclass:: tibiapy.enums.Vocation
+    :members:
+    :undoc-members:
+
+.. autoclass:: tibiapy.enums.WorldLocation
     :members:
     :undoc-members:
 

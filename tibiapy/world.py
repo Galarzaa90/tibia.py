@@ -6,7 +6,7 @@ import bs4
 
 from tibiapy import abc
 from tibiapy.character import OnlineCharacter
-from tibiapy.enums import PvpTypes, TransferType, WorldLocation, try_enum
+from tibiapy.enums import PvpType, TransferType, WorldLocation, try_enum
 from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date, parse_tibiadata_datetime
 
 record_regexp = re.compile(r'(?P<count>\d+) players \(on (?P<date>[^)]+)\)')
@@ -61,7 +61,7 @@ class World(abc.Serializable):
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
         self.name = name
         self.location = try_enum(WorldLocation, location)
-        self.pvp_type = try_enum(PvpTypes, pvp_type)
+        self.pvp_type = try_enum(PvpType, pvp_type)
         self.status = kwargs.get("status")
         self.online_count = kwargs.get("online_count", 0)
         self.record_count = kwargs.get("record_count", 0)
