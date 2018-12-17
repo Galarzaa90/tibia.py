@@ -248,10 +248,11 @@ class CharacterHouse(abc.BaseHouseWithId):
     """
     __slots__ = ("town", "owner", "paid_until_date")
 
-    def __init__(self, _id, name, town=None, owner=None, paid_until_date=None):
+    def __init__(self, _id, name, world=None, town=None, owner=None, paid_until_date=None):
         self.id = _id
         self.name = name
         self.town = town
+        self.world = world
         self.owner = owner
         self.paid_until_date = paid_until_date
         self.status = HouseStatus.RENTED

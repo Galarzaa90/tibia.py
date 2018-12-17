@@ -3,7 +3,7 @@ import json
 import re
 import urllib.parse
 from collections import OrderedDict
-from typing import List
+from typing import List, Optional
 
 import bs4
 
@@ -29,11 +29,51 @@ house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
 
+class AccountInformation(abc.Serializable):
+    """Represents the account information of a character.
+
+    Attributes
+    ----------
+    created: :class:`datetime.datetime`
+        The date when the account was created.
+    position: :class:`str`, optional
+        The special position of this account, if any.
+    loyalty_title: :class:`str`, optional
+        The loyalty title of the account, if any.
+    """
+    __slots__ = ("created", "loyalty_title", "position")
+
+    def __init__(self, created, loyalty_title=None, position=None):
+        self.created = created
+        self.loyalty_title = loyalty_title
+        self.position = position
+
+
+class Achievement(abc.Serializable):
+    """Represents an achievement listed on a character's page.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the achievement.
+    grade: :class:`int`
+        The grade of the achievement, also known as stars.
+    """
+    __slots__ = ("name", "grade")
+
+    def __init__(self, name, grade):
+        self.name = name
+        self.grade = grade
+
+    def __repr__(self):
+        return "<%s name=%r grade=%d>" % (self.__class__.__name__, self.name, self.grade)
+
+
 class Character(abc.BaseCharacter):
     """Represents a Tibia character.
 
     Attributes
-    ---------------
+    ----------
     name: :class:`str`
         The name of the character.
     deletion_date: :class:`datetime.datetime`, optional
@@ -66,7 +106,7 @@ class Character(abc.BaseCharacter):
         The displayed comment.
     account_status: :class:`AccountStatus`
         Whether the character's account is Premium or Free.
-    achievements: :class:`list` of :class:`dict`
+    achievements: :class:`list` of :class:`Achievement`
         The achievements chosen to be displayed.
     deaths: list of  :class:`Death`
         The character's recent deaths.
@@ -91,7 +131,7 @@ class Character(abc.BaseCharacter):
         self.residence = kwargs.get("residence")
         self.married_to = kwargs.get("married_to")
         self.house = kwargs.get("house")
-        self.guild_membership = kwargs.get("guild_membership")
+        self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
         self.last_login = kwargs.get("last_login")
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
         self.comment = kwargs.get("comment")
@@ -109,12 +149,12 @@ class Character(abc.BaseCharacter):
     @property
     def guild_name(self):
         """:class:`str`: The name of the guild the character belongs to, or ``None``."""
-        return self.guild_membership["guild"] if self.guild_membership else None
+        return self.guild_membership.name if self.guild_membership else None
 
     @property
     def guild_rank(self):
         """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
-        return self.guild_membership["rank"] if self.guild_membership else None
+        return self.guild_membership.rank if self.guild_membership else None
 
     @property
     def guild_url(self):
@@ -141,94 +181,59 @@ class Character(abc.BaseCharacter):
         """
         return bs4.BeautifulSoup(content, 'html.parser', parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
 
-    @classmethod
-    def _parse(cls, content):
-        """
-        Parses the character's page HTML content into a dictionary.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the character's page.
-
-        Returns
-        -------
-        :class:`dict[str, Any]`
-            A dictionary containing all the character's information.
-        """
-        parsed_content = cls._beautiful_soup(content)
-        tables = cls._parse_tables(parsed_content)
-        char = {}
-        if "Character Information" in tables.keys():
-            cls._parse_character_information(char, tables["Character Information"])
-        else:
-            return {}
-        cls._parse_achievements(char, tables.get("Account Achievements", []))
-        cls._parse_deaths(char, tables.get("Character Deaths", []))
-        cls._parse_account_information(char, tables.get("Account Information", []))
-        cls._parse_other_characters(char, tables.get("Characters", []))
-        return char
-
-    @classmethod
-    def _parse_account_information(cls, char, rows):
+    def _parse_account_information(self, rows):
         """
         Parses the character's account information
 
         Parameters
         ----------
-        char: :class:`dict`[str,Any]
-            Dictionary where information will be stored.
-        rows: List[:class:`bs4.Tag`]
+        rows: :class:`list` of :class:`bs4.Tag`, optional
             A list of all rows contained in the table.
         """
-        char["account_information"] = {}
+        acc_info = {}
         for row in rows:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
             field, value = cols
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
             value = value.replace("\xa0", " ")
-            char["account_information"][field] = value
+            acc_info[field] = value
+        created = parse_tibia_datetime(acc_info["created"])
+        loyalty_title = None if acc_info["loyalty_title"] == "(no title)" else acc_info["loyalty_title"]
+        position = acc_info.get("position")
+        print(acc_info)
+        self.account_information = AccountInformation(created, loyalty_title, position)
 
-    @classmethod
-    def _parse_achievements(cls, char, rows):
+    def _parse_achievements(self, rows):
         """
         Parses the character's displayed achievements
 
         Parameters
         ----------
-        char: :class:`dict`[str,Any]
-            Dictionary where information will be stored.
-        rows: List[:class:`bs4.Tag`]
+        rows: :class:`list` of :class:`bs4.Tag`
             A list of all rows contained in the table.
         """
-        achievements = []
         for row in rows:
             cols = row.find_all('td')
             if len(cols) != 2:
                 continue
             field, value = cols
             grade = str(field).count("achievement-grade-symbol")
-            achievement = value.text.strip()
-            achievements.append({
-                "grade": grade,
-                "name": achievement
-            })
-        char["achievements"] = achievements
+            name = value.text.strip()
+            self.achievements.append(Achievement(name, grade))
 
-    @classmethod
-    def _parse_character_information(cls, char, rows):
+    def _parse_character_information(self, rows):
         """
-        Parses the character's basic information.
+        Parses the character's basic information and applies the found values.
 
         Parameters
         ----------
-        char: :class:`dict`[str,Any]
-            Dictionary where information will be stored.
-        rows: List[:class:`bs4.Tag`]
+        rows: :class:`list` of :class:`bs4.Tag`
             A list of all rows contained in the table.
         """
         int_rows = ["level", "achievement_points"]
+        char = {}
+        house = {}
         for row in rows:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
@@ -243,55 +248,54 @@ class Character(abc.BaseCharacter):
                 house_link = cols_raw[1].find('a')
                 url = urllib.parse.urlparse(house_link["href"])
                 query = urllib.parse.parse_qs(url.query)
-                char["house"] = CharacterHouse(int(query["houseid"][0]), house_link.text.strip(), query["town"][0],
-                                               char["name"], paid_until_date)
+                house = {"id": int(query["houseid"][0]), "name": house_link.text.strip(),
+                         "town": query["town"][0], "paid_until": paid_until_date}
                 continue
             if field in int_rows:
                 value = int(value)
             char[field] = value
+
+        # If the character is deleted, the information is fouund with the name, so we must clean it
         m = deleted_regexp.match(char["name"])
         if m:
             char["name"] = m.group(1)
-            char["deletion_date"] = m.group(2)
-        else:
-            char["deletion_date"] = None
-
+            char["deletion_date"] = parse_tibia_datetime(m.group(2))
         if "guild_membership" in char:
             m = guild_regexp.match(char["guild_membership"])
-            char["guild_membership"] = {
-                'rank': m.group(1),
-                'guild': m.group(2)
-            }
-        else:
-            char["guild_membership"] = None
+            char["guild_membership"] = GuildMembership(m.group(2), m.group(1))
 
         if "former_names" in char:
             former_names = [fn.strip() for fn in char["former_names"].split(",")]
             char["former_names"] = former_names
+
+        if "never" in char["last_login"]:
+            char["last_login"] = None
         else:
-            char["former_names"] = []
+            char["last_login"] = parse_tibia_datetime(char["last_login"])
 
-        if "married_to" not in char:
-            char["married_to"] = None
+        for k, v in char.items():
+            try:
+                setattr(self, k, v)
+            except AttributeError:
+                pass
+        if house:
+            self.house = CharacterHouse(house["id"], house["name"], self.world, house["town"], self.name,
+                                        house["paid_until"])
 
-    @classmethod
-    def _parse_deaths(cls, char, rows):
+    def _parse_deaths(self, rows):
         """
         Parses the character's recent deaths
 
         Parameters
         ----------
-        char: :class:`dict`[str,Any]
-            Dictionary where information will be stored.
-        rows: List[:class:`bs4.Tag`]
+        rows: :class:`list` of :class:`bs4.Tag`
             A list of all rows contained in the table.
         """
-        deaths = []
         for row in rows:
             cols = row.find_all('td')
-            death_time = cols[0].text.strip()
+            death_time_str = cols[0].text.replace("\xa0", " ").strip()
+            death_time = parse_tibia_datetime(death_time_str)
             death = str(cols[1]).replace("\xa0", " ")
-            death_time = death_time.replace("\xa0", " ")
             death_info = death_regexp.search(death)
             if death_info:
                 level = int(death_info.group("level"))
@@ -305,20 +309,20 @@ class Character(abc.BaseCharacter):
                 # Filter out assists
                 killers_str = assist_match.group("killers")
                 # Split assists into a list.
-                assists = cls._split_list(assist_match.group("assists"))
-            killers = cls._split_list(killers_str)
+                assists = self._split_list(assist_match.group("assists"))
+            killers = self._split_list(killers_str)
             for i, killer in enumerate(killers):
-                killer_dict = cls._parse_killer(killer)
+                killer_dict = self._parse_killer(killer)
                 killers[i] = killer_dict
             for (i, assist) in enumerate(assists):
                 # Extract names from character links in assists list.
                 assists[i] = {"name": link_content.search(assist).group(1), "player": True}
             try:
-                deaths.append({'time': death_time, 'level': level, 'killers': killers, 'assists': assists})
+                self.deaths.append(Death(self.name, level, time=death_time, killers=killers, assists=assists))
+                self.deaths.append({'time': death_time, 'level': level, 'killers': killers, 'assists': assists})
             except ValueError:
                 # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                 continue
-        char["deaths"] = deaths
 
     @classmethod
     def _parse_killer(cls, killer):
@@ -344,28 +348,23 @@ class Character(abc.BaseCharacter):
             killer_dict["summon"] = m.group("summon")
         return killer_dict
 
-    @classmethod
-    def _parse_other_characters(cls, char, rows):
+    def _parse_other_characters(self, rows):
         """
         Parses the character's other visible characters.
 
         Parameters
         ----------
-        char: :class:`dict`[str,Any]
-            Dictionary where information will be stored.
-        rows: List[:class:`bs4.Tag`]
+        rows: :class:`list` of :class:`bs4.Tag`
             A list of all rows contained in the table.
         """
-        char["other_characters"] = []
         for row in rows:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
             if len(cols) != 5:
                 continue
-            _name, world, status, __, __ = cols
-            _name = _name.replace("\xa0", " ").split(". ")[1]
-            char["other_characters"].append(
-                {'name': _name, 'world': world, 'online': status == "online", 'deleted': status == "deleted"})
+            name, world, status, __, __ = cols
+            name = name.replace("\xa0", " ").split(". ")[1]
+            self.other_characters.append(OtherCharacter(name, world, status == "online", status == "deleted"))
 
     @classmethod
     def _parse_tables(cls, parsed_content):
@@ -433,36 +432,17 @@ class Character(abc.BaseCharacter):
         :class:`Character`
             The character contained in the page, or None if the character doesn't exist.
         """
-        char_json = cls._parse(content)
-        if not char_json:
+        parsed_content = cls._beautiful_soup(content)
+        tables = cls._parse_tables(parsed_content)
+        char = Character()
+        if "Character Information" in tables.keys():
+            char._parse_character_information(tables["Character Information"])
+        else:
             return None
-        try:
-            if char_json["deletion_date"]:
-                char_json["deletion_date"] = parse_tibia_datetime(char_json["deletion_date"])
-            else:
-                char_json["deletion_date"] = None
-
-            # Some attributes require converting
-            if "never" in char_json["last_login"]:
-                char_json["last_login"] = None
-            else:
-                char_json["last_login"] = parse_tibia_datetime(char_json["last_login"])
-            deaths = []
-            for d in char_json["deaths"]:
-                death = Death(**d)
-                death.name = char_json["name"]
-                deaths.append(death)
-            char_json["deaths"] = deaths
-            other_characters = []
-            if char_json["other_characters"]:
-                for o_char in char_json["other_characters"]:
-                    other_characters.append(OtherCharacter(**o_char))
-            char_json["other_characters"] = other_characters
-
-            char = cls(**char_json)
-
-        except KeyError as e:
-            return None
+        char._parse_achievements(tables.get("Account Achievements", []))
+        char._parse_deaths(tables.get("Character Deaths", []))
+        char._parse_account_information(tables.get("Account Information", []))
+        char._parse_other_characters(tables.get("Characters", []))
         return char
 
     @classmethod
@@ -494,7 +474,7 @@ class Character(abc.BaseCharacter):
         char.married_to = character_data.get("married_to")
         char.former_world = character_data.get("former_world")
         if "guild" in character_data:
-            char.guild_membership = {"rank": character_data["guild"]["rank"], "guild": character_data["guild"]["name"]}
+            char.guild_membership = GuildMembership(character_data["guild"]["name"], character_data["guild"]["rank"])
         if "house" in character_data:
             house = character_data["house"]
             paid_until_date = parse_tibiadata_date(house["paid"])
@@ -503,7 +483,7 @@ class Character(abc.BaseCharacter):
         if len(character_data["last_login"]) > 0:
             char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])
         for achievement in character["achievements"]:
-            char.achievements.append({"grade": achievement["stars"], "name": achievement["name"]})
+            char.achievements.append(Achievement(achievement["name"], achievement["stars"]))
 
         cls._parse_deaths_tibiadata(char, character.get("deaths", []))
 
@@ -513,11 +493,12 @@ class Character(abc.BaseCharacter):
                                                         other_char["status"] == "deleted"))
 
         if character["account_information"]:
-            char.account_information = {}
-            for key, value in character["account_information"].items():
-                if key == "created":
-                    value = parse_tibiadata_datetime(value)
-                char.account_information[key] = value
+            acc_info = character["account_information"]
+            created = parse_tibiadata_datetime(acc_info.get("created"))
+            loyalty_title = None if acc_info["loyalty_title"] == "(no title)" else acc_info["loyalty_title"]
+            position = acc_info.get("position")
+
+            char.account_information = AccountInformation(created, loyalty_title, position)
 
         return char
 
@@ -605,6 +586,26 @@ class Death(abc.Serializable):
     def by_player(self):
         """:class:`bool`: Whether the kill involves other characters."""
         return any([k.player and self.name != k.name for k in self.killers])
+
+
+class GuildMembership(abc.BaseGuild):
+    """Represents the guild information of a character.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the guild.
+    rank: :class:`str`
+        The name of the rank the member has.
+    """
+    __slots__ = ("rank",)
+
+    def __init__(self, name, rank):
+        self.name = name
+        self.rank = rank
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} rank={0.rank!r}>".format(self)
 
 
 class Killer(abc.Serializable):

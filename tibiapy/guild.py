@@ -24,13 +24,11 @@ disband_regex = re.compile(r'It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).')
 disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
 
-GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName="
-GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
 GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
 GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
 
 
-class Guild(abc.Serializable):
+class Guild(abc.BaseGuild):
     """
     Represents a Tibia guild.
 
@@ -63,7 +61,7 @@ class Guild(abc.Serializable):
     invites: :class:`list` of :class:`GuildInvite`
         List of invited characters.
     """
-    __slots__ = ("name", "logo_url", "description", "world", "founded", "active", "guildhall", "open_applications",
+    __slots__ = ("world", "logo_url", "description", "founded", "active", "guildhall", "open_applications",
                  "disband_condition", "disband_date", "homepage", "members", "invites")
 
     def __init__(self, name=None, world=None, **kwargs):
@@ -106,16 +104,6 @@ class Guild(abc.Serializable):
     def ranks(self) -> List[str]:
         """:class:`list` of :class:`str`: Ranks in their hierarchical order."""
         return list(OrderedDict.fromkeys((m.rank for m in self.members)))
-
-    @property
-    def url(self):
-        """:class:`str`: The URL to the guild's information page."""
-        return GUILD_URL + urllib.parse.quote(self.name.encode('iso-8859-1'))
-
-    @property
-    def url_tibiadata(self):
-        """:class:`str`: The URL to the guild on TibiaData."""
-        return GUILD_URL_TIBIADATA % urllib.parse.quote(self.name.encode('iso-8859-1'))
 
     @classmethod
     def _beautiful_soup(cls, content):
@@ -482,36 +470,6 @@ class Guild(abc.Serializable):
         guild_json["invites"] = invites
         guild = cls(**guild_json)
         return guild
-
-    @classmethod
-    def get_url(cls, name):
-        """Gets the Tibia.com URL for a given guild name.
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the guild.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the guild's page"""
-        return GUILD_URL + urllib.parse.quote(name.encode('iso-8859-1'))
-
-    @classmethod
-    def get_url_tibiadata(cls, name):
-        """Gets the TibiaData.com URL for a given guild name.
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the guild.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the guild's page"""
-        return GUILD_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
 
     @classmethod
     def get_world_list_url(cls, world):

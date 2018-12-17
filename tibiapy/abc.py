@@ -9,6 +9,8 @@ CHARACTER_URL = "https://www.tibia.com/community/?subtopic=characters&name=%s"
 CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
 URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
 URL_HOUSE_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
+GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName=%s"
+GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
 
 
 class Serializable(abc.ABC):
@@ -144,6 +146,65 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
         :class:`str`
             The URL to the character's page on TibiaData."""
         return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
+
+
+class BaseGuild(Serializable, metaclass=abc.ABCMeta):
+    """Base class for Guild classes.
+
+    The following implement this class:
+
+    - :class:`.Guild`
+    - :class:`.GuildMembership`
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the guild.
+    """
+    __slots__ = ("name",)
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r}>".format(self)
+
+    @property
+    def url(self):
+        """:class:`str`: The URL to the guild's information page."""
+        return self.get_url(self.name)
+
+    @property
+    def url_tibiadata(self):
+        """:class:`str`: The URL to the guild on TibiaData."""
+        return self.get_url_tibiadata(self.name)
+
+    @classmethod
+    def get_url(cls, name):
+        """Gets the Tibia.com URL for a given guild name.
+
+        Parameters
+        ------------
+        name: :class:`str`
+            The name of the guild.
+
+        Returns
+        --------
+        :class:`str`
+            The URL to the guild's page"""
+        return GUILD_URL % urllib.parse.quote(name.encode('iso-8859-1'))
+
+    @classmethod
+    def get_url_tibiadata(cls, name):
+        """Gets the TibiaData.com URL for a given guild name.
+
+        Parameters
+        ------------
+        name: :class:`str`
+            The name of the guild.
+
+        Returns
+        --------
+        :class:`str`
+            The URL to the guild's page"""
+        return GUILD_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
 
 
 class BaseHouse(Serializable, metaclass=abc.ABCMeta):

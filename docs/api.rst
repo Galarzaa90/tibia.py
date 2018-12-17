@@ -90,6 +90,18 @@ Auxiliary Classes
 Auxiliary classes are used to hold certain data in a standardized way, in some cases, introducing additional methods
 and properties for their use.
 
+AccountInformation
+------------------
+.. autoclass:: AccountInformation
+   :members:
+   :inherited-members:
+
+Achievement
+--------------
+.. autoclass:: Achievement
+   :members:
+   :inherited-members:
+
 CharacterHouse
 --------------
 .. autoclass:: CharacterHouse
@@ -120,6 +132,12 @@ GuildMember
    :members:
    :inherited-members:
 
+GuildMembership
+---------------
+.. autoclass:: GuildMembership
+   :members:
+   :inherited-members:
+
 Killer
 ------
 .. autoclass:: Killer
@@ -145,6 +163,10 @@ The following classes are not meant to be used or instantiated, but are document
 They implement methods and properties that can be inherited by other classes to implement their functionality.
 
 .. autoclass:: tibiapy.abc.BaseCharacter
+    :members:
+    :inherited-members:
+
+.. autoclass:: tibiapy.abc.BaseGuild
     :members:
     :inherited-members:
 
