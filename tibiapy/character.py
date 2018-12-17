@@ -462,7 +462,6 @@ class Character(abc.BaseCharacter):
             char = cls(**char_json)
 
         except KeyError as e:
-            print(e)
             return None
         return char
 

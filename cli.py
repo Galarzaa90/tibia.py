@@ -1,7 +1,7 @@
 import time
 
 from tibiapy import Character, Guild, House, World, WorldOverview, __version__
-from tibiapy.enums import HouseType
+from tibiapy.enums import HouseType, HouseStatus
 from tibiapy.house import ListedHouse
 
 try:
@@ -185,7 +185,8 @@ def cli_house(id, world, tibiadata, json):
     if json:
         print(house.to_json(indent=2))
     else:
-        print(print_house(house))
+        print(get_house_string(house))
+
 
 @cli.command(name="houses")
 @click.argument('world')
@@ -198,12 +199,11 @@ def cli_houses(world, town, tibiadata, json, guildhalls):
     start = time.perf_counter()
     house_type = HouseType.GUILDHALL if guildhalls else HouseType.HOUSE
     if tibiadata:
-        # r = requests.get(ListedHouse.get_url_tibiadata(int(id), world))
-        # dt = (time.perf_counter() - start) * 1000.0
-        # print("Fetched in {0:.2f} ms".format(dt))
-        # start = time.perf_counter()
-        # house = ListedHouse.from_tibiadata(r.text)
-        return
+        r = requests.get(ListedHouse.get_list_url_tibiadata(world, town, house_type))
+        dt = (time.perf_counter() - start) * 1000.0
+        print("Fetched in {0:.2f} ms".format(dt))
+        start = time.perf_counter()
+        houses = ListedHouse.list_from_tibiadata(r.text)
     else:
         r = requests.get(ListedHouse.get_list_url(world, town, house_type))
         dt = (time.perf_counter() - start) * 1000.0
@@ -212,10 +212,11 @@ def cli_houses(world, town, tibiadata, json, guildhalls):
         houses = ListedHouse.list_from_content(r.text)
     dt = (time.perf_counter() - start) * 1000.0
     print("Parsed in {0:.2f} ms".format(dt))
-    # if json:
-    #     print(house.to_json(indent=2))
-    # else:
-    #     print(print_house(house))
+    if json:
+        import json as _json
+        print(_json.dumps(houses, default=House._try_dict, indent=2))
+    else:
+        print(get_houses_string(houses))
 
 
 def get_field(field, content):
@@ -387,7 +388,7 @@ def print_world_overview(world_overview):
     return content
 
 
-def print_house(house):
+def get_house_string(house):
     content = build_header("House", "=")
     content += get_field("Name", house.name)
     content += get_field("World", house.world)
@@ -411,6 +412,20 @@ def print_house(house):
                 else:
                     transfer += ", if accepted."
             content += get_field("Moving", transfer)
+    return content
+
+
+def get_houses_string(houses):
+    content = build_header("House List", "=")
+    if not houses:
+        content += "No houses."
+        return content
+    for h in houses:
+        content += get_field("Name", h.name)
+        content += get_field("ID", h.id)
+        content += get_field("Rent", h.rent)
+        content += get_field("Status", h.status.value)
+        content += "-----\n"
     return content
 
 

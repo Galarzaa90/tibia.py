@@ -24,6 +24,7 @@ list_header_regex = re.compile(r'Available (?P<type>[\w\s]+) in (?P<town>[\w\s\'
 list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<time_unit>day|hour)s? left\)')
 
 HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s"
+HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
 
 
 class House(abc.BaseHouseWithId):
@@ -365,7 +366,40 @@ class ListedHouse(abc.BaseHouseWithId):
             id_input = cols[5].find("input", {'name': 'houseid'})
             house.id = int(id_input["value"])
             houses.append(house)
-        print(json.dumps(houses, default=cls._try_dict, indent=2))
+        return houses
+
+    @classmethod
+    def list_from_tibiadata(cls, content):
+        """Parses the content of a house list from TibiaData.com into a list of houses
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The raw JSON response from TibiaData
+
+        Returns
+        -------
+        :class:`list` of :class:`ListedHouse`
+        """
+        try:
+            json_data = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        try:
+            house_list = json_data["houses"]
+            houses = []
+            house_type = HouseType.HOUSE if json_data["type"] == "houses" else HouseType.GUILDHALL
+            for house_json in house_list:
+                if not house_json["status"]:
+                    return houses
+                house = ListedHouse(house_json["name"], json_data["world"], house_json["houseid"],
+                                    houseid=house_json["houseid"], size=house_json["size"], rent=house_json["rent"],
+                                    town=json_data["town"], house_type=house_type)
+                house._parse_status(house_json["status"])
+                houses.append(house)
+            return houses
+        except KeyError:
+            return None
 
     def _parse_status(self, status):
         """
@@ -404,9 +438,32 @@ class ListedHouse(abc.BaseHouseWithId):
 
         Returns
         -------
-
+        :class:`str`
+            The URL to the list matching the parameters.
         """
         house_type = "%ss" % house_type.value
         return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
+
+    @classmethod
+    def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):
+        """
+        Gets the URL to the house list on Tibia.com with the specified parameters.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+        town: :class:`str`
+            The name of the town.
+        house_type: :class:`.HouseType`
+            Whether to search for houses or guildhalls.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the list matching the parameters.
+        """
+        house_type = "%ss" % house_type.value
+        return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
 
 
