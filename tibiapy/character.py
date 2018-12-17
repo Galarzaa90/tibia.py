@@ -48,6 +48,9 @@ class AccountInformation(abc.Serializable):
         self.loyalty_title = loyalty_title
         self.position = position
 
+    def __repr__(self):
+        return "<%s created=%r>" % (self.__class__.__name__, self.created)
+
 
 class Achievement(abc.Serializable):
     """Represents an achievement listed on a character's page.
@@ -141,6 +144,7 @@ class Character(abc.BaseCharacter):
         self.other_characters = kwargs.get("other_characters", [])
         self.deletion_date = kwargs.get("deletion_date")
 
+    # region Properties
     @property
     def deleted(self) -> bool:
         """:class:`bool`: Whether the character is scheduled for deletion or not."""
@@ -165,7 +169,95 @@ class Character(abc.BaseCharacter):
     def married_to_url(self):
         """:class:`str`: The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return self.get_url(self.married_to) if self.married_to else None
+    # endregion
 
+    # region Public methods
+    @classmethod
+    def from_content(cls, content):
+        """Creates an instance of the class from the html content of the character's page.
+
+        Parameters
+        -----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        ----------
+        :class:`Character`
+            The character contained in the page, or None if the character doesn't exist.
+        """
+        parsed_content = cls._beautiful_soup(content)
+        tables = cls._parse_tables(parsed_content)
+        char = Character()
+        if "Character Information" in tables.keys():
+            char._parse_character_information(tables["Character Information"])
+        else:
+            return None
+        char._parse_achievements(tables.get("Account Achievements", []))
+        char._parse_deaths(tables.get("Character Deaths", []))
+        char._parse_account_information(tables.get("Account Information", []))
+        char._parse_other_characters(tables.get("Characters", []))
+        return char
+
+    @classmethod
+    def from_tibiadata(cls, content):
+        """Builds a character object from a TibiaData character response"""
+        try:
+            json_content = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        character = json_content["characters"]
+        character_data = character["data"]
+        char = cls()
+        if "error" in character:
+            return None
+        try:
+            char.name = character_data["name"]
+            char.world = character_data["world"]
+            char.level = character_data["level"]
+            char.achievement_points = character_data["achievement_points"]
+            char.sex = character_data["sex"]
+            char.vocation = try_enum(Vocation, character_data["vocation"])
+            char.residence = character_data["residence"]
+            char.account_status = character_data["account_status"]
+        except KeyError:
+            return None
+        char.former_names = character_data.get("former_names", [])
+        if "deleted" in character_data:
+            char.deletion_date = parse_tibiadata_datetime(character_data["deleted"])
+        char.married_to = character_data.get("married_to")
+        char.former_world = character_data.get("former_world")
+        if "guild" in character_data:
+            char.guild_membership = GuildMembership(character_data["guild"]["name"], character_data["guild"]["rank"])
+        if "house" in character_data:
+            house = character_data["house"]
+            paid_until_date = parse_tibiadata_date(house["paid"])
+            char.house = CharacterHouse(house["houseid"], house["name"], house["town"], char.name, paid_until_date)
+        char.comment = character_data.get("comment")
+        if len(character_data["last_login"]) > 0:
+            char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])
+        for achievement in character["achievements"]:
+            char.achievements.append(Achievement(achievement["name"], achievement["stars"]))
+
+        cls._parse_deaths_tibiadata(char, character.get("deaths", []))
+
+        for other_char in character["other_characters"]:
+            char.other_characters.append(OtherCharacter(other_char["name"], other_char["world"],
+                                                        other_char["status"] == "online",
+                                                        other_char["status"] == "deleted"))
+
+        if character["account_information"]:
+            acc_info = character["account_information"]
+            created = parse_tibiadata_datetime(acc_info.get("created"))
+            loyalty_title = None if acc_info["loyalty_title"] == "(no title)" else acc_info["loyalty_title"]
+            position = acc_info.get("position")
+
+            char.account_information = AccountInformation(created, loyalty_title, position)
+
+        return char
+    # endregion
+
+    # region Private methods
     @classmethod
     def _beautiful_soup(cls, content):
         """
@@ -203,7 +295,6 @@ class Character(abc.BaseCharacter):
         created = parse_tibia_datetime(acc_info["created"])
         loyalty_title = None if acc_info["loyalty_title"] == "(no title)" else acc_info["loyalty_title"]
         position = acc_info.get("position")
-        print(acc_info)
         self.account_information = AccountInformation(created, loyalty_title, position)
 
     def _parse_achievements(self, rows):
@@ -330,6 +421,27 @@ class Character(abc.BaseCharacter):
                 continue
 
     @classmethod
+    def _parse_deaths_tibiadata(cls, char, deaths):
+        for death in deaths:
+            level = death["level"]
+            death_time = parse_tibiadata_datetime(death["date"])
+            m = death_reason.search(death["reason"])
+            killers_str = []
+            assists_str = []
+            killers = []
+            assists = []
+            involved = [i["name"] for i in death["involved"]]
+            if m and m.group("killers"):
+                killers_str = [k.strip() for k in cls._split_list(m.group("killers").strip())]
+            if m and m.group("assists"):
+                assists_str = [a.strip() for a in cls._split_list(m.group("assists").strip())]
+            for killer in killers_str:
+                killers.append(Killer(killer, killer in involved))
+            for assist in assists_str:
+                assists.append(Killer(assist, assist in involved))
+            char.deaths.append(Death(char.name, level, time=death_time, killers=killers, assists=assists))
+
+    @classmethod
     def _parse_killer(cls, killer):
         """Parses a killer into a dictionary.
 
@@ -422,112 +534,7 @@ class Character(abc.BaseCharacter):
             items[-1] = last_split[0]
             items.append(last_split[1])
         return [e.strip() for e in items]
-
-    @classmethod
-    def from_content(cls, content):
-        """Creates an instance of the class from the html content of the character's page.
-
-        Parameters
-        -----------
-        content: :class:`str`
-            The HTML content of the page.
-
-        Returns
-        ----------
-        :class:`Character`
-            The character contained in the page, or None if the character doesn't exist.
-        """
-        parsed_content = cls._beautiful_soup(content)
-        tables = cls._parse_tables(parsed_content)
-        char = Character()
-        if "Character Information" in tables.keys():
-            char._parse_character_information(tables["Character Information"])
-        else:
-            return None
-        char._parse_achievements(tables.get("Account Achievements", []))
-        char._parse_deaths(tables.get("Character Deaths", []))
-        char._parse_account_information(tables.get("Account Information", []))
-        char._parse_other_characters(tables.get("Characters", []))
-        return char
-
-    @classmethod
-    def from_tibiadata(cls, content):
-        """Builds a character object from a TibiaData character response"""
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            return None
-        character = json_content["characters"]
-        character_data = character["data"]
-        char = cls()
-        if "error" in character:
-            return None
-        try:
-            char.name = character_data["name"]
-            char.world = character_data["world"]
-            char.level = character_data["level"]
-            char.achievement_points = character_data["achievement_points"]
-            char.sex = character_data["sex"]
-            char.vocation = try_enum(Vocation, character_data["vocation"])
-            char.residence = character_data["residence"]
-            char.account_status = character_data["account_status"]
-        except KeyError:
-            return None
-        char.former_names = character_data.get("former_names", [])
-        if "deleted" in character_data:
-            char.deletion_date = parse_tibiadata_datetime(character_data["deleted"])
-        char.married_to = character_data.get("married_to")
-        char.former_world = character_data.get("former_world")
-        if "guild" in character_data:
-            char.guild_membership = GuildMembership(character_data["guild"]["name"], character_data["guild"]["rank"])
-        if "house" in character_data:
-            house = character_data["house"]
-            paid_until_date = parse_tibiadata_date(house["paid"])
-            char.house = CharacterHouse(house["houseid"], house["name"], house["town"], char.name, paid_until_date)
-        char.comment = character_data.get("comment")
-        if len(character_data["last_login"]) > 0:
-            char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])
-        for achievement in character["achievements"]:
-            char.achievements.append(Achievement(achievement["name"], achievement["stars"]))
-
-        cls._parse_deaths_tibiadata(char, character.get("deaths", []))
-
-        for other_char in character["other_characters"]:
-            char.other_characters.append(OtherCharacter(other_char["name"], other_char["world"],
-                                                        other_char["status"] == "online",
-                                                        other_char["status"] == "deleted"))
-
-        if character["account_information"]:
-            acc_info = character["account_information"]
-            created = parse_tibiadata_datetime(acc_info.get("created"))
-            loyalty_title = None if acc_info["loyalty_title"] == "(no title)" else acc_info["loyalty_title"]
-            position = acc_info.get("position")
-
-            char.account_information = AccountInformation(created, loyalty_title, position)
-
-        return char
-
-    @classmethod
-    def _parse_deaths_tibiadata(cls, char, deaths):
-        for death in deaths:
-            level = death["level"]
-            death_time = parse_tibiadata_datetime(death["date"])
-            m = death_reason.search(death["reason"])
-            killers_str = []
-            assists_str = []
-            killers = []
-            assists = []
-            involved = [i["name"] for i in death["involved"]]
-            if m and m.group("killers"):
-                killers_str = [k.strip() for k in cls._split_list(m.group("killers").strip())]
-            if m and m.group("assists"):
-                assists_str = [a.strip() for a in cls._split_list(m.group("assists").strip())]
-            for killer in killers_str:
-                killers.append(Killer(killer, killer in involved))
-            for assist in assists_str:
-                assists.append(Killer(assist, assist in involved))
-            char.deaths.append(Death(char.name, level, time=death_time, killers=killers, assists=assists))
-
+    # endregion
 
 class Death(abc.Serializable):
     """
@@ -581,16 +588,16 @@ class Death(abc.Serializable):
         return "{0.__class__.__name__}({0.name!r},{0.level!r}{1})".format(self, attributes)
 
     @property
+    def by_player(self):
+        """:class:`bool`: Whether the kill involves other characters."""
+        return any([k.player and self.name != k.name for k in self.killers])
+
+    @property
     def killer(self):
         """Optional[:class:`Killer`]: The first killer in the list.
 
         This is usually the killer that gave the killing blow."""
         return self.killers[0] if self.killers else None
-
-    @property
-    def by_player(self):
-        """:class:`bool`: Whether the kill involves other characters."""
-        return any([k.player and self.name != k.name for k in self.killers])
 
 
 class GuildMembership(abc.BaseGuild):
@@ -687,7 +694,7 @@ class OtherCharacter(abc.BaseCharacter):
 
 
 class OnlineCharacter(abc.BaseCharacter):
-    """Representes an online character."""
+    """Represents an online character."""
     __slots__ = ("name", "world", "vocation", "level")
 
     def __init__(self, name, world, level, vocation):

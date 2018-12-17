@@ -78,6 +78,7 @@ class World(abc.Serializable):
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} location={0.location!r} pvp_type={0.pvp_type!r}>".format(self)
 
+    # region Properties
     @property
     def url(self):
         """:class:`str`: URL to the world's information page on Tibia.com."""
@@ -87,7 +88,9 @@ class World(abc.Serializable):
     def url_tibiadata(self):
         """:class:`str`: URL to the world's information page on TibiaData.com."""
         return self.get_url_tibiadata(self.name)
+    # endregion
 
+    # region Public methods
     @classmethod
     def get_url(cls, name):
         """Gets the URL to the World's information page on Tibia.com.
@@ -179,7 +182,9 @@ class World(abc.Serializable):
             return world
         except KeyError:
             return None
+    # endregion
 
+    # region Private methods
     @classmethod
     def _beautiful_soup(cls, content):
         """
@@ -289,6 +294,7 @@ class World(abc.Serializable):
             inner_table = table.find("div", attrs={'class': 'InnerTableContainer'})
             output[title] = inner_table.find_all("tr")
         return output
+    # endregion
 
 
 class WorldOverview(abc.Serializable):
@@ -318,6 +324,7 @@ class WorldOverview(abc.Serializable):
         """:class:`int`: Total players online across all worlds."""
         return sum(w.online_count for w in self.worlds)
 
+    # region Public methods
     @classmethod
     def get_url(cls):
         """
@@ -383,6 +390,50 @@ class WorldOverview(abc.Serializable):
         world_overview._parse_worlds(world_rows)
         return world_overview
 
+    @classmethod
+    def from_tibiadata(cls, content):
+        """Parses the content of the World Overview section from Tibiaata.com into an object of this class.
+
+        Notes
+        -----
+        Due to TibiaData limitations, the resulting object only contains the :py:attr:`worlds` attribute.
+        Also, :class:`World` elements contained in the attribute ``worlds`` only contain the following attributes:
+
+        - :py:attr:`World.name`
+        - :py:attr:`World.online_count`
+        - :py:attr:`World.location`
+        - :py:attr:`World.pvp_type`
+        - :py:attr:`World.premium_only`
+        - :py:attr:`World.type`
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the World Overview page in Tibia.com
+
+        Returns
+        -------
+        :class:`WorldOverview`
+            An instance of this class containing all the information.
+        """
+        try:
+            json_data = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        try:
+            worlds = json_data["worlds"]["allworlds"]
+            world_overview = cls()
+            for world in worlds:
+                premium, transfer_type, world_type = cls._parse_additional_info(world["additional"])
+                world_overview.worlds.append(World(world["name"], world["location"], world["worldtype"],
+                                                   online_count=world["online"], premium_only=premium,
+                                                   transfer_type=transfer_type, type=world_type))
+            return world_overview
+        except KeyError:
+            return None
+    # endregion
+
+    # region Private methods
     def _parse_worlds(self, world_rows):
         for world_row in world_rows:
             cols = world_row.find_all("td")
@@ -425,45 +476,3 @@ class WorldOverview(abc.Serializable):
             world_type = "Regular"
         premium = "premium" in additional_info
         return premium, transfer_type, world_type
-
-    @classmethod
-    def from_tibiadata(cls, content):
-        """Parses the content of the World Overview section from Tibiaata.com into an object of this class.
-
-        Notes
-        -----
-        Due to TibiaData limitations, the resulting object only contains the :py:attr:`worlds` attribute.
-        Also, :class:`World` elements contained in the attribute ``worlds`` only contain the following attributes:
-
-        - :py:attr:`World.name`
-        - :py:attr:`World.online_count`
-        - :py:attr:`World.location`
-        - :py:attr:`World.pvp_type`
-        - :py:attr:`World.premium_only`
-        - :py:attr:`World.type`
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the World Overview page in Tibia.com
-
-        Returns
-        -------
-        :class:`WorldOverview`
-            An instance of this class containing all the information.
-        """
-        try:
-            json_data = json.loads(content)
-        except json.JSONDecodeError:
-            return None
-        try:
-            worlds = json_data["worlds"]["allworlds"]
-            world_overview = cls()
-            for world in worlds:
-                premium, transfer_type, world_type = cls._parse_additional_info(world["additional"])
-                world_overview.worlds.append(World(world["name"], world["location"], world["worldtype"],
-                                                   online_count=world["online"], premium_only=premium,
-                                                   transfer_type=transfer_type, type=world_type))
-            return world_overview
-        except KeyError:
-            return None

@@ -1,7 +1,7 @@
 import time
 
-from tibiapy import Character, Guild, House, World, WorldOverview, __version__
-from tibiapy.enums import HouseType, HouseStatus
+from tibiapy import Character, Guild, House, ListedGuild, World, WorldOverview, __version__
+from tibiapy.enums import HouseType
 from tibiapy.house import ListedHouse
 
 try:
@@ -18,6 +18,20 @@ BOLD = '\033[1m'
 CEND = '\033[0m'
 
 
+def _fetch_and_parse(regular_url, regular_parse, tibiadata_url, tibiadata_parse, tibiadata: bool, *args):
+    url = regular_url(*args) if not tibiadata else tibiadata_url(*args)
+    parse_func = regular_parse if not tibiadata else tibiadata_parse
+    start = time.perf_counter()
+    r = requests.get(url)
+    dt = (time.perf_counter() - start) * 1000.0
+    print("Fetched in {0:.2f} ms | {1}".format(dt, url))
+    start = time.perf_counter()
+    results = parse_func(r.text)
+    dt = (time.perf_counter() - start) * 1000.0
+    print("Parsed in {0:.2f} ms".format(dt))
+    return results
+
+
 @click.group(context_settings={'help_option_names': ['-h', '--hel']})
 @click.version_option(__version__, '-V', '--version')
 def cli():
@@ -31,25 +45,13 @@ def cli():
 def cli_char(name, tibiadata, json):
     """Displays information about a Tibia character."""
     name = " ".join(name)
-    start = time.perf_counter()
-    if tibiadata:
-        r = requests.get(Character.get_url_tibiadata(name))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        char = Character.from_tibiadata(r.text)
-    else:
-        r = requests.get(Character.get_url(name))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        char = Character.from_content(r.text)
-    dt = (time.perf_counter() - start) * 1000.0
-    print("Parsed in {0:.2f} ms".format(dt))
-    if json:
+    char = _fetch_and_parse(Character.get_url, Character.from_content,
+                            Character.get_url_tibiadata, Character.from_tibiadata,
+                            tibiadata, name)
+    if json and char:
         print(char.to_json(indent=2))
-    else:
-        print(build_character(char))
+        return
+    print(build_character(char))
 
 
 @cli.command(name="guild")
@@ -59,25 +61,13 @@ def cli_char(name, tibiadata, json):
 def cli_guild(name, tibiadata, json):
     """Displays information about a Tibia guild."""
     name = " ".join(name)
-    start = time.perf_counter()
-    if tibiadata:
-        r = requests.get(Guild.get_url_tibiadata(name))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        guild = Guild.from_tibiadata(r.text)
-    else:
-        r = requests.get(Guild.get_url(name))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        guild = Guild.from_content(r.text)
-    dt = (time.perf_counter() - start) * 1000.0
-    print("Parsed in {0:.2f} ms".format(dt))
-    if json:
+    guild = _fetch_and_parse(Guild.get_url, Guild.from_content,
+                             Guild.get_url_tibiadata, Guild.from_tibiadata,
+                             tibiadata, name)
+    if json and guild:
         print(guild.to_json(indent=2))
-    else:
-        print(build_guild(guild))
+        return
+    print(build_guild(guild))
 
 
 @cli.command(name="guilds")
@@ -87,26 +77,14 @@ def cli_guild(name, tibiadata, json):
 def cli_guilds(world, tibiadata, json):
     """Displays the list of guilds for a specific world"""
     world = " ".join(world)
-    start = time.perf_counter()
-    if tibiadata:
-        r = requests.get(Guild.get_world_list_url_tibiadata(world))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        guilds = Guild.list_from_tibiadata(r.text)
-    else:
-        r = requests.get(Guild.get_world_list_url(world))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        guilds = Guild.list_from_content(r.text)
-    dt = (time.perf_counter() - start) * 1000.0
-    print("Parsed in {0:.2f} ms".format(dt))
-    if json:
+    guilds = _fetch_and_parse(ListedGuild.get_world_list_url, ListedGuild.list_from_content,
+                              ListedGuild.get_world_list_url_tibiadata, ListedGuild.list_from_tibiadata,
+                              tibiadata, world)
+    if json and guilds:
         import json as _json
         print(_json.dumps(guilds, default=dict, indent=2))
-    else:
-        print(get_guilds_string(guilds))
+        return
+    print(get_guilds_string(guilds))
 
 
 @cli.command(name="world")
@@ -115,50 +93,26 @@ def cli_guilds(world, tibiadata, json):
 @click.option("-js", "--json", default=False, is_flag=True)
 def cli_world(name, tibiadata, json):
     name = " ".join(name)
-    start = time.perf_counter()
-    if tibiadata:
-        r = requests.get(World.get_url_tibiadata(name))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        world = World.from_tibiadata(r.text)
-    else:
-        r = requests.get(World.get_url(name))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        world = World.from_content(r.text)
-    dt = (time.perf_counter() - start) * 1000.0
-    print("Parsed in {0:.2f} ms".format(dt))
-    if json:
+    world = _fetch_and_parse(World.get_url, World.from_content,
+                             World.get_url_tibiadata, World.from_tibiadata,
+                             tibiadata, name)
+    if json and world:
         print(world.to_json(indent=2))
-    else:
-        print(print_world(world))
+        return
+    print(print_world(world))
 
 
 @cli.command(name="worlds")
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
 def cli_worlds(tibiadata, json):
-    start = time.perf_counter()
-    if tibiadata:
-        r = requests.get(WorldOverview.get_url_tibiadata())
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        worlds = WorldOverview.from_tibiadata(r.text)
-    else:
-        r = requests.get(WorldOverview.get_url())
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        worlds = WorldOverview.from_content(r.text)
-    dt = (time.perf_counter() - start) * 1000.0
-    print("Parsed in {0:.2f} ms".format(dt))
-    if json:
+    worlds = _fetch_and_parse(WorldOverview.get_url, WorldOverview.from_content,
+                              WorldOverview.get_url_tibiadata, WorldOverview.from_tibiadata,
+                              tibiadata)
+    if json and worlds:
         print(worlds.to_json(indent=2))
-    else:
-        print(print_world_overview(worlds))
+        return
+    print(print_world_overview(worlds))
 
 
 @cli.command(name="house")
@@ -167,25 +121,13 @@ def cli_worlds(tibiadata, json):
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
 def cli_house(id, world, tibiadata, json):
-    start = time.perf_counter()
-    if tibiadata:
-        r = requests.get(House.get_url_tibiadata(int(id), world))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        house = House.from_tibiadata(r.text)
-    else:
-        r = requests.get(House.get_url(int(id), world))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        house = House.from_content(r.text)
-    dt = (time.perf_counter() - start) * 1000.0
-    print("Parsed in {0:.2f} ms".format(dt))
-    if json:
+    house = _fetch_and_parse(House.get_url, House.from_content,
+                             House.get_url_tibiadata, House.from_tibiadata,
+                             tibiadata, id, world)
+    if json and house:
         print(house.to_json(indent=2))
-    else:
-        print(get_house_string(house))
+        return
+    print(get_house_string(house))
 
 
 @cli.command(name="houses")
@@ -196,27 +138,15 @@ def cli_house(id, world, tibiadata, json):
 @click.option("-gh", "--guildhalls", default=False, is_flag=True)
 def cli_houses(world, town, tibiadata, json, guildhalls):
     town = " ".join(town)
-    start = time.perf_counter()
     house_type = HouseType.GUILDHALL if guildhalls else HouseType.HOUSE
-    if tibiadata:
-        r = requests.get(ListedHouse.get_list_url_tibiadata(world, town, house_type))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        houses = ListedHouse.list_from_tibiadata(r.text)
-    else:
-        r = requests.get(ListedHouse.get_list_url(world, town, house_type))
-        dt = (time.perf_counter() - start) * 1000.0
-        print("Fetched in {0:.2f} ms".format(dt))
-        start = time.perf_counter()
-        houses = ListedHouse.list_from_content(r.text)
-    dt = (time.perf_counter() - start) * 1000.0
-    print("Parsed in {0:.2f} ms".format(dt))
-    if json:
+    houses = _fetch_and_parse(ListedHouse.get_list_url, ListedHouse.list_from_content,
+                              ListedHouse.get_list_url_tibiadata, ListedHouse.list_from_tibiadata,
+                              tibiadata, world, town, house_type)
+    if json and houses:
         import json as _json
         print(_json.dumps(houses, default=House._try_dict, indent=2))
-    else:
-        print(get_houses_string(houses))
+        return
+    print(get_houses_string(houses))
 
 
 def get_field(field, content):

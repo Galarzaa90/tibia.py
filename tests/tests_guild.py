@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import Guild, GuildInvite, GuildMember
+from tibiapy import Guild, GuildInvite, GuildMember, ListedGuild
 
 FILE_GUILD_FULL = "guild_full.txt"
 FILE_GUILD_INFO_COMPLETE = "guild_info_complete.txt"
@@ -106,9 +106,9 @@ class TestsGuild(TestTibiaPy):
 
     def testGuildList(self):
         content = self._get_parsed_content(FILE_GUILD_LIST, False)
-        guilds = Guild.list_from_content(content)
+        guilds = ListedGuild.list_from_content(content)
         self.assertTrue(guilds)
-        self.assertIsNotNone(Guild.get_world_list_url(guilds[0].world))
+        self.assertIsNotNone(ListedGuild.get_world_list_url(guilds[0].world))
         self.assertEqual("Zuna", guilds[0].world)
         self.assertTrue(guilds[0].active)
         self.assertFalse(guilds[-1].active)

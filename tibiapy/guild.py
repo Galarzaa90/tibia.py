@@ -90,6 +90,7 @@ class Guild(abc.BaseGuild):
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} world={0.world!r}>".format(self)
 
+    # region Properties
     @property
     def member_count(self):
         """:class:`int`: The number of members in the guild."""
@@ -104,7 +105,86 @@ class Guild(abc.BaseGuild):
     def ranks(self) -> List[str]:
         """:class:`list` of :class:`str`: Ranks in their hierarchical order."""
         return list(OrderedDict.fromkeys((m.rank for m in self.members)))
+    # endregion
 
+    # region Public methods
+    @classmethod
+    def from_content(cls, content):
+        """Creates an instance of the class from the html content of the guild's page.
+
+        Parameters
+        -----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        ----------
+        :class:`Guild`
+            The guild contained in the page or None if it doesn't exist.
+        """
+        guild_json = cls._parse(content)
+        if not guild_json:
+            return None
+        members = []
+        for member in guild_json["members"]:
+            members.append(GuildMember(**member))
+        guild_json["members"] = members
+
+        invites = []
+        for invite in guild_json["invites"]:
+            invites.append(GuildInvite(**invite))
+        guild_json["invites"] = invites
+        guild = cls(**guild_json)
+        return guild
+
+    @classmethod
+    def from_tibiadata(cls, content):
+        """Builds a guild object from a TibiaData character response.
+        Parameters
+        ----------
+        content: :class:`str`
+            The json string from the TibiaData response.
+        Returns
+        -------
+        :class:`Guild`
+            The guild contained in the description or ``None``.
+        """
+        try:
+            json_content = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        guild_obj = json_content["guild"]
+        guild = cls()
+        if "error" in guild_obj:
+            return None
+        guild_data = guild_obj["data"]
+        try:
+            guild.name = guild_data["name"]
+            guild.world = guild_data["world"]
+            guild.logo_url = guild_data["guildlogo"]
+            guild.description = guild_data["description"]
+            guild.founded = parse_tibiadata_date(guild_data["founded"])
+            guild.open_applications = guild_data["application"]
+        except KeyError:
+            return None
+        guild.homepage = guild_data.get("homepage")
+        guild.active = not guild_data.get("formation", False)
+        if isinstance(guild_data["disbanded"], dict):
+            guild.disband_date = guild_data["disbanded"]["date"]
+            guild.disband_condition = disband_tibadata_regex.search(guild_data["disbanded"]["notification"]).group(1)
+        for rank in guild_obj["members"]:
+            rank_name = rank["rank_title"]
+            for member in rank["characters"]:
+                guild.members.append(GuildMember(member["name"], rank_name, member["nick"] or None,
+                                                 member["level"], member["vocation"],
+                                                 joined=parse_tibiadata_date(member["joined"]),
+                                                 online=member["status"] == "online"))
+        for invited in guild_obj["invited"]:
+            guild.invites.append(GuildInvite(invited["name"], parse_tibiadata_date(invited["invited"])))
+        return guild
+    # endregion
+
+    # region Private methods
     @classmethod
     def _beautiful_soup(cls, content):
         """
@@ -283,57 +363,6 @@ class Guild(abc.BaseGuild):
             guild["founded"] = m.group("date").replace("\xa0", " ")
             guild["active"] = "currently active" in m.group("status")
 
-    @classmethod
-    def _parse_guild_list(cls, content, active_only=False):
-        """
-        Parses the contents of a world's guild list page.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the page.
-        active_only: :class:`bool`
-            Whether to only show active guilds.
-
-        Returns
-        -------
-        List[:class:`dict`[str, Any]]
-            A list of guild dictionaries.
-        """
-        parsed_content = cls._beautiful_soup(content)
-        selected_world = parsed_content.find('option', selected=True)
-        try:
-            if "choose world" in selected_world.text:
-                return None
-            world = selected_world.text
-        except AttributeError:
-            raise InvalidContent("Content does not belong to world guild list.")
-        containers = parsed_content.find_all('div', class_="TableContainer")
-        try:
-            # First TableContainer contains world selector.
-            containers = containers[1:]
-        except IndexError:
-            raise InvalidContent("Content does not belong to world guild list.")
-        guilds = []
-        for container in containers:
-            header = container.find('div', class_="Text")
-            active = "Active" in header.text
-            if active_only and not active:
-                return guilds
-            rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
-            for row in rows:
-                columns = row.find_all('td')
-                if columns[0].text == "Logo":
-                    continue
-                logo_img = columns[0].find('img')["src"]
-                description_lines = columns[1].get_text("\n").split("\n", 1)
-                name = description_lines[0]
-                description = None
-                if len(description_lines) > 1:
-                    description = description_lines[1].replace("\r", "").replace("\n", " ")
-                guilds.append({"logo_url": logo_img, "name": name, "description": description, "active": active,
-                               "world": world})
-        return guilds
 
     @classmethod
     def _parse_guild_logo(cls, guild, parsed_content):
@@ -416,169 +445,7 @@ class Guild(abc.BaseGuild):
                 "name": name,
                 "date": date
             })
-
-    @classmethod
-    def list_from_content(cls, content, active_only=False):
-        """
-        Gets a list of guilds from the html content of the world guilds' page.
-
-        The :class:`Guild` objects in the list only contain the attributes:
-        :attr:`name`, :attr:`logo_url`, :attr:`world` and if available, :attr:`description`
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The html content of the page.
-        active_only: :class:`bool`
-            Whether to only show active guilds or not.
-
-        Returns
-        -------
-        List[:class:`Guild`]
-            List of guilds in the current world.
-        """
-        guild_list = cls._parse_guild_list(content, active_only)
-        if guild_list is None:
-            return None
-        return [cls(**g) for g in guild_list]
-
-    @classmethod
-    def from_content(cls, content):
-        """Creates an instance of the class from the html content of the guild's page.
-
-        Parameters
-        -----------
-        content: :class:`str`
-            The HTML content of the page.
-
-        Returns
-        ----------
-        :class:`Guild`
-            The guild contained in the page or None if it doesn't exist.
-        """
-        guild_json = cls._parse(content)
-        if not guild_json:
-            return None
-        members = []
-        for member in guild_json["members"]:
-            members.append(GuildMember(**member))
-        guild_json["members"] = members
-
-        invites = []
-        for invite in guild_json["invites"]:
-            invites.append(GuildInvite(**invite))
-        guild_json["invites"] = invites
-        guild = cls(**guild_json)
-        return guild
-
-    @classmethod
-    def get_world_list_url(cls, world):
-        """Gets the Tibia.com URL for the guild section of a specific world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's page
-        """
-        return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
-
-    @classmethod
-    def get_world_list_url_tibiadata(cls, world):
-        """Gets the TibiaData.com URL for the guild list of a specific world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's page.
-        """
-        return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
-
-    @classmethod
-    def from_tibiadata(cls, content):
-        """Builds a guild object from a TibiaData character response.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The json string from the TibiaData response.
-
-        Returns
-        -------
-        :class:`Guild`
-            The guild contained in the description or ``None``.
-        """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            return None
-        guild_obj = json_content["guild"]
-        guild = cls()
-        if "error" in guild_obj:
-            return None
-        guild_data = guild_obj["data"]
-        try:
-            guild.name = guild_data["name"]
-            guild.world = guild_data["world"]
-            guild.logo_url = guild_data["guildlogo"]
-            guild.description = guild_data["description"]
-            guild.founded = parse_tibiadata_date(guild_data["founded"])
-            guild.open_applications = guild_data["application"]
-        except KeyError:
-            return None
-        guild.homepage = guild_data.get("homepage")
-        guild.active = not guild_data.get("formation", False)
-        if isinstance(guild_data["disbanded"], dict):
-            guild.disband_date = guild_data["disbanded"]["date"]
-            guild.disband_condition = disband_tibadata_regex.search(guild_data["disbanded"]["notification"]).group(1)
-        for rank in guild_obj["members"]:
-            rank_name = rank["rank_title"]
-            for member in rank["characters"]:
-                guild.members.append(GuildMember(member["name"], rank_name, member["nick"] or None,
-                                                 member["level"], member["vocation"],
-                                                 joined=parse_tibiadata_date(member["joined"]),
-                                                 online=member["status"] == "online"))
-        for invited in guild_obj["invited"]:
-            guild.invites.append(GuildInvite(invited["name"], parse_tibiadata_date(invited["invited"])))
-        return guild
-
-    @classmethod
-    def list_from_tibiadata(cls, content) -> List['Guild']:
-        """Builds a character object from a TibiaData character response.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            A string containing the JSON response from TibiaData.
-
-        Returns
-        -------
-        :class:`list` of :class:`Guild`
-            The list of guilds contained.
-        """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            return None
-        guilds_obj = json_content["guilds"]
-        guilds = []
-        for guild in guilds_obj["active"]:
-            guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
-                              description=guild["desc"], active=True))
-        for guild in guilds_obj["formation"]:
-            guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
-                              description=guild["desc"], active=False))
-
-        return guilds
+    # endregion
 
 
 class GuildMember(abc.BaseCharacter):
@@ -649,3 +516,169 @@ class GuildInvite(abc.BaseCharacter):
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} " \
                "date={0.date!r}>".format(self)
+
+
+class ListedGuild(abc.BaseGuild):
+    """
+    Represents a Tibia guild in the guild list of a world.
+
+    Attributes
+    ------------
+    name: :class:`str`
+        The name of the guild.
+    logo_url: :class:`str`
+        The URL to the guild's logo.
+    description: :class:`str`, optional
+        The description of the guild.
+    world: :class:`str`
+        The world where this guild is in.
+    active: :class:`bool`
+        Whether the guild is active or still in formation.
+    """
+    __slots__ = ("logo_url", "description", "world", "active")
+
+    def __init__(self, name, world, logo_url=None, description=None, active=False):
+        self.name = name
+        self.world = world
+        self.logo_url = logo_url
+        self.description = description
+        self.active = active
+
+    # region Public methods
+    @classmethod
+    def get_world_list_url(cls, world):
+        """Gets the Tibia.com URL for the guild section of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page
+        """
+        return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
+
+    @classmethod
+    def get_world_list_url_tibiadata(cls, world):
+        """Gets the TibiaData.com URL for the guild list of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page.
+        """
+        return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
+
+    @classmethod
+    def list_from_content(cls, content, active_only=False):
+        """
+        Gets a list of guilds from the html content of the world guilds' page.
+
+        The :class:`Guild` objects in the list only contain the attributes:
+        :attr:`name`, :attr:`logo_url`, :attr:`world` and if available, :attr:`description`
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The html content of the page.
+        active_only: :class:`bool`
+            Whether to only show active guilds or not.
+
+        Returns
+        -------
+        List[:class:`Guild`]
+            List of guilds in the current world.
+        """
+        guild_list = cls._parse_guild_list(content, active_only)
+        if guild_list is None:
+            return None
+        return [cls(**g) for g in guild_list]
+
+    @classmethod
+    def list_from_tibiadata(cls, content) -> List['ListedGuild']:
+        """Builds a character object from a TibiaData character response.
+        Parameters
+        ----------
+        content: :class:`str`
+            A string containing the JSON response from TibiaData.
+        Returns
+        -------
+        :class:`list` of :class:`ListedGuild`
+            The list of guilds contained.
+        """
+        try:
+            json_content = json.loads(content)
+        except json.JSONDecodeError:
+            return None
+        guilds_obj = json_content["guilds"]
+        guilds = []
+        for guild in guilds_obj["active"]:
+            guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
+                              description=guild["desc"], active=True))
+        for guild in guilds_obj["formation"]:
+            guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
+                              description=guild["desc"], active=False))
+
+        return guilds
+    # endregion
+
+    # region Private methods
+    @classmethod
+    def _parse_guild_list(cls, content, active_only=False):
+        """
+        Parses the contents of a world's guild list page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+        active_only: :class:`bool`
+            Whether to only show active guilds.
+
+        Returns
+        -------
+        List[:class:`dict`[str, Any]]
+            A list of guild dictionaries.
+        """
+        parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
+                                           parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+        selected_world = parsed_content.find('option', selected=True)
+        try:
+            if "choose world" in selected_world.text:
+                return None
+            world = selected_world.text
+        except AttributeError:
+            raise InvalidContent("Content does not belong to world guild list.")
+        containers = parsed_content.find_all('div', class_="TableContainer")
+        try:
+            # First TableContainer contains world selector.
+            containers = containers[1:]
+        except IndexError:
+            raise InvalidContent("Content does not belong to world guild list.")
+        guilds = []
+        for container in containers:
+            header = container.find('div', class_="Text")
+            active = "Active" in header.text
+            if active_only and not active:
+                return guilds
+            header, *rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+            for row in rows:
+                columns = row.find_all('td')
+                logo_img = columns[0].find('img')["src"]
+                description_lines = columns[1].get_text("\n").split("\n", 1)
+                name = description_lines[0]
+                description = None
+                if len(description_lines) > 1:
+                    description = description_lines[1].replace("\r", "").replace("\n", " ")
+                guilds.append({"logo_url": logo_img, "name": name, "description": description, "active": active,
+                               "world": world})
+        return guilds
+    # endregion

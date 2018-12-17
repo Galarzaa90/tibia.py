@@ -67,6 +67,12 @@ House
    :members:
    :inherited-members:
 
+ListedGuild
+-----------
+.. autoclass:: ListedGuild
+   :members:
+   :inherited-members:
+
 ListedHouse
 -----------
 .. autoclass:: ListedHouse

@@ -94,6 +94,7 @@ class House(abc.BaseHouseWithId):
         self.highest_bid = kwargs.get("highest_bid", 0)
         self.highest_bidder = kwargs.get("highest_bidder")
 
+    # region Properties
     @property
     def owner_url(self):
         """:class:`str`: The URL to the Tibia.com page of the house's owner, if applicable."""
@@ -103,7 +104,9 @@ class House(abc.BaseHouseWithId):
     def transferee_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
         return tibiapy.Character.get_url(self.transferee) if self.transferee is not None else None
+    # endregion
 
+    # region Public methods
     @classmethod
     def from_content(cls, content):
         """Parses a Tibia.com response into a House object.
@@ -190,6 +193,7 @@ class House(abc.BaseHouseWithId):
         except KeyError:
             return None
         return house
+    # endregion
 
     def _parse_status(self, status):
         """Parses the house's state description and applies the corresponding values
@@ -328,6 +332,7 @@ class ListedHouse(abc.BaseHouseWithId):
         self.time_left = kwargs.get("time_left")
         self.highest_bid = kwargs.get("highest_bid", 0)
 
+    # region Public methods
     @classmethod
     def list_from_content(cls, content):
         """Parses the content of a house list from Tibia.com into a list of houses
@@ -402,27 +407,6 @@ class ListedHouse(abc.BaseHouseWithId):
         except KeyError:
             return None
 
-    def _parse_status(self, status):
-        """
-        Parses the status string found in the table and applies the corresponding values.
-
-        Parameters
-        ----------
-        status: :class:`str`
-            The string containing the status.
-        """
-        if "rented" in status:
-            self.status = HouseStatus.RENTED
-        else:
-            m = list_auction_regex.search(status)
-            if m:
-                self.bid = int(m.group('bid'))
-                if m.group("time_unit") == "day":
-                    self.time_left = datetime.timedelta(days=int(m.group("time_left")))
-                else:
-                    self.time_left = datetime.timedelta(seconds=int(m.group("time_left")) * 60 * 60)
-            self.status = HouseStatus.AUCTIONED
-
     @classmethod
     def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE):
         """
@@ -466,5 +450,27 @@ class ListedHouse(abc.BaseHouseWithId):
         """
         house_type = "%ss" % house_type.value
         return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
+    # endregion
 
+    # region Private methods
+    def _parse_status(self, status):
+        """
+        Parses the status string found in the table and applies the corresponding values.
 
+        Parameters
+        ----------
+        status: :class:`str`
+            The string containing the status.
+        """
+        if "rented" in status:
+            self.status = HouseStatus.RENTED
+        else:
+            m = list_auction_regex.search(status)
+            if m:
+                self.bid = int(m.group('bid'))
+                if m.group("time_unit") == "day":
+                    self.time_left = datetime.timedelta(days=int(m.group("time_left")))
+                else:
+                    self.time_left = datetime.timedelta(seconds=int(m.group("time_left")) * 60 * 60)
+            self.status = HouseStatus.AUCTIONED
+    # endregion
