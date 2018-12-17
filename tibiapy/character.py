@@ -80,7 +80,7 @@ class Character(abc.BaseCharacter):
         The date where the character will be deleted if it is scheduled for deletion.
     former_names: :class:`list` of :class:`str`, optional
         Previous names of this character.
-    sex: :class:`str`
+    sex: :class:`.Sex`
         The character's gender, either "male" or "female"
     vocation: :class:`.Vocation`
         The character's vocation.
@@ -110,7 +110,7 @@ class Character(abc.BaseCharacter):
         The achievements chosen to be displayed.
     deaths: list of  :class:`Death`
         The character's recent deaths.
-    account_information: :class:`dict`, optional
+    account_information: :class:`AccountInformation`, optional
         The character's account information, if visible.
     other_characters: :class:`list` of :class:`OtherCharacter`, optional
         Other characters in the same account, if visible.
@@ -191,6 +191,8 @@ class Character(abc.BaseCharacter):
             A list of all rows contained in the table.
         """
         acc_info = {}
+        if not rows:
+            return
         for row in rows:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
@@ -273,6 +275,10 @@ class Character(abc.BaseCharacter):
         else:
             char["last_login"] = parse_tibia_datetime(char["last_login"])
 
+        char["vocation"] = try_enum(Vocation, char["vocation"])
+        char["sex"] = try_enum(Sex, char["sex"])
+        char["account_status"] = try_enum(AccountStatus, char["account_status"])
+
         for k, v in char.items():
             try:
                 setattr(self, k, v)
@@ -319,7 +325,6 @@ class Character(abc.BaseCharacter):
                 assists[i] = {"name": link_content.search(assist).group(1), "player": True}
             try:
                 self.deaths.append(Death(self.name, level, time=death_time, killers=killers, assists=assists))
-                self.deaths.append({'time': death_time, 'level': level, 'killers': killers, 'assists': assists})
             except ValueError:
                 # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                 continue
