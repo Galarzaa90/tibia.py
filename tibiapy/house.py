@@ -8,6 +8,7 @@ import bs4
 import tibiapy.character
 from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex, try_enum
+from tibiapy.errors import InvalidContent
 from tibiapy.utils import parse_number_words, parse_tibia_datetime
 
 id_regex = re.compile(r'house_(\d+)\.')
@@ -76,6 +77,7 @@ class House(abc.BaseHouseWithId):
                  "highest_bidder", "auction_end")
 
     def __init__(self, name, world=None, **kwargs):
+        self.id = kwargs.get("id", 0)
         self.name = name
         self.world = world
         self.image_url = kwargs.get("image_url")
@@ -93,6 +95,7 @@ class House(abc.BaseHouseWithId):
         self.transfer_accepted = kwargs.get("transfer_accepted", False)
         self.highest_bid = kwargs.get("highest_bid", 0)
         self.highest_bidder = kwargs.get("highest_bidder")
+        self.auction_end = kwargs.get("auction_end")
 
     # region Properties
     @property
@@ -120,20 +123,26 @@ class House(abc.BaseHouseWithId):
         -------
         :class:`House`
             The house contained in the page, or None if the house doesn't exist.
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            If the content is not the house section on Tibia.com
         """
         parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
                                            parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
         image_column, desc_column, *_ = parsed_content.find_all('td')
-        if "Error" in image_column:
+        if "Error" in image_column.text:
             return None
         image = image_column.find('img')
-        if image is None:
-            return None
         for br in desc_column.find_all("br"):
             br.replace_with("\n")
         description = desc_column.text.replace("\u00a0", " ").replace("\n\n","\n")
         lines = description.splitlines()
-        name, beds, info, state, *_ = lines
+        try:
+            name, beds, info, state, *_ = lines
+        except ValueError:
+            raise InvalidContent("content does is not from the house section of Tibia.com")
 
         house = cls(name.strip())
         house.image_url = image["src"]
@@ -170,11 +179,16 @@ class House(abc.BaseHouseWithId):
         -------
         :class:`House`
             The house contained in the response, if found.
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            If the content is not a house JSON response from TibiaData
         """
         try:
             json_content = json.loads(content)
         except json.JSONDecodeError:
-            return None
+            raise InvalidContent("content is not a json string.")
         try:
             house_json = json_content["house"]
             if not house_json["name"]:
@@ -182,6 +196,7 @@ class House(abc.BaseHouseWithId):
             house = cls(house_json["name"], house_json["world"])
 
             house.type = try_enum(HouseType, house_json["type"])
+            house.id = house_json["houseid"]
             house.beds = house_json["beds"]
             house.size = house_json["size"]
             house.size = house_json["size"]
@@ -191,7 +206,7 @@ class House(abc.BaseHouseWithId):
             # Parsing the original status string is easier than dealing with TibiaData fields
             house._parse_status(house_json["status"]["original"])
         except KeyError:
-            return None
+            raise InvalidContent("content is not a TibiaData house response.")
         return house
     # endregion
 

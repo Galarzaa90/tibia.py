@@ -1,0 +1,15 @@
+<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
+  <TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
+  <TR><TD BGCOLOR="#505050" CLASS=white><B>Error</B></TD></TR>
+  <TR><TD BGCOLOR="#D4C0A1"><TABLE BORDER=0 CELLPADDING=1><TR><TD>No information about this house found.</TD></TR></TABLE></TD></TR>
+  </TABLE>
+  <BR><TABLE BORDER=0 WIDTH=100%><TR><TD ALIGN=center><IMG SRC="https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif" WIDTH=80 HEIGHT=1 BORDER=0<BR></TD><TD ALIGN=center><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters&amp;name=Emperor+Andrew METHOD=post><TR><TD>
+<INPUT TYPE=image NAME="BACK" ALT="BACK" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD><TD ALIGN=center><IMG SRC="https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif" WIDTH=80 HEIGHT=1 BORDER=0<BR></TD></TR></TABLE>        </div>
+      </div>
+    </div>
+    <div class="Border_1" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/border-1.gif);"></div>
+    <div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-bl.gif);"></div></div>
+    <div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-br.gif);"></div></div>
+  </div>

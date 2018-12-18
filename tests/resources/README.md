@@ -44,7 +44,9 @@ with the bare minimum (no description, no guildhall, no homepage)
  for transfer.
  - [tibiacom_status_with_bids.txt](house/tibiacom_status_with_bids.txt) - The status string of a auctioned house with 
  bids.
- - [tibiadata.json](house/tibiadata.json) - A house on TibiaData.
+- [tibiacom_not_found.txt](house/tibiacom_not_found.txt) - The content of a page for a house not found.
+- [tibiadata.json](house/tibiadata.json) - A house on TibiaData.
+- [tibiadata_not_found.json](house/tibiadata_not_found.json) - The TibiaData response for a house that doesn't exist.
  
  ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.
