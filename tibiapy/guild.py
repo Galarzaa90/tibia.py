@@ -513,9 +513,6 @@ class ListedGuild(abc.BaseGuild):
         """
         Gets a list of guilds from the html content of the world guilds' page.
 
-        The :class:`Guild` objects in the list only contain the attributes:
-        :attr:`name`, :attr:`logo_url`, :attr:`world` and if available, :attr:`description`
-
         Parameters
         ----------
         content: :class:`str`
@@ -525,75 +522,26 @@ class ListedGuild(abc.BaseGuild):
 
         Returns
         -------
-        List[:class:`Guild`]
-            List of guilds in the current world.
-        """
-        guild_list = cls._parse_guild_list(content, active_only)
-        if guild_list is None:
-            return None
-        return [cls(**g) for g in guild_list]
-
-    @classmethod
-    def list_from_tibiadata(cls, content) -> List['ListedGuild']:
-        """Builds a character object from a TibiaData character response.
-        Parameters
-        ----------
-        content: :class:`str`
-            A string containing the JSON response from TibiaData.
-        Returns
-        -------
         :class:`list` of :class:`ListedGuild`
-            The list of guilds contained.
-        """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            return None
-        guilds_obj = json_content["guilds"]
-        guilds = []
-        for guild in guilds_obj["active"]:
-            guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
-                              description=guild["desc"], active=True))
-        for guild in guilds_obj["formation"]:
-            guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
-                              description=guild["desc"], active=False))
+            List of guilds in the current world. ``None`` if it's the list of a world that doesn't exist.
 
-        return guilds
-    # endregion
-
-    # region Private methods
-    @classmethod
-    def _parse_guild_list(cls, content, active_only=False):
-        """
-        Parses the contents of a world's guild list page.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the page.
-        active_only: :class:`bool`
-            Whether to only show active guilds.
-
-        Returns
-        -------
-        List[:class:`dict`[str, Any]]
-            A list of guild dictionaries.
+        Raises
+        ------
+        :class:`.InvalidContent`
+            If content is not a the HTML of a guild's page.
         """
         parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
                                            parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
         selected_world = parsed_content.find('option', selected=True)
         try:
             if "choose world" in selected_world.text:
+                # It belongs to a world that doesn't exist
                 return None
             world = selected_world.text
         except AttributeError:
             raise InvalidContent("Content does not belong to world guild list.")
-        containers = parsed_content.find_all('div', class_="TableContainer")
-        try:
-            # First TableContainer contains world selector.
-            containers = containers[1:]
-        except IndexError:
-            raise InvalidContent("Content does not belong to world guild list.")
+        # First TableContainer contains world selector.
+        _, *containers = parsed_content.find_all('div', class_="TableContainer")
         guilds = []
         for container in containers:
             header = container.find('div', class_="Text")
@@ -609,7 +557,43 @@ class ListedGuild(abc.BaseGuild):
                 description = None
                 if len(description_lines) > 1:
                     description = description_lines[1].replace("\r", "").replace("\n", " ")
-                guilds.append({"logo_url": logo_img, "name": name, "description": description, "active": active,
-                               "world": world})
+                guild = cls(name, world, logo_img, description, active)
+                guilds.append(guild)
+        return guilds
+
+    @classmethod
+    def list_from_tibiadata(cls, content):
+        """Builds a character object from a TibiaData character response.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            A string containing the JSON response from TibiaData.
+
+        Returns
+        -------
+        :class:`list` of :class:`ListedGuild`
+            The list of guilds contained.
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            If content is not a the JSON of TibiaData's guild list.
+        """
+        try:
+            json_content = json.loads(content)
+        except json.JSONDecodeError:
+            raise InvalidContent("content is not a valid json string.")
+        try:
+            guilds_obj = json_content["guilds"]
+            guilds = []
+            for guild in guilds_obj["active"]:
+                guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
+                                  description=guild["desc"], active=True))
+            for guild in guilds_obj["formation"]:
+                guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
+                                  description=guild["desc"], active=False))
+        except KeyError:
+            raise InvalidContent("content doest not belong to a guilds response.")
         return guilds
     # endregion

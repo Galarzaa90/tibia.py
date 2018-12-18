@@ -11,11 +11,14 @@ FILE_GUILD_INFO_MINIMUM = "guild/tibiacom_info_minimum.txt"
 FILE_GUILD_INFO_DISBANDING = "guild/tibiacom_info_disbanding.txt"
 FILE_GUILD_INFO_FORMATION = "guild/tibiacom_info_formation.txt"
 FILE_GUILD_LIST = "guild/tibiacom_list.txt"
+FILE_GUILD_LIST_NOT_FOUND = "guild/tibiacom_list_not_found.txt"
 
 FILE_GUILD_TIBIADATA = "guild/tibiadata.json"
 FILE_GUILD_TIBIADATA_NOT_FOUND = "guild/tibiadata_not_found.json"
 FILE_GUILD_TIBIADATA_DISBANDING = "guild/tibiadata_disbanding.json"
 FILE_GUILD_TIBIADATA_INVITED = "guild/tibiadata_invited.json"
+FILE_GUILD_TIBIADATA_LIST = "guild/tibiadata_list.json"
+FILE_GUILD_TIBIADATA_LIST_NOT_FOUND = "guild/tibiadata_list_not_found.json"
 
 
 class TestsGuild(TestTibiaPy):
@@ -126,6 +129,16 @@ class TestsGuild(TestTibiaPy):
         self.assertTrue(guilds[0].active)
         self.assertFalse(guilds[-1].active)
 
+    def testGuildListNotFound(self):
+        content = self._get_parsed_content(FILE_GUILD_LIST_NOT_FOUND, False)
+        guilds = ListedGuild.list_from_content(content)
+        self.assertIsNone(guilds)
+
+    def testGuildListUnrelated(self):
+        content = self._get_parsed_content(self.FILE_UNRELATED_SECTION, False)
+        with self.assertRaises(InvalidContent):
+            ListedGuild.list_from_content(content)
+
     def testInvitationDate(self):
         name = "Tschas"
         date = "Invitation Date"
@@ -203,3 +216,27 @@ class TestsGuild(TestTibiaPy):
         with self.assertRaises(InvalidContent):
             Guild.from_tibiadata(content)
 
+    def testGuildListTibiaData(self):
+        content = self._get_parsed_content(FILE_GUILD_TIBIADATA_LIST, False)
+        guilds = ListedGuild.list_from_tibiadata(content)
+        self.assertTrue(guilds)
+        self.assertIsNotNone(ListedGuild.get_world_list_url_tibiadata(guilds[0].world))
+        self.assertEqual("Zunera", guilds[0].world)
+        self.assertIsInstance(guilds[0], ListedGuild)
+        self.assertTrue(guilds[0].active)
+        self.assertFalse(guilds[-1].active)
+
+    def testGuildListTibiaDataNotFound(self):
+        content = self._get_parsed_content(FILE_GUILD_TIBIADATA_LIST_NOT_FOUND, False)
+        guilds = ListedGuild.list_from_tibiadata(content)
+        # There's no way to tell if the searched world doesn't exist or has no guilds
+        self.assertEqual(guilds, [])
+
+    def testGuildListTibiaDataUnrelated(self):
+        content = self._get_parsed_content(tests.tests_character.FILE_CHARACTER_TIBIADATA, False)
+        with self.assertRaises(InvalidContent):
+            ListedGuild.list_from_tibiadata(content)
+
+    def testGuildListTibiaDataInvalidJson(self):
+        with self.assertRaises(InvalidContent):
+            ListedGuild.list_from_tibiadata("<b>Not JSON</b>")

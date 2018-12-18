@@ -26,11 +26,15 @@ still in formation.
 - [tibiacom_info_minimum.txt](guild/tibiacom_info_minimum.txt) - An extract of the information container of a guild
 with the bare minimum (no description, no guildhall, no homepage)
 - [tibiacom_list.txt](guild/tibiacom_list.txt) - The guild list of a world.
+- [tibiacom_list_not_found.txt](guild/tibiacom_list_not_found.txt) - The guild list of a world that doesn't exist.
 - [tibiacom_not_found.txt](guild/tibiacom_not_found.txt) - The page shown for a guild that doesn't exist.
 - [tibiadata.json](guild/tibiadata.json) - A guild on TibiaData, without disband information and no invites.
 - [tibiadata_disbanding.json](guild/tibiadata_disbanding.json) - A guild on TibiaData with a disband condition.
 - [tibiadata_invited.json](guild/tibiadata_invited.json) - A guild on TibiaData with pending invites.
 - [tibiadata_not_found.json](guild/tibiadata_not_found.json) - The response of a guild not found on TibiaData.
+- [tibiadata_list.json](guild/tibiadata_list.json) - The guild list of a world on TibiaData.
+- [tibiadata_list_not_found.json](guild/tibiadata_list_not_found.json) - The guild list of a world that doesn't exist on
+ TibiaData
 
 ## House resources
 - [tibiacom_full.txt](house/tibiacom_full.txt) - The content of a house's page
