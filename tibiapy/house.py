@@ -361,11 +361,20 @@ class ListedHouse(abc.BaseHouseWithId):
         Returns
         -------
         :class:`list` of :class:`ListedHouse`
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            Content is not the house list from Tibia.com
         """
-        parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                                           parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
-        table = parsed_content.find("table")
-        header, *rows = table.find_all("tr")
+        try:
+            parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
+                                               parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+            table = parsed_content.find("table")
+            header, *rows = table.find_all("tr")
+        except (ValueError, AttributeError):
+            raise InvalidContent("content does not belong to a Tibia.com house list")
+
         m = list_header_regex.match(header.text.strip())
         if not m:
             return None
@@ -402,26 +411,29 @@ class ListedHouse(abc.BaseHouseWithId):
         Returns
         -------
         :class:`list` of :class:`ListedHouse`
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            Content is not the house list from TibiaData.com
         """
         try:
             json_data = json.loads(content)
         except json.JSONDecodeError:
-            return None
+            raise InvalidContent("content is not a json string")
         try:
-            house_list = json_data["houses"]
+            house_data = json_data["houses"]
             houses = []
-            house_type = HouseType.HOUSE if json_data["type"] == "houses" else HouseType.GUILDHALL
-            for house_json in house_list:
-                if not house_json["status"]:
-                    return houses
-                house = ListedHouse(house_json["name"], json_data["world"], house_json["houseid"],
-                                    houseid=house_json["houseid"], size=house_json["size"], rent=house_json["rent"],
-                                    town=json_data["town"], house_type=house_type)
+            house_type = HouseType.HOUSE if house_data["type"] == "houses" else HouseType.GUILDHALL
+            for house_json in house_data["houses"]:
+                house = ListedHouse(house_json["name"], house_data["world"], house_json["houseid"],
+                                    size=house_json["size"], rent=house_json["rent"], town=house_data["town"],
+                                    type=house_type)
                 house._parse_status(house_json["status"])
                 houses.append(house)
             return houses
         except KeyError:
-            return None
+            raise InvalidContent("content is not a house list json response from TibiaData.com")
 
     @classmethod
     def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE):
@@ -483,10 +495,10 @@ class ListedHouse(abc.BaseHouseWithId):
         else:
             m = list_auction_regex.search(status)
             if m:
-                self.bid = int(m.group('bid'))
+                self.highest_bid = int(m.group('bid'))
                 if m.group("time_unit") == "day":
                     self.time_left = datetime.timedelta(days=int(m.group("time_left")))
                 else:
-                    self.time_left = datetime.timedelta(seconds=int(m.group("time_left")) * 60 * 60)
+                    self.time_left = datetime.timedelta(hours=int(m.group("time_left")))
             self.status = HouseStatus.AUCTIONED
     # endregion

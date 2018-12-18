@@ -3,7 +3,7 @@ import json
 
 import tests.tests_character
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import House, InvalidContent
+from tibiapy import House, InvalidContent, ListedHouse
 from tibiapy.enums import HouseStatus, HouseType
 
 FILE_HOUSE_FULL = "house/tibiacom_full.txt"
@@ -12,9 +12,14 @@ FILE_HOUSE_STATUS_NO_BIDS = "house/tibiacom_status_no_bids.txt"
 FILE_HOUSE_STATUS_WITH_BIDS = "house/tibiacom_status_with_bids.txt"
 FILE_HOUSE_STATUS_RENTED = "house/tibiacom_status_rented.txt"
 FILE_HOUSE_NOT_FOUND = "house/tibiacom_not_found.txt"
+FILE_HOUSE_LIST = "house/tibiacom_list.txt"
+FILE_HOUSE_LIST_NOT_FOUND = "house/tibiacom_list_not_found.txt"
+FILE_HOUSE_LIST_EMPTY = "house/tibiacom_list_empty.txt"
 
 FILE_HOUSE_TIBIADATA = "house/tibiadata.json"
 FILE_HOUSE_TIBIADATA_NOT_FOUND = "house/tibiadata_not_found.json"
+FILE_HOUSE_TIBIADATA_LIST = "house/tibiadata_list.json"
+FILE_HOUSE_TIBIADATA_LIST_NOT_FOUND = "house/tibiadata_list_not_found.json"
 
 
 class TestsHouse(TestTibiaPy):
@@ -91,6 +96,39 @@ class TestsHouse(TestTibiaPy):
         with self.assertRaises(InvalidContent):
             House.from_content(content)
 
+    def testHouseList(self):
+        content = self._get_resource(FILE_HOUSE_LIST)
+        houses = ListedHouse.list_from_content(content)
+
+        self.assertIsInstance(houses, list)
+        self.assertGreater(len(houses), 0)
+        self.assertIsInstance(houses[0], ListedHouse)
+        self.assertEqual(houses[0].town, "Carlin")
+        self.assertEqual(houses[0].type, HouseType.HOUSE)
+        self.assertEqual(houses[0].status, HouseStatus.RENTED)
+        self.assertIsInstance(houses[0].id, int)
+        self.assertIsNotNone(ListedHouse.get_list_url(houses[0].world, houses[0].town))
+
+        self.assertEqual(houses[25].status, HouseStatus.AUCTIONED)
+        self.assertEqual(houses[25].highest_bid, 7500000)
+
+    def testHouseListEmpty(self):
+        content = self._get_resource(FILE_HOUSE_LIST_EMPTY)
+        houses = ListedHouse.list_from_content(content)
+
+        self.assertEqual(len(houses), 0)
+
+    def testHouseListNotFound(self):
+        content = self._get_resource(FILE_HOUSE_NOT_FOUND)
+        houses = ListedHouse.list_from_content(content)
+
+        self.assertIsNone(houses)
+
+    def testHouseListUnrelated(self):
+        content = self._get_resource(self.FILE_UNRELATED_SECTION)
+        with self.assertRaises(InvalidContent):
+            ListedHouse.list_from_content(content)
+
     def testHouseTibiaData(self):
         content = self._get_resource(FILE_HOUSE_TIBIADATA)
         house = House.from_tibiadata(content)
@@ -117,3 +155,31 @@ class TestsHouse(TestTibiaPy):
         content = self._get_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA)
         with self.assertRaises(InvalidContent):
             House.from_tibiadata(content)
+
+    def testHouseTibiaDataList(self):
+        content = self._get_resource(FILE_HOUSE_TIBIADATA_LIST)
+        houses = ListedHouse.list_from_tibiadata(content)
+
+        self.assertIsInstance(houses, list)
+        self.assertGreater(len(houses), 0)
+        self.assertIsInstance(houses[0], ListedHouse)
+        self.assertEqual(houses[0].town, "Edron")
+        self.assertEqual(houses[0].type, HouseType.GUILDHALL)
+        self.assertEqual(houses[0].status, HouseStatus.RENTED)
+        self.assertIsInstance(houses[0].id, int)
+        self.assertIsNotNone(ListedHouse.get_list_url_tibiadata(houses[0].world, houses[0].town))
+
+    def testHouseTibiaDataListNotFound(self):
+        content = self._get_resource(FILE_HOUSE_TIBIADATA_LIST_NOT_FOUND)
+        houses = ListedHouse.list_from_tibiadata(content)
+
+        self.assertIsInstance(houses, list)
+        self.assertEqual(len(houses), 0)
+
+    def testHouseTibiaDataListInvalidJson(self):
+        with self.assertRaises(InvalidContent):
+            ListedHouse.list_from_tibiadata("nope")
+
+    def testHouseTibiaDataListUnrelated(self):
+        with self.assertRaises(InvalidContent):
+            ListedHouse.list_from_tibiadata(self._get_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))
