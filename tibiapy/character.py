@@ -164,7 +164,7 @@ class Character(abc.BaseCharacter):
     @property
     def guild_url(self):
         """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
-        return Guild.get_url(self.guild_membership["guild"]) if self.guild_membership else None
+        return Guild.get_url(self.guild_membership.name) if self.guild_membership else None
 
     @property
     def married_to_url(self):

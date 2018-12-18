@@ -1,7 +1,8 @@
 import datetime
 
+import tests.tests_character
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import Guild, GuildInvite, GuildMember, InvalidContent, ListedGuild
+from tibiapy import Guild, GuildHouse, GuildInvite, GuildMember, InvalidContent, ListedGuild
 
 FILE_GUILD_FULL = "guild_full.txt"
 FILE_GUILD_NOT_FOUND = "guild_not_found.txt"
@@ -11,7 +12,10 @@ FILE_GUILD_INFO_DISBANDING = "guild_info_disbanding.txt"
 FILE_GUILD_INFO_FORMATION = "guild_info_formation.txt"
 FILE_GUILD_LIST = "guild_list.txt"
 
-FILE_GUILD_TIBIADATA = "guild_tibiadata.txt"
+FILE_GUILD_TIBIADATA = "guild_tibiadata.json"
+FILE_GUILD_TIBIADATA_NOT_FOUND = "guild_tibiadata_not_found.json"
+FILE_GUILD_TIBIADATA_DISBANDING = "guild_tibiadata_disbanding.json"
+FILE_GUILD_TIBIADATA_INVITED = "guild_tibiadata_invited.json"
 
 
 class TestsGuild(TestTibiaPy):
@@ -166,3 +170,36 @@ class TestsGuild(TestTibiaPy):
         guild = Guild.from_tibiadata(content)
 
         self.assertIsInstance(guild, Guild)
+        self.assertTrue(guild.open_applications)
+        self.assertIsNotNone(guild.guildhall)
+        self.assertEqual(guild.founded, datetime.date(2002, 2, 18))
+        self.assertIsInstance(guild.guildhall, GuildHouse)
+        self.assertEqual(guild.guildhall.world, guild.world)
+        self.assertIsNotNone(guild.logo_url)
+
+    def testGuildTibiaDataNotFound(self):
+        content = self._get_parsed_content(FILE_GUILD_TIBIADATA_NOT_FOUND, False)
+        guild = Guild.from_tibiadata(content)
+        self.assertIsNone(guild)
+
+    def testGuildTibiaDataDisbanding(self):
+        content = self._get_parsed_content(FILE_GUILD_TIBIADATA_DISBANDING, False)
+        guild = Guild.from_tibiadata(content)
+        self.assertIsNotNone(guild.disband_condition)
+        self.assertEqual(guild.disband_date, datetime.date(2018, 12, 26))
+
+    def testGuildTibiaDataInvited(self):
+        content = self._get_parsed_content(FILE_GUILD_TIBIADATA_INVITED, False)
+        guild = Guild.from_tibiadata(content)
+        self.assertTrue(len(guild.invites) > 0)
+        self.assertIsInstance(guild.invites[0], GuildInvite)
+
+    def testGuildTibiaDataInvalid(self):
+        with self.assertRaises(InvalidContent):
+            Guild.from_tibiadata("<html><p>definitely not a json string</p></html>")
+
+    def testGuildTibiaDataUnrelated(self):
+        content = self._get_parsed_content(tests.tests_character.FILE_CHARACTER_TIBIADATA, False)
+        with self.assertRaises(InvalidContent):
+            Guild.from_tibiadata(content)
+

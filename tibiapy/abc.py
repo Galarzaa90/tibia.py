@@ -51,7 +51,7 @@ class Serializable(abc.ABC):
                 return obj.isoformat()
             if isinstance(obj, Enum):
                 return obj.value
-            return {k:v for k,v in dict(obj).items() if v is not None}
+            return {k: v for k, v in dict(obj).items() if v is not None}
         except TypeError:
             return str(obj)
 

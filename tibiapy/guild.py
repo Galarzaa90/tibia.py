@@ -122,6 +122,11 @@ class Guild(abc.BaseGuild):
         ----------
         :class:`Guild`
             The guild contained in the page or None if it doesn't exist.
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            If content is not a the HTML of a guild's page.
         """
         if "An internal error has occurred" in content:
             return None
@@ -156,21 +161,28 @@ class Guild(abc.BaseGuild):
         ----------
         content: :class:`str`
             The json string from the TibiaData response.
+
         Returns
         -------
         :class:`Guild`
             The guild contained in the description or ``None``.
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            If content is not a the JSON of a guild's page.
         """
         try:
             json_content = json.loads(content)
         except json.JSONDecodeError:
-            return None
-        guild_obj = json_content["guild"]
+            raise InvalidContent("content is not a json string.")
+
         guild = cls()
-        if "error" in guild_obj:
-            return None
-        guild_data = guild_obj["data"]
         try:
+            guild_obj = json_content["guild"]
+            if "error" in guild_obj:
+                return None
+            guild_data = guild_obj["data"]
             guild.name = guild_data["name"]
             guild.world = guild_data["world"]
             guild.logo_url = guild_data["guildlogo"]
@@ -178,11 +190,11 @@ class Guild(abc.BaseGuild):
             guild.founded = parse_tibiadata_date(guild_data["founded"])
             guild.open_applications = guild_data["application"]
         except KeyError:
-            return None
+            raise InvalidContent("content does not match a guild json from TibiaData.")
         guild.homepage = guild_data.get("homepage")
         guild.active = not guild_data.get("formation", False)
         if isinstance(guild_data["disbanded"], dict):
-            guild.disband_date = guild_data["disbanded"]["date"]
+            guild.disband_date = parse_tibiadata_date(guild_data["disbanded"]["date"])
             guild.disband_condition = disband_tibadata_regex.search(guild_data["disbanded"]["notification"]).group(1)
         for rank in guild_obj["members"]:
             rank_name = rank["rank_title"]
@@ -193,6 +205,10 @@ class Guild(abc.BaseGuild):
                                                  online=member["status"] == "online"))
         for invited in guild_obj["invited"]:
             guild.invites.append(GuildInvite(invited["name"], parse_tibiadata_date(invited["invited"])))
+        if isinstance(guild_data["guildhall"], dict):
+            gh = guild_data["guildhall"]
+            guild.guildhall = GuildHouse(gh["name"], gh["world"], guild.members[0].name,
+                                         parse_tibiadata_date(gh["paid"]))
         return guild
     # endregion
 

@@ -288,6 +288,9 @@ class GuildHouse(abc.BaseHouse):
         self.status = HouseStatus.RENTED
         self.type = HouseType.GUILDHALL
 
+    def __repr__(self):
+        return "<%s name=%r>" % (self.__class__.__name__, self.name)
+
 
 class ListedHouse(abc.BaseHouseWithId):
     """Represents a house from the house list in Tibia.com.

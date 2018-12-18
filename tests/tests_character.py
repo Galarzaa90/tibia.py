@@ -1,6 +1,6 @@
 import datetime
 
-from tests.tests_guild import FILE_GUILD_TIBIADATA
+import tests.tests_guild
 from tests.tests_tibiapy import TestTibiaPy
 from tibiapy import Character, Death, InvalidContent, Killer
 from tibiapy.enums import AccountStatus, Sex, Vocation
@@ -12,9 +12,10 @@ FILE_CHARACTER_FORMER_NAMES = "character_former_names.txt"
 FILE_CHARACTER_DELETION = "character_deletion.txt"
 FILE_CHARACTER_DEATHS_COMPLEX = "character_deaths_complex.txt"
 
-FILE_CHARACTER_TIBIADATA = "character_tibiadata.txt"
-FILE_CHARACTER_TIBIADATA_DELETED = "character_tibiadata_deleted.txt"
-FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character_tibiadata_not_found.txt"
+FILE_CHARACTER_TIBIADATA = "character_tibiadata.json"
+FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character_tibiadata_unhidden.json"
+FILE_CHARACTER_TIBIADATA_DELETED = "character_tibiadata_deleted.json"
+FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character_tibiadata_not_found.json"
 
 
 class TestCharacter(TestTibiaPy):
@@ -31,6 +32,8 @@ class TestCharacter(TestTibiaPy):
         self.assertIsNotNone(character.guild_membership)
         self.assertEqual("Redd Alliance", character.guild_membership.name)
         self.assertEqual("Mentor", character.guild_membership.rank)
+        self.assertIsNotNone(character.guild_url)
+        self.assertIsNone(character.married_to_url)
         self.assertEqual(character.guild_name, character.guild_membership.name)
         self.assertEqual(character.guild_rank, character.guild_membership.rank)
         self.assertEqual(AccountStatus.FREE_ACCOUNT, character.account_status)
@@ -93,7 +96,14 @@ class TestCharacter(TestTibiaPy):
         self.assertIsNotNone(char.guild_name)
         self.assertIsInstance(char.last_login, datetime.datetime)
 
-        self.assertTrue(char.deaths[5].by_player)
+        self.assertTrue(char.deaths[3].by_player)
+
+    def testCharacterTibiaDataUnhidden(self):
+        content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA_UNHIDDEN, False)
+        char = Character.from_tibiadata(content)
+
+        self.assertIsNotNone(char.account_information)
+        self.assertTrue(char.other_characters)
 
     def testCharacterTibiaDataDeleted(self):
         content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA_DELETED, False)
@@ -117,4 +127,4 @@ class TestCharacter(TestTibiaPy):
 
     def testCharacterTibiaDataUnrelatedJson(self):
         with self.assertRaises(InvalidContent):
-            Character.from_tibiadata(self._get_parsed_content(FILE_GUILD_TIBIADATA, False))
+            Character.from_tibiadata(self._get_parsed_content(tests.tests_guild.FILE_GUILD_TIBIADATA, False))
