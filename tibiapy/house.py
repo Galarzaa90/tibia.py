@@ -276,15 +276,13 @@ class GuildHouse(abc.BaseHouse):
         The current status of the guildhall. This is always :py:attr:`.HouseStatus.RENTED` for this class.
     type: :class:`.HouseType`
         The type of the guildhall. This is always :py:attr:`.HouseType.GUILDHALL` for this class.
-    town: :class:`str`
-        The town where the city is located in.
     owner: :class:`str`
         The owner of the guildhall."""
     __slots__ = ("owner", "paid_until_date")
 
-    def __init__(self, name, town=None, owner=None, paid_until_date=None):
+    def __init__(self, name, world=None, owner=None, paid_until_date=None):
         self.name = name
-        self.town = town
+        self.world = world
         self.owner = owner
         self.paid_until_date = paid_until_date
         self.status = HouseStatus.RENTED

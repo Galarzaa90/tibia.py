@@ -9,6 +9,7 @@ import bs4
 
 from tibiapy import abc
 from tibiapy.enums import AccountStatus, Sex, Vocation, try_enum
+from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime
@@ -177,22 +178,29 @@ class Character(abc.BaseCharacter):
         """Creates an instance of the class from the html content of the character's page.
 
         Parameters
-        -----------
+        ----------
         content: :class:`str`
             The HTML content of the page.
 
         Returns
-        ----------
+        -------
         :class:`Character`
-            The character contained in the page, or None if the character doesn't exist.
+            The character contained in the page, or None if the character doesn't exist
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            If content is not a the HTML of a character's page.
         """
         parsed_content = cls._beautiful_soup(content)
         tables = cls._parse_tables(parsed_content)
         char = Character()
+        if "Could not find character" in tables.keys():
+            return None
         if "Character Information" in tables.keys():
             char._parse_character_information(tables["Character Information"])
         else:
-            return None
+            raise InvalidContent("content does not contain a tibia.com character information page.")
         char._parse_achievements(tables.get("Account Achievements", []))
         char._parse_deaths(tables.get("Character Deaths", []))
         char._parse_account_information(tables.get("Account Information", []))
@@ -201,17 +209,32 @@ class Character(abc.BaseCharacter):
 
     @classmethod
     def from_tibiadata(cls, content):
-        """Builds a character object from a TibiaData character response"""
+        """Builds a character object from a TibiaData character response.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The JSON content of the response.
+
+        Returns
+        -------
+        :class:`Character`
+            The character contained in the page, or None if the character doesn't exist
+
+        Raises
+        ------
+        :class:`.InvalidContent`
+            If content is not a the JSON string of the response."""
         try:
             json_content = json.loads(content)
         except json.JSONDecodeError:
-            return None
-        character = json_content["characters"]
-        character_data = character["data"]
+            raise InvalidContent("content is not a valid json string.")
         char = cls()
-        if "error" in character:
-            return None
         try:
+            character = json_content["characters"]
+            if "error" in character:
+                return None
+            character_data = character["data"]
             char.name = character_data["name"]
             char.world = character_data["world"]
             char.level = character_data["level"]
@@ -221,7 +244,7 @@ class Character(abc.BaseCharacter):
             char.residence = character_data["residence"]
             char.account_status = character_data["account_status"]
         except KeyError:
-            return None
+            raise InvalidContent("content does not match a character json from TibiaData.")
         char.former_names = character_data.get("former_names", [])
         if "deleted" in character_data:
             char.deletion_date = parse_tibiadata_datetime(character_data["deleted"])

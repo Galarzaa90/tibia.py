@@ -1,9 +1,10 @@
 import datetime
 
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import Guild, GuildInvite, GuildMember, ListedGuild
+from tibiapy import Guild, GuildInvite, GuildMember, InvalidContent, ListedGuild
 
 FILE_GUILD_FULL = "guild_full.txt"
+FILE_GUILD_NOT_FOUND = "guild_not_found.txt"
 FILE_GUILD_INFO_COMPLETE = "guild_info_complete.txt"
 FILE_GUILD_INFO_MINIMUM = "guild_info_minimum.txt"
 FILE_GUILD_INFO_DISBANDING = "guild_info_disbanding.txt"
@@ -15,7 +16,7 @@ FILE_GUILD_TIBIADATA = "guild_tibiadata.txt"
 
 class TestsGuild(TestTibiaPy):
     def setUp(self):
-        self.guild = {}
+        self.guild = Guild()
 
     @staticmethod
     def _get_parsed_content(resource, beautiful_soup=True):
@@ -43,57 +44,65 @@ class TestsGuild(TestTibiaPy):
             self.assertIsNotNone(invited.name, "Invited character's name should not be None.")
             self.assertIsInstance(invited.date, datetime.date, "Invited character's date should be datetime.date.")
 
+    def testGuildNotFound(self):
+        content = self._get_parsed_content(FILE_GUILD_NOT_FOUND, False)
+        guild = Guild.from_content(content)
+        self.assertIsNone(guild)
+
+    def testGuildUnrelated(self):
+        content = self._get_parsed_content(self.FILE_UNRELATED_SECTION, False)
+        with self.assertRaises(InvalidContent):
+            Guild.from_content(content)
+
     def testGuildInfoComplete(self):
         content = self._get_parsed_content(FILE_GUILD_INFO_COMPLETE)
-        Guild._parse_guild_disband_info(self.guild, content)
-        self.assertIsNone(self.guild["disband_condition"], "Guild should not be under disband warning")
-        self.assertIsNone(self.guild["disband_date"], "Guild should not have disband date")
+        self.guild._parse_guild_disband_info(content)
+        self.assertIsNone(self.guild.disband_condition, "Guild should not be under disband warning")
+        self.assertIsNone(self.guild.disband_date, "Guild should not have disband date")
 
-        Guild._parse_guild_guildhall(self.guild, content)
-        guildhall = self.guild["guildhall"]
-        self.assertIsNotNone(guildhall, "Guild should have guildhall")
-        self.assertEqual(guildhall["name"], "Sky Lane, Guild 1")
-        self.assertEqual(guildhall["paid_until"], "Aug 26 2018")
+        self.guild._parse_guild_guildhall(content)
+        self.assertIsNotNone(self.guild.guildhall, "Guild should have guildhall")
+        self.assertEqual(self.guild.guildhall.name, "Sky Lane, Guild 1")
+        self.assertEqual(self.guild.guildhall.paid_until_date, datetime.date(2018, 8, 26))
 
-        Guild._parse_guild_homepage(self.guild, content)
-        self.assertIsNotNone(self.guild["homepage"], "Guild homepage must exist")
-        self.assertEqual("tibiammo.reddit.com", self.guild["homepage"])
+        self.guild._parse_guild_homepage(content)
+        self.assertIsNotNone(self.guild.homepage, "Guild homepage must exist")
+        self.assertEqual("tibiammo.reddit.com", self.guild.homepage)
 
-        Guild._parse_guild_applications(self.guild, content)
-        self.assertTrue(self.guild["open_applications"], "Guild should be open to applications")
+        self.guild._parse_application_info(content)
+        self.assertTrue(self.guild.open_applications, "Guild should be open to applications")
 
-        Guild._parse_guild_info(self.guild, content)
-        self.assertIsNotNone(self.guild["description"], "Guild description must exist")
-        self.assertEqual("Gladera", self.guild["world"])
-        self.assertEqual("Jul 23 2015", self.guild["founded"])
-        self.assertTrue(self.guild["active"], "Guild should be active")
+        self.guild._parse_guild_info(content)
+        self.assertIsNotNone(self.guild.description, "Guild description must exist")
+        self.assertEqual("Gladera", self.guild.world)
+        self.assertEqual(datetime.date(2015, 7, 23), self.guild.founded)
+        self.assertTrue(self.guild.active, "Guild should be active")
 
     def testGuildInfoMinimum(self):
         content = self._get_parsed_content(FILE_GUILD_INFO_MINIMUM)
-        Guild._parse_guild_disband_info(self.guild, content)
-        self.assertIsNone(self.guild["disband_condition"], "Guild should not be under disband warning")
-        self.assertIsNone(self.guild["disband_date"], "Guild should not have disband date")
+        self.guild._parse_guild_disband_info(content)
+        self.assertIsNone(self.guild.disband_condition, "Guild should not be under disband warning")
+        self.assertIsNone(self.guild.disband_date, "Guild should not have disband date")
 
-        Guild._parse_guild_guildhall(self.guild, content)
-        guildhall = self.guild["guildhall"]
-        self.assertIsNone(guildhall, "Guild should not have a guildhall")
+        self.guild._parse_guild_guildhall(content)
+        self.assertIsNone(self.guild.guildhall, "Guild should not have a guildhall")
 
-        Guild._parse_guild_homepage(self.guild, content)
-        self.assertIsNone(self.guild["homepage"], "Guild should not have a guildhall")
+        self.guild._parse_guild_homepage(content)
+        self.assertIsNone(self.guild.homepage, "Guild should not have a guildhall")
 
-        Guild._parse_guild_info(self.guild, content)
-        self.assertIsNone(self.guild["description"], "Guild description must not exist")
-        self.assertEqual("Gladera", self.guild["world"])
-        self.assertEqual("May 18 2018", self.guild["founded"])
+        self.guild._parse_guild_info(content)
+        self.assertIsNone(self.guild.description, "Guild description must not exist")
+        self.assertEqual("Gladera", self.guild.world)
+        self.assertEqual(datetime.date(year=2018, month=5, day=18), self.guild.founded)
 
     def testGuildInfoDisbanding(self):
         content = self._get_parsed_content(FILE_GUILD_INFO_DISBANDING)
-        Guild._parse_guild_info(self.guild, content)
-        self.assertTrue(self.guild["active"], "Guild should be active")
+        self.guild._parse_guild_info(content)
+        self.assertTrue(self.guild.active, "Guild should be active")
 
-        Guild._parse_guild_disband_info(self.guild, content)
-        self.assertIsNotNone(self.guild["disband_condition"], "Guild should have a disband warning")
-        self.assertEqual(self.guild["disband_date"], "Aug 17 2018", "Guild should have disband date")
+        self.guild._parse_guild_disband_info(content)
+        self.assertIsNotNone(self.guild.disband_condition, "Guild should have a disband warning")
+        self.assertEqual(self.guild.disband_date, datetime.date(2018, 8, 17), "Guild should have disband date")
 
     def testGuildInfoFormation(self):
         content = self._get_parsed_content(FILE_GUILD_INFO_FORMATION)
@@ -101,8 +110,8 @@ class TestsGuild(TestTibiaPy):
         self.assertFalse(self.guild["active"], "Guild should not be active")
 
         Guild._parse_guild_disband_info(self.guild, content)
-        self.assertIsNotNone(self.guild["disband_condition"], "Guild should have a disband warning")
-        self.assertEqual(self.guild["disband_date"], "Aug 16 2018", "Guild should have disband date")
+        self.assertIsNotNone(self.guild.disband_condition, "Guild should have a disband warning")
+        self.assertEqual(self.guild.disband_date, datetime.date(2018, 8, 16), "Guild should have disband date")
 
     def testGuildList(self):
         content = self._get_parsed_content(FILE_GUILD_LIST, False)
@@ -114,24 +123,22 @@ class TestsGuild(TestTibiaPy):
         self.assertFalse(guilds[-1].active)
 
     def testInvitationDate(self):
-        guild = {"invites": []}
         name = "Tschas"
         date = "Invitation Date"
         values = name, date
-        Guild._parse_invited_member(guild, values)
-        self.assertIsNotNone(guild["invites"])
-        self.assertListEqual(guild["invites"], [])
+        self.guild._parse_invited_member(values)
+        self.assertIsNotNone(self.guild.invites)
+        self.assertListEqual(self.guild.invites, [])
 
     def testInvitedMember(self):
-        guild = {"invites": []}
         name = "Tschas"
         date = "Jun 20 2018"
         values = name, date
-        Guild._parse_invited_member(guild, values)
-        self.assertIsNotNone(guild["invites"])
-        self.assertIsNotNone(guild["invites"][0])
-        self.assertEqual(guild["invites"][0]["name"], name)
-        self.assertEqual(guild["invites"][0]["date"], date)
+        Guild._parse_invited_member(self.guild, values)
+        self.assertIsNotNone(self.guild.invites)
+        self.assertIsNotNone(self.guild.invites[0])
+        self.assertEqual(self.guild.invites[0].name, name)
+        self.assertEqual(self.guild.invites[0].date, datetime.date(2018,6,20))
 
     def testMemberJoinDate(self):
         self.assertIsInstance(GuildMember(joined="Jul 20 2018").joined, datetime.date)

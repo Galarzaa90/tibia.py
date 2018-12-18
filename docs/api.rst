@@ -192,3 +192,8 @@ Utility functions
 ==================
 .. automodule:: tibiapy.utils
    :members:
+
+Exceptions
+==========
+.. automodule:: tibiapy.errors
+   :members:

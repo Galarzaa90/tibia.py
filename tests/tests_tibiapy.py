@@ -8,6 +8,8 @@ RESOURCES_PATH = os.path.join(MY_PATH, "resources/")
 
 
 class TestTibiaPy(unittest.TestCase):
+    FILE_UNRELATED_SECTION = "tibiacom_about.txt"
+
     @staticmethod
     def _load_resource(resource):
         with open(os.path.join(RESOURCES_PATH, resource)) as f:

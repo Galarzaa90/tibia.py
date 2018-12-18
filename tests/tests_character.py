@@ -1,7 +1,8 @@
 import datetime
 
+from tests.tests_guild import FILE_GUILD_TIBIADATA
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import Character, Death, Killer
+from tibiapy import Character, Death, InvalidContent, Killer
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.utils import parse_tibia_datetime
 
@@ -67,6 +68,11 @@ class TestCharacter(TestTibiaPy):
         self.assertTrue(char.deaths)
         self.assertEqual(len(char.deaths), 19)
 
+    def testCharacterUnrelated(self):
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        with self.assertRaises(InvalidContent):
+            Character.from_content(content)
+
     def testDeathTypes(self):
         assisted_suicide = Death("Galarzaa", 280, killers=[Killer("Galarzaa", True), Killer("a pixy")],
                                  time=datetime.datetime.now())
@@ -106,5 +112,9 @@ class TestCharacter(TestTibiaPy):
         self.assertIsNone(char)
 
     def testCharacterTibiaDataInvalidJson(self):
-        char = Character.from_tibiadata("<html><b>Not a json string</b></html>")
-        self.assertIsNone(char)
+        with self.assertRaises(InvalidContent):
+            Character.from_tibiadata("<html><b>Not a json string</b></html>")
+
+    def testCharacterTibiaDataUnrelatedJson(self):
+        with self.assertRaises(InvalidContent):
+            Character.from_tibiadata(self._get_parsed_content(FILE_GUILD_TIBIADATA, False))
