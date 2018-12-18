@@ -4,18 +4,18 @@ import tests.tests_character
 from tests.tests_tibiapy import TestTibiaPy
 from tibiapy import Guild, GuildHouse, GuildInvite, GuildMember, InvalidContent, ListedGuild
 
-FILE_GUILD_FULL = "guild_full.txt"
-FILE_GUILD_NOT_FOUND = "guild_not_found.txt"
-FILE_GUILD_INFO_COMPLETE = "guild_info_complete.txt"
-FILE_GUILD_INFO_MINIMUM = "guild_info_minimum.txt"
-FILE_GUILD_INFO_DISBANDING = "guild_info_disbanding.txt"
-FILE_GUILD_INFO_FORMATION = "guild_info_formation.txt"
-FILE_GUILD_LIST = "guild_list.txt"
+FILE_GUILD_FULL = "guild/tibiacom_full.txt"
+FILE_GUILD_NOT_FOUND = "guild/tibiacom_not_found.txt"
+FILE_GUILD_INFO_COMPLETE = "guild/tibiacom_info_complete.txt"
+FILE_GUILD_INFO_MINIMUM = "guild/tibiacom_info_minimum.txt"
+FILE_GUILD_INFO_DISBANDING = "guild/tibiacom_info_disbanding.txt"
+FILE_GUILD_INFO_FORMATION = "guild/tibiacom_info_formation.txt"
+FILE_GUILD_LIST = "guild/tibiacom_list.txt"
 
-FILE_GUILD_TIBIADATA = "guild_tibiadata.json"
-FILE_GUILD_TIBIADATA_NOT_FOUND = "guild_tibiadata_not_found.json"
-FILE_GUILD_TIBIADATA_DISBANDING = "guild_tibiadata_disbanding.json"
-FILE_GUILD_TIBIADATA_INVITED = "guild_tibiadata_invited.json"
+FILE_GUILD_TIBIADATA = "guild/tibiadata.json"
+FILE_GUILD_TIBIADATA_NOT_FOUND = "guild/tibiadata_not_found.json"
+FILE_GUILD_TIBIADATA_DISBANDING = "guild/tibiadata_disbanding.json"
+FILE_GUILD_TIBIADATA_INVITED = "guild/tibiadata_invited.json"
 
 
 class TestsGuild(TestTibiaPy):

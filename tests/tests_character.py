@@ -6,16 +6,16 @@ from tibiapy import Character, Death, InvalidContent, Killer
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.utils import parse_tibia_datetime
 
-FILE_CHARACTER_RESOURCE = "character_regular.txt"
-FILE_CHARACTER_NOT_FOUND = "character_not_found.txt"
-FILE_CHARACTER_FORMER_NAMES = "character_former_names.txt"
-FILE_CHARACTER_DELETION = "character_deletion.txt"
-FILE_CHARACTER_DEATHS_COMPLEX = "character_deaths_complex.txt"
+FILE_CHARACTER_RESOURCE = "character/tibiacom_full.txt"
+FILE_CHARACTER_NOT_FOUND = "character/tibiacom_not_found.txt"
+FILE_CHARACTER_FORMER_NAMES = "character/tibiacom_former_names.txt"
+FILE_CHARACTER_DELETION = "character/tibiacom_deletion.txt"
+FILE_CHARACTER_DEATHS_COMPLEX = "character/tibiacom_deaths_complex.txt"
 
-FILE_CHARACTER_TIBIADATA = "character_tibiadata.json"
-FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character_tibiadata_unhidden.json"
-FILE_CHARACTER_TIBIADATA_DELETED = "character_tibiadata_deleted.json"
-FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character_tibiadata_not_found.json"
+FILE_CHARACTER_TIBIADATA = "character/tibiadata.json"
+FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character/tibiadata_unhidden.json"
+FILE_CHARACTER_TIBIADATA_DELETED = "character/tibiadata_deleted.json"
+FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character/tibiadata_not_found.json"
 
 
 class TestCharacter(TestTibiaPy):
@@ -69,7 +69,11 @@ class TestCharacter(TestTibiaPy):
         content = self._load_resource(FILE_CHARACTER_DEATHS_COMPLEX)
         char = Character.from_content(content)
         self.assertTrue(char.deaths)
+        self.assertIsInstance(char.deaths[0], Death)
         self.assertEqual(len(char.deaths), 19)
+        oldest_death = char.deaths[-1]
+        self.assertEqual(oldest_death.killer.summon, "a fire elemental")
+
 
     def testCharacterUnrelated(self):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)

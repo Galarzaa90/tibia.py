@@ -140,7 +140,7 @@ class Character(abc.BaseCharacter):
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
         self.comment = kwargs.get("comment")
         self.achievements = kwargs.get("achievements", [])
-        self.deaths = kwargs.get("deaths", [])
+        self.deaths = kwargs.get("deaths", [])  # type: List[Death]
         self.account_information = kwargs.get("account_information")
         self.other_characters = kwargs.get("other_characters", [])
         self.deletion_date = kwargs.get("deletion_date")

@@ -3,14 +3,14 @@ import json
 from tests.tests_tibiapy import TestTibiaPy
 from tibiapy import World, WorldOverview
 
-FILE_WORLD_FULL = "world_full.txt"
-FILE_WORLD_FULL_OFFLINE = "world_full_off.txt"
-FILE_WORLD_TIBIADATA = "world_tibiadata.txt"
-FILE_WORLD_NOT_FOUND = "world_not_found.txt"
+FILE_WORLD_FULL = "world/tibiacom_online.txt"
+FILE_WORLD_FULL_OFFLINE = "world/tibiacom_offline.txt"
+FILE_WORLD_TIBIADATA = "world/tibiadata_online.json"
+FILE_WORLD_NOT_FOUND = "world/tibiacom_not_found.txt"
 
-FILE_WORLD_LIST = "world_list.txt"
-FILE_WORLD_LIST_OFFLINE = "world_list_offline.txt"
-FILE_WORLD_LIST_TIBIADATA = "world_list_tibiadata.txt"
+FILE_WORLD_LIST = "world/tibiacom_list_online.txt"
+FILE_WORLD_LIST_OFFLINE = "world/tibiacom_list_offline.txt"
+FILE_WORLD_LIST_TIBIADATA = "world/tibiadata_list_online.json"
 
 
 class TestWorld(TestTibiaPy):
