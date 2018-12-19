@@ -93,8 +93,6 @@ class TestWorld(TestTibiaPy):
         worlds = WorldOverview.from_tibiadata(content)
 
         self.assertGreater(len(worlds.worlds), 0)
-        self.assertIsNotNone(worlds.record_date)
-        self.assertIsNotNone(worlds.record_count)
 
     def testWorldOverviewTibiaDataInvalidJson(self):
         worlds = WorldOverview.from_tibiadata("<html><b>Not a json string</b></html>")

@@ -195,5 +195,6 @@ Utility functions
 
 Exceptions
 ==========
-.. automodule:: tibiapy.errors
-   :members:
+.. autoclass:: tibiapy.TibiapyException
+
+.. autoclass:: tibiapy.InvalidContent

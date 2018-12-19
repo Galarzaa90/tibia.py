@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Type, TypeVar, Union
 
 
 class AccountStatus(Enum):
@@ -64,7 +65,11 @@ class WorldLocation(Enum):
     SOUTH_AMERICA = "South America"
 
 
-def try_enum(cls, val, default=None):
+T = TypeVar('T')
+D = TypeVar('D')
+
+
+def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
     """Attempts to convert a value into their enum value
 
     Parameters
@@ -78,7 +83,7 @@ def try_enum(cls, val, default=None):
 
     Returns
     -------
-    The enum value if found, otherwise None
+    The enum value if found, otherwise None.
     """
     try:
         return cls(val)

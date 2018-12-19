@@ -1,7 +1,8 @@
 import datetime
+from typing import Optional
 
 
-def parse_tibia_datetime(datetime_str):
+def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
     """Parses date and time from the format used in Tibia.com
 
     Accepted format:
@@ -15,7 +16,7 @@ def parse_tibia_datetime(datetime_str):
 
     Returns
     -----------
-    :class:`datetime.datetime`
+    :class:`datetime.datetime`, optional
         The represented datetime, in UTC.
     """
     try:
@@ -37,11 +38,11 @@ def parse_tibia_datetime(datetime_str):
         # Add/subtract hours to get the real time
         t = t - datetime.timedelta(hours=utc_offset)
         return t.replace(tzinfo=datetime.timezone.utc)
-    except ValueError:
+    except (ValueError, AttributeError):
         return None
 
 
-def parse_tibia_date(date_str):
+def parse_tibia_date(date_str) -> Optional[datetime.date]:
     """Parses a date from the format used in Tibia.com
 
     Accepted format:
@@ -55,7 +56,7 @@ def parse_tibia_date(date_str):
 
     Returns
     -----------
-    :class:`datetime.date`
+    :class:`datetime.date`, optional
         The represented date."""
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")
@@ -64,7 +65,7 @@ def parse_tibia_date(date_str):
         return None
 
 
-def parse_tibia_full_date(date_str):
+def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
     """Parses a date in the fuller format used in Tibia.com
 
     Accepted format:
@@ -78,8 +79,9 @@ def parse_tibia_full_date(date_str):
 
     Returns
     -----------
-    :class:`datetime.date`
-        The represended date."""
+    :class:`datetime.date`, optional
+        The represended date.
+    """
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y")
         return t.date()
@@ -87,7 +89,7 @@ def parse_tibia_full_date(date_str):
         return None
 
 
-def parse_tibiadata_datetime(date_dict):
+def parse_tibiadata_datetime(date_dict) -> Optional[datetime.datetime]:
     """Parses time objects from the TibiaData API.
 
     Time objects are made of a dictionary with three keys:
@@ -98,17 +100,17 @@ def parse_tibiadata_datetime(date_dict):
 
     Parameters
     ----------
-    date_dict:
+    date_dict: :class:`dict`
         Dictionary representing the time object.
 
     Returns
     -------
-    :class:`datetime.date`:
+    :class:`datetime.date`, optional
         The represented datetime, in UTC.
     """
     try:
         t = datetime.datetime.strptime(date_dict["date"], "%Y-%m-%d %H:%M:%S.%f")
-    except (KeyError, ValueError):
+    except (KeyError, ValueError, TypeError):
         return None
 
     if date_dict["timezone_type"] == 2:
@@ -125,7 +127,7 @@ def parse_tibiadata_datetime(date_dict):
     return t.replace(tzinfo=datetime.timezone.utc)
 
 
-def parse_tibiadata_date(date_str):
+def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
     """Parses a date from the format used in TibiaData.
 
     Parameters
@@ -135,7 +137,7 @@ def parse_tibiadata_date(date_str):
 
     Returns
     -----------
-    :class:`datetime.date`
+    :class:`datetime.date`, optional
         The represended date."""
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%Y-%m-%d")
@@ -144,7 +146,7 @@ def parse_tibiadata_date(date_str):
         return None
 
 
-def parse_number_words(textnum):
+def parse_number_words(text_num):
     numwords = {}
     units = [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
@@ -162,10 +164,10 @@ def parse_number_words(textnum):
     for idx, word in enumerate(scales):   numwords[word] = (10 ** (idx * 3 or 2), 0)
 
     current = result = 0
-    textnum = textnum.replace("-", " ")
-    for word in textnum.split():
+    text_num = text_num.replace("-", " ")
+    for word in text_num.split():
         if word not in numwords:
-          raise Exception("Illegal word: " + word)
+            return 0
 
         scale, increment = numwords[word]
         current = current * scale + increment
@@ -174,3 +176,62 @@ def parse_number_words(textnum):
             current = 0
 
     return result + current
+
+
+def try_datetime(obj) -> Optional[datetime.datetime]:
+    """Attempts to convert an object into a datetime.
+
+    If the date format is known, it's recommended to use the corresponding function
+    This is meant to be used in constructors.
+
+    Parameters
+    ----------
+    obj: :class:`str`, :class:`dict`
+        The object to convert.
+
+    Returns
+    -------
+    :class:`datetime.datetime`
+        The represented datetime, or ``None`` if conversion wasn't possible.
+    """
+    if obj is None:
+        return None
+    if isinstance(obj, datetime.datetime):
+        return obj
+    res = parse_tibia_datetime(obj)
+    if res is not None:
+        return res
+    res = parse_tibiadata_datetime(obj)
+    return res
+
+
+def try_date(obj) -> Optional[datetime.date]:
+    """Attempts to convert an object into a date.
+
+    If the date format is known, it's recommended to use the corresponding function
+    This is meant to be used in constructors.
+
+    Parameters
+    ----------
+    obj: :class:`str`, :class:`dict`, :class:`datetime.datetime`
+        The object to convert.
+
+    Returns
+    -------
+    :class:`datetime.date`, optional
+        The represented date.
+    """
+    if obj is None:
+        return None
+    if isinstance(obj, datetime.date):
+        return obj
+    if isinstance(obj, datetime.datetime):
+        return obj.date()
+    res = parse_tibia_date(obj)
+    if res is not None:
+        return res
+    res = parse_tibia_full_date(obj)
+    if res is not None:
+        return res
+    res = parse_tibiadata_date(obj)
+    return res

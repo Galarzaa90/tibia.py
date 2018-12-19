@@ -12,7 +12,8 @@ from tibiapy.enums import AccountStatus, Sex, Vocation, try_enum
 from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
-from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime
+from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime, \
+    try_datetime
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
@@ -134,16 +135,16 @@ class Character(abc.BaseCharacter):
         self.former_world = kwargs.get("former_world")
         self.residence = kwargs.get("residence")
         self.married_to = kwargs.get("married_to")
-        self.house = kwargs.get("house")
+        self.house = kwargs.get("house")  # type: Optional[CharacterHouse]
         self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
-        self.last_login = kwargs.get("last_login")
+        self.last_login = try_datetime(kwargs.get("last_login"))
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
         self.comment = kwargs.get("comment")
-        self.achievements = kwargs.get("achievements", [])
+        self.achievements = kwargs.get("achievements", [])  # type: List[Achievement]
         self.deaths = kwargs.get("deaths", [])  # type: List[Death]
-        self.account_information = kwargs.get("account_information")
-        self.other_characters = kwargs.get("other_characters", [])
-        self.deletion_date = kwargs.get("deletion_date")
+        self.account_information = kwargs.get("account_information")  # type: Optional[AccountInformation]
+        self.other_characters = kwargs.get("other_characters", [])  # type: List[OtherCharacter]
+        self.deletion_date = try_datetime(kwargs.get("deletion_date"))
 
     # region Properties
     @property
@@ -152,12 +153,12 @@ class Character(abc.BaseCharacter):
         return self.deletion_date is not None
 
     @property
-    def guild_name(self):
+    def guild_name(self) -> Optional[str]:
         """:class:`str`: The name of the guild the character belongs to, or ``None``."""
         return self.guild_membership.name if self.guild_membership else None
 
     @property
-    def guild_rank(self):
+    def guild_rank(self) -> Optional[str]:
         """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
         return self.guild_membership.rank if self.guild_membership else None
 
@@ -189,7 +190,7 @@ class Character(abc.BaseCharacter):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent
             If content is not a the HTML of a character's page.
         """
         parsed_content = cls._beautiful_soup(content)
@@ -223,7 +224,7 @@ class Character(abc.BaseCharacter):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent
             If content is not a the JSON string of the response."""
         try:
             json_content = json.loads(content)
@@ -262,7 +263,7 @@ class Character(abc.BaseCharacter):
         for achievement in character["achievements"]:
             char.achievements.append(Achievement(achievement["name"], achievement["stars"]))
 
-        cls._parse_deaths_tibiadata(char, character.get("deaths", []))
+        char._parse_deaths_tibiadata(character.get("deaths", []))
 
         for other_char in character["other_characters"]:
             char.other_characters.append(OtherCharacter(other_char["name"], other_char["world"],
@@ -285,6 +286,7 @@ class Character(abc.BaseCharacter):
     def _beautiful_soup(cls, content):
         """
         Parses HTML content into a BeautifulSoup object.
+
         Parameters
         ----------
         content: :class:`str`
@@ -419,50 +421,50 @@ class Character(abc.BaseCharacter):
             death_info = death_regexp.search(death)
             if death_info:
                 level = int(death_info.group("level"))
-                killers_str = death_info.group("killers")
+                killers_desc = death_info.group("killers")
             else:
                 continue
-            assists = []
+            death = Death(self.name, level, time=death_time)
+            assists_name_list = []
             # Check if the killers list contains assists
-            assist_match = death_assisted.search(killers_str)
+            assist_match = death_assisted.search(killers_desc)
             if assist_match:
                 # Filter out assists
-                killers_str = assist_match.group("killers")
+                killers_desc = assist_match.group("killers")
                 # Split assists into a list.
-                assists = self._split_list(assist_match.group("assists"))
-            killers = self._split_list(killers_str)
-            for i, killer in enumerate(killers):
+                assists_name_list = self._split_list(assist_match.group("assists"))
+            killers_name_list = self._split_list(killers_desc)
+            for killer in killers_name_list:
                 killer_dict = self._parse_killer(killer)
-                killers[i] = killer_dict
-            for (i, assist) in enumerate(assists):
+                death.killers.append(Killer(**killer_dict))
+            for assist in assists_name_list:
                 # Extract names from character links in assists list.
-                assists[i] = {"name": link_content.search(assist).group(1), "player": True}
+                assist_dict = {"name": link_content.search(assist).group(1), "player": True}
+                death.assists.append(Killer(**assist_dict))
             try:
-                self.deaths.append(Death(self.name, level, time=death_time, killers=killers, assists=assists))
+                self.deaths.append(death)
             except ValueError:
                 # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                 continue
 
-    @classmethod
-    def _parse_deaths_tibiadata(cls, char, deaths):
+    def _parse_deaths_tibiadata(self, deaths):
         for death in deaths:
             level = death["level"]
             death_time = parse_tibiadata_datetime(death["date"])
             m = death_reason.search(death["reason"])
+            _death = Death(self.name, level, time=death_time)
             killers_str = []
             assists_str = []
-            killers = []
-            assists = []
             involved = [i["name"] for i in death["involved"]]
             if m and m.group("killers"):
-                killers_str = [k.strip() for k in cls._split_list(m.group("killers").strip())]
+                killers_str = [k.strip() for k in self._split_list(m.group("killers").strip())]
             if m and m.group("assists"):
-                assists_str = [a.strip() for a in cls._split_list(m.group("assists").strip())]
+                assists_str = [a.strip() for a in self._split_list(m.group("assists").strip())]
             for killer in killers_str:
-                killers.append(Killer(killer, killer in involved))
+                _death.killers.append(Killer(killer, killer in involved))
             for assist in assists_str:
-                assists.append(Killer(assist, assist in involved))
-            char.deaths.append(Death(char.name, level, time=death_time, killers=killers, assists=assists))
+                _death.assists.append(Killer(assist, assist in involved))
+            self.deaths.append(_death)
 
     @classmethod
     def _parse_killer(cls, killer):
@@ -518,7 +520,7 @@ class Character(abc.BaseCharacter):
 
         Returns
         -------
-        :class:`OrderedDict`[str, List[:class:`bs4.Tag`]]
+        :class:`OrderedDict`[str, :class:`list`of :class:`bs4.Tag`]
             A dictionary containing all the table rows, with the table headers as keys.
         """
         tables = parsed_content.find_all('table', attrs={"width": "100%"})
@@ -545,7 +547,7 @@ class Character(abc.BaseCharacter):
 
         Returns
         -------
-        List[:class:`str`]
+        :class:`list` of :class:`str`
             A list containing each one of the items.
         """
         if items is None:
@@ -559,6 +561,7 @@ class Character(abc.BaseCharacter):
         return [e.strip() for e in items]
     # endregion
 
+
 class Death(abc.Serializable):
     """
     Represents a death by a character
@@ -569,9 +572,9 @@ class Death(abc.Serializable):
         The name of the character this death belongs to.
     level: :class:`int`
         The level at which the death occurred.
-    killers: List[:class:`Killer`]
+    killers: :class:`list` of :class:`Killer`
         A list of all the killers involved.
-    assists: List[:class:`Killer`]
+    assists: :class:`list` of :class:`Killer`
         A list of characters that were involved, without dealing damage.
     time: :class:`datetime.datetime`
         The time at which the death occurred.
@@ -581,19 +584,9 @@ class Death(abc.Serializable):
     def __init__(self, name=None, level=0, **kwargs):
         self.name = name
         self.level = level
-        self.killers = kwargs.get("killers", [])
-        if self.killers and isinstance(self.killers[0], dict):
-            self.killers = [Killer(**k) for k in self.killers]
-        self.assists = kwargs.get("assists", [])
-        if self.assists and isinstance(self.assists[0], dict):
-            self.assists = [Killer(**k) for k in self.assists]
-        time = kwargs.get("time")
-        if isinstance(time, datetime.datetime):
-            self.time = time
-        elif isinstance(time, str):
-            self.time = parse_tibia_datetime(time)
-        else:
-            self.time = None
+        self.killers = kwargs.get("killers", [])  # type: List[Killer]
+        self.assists = kwargs.get("assists", [])  # type: List[Killer]
+        self.time = try_datetime(kwargs.get("time"))
 
     def __repr__(self):
         attributes = ""
@@ -617,7 +610,7 @@ class Death(abc.Serializable):
 
     @property
     def killer(self):
-        """Optional[:class:`Killer`]: The first killer in the list.
+        """:class:`Killer`: The first killer in the list.
 
         This is usually the killer that gave the killing blow."""
         return self.killers[0] if self.killers else None
@@ -659,12 +652,12 @@ class Killer(abc.Serializable):
         The name of the killer.
     player: :class:`bool`
         Whether the killer is a player or not.
-    summon: Optional[:class:`str`]
+    summon: :class:`str`, optional
         The name of the summoned creature, if applicable.
     """
     __slots__ = ("name", "player", "summon")
 
-    def __init__(self, name=None, player=False, summon=None):
+    def __init__(self, name, player=False, summon=None):
         self.name = name
         self.player = player
         self.summon = summon
@@ -687,7 +680,7 @@ class Killer(abc.Serializable):
     @property
     def url(self):
         """
-        Optional[:class:`str`]: The URL of the character’s information page on Tibia.com, if applicable.
+        :class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable.
         """
         return Character.get_url(self.name) if self.player else None
 
@@ -709,7 +702,7 @@ class OtherCharacter(abc.BaseCharacter):
     """
     __slots__ = ("world", "online", "deleted")
 
-    def __init__(self, name=None, world=None, online=False, deleted=False):
+    def __init__(self, name, world=None, online=False, deleted=False):
         self.name = name
         self.world = world
         self.online = online

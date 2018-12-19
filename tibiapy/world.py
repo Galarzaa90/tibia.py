@@ -7,7 +7,7 @@ import bs4
 from tibiapy import abc
 from tibiapy.character import OnlineCharacter
 from tibiapy.enums import PvpType, TransferType, WorldLocation, try_enum
-from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date, parse_tibiadata_datetime
+from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date, parse_tibiadata_datetime, try_date, try_datetime
 
 record_regexp = re.compile(r'(?P<count>\d+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
@@ -44,19 +44,19 @@ class World(abc.Serializable):
         List of world quest titles the server has achieved.
     battleye_protected: :class:`bool`
         Whether the server is currently protected with battleye or not.
-    battleye_date: :class:`datetime.datetime`
+    battleye_date: :class:`datetime.date`
         The date where battleye was added to this world.
         If this is ``None`` and the world is proyected, it means the world was protected from the beginning.
-    type: :class:`str`
-        The world's type.
+    experimental: :class:`bool`
+        Whether the world is experimental or not.
     online_players: :obj:`list` of :class:`OnlineCharacter`.
         A list of characters currently online in the server.
     premium_only: :class:`bool`
         Whether only premium account players are allowed to play in this server.
     """
     __slots__ = ("name", "status", "online_count", "record_count", "record_date", "location", "pvp_type",
-                 "creation_date", "transfer_type", "world_quest_titles", "battleye_protected", "battleye_date", "type",
-                 "premium_only", "online_players")
+                 "creation_date", "transfer_type", "world_quest_titles", "battleye_protected", "battleye_date",
+                 "premium_only", "experimental", "online_players")
 
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
         self.name = name
@@ -65,13 +65,13 @@ class World(abc.Serializable):
         self.status = kwargs.get("status")
         self.online_count = kwargs.get("online_count", 0)
         self.record_count = kwargs.get("record_count", 0)
-        self.record_date = kwargs.get("record_date")
+        self.record_date = try_datetime(kwargs.get("record_date"))
         self.creation_date = kwargs.get("creation_date")
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
         self.world_quest_titles = kwargs.get("world_quest_titles", [])
         self.battleye_protected = kwargs.get("battleye_protected", False)
-        self.battleye_date = kwargs.get("battleye_date")
-        self.type = kwargs.get("type")
+        self.battleye_date = try_date(kwargs.get("battleye_date"))
+        self.experimental = kwargs.get("experimental")
         self.online_players = kwargs.get("online_players", [])
         self.premium_only = kwargs.get("premium_only", False)
 
@@ -137,7 +137,21 @@ class World(abc.Serializable):
         :class:`World`
             The World described in the page, or ``None``.
         """
-        world = cls._parse(content)
+        parsed_content = cls._beautiful_soup(content)
+        tables = cls._parse_tables(parsed_content)
+        if len(tables) == 1:
+            return None
+        selected_world = parsed_content.find('option', selected=True)
+        world = cls(selected_world.text)
+        world._parse_world_info(tables.get("World Information", []))
+
+        online_table = tables.get("Players Online", [])
+        world.online_players = []
+        for row in online_table[1:]:
+            cols_raw = row.find_all('td')
+            name, level, vocation = (c.text.replace('\xa0', ' ').strip() for c in cols_raw)
+            world.online_players.append(OnlineCharacter(name, world.name, int(level), vocation))
+
         return world
 
     @classmethod
@@ -175,7 +189,7 @@ class World(abc.Serializable):
             world.premium_only = "premium_type" in world_info
             world.world_quest_titles = world_info.get("world_quest_titles", [])
             world._parse_battleye_status(world_info.get("battleye_status", ""))
-            world.type = world_info.get("Game World Type:", "Regular")
+            world.experimental = world_info.get("Game World Type:", "Regular") != "Regular"
             for player in world_data.get("players_online", []):
                 world.online_players.append(OnlineCharacter(player["name"], world.name, player["level"],
                                                             player["vocation"]))
@@ -200,25 +214,6 @@ class World(abc.Serializable):
         """
         return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
                                  parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
-
-    @classmethod
-    def _parse(cls, content):
-        parsed_content = cls._beautiful_soup(content)
-        tables = cls._parse_tables(parsed_content)
-        if len(tables) == 1:
-            return None
-        selected_world = parsed_content.find('option', selected=True)
-        world = cls(selected_world.text)
-        world._parse_world_info(tables.get("World Information", []))
-
-        online_table = tables.get("Players Online", [])
-        world.online_players = []
-        for row in online_table[1:]:
-            cols_raw = row.find_all('td')
-            name, level, vocation = (c.text.replace('\xa0', ' ').strip() for c in cols_raw)
-            world.online_players.append(OnlineCharacter(name, world.name, int(level), vocation))
-
-        return world
 
     def _parse_world_info(self, world_info_table):
         """
@@ -246,7 +241,7 @@ class World(abc.Serializable):
             self.record_date = parse_tibia_datetime(m.group("date"))
         if "world_quest_titles" in world_info:
             self.world_quest_titles = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
-        self.type = world_info.pop("game_world_type")
+        self.experimental = world_info.pop("game_world_type") != "Regular"
         self._parse_battleye_status(world_info.pop("battleye_status"))
         self.premium_only = "premium_type" in world_info
         for k, v in world_info.items():
@@ -304,7 +299,7 @@ class WorldOverview(abc.Serializable):
     ----------
     record_count: :class:`int`
         The overall player online record.
-    record_date: :class:`datetime.date`
+    record_date: :class:`datetime.datetime`
         The date where the record was achieved.
     worlds: :class:`list` of :class:`World`
         List of worlds, with limited info.
@@ -313,7 +308,7 @@ class WorldOverview(abc.Serializable):
 
     def __init__(self, **kwargs):
         self.record_count = kwargs.get("record_count", 0)
-        self.record_date = kwargs.get("record_date", 0)
+        self.record_date = try_datetime(kwargs.get("record_date"))
         self.worlds = kwargs.get("worlds", [])
 
     def __repr__(self):

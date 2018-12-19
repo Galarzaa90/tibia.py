@@ -11,7 +11,7 @@ from tibiapy import abc
 from tibiapy.enums import Vocation, try_enum
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import parse_tibia_date, parse_tibiadata_date
+from tibiapy.utils import parse_tibia_date, parse_tibiadata_date, try_date, try_datetime
 
 COLS_INVITED_MEMBER = 2
 COLS_GUILD_MEMBER = 6
@@ -70,20 +70,12 @@ class Guild(abc.BaseGuild):
         self.world = world
         self.logo_url = kwargs.get("logo_url")
         self.description = kwargs.get("description")
-        _founded = kwargs.get("founded")
-        if isinstance(_founded, datetime.datetime):
-            self.founded = _founded.date()
-        elif isinstance(_founded, datetime.date):
-            self.founded = _founded
-        elif isinstance(_founded, str):
-            self.founded = parse_tibia_date(_founded)
-        else:
-            self.founded = None
+        self.founded = try_date(kwargs.get("founded"))
         self.active = kwargs.get("active", False)
         self.guildhall = kwargs.get("guildhall")  # type: Optional[GuildHouse]
         self.open_applications = kwargs.get("open_applications", False)
         self.disband_condition = kwargs.get("disband_condition")
-        self.disband_date = kwargs.get("disband_date")
+        self.disband_date = try_datetime(kwargs.get("disband_date"))
         self.homepage = kwargs.get("homepage")
         self.members = kwargs.get("members", [])  # type: List[GuildMember]
         self.invites = kwargs.get("invites", [])  # type: List[GuildInvite]
@@ -125,7 +117,7 @@ class Guild(abc.BaseGuild):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent
             If content is not a the HTML of a guild's page.
         """
         if "An internal error has occurred" in content:
@@ -169,7 +161,7 @@ class Guild(abc.BaseGuild):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent
             If content is not a the JSON of a guild's page.
         """
         try:
@@ -408,16 +400,8 @@ class GuildMember(abc.BaseCharacter):
         self.title = title
         self.vocation = try_enum(Vocation, vocation)
         self.level = level
-        joined = kwargs.get("joined")
-        self.online = kwargs.get("online")
-        if isinstance(joined, datetime.datetime):
-            self.joined = joined.date()
-        elif isinstance(joined, datetime.date):
-            self.joined = joined
-        elif isinstance(joined, str):
-            self.joined = parse_tibia_date(joined)
-        else:
-            self.joined = None
+        self.online = kwargs.get("online", False)
+        self.joined = try_date(kwargs.get("joined"))
 
 
 class GuildInvite(abc.BaseCharacter):
@@ -435,14 +419,7 @@ class GuildInvite(abc.BaseCharacter):
 
     def __init__(self, name=None, date=None):
         self.name = name
-        if isinstance(date, datetime.datetime):
-            self.date = date.date()
-        elif isinstance(date, datetime.date):
-            self.date = date
-        elif isinstance(date, str):
-            self.date = parse_tibia_date(date)
-        else:
-            self.date = None
+        self.date = try_date(date)
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} " \
@@ -527,7 +504,7 @@ class ListedGuild(abc.BaseGuild):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent
             If content is not a the HTML of a guild's page.
         """
         parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
@@ -577,7 +554,7 @@ class ListedGuild(abc.BaseGuild):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent
             If content is not a the JSON of TibiaData's guild list.
         """
         try:

@@ -2,6 +2,7 @@ import datetime
 import json
 import re
 import urllib.parse
+from typing import Optional
 
 import bs4
 
@@ -9,7 +10,7 @@ import tibiapy.character
 from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex, try_enum
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_number_words, parse_tibia_datetime
+from tibiapy.utils import parse_number_words, parse_tibia_datetime, try_date, try_datetime
 
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
@@ -82,20 +83,20 @@ class House(abc.BaseHouseWithId):
         self.world = world
         self.image_url = kwargs.get("image_url")
         self.beds = kwargs.get("beds", 0)
-        self.type = kwargs.get("type", HouseType.HOUSE)
+        self.type = try_enum(HouseType, kwargs.get("type"), HouseType.HOUSE)
         self.size = kwargs.get("size", 0)
         self.rent = kwargs.get("rent", 0)
-        self.status = kwargs.get("status")
+        self.status = try_enum(HouseStatus, kwargs.get("status"), None)
         self.owner = kwargs.get("owner")
         self.owner_sex = kwargs.get("owner_sex")
-        self.paid_until = kwargs.get("paid_until")
-        self.transfer_date = kwargs.get("transfer_date")
+        self.paid_until = try_datetime(kwargs.get("paid_until"))
+        self.transfer_date = try_datetime(kwargs.get("transfer_date"))
         self.transferee = kwargs.get("transferee")
         self.transfer_price = kwargs.get("transfer_price", 0)
         self.transfer_accepted = kwargs.get("transfer_accepted", False)
         self.highest_bid = kwargs.get("highest_bid", 0)
         self.highest_bidder = kwargs.get("highest_bidder")
-        self.auction_end = kwargs.get("auction_end")
+        self.auction_end = try_datetime(kwargs.get("auction_end"))
 
     # region Properties
     @property
@@ -126,7 +127,7 @@ class House(abc.BaseHouseWithId):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent
             If the content is not the house section on Tibia.com
         """
         parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
@@ -182,7 +183,7 @@ class House(abc.BaseHouseWithId):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent
             If the content is not a house JSON response from TibiaData
         """
         try:
@@ -264,16 +265,18 @@ class CharacterHouse(abc.BaseHouseWithId):
         The town where the city is located in.
     owner: :class:`str`
         The owner of the house.
+    paid_until_date: :class:`datetime.date`
+        The date the last paid rent is due.
     """
     __slots__ = ("town", "owner", "paid_until_date")
 
     def __init__(self, _id, name, world=None, town=None, owner=None, paid_until_date=None):
-        self.id = _id
+        self.id = int(_id)
         self.name = name
         self.town = town
         self.world = world
         self.owner = owner
-        self.paid_until_date = paid_until_date
+        self.paid_until_date = try_date(paid_until_date)
         self.status = HouseStatus.RENTED
         self.type = HouseType.HOUSE
 
@@ -345,7 +348,7 @@ class ListedHouse(abc.BaseHouseWithId):
         self.town = kwargs.get("town")
         self.size = kwargs.get("size", 0)
         self.rent = kwargs.get("rent", 0)
-        self.time_left = kwargs.get("time_left")
+        self.time_left = kwargs.get("time_left")  # type: Optional[datetime.timedelta]
         self.highest_bid = kwargs.get("highest_bid", 0)
 
     # region Public methods
@@ -364,7 +367,7 @@ class ListedHouse(abc.BaseHouseWithId):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent`
             Content is not the house list from Tibia.com
         """
         try:
@@ -414,7 +417,7 @@ class ListedHouse(abc.BaseHouseWithId):
 
         Raises
         ------
-        :class:`.InvalidContent`
+        InvalidContent`
             Content is not the house list from TibiaData.com
         """
         try:
