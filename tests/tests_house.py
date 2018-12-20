@@ -40,6 +40,7 @@ class TestsHouse(TestTibiaPy):
         self.assertTrue(house.rent, 715)
         self.assertEqual(house.status, HouseStatus.AUCTIONED)
         self.assertEqual(house.url, House.get_url(house.id, house.world))
+        self.assertEqual(house.url_tibiadata, House.get_url_tibiadata(house.id, house.world))
         self.assertIsNone(house.owner)
         self.assertIsNone(house.owner_url)
         self.assertIsNotNone(house.highest_bidder)

@@ -15,8 +15,29 @@ class TestTibiaPy(unittest.TestCase):
         with open(os.path.join(RESOURCES_PATH, resource)) as f:
             return f.read()
 
-    # This uses a static method fom Guild class, so it should only be used for Guild
     @staticmethod
-    def _get_parsed_content(resource, beautiful_soup=True):
+    def _load_parsed_resource(resource):
         content = TestTibiaPy._load_resource(resource)
-        return tibiapy.Guild._beautiful_soup(content) if beautiful_soup else content
+        return tibiapy.utils.parse_tibiacom_content(content)
+
+    def testSerializableGetItem(self):
+        # Class inherits from Serializable
+        world = tibiapy.World("Calmera")
+
+        # Serializable allows accessing attributes like a dictionary
+        self.assertEqual(world.name, world["name"])
+        # And setting values too
+        world["location"] = tibiapy.enums.WorldLocation.NORTH_AMERICA
+        self.assertEqual(world.location, tibiapy.enums.WorldLocation.NORTH_AMERICA)
+
+        # Accessing via __get__ returns KeyError instead of AttributeError to follow dictionary behaviour
+        with self.assertRaises(KeyError):
+            level = world["level"]  # NOSONAR
+
+        # Accessing an undefined attribute that is defined in __slots__ returns `None` instead of raising an exception.
+        del world.location
+        self.assertIsNone(world["location"])
+
+        # New attributes can't be created by assignation
+        with self.assertRaises(KeyError):
+            world["custom"] = "custom value"

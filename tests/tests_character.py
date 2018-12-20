@@ -27,7 +27,7 @@ class TestCharacter(TestTibiaPy):
         self.assertEqual(mock_character.sex, character.sex)
 
     def testCharacter(self):
-        character = Character.from_content(self._get_parsed_content(FILE_CHARACTER_RESOURCE, False))
+        character = Character.from_content(self._load_resource(FILE_CHARACTER_RESOURCE))
         self._compare_character(Character("Tschas", "Gladera", Vocation.DRUID, 205, Sex.FEMALE), character)
         self.assertIsNotNone(character.guild_membership)
         self.assertEqual("Redd Alliance", character.guild_membership.name)
@@ -74,7 +74,6 @@ class TestCharacter(TestTibiaPy):
         oldest_death = char.deaths[-1]
         self.assertEqual(oldest_death.killer.summon, "a fire elemental")
 
-
     def testCharacterUnrelated(self):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
@@ -92,7 +91,7 @@ class TestCharacter(TestTibiaPy):
         self.assertTrue(spawn_invasion.by_player)
         
     def testCharacterTibiaData(self):
-        content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA, False)
+        content = self._load_resource(FILE_CHARACTER_TIBIADATA)
         char = Character.from_tibiadata(content)
 
         self.assertEqual(char.url_tibiadata, Character.get_url_tibiadata(char.name))
@@ -103,14 +102,14 @@ class TestCharacter(TestTibiaPy):
         self.assertTrue(char.deaths[3].by_player)
 
     def testCharacterTibiaDataUnhidden(self):
-        content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA_UNHIDDEN, False)
+        content = self._load_resource(FILE_CHARACTER_TIBIADATA_UNHIDDEN)
         char = Character.from_tibiadata(content)
 
         self.assertIsNotNone(char.account_information)
         self.assertTrue(char.other_characters)
 
     def testCharacterTibiaDataDeleted(self):
-        content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA_DELETED, False)
+        content = self._load_resource(FILE_CHARACTER_TIBIADATA_DELETED)
         char = Character.from_tibiadata(content)
 
         self.assertEqual(char.url_tibiadata, Character.get_url_tibiadata(char.name))
@@ -121,7 +120,7 @@ class TestCharacter(TestTibiaPy):
         self.assertIsNone(char.last_login)
 
     def testCharacterTibiaDataNotFound(self):
-        content = self._get_parsed_content(FILE_CHARACTER_TIBIADATA_NOT_FOUND, False)
+        content = self._load_resource(FILE_CHARACTER_TIBIADATA_NOT_FOUND)
         char = Character.from_tibiadata(content)
         self.assertIsNone(char)
 
@@ -131,4 +130,4 @@ class TestCharacter(TestTibiaPy):
 
     def testCharacterTibiaDataUnrelatedJson(self):
         with self.assertRaises(InvalidContent):
-            Character.from_tibiadata(self._get_parsed_content(tests.tests_guild.FILE_GUILD_TIBIADATA, False))
+            Character.from_tibiadata(self._load_resource(tests.tests_guild.FILE_GUILD_TIBIADATA))

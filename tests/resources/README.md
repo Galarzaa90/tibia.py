@@ -62,7 +62,9 @@ doesn't exist.
  - [tibiacom_list_online.txt](world/tibiacom_list_online.txt) - The world list with all worlds online.
  - [tibiacom_list_offline.txt](world/tibiacom_list_offline.txt) - The world list with all worlds offline.
  - [tibiadata_online.json](world/tibiadata_online.json) - An online world on TibiaData.
+ - [tibiadata_offline.json](world/tibiadata_offline.json) - An offline world on TibiaData.
  - [tibiadata_list_online.json](world/tibiadata_list_online.json) - The world list with worlds online on TibiaData.
+ - [tibiadata_list_offline.json](world/tibiadata_list_offline.json) - The world list with worlds offline on TibiaData.
  
  ## Other resources
  - [tibiacom_about.txt](tibiacom_about.txt) - The 'About Tibia' section on Tibia.com, used to provide invalid content 

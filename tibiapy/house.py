@@ -4,13 +4,11 @@ import re
 import urllib.parse
 from typing import Optional
 
-import bs4
-
 import tibiapy.character
 from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex, try_enum
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_number_words, parse_tibia_datetime, try_date, try_datetime
+from tibiapy.utils import parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, try_datetime
 
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
@@ -130,8 +128,7 @@ class House(abc.BaseHouseWithId):
         InvalidContent
             If the content is not the house section on Tibia.com
         """
-        parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                                           parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+        parsed_content = parse_tibiacom_content(content)
         image_column, desc_column, *_ = parsed_content.find_all('td')
         if "Error" in image_column.text:
             return None
@@ -371,8 +368,7 @@ class ListedHouse(abc.BaseHouseWithId):
             Content is not the house list from Tibia.com
         """
         try:
-            parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                                               parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+            parsed_content = parse_tibiacom_content(content)
             table = parsed_content.find("table")
             header, *rows = table.find_all("tr")
         except (ValueError, AttributeError):

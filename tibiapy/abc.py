@@ -11,9 +11,11 @@ URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=
 URL_HOUSE_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
 GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName=%s"
 GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
+WORLD_URL = "https://www.tibia.com/community/?subtopic=worlds&world=%s"
+WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
 
-class Serializable(abc.ABC):
+class Serializable:
     """Contains methods to make a class convertible to JSON.
 
     .. note::
@@ -44,6 +46,12 @@ class Serializable(abc.ABC):
         else:
             raise KeyError(item)
 
+    def __setitem__(self, key, value):
+        if key in self.keys():
+            setattr(self, key, value)
+        else:
+            raise KeyError(key)
+
     @staticmethod
     def _try_dict(obj):
         try:
@@ -70,7 +78,7 @@ class Serializable(abc.ABC):
         :class:`str`
             JSON representation of the object.
         """
-        return json.dumps({k:v for k,v in dict(self).items() if v is not None}, indent=indent, sort_keys=sort_keys,
+        return json.dumps({k: v for k, v in dict(self).items() if v is not None}, indent=indent, sort_keys=sort_keys,
                           default=self._try_dict)
 
 
@@ -113,7 +121,7 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
     @property
     def url_tibiadata(self):
         """
-        :class:`str`: The URL of the character's information on TibiaData
+        :class:`str`: The URL of the character's information on TibiaData.com.
         """
         return self.get_url_tibiadata(self.name)
 
@@ -124,7 +132,7 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
         Parameters
         ------------
         name: :class:`str`
-            The name of the character
+            The name of the character.
 
         Returns
         --------
@@ -139,12 +147,12 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
         Parameters
         ------------
         name: :class:`str`
-            The name of the character
+            The name of the character.
 
         Returns
         --------
         :class:`str`
-            The URL to the character's page on TibiaData."""
+            The URL to the character's page on TibiaData.com."""
         return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
 
 
@@ -168,12 +176,12 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
 
     @property
     def url(self):
-        """:class:`str`: The URL to the guild's information page."""
+        """:class:`str`: The URL to the guild's information page on Tibia.com."""
         return self.get_url(self.name)
 
     @property
     def url_tibiadata(self):
-        """:class:`str`: The URL to the guild on TibiaData."""
+        """:class:`str`: The URL to the guild on TibiaData.com."""
         return self.get_url_tibiadata(self.name)
 
     @classmethod
@@ -203,7 +211,7 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         Returns
         --------
         :class:`str`
-            The URL to the guild's page"""
+            The URL to the guild's page on TibiaData.com."""
         return GUILD_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
 
 
@@ -309,3 +317,84 @@ class BaseHouseWithId(BaseHouse):
     def url_tibiadata(self):
         """:class:`str`: The URL to the TibiaData.com page of the house."""
         return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None
+
+
+class BaseWorld(Serializable):
+    """Base class for all World classes.
+
+    The following implement this class:
+
+    - :class:`.ListedWorld`
+    - :class:`.World`
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the world.
+    status: :class:`str`
+        The current status of the world.
+    online_count: :class:`int`
+        The number of currently online players in the world.
+    location: :class:`WorldLocation`
+        The physical location of the game servers.
+    pvp_type: :class:`.PvpType`
+        The type of PvP in the world.
+    transfer_type: :class:`.TransferType`
+        The type of transfer restrictions this world has.
+    battleye_protected: :class:`bool`
+        Whether the server is currently protected with battleye or not.
+    battleye_date: :class:`datetime.date`
+        The date where battleye was added to this world.
+        If this is ``None`` and the world is protected, it means the world was protected from the beginning.
+    experimental: :class:`bool`
+        Whether the world is experimental or not.
+    premium_only: :class:`bool`
+        Whether only premium account players are allowed to play in this server.
+    """
+    __slots__ = ("name", "status", "location", "online_count", "pvp_type", "battleye_protected", "battleye_date",
+                 "experimental", "premium_only", "transfer_type")
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} location={0.location!r} pvp_type={0.pvp_type!r}>".format(self)
+
+    @property
+    def url(self):
+        """:class:`str`: URL to the world's information page on Tibia.com."""
+        return self.get_url(self.name)
+
+    @property
+    def url_tibiadata(self):
+        """:class:`str`: URL to the world's information page on TibiaData.com."""
+        return self.get_url_tibiadata(self.name)
+
+    @classmethod
+    def get_url(cls, name):
+        """Gets the URL to the World's information page on Tibia.com.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the world's information page.
+        """
+        return WORLD_URL % name.title()
+
+    @classmethod
+    def get_url_tibiadata(cls, name):
+        """Gets the URL to the World's information page on TibiaData.com.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the world's information page on TibiaData.com.
+        """
+        return WORLD_URL_TIBIADATA % name.title()

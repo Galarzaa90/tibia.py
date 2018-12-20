@@ -1,6 +1,6 @@
 import time
 
-from tibiapy import Character, Guild, House, ListedGuild, World, WorldOverview, __version__
+from tibiapy import Character, Guild, House, ListedGuild, ListedWorld, World, WorldOverview, __version__
 from tibiapy.enums import HouseType
 from tibiapy.house import ListedHouse
 
@@ -51,7 +51,7 @@ def cli_char(name, tibiadata, json):
     if json and char:
         print(char.to_json(indent=2))
         return
-    print(build_character(char))
+    print(get_character_string(char))
 
 
 @cli.command(name="guild")
@@ -67,7 +67,7 @@ def cli_guild(name, tibiadata, json):
     if json and guild:
         print(guild.to_json(indent=2))
         return
-    print(build_guild(guild))
+    print(get_guild_string(guild))
 
 
 @cli.command(name="guilds")
@@ -106,11 +106,15 @@ def cli_world(name, tibiadata, json):
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
 def cli_worlds(tibiadata, json):
-    worlds = _fetch_and_parse(WorldOverview.get_url, WorldOverview.from_content,
-                              WorldOverview.get_url_tibiadata, WorldOverview.from_tibiadata,
+    worlds = _fetch_and_parse(ListedWorld.get_list_url, ListedWorld.list_from_content,
+                              ListedWorld.get_list_url_tibiadata, ListedWorld.list_from_tibiadata,
                               tibiadata)
     if json and worlds:
-        print(worlds.to_json(indent=2))
+        if isinstance(worlds, WorldOverview):
+            print(worlds.to_json(indent=2))
+        else:
+            import json as _json
+            print(_json.dumps(worlds, default=ListedWorld._try_dict, indent=2))
         return
     print(print_world_overview(worlds))
 
@@ -157,7 +161,7 @@ def build_header(title, separator="-"):
     return "{2}{0}\n{1}\n{3}".format(title, len(title)*separator, BOLD, CEND)
 
 
-def build_character(character: Character):  # NOSONAR
+def get_character_string(character: Character):  # NOSONAR
     content = build_header("Character", "=")
     if character is None:
         content += "{0}Character doesn't exist{1}".format(RED, CEND)
@@ -168,8 +172,8 @@ def build_character(character: Character):  # NOSONAR
         content += get_field("Scheduled for deletion", character.deletion_date)
     if character.former_names:
         content += get_field("Former names", ",".join(character.former_names))
-    content += get_field("Sex", character.sex)
-    content += get_field("Vocation", character.vocation)
+    content += get_field("Sex", character.sex.value)
+    content += get_field("Vocation", character.vocation.value)
     content += get_field("Level", character.level)
     content += get_field("Achievement Points", character.achievement_points)
     content += get_field("World", character.world)
@@ -186,12 +190,12 @@ def build_character(character: Character):  # NOSONAR
         content += get_field("Last login", "Never")
     if character.comment:
         content += get_field("Comment", character.comment)
-    content += get_field("Account status", character.account_status)
+    content += get_field("Account status", character.account_status.value)
     if character.achievements:
         content += "\n"
         content += build_header("Account Achievements")
         for achievement in character.achievements:
-            content += "- %s (Grade %d)\n" % (achievement["name"], achievement["grade"])
+            content += "- %s (Grade %d)\n" % (achievement.name, achievement.grade)
 
     if character.deaths:
         content += "\n"
@@ -207,20 +211,21 @@ def build_character(character: Character):  # NOSONAR
     if character.account_information:
         content += "\n"
         content += build_header("Account Information")
-        content += get_field("Loyalty Title", character.account_information["loyalty_title"])
-        content += get_field("Created", character.account_information["created"])
-        content += get_field("Position", character.account_information.get("position", "None"))
+        content += get_field("Loyalty Title", character.account_information.loyalty_title)
+        content += get_field("Created", character.account_information.created)
+        if character.account_information.position:
+            content += get_field("Position", character.account_information.position)
 
     if character.other_characters:
         content += "\n"
-        content+= build_header("Other Characters")
+        content += build_header("Other Characters")
         for other_char in character.other_characters:
             content += "- %s - %s - %s\n" % (other_char.name, other_char.world, "online" if other_char.online else
             ("deleted" if other_char.deleted else "offline"))
     return content
 
 
-def build_guild(guild):  # NOSONAR
+def get_guild_string(guild):  # NOSONAR
     content = build_header("Guild Information", "=")
     if guild is None:
         content += "{0}Guild doesn't exist{1}".format(RED, CEND)
@@ -240,7 +245,7 @@ def build_guild(guild):  # NOSONAR
                              (guild.disband_date, guild.disband_condition))
     content += get_field("Open applications", "Yes" if guild.open_applications else "No")
     if guild.guildhall:
-        content += get_field("Guildhall", "%s, paid until %s" % (guild.guildhall["name"], guild.guildhall["paid_until"]))
+        content += get_field("Guildhall", "%s, paid until %s" % (guild.guildhall.name, guild.guildhall.paid_until_date))
     if guild.description:
         content += get_field("Description", guild.description)
     content += get_field("Ranks", ", ".join(guild.ranks))
@@ -248,9 +253,9 @@ def build_guild(guild):  # NOSONAR
     content += build_header("Members")
     content += get_field("Online", "%d/%d" % (len(guild.online_members), guild.member_count))
     for member in guild.members:
-        content += "- %s - %s%s - %s %d - %s\n" % (member.rank, member.name,
-                                              "" if not member.title else " (%s)" % member.title,
-                                              member.vocation, member.level, member.joined)
+        title = "" if not member.title else " (%s)" % member.title
+        content += "- %s - %s%s - %s Lvl %d - %s\n" % (member.rank, member.name, title, member.vocation.value,
+                                                       member.level, member.joined)
 
     content += build_header("Invites")
     if guild.invites:
@@ -276,7 +281,7 @@ def get_guilds_string(guilds):
     return content
 
 
-def print_world(world):
+def print_world(world: World):
     content = build_header("World", "=")
     if world is None:
         content += "World doesn't exist."
@@ -286,10 +291,10 @@ def print_world(world):
     content += get_field("Online count", world.online_count)
     content += get_field("Online record", "%d players on %s" % (world.record_count, world.record_date))
     content += get_field("Creation Date", world.creation_date)
-    content += get_field("Location", world.location)
-    content += get_field("PvP Type", world.pvp_type)
-    content += get_field("Transfer Type", world.transfer_type)
-    content += get_field("World Type", world.type)
+    content += get_field("Location", world.location.value)
+    content += get_field("PvP Type", world.pvp_type.value)
+    content += get_field("Transfer Type", world.transfer_type.value)
+    content += get_field("World Type", "Regular" if not world.experimental else "Experimental")
     content += get_field("Premium Only", "Yes" if world.premium_only else "No")
     if not world.battleye_protected:
         content += get_field("Battleye Protected", "Not protected")
@@ -301,8 +306,8 @@ def print_world(world):
             content += "- %s\n" % quest
 
     content += build_header("Players Online")
-    for player in world.players_online:
-        content += "- %s - Level %d %s\n" % (player.name, player.level, player.vocation)
+    for player in world.online_players:
+        content += "- %s - Level %d %s\n" % (player.name, player.level, player.vocation.value)
     return content
 
 

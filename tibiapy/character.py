@@ -12,8 +12,8 @@ from tibiapy.enums import AccountStatus, Sex, Vocation, try_enum
 from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
-from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiadata_date, parse_tibiadata_datetime, \
-    try_datetime
+from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, parse_tibiadata_date, \
+    parse_tibiadata_datetime, try_datetime
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
@@ -83,16 +83,16 @@ class Character(abc.BaseCharacter):
         The name of the character.
     deletion_date: :class:`datetime.datetime`, optional
         The date where the character will be deleted if it is scheduled for deletion.
-    former_names: :class:`list` of :class:`str`, optional
-        Previous names of this character.
+    former_names: :class:`list` of :class:`str`
+        Previous names of the character.
     sex: :class:`.Sex`
-        The character's gender, either "male" or "female"
+        The character's gender.
     vocation: :class:`.Vocation`
         The character's vocation.
     level: :class:`int`
         The character's level.
     achievement_points: :class:`int`
-        The total of points the character has.
+        The total of achievement points the character has.
     world: :class:`str`
         The character's current world.
     former_world: :class:`str`, optional
@@ -103,8 +103,8 @@ class Character(abc.BaseCharacter):
         The name of the character's spouse/husband.
     house: :class:`CharacterHouse`, optional
         The house currently owned by the character.
-    guild_membership: :class:`dict`, optional
-        The guild the character is a member of. The dictionary contains a key for the rank and a key for the name.
+    guild_membership: :class:`GuildMembership`, optional
+        The guild the character is a member of..
     last_login: :class:`datetime.datetime`, optional
         The last time the character logged in. It will be ``None`` if the character has never logged in.
     comment: :class:`str`, optional
@@ -113,12 +113,13 @@ class Character(abc.BaseCharacter):
         Whether the character's account is Premium or Free.
     achievements: :class:`list` of :class:`Achievement`
         The achievements chosen to be displayed.
-    deaths: list of  :class:`Death`
+    deaths: :class:`list` of :class:`Death`
         The character's recent deaths.
     account_information: :class:`AccountInformation`, optional
         The character's account information, if visible.
-    other_characters: :class:`list` of :class:`OtherCharacter`, optional
-        Other characters in the same account, if visible.
+    other_characters: :class:`list` of :class:`OtherCharacter`
+        Other characters in the same account.
+        It will be empty if the character is hidden, otherwise, it will contain at least the character itself.
     """
     __slots__ = ("former_names", "sex", "vocation", "level", "achievement_points", "world", "former_world", "residence",
                  "married_to", "house", "guild_membership", "last_login", "account_status", "comment", "achievements",
@@ -168,6 +169,11 @@ class Character(abc.BaseCharacter):
         return Guild.get_url(self.guild_membership.name) if self.guild_membership else None
 
     @property
+    def hidden(self):
+        """:class:`bool`: Whether this is a hidden character or not."""
+        return len(self.other_characters) == 0
+
+    @property
     def married_to_url(self):
         """:class:`str`: The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return self.get_url(self.married_to) if self.married_to else None
@@ -193,7 +199,7 @@ class Character(abc.BaseCharacter):
         InvalidContent
             If content is not a the HTML of a character's page.
         """
-        parsed_content = cls._beautiful_soup(content)
+        parsed_content = parse_tibiacom_content(content)
         tables = cls._parse_tables(parsed_content)
         char = Character()
         if "Could not find character" in tables.keys():
@@ -240,10 +246,10 @@ class Character(abc.BaseCharacter):
             char.world = character_data["world"]
             char.level = character_data["level"]
             char.achievement_points = character_data["achievement_points"]
-            char.sex = character_data["sex"]
+            char.sex = try_enum(Sex, character_data["sex"])
             char.vocation = try_enum(Vocation, character_data["vocation"])
             char.residence = character_data["residence"]
-            char.account_status = character_data["account_status"]
+            char.account_status = try_enum(AccountStatus, character_data["account_status"])
         except KeyError:
             raise InvalidContent("content does not match a character json from TibiaData.")
         char.former_names = character_data.get("former_names", [])
@@ -282,22 +288,6 @@ class Character(abc.BaseCharacter):
     # endregion
 
     # region Private methods
-    @classmethod
-    def _beautiful_soup(cls, content):
-        """
-        Parses HTML content into a BeautifulSoup object.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content.
-
-        Returns
-        -------
-        :class:`bs4.BeautifulSoup`: The parsed content.
-        """
-        return bs4.BeautifulSoup(content, 'html.parser', parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
-
     def _parse_account_information(self, rows):
         """
         Parses the character's account information

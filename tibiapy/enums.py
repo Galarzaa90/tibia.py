@@ -28,6 +28,7 @@ class PvpType(Enum):
     OPTIONAL_PVP = "Optional PvP"
     RETRO_OPEN_PVP = "Retro Open PvP"
     RETRO_HARDCORE_PVP = "Retro Hardcore PvP"
+    HARDCORE_PVP = "Hardcore PvP"
 
 
 class Sex(Enum):
@@ -38,7 +39,7 @@ class Sex(Enum):
 
 class TransferType(Enum):
     """The possible special transfer restrictions a world may have."""
-    REGULAR = "regular" #: No special transfer restrictions.
+    REGULAR = "regular"  #: No special transfer restrictions.
     BLOCKED = "blocked"  #: Can't transfer to this world, but can transfer out of this world.
     LOCKED = "locked"  #: Can transfer to this world, but can't transfer out of this world.
 
@@ -85,6 +86,8 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
     -------
     The enum value if found, otherwise None.
     """
+    if isinstance(val, cls):
+        return val
     try:
         return cls(val)
     except ValueError:

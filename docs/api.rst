@@ -79,6 +79,12 @@ ListedHouse
    :members:
    :inherited-members:
 
+ListedWorld
+-----------
+.. autoclass:: ListedWorld
+   :members:
+   :inherited-members:
+
 World
 -----
 .. autoclass:: World
@@ -181,6 +187,10 @@ They implement methods and properties that can be inherited by other classes to 
     :inherited-members:
 
 .. autoclass:: tibiapy.abc.BaseHouseWithId
+    :members:
+    :inherited-members:
+
+.. autoclass:: tibiapy.abc.BaseWorld
     :members:
     :inherited-members:
 

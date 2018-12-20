@@ -11,7 +11,7 @@ from tibiapy import abc
 from tibiapy.enums import Vocation, try_enum
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import parse_tibia_date, parse_tibiadata_date, try_date, try_datetime
+from tibiapy.utils import parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, try_date, try_datetime
 
 COLS_INVITED_MEMBER = 2
 COLS_GUILD_MEMBER = 6
@@ -51,10 +51,10 @@ class Guild(abc.BaseGuild):
         The guild's guildhall if any.
     open_applications: :class:`bool`
         Whether applications are open or not.
-    disband_condition: :class:`str`, optional
-        The reason why the guild will get disbanded.
     disband_date: :class:`datetime.datetime`, optional
         The date when the guild will be disbanded if the condition hasn't been meet.
+    disband_condition: :class:`str`, optional
+        The reason why the guild will get disbanded.
     homepage: :class:`str`, optional
         The guild's homepage, if any.
     members: :class:`list` of :class:`GuildMember`
@@ -90,7 +90,7 @@ class Guild(abc.BaseGuild):
         return len(self.members)
 
     @property
-    def online_members(self) -> List['GuildMember']:
+    def online_members(self):
         """:class:`list` of :class:`GuildMember`: List of currently online members."""
         return list(filter(lambda m: m.online, self.members))
 
@@ -123,7 +123,7 @@ class Guild(abc.BaseGuild):
         if "An internal error has occurred" in content:
             return None
 
-        parsed_content = cls._beautiful_soup(content)
+        parsed_content = parse_tibiacom_content(content)
         try:
             name_header = parsed_content.find('h1')
             guild = Guild(name_header.text.strip())
@@ -205,24 +205,6 @@ class Guild(abc.BaseGuild):
     # endregion
 
     # region Private methods
-    @classmethod
-    def _beautiful_soup(cls, content):
-        """
-        Parses HTML content into a BeautifulSoup object.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content.
-
-        Returns
-        -------
-        :class:`bs4.BeautifulSoup`
-            The parsed content.
-        """
-        return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                                 parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
-
     def _parse_current_member(self, previous_rank, values):
         """
         Parses the column texts of a member row into a member dictionary.
@@ -486,7 +468,7 @@ class ListedGuild(abc.BaseGuild):
         return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
 
     @classmethod
-    def list_from_content(cls, content, active_only=False):
+    def list_from_content(cls, content):
         """
         Gets a list of guilds from the html content of the world guilds' page.
 
@@ -494,8 +476,6 @@ class ListedGuild(abc.BaseGuild):
         ----------
         content: :class:`str`
             The html content of the page.
-        active_only: :class:`bool`
-            Whether to only show active guilds or not.
 
         Returns
         -------
@@ -507,8 +487,7 @@ class ListedGuild(abc.BaseGuild):
         InvalidContent
             If content is not a the HTML of a guild's page.
         """
-        parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), 'lxml',
-                                           parse_only=bs4.SoupStrainer("div", class_="BoxContent"))
+        parsed_content = parse_tibiacom_content(content)
         selected_world = parsed_content.find('option', selected=True)
         try:
             if "choose world" in selected_world.text:
@@ -523,8 +502,6 @@ class ListedGuild(abc.BaseGuild):
         for container in containers:
             header = container.find('div', class_="Text")
             active = "Active" in header.text
-            if active_only and not active:
-                return guilds
             header, *rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
             for row in rows:
                 columns = row.find_all('td')

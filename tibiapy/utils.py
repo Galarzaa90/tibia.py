@@ -1,6 +1,8 @@
 import datetime
 from typing import Optional
 
+import bs4
+
 
 def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
     """Parses date and time from the format used in Tibia.com
@@ -61,7 +63,7 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")
         return t.date()
-    except ValueError:
+    except (ValueError, AttributeError):
         return None
 
 
@@ -70,7 +72,7 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
 
     Accepted format:
 
-    - ``MMMM DD, YYYY``, e.g. ``July, 23 2015``
+    - ``MMMM DD, YYYY``, e.g. ``July 23, 2015``
 
     Parameters
     -----------
@@ -85,7 +87,7 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y")
         return t.date()
-    except ValueError:
+    except (ValueError, AttributeError):
         return None
 
 
@@ -113,15 +115,12 @@ def parse_tibiadata_datetime(date_dict) -> Optional[datetime.datetime]:
     except (KeyError, ValueError, TypeError):
         return None
 
-    if date_dict["timezone_type"] == 2:
-        if date_dict["timezone"] == "CET":
-            timezone_offset = 1
-        elif date_dict["timezone"] == "CEST":
-            timezone_offset = 2
-        else:
-            return None
-    else:
+    if date_dict["timezone"] == "CET":
         timezone_offset = 1
+    elif date_dict["timezone"] == "CEST":
+        timezone_offset = 2
+    else:
+        return None
     # We subtract the offset to convert the time to UTC
     t = t - datetime.timedelta(hours=timezone_offset)
     return t.replace(tzinfo=datetime.timezone.utc)
@@ -142,7 +141,7 @@ def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%Y-%m-%d")
         return t.date()
-    except ValueError:
+    except (ValueError, AttributeError):
         return None
 
 
@@ -186,7 +185,7 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
 
     Parameters
     ----------
-    obj: :class:`str`, :class:`dict`
+    obj: :class:`str`, :class:`dict`, :class:`datetime.datetime`
         The object to convert.
 
     Returns
@@ -213,7 +212,7 @@ def try_date(obj) -> Optional[datetime.date]:
 
     Parameters
     ----------
-    obj: :class:`str`, :class:`dict`, :class:`datetime.datetime`
+    obj: :class:`str`, :class:`datetime.datetime`, :class:`datetime.date`
         The object to convert.
 
     Returns
@@ -223,10 +222,10 @@ def try_date(obj) -> Optional[datetime.date]:
     """
     if obj is None:
         return None
-    if isinstance(obj, datetime.date):
-        return obj
     if isinstance(obj, datetime.datetime):
         return obj.date()
+    if isinstance(obj, datetime.date):
+        return obj
     res = parse_tibia_date(obj)
     if res is not None:
         return res
@@ -235,3 +234,26 @@ def try_date(obj) -> Optional[datetime.date]:
         return res
     res = parse_tibiadata_date(obj)
     return res
+
+
+def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", builder="lxml"):
+    """Parses HTML content from Tibia.com into a BeautifulSoup object.
+
+    Parameters
+    ----------
+    content: :class:`str`
+        The raw HTML content from Tibia.com
+    html_class: :class:`str`
+        The HTML class of the parsed element. The default value is ``BoxContent``.
+    tag: :class:`str`
+        The HTML tag select. The default value is ``div``.
+    builder: :class:`str`
+        The builder to use. The default value is ``lxml``.
+
+    Returns
+    -------
+    :class:`bs4.BeautifulSoup`, optional
+        The parsed content.
+    """
+    return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), builder,
+                             parse_only=bs4.SoupStrainer(tag, class_=html_class))
