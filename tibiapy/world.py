@@ -151,6 +151,7 @@ class ListedWorld(abc.BaseWorld):
             for world_json in worlds_json:
                 world = ListedWorld(world_json["name"], world_json["location"], world_json["worldtype"])
                 world._parse_additional_info(world_json["additional"])
+                world.online_count = world_json["online"]
                 worlds.append(world)
             return worlds
         except KeyError:

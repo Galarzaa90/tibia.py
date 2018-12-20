@@ -167,6 +167,7 @@ class TestWorld(TestTibiaPy):
 
         self.assertIsInstance(worlds, list)
         self.assertGreater(len(worlds), 0)
+        self.assertGreater(sum(w.online_count for w in worlds), 0)
         self.assertIsInstance(worlds[0], ListedWorld)
         self.assertIsInstance(worlds[0].pvp_type, PvpType)
         self.assertIsInstance(worlds[0].transfer_type, TransferType)
