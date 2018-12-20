@@ -15,6 +15,7 @@ FILE_WORLD_LIST_OFFLINE = "world/tibiacom_list_offline.txt"
 
 FILE_WORLD_TIBIADATA = "world/tibiadata_online.json"
 FILE_WORLD_TIBIADATA_OFFLINE = "world/tibiadata_offline.json"
+FILE_WORLD_TIBIADATA_NOT_FOUND = "world/tibiadata_not_found.json"
 FILE_WORLD_LIST_TIBIADATA = "world/tibiadata_list_online.json"
 FILE_WORLD_LIST_TIBIADATA_OFFLINE = "world/tibiadata_list_offline.json"
 
@@ -23,13 +24,8 @@ class TestWorld(TestTibiaPy):
     def setUp(self):
         self.guild = {}
 
-    @staticmethod
-    def _load_parsed_resource(resource, beautiful_soup=True):
-        content = TestTibiaPy._load_resource(resource)
-        return World._beautiful_soup(content) if beautiful_soup else content
-
     def testWorld(self):
-        content = self._load_parsed_resource(FILE_WORLD_FULL, False)
+        content = self._load_resource(FILE_WORLD_FULL)
         world = World.from_content(content)
 
         self.assertIsInstance(world, World)
@@ -54,7 +50,7 @@ class TestWorld(TestTibiaPy):
         self.assertEqual(len(world.online_players), len(world_json["online_players"]))
 
     def testWorldOffline(self):
-        content = self._load_parsed_resource(FILE_WORLD_FULL_OFFLINE, False)
+        content = self._load_resource(FILE_WORLD_FULL_OFFLINE,)
         world = World.from_content(content)
 
         self.assertIsInstance(world, World)
@@ -75,7 +71,7 @@ class TestWorld(TestTibiaPy):
         self.assertEqual(World.get_url(world.name), world.url)
 
     def testWorldNotFound(self):
-        content = self._load_parsed_resource(FILE_WORLD_NOT_FOUND, False)
+        content = self._load_resource(FILE_WORLD_NOT_FOUND)
         world = World.from_content(content)
 
         self.assertIsNone(world)
@@ -86,7 +82,7 @@ class TestWorld(TestTibiaPy):
             World.from_content(content)
 
     def testWorldOverview(self):
-        content = self._load_parsed_resource(FILE_WORLD_LIST, False)
+        content = self._load_resource(FILE_WORLD_LIST)
         worlds = ListedWorld.list_from_content(content)
 
         self.assertIsInstance(worlds, WorldOverview)
@@ -98,7 +94,7 @@ class TestWorld(TestTibiaPy):
         self.assertIsNotNone(worlds.record_count)
 
     def testWorldOverviewOffline(self):
-        content = self._load_parsed_resource(FILE_WORLD_LIST_OFFLINE, False)
+        content = self._load_resource(FILE_WORLD_LIST_OFFLINE)
         world_overview = ListedWorld.list_from_content(content)
 
         self.assertEqual(world_overview.record_count, 64028)
@@ -111,7 +107,7 @@ class TestWorld(TestTibiaPy):
         self.assertIsInstance(world_overview.worlds[0].online_count, int)
 
     def testWorldTibiadata(self):
-        content = self._load_parsed_resource(FILE_WORLD_TIBIADATA, False)
+        content = self._load_resource(FILE_WORLD_TIBIADATA,)
         world = World.from_tibiadata(content)
 
         self.assertIsInstance(world, World)
@@ -132,7 +128,7 @@ class TestWorld(TestTibiaPy):
         self.assertEqual(World.get_url_tibiadata(world.name), world.url_tibiadata)
 
     def testWorldTibiaDataOffline(self):
-        content = self._load_parsed_resource(FILE_WORLD_TIBIADATA_OFFLINE, False)
+        content = self._load_resource(FILE_WORLD_TIBIADATA_OFFLINE)
         world = World.from_tibiadata(content)
 
         self.assertIsInstance(world, World)
@@ -151,6 +147,12 @@ class TestWorld(TestTibiaPy):
         self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(World.get_url_tibiadata(world.name), world.url_tibiadata)
 
+    def testWorldTibiaDataNotFound(self):
+        content = self._load_resource(FILE_WORLD_TIBIADATA_NOT_FOUND)
+        world = World.from_tibiadata(content)
+
+        self.assertIsNone(world)
+
     def testWorldTibiaDataInvalidJson(self):
         with self.assertRaises(InvalidContent):
             World.from_tibiadata("<html><b>Not a json string</b></html>")
@@ -160,7 +162,7 @@ class TestWorld(TestTibiaPy):
             World.from_tibiadata(self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))
 
     def testWorldOverviewTibiaData(self):
-        content = self._load_parsed_resource(FILE_WORLD_LIST_TIBIADATA, False)
+        content = self._load_resource(FILE_WORLD_LIST_TIBIADATA)
         worlds = ListedWorld.list_from_tibiadata(content)
 
         self.assertIsInstance(worlds, list)
@@ -172,7 +174,7 @@ class TestWorld(TestTibiaPy):
         self.assertIsInstance(worlds[0].online_count, int)
 
     def testWorldOverviewTibiaDataOffline(self):
-        content = self._load_parsed_resource(FILE_WORLD_LIST_TIBIADATA_OFFLINE, False)
+        content = self._load_resource(FILE_WORLD_LIST_TIBIADATA_OFFLINE)
         worlds = ListedWorld.list_from_tibiadata(content)
 
         self.assertIsInstance(worlds, list)

@@ -308,6 +308,8 @@ class World(abc.BaseWorld):
             world_data = json_data["world"]
             world_info = world_data["world_information"]
             world = cls(world_info["name"])
+            if "location" not in world_info:
+                return None
             world.online_count = world_info["players_online"]
             world.status = "Online" if world.online_count > 0 else "Offline"
             world.record_count = world_info["online_record"]["players"]
