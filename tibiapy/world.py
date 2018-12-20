@@ -35,22 +35,9 @@ class ListedWorld(abc.BaseWorld):
     transfer_type: :class:`TransferType`
         The type of transfer restrictions this world has.
     battleye_protected: :class:`bool`
-        Whether the server is currently protected with battleye or not.
+        Whether the server is currently protected with BattlEye or not.
     battleye_date: :class:`datetime.date`
-        The date where battleye was added to this world.
-        If this is ``None`` and the world is protected, it means the world was protected from the beginning.
-    experimental: :class:`bool`
-        Whether the world is experimental or not.
-    premium_only: :class:`bool`
-        Whether only premium account players are allowed to play in this server.
-    pvp_type: :class:`PvpType`
-        The type of PvP in the world.
-    transfer_type: :class:`TransferType`
-        The type of transfer restrictions this world has.
-    battleye_protected: :class:`bool`
-        Whether the server is currently protected with battleye or not.
-    battleye_date: :class:`datetime.date`
-        The date where battleye was added to this world.
+        The date when BattlEye was added to this world.
         If this is ``None`` and the world is protected, it means the world was protected from the beginning.
     experimental: :class:`bool`
         Whether the world is experimental or not.
@@ -111,7 +98,7 @@ class ListedWorld(abc.BaseWorld):
         Raises
         ------
         InvalidContent
-            If the provided content is not the html content of the worlds section in Tibia.com
+            If the provided content is not the HTML content of the worlds section in Tibia.com
         """
         parsed_content = parse_tibiacom_content(content, html_class="TableContentAndRightShadow")
         world_overview = WorldOverview()
@@ -135,7 +122,7 @@ class ListedWorld(abc.BaseWorld):
         object.
 
         It's also worth noting that there's no way to tell if worlds are empty or offline, so the attribute
-        :py:attr:`status` and BattleEye information is not available, so :py:attr:`battleye_protected` is always
+        :py:attr:`status` and BattlEye information is not available, so :py:attr:`battleye_protected` is always
         ``False`` and :py:attr:`battleye_date` is always ``None``.
 
 
@@ -198,7 +185,7 @@ class World(abc.BaseWorld):
     record_count: :class:`int`
         The server's online players record.
     record_date: :class:`datetime.datetime`
-        The date where the online record was achieved.
+        The date when the online record was achieved.
     location: :class:`WorldLocation`
         The physical location of the game servers.
     pvp_type: :class:`PvpType`
@@ -210,9 +197,9 @@ class World(abc.BaseWorld):
     world_quest_titles: :obj:`list` of :class:`str`
         List of world quest titles the server has achieved.
     battleye_protected: :class:`bool`
-        Whether the server is currently protected with battleye or not.
+        Whether the server is currently protected with BattlEye or not.
     battleye_date: :class:`datetime.date`
-        The date where battleye was added to this world.
+        The date when BattlEye was added to this world.
         If this is ``None`` and the world is protected, it means the world was protected from the beginning.
     experimental: :class:`bool`
         Whether the world is experimental or not.
@@ -373,7 +360,7 @@ class World(abc.BaseWorld):
                 pass
 
     def _parse_battleye_status(self, battleye_string):
-        """Parses the battleye string and applies the results.
+        """Parses the BattlEye string and applies the results.
 
         Parameters
         ----------
@@ -422,7 +409,7 @@ class WorldOverview(abc.Serializable):
     record_count: :class:`int`
         The overall player online record.
     record_date: :class:`datetime.datetime`
-        The date where the record was achieved.
+        The date when the record was achieved.
     worlds: :class:`list` of :class:`ListedWorld`
         List of worlds, with limited info.
     """

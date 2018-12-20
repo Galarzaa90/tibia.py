@@ -45,7 +45,7 @@ class Guild(abc.BaseGuild):
     description: :class:`str`, optional
         The description of the guild.
     world: :class:`str`
-        The world where this guild is in.
+        The world this guild belongs to.
     founded: :class:`datetime.date`
         The day the guild was founded.
     active: :class:`bool`
@@ -106,7 +106,7 @@ class Guild(abc.BaseGuild):
     # region Public methods
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the guild's page.
+        """Creates an instance of the class from the HTML content of the guild's page.
 
         Parameters
         -----------
@@ -121,7 +121,7 @@ class Guild(abc.BaseGuild):
         Raises
         ------
         InvalidContent
-            If content is not a the HTML of a guild's page.
+            If content is not the HTML of a guild's page.
         """
         if "An internal error has occurred" in content:
             return None
@@ -166,7 +166,7 @@ class Guild(abc.BaseGuild):
         Raises
         ------
         InvalidContent
-            If content is not a the JSON of a guild's page.
+            If content is not a JSON response of a guild's page.
         """
         try:
             json_content = json.loads(content)
@@ -425,7 +425,7 @@ class ListedGuild(abc.BaseGuild):
     description: :class:`str`, optional
         The description of the guild.
     world: :class:`str`
-        The world where this guild is in.
+        The world this guild belongs to.
     active: :class:`bool`
         Whether the guild is active or still in formation.
     """
@@ -474,12 +474,12 @@ class ListedGuild(abc.BaseGuild):
     @classmethod
     def list_from_content(cls, content):
         """
-        Gets a list of guilds from the html content of the world guilds' page.
+        Gets a list of guilds from the HTML content of the world guilds' page.
 
         Parameters
         ----------
         content: :class:`str`
-            The html content of the page.
+            The HTML content of the page.
 
         Returns
         -------
@@ -489,7 +489,7 @@ class ListedGuild(abc.BaseGuild):
         Raises
         ------
         InvalidContent
-            If content is not a the HTML of a guild's page.
+            If content is not the HTML of a guild's page.
         """
         parsed_content = parse_tibiacom_content(content)
         selected_world = parsed_content.find('option', selected=True)
@@ -536,7 +536,7 @@ class ListedGuild(abc.BaseGuild):
         Raises
         ------
         InvalidContent
-            If content is not a the JSON of TibiaData's guild list.
+            If content is not a JSON response of TibiaData's guild list.
         """
         try:
             json_content = json.loads(content)

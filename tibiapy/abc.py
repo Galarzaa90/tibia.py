@@ -228,7 +228,7 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
     name: :class:`str`
         The name of the house.
     world: :class:`str`
-        The name of the world where the house is.
+        The name of the world the house belongs to.
     status: :class:`HouseStatus`
         The current status of the house.
     type: :class:`HouseType`
@@ -294,7 +294,7 @@ class BaseHouseWithId(BaseHouse):
     name: :class:`str`
         The name of the house.
     world: :class:`str`
-        The name of the world where the house is.
+        The name of the world the house belongs to.
     status: :class:`HouseStatus`
         The current status of the house.
     type: :class:`HouseType`
@@ -342,9 +342,9 @@ class BaseWorld(Serializable):
     transfer_type: :class:`TransferType`
         The type of transfer restrictions this world has.
     battleye_protected: :class:`bool`
-        Whether the server is currently protected with battleye or not.
+        Whether the server is currently protected with BattlEye or not.
     battleye_date: :class:`datetime.date`
-        The date where battleye was added to this world.
+        The date when BattlEye was added to this world.
         If this is ``None`` and the world is protected, it means the world was protected from the beginning.
     experimental: :class:`bool`
         Whether the world is experimental or not.

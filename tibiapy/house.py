@@ -40,7 +40,7 @@ class House(abc.BaseHouseWithId):
     name: :class:`str`
         The name of the house.
     world: :class:`str`
-        The name of the world where the house is.
+        The name of the world the house belongs to.
     status: :class:`HouseStatus`
         The current status of the house.
     type: :class:`HouseType`
@@ -52,7 +52,7 @@ class House(abc.BaseHouseWithId):
     size: :class:`int`
         The number of SQM the house has.
     rent: :class:`int`
-        The monthly rent paid for the house.
+        The monthly cost paid for the house, in gold coins.
     owner: :class:`str`
         The current owner of the house, if any.
     owner_sex: :class:`Sex`
@@ -72,7 +72,7 @@ class House(abc.BaseHouseWithId):
     highest_bidder: :class:`str`, optional
         The character that holds the highest bid.
     auction_end: :class:`datetime.datetime`, optional
-        The date where the auction will end.
+        The date when the auction will end.
     """
     __slots__ = ("image_url", "beds", "type", "size", "rent", "owner", "owner_sex", "paid_until", "transfer_date",
                  "transferee", "transfer_price", "transfer_accepted", "highest_bid",
@@ -256,7 +256,7 @@ class CharacterHouse(abc.BaseHouseWithId):
     name: :class:`str`
         The name of the house.
     world: :class:`str`
-        The name of the world where the house is.
+        The name of the world the house belongs to.
     status: :class:`HouseStatus`
         The current status of the house.
     type: :class:`HouseType`
@@ -289,7 +289,7 @@ class GuildHouse(abc.BaseHouse):
     name: :class:`str`
         The name of the house.
     world: :class:`str`
-        The name of the world where the house is.
+        The name of the world the house belongs to.
     status: :class:`HouseStatus`
         The current status of the house.
     type: :class:`HouseType`
@@ -320,7 +320,7 @@ class ListedHouse(abc.BaseHouseWithId):
     name: :class:`str`
         The name of the house.
     world: :class:`str`
-        The name of the world where the house is.
+        The name of the world the house belongs to.
     status: :class:`HouseStatus`
         The current status of the house.
     type: :class:`HouseType`
@@ -330,7 +330,7 @@ class ListedHouse(abc.BaseHouseWithId):
     size: :class:`int`
         The size of the house in SQM.
     rent: :class:`int`
-        The monthly rent of the house, in gold coins.
+        The monthly cost of the house, in gold coins.
     time_left: :class:`datetime.timedelta`, optional
         The number of days or hours left until the bid ends, if it has started.
         This is not an exact measure, it is rounded to hours or days.

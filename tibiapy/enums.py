@@ -38,14 +38,14 @@ class PvpType(BaseEnum):
 
 
 class Sex(BaseEnum):
-    """Character genders."""
+    """Possible character sexes."""
     MALE = "male"
     FEMALE = "female"
 
 
 class TransferType(BaseEnum):
     """The possible special transfer restrictions a world may have."""
-    REGULAR = "regular"  #: No special transfer restrictions.
+    REGULAR = "regular"  #: No special transfer restrictions
     BLOCKED = "blocked"  #: Can't transfer to this world, but can transfer out of this world.
     LOCKED = "locked"  #: Can transfer to this world, but can't transfer out of this world.
 

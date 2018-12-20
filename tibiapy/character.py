@@ -85,11 +85,11 @@ class Character(abc.BaseCharacter):
     name: :class:`str`
         The name of the character.
     deletion_date: :class:`datetime.datetime`, optional
-        The date where the character will be deleted if it is scheduled for deletion.
+        The date when the character will be deleted if it is scheduled for deletion.
     former_names: :class:`list` of :class:`str`
         Previous names of the character.
     sex: :class:`Sex`
-        The character's gender.
+        The character's sex.
     vocation: :class:`Vocation`
         The character's vocation.
     level: :class:`int`
@@ -99,7 +99,7 @@ class Character(abc.BaseCharacter):
     world: :class:`str`
         The character's current world.
     former_world: :class:`str`, optional
-        The previous world where the character was in, in the last 6 months.
+        The previous world the character was in, in the last 6 months.
     residence: :class:`str`
         The current hometown of the character.
     married_to: :class:`str`, optional
@@ -107,7 +107,7 @@ class Character(abc.BaseCharacter):
     house: :class:`CharacterHouse`, optional
         The house currently owned by the character.
     guild_membership: :class:`GuildMembership`, optional
-        The guild the character is a member of..
+        The guild the character is a member of.
     last_login: :class:`datetime.datetime`, optional
         The last time the character logged in. It will be ``None`` if the character has never logged in.
     comment: :class:`str`, optional
@@ -200,7 +200,7 @@ class Character(abc.BaseCharacter):
         Raises
         ------
         InvalidContent
-            If content is not a the HTML of a character's page.
+            If content is not the HTML of a character's page.
         """
         parsed_content = parse_tibiacom_content(content)
         tables = cls._parse_tables(parsed_content)
@@ -234,7 +234,7 @@ class Character(abc.BaseCharacter):
         Raises
         ------
         InvalidContent
-            If content is not a the JSON string of the response."""
+            If content is not a JSON string of the Character response."""
         try:
             json_content = json.loads(content)
         except json.JSONDecodeError:

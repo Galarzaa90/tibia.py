@@ -297,9 +297,9 @@ def print_world(world: World):
     content += get_field("World Type", "Regular" if not world.experimental else "Experimental")
     content += get_field("Premium Only", "Yes" if world.premium_only else "No")
     if not world.battleye_protected:
-        content += get_field("Battleye Protected", "Not protected")
+        content += get_field("BattlEye Protected", "Not protected")
     else:
-        content += get_field("Battleye Protected", "Protected since %s." % (world.battleye_date or "release"))
+        content += get_field("BattlEye Protected", "Protected since %s." % (world.battleye_date or "release"))
     if world.world_quest_titles:
         content += build_header("World Quest Titles")
         for quest in world.world_quest_titles:
