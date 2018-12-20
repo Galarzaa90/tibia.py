@@ -109,6 +109,11 @@ class House(abc.BaseHouseWithId):
     def transferee_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
         return tibiapy.Character.get_url(self.transferee) if self.transferee is not None else None
+
+    @property
+    def highest_bidder_url(self):
+        """:class:`str`: The URL to the Tibia.com page of the character with the highest bid, if applicable."""
+        return tibiapy.Character.get_url(self.highest_bidder) if self.highest_bidder is not None else None
     # endregion
 
     # region Public methods

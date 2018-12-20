@@ -44,6 +44,7 @@ class TestsHouse(TestTibiaPy):
         self.assertIsNone(house.owner)
         self.assertIsNone(house.owner_url)
         self.assertIsNotNone(house.highest_bidder)
+        self.assertIsNotNone(house.highest_bidder_url)
         self.assertEqual(house.highest_bid, 0)
 
         house_json_raw = house.to_json()
