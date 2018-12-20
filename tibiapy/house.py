@@ -36,23 +36,23 @@ class House(abc.BaseHouseWithId):
         The internal ID of the house. This is used on the website to identify houses.
     name: :class:`str`
         The name of the house.
+    world: :class:`str`
+        The name of the world where the house is.
+    status: :class:`.HouseStatus`
+        The current status of the house.
+    type: :class:`.HouseType`
+        The type of the house.
     image_url: :class:`str`
         The URL to the house's minimap image.
     beds: :class:`int`
         The number of beds the house has.
-    type: :class:`str`
-        The type of house. It can be a regular ``house`` or a ``guildhall``.
     size: :class:`int`
         The number of SQM the house has.
     rent: :class:`int`
         The monthly rent paid for the house.
-    world: :class:`str`
-        The world of the house.
-    status: :class:`.HouseStatus`
-        The renting status of the house, can be ``rented`` or ``auctioned``.
     owner: :class:`str`
         The current owner of the house, if any.
-    owner_sex: :class:`str`
+    owner_sex: :class:`.Sex`
         The sex of the owner of the house, if applicable.
     paid_until: :class:`datetime.datetime`, optional
         The date the last paid rent is due.
@@ -71,8 +71,8 @@ class House(abc.BaseHouseWithId):
     auction_end: :class:`datetime.datetime`, optional
         The date where the auction will end.
     """
-    __slots__ = ("image_url", "beds", "type", "size", "rent", "owner", "owner_sex",
-                 "paid_until", "transfer_date", "transferee", "transfer_price", "transfer_accepted", "highest_bid",
+    __slots__ = ("image_url", "beds", "type", "size", "rent", "owner", "owner_sex", "paid_until", "transfer_date",
+                 "transferee", "transfer_price", "transfer_accepted", "highest_bid",
                  "highest_bidder", "auction_end")
 
     def __init__(self, name, world=None, **kwargs):
@@ -86,7 +86,7 @@ class House(abc.BaseHouseWithId):
         self.rent = kwargs.get("rent", 0)
         self.status = try_enum(HouseStatus, kwargs.get("status"), None)
         self.owner = kwargs.get("owner")
-        self.owner_sex = kwargs.get("owner_sex")
+        self.owner_sex = try_enum(Sex, kwargs.get("owner_sex"))
         self.paid_until = try_datetime(kwargs.get("paid_until"))
         self.transfer_date = try_datetime(kwargs.get("transfer_date"))
         self.transferee = kwargs.get("transferee")
@@ -255,9 +255,9 @@ class CharacterHouse(abc.BaseHouseWithId):
     world: :class:`str`
         The name of the world where the house is.
     status: :class:`.HouseStatus`
-        The current status of the house. This is always :py:attr:`.HouseStatus.RENTED` for this class.
+        The current status of the house.
     type: :class:`.HouseType`
-        The type of the house. This is always :py:attr:`.HouseType.HOUSE` for this class.
+        The type of the house.
     town: :class:`str`
         The town where the city is located in.
     owner: :class:`str`
@@ -284,13 +284,13 @@ class GuildHouse(abc.BaseHouse):
     Attributes
     ----------
     name: :class:`str`
-        The name of the guildhall.
+        The name of the house.
     world: :class:`str`
-        The name of the world where the guildhall is.
+        The name of the world where the house is.
     status: :class:`.HouseStatus`
-        The current status of the guildhall. This is always :py:attr:`.HouseStatus.RENTED` for this class.
+        The current status of the house.
     type: :class:`.HouseType`
-        The type of the guildhall. This is always :py:attr:`.HouseType.GUILDHALL` for this class.
+        The type of the house.
     owner: :class:`str`
         The owner of the guildhall."""
     __slots__ = ("owner", "paid_until_date")
