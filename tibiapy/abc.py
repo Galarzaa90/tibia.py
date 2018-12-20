@@ -229,9 +229,9 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         The name of the house.
     world: :class:`str`
         The name of the world where the house is.
-    status: :class:`.HouseStatus`
+    status: :class:`HouseStatus`
         The current status of the house.
-    type: :class:`.HouseType`
+    type: :class:`HouseType`
         The type of the house.
     """
     __slots__ = ("name", "world", "status", "type")
@@ -295,9 +295,9 @@ class BaseHouseWithId(BaseHouse):
         The name of the house.
     world: :class:`str`
         The name of the world where the house is.
-    status: :class:`.HouseStatus`
+    status: :class:`HouseStatus`
         The current status of the house.
-    type: :class:`.HouseType`
+    type: :class:`HouseType`
         The type of the house.
     """
     __slots__ = ("id",)
@@ -337,9 +337,9 @@ class BaseWorld(Serializable):
         The number of currently online players in the world.
     location: :class:`WorldLocation`
         The physical location of the game servers.
-    pvp_type: :class:`.PvpType`
+    pvp_type: :class:`PvpType`
         The type of PvP in the world.
-    transfer_type: :class:`.TransferType`
+    transfer_type: :class:`TransferType`
         The type of transfer restrictions this world has.
     battleye_protected: :class:`bool`
         Whether the server is currently protected with battleye or not.

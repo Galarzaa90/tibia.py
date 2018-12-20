@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import Optional, Type, TypeVar, Union
 
 import bs4
 
@@ -13,7 +13,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
 
     Parameters
     -------------
-    datetime_str: str
+    datetime_str: :class:`str`
         The date and time as represented in Tibia.com
 
     Returns
@@ -53,7 +53,7 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
 
     Parameters
     -----------
-    date_str: str
+    date_str: :class:`str`
         The date as represented in Tibia.com
 
     Returns
@@ -76,7 +76,7 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
 
     Parameters
     -----------
-    date_str: str
+    date_str: :class:`str`
         The date as represented in Tibia.com
 
     Returns
@@ -131,7 +131,7 @@ def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
 
     Parameters
     -----------
-    date_str: str
+    date_str: :class:`str`
         The date as represented in Tibia.com
 
     Returns
@@ -257,3 +257,32 @@ def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", build
     """
     return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), builder,
                              parse_only=bs4.SoupStrainer(tag, class_=html_class))
+
+
+T = TypeVar('T')
+D = TypeVar('D')
+
+
+def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
+    """Attempts to convert a value into their enum value
+
+    Parameters
+    ----------
+    cls: :class:`Enum`
+        The enum to convert to.
+    val:
+        The value to try to convert to Enum
+    default: optional
+        The value to return if no enum value is found.
+
+    Returns
+    -------
+    any
+        The enum value if found, otherwise None.
+    """
+    if isinstance(val, cls):
+        return val
+    try:
+        return cls(val)
+    except ValueError:
+        return default

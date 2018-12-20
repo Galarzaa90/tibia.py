@@ -12,35 +12,35 @@ Enumerations
 ============
 Enumerations are provided for various values in order to avoid depending on strings.
 
-.. autoclass:: tibiapy.enums.HouseType
+.. autoclass:: HouseType
     :members:
     :undoc-members:
 
-.. autoclass:: tibiapy.enums.AccountStatus
+.. autoclass:: AccountStatus
     :members:
     :undoc-members:
 
-.. autoclass:: tibiapy.enums.HouseStatus
+.. autoclass:: HouseStatus
     :members:
     :undoc-members:
 
-.. autoclass:: tibiapy.enums.PvpType
+.. autoclass:: PvpType
     :members:
     :undoc-members:
 
-.. autoclass:: tibiapy.enums.Sex
+.. autoclass:: Sex
     :members:
     :undoc-members:
 
-.. autoclass:: tibiapy.enums.TransferType
+.. autoclass:: TransferType
     :members:
     :undoc-members:
 
-.. autoclass:: tibiapy.enums.Vocation
+.. autoclass:: Vocation
     :members:
     :undoc-members:
 
-.. autoclass:: tibiapy.enums.WorldLocation
+.. autoclass:: WorldLocation
     :members:
     :undoc-members:
 
@@ -198,13 +198,14 @@ They implement methods and properties that can be inherited by other classes to 
     :members:
     :inherited-members:
 
+Exceptions
+==========
+.. autoclass:: TibiapyException
+
+.. autoclass:: InvalidContent
+
 Utility functions
 ==================
 .. automodule:: tibiapy.utils
    :members:
 
-Exceptions
-==========
-.. autoclass:: tibiapy.TibiapyException
-
-.. autoclass:: tibiapy.InvalidContent

@@ -6,9 +6,12 @@ from typing import Optional
 
 import tibiapy.character
 from tibiapy import abc
-from tibiapy.enums import HouseStatus, HouseType, Sex, try_enum
+from tibiapy.enums import HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, try_datetime
+from tibiapy.utils import parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, try_datetime, \
+    try_enum
+
+__all__ = ("House", "CharacterHouse", "GuildHouse", "ListedHouse")
 
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
@@ -38,9 +41,9 @@ class House(abc.BaseHouseWithId):
         The name of the house.
     world: :class:`str`
         The name of the world where the house is.
-    status: :class:`.HouseStatus`
+    status: :class:`HouseStatus`
         The current status of the house.
-    type: :class:`.HouseType`
+    type: :class:`HouseType`
         The type of the house.
     image_url: :class:`str`
         The URL to the house's minimap image.
@@ -52,7 +55,7 @@ class House(abc.BaseHouseWithId):
         The monthly rent paid for the house.
     owner: :class:`str`
         The current owner of the house, if any.
-    owner_sex: :class:`.Sex`
+    owner_sex: :class:`Sex`
         The sex of the owner of the house, if applicable.
     paid_until: :class:`datetime.datetime`, optional
         The date the last paid rent is due.
@@ -254,9 +257,9 @@ class CharacterHouse(abc.BaseHouseWithId):
         The name of the house.
     world: :class:`str`
         The name of the world where the house is.
-    status: :class:`.HouseStatus`
+    status: :class:`HouseStatus`
         The current status of the house.
-    type: :class:`.HouseType`
+    type: :class:`HouseType`
         The type of the house.
     town: :class:`str`
         The town where the city is located in.
@@ -287,9 +290,9 @@ class GuildHouse(abc.BaseHouse):
         The name of the house.
     world: :class:`str`
         The name of the world where the house is.
-    status: :class:`.HouseStatus`
+    status: :class:`HouseStatus`
         The current status of the house.
-    type: :class:`.HouseType`
+    type: :class:`HouseType`
         The type of the house.
     owner: :class:`str`
         The owner of the guildhall."""
@@ -318,9 +321,9 @@ class ListedHouse(abc.BaseHouseWithId):
         The name of the house.
     world: :class:`str`
         The name of the world where the house is.
-    status: :class:`.HouseStatus`
+    status: :class:`HouseStatus`
         The current status of the house.
-    type: :class:`.HouseType`
+    type: :class:`HouseType`
         The type of house.
     town: :class:`str`
         The town where the house is located.
@@ -445,7 +448,7 @@ class ListedHouse(abc.BaseHouseWithId):
             The name of the world.
         town: :class:`str`
             The name of the town.
-        house_type: :class:`.HouseType`
+        house_type: :class:`HouseType`
             Whether to search for houses or guildhalls.
 
         Returns
@@ -467,7 +470,7 @@ class ListedHouse(abc.BaseHouseWithId):
             The name of the world.
         town: :class:`str`
             The name of the town.
-        house_type: :class:`.HouseType`
+        house_type: :class:`HouseType`
             Whether to search for houses or guildhalls.
 
         Returns

@@ -1,8 +1,7 @@
 import datetime
 
-import tibiapy.utils
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import enums
+from tibiapy import enums, utils
 
 TIBIA_DATETIME_CEST = "Jul 10 2018, 07:13:32 CEST"
 TIBIA_DATETIME_CET = "Jan 10 2018, 07:13:32 CET"
@@ -33,7 +32,7 @@ TIBIADATA_DATE = "2018-12-20"
 
 class TestUtils(TestTibiaPy):
     def testTibiaDateTime(self):
-        time = tibiapy.utils.parse_tibia_datetime(TIBIA_DATETIME_CEST)
+        time = utils.parse_tibia_datetime(TIBIA_DATETIME_CEST)
         self.assertIsInstance(time, datetime.datetime)
         self.assertEqual(time.month, 7)
         self.assertEqual(time.day, 10)
@@ -42,7 +41,7 @@ class TestUtils(TestTibiaPy):
         self.assertEqual(time.minute, 13)
         self.assertEqual(time.second, 32)
 
-        time = tibiapy.utils.parse_tibia_datetime(TIBIA_DATETIME_CET)
+        time = utils.parse_tibia_datetime(TIBIA_DATETIME_CET)
         self.assertIsInstance(time, datetime.datetime)
         self.assertEqual(time.month, 1)
         self.assertEqual(time.day, 10)
@@ -52,79 +51,79 @@ class TestUtils(TestTibiaPy):
         self.assertEqual(time.second, 32)
 
     def testTibiaDateInvalidTimezone(self):
-        time = tibiapy.utils.parse_tibia_datetime(TIBIA_DATETIME_PST)
+        time = utils.parse_tibia_datetime(TIBIA_DATETIME_PST)
         self.assertIsNone(time)
 
     def testTibiaDateTimeInvalid(self):
-        time = tibiapy.utils.parse_tibia_datetime(TIBIA_DATETIME_INVALID)
+        time = utils.parse_tibia_datetime(TIBIA_DATETIME_INVALID)
         self.assertIsNone(time)
 
     def testTibiaDate(self):
-        date = tibiapy.utils.parse_tibia_date(TIBIA_DATE)
+        date = utils.parse_tibia_date(TIBIA_DATE)
         self.assertIsInstance(date, datetime.date)
         self.assertEqual(date.month, 6)
         self.assertEqual(date.day, 20)
         self.assertEqual(date.year, 2018)
 
     def testTibiaFullDate(self):
-        date = tibiapy.utils.parse_tibia_full_date(TIBIA_FULL_DATE)
+        date = utils.parse_tibia_full_date(TIBIA_FULL_DATE)
         self.assertIsInstance(date, datetime.date)
         self.assertEqual(date.month, 7)
         self.assertEqual(date.day, 23)
         self.assertEqual(date.year, 2015)
 
     def testTibiaDateInvalid(self):
-        date = tibiapy.utils.parse_tibia_date(TIBIA_DATETIME_INVALID)
+        date = utils.parse_tibia_date(TIBIA_DATETIME_INVALID)
         self.assertIsNone(date)
 
     def testTibiaDataDatetime(self):
-        date = tibiapy.utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_CET)
+        date = utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_CET)
         self.assertIsInstance(date, datetime.datetime)
 
-        date = tibiapy.utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_CEST)
+        date = utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_CEST)
         self.assertIsInstance(date, datetime.datetime)
 
-        date = tibiapy.utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_PST)
+        date = utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_PST)
         self.assertIsNone(date)
 
-        date = tibiapy.utils.parse_tibiadata_datetime(TIBIA_DATE)
+        date = utils.parse_tibiadata_datetime(TIBIA_DATE)
         self.assertIsNone(date)
 
     def testTryDate(self):
-        date = tibiapy.utils.try_date(datetime.datetime.now())
+        date = utils.try_date(datetime.datetime.now())
         self.assertIsInstance(date, datetime.date)
 
-        date = tibiapy.utils.try_date(datetime.date.today())
+        date = utils.try_date(datetime.date.today())
         self.assertIsInstance(date, datetime.date)
         self.assertEqual(date, datetime.date.today())
 
-        date = tibiapy.utils.try_date(TIBIA_DATE)
+        date = utils.try_date(TIBIA_DATE)
         self.assertIsInstance(date, datetime.date)
 
-        date = tibiapy.utils.try_date(TIBIA_FULL_DATE)
+        date = utils.try_date(TIBIA_FULL_DATE)
         self.assertIsInstance(date, datetime.date)
 
-        date = tibiapy.utils.try_date(TIBIADATA_DATE)
+        date = utils.try_date(TIBIADATA_DATE)
         self.assertIsInstance(date, datetime.date)
 
     def testTryDateTime(self):
-        date_time = tibiapy.utils.try_datetime(datetime.datetime.now())
+        date_time = utils.try_datetime(datetime.datetime.now())
         self.assertIsInstance(date_time, datetime.datetime)
 
-        date_time = tibiapy.utils.try_datetime(TIBIA_DATETIME_CEST)
+        date_time = utils.try_datetime(TIBIA_DATETIME_CEST)
         self.assertIsInstance(date_time, datetime.datetime)
 
-        date_time = tibiapy.utils.try_datetime(TIBIADATA_DATETIME_CET)
+        date_time = utils.try_datetime(TIBIADATA_DATETIME_CET)
         self.assertIsInstance(date_time, datetime.datetime)
 
     def testParseNumberWords(self):
-        self.assertEqual(tibiapy.utils.parse_number_words("one"), 1)
-        self.assertEqual(tibiapy.utils.parse_number_words("..."), 0)
-        self.assertEqual(tibiapy.utils.parse_number_words("twenty-one"), 21)
-        self.assertEqual(tibiapy.utils.parse_number_words("one hundred two"), 102)
-        self.assertEqual(tibiapy.utils.parse_number_words("two thousand forty five"), 2045)
+        self.assertEqual(utils.parse_number_words("one"), 1)
+        self.assertEqual(utils.parse_number_words("..."), 0)
+        self.assertEqual(utils.parse_number_words("twenty-one"), 21)
+        self.assertEqual(utils.parse_number_words("one hundred two"), 102)
+        self.assertEqual(utils.parse_number_words("two thousand forty five"), 2045)
 
     def testTryEnum(self):
-        self.assertEqual(enums.try_enum(enums.Sex, "male"), enums.Sex.MALE)
-        self.assertEqual(enums.try_enum(enums.TransferType, "", enums.TransferType.REGULAR), enums.TransferType.REGULAR)
-        self.assertEqual(enums.try_enum(enums.WorldLocation, enums.WorldLocation.EUROPE), enums.WorldLocation.EUROPE)
+        self.assertEqual(utils.try_enum(enums.Sex, "male"), enums.Sex.MALE)
+        self.assertEqual(utils.try_enum(enums.TransferType, "", enums.TransferType.REGULAR), enums.TransferType.REGULAR)
+        self.assertEqual(utils.try_enum(enums.WorldLocation, enums.WorldLocation.EUROPE), enums.WorldLocation.EUROPE)

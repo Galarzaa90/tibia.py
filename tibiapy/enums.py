@@ -1,5 +1,6 @@
 from enum import Enum
-from typing import Type, TypeVar, Union
+
+__all__ = ('AccountStatus', 'HouseStatus', 'HouseType', 'PvpType', 'Sex', 'TransferType', 'Vocation', 'WorldLocation')
 
 
 class AccountStatus(Enum):
@@ -45,9 +46,7 @@ class TransferType(Enum):
 
 
 class Vocation(Enum):
-    """
-    The possible vocation types.
-    """
+    """The possible vocation types."""
     NONE = "None"
     DRUID = "Druid"
     KNIGHT = "Knight"
@@ -64,31 +63,3 @@ class WorldLocation(Enum):
     EUROPE = "Europe"
     NORTH_AMERICA = "North America"
     SOUTH_AMERICA = "South America"
-
-
-T = TypeVar('T')
-D = TypeVar('D')
-
-
-def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
-    """Attempts to convert a value into their enum value
-
-    Parameters
-    ----------
-    cls: :class:`Enum`
-        The enum to convert to.
-    val:
-        The value to try to convert to Enum
-    default: optional
-        The value to return if no enum value is found.
-
-    Returns
-    -------
-    The enum value if found, otherwise None.
-    """
-    if isinstance(val, cls):
-        return val
-    try:
-        return cls(val)
-    except ValueError:
-        return default

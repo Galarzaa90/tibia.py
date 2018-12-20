@@ -7,9 +7,11 @@ import bs4
 
 from tibiapy import InvalidContent, abc
 from tibiapy.character import OnlineCharacter
-from tibiapy.enums import PvpType, TransferType, WorldLocation, try_enum
+from tibiapy.enums import PvpType, TransferType, WorldLocation
 from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date, parse_tibiacom_content, parse_tibiadata_datetime, \
-    try_date, try_datetime
+    try_date, try_datetime, try_enum
+
+__all__ = ("ListedWorld", "World", "WorldOverview")
 
 record_regexp = re.compile(r'(?P<count>\d+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
@@ -28,9 +30,22 @@ class ListedWorld(abc.BaseWorld):
         The number of currently online players in the world.
     location: :class:`WorldLocation`
         The physical location of the game servers.
-    pvp_type: :class:`.PvpType`
+    pvp_type: :class:`PvpType`
         The type of PvP in the world.
-    transfer_type: :class:`.TransferType`
+    transfer_type: :class:`TransferType`
+        The type of transfer restrictions this world has.
+    battleye_protected: :class:`bool`
+        Whether the server is currently protected with battleye or not.
+    battleye_date: :class:`datetime.date`
+        The date where battleye was added to this world.
+        If this is ``None`` and the world is protected, it means the world was protected from the beginning.
+    experimental: :class:`bool`
+        Whether the world is experimental or not.
+    premium_only: :class:`bool`
+        Whether only premium account players are allowed to play in this server.
+    pvp_type: :class:`PvpType`
+        The type of PvP in the world.
+    transfer_type: :class:`TransferType`
         The type of transfer restrictions this world has.
     battleye_protected: :class:`bool`
         Whether the server is currently protected with battleye or not.
@@ -184,13 +199,13 @@ class World(abc.BaseWorld):
         The server's online players record.
     record_date: :class:`datetime.datetime`
         The date where the online record was achieved.
-    location: :class:`.WorldLocation`
+    location: :class:`WorldLocation`
         The physical location of the game servers.
-    pvp_type: :class:`.PvpType`
+    pvp_type: :class:`PvpType`
         The type of PvP in the world.
     creation_date: :class:`str`
         The month and year the world was created. In MM/YY format.
-    transfer_type: :class:`.TransferType`
+    transfer_type: :class:`TransferType`
         The type of transfer restrictions this world has.
     world_quest_titles: :obj:`list` of :class:`str`
         List of world quest titles the server has achieved.

@@ -8,12 +8,12 @@ from typing import List, Optional
 import bs4
 
 from tibiapy import abc
-from tibiapy.enums import AccountStatus, Sex, Vocation, try_enum
+from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, parse_tibiadata_date, \
-    parse_tibiadata_datetime, try_datetime
+    parse_tibiadata_datetime, try_datetime, try_enum
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
@@ -29,6 +29,9 @@ death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists
 
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
+
+__all__ = ("AccountInformation", "Achievement", "Character", "Death", "GuildMembership", "Killer", "OtherCharacter",
+           "OnlineCharacter")
 
 
 class AccountInformation(abc.Serializable):
@@ -85,9 +88,9 @@ class Character(abc.BaseCharacter):
         The date where the character will be deleted if it is scheduled for deletion.
     former_names: :class:`list` of :class:`str`
         Previous names of the character.
-    sex: :class:`.Sex`
+    sex: :class:`Sex`
         The character's gender.
-    vocation: :class:`.Vocation`
+    vocation: :class:`Vocation`
         The character's vocation.
     level: :class:`int`
         The character's level.
@@ -632,14 +635,14 @@ class Killer(abc.Serializable):
 
     A killer can be:
 
-    a) Another character.
-    b) A creature.
+    a) A creature.
+    b) A character.
     c) A creature summoned by a character.
 
     Attributes
     -----------
     name: :class:`str`
-        The name of the killer.
+        The name of the killer. In the case of summons, the name belongs to the owner.
     player: :class:`bool`
         Whether the killer is a player or not.
     summon: :class:`str`, optional
@@ -700,8 +703,20 @@ class OtherCharacter(abc.BaseCharacter):
 
 
 class OnlineCharacter(abc.BaseCharacter):
-    """Represents an online character."""
-    __slots__ = ("name", "world", "vocation", "level")
+    """Represents an online character.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character.
+    world: :class:`str`
+        The name of the world.
+    vocation: :class:`Vocation`
+        The vocation of the character.
+    level: :class:`int`
+        The level of the character.
+    """
+    __slots__ = ("world", "vocation", "level")
 
     def __init__(self, name, world, level, vocation):
         self.name = name
