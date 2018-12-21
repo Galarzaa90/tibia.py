@@ -123,8 +123,8 @@ class ListedWorld(abc.BaseWorld):
 
         Returns
         -------
-        :class:`WorldOverview`
-            An instance of the class containing only the available worlds.
+        :class:`list` of :class:`ListedWorld`
+            A list of the worlds and their current information.
 
         Raises
         ------
