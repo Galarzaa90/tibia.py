@@ -21,9 +21,8 @@ FILE_WORLD_LIST_TIBIADATA_OFFLINE = "world/tibiadata_list_offline.json"
 
 
 class TestWorld(TestTibiaPy):
-    def setUp(self):
-        self.guild = {}
 
+    # region Tibia.com Tests
     def testWorld(self):
         content = self._load_resource(FILE_WORLD_FULL)
         world = World.from_content(content)
@@ -85,21 +84,27 @@ class TestWorld(TestTibiaPy):
         with self.assertRaises(InvalidContent):
             World.from_content(content)
 
+    # endregion
+
+    # region Tibia.com WorldOverview Tests
     def testWorldOverview(self):
         content = self._load_resource(FILE_WORLD_LIST)
-        worlds = ListedWorld.list_from_content(content)
+        world_overview = WorldOverview.from_content(content)
 
-        self.assertIsInstance(worlds, WorldOverview)
-        self.assertIsNotNone(WorldOverview.get_list_url())
-        self.assertIsNotNone(WorldOverview.get_list_url_tibiadata())
-        self.assertGreater(len(worlds.worlds), 0)
-        self.assertGreater(worlds.total_online, 0)
-        self.assertIsNotNone(worlds.record_date)
-        self.assertIsNotNone(worlds.record_count)
+        self.assertIsInstance(world_overview, WorldOverview)
+        self.assertEqual(WorldOverview.get_url(), ListedWorld.get_list_url())
+        self.assertIsNotNone(WorldOverview.get_url_tibiadata())
+        self.assertGreater(len(world_overview.worlds), 0)
+        self.assertGreater(world_overview.total_online, 0)
+        self.assertIsNotNone(world_overview.record_date)
+        self.assertIsNotNone(world_overview.record_count)
+
+        worlds = ListedWorld.list_from_content(content)
+        self.assertEqual(len(world_overview.worlds), len(worlds))
 
     def testWorldOverviewOffline(self):
         content = self._load_resource(FILE_WORLD_LIST_OFFLINE)
-        world_overview = ListedWorld.list_from_content(content)
+        world_overview = WorldOverview.from_content(content)
 
         self.assertEqual(world_overview.record_count, 64028)
         self.assertIsInstance(world_overview.record_date, datetime.datetime)
@@ -114,6 +119,10 @@ class TestWorld(TestTibiaPy):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             ListedWorld.list_from_content(content)
+
+    # endregion
+
+    # region TibiaData Tests
 
     def testWorldTibiadata(self):
         content = self._load_resource(FILE_WORLD_TIBIADATA)
@@ -174,18 +183,22 @@ class TestWorld(TestTibiaPy):
         with self.assertRaises(InvalidContent):
             World.from_tibiadata(self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))
 
+    # endregion
+
+    # region TibiaData WorldOverview Tests
+
     def testWorldOverviewTibiaData(self):
         content = self._load_resource(FILE_WORLD_LIST_TIBIADATA)
-        worlds = ListedWorld.list_from_tibiadata(content)
+        world_overview = WorldOverview.from_tibiadata(content)
 
-        self.assertIsInstance(worlds, list)
-        self.assertGreater(len(worlds), 0)
-        self.assertGreater(sum(w.online_count for w in worlds), 0)
-        self.assertIsInstance(worlds[0], ListedWorld)
-        self.assertIsInstance(worlds[0].pvp_type, PvpType)
-        self.assertIsInstance(worlds[0].transfer_type, TransferType)
-        self.assertIsInstance(worlds[0].location, WorldLocation)
-        self.assertIsInstance(worlds[0].online_count, int)
+        self.assertIsInstance(world_overview, WorldOverview)
+        self.assertEqual(WorldOverview.get_url(), ListedWorld.get_list_url())
+        self.assertGreater(sum(w.online_count for w in world_overview.worlds), 0)
+        self.assertIsInstance(world_overview.worlds[0], ListedWorld)
+        self.assertIsInstance(world_overview.worlds[0].pvp_type, PvpType)
+        self.assertIsInstance(world_overview.worlds[0].transfer_type, TransferType)
+        self.assertIsInstance(world_overview.worlds[0].location, WorldLocation)
+        self.assertIsInstance(world_overview.worlds[0].online_count, int)
 
     def testWorldOverviewTibiaDataOffline(self):
         content = self._load_resource(FILE_WORLD_LIST_TIBIADATA_OFFLINE)
@@ -207,3 +220,4 @@ class TestWorld(TestTibiaPy):
     def testWorldOverviewTibiaDataInvalidJson(self):
         with self.assertRaises(InvalidContent):
             ListedWorld.list_from_tibiadata("<html><b>Not a json string</b></html>")
+    # endregion

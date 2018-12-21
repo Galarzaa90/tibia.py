@@ -58,8 +58,32 @@ class ListedWorld(abc.BaseWorld):
 
     # region Public methods
     @classmethod
+    def get_list_url(cls):
+        """
+        Gets the URL to the World Overview page in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the World Overview's page.
+        """
+        return WorldOverview.get_url()
+
+    @classmethod
+    def get_list_url_tibiadata(cls):
+        """
+        Gets the URL to the World Overview page in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the World Overview's page.
+        """
+        return WorldOverview.get_url_tibiadata()
+
+    @classmethod
     def list_from_content(cls, content):
-        """Parses the content of the World Overview section from Tibia.com.
+        """Parses the content of the World Overview section from Tibia.com and returns only the list of worlds.
 
         Parameters
         ----------
@@ -68,15 +92,16 @@ class ListedWorld(abc.BaseWorld):
 
         Returns
         -------
-        :class:`WorldOverview`
-            An instance of the class containing the currently displayed information.
+        :class:`list` of :class:`ListedWorld`
+            A list of the worlds and their current information.
 
         Raises
         ------
         InvalidContent
             If the provided content is not the HTML content of the worlds section in Tibia.com
         """
-        return WorldOverview.from_content(content)
+        world_overview = WorldOverview.from_content(content)
+        return world_overview.worlds
 
     @classmethod
     def list_from_tibiadata(cls, content):
@@ -84,16 +109,12 @@ class ListedWorld(abc.BaseWorld):
 
         Notes
         -----
-        Due to TibiaData limitations, :py:attr:`record_count` and :py:attr:`record_date` are unavailable
-        object.
-
-        Additionally, the listed worlds in :py:attr:`worlds` lack some information when obtained from TibiaData.
+        Due to TibiaData limitations, the listed worlds lack some information.
         The following attributes are unavailable:
 
-        - :py:attr:`ListedWorld.status` is always ``Online``.
-        - :py:attr:`ListedWorld.battleye_protected` is always ``False``
-        - :py:attr:`ListedWorld.battleye_date` is always ``None``.
-
+        - :py:attr:`status` is always ``Online``.
+        - :py:attr:`battleye_protected` is always ``False``
+        - :py:attr:`battleye_date` is always ``None``.
 
         Parameters
         ----------
@@ -110,7 +131,8 @@ class ListedWorld(abc.BaseWorld):
         InvalidContent
             If the provided content is the json content of the world section in TibiaData.com
         """
-        return WorldOverview.from_tibiadata(content)
+        world_overview = WorldOverview.from_tibiadata(content)
+        return world_overview.worlds
     # endregion
 
     # region Private methods
@@ -403,7 +425,7 @@ class WorldOverview(abc.Serializable):
         return sum(w.online_count for w in self.worlds)
 
     @classmethod
-    def get_list_url(cls):
+    def get_url(cls):
         """
         Gets the URL to the World Overview page in Tibia.com
 
@@ -415,7 +437,7 @@ class WorldOverview(abc.Serializable):
         return "https://www.tibia.com/community/?subtopic=worlds"
 
     @classmethod
-    def get_list_url_tibiadata(cls):
+    def get_url_tibiadata(cls):
         """
         Gets the URL to the World Overview page in Tibia.com
 
@@ -498,13 +520,13 @@ class WorldOverview(abc.Serializable):
             raise InvalidContent("content is not a valid json string.")
         try:
             worlds_json = json_data["worlds"]["allworlds"]
-            worlds = []
+            world_overview = cls()
             for world_json in worlds_json:
                 world = ListedWorld(world_json["name"], world_json["location"], world_json["worldtype"])
                 world._parse_additional_info(world_json["additional"])
                 world.online_count = world_json["online"]
-                worlds.append(world)
-            return worlds
+                world_overview.worlds.append(world)
+            return world_overview
         except KeyError:
             raise InvalidContent("content is not a worlds json response from TibiaData.com.")
 
