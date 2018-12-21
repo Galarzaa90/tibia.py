@@ -103,7 +103,7 @@ class Character(abc.BaseCharacter):
     residence: :class:`str`
         The current hometown of the character.
     married_to: :class:`str`, optional
-        The name of the character's spouse/husband.
+        The name of the character's spouse.
     house: :class:`CharacterHouse`, optional
         The house currently owned by the character.
     guild_membership: :class:`GuildMembership`, optional
