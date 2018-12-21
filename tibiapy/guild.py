@@ -93,6 +93,11 @@ class Guild(abc.BaseGuild):
         return len(self.members)
 
     @property
+    def online_count(self):
+        """:class:`int`: The number of online members in the guild."""
+        return len(self.online_members)
+
+    @property
     def online_members(self):
         """:class:`list` of :class:`GuildMember`: List of currently online members."""
         return list(filter(lambda m: m.online, self.members))

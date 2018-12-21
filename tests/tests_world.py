@@ -33,7 +33,9 @@ class TestWorld(TestTibiaPy):
         self.assertEqual(world.status, "Online")
         self.assertEqual(world.record_count, 531)
         self.assertIsInstance(world.record_date, datetime.datetime)
-        self.assertEqual(world.creation_date, "04/02")
+        self.assertEqual(world.creation_date, "2002-04")
+        self.assertEqual(world.creation_year, 2002)
+        self.assertEqual(world.creation_month, 4)
         self.assertEqual(world.location, WorldLocation.EUROPE)
         self.assertEqual(world.pvp_type, PvpType.OPEN_PVP)
         self.assertEqual(world.transfer_type, TransferType.REGULAR)
@@ -58,7 +60,9 @@ class TestWorld(TestTibiaPy):
         self.assertEqual(world.status, "Offline")
         self.assertEqual(world.record_count, 1052)
         self.assertIsInstance(world.record_date, datetime.datetime)
-        self.assertEqual(world.creation_date, "01/97")
+        self.assertEqual(world.creation_date, "1997-01")
+        self.assertEqual(world.creation_year, 1997)
+        self.assertEqual(world.creation_month, 1)
         self.assertEqual(world.location, WorldLocation.EUROPE)
         self.assertEqual(world.pvp_type, PvpType.OPEN_PVP)
         self.assertEqual(world.transfer_type, TransferType.REGULAR)
@@ -86,8 +90,8 @@ class TestWorld(TestTibiaPy):
         worlds = ListedWorld.list_from_content(content)
 
         self.assertIsInstance(worlds, WorldOverview)
-        self.assertIsNotNone(ListedWorld.get_list_url())
-        self.assertIsNotNone(ListedWorld.get_list_url_tibiadata())
+        self.assertIsNotNone(WorldOverview.get_list_url())
+        self.assertIsNotNone(WorldOverview.get_list_url_tibiadata())
         self.assertGreater(len(worlds.worlds), 0)
         self.assertGreater(worlds.total_online, 0)
         self.assertIsNotNone(worlds.record_date)
@@ -106,8 +110,13 @@ class TestWorld(TestTibiaPy):
         self.assertIsInstance(world_overview.worlds[0].location, WorldLocation)
         self.assertIsInstance(world_overview.worlds[0].online_count, int)
 
+    def testWorldOverviewUnrelated(self):
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        with self.assertRaises(InvalidContent):
+            ListedWorld.list_from_content(content)
+
     def testWorldTibiadata(self):
-        content = self._load_resource(FILE_WORLD_TIBIADATA,)
+        content = self._load_resource(FILE_WORLD_TIBIADATA)
         world = World.from_tibiadata(content)
 
         self.assertIsInstance(world, World)
@@ -115,7 +124,9 @@ class TestWorld(TestTibiaPy):
         self.assertEqual(world.status, "Online")
         self.assertEqual(world.record_count, 106)
         self.assertIsInstance(world.record_date, datetime.datetime)
-        self.assertEqual(world.creation_date, "10/17")
+        self.assertEqual(world.creation_date, "2017-10")
+        self.assertEqual(world.creation_year, 2017)
+        self.assertEqual(world.creation_month, 10)
         self.assertEqual(world.location, WorldLocation.EUROPE)
         self.assertEqual(world.pvp_type, PvpType.HARDCORE_PVP)
         self.assertEqual(world.transfer_type, TransferType.LOCKED)
@@ -135,7 +146,9 @@ class TestWorld(TestTibiaPy):
         self.assertEqual(world.name, "Antica")
         self.assertEqual(world.record_count, 1052)
         self.assertIsInstance(world.record_date, datetime.datetime)
-        self.assertEqual(world.creation_date, "01/97")
+        self.assertEqual(world.creation_date, "1997-01")
+        self.assertEqual(world.creation_year, 1997)
+        self.assertEqual(world.creation_month, 1)
         self.assertEqual(world.location, WorldLocation.EUROPE)
         self.assertEqual(world.pvp_type, PvpType.OPEN_PVP)
         self.assertEqual(world.transfer_type, TransferType.REGULAR)
@@ -185,6 +198,11 @@ class TestWorld(TestTibiaPy):
         self.assertIsInstance(worlds[0].transfer_type, TransferType)
         self.assertIsInstance(worlds[0].location, WorldLocation)
         self.assertIsInstance(worlds[0].online_count, int)
+
+    def testWorldOverviewTibiaDataUnrelated(self):
+        content = self._load_resource(FILE_WORLD_TIBIADATA)
+        with self.assertRaises(InvalidContent):
+            ListedWorld.list_from_tibiadata(content)
 
     def testWorldOverviewTibiaDataInvalidJson(self):
         with self.assertRaises(InvalidContent):

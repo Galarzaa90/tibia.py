@@ -127,3 +127,6 @@ class TestUtils(TestTibiaPy):
         self.assertEqual(utils.try_enum(enums.Sex, "male"), enums.Sex.MALE)
         self.assertEqual(utils.try_enum(enums.TransferType, "", enums.TransferType.REGULAR), enums.TransferType.REGULAR)
         self.assertEqual(utils.try_enum(enums.WorldLocation, enums.WorldLocation.EUROPE), enums.WorldLocation.EUROPE)
+
+    def testEnumStr(self):
+        self.assertEqual(str(enums.Sex.MALE), enums.Sex.MALE.value)

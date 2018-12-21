@@ -107,6 +107,7 @@ class TestCharacter(TestTibiaPy):
 
         self.assertIsNotNone(char.account_information)
         self.assertTrue(char.other_characters)
+        self.assertFalse(char.hidden)
 
     def testCharacterTibiaDataDeleted(self):
         content = self._load_resource(FILE_CHARACTER_TIBIADATA_DELETED)

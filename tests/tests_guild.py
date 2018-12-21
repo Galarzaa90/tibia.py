@@ -39,6 +39,8 @@ class TestsGuild(TestTibiaPy):
         self.assertEqual(guild.member_count, len(guild.members))
         self.assertTrue(guild.invites, "Guild should have invites")
         self.assertIsInstance(guild.online_members, list, "Guild online members should be a list.")
+        self.assertEqual(len(guild.online_members), guild.online_count, "Length of online_members should be equal "
+                                                                        "to online_count")
         self.assertTrue(guild.ranks, "Guild ranks should not be empty.")
         for member in guild.members:
             self.assertIsInstance(member.level, int, "Member level should be an integer.")
