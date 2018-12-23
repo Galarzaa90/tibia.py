@@ -9,3 +9,69 @@ dl.exception > dt {
   background-color: #eff0f2;
   padding: 1px 10px;
 }
+
+h1.logo {
+  font-size: 1.8em;
+}
+
+div.body ul {
+  list-style: disc;
+  margin: 1em 0;
+  padding-left: 1.3em;
+}
+
+div.body ul ul, div.body ol ul {
+  margin: .2em 0;
+  padding-left: 1.2em;
+}
+
+div.body ul li {
+  padding: 2px 0;
+}
+
+div.body ul.search li {
+  padding: 5px 0 5px 20px;
+}
+
+div.body ol {
+  counter-reset: li;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+div.body ol ol {
+  margin: .2em 0;
+}
+
+div.body ol > li {
+  list-style: none;
+  margin: 0 0 0 1.9em;
+  padding: 2px 1px;
+  position: relative;
+}
+
+div.body ol > li:before {
+  content: counter(li) ".";
+  counter-increment: li;
+  top: -2px;
+  left: -1.9em;
+  width: 1.9em;
+  padding: 4px 0;
+  position: absolute;
+  text-align: left;
+}
+
+div.body p,
+div.body dd,
+div.body li {
+  line-height: 1.4em;
+}
+
+/* weird margins */
+li > p {
+  margin: 2px;
+}
+
+li > blockquote {
+  margin: 10px;
+}

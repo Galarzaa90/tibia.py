@@ -2,7 +2,7 @@ import os
 import re
 import sys
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 if sys.version_info < (3,5):
     sys.exit('Sorry, Python < 3.5 is not supported')
@@ -20,6 +20,17 @@ with open('requirements.txt') as f:
 with open('README.md') as f:
     readme = f.read()
 
+extras_require = {
+    'cli': [
+        'click',
+        'requests',
+        'colorama'
+    ],
+    'docs': [
+        'sphinx==1.7.9',
+    ]
+}
+
 setup(
     name='tibia.py',
     version=get_version("tibiapy"),
@@ -28,13 +39,14 @@ setup(
     url='https://github.com/Galarzaa90/tibia.py',
     license='Apache 2.0',
     install_requires=requirements,
+    extras_require=extras_require,
     description="API that parses website content into python data.",
     long_description=readme,
     long_description_content_type="text/markdown",
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',

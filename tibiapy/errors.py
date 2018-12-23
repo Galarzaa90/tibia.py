@@ -8,9 +8,10 @@ class TibiapyException(Exception):
 
 
 class InvalidContent(TibiapyException):
-    """Exception thrown when the parsing couldn't be completed due to invalid content supplied.
+    """Exception thrown when the provided content is unrelated for the calling function.
 
-    This usually means that the content provided belongs to a different website or section.
+    This usually means that the content provided belongs to a different website or section of the website.
+    This serves as a way to differentiate those cases from a parsing that returned no results (e.g. Character not found)
 
     In some cases this can mean that Tibia.com's format has changed and the library needs updating."""
     pass
