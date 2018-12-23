@@ -6,16 +6,17 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Tibia.py &#8212; Tibia.py 0.1.0 documentation</title>
+    <title>Tibia.py &#8212; Tibia.py 1.0.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="intro.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -34,766 +35,65 @@
             
   <div class="section" id="tibia-py">
 <h1>Tibia.py<a class="headerlink" href="#tibia-py" title="Permalink to this headline">¶</a></h1>
-<p>Tibia.py is a libray for parsing HTML content from <a class="reference external" href="https://www.tibia.com/news/?subtopic=latestnews">Tibia.com</a>. into python objects.</p>
-<p>This library only performs parsing, to fetch content you need to use external libraries.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">aiohttp</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">tibiapy</span>
-
-<span class="c1"># Asynchronously</span>
-<span class="n">async</span> <span class="k">def</span> <span class="nf">get_character</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-   <span class="n">url</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-
-   <span class="k">try</span><span class="p">:</span>
-      <span class="n">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-         <span class="n">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
-            <span class="n">content</span> <span class="o">=</span> <span class="n">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-   <span class="n">character</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Character</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-   <span class="k">return</span> <span class="n">character</span>
-
-<span class="c1"># Synchronously</span>
-<span class="k">def</span> <span class="nf">get_character_sync</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-   <span class="n">url</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-
-   <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-   <span class="n">content</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-   <span class="n">character</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Character</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-   <span class="k">return</span> <span class="n">character</span>
-</pre></div>
-</div>
-<div class="toctree-wrapper compound">
-</div>
-</div>
+<p>Tibia.py is a library for parsing HTML content from <a class="reference external" href="https://www.tibia.com/news/?subtopic=latestnews">Tibia.com</a>. into Python objects.
+It can also parse json content from <a class="reference external" href="https://www.tibiadata.com/">TibiaData</a>.</p>
+<p><strong>Features:</strong></p>
+<ul class="simple">
+<li>Converts data into well-structured Python objects.</li>
+<li>Type consistent attributes.</li>
+<li>All objects can be converted to JSON strings.</li>
+<li>Can be used with any networking library.</li>
+<li>Support for characters, guilds, houses and worlds.</li>
+</ul>
 <div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#usage">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#enumerations">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#main-models">Main Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#character">Character</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#guild">Guild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#house">House</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedguild">ListedGuild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedhouse">ListedHouse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedworld">ListedWorld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#world">World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#worldoverview">WorldOverview</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#auxiliary-classes">Auxiliary Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#accountinformation">AccountInformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#achievement">Achievement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#characterhouse">CharacterHouse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#death">Death</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#guildhouse">GuildHouse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#guildinvite">GuildInvite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#guildmember">GuildMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#guildmembership">GuildMembership</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#killer">Killer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#onlinecharacter">OnlineCharacter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#othercharacter">OtherCharacter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-tibiapy.utils">Utility functions</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
 <li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 </div>
-<div class="section" id="classes">
-<h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="character">
-<h2>Character<a class="headerlink" href="#character" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="tibiapy.Character">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Character</code><span class="sig-paren">(</span><em>name=None</em>, <em>world=None</em>, <em>vocation=None</em>, <em>level=0</em>, <em>sex=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Character"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a Tibia character</p>
-<dl class="attribute">
-<dt id="tibiapy.Character.name">
-<code class="descname">name</code><a class="headerlink" href="#tibiapy.Character.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the character.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.deletion_date">
-<code class="descname">deletion_date</code><a class="headerlink" href="#tibiapy.Character.deletion_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>] – The date where the character will be deleted if it is scheduled for deletion.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.former_names">
-<code class="descname">former_names</code><a class="headerlink" href="#tibiapy.Character.former_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – Previous names of this character.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.sex">
-<code class="descname">sex</code><a class="headerlink" href="#tibiapy.Character.sex" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The character’s gender, either “male” or “female”</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.vocation">
-<code class="descname">vocation</code><a class="headerlink" href="#tibiapy.Character.vocation" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The character’s vocation.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.level">
-<code class="descname">level</code><a class="headerlink" href="#tibiapy.Character.level" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The character’s level.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.achievement_points">
-<code class="descname">achievement_points</code><a class="headerlink" href="#tibiapy.Character.achievement_points" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The total of points the character has.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.world">
-<code class="descname">world</code><a class="headerlink" href="#tibiapy.Character.world" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The character’s current world</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.former_world">
-<code class="descname">former_world</code><a class="headerlink" href="#tibiapy.Character.former_world" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The previous world where the character was in, in the last 6 months.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.residence">
-<code class="descname">residence</code><a class="headerlink" href="#tibiapy.Character.residence" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The current hometown of the character.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.married_to">
-<code class="descname">married_to</code><a class="headerlink" href="#tibiapy.Character.married_to" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The name of the character’s spouse/husband.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.house">
-<code class="descname">house</code><a class="headerlink" href="#tibiapy.Character.house" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>] – The house currently owned by the character.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.guild_membership">
-<code class="descname">guild_membership</code><a class="headerlink" href="#tibiapy.Character.guild_membership" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>] – The guild the character is a member of. The dictionary contains a key for the rank and a key for the name.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.last_login">
-<code class="descname">last_login</code><a class="headerlink" href="#tibiapy.Character.last_login" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>] – The last time the character logged in. It will be None if the character has never logged in.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.comment">
-<code class="descname">comment</code><a class="headerlink" href="#tibiapy.Character.comment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The displayed comment.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.account_status">
-<code class="descname">account_status</code><a class="headerlink" href="#tibiapy.Character.account_status" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – Whether the character’s account is Premium or Free.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.achievements">
-<code class="descname">achievements</code><a class="headerlink" href="#tibiapy.Character.achievements" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>] – The achievements chosen to be displayed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.deaths">
-<code class="descname">deaths</code><a class="headerlink" href="#tibiapy.Character.deaths" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference internal" href="#tibiapy.Death" title="tibiapy.Death"><code class="xref py py-class docutils literal notranslate"><span class="pre">Death</span></code></a>] – The character’s recent deaths.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.account_information">
-<code class="descname">account_information</code><a class="headerlink" href="#tibiapy.Character.account_information" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> – The character’s account information, if visible.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.other_characters">
-<code class="descname">other_characters</code><a class="headerlink" href="#tibiapy.Character.other_characters" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference internal" href="#tibiapy.OtherCharacter" title="tibiapy.OtherCharacter"><code class="xref py py-class docutils literal notranslate"><span class="pre">OtherCharacter</span></code></a>] – Other characters in the same account, if visible.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.guild_name">
-<code class="descname">guild_name</code><a class="headerlink" href="#tibiapy.Character.guild_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The name of the guild the character belongs to, or <cite>None</cite>.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.guild_rank">
-<code class="descname">guild_rank</code><a class="headerlink" href="#tibiapy.Character.guild_rank" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The character’s rank in the guild they belong to, or <cite>None</cite>.</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Character.get_url">
-<em class="property">static </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Character.get_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character.get_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the Tibia.com URl for a given character name.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The name of the character</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Character.from_content">
-<em class="property">static </em><code class="descname">from_content</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span> &#x2192; Union[_ForwardRef('Character'), NoneType]<a class="reference internal" href="_modules/tibiapy/character.html#Character.from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character.from_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates an instance of the class from the html content of the character’s page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The character contained in the page, or None if the character doesn’t exist.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Optional[<a class="reference internal" href="#tibiapy.Character" title="tibiapy.Character"><code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Character.parse_to_json">
-<em class="property">static </em><code class="descname">parse_to_json</code><span class="sig-paren">(</span><em>content</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Character.parse_to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Character.parse_to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Static method that creates a JSON string from the html content of the character’s page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</li>
-<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of spaces to indent the output with.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A string in JSON format.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Character.url">
-<code class="descname">url</code><a class="headerlink" href="#tibiapy.Character.url" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL of the character’s information page on Tibia.com</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="death">
-<h2>Death<a class="headerlink" href="#death" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="tibiapy.Death">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Death</code><span class="sig-paren">(</span><em>name=None</em>, <em>level=0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Death"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Death" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a death by a character</p>
-<dl class="attribute">
-<dt id="tibiapy.Death.name">
-<code class="descname">name</code><a class="headerlink" href="#tibiapy.Death.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the character this death belongs to.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Death.level">
-<code class="descname">level</code><a class="headerlink" href="#tibiapy.Death.level" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The level at which the death occurred.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Death.killers">
-<code class="descname">killers</code><a class="headerlink" href="#tibiapy.Death.killers" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference internal" href="#tibiapy.Killer" title="tibiapy.Killer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Killer</span></code></a>] – A list of all the killers involved.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Death.assists">
-<code class="descname">assists</code><a class="headerlink" href="#tibiapy.Death.assists" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference internal" href="#tibiapy.Killer" title="tibiapy.Killer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Killer</span></code></a>] – A list of characters that were involved, without dealing damage.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Death.time">
-<code class="descname">time</code><a class="headerlink" href="#tibiapy.Death.time" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> – The time at which the death occurred.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Death.killer">
-<code class="descname">killer</code><a class="headerlink" href="#tibiapy.Death.killer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference internal" href="#tibiapy.Killer" title="tibiapy.Killer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Killer</span></code></a>] – The first killer in the list.</p>
-<p>This is usually the killer that gave the killing blow.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Death.by_player">
-<code class="descname">by_player</code><a class="headerlink" href="#tibiapy.Death.by_player" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the kill involves other characters.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="guild">
-<h2>Guild<a class="headerlink" href="#guild" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="tibiapy.Guild">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Guild</code><span class="sig-paren">(</span><em>name=None</em>, <em>world=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a Tibia guild.</p>
-<dl class="attribute">
-<dt id="tibiapy.Guild.name">
-<code class="descname">name</code><a class="headerlink" href="#tibiapy.Guild.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the guild. Names are case sensitive.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.logo_url">
-<code class="descname">logo_url</code><a class="headerlink" href="#tibiapy.Guild.logo_url" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the guild’s logo.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.description">
-<code class="descname">description</code><a class="headerlink" href="#tibiapy.Guild.description" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The description of the guild.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.world">
-<code class="descname">world</code><a class="headerlink" href="#tibiapy.Guild.world" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The world where this guild is in.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.founded">
-<code class="descname">founded</code><a class="headerlink" href="#tibiapy.Guild.founded" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a> – The day the guild was founded.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.active">
-<code class="descname">active</code><a class="headerlink" href="#tibiapy.Guild.active" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the guild is active or still in formation.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.guildhall">
-<code class="descname">guildhall</code><a class="headerlink" href="#tibiapy.Guild.guildhall" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>] – The guild’s guildhall.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.open_applications">
-<code class="descname">open_applications</code><a class="headerlink" href="#tibiapy.Guild.open_applications" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether applications are open or not.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.disband_condition">
-<code class="descname">disband_condition</code><a class="headerlink" href="#tibiapy.Guild.disband_condition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The reason why the guild will get disbanded.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.disband_date">
-<code class="descname">disband_date</code><a class="headerlink" href="#tibiapy.Guild.disband_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The date when the guild will be disbanded if the condition hasn’t been meet.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.homepage">
-<code class="descname">homepage</code><a class="headerlink" href="#tibiapy.Guild.homepage" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The guild’s homepage</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.members">
-<code class="descname">members</code><a class="headerlink" href="#tibiapy.Guild.members" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference internal" href="#tibiapy.GuildMember" title="tibiapy.GuildMember"><code class="xref py py-class docutils literal notranslate"><span class="pre">GuildMember</span></code></a>] – List of guild members.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.invites">
-<code class="descname">invites</code><a class="headerlink" href="#tibiapy.Guild.invites" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference internal" href="#tibiapy.GuildInvite" title="tibiapy.GuildInvite"><code class="xref py py-class docutils literal notranslate"><span class="pre">GuildInvite</span></code></a>] – List of invited characters.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.member_count">
-<code class="descname">member_count</code><a class="headerlink" href="#tibiapy.Guild.member_count" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The number of members in the guild.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.online_members">
-<code class="descname">online_members</code><a class="headerlink" href="#tibiapy.Guild.online_members" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference internal" href="#tibiapy.GuildMember" title="tibiapy.GuildMember"><code class="xref py py-class docutils literal notranslate"><span class="pre">GuildMember</span></code></a>] – List of currently online members.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.ranks">
-<code class="descname">ranks</code><a class="headerlink" href="#tibiapy.Guild.ranks" title="Permalink to this definition">¶</a></dt>
-<dd><p>List[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – Ranks in their hierarchical order.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Guild.url">
-<code class="descname">url</code><a class="headerlink" href="#tibiapy.Guild.url" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the guild’s information page.</p>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Guild.list_from_content">
-<em class="property">static </em><code class="descname">list_from_content</code><span class="sig-paren">(</span><em>content</em>, <em>active_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.list_from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.list_from_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of guilds from the html content of the world guilds’ page.</p>
-<p>The <a class="reference internal" href="#tibiapy.Guild" title="tibiapy.Guild"><code class="xref py py-class docutils literal notranslate"><span class="pre">Guild</span></code></a> objects in the list only contain the attributes:
-<a class="reference internal" href="#tibiapy.Guild.name" title="tibiapy.Guild.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">name</span></code></a>, <a class="reference internal" href="#tibiapy.Guild.logo_url" title="tibiapy.Guild.logo_url"><code class="xref py py-attr docutils literal notranslate"><span class="pre">logo_url</span></code></a>, <a class="reference internal" href="#tibiapy.Guild.world" title="tibiapy.Guild.world"><code class="xref py py-attr docutils literal notranslate"><span class="pre">world</span></code></a> and if available, <a class="reference internal" href="#tibiapy.Guild.description" title="tibiapy.Guild.description"><code class="xref py py-attr docutils literal notranslate"><span class="pre">description</span></code></a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The html content of the page.</li>
-<li><strong>active_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to only show active guilds or not.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of guilds in the current world.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List[<a class="reference internal" href="#tibiapy.Guild" title="tibiapy.Guild"><code class="xref py py-class docutils literal notranslate"><span class="pre">Guild</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Guild.from_content">
-<em class="property">static </em><code class="descname">from_content</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span> &#x2192; Union[_ForwardRef('Guild'), NoneType]<a class="reference internal" href="_modules/tibiapy/guild.html#Guild.from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.from_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates an instance of the class from the html content of the guild’s page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The guild contained in the page or None if it doesn’t exist.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Optional[<a class="reference internal" href="#tibiapy.Guild" title="tibiapy.Guild"><code class="xref py py-class docutils literal notranslate"><span class="pre">Guild</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Guild.get_url">
-<em class="property">static </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.get_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.get_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the Tibia.com URL for a given guild name.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the guild</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the guild’s page</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Guild.get_world_list_url">
-<em class="property">static </em><code class="descname">get_world_list_url</code><span class="sig-paren">(</span><em>world</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.get_world_list_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.get_world_list_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the Tibia.com URL for the guild section of a specific world.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the guild’s page</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Guild.json_list_from_content">
-<em class="property">static </em><code class="descname">json_list_from_content</code><span class="sig-paren">(</span><em>content</em>, <em>active_only=False</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.json_list_from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.json_list_from_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a JSON string from the html content of the world guilds’ page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The html content of the page.</li>
-<li><strong>active_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to only show active guilds or not.</li>
-<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of spaces to indent the output with.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A string in JSON format.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="staticmethod">
-<dt id="tibiapy.Guild.parse_to_json">
-<em class="property">static </em><code class="descname">parse_to_json</code><span class="sig-paren">(</span><em>content</em>, <em>indent=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#Guild.parse_to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Guild.parse_to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a JSON string from the html content of the guild’s page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</li>
-<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of spaces to indent the output with.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A string in JSON format.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-</div>
-<div class="section" id="auxiliary-classes">
-<h1>Auxiliary Classes<a class="headerlink" href="#auxiliary-classes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="guild-invite">
-<h2>Guild Invite<a class="headerlink" href="#guild-invite" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="tibiapy.GuildInvite">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">GuildInvite</code><span class="sig-paren">(</span><em>name=None</em>, <em>date=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#GuildInvite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.GuildInvite" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents an invited character</p>
-<dl class="attribute">
-<dt id="tibiapy.GuildInvite.name">
-<code class="descname">name</code><a class="headerlink" href="#tibiapy.GuildInvite.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the character</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildInvite.date">
-<code class="descname">date</code><a class="headerlink" href="#tibiapy.GuildInvite.date" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a> – The day when the character was invited.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildInvite.url">
-<code class="descname">url</code><a class="headerlink" href="#tibiapy.GuildInvite.url" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL of the character’s information page on Tibia.com</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="guild-member">
-<h2>Guild Member<a class="headerlink" href="#guild-member" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="tibiapy.GuildMember">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">GuildMember</code><span class="sig-paren">(</span><em>name=None</em>, <em>rank=None</em>, <em>title=None</em>, <em>level=0</em>, <em>vocation=None</em>, <em>joined=None</em>, <em>online=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/guild.html#GuildMember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.GuildMember" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a guild member.</p>
-<dl class="attribute">
-<dt id="tibiapy.GuildMember.rank">
-<code class="descname">rank</code><a class="headerlink" href="#tibiapy.GuildMember.rank" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The rank the member belongs to</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildMember.name">
-<code class="descname">name</code><a class="headerlink" href="#tibiapy.GuildMember.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the guild member.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildMember.title">
-<code class="descname">title</code><a class="headerlink" href="#tibiapy.GuildMember.title" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The member’s title.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildMember.level">
-<code class="descname">level</code><a class="headerlink" href="#tibiapy.GuildMember.level" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The member’s level.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildMember.vocation">
-<code class="descname">vocation</code><a class="headerlink" href="#tibiapy.GuildMember.vocation" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The member’s vocation.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildMember.joined">
-<code class="descname">joined</code><a class="headerlink" href="#tibiapy.GuildMember.joined" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a> – The day the member joined the guild.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildMember.online">
-<code class="descname">online</code><a class="headerlink" href="#tibiapy.GuildMember.online" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the member is online or not.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.GuildMember.url">
-<code class="descname">url</code><a class="headerlink" href="#tibiapy.GuildMember.url" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL of the character’s information page on Tibia.com</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="killer">
-<h2>Killer<a class="headerlink" href="#killer" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="tibiapy.Killer">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Killer</code><span class="sig-paren">(</span><em>name=None</em>, <em>player=False</em>, <em>summon=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#Killer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Killer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a killer.</p>
-<p>A killer can be:</p>
-<ol class="loweralpha simple">
-<li>Another character.</li>
-<li>A creature.</li>
-<li>A creature summoned by a character.</li>
-</ol>
-<dl class="attribute">
-<dt id="tibiapy.Killer.name">
-<code class="descname">name</code><a class="headerlink" href="#tibiapy.Killer.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the killer.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Killer.player">
-<code class="descname">player</code><a class="headerlink" href="#tibiapy.Killer.player" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the killer is a player or not.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Killer.summon">
-<code class="descname">summon</code><a class="headerlink" href="#tibiapy.Killer.summon" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The name of the summoned creature, if applicable.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.Killer.url">
-<code class="descname">url</code><a class="headerlink" href="#tibiapy.Killer.url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] – The URL of the character’s information page on Tibia.com, if applicable.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="other-character">
-<h2>Other Character<a class="headerlink" href="#other-character" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="tibiapy.OtherCharacter">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">OtherCharacter</code><span class="sig-paren">(</span><em>name=None</em>, <em>world=None</em>, <em>online=False</em>, <em>deleted=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#OtherCharacter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.OtherCharacter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents other character’s displayed in the Character’s information page.</p>
-<dl class="attribute">
-<dt id="tibiapy.OtherCharacter.name">
-<code class="descname">name</code><a class="headerlink" href="#tibiapy.OtherCharacter.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the character.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.OtherCharacter.world">
-<code class="descname">world</code><a class="headerlink" href="#tibiapy.OtherCharacter.world" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the world.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.OtherCharacter.online">
-<code class="descname">online</code><a class="headerlink" href="#tibiapy.OtherCharacter.online" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the character is online or not.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.OtherCharacter.deleted">
-<code class="descname">deleted</code><a class="headerlink" href="#tibiapy.OtherCharacter.deleted" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the character is scheduled for deletion or not.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.OtherCharacter.url">
-<code class="descname">url</code><a class="headerlink" href="#tibiapy.OtherCharacter.url" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL of the character’s information page on Tibia.com</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-</div>
-<div class="section" id="utility-functions">
-<h1>Utility functions<a class="headerlink" href="#utility-functions" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="tibiapy.utils.parse_tibia_datetime">
-<code class="descclassname">tibiapy.utils.</code><code class="descname">parse_tibia_datetime</code><span class="sig-paren">(</span><em>datetime_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#parse_tibia_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.utils.parse_tibia_datetime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses date and time from the format used in Tibia.com</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>datetime_str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The date and time as represented in Tibia.com</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The represented datetime, in UTC.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="tibiapy.utils.parse_tibia_date">
-<code class="descclassname">tibiapy.utils.</code><code class="descname">parse_tibia_date</code><span class="sig-paren">(</span><em>date_str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#parse_tibia_date"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.utils.parse_tibia_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses a date from the format used in Tibia.com</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>date_str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – The date as represented in Tibia.com</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The represended date.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="exceptions">
-<h1>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
-<dl class="exception">
-<dt id="tibiapy.TibiapyException">
-<em class="property">exception </em><code class="descclassname">tibiapy.</code><code class="descname">TibiapyException</code><a class="reference internal" href="_modules/tibiapy/errors.html#TibiapyException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.TibiapyException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base exception for the tibiapy module.</p>
-<p>All exceptions thrown by the module are inherited from this.</p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="tibiapy.InvalidContent">
-<em class="property">exception </em><code class="descclassname">tibiapy.</code><code class="descname">InvalidContent</code><a class="reference internal" href="_modules/tibiapy/errors.html#InvalidContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.InvalidContent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exception thrown when the parsing couldn’t be completed due to invalid content supplied.</p>
-<p>This usually means that the content provided belongs to a different website or section.</p>
-<p>In some cases this can mean that Tibia.com’s format has changed and the library needs updating.</p>
-</dd></dl>
-
 </div>
 
 
@@ -810,35 +110,26 @@
 
 
 
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
 
 
 <h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tibia.py</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#classes">Classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#character">Character</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#death">Death</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#guild">Guild</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#auxiliary-classes">Auxiliary Classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#guild-invite">Guild Invite</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#guild-member">Guild Member</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#killer">Killer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#other-character">Other Character</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#utility-functions">Utility functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="intro.html" title="next chapter">Introduction</a></li>
   </ul></li>
 </ul>
 </div>
@@ -854,6 +145,14 @@
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -862,8 +161,8 @@
       &copy;2018, Allan Galarza.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/index.rst.txt"

@@ -1,0 +1,623 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tibiapy.house &#8212; Tibia.py 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.house</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">tibiapy.character</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="k">import</span> <span class="n">abc</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="k">import</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">Sex</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="k">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="k">import</span> <span class="n">parse_number_words</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_date</span><span class="p">,</span> <span class="n">try_datetime</span><span class="p">,</span> \
+    <span class="n">try_enum</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;House&quot;</span><span class="p">,</span> <span class="s2">&quot;CharacterHouse&quot;</span><span class="p">,</span> <span class="s2">&quot;GuildHouse&quot;</span><span class="p">,</span> <span class="s2">&quot;ListedHouse&quot;</span><span class="p">)</span>
+
+<span class="n">id_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;house_(\d+)\.&#39;</span><span class="p">)</span>
+<span class="n">bed_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;This (?P&lt;type&gt;\w+) has (?P&lt;beds&gt;[\w-]+) bed&#39;</span><span class="p">)</span>
+<span class="n">info_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;The house has a size of (?P&lt;size&gt;\d+) square meter[s]?. The monthly rent is (?P&lt;rent&gt;\d+) gold and will be debited to the bank account on (?P&lt;world&gt;\w+).&#39;</span><span class="p">)</span>
+
+<span class="n">rented_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;The house has been rented by (?P&lt;owner&gt;[^.]+)\. (?P&lt;pronoun&gt;\w+) has paid the rent until (?P&lt;paid_until&gt;[^.]+)\.&#39;</span><span class="p">)</span>
+<span class="n">transfer_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+ will move out on (?P&lt;transfer_date&gt;[^(]+)\([^)]+\)(?: and (?P&lt;verb&gt;wants to|will) pass the house to (?P&lt;transferee&gt;[\w\s]+) for (?P&lt;transfer_price&gt;\d+) gold coin)?&#39;</span><span class="p">)</span>
+<span class="n">moving_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+ will move out on (?P&lt;move_date&gt;[^(]+)&#39;</span><span class="p">)</span>
+<span class="n">bid_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;The highest bid so far is (?P&lt;highest_bid&gt;\d+) gold and has been submitted by (?P&lt;bidder&gt;[^.]+)&#39;</span><span class="p">)</span>
+<span class="n">auction_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;The auction (?P&lt;auction_state&gt;has ended|will end) at (?P&lt;auction_end&gt;[^.]+).&#39;</span><span class="p">)</span>
+
+<span class="n">list_header_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Available (?P&lt;type&gt;[\w\s]+) in (?P&lt;town&gt;[\w\s</span><span class="se">\&#39;</span><span class="s1">]+) on (?P&lt;world&gt;\w+)&#39;</span><span class="p">)</span>
+<span class="n">list_auction_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\((?P&lt;bid&gt;\d+) gold; (?P&lt;time_left&gt;\w)+ (?P&lt;time_unit&gt;day|hour)s? left\)&#39;</span><span class="p">)</span>
+
+<span class="n">HOUSE_LIST_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=houses&amp;world=</span><span class="si">%s</span><span class="s2">&amp;town=</span><span class="si">%s</span><span class="s2">&amp;type=</span><span class="si">%s</span><span class="s2">&quot;</span>
+<span class="n">HOUSE_LIST_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/houses/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
+
+
+<div class="viewcode-block" id="House"><a class="viewcode-back" href="../../api.html#tibiapy.House">[docs]</a><span class="k">class</span> <span class="nc">House</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseHouseWithId</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a house in a specific world.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id: :class:`int`</span>
+<span class="sd">        The internal ID of the house. This is used on the website to identify houses.</span>
+<span class="sd">    name: :class:`str`</span>
+<span class="sd">        The name of the house.</span>
+<span class="sd">    world: :class:`str`</span>
+<span class="sd">        The name of the world the house belongs to.</span>
+<span class="sd">    status: :class:`HouseStatus`</span>
+<span class="sd">        The current status of the house.</span>
+<span class="sd">    type: :class:`HouseType`</span>
+<span class="sd">        The type of the house.</span>
+<span class="sd">    image_url: :class:`str`</span>
+<span class="sd">        The URL to the house&#39;s minimap image.</span>
+<span class="sd">    beds: :class:`int`</span>
+<span class="sd">        The number of beds the house has.</span>
+<span class="sd">    size: :class:`int`</span>
+<span class="sd">        The number of SQM the house has.</span>
+<span class="sd">    rent: :class:`int`</span>
+<span class="sd">        The monthly cost paid for the house, in gold coins.</span>
+<span class="sd">    owner: :class:`str`</span>
+<span class="sd">        The current owner of the house, if any.</span>
+<span class="sd">    owner_sex: :class:`Sex`</span>
+<span class="sd">        The sex of the owner of the house, if applicable.</span>
+<span class="sd">    paid_until: :class:`datetime.datetime`, optional</span>
+<span class="sd">        The date the last paid rent is due.</span>
+<span class="sd">    transfer_date: :class:`datetime.datetime`, optional</span>
+<span class="sd">        The date when the owner will move out of the house, if applicable.</span>
+<span class="sd">    transferee: :class:`str`, optional</span>
+<span class="sd">        The character who will receive the house when the owner moves, if applicable.</span>
+<span class="sd">    transfer_price: :class:`int`</span>
+<span class="sd">        The price that will be paid from the transferee to the owner for the house transfer.</span>
+<span class="sd">    transfer_accepted: :class:`bool`</span>
+<span class="sd">        Whether the house transfer has already been accepted or not.</span>
+<span class="sd">    highest_bid: :class:`int`</span>
+<span class="sd">        The currently highest bid on the house if it is being auctioned.</span>
+<span class="sd">    highest_bidder: :class:`str`, optional</span>
+<span class="sd">        The character that holds the highest bid.</span>
+<span class="sd">    auction_end: :class:`datetime.datetime`, optional</span>
+<span class="sd">        The date when the auction will end.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;image_url&quot;</span><span class="p">,</span> <span class="s2">&quot;beds&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;rent&quot;</span><span class="p">,</span> <span class="s2">&quot;owner&quot;</span><span class="p">,</span> <span class="s2">&quot;owner_sex&quot;</span><span class="p">,</span> <span class="s2">&quot;paid_until&quot;</span><span class="p">,</span> <span class="s2">&quot;transfer_date&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;transferee&quot;</span><span class="p">,</span> <span class="s2">&quot;transfer_price&quot;</span><span class="p">,</span> <span class="s2">&quot;transfer_accepted&quot;</span><span class="p">,</span> <span class="s2">&quot;highest_bid&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;highest_bidder&quot;</span><span class="p">,</span> <span class="s2">&quot;auction_end&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_url</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;image_url&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beds</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;beds&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">HouseType</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">),</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rent&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">HouseStatus</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;owner&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_sex</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Sex</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;owner_sex&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paid_until</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paid_until&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transfer_date</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transfer_date&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transferee</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transferee&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transfer_price</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transfer_price&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transfer_accepted</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transfer_accepted&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">highest_bid</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;highest_bid&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">highest_bidder</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;highest_bidder&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auction_end</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;auction_end&quot;</span><span class="p">))</span>
+
+    <span class="c1"># region Properties</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">owner_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the Tibia.com page of the house&#39;s owner, if applicable.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owner</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">transferee_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transferee</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transferee</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">highest_bidder_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the Tibia.com page of the character with the highest bid, if applicable.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">highest_bidder</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">highest_bidder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region Public methods</span>
+<div class="viewcode-block" id="House.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.House.from_content">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses a Tibia.com response into a House object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            HTML content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`House`</span>
+<span class="sd">            The house contained in the page, or None if the house doesn&#39;t exist.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If the content is not the house section on Tibia.com</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">image_column</span><span class="p">,</span> <span class="n">desc_column</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;Error&quot;</span> <span class="ow">in</span> <span class="n">image_column</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image_column</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">br</span> <span class="ow">in</span> <span class="n">desc_column</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;br&quot;</span><span class="p">):</span>
+            <span class="n">br</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">desc_column</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">beds</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">lines</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does is not from the house section of Tibia.com&quot;</span><span class="p">)</span>
+
+        <span class="n">house</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="n">house</span><span class="o">.</span><span class="n">image_url</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+        <span class="n">house</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">id_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">house</span><span class="o">.</span><span class="n">image_url</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">bed_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">beds</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">GUILDHALL</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;guildhall&quot;</span><span class="p">,</span> <span class="s2">&quot;clanhall&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span>
+            <span class="n">beds_word</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;beds&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">beds_word</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
+                <span class="n">house</span><span class="o">.</span><span class="n">beds</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">house</span><span class="o">.</span><span class="n">beds</span> <span class="o">=</span> <span class="n">parse_number_words</span><span class="p">(</span><span class="n">beds_word</span><span class="p">)</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">info_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">rent</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;rent&quot;</span><span class="p">))</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">))</span>
+
+        <span class="n">house</span><span class="o">.</span><span class="n">_parse_status</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">house</span></div>
+
+<div class="viewcode-block" id="House.from_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.House.from_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses a TibiaData response into a House object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The JSON content of the TibiaData response.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`House`</span>
+<span class="sd">            The house contained in the response, if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If the content is not a house JSON response from TibiaData</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json_content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a json string.&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">house_json</span> <span class="o">=</span> <span class="n">json_content</span><span class="p">[</span><span class="s2">&quot;house&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">house</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">])</span>
+
+            <span class="n">house</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">HouseType</span><span class="p">,</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;houseid&quot;</span><span class="p">]</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">beds</span> <span class="o">=</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;beds&quot;</span><span class="p">]</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">rent</span> <span class="o">=</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;rent&quot;</span><span class="p">]</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">image_url</span> <span class="o">=</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;img&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Parsing the original status string is easier than dealing with TibiaData fields</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">_parse_status</span><span class="p">(</span><span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">][</span><span class="s2">&quot;original&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a TibiaData house response.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">house</span></div>
+    <span class="c1"># endregion</span>
+
+    <span class="k">def</span> <span class="nf">_parse_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the house&#39;s state description and applies the corresponding values</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        status: :class:`str`</span>
+<span class="sd">            Plain text string containing the current renting state of the house.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">rented_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">HouseStatus</span><span class="o">.</span><span class="n">RENTED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;owner&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">owner_sex</span> <span class="o">=</span> <span class="n">Sex</span><span class="o">.</span><span class="n">MALE</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;pronoun&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;He&quot;</span> <span class="k">else</span> <span class="n">Sex</span><span class="o">.</span><span class="n">FEMALE</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">paid_until</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;paid_until&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">HouseStatus</span><span class="o">.</span><span class="n">AUCTIONED</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">transfer_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transfer_date</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;transfer_date&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transfer_accepted</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;verb&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;will&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transferee</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;transferee&quot;</span><span class="p">)</span>
+            <span class="n">price</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;transfer_price&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transfer_price</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">price</span><span class="p">)</span> <span class="k">if</span> <span class="n">price</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">auction_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">auction_end</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;auction_end&quot;</span><span class="p">))</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">bid_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">highest_bid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;highest_bid&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">highest_bidder</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;bidder&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CharacterHouse"><a class="viewcode-back" href="../../api.html#tibiapy.CharacterHouse">[docs]</a><span class="k">class</span> <span class="nc">CharacterHouse</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseHouseWithId</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a House owned by a character.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id: :class:`int`</span>
+<span class="sd">        The internal ID of the house. This is used on the website to identify houses.</span>
+<span class="sd">    name: :class:`str`</span>
+<span class="sd">        The name of the house.</span>
+<span class="sd">    world: :class:`str`</span>
+<span class="sd">        The name of the world the house belongs to.</span>
+<span class="sd">    status: :class:`HouseStatus`</span>
+<span class="sd">        The current status of the house.</span>
+<span class="sd">    type: :class:`HouseType`</span>
+<span class="sd">        The type of the house.</span>
+<span class="sd">    town: :class:`str`</span>
+<span class="sd">        The town where the city is located in.</span>
+<span class="sd">    owner: :class:`str`</span>
+<span class="sd">        The owner of the house.</span>
+<span class="sd">    paid_until_date: :class:`datetime.date`</span>
+<span class="sd">        The date the last paid rent is due.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;town&quot;</span><span class="p">,</span> <span class="s2">&quot;owner&quot;</span><span class="p">,</span> <span class="s2">&quot;paid_until_date&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">town</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paid_until_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">town</span> <span class="o">=</span> <span class="n">town</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">owner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paid_until_date</span> <span class="o">=</span> <span class="n">try_date</span><span class="p">(</span><span class="n">paid_until_date</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">HouseStatus</span><span class="o">.</span><span class="n">RENTED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span></div>
+
+
+<div class="viewcode-block" id="GuildHouse"><a class="viewcode-back" href="../../api.html#tibiapy.GuildHouse">[docs]</a><span class="k">class</span> <span class="nc">GuildHouse</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseHouse</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a House owned by a guild.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: :class:`str`</span>
+<span class="sd">        The name of the house.</span>
+<span class="sd">    world: :class:`str`</span>
+<span class="sd">        The name of the world the house belongs to.</span>
+<span class="sd">    status: :class:`HouseStatus`</span>
+<span class="sd">        The current status of the house.</span>
+<span class="sd">    type: :class:`HouseType`</span>
+<span class="sd">        The type of the house.</span>
+<span class="sd">    owner: :class:`str`</span>
+<span class="sd">        The owner of the guildhall.&quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;owner&quot;</span><span class="p">,</span> <span class="s2">&quot;paid_until_date&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">paid_until_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">owner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paid_until_date</span> <span class="o">=</span> <span class="n">paid_until_date</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">HouseStatus</span><span class="o">.</span><span class="n">RENTED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">GUILDHALL</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2"> name=</span><span class="si">%r</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ListedHouse"><a class="viewcode-back" href="../../api.html#tibiapy.ListedHouse">[docs]</a><span class="k">class</span> <span class="nc">ListedHouse</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseHouseWithId</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a house from the house list in Tibia.com.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id: :class:`int`</span>
+<span class="sd">        The internal ID of the house. This is used on the website to identify houses.</span>
+<span class="sd">    name: :class:`str`</span>
+<span class="sd">        The name of the house.</span>
+<span class="sd">    world: :class:`str`</span>
+<span class="sd">        The name of the world the house belongs to.</span>
+<span class="sd">    status: :class:`HouseStatus`</span>
+<span class="sd">        The current status of the house.</span>
+<span class="sd">    type: :class:`HouseType`</span>
+<span class="sd">        The type of house.</span>
+<span class="sd">    town: :class:`str`</span>
+<span class="sd">        The town where the house is located.</span>
+<span class="sd">    size: :class:`int`</span>
+<span class="sd">        The size of the house in SQM.</span>
+<span class="sd">    rent: :class:`int`</span>
+<span class="sd">        The monthly cost of the house, in gold coins.</span>
+<span class="sd">    time_left: :class:`datetime.timedelta`, optional</span>
+<span class="sd">        The number of days or hours left until the bid ends, if it has started.</span>
+<span class="sd">        This is not an exact measure, it is rounded to hours or days.</span>
+<span class="sd">    highest_bid: :class:`int`</span>
+<span class="sd">        The highest bid so far, if the auction has started.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;town&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;rent&quot;</span><span class="p">,</span> <span class="s2">&quot;time_left&quot;</span><span class="p">,</span> <span class="s2">&quot;highest_bid&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">houseid</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">houseid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">town</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;town&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rent</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rent&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_left</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;time_left&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[datetime.timedelta]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">highest_bid</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;highest_bid&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># region Public methods</span>
+<div class="viewcode-block" id="ListedHouse.list_from_content"><a class="viewcode-back" href="../../api.html#tibiapy.ListedHouse.list_from_content">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">list_from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the content of a house list from Tibia.com into a list of houses</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The raw HTML response from the house list.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`list` of :class:`ListedHouse`</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent`</span>
+<span class="sd">            Content is not the house list from Tibia.com</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">)</span>
+            <span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">rows</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com house list&quot;</span><span class="p">)</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">list_header_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">town</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;town&quot;</span><span class="p">)</span>
+        <span class="n">world</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+        <span class="n">house_type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">GUILDHALL</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;Guildhalls&quot;</span> <span class="k">else</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span>
+        <span class="n">houses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\u00a0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">house</span> <span class="o">=</span> <span class="n">ListedHouse</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">town</span><span class="o">=</span><span class="n">town</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">house_type</span><span class="p">)</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;sqm&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">rent</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;gold&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">rent</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rent</span><span class="p">)</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">_parse_status</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+            <span class="n">id_input</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;houseid&#39;</span><span class="p">})</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">id_input</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span>
+            <span class="n">houses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">house</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">houses</span></div>
+
+<div class="viewcode-block" id="ListedHouse.list_from_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.ListedHouse.list_from_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">list_from_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the content of a house list from TibiaData.com into a list of houses</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The raw JSON response from TibiaData</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`list` of :class:`ListedHouse`</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent`</span>
+<span class="sd">            Content is not the house list from TibiaData.com</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a json string&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">house_data</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;houses&quot;</span><span class="p">]</span>
+            <span class="n">houses</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">house_type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span> <span class="k">if</span> <span class="n">house_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;houses&quot;</span> <span class="k">else</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">GUILDHALL</span>
+            <span class="k">for</span> <span class="n">house_json</span> <span class="ow">in</span> <span class="n">house_data</span><span class="p">[</span><span class="s2">&quot;houses&quot;</span><span class="p">]:</span>
+                <span class="n">house</span> <span class="o">=</span> <span class="n">ListedHouse</span><span class="p">(</span><span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">house_data</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">],</span> <span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;houseid&quot;</span><span class="p">],</span>
+                                    <span class="n">size</span><span class="o">=</span><span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">],</span> <span class="n">rent</span><span class="o">=</span><span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;rent&quot;</span><span class="p">],</span> <span class="n">town</span><span class="o">=</span><span class="n">house_data</span><span class="p">[</span><span class="s2">&quot;town&quot;</span><span class="p">],</span>
+                                    <span class="nb">type</span><span class="o">=</span><span class="n">house_type</span><span class="p">)</span>
+                <span class="n">house</span><span class="o">.</span><span class="n">_parse_status</span><span class="p">(</span><span class="n">house_json</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">])</span>
+                <span class="n">houses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">house</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">houses</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a house list json response from TibiaData.com&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListedHouse.get_list_url"><a class="viewcode-back" href="../../api.html#tibiapy.ListedHouse.get_list_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_list_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="p">:</span> <span class="n">HouseType</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the URL to the house list on Tibia.com with the specified parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        town: :class:`str`</span>
+<span class="sd">            The name of the town.</span>
+<span class="sd">        house_type: :class:`HouseType`</span>
+<span class="sd">            Whether to search for houses or guildhalls.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the list matching the parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">house_type</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="n">house_type</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">HOUSE_LIST_URL</span> <span class="o">%</span> <span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">town</span><span class="p">),</span> <span class="n">house_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ListedHouse.get_list_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.ListedHouse.get_list_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_list_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="p">:</span> <span class="n">HouseType</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the URL to the house list on Tibia.com with the specified parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        town: :class:`str`</span>
+<span class="sd">            The name of the town.</span>
+<span class="sd">        house_type: :class:`HouseType`</span>
+<span class="sd">            Whether to search for houses or guildhalls.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the list matching the parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">house_type</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="n">house_type</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">HOUSE_LIST_URL_TIBIADATA</span> <span class="o">%</span> <span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">town</span><span class="p">),</span> <span class="n">house_type</span><span class="p">)</span></div>
+    <span class="c1"># endregion</span>
+
+    <span class="c1"># region Private methods</span>
+    <span class="k">def</span> <span class="nf">_parse_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the status string found in the table and applies the corresponding values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        status: :class:`str`</span>
+<span class="sd">            The string containing the status.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;rented&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">HouseStatus</span><span class="o">.</span><span class="n">RENTED</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">list_auction_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">highest_bid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;bid&#39;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;time_unit&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;day&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">time_left</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;time_left&quot;</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">time_left</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;time_left&quot;</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">HouseStatus</span><span class="o">.</span><span class="n">AUCTIONED</span></div>
+    <span class="c1"># endregion</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Allan Galarza.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

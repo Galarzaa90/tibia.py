@@ -6,10 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.errors &#8212; Tibia.py 0.1.0 documentation</title>
+    <title>tibiapy.errors &#8212; Tibia.py 1.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -33,7 +33,7 @@
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.errors</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="TibiapyException"><a class="viewcode-back" href="../../index.html#tibiapy.TibiapyException">[docs]</a><span></span><span class="k">class</span> <span class="nc">TibiapyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="TibiapyException"><a class="viewcode-back" href="../../api.html#tibiapy.TibiapyException">[docs]</a><span></span><span class="k">class</span> <span class="nc">TibiapyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base exception for the tibiapy module.</span>
 
@@ -42,10 +42,11 @@
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="InvalidContent"><a class="viewcode-back" href="../../index.html#tibiapy.InvalidContent">[docs]</a><span class="k">class</span> <span class="nc">InvalidContent</span><span class="p">(</span><span class="n">TibiapyException</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Exception thrown when the parsing couldn&#39;t be completed due to invalid content supplied.</span>
+<div class="viewcode-block" id="InvalidContent"><a class="viewcode-back" href="../../api.html#tibiapy.InvalidContent">[docs]</a><span class="k">class</span> <span class="nc">InvalidContent</span><span class="p">(</span><span class="n">TibiapyException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Exception thrown when the provided content is unrelated for the calling function.</span>
 
-<span class="sd">    This usually means that the content provided belongs to a different website or section.</span>
+<span class="sd">    This usually means that the content provided belongs to a different website or section of the website.</span>
+<span class="sd">    This serves as a way to differentiate those cases from a parsing that returned no results (e.g. Character not found)</span>
 
 <span class="sd">    In some cases this can mean that Tibia.com&#39;s format has changed and the library needs updating.&quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
@@ -64,16 +65,19 @@
 
 
 
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
 
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Tibia.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#indices-and-tables">Indices and tables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#classes">Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#auxiliary-classes">Auxiliary Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#utility-functions">Utility functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#exceptions">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 </ul>
 
 <div class="relations">
@@ -97,6 +101,14 @@
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -105,8 +117,8 @@
       &copy;2018, Allan Galarza.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

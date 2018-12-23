@@ -6,10 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.utils &#8212; Tibia.py 0.1.0 documentation</title>
+    <title>tibiapy.utils &#8212; Tibia.py 1.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -33,20 +33,27 @@
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">bs4</span>
 
 
-<div class="viewcode-block" id="parse_tibia_datetime"><a class="viewcode-back" href="../../index.html#tibiapy.utils.parse_tibia_datetime">[docs]</a><span class="k">def</span> <span class="nf">parse_tibia_datetime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_tibia_datetime"><a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_tibia_datetime">[docs]</a><span class="k">def</span> <span class="nf">parse_tibia_datetime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Parses date and time from the format used in Tibia.com</span>
+
+<span class="sd">    Accepted format:</span>
+
+<span class="sd">    - ``MMM DD YYYY, HH:mm:ss ZZZ``, e.g. ``Dec 10 2018, 21:53:37 CET``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    -------------</span>
-<span class="sd">    datetime_str: str</span>
+<span class="sd">    datetime_str: :class:`str`</span>
 <span class="sd">        The date and time as represented in Tibia.com</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -----------</span>
-<span class="sd">    :class:`datetime.datetime`</span>
+<span class="sd">    :class:`datetime.datetime`, optional</span>
 <span class="sd">        The represented datetime, in UTC.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -56,7 +63,7 @@
 
         <span class="c1"># Convert time string to time object</span>
         <span class="c1"># Removing timezone cause CEST and CET are not supported</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">)</span>
 
         <span class="c1"># Getting the offset</span>
         <span class="k">if</span> <span class="n">tz</span> <span class="o">==</span> <span class="s2">&quot;CET&quot;</span><span class="p">:</span>
@@ -66,29 +73,254 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="c1"># Add/subtract hours to get the real time</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">utc_offset</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">dt</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">utc_offset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="parse_tibia_date"><a class="viewcode-back" href="../../index.html#tibiapy.utils.parse_tibia_date">[docs]</a><span class="k">def</span> <span class="nf">parse_tibia_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_tibia_date"><a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_tibia_date">[docs]</a><span class="k">def</span> <span class="nf">parse_tibia_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Parses a date from the format used in Tibia.com</span>
+
+<span class="sd">    Accepted format:</span>
+
+<span class="sd">    - ``MMM DD YYYY``, e.g. ``Jul 23 2015``</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    -----------</span>
-<span class="sd">    date_str: str</span>
+<span class="sd">    date_str: :class:`str`</span>
 <span class="sd">        The date as represented in Tibia.com</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -----------</span>
-<span class="sd">    :class:`datetime.date`</span>
+<span class="sd">    :class:`datetime.date`, optional</span>
+<span class="sd">        The represented date.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="parse_tibia_full_date"><a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_tibia_full_date">[docs]</a><span class="k">def</span> <span class="nf">parse_tibia_full_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Parses a date in the fuller format used in Tibia.com</span>
+
+<span class="sd">    Accepted format:</span>
+
+<span class="sd">    - ``MMMM DD, YYYY``, e.g. ``July 23, 2015``</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    date_str: :class:`str`</span>
+<span class="sd">        The date as represented in Tibia.com</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -----------</span>
+<span class="sd">    :class:`datetime.date`, optional</span>
+<span class="sd">        The represended date.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="parse_tibiadata_datetime"><a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_tibiadata_datetime">[docs]</a><span class="k">def</span> <span class="nf">parse_tibiadata_datetime</span><span class="p">(</span><span class="n">date_dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Parses time objects from the TibiaData API.</span>
+
+<span class="sd">    Time objects are made of a dictionary with three keys:</span>
+<span class="sd">        date: contains a string representation of the time</span>
+<span class="sd">        timezone: a string representation of the timezone the date time is based on</span>
+<span class="sd">        timezone_type: the type of representation used in the timezone key</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    date_dict: :class:`dict`</span>
+<span class="sd">        Dictionary representing the time object.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`datetime.date`, optional</span>
+<span class="sd">        The represented datetime, in UTC.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_dict</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">date_dict</span><span class="p">[</span><span class="s2">&quot;timezone&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CET&quot;</span><span class="p">:</span>
+        <span class="n">timezone_offset</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">date_dict</span><span class="p">[</span><span class="s2">&quot;timezone&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CEST&quot;</span><span class="p">:</span>
+        <span class="n">timezone_offset</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># We subtract the offset to convert the time to UTC</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">timezone_offset</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="parse_tibiadata_date"><a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_tibiadata_date">[docs]</a><span class="k">def</span> <span class="nf">parse_tibiadata_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Parses a date from the format used in TibiaData.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    date_str: :class:`str`</span>
+<span class="sd">        The date as represented in Tibia.com</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -----------</span>
+<span class="sd">    :class:`datetime.date`, optional</span>
 <span class="sd">        The represended date.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y&quot;</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<span class="k">def</span> <span class="nf">parse_number_words</span><span class="p">(</span><span class="n">text_num</span><span class="p">):</span>
+    <span class="n">numwords</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">units</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;zero&quot;</span><span class="p">,</span> <span class="s2">&quot;one&quot;</span><span class="p">,</span> <span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="s2">&quot;three&quot;</span><span class="p">,</span> <span class="s2">&quot;four&quot;</span><span class="p">,</span> <span class="s2">&quot;five&quot;</span><span class="p">,</span> <span class="s2">&quot;six&quot;</span><span class="p">,</span> <span class="s2">&quot;seven&quot;</span><span class="p">,</span> <span class="s2">&quot;eight&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nine&quot;</span><span class="p">,</span> <span class="s2">&quot;ten&quot;</span><span class="p">,</span> <span class="s2">&quot;eleven&quot;</span><span class="p">,</span> <span class="s2">&quot;twelve&quot;</span><span class="p">,</span> <span class="s2">&quot;thirteen&quot;</span><span class="p">,</span> <span class="s2">&quot;fourteen&quot;</span><span class="p">,</span> <span class="s2">&quot;fifteen&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sixteen&quot;</span><span class="p">,</span> <span class="s2">&quot;seventeen&quot;</span><span class="p">,</span> <span class="s2">&quot;eighteen&quot;</span><span class="p">,</span> <span class="s2">&quot;nineteen&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">tens</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;twenty&quot;</span><span class="p">,</span> <span class="s2">&quot;thirty&quot;</span><span class="p">,</span> <span class="s2">&quot;forty&quot;</span><span class="p">,</span> <span class="s2">&quot;fifty&quot;</span><span class="p">,</span> <span class="s2">&quot;sixty&quot;</span><span class="p">,</span> <span class="s2">&quot;seventy&quot;</span><span class="p">,</span> <span class="s2">&quot;eighty&quot;</span><span class="p">,</span> <span class="s2">&quot;ninety&quot;</span><span class="p">]</span>
+
+    <span class="n">scales</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hundred&quot;</span><span class="p">,</span> <span class="s2">&quot;thousand&quot;</span><span class="p">,</span> <span class="s2">&quot;million&quot;</span><span class="p">,</span> <span class="s2">&quot;billion&quot;</span><span class="p">,</span> <span class="s2">&quot;trillion&quot;</span><span class="p">]</span>
+
+    <span class="n">numwords</span><span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">):</span>    <span class="n">numwords</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tens</span><span class="p">):</span>     <span class="n">numwords</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scales</span><span class="p">):</span>   <span class="n">numwords</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">idx</span> <span class="o">*</span> <span class="mi">3</span> <span class="ow">or</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">current</span> <span class="o">=</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">text_num</span> <span class="o">=</span> <span class="n">text_num</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text_num</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">numwords</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="n">scale</span><span class="p">,</span> <span class="n">increment</span> <span class="o">=</span> <span class="n">numwords</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">current</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">+</span> <span class="n">increment</span>
+        <span class="k">if</span> <span class="n">scale</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">current</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="n">result</span> <span class="o">+</span> <span class="n">current</span>
+
+
+<div class="viewcode-block" id="try_datetime"><a class="viewcode-back" href="../../api.html#tibiapy.utils.try_datetime">[docs]</a><span class="k">def</span> <span class="nf">try_datetime</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Attempts to convert an object into a datetime.</span>
+
+<span class="sd">    If the date format is known, it&#39;s recommended to use the corresponding function</span>
+<span class="sd">    This is meant to be used in constructors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj: :class:`str`, :class:`dict`, :class:`datetime.datetime`</span>
+<span class="sd">        The object to convert.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`datetime.datetime`</span>
+<span class="sd">        The represented datetime, or ``None`` if conversion wasn&#39;t possible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">parse_tibiadata_datetime</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="try_date"><a class="viewcode-back" href="../../api.html#tibiapy.utils.try_date">[docs]</a><span class="k">def</span> <span class="nf">try_date</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Attempts to convert an object into a date.</span>
+
+<span class="sd">    If the date format is known, it&#39;s recommended to use the corresponding function</span>
+<span class="sd">    This is meant to be used in constructors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj: :class:`str`, :class:`datetime.datetime`, :class:`datetime.date`</span>
+<span class="sd">        The object to convert.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`datetime.date`, optional</span>
+<span class="sd">        The represented date.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">parse_tibia_full_date</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">parse_tibiadata_date</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="parse_tibiacom_content"><a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_tibiacom_content">[docs]</a><span class="k">def</span> <span class="nf">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">html_class</span><span class="o">=</span><span class="s2">&quot;BoxContent&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">builder</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parses HTML content from Tibia.com into a BeautifulSoup object.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    content: :class:`str`</span>
+<span class="sd">        The raw HTML content from Tibia.com</span>
+<span class="sd">    html_class: :class:`str`</span>
+<span class="sd">        The HTML class of the parsed element. The default value is ``BoxContent``.</span>
+<span class="sd">    tag: :class:`str`</span>
+<span class="sd">        The HTML tag select. The default value is ``div``.</span>
+<span class="sd">    builder: :class:`str`</span>
+<span class="sd">        The builder to use. The default value is ``lxml``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`bs4.BeautifulSoup`, optional</span>
+<span class="sd">        The parsed content.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">builder</span><span class="p">,</span>
+                             <span class="n">parse_only</span><span class="o">=</span><span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="n">html_class</span><span class="p">))</span></div>
+
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="try_enum"><a class="viewcode-back" href="../../api.html#tibiapy.utils.try_enum">[docs]</a><span class="k">def</span> <span class="nf">try_enum</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">val</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">D</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">D</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Attempts to convert a value into their enum value</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cls: :class:`Enum`</span>
+<span class="sd">        The enum to convert to.</span>
+<span class="sd">    val:</span>
+<span class="sd">        The value to try to convert to Enum</span>
+<span class="sd">    default: optional</span>
+<span class="sd">        The value to return if no enum value is found.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    any</span>
+<span class="sd">        The enum value if found, otherwise None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">val</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default</span></div>
 </pre></div>
 
           </div>
@@ -104,16 +336,19 @@
 
 
 
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
 
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Tibia.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#indices-and-tables">Indices and tables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#classes">Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#auxiliary-classes">Auxiliary Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#utility-functions">Utility functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html#exceptions">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 </ul>
 
 <div class="relations">
@@ -137,6 +372,14 @@
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -145,8 +388,8 @@
       &copy;2018, Allan Galarza.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 
