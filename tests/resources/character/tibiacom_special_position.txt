@@ -1,0 +1,279 @@
+        <div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
+<table border="0" cellspacing="1" cellpadding="4" width="100%"><tr bgcolor=#505050><td colspan=2 class=white><b>Character Information</b></td></tr><tr bgcolor=#F1E0C6><td width=20%>Name:</td><td>Steve <div style="float: right"></div></td></tr><tr bgcolor=#D4C0A1><td>Sex:</td><td>male</td></tr><tr bgcolor=#F1E0C6><td>Vocation:</td><td>Knight</td></tr><tr bgcolor=#D4C0A1><td>Level:</td><td>110</td></tr><tr bgcolor=#F1E0C6><td><nobr>Achievement Points:</nobr></td><td>0</td></tr><tr bgcolor=#D4C0A1><td>World:</td><td>Antica</td></tr><tr bgcolor=#F1E0C6><td>Residence:</td><td>Venore</td></tr><tr bgcolor=#D4C0A1><td>Last Login:</td><td>Jun&#160;20&#160;2011,&#160;11:48:49&#160;CEST</td></tr><tr bgcolor=#F1E0C6><td>Position:</td><td>CipSoft Member</td></tr><tr bgcolor=#D4C0A1><td valign=top>Comment:</td><td>Sit tibi Tibia levis! </td></tr><tr bgcolor=#F1E0C6><td>Account&#160;Status:</td><td>Premium Account</td></tr></table>
+<br /><br /><table border="0" cellspacing="1" cellpadding="4" width="100%" ><tr bgcolor="#505050" ><td colspan="2" class="white" ><b>Account Achievements</b></td></tr><tr bgcolor="#F1E0C6" ><td colspan="2" >There are no achievements set to be displayed for this character.</td></tr></table><br /><br /><table border="0" cellspacing="1" cellpadding="4" width="100%" ><tr bgcolor="#505050"><td colspan="2" class="white" ><b>Account Information</b></td></tr><tr bgcolor="#F1E0C6" ><td width="20%" >Position:</td><td>CipSoft Member</td></tr><tr bgcolor="#D4C0A1" ><td width="20%" >Loyalty Title:</td><td>Steward of Tibia</td></tr><tr bgcolor="#F1E0C6" ><td width="20%" >Created:</td><td>Jul&#160;21&#160;2001,&#160;00:56:15&#160;CEST</td></tr></table><br /><br /><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=#505050><TD COLSPAN=4 CLASS=white><B>Characters</B></TD></TR><TR BGCOLOR=#D4C0A1><TD><B>Name</B></TD><TD><B>World</B></TD><TD><B>Status</B></TD><TD><B>&#160;</B></TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>1.&#160;Jebef</NOBR></TD><TD WIDTH=10%><NOBR>Antica</NOBR></TD><TD WIDTH=70%><IMG SRC"=https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif" WIDTH=1 HEIGHT=1 BORDER=0><BR></TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Jebef">
+<INPUT TYPE=image NAME="View Jebef" ALT="View Jebef" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>2.&#160;Jifoz</NOBR></TD><TD WIDTH=10%><NOBR>Solidera</NOBR></TD><TD WIDTH=70%><IMG SRC"=https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif" WIDTH=1 HEIGHT=1 BORDER=0><BR></TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Jifoz">
+<INPUT TYPE=image NAME="View Jifoz" ALT="View Jifoz" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>3.&#160;Steve</NOBR></TD><TD WIDTH=10%><NOBR>Antica</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve">
+<INPUT TYPE=image NAME="View Steve" ALT="View Steve" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>4.&#160;Steve&#160;on&#160;Aldora</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Aldora">
+<INPUT TYPE=image NAME="View Steve on Aldora" ALT="View Steve on Aldora" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>5.&#160;Steve&#160;on&#160;Amera</NOBR></TD><TD WIDTH=10%><NOBR>Solidera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Amera">
+<INPUT TYPE=image NAME="View Steve on Amera" ALT="View Steve on Amera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>6.&#160;Steve&#160;on&#160;Arcania</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Arcania">
+<INPUT TYPE=image NAME="View Steve on Arcania" ALT="View Steve on Arcania" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>7.&#160;Steve&#160;on&#160;Askara</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Askara">
+<INPUT TYPE=image NAME="View Steve on Askara" ALT="View Steve on Askara" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>8.&#160;Steve&#160;on&#160;Astera</NOBR></TD><TD WIDTH=10%><NOBR>Astera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Astera">
+<INPUT TYPE=image NAME="View Steve on Astera" ALT="View Steve on Astera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>9.&#160;Steve&#160;on&#160;Aurea</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Aurea">
+<INPUT TYPE=image NAME="View Steve on Aurea" ALT="View Steve on Aurea" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>10.&#160;Steve&#160;on&#160;Azura</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Azura">
+<INPUT TYPE=image NAME="View Steve on Azura" ALT="View Steve on Azura" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>11.&#160;Steve&#160;on&#160;Balera</NOBR></TD><TD WIDTH=10%><NOBR>Garnera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Balera">
+<INPUT TYPE=image NAME="View Steve on Balera" ALT="View Steve on Balera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>12.&#160;Steve&#160;on&#160;Berylia</NOBR></TD><TD WIDTH=10%><NOBR>Estela</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Berylia">
+<INPUT TYPE=image NAME="View Steve on Berylia" ALT="View Steve on Berylia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>13.&#160;Steve&#160;on&#160;Calmera</NOBR></TD><TD WIDTH=10%><NOBR>Calmera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Calmera">
+<INPUT TYPE=image NAME="View Steve on Calmera" ALT="View Steve on Calmera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>14.&#160;Steve&#160;on&#160;Celesta</NOBR></TD><TD WIDTH=10%><NOBR>Celesta</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Celesta">
+<INPUT TYPE=image NAME="View Steve on Celesta" ALT="View Steve on Celesta" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>15.&#160;Steve&#160;on&#160;Chimera</NOBR></TD><TD WIDTH=10%><NOBR>Talera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Chimera">
+<INPUT TYPE=image NAME="View Steve on Chimera" ALT="View Steve on Chimera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>16.&#160;Steve&#160;on&#160;Danera</NOBR></TD><TD WIDTH=10%><NOBR>Quintera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Danera">
+<INPUT TYPE=image NAME="View Steve on Danera" ALT="View Steve on Danera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>17.&#160;Steve&#160;on&#160;Danubia</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Danubia">
+<INPUT TYPE=image NAME="View Steve on Danubia" ALT="View Steve on Danubia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>18.&#160;Steve&#160;on&#160;Dolera</NOBR></TD><TD WIDTH=10%><NOBR>Zunera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Dolera">
+<INPUT TYPE=image NAME="View Steve on Dolera" ALT="View Steve on Dolera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>19.&#160;Steve&#160;on&#160;Elera</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Elera">
+<INPUT TYPE=image NAME="View Steve on Elera" ALT="View Steve on Elera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>20.&#160;Steve&#160;on&#160;Elysia</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Elysia">
+<INPUT TYPE=image NAME="View Steve on Elysia" ALT="View Steve on Elysia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>21.&#160;Steve&#160;on&#160;Eternia</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Eternia">
+<INPUT TYPE=image NAME="View Steve on Eternia" ALT="View Steve on Eternia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>22.&#160;Steve&#160;on&#160;Fortera</NOBR></TD><TD WIDTH=10%><NOBR>Talera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Fortera">
+<INPUT TYPE=image NAME="View Steve on Fortera" ALT="View Steve on Fortera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>23.&#160;Steve&#160;on&#160;Furora</NOBR></TD><TD WIDTH=10%><NOBR>Estela</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Furora">
+<INPUT TYPE=image NAME="View Steve on Furora" ALT="View Steve on Furora" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>24.&#160;Steve&#160;on&#160;Galana</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Galana">
+<INPUT TYPE=image NAME="View Steve on Galana" ALT="View Steve on Galana" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>25.&#160;Steve&#160;on&#160;Grimera</NOBR></TD><TD WIDTH=10%><NOBR>Talera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Grimera">
+<INPUT TYPE=image NAME="View Steve on Grimera" ALT="View Steve on Grimera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>26.&#160;Steve&#160;on&#160;Guardia</NOBR></TD><TD WIDTH=10%><NOBR>Bona</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Guardia">
+<INPUT TYPE=image NAME="View Steve on Guardia" ALT="View Steve on Guardia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>27.&#160;Steve&#160;on&#160;Harmonia</NOBR></TD><TD WIDTH=10%><NOBR>Harmonia</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Harmonia">
+<INPUT TYPE=image NAME="View Steve on Harmonia" ALT="View Steve on Harmonia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>28.&#160;Steve&#160;on&#160;Hiberna</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Hiberna">
+<INPUT TYPE=image NAME="View Steve on Hiberna" ALT="View Steve on Hiberna" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>29.&#160;Steve&#160;on&#160;Honera</NOBR></TD><TD WIDTH=10%><NOBR>Nefera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Honera">
+<INPUT TYPE=image NAME="View Steve on Honera" ALT="View Steve on Honera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>30.&#160;Steve&#160;on&#160;Inferna</NOBR></TD><TD WIDTH=10%><NOBR>Zuna</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Inferna">
+<INPUT TYPE=image NAME="View Steve on Inferna" ALT="View Steve on Inferna" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>31.&#160;Steve&#160;on&#160;Iridia</NOBR></TD><TD WIDTH=10%><NOBR>Estela</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Iridia">
+<INPUT TYPE=image NAME="View Steve on Iridia" ALT="View Steve on Iridia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>32.&#160;Steve&#160;on&#160;Isara</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Isara">
+<INPUT TYPE=image NAME="View Steve on Isara" ALT="View Steve on Isara" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>33.&#160;Steve&#160;on&#160;Jamera</NOBR></TD><TD WIDTH=10%><NOBR>Garnera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Jamera">
+<INPUT TYPE=image NAME="View Steve on Jamera" ALT="View Steve on Jamera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>34.&#160;Steve&#160;on&#160;Julera</NOBR></TD><TD WIDTH=10%><NOBR>Wintera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Julera">
+<INPUT TYPE=image NAME="View Steve on Julera" ALT="View Steve on Julera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>35.&#160;Steve&#160;on&#160;Keltera</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Keltera">
+<INPUT TYPE=image NAME="View Steve on Keltera" ALT="View Steve on Keltera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>36.&#160;Steve&#160;on&#160;Kyra</NOBR></TD><TD WIDTH=10%><NOBR>Kenora</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Kyra">
+<INPUT TYPE=image NAME="View Steve on Kyra" ALT="View Steve on Kyra" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>37.&#160;Steve&#160;on&#160;Libera</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Libera">
+<INPUT TYPE=image NAME="View Steve on Libera" ALT="View Steve on Libera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>38.&#160;Steve&#160;on&#160;Lucera</NOBR></TD><TD WIDTH=10%><NOBR>Impera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Lucera">
+<INPUT TYPE=image NAME="View Steve on Lucera" ALT="View Steve on Lucera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>39.&#160;Steve&#160;on&#160;Lunara</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Lunara">
+<INPUT TYPE=image NAME="View Steve on Lunara" ALT="View Steve on Lunara" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>40.&#160;Steve&#160;on&#160;Malvera</NOBR></TD><TD WIDTH=10%><NOBR>Talera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Malvera">
+<INPUT TYPE=image NAME="View Steve on Malvera" ALT="View Steve on Malvera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>41.&#160;Steve&#160;on&#160;Morgana</NOBR></TD><TD WIDTH=10%><NOBR>Estela</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Morgana">
+<INPUT TYPE=image NAME="View Steve on Morgana" ALT="View Steve on Morgana" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>42.&#160;Steve&#160;on&#160;Mythera</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Mythera">
+<INPUT TYPE=image NAME="View Steve on Mythera" ALT="View Steve on Mythera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>43.&#160;Steve&#160;on&#160;Neptera</NOBR></TD><TD WIDTH=10%><NOBR>Quintera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Neptera">
+<INPUT TYPE=image NAME="View Steve on Neptera" ALT="View Steve on Neptera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>44.&#160;Steve&#160;on&#160;Obsidia</NOBR></TD><TD WIDTH=10%><NOBR>Estela</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Obsidia">
+<INPUT TYPE=image NAME="View Steve on Obsidia" ALT="View Steve on Obsidia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>45.&#160;Steve&#160;on&#160;Ocera</NOBR></TD><TD WIDTH=10%><NOBR>Impera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Ocera">
+<INPUT TYPE=image NAME="View Steve on Ocera" ALT="View Steve on Ocera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>46.&#160;Steve&#160;on&#160;Pacera</NOBR></TD><TD WIDTH=10%><NOBR>Pacera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Pacera">
+<INPUT TYPE=image NAME="View Steve on Pacera" ALT="View Steve on Pacera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>47.&#160;Steve&#160;on&#160;Pandoria</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Pandoria">
+<INPUT TYPE=image NAME="View Steve on Pandoria" ALT="View Steve on Pandoria" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>48.&#160;Steve&#160;on&#160;Premia</NOBR></TD><TD WIDTH=10%><NOBR>Premia</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Premia">
+<INPUT TYPE=image NAME="View Steve on Premia" ALT="View Steve on Premia" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>49.&#160;Steve&#160;on&#160;Pythera</NOBR></TD><TD WIDTH=10%><NOBR>Impera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Pythera">
+<INPUT TYPE=image NAME="View Steve on Pythera" ALT="View Steve on Pythera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>50.&#160;Steve&#160;on&#160;Rubera</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Rubera">
+<INPUT TYPE=image NAME="View Steve on Rubera" ALT="View Steve on Rubera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>51.&#160;Steve&#160;on&#160;Samera</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Samera">
+<INPUT TYPE=image NAME="View Steve on Samera" ALT="View Steve on Samera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>52.&#160;Steve&#160;on&#160;Secura</NOBR></TD><TD WIDTH=10%><NOBR>Secura</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Secura">
+<INPUT TYPE=image NAME="View Steve on Secura" ALT="View Steve on Secura" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>53.&#160;Steve&#160;on&#160;Selena</NOBR></TD><TD WIDTH=10%><NOBR>Estela</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Selena">
+<INPUT TYPE=image NAME="View Steve on Selena" ALT="View Steve on Selena" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>54.&#160;Steve&#160;on&#160;Shivera</NOBR></TD><TD WIDTH=10%><NOBR>Talera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Shivera">
+<INPUT TYPE=image NAME="View Steve on Shivera" ALT="View Steve on Shivera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>55.&#160;Steve&#160;on&#160;Silvera</NOBR></TD><TD WIDTH=10%><NOBR>Solidera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Silvera">
+<INPUT TYPE=image NAME="View Steve on Silvera" ALT="View Steve on Silvera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>56.&#160;Steve&#160;on&#160;Solera</NOBR></TD><TD WIDTH=10%><NOBR>Wintera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Solera">
+<INPUT TYPE=image NAME="View Steve on Solera" ALT="View Steve on Solera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>57.&#160;Steve&#160;on&#160;Tenebra</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Tenebra">
+<INPUT TYPE=image NAME="View Steve on Tenebra" ALT="View Steve on Tenebra" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>58.&#160;Steve&#160;on&#160;Thoria</NOBR></TD><TD WIDTH=10%><NOBR>Kenora</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Thoria">
+<INPUT TYPE=image NAME="View Steve on Thoria" ALT="View Steve on Thoria" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>59.&#160;Steve&#160;on&#160;Titania</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Titania">
+<INPUT TYPE=image NAME="View Steve on Titania" ALT="View Steve on Titania" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>60.&#160;Steve&#160;on&#160;Trimera</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Trimera">
+<INPUT TYPE=image NAME="View Steve on Trimera" ALT="View Steve on Trimera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>61.&#160;Steve&#160;on&#160;Valoria</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Valoria">
+<INPUT TYPE=image NAME="View Steve on Valoria" ALT="View Steve on Valoria" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>62.&#160;Steve&#160;on&#160;Vinera</NOBR></TD><TD WIDTH=10%><NOBR>Lobera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Vinera">
+<INPUT TYPE=image NAME="View Steve on Vinera" ALT="View Steve on Vinera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>63.&#160;Steve&#160;on&#160;Xantera</NOBR></TD><TD WIDTH=10%><NOBR>Wintera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Xantera">
+<INPUT TYPE=image NAME="View Steve on Xantera" ALT="View Steve on Xantera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>64.&#160;Steve&#160;On&#160;Xerena</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve On Xerena">
+<INPUT TYPE=image NAME="View Steve On Xerena" ALT="View Steve On Xerena" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>65.&#160;Steve&#160;on&#160;Zanera</NOBR></TD><TD WIDTH=10%><NOBR>Solidera</NOBR></TD><TD WIDTH=70%>CipSoft Member</TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve on Zanera">
+<INPUT TYPE=image NAME="View Steve on Zanera" ALT="View Steve on Zanera" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>66.&#160;Steve's&#160;Goblin</NOBR></TD><TD WIDTH=10%><NOBR>Peloria</NOBR></TD><TD WIDTH=70%><IMG SRC"=https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif" WIDTH=1 HEIGHT=1 BORDER=0><BR></TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Steve's Goblin">
+<INPUT TYPE=image NAME="View Steve's Goblin" ALT="View Steve's Goblin" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR></TABLE>
+<br /><br />  <FORM ACTION="https://www.tibia.com/community/?subtopic=characters" METHOD=post>
+  <TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
+  <TR><TD BGCOLOR="#505050" CLASS=white><B>Search Character</B></TD></TR>
+  <TR><TD BGCOLOR="#D4C0A1"><TABLE BORDER=0 CELLPADDING=1><TR>
+  <TD>Name:</TD><TD><INPUT NAME="name" VALUE="steve"SIZE=29 MAXLENGTH=29></TD>
+  <TD><INPUT TYPE=image NAME="Submit" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD>
+  </TR></TABLE></TD></TR>
+  </TABLE>
+  </FORM>
+          </div>
+      </div>
+    </div>

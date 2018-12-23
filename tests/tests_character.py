@@ -9,12 +9,14 @@ from tibiapy.utils import parse_tibia_datetime
 FILE_CHARACTER_RESOURCE = "character/tibiacom_full.txt"
 FILE_CHARACTER_NOT_FOUND = "character/tibiacom_not_found.txt"
 FILE_CHARACTER_FORMER_NAMES = "character/tibiacom_former_names.txt"
+FILE_CHARACTER_SPECIAL_POSITION = "character/tibiacom_special_position.txt"
 FILE_CHARACTER_DELETION = "character/tibiacom_deletion.txt"
 FILE_CHARACTER_DEATHS_COMPLEX = "character/tibiacom_deaths_complex.txt"
 
 FILE_CHARACTER_TIBIADATA = "character/tibiadata.json"
 FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character/tibiadata_unhidden.json"
 FILE_CHARACTER_TIBIADATA_DELETED = "character/tibiadata_deleted.json"
+FILE_CHARACTER_TIBIADATA_SPECIAL_POSITION = "character/tibiadata_special_position.json"
 FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character/tibiadata_not_found.json"
 
 
@@ -26,6 +28,7 @@ class TestCharacter(TestTibiaPy):
         self.assertEqual(mock_character.level, character.level)
         self.assertEqual(mock_character.sex, character.sex)
 
+    # region Tibia.com Character Tests
     def testCharacter(self):
         character = Character.from_content(self._load_resource(FILE_CHARACTER_RESOURCE))
         self._compare_character(Character("Tschas", "Gladera", Vocation.DRUID, 205, Sex.FEMALE), character)
@@ -57,6 +60,13 @@ class TestCharacter(TestTibiaPy):
         self.assertTrue(char.former_names)
         self.assertEqual(len(char.former_names), 2)
 
+    def testCharacterPosition(self):
+        content = self._load_resource(FILE_CHARACTER_SPECIAL_POSITION)
+        char = Character.from_content(content)
+        self.assertEqual(char.name, "Steve")
+        self.assertEqual(char.position, "CipSoft Member")
+        self.assertEqual(char.account_information.position, "CipSoft Member")
+
     def testCharacterDeletion(self):
         content = self._load_resource(FILE_CHARACTER_DELETION)
         char = Character.from_content(content)
@@ -79,6 +89,8 @@ class TestCharacter(TestTibiaPy):
         with self.assertRaises(InvalidContent):
             Character.from_content(content)
 
+    # endregion
+
     def testDeathTypes(self):
         assisted_suicide = Death("Galarzaa", 280, killers=[Killer("Galarzaa", True), Killer("a pixy")],
                                  time=datetime.datetime.now())
@@ -89,6 +101,8 @@ class TestCharacter(TestTibiaPy):
         self.assertEqual(spawn_invasion.killer, spawn_invasion.killers[0])
         self.assertIsNone(spawn_invasion.killer.url)
         self.assertTrue(spawn_invasion.by_player)
+
+    # region TibiaData Character tests
         
     def testCharacterTibiaData(self):
         content = self._load_resource(FILE_CHARACTER_TIBIADATA)
@@ -119,6 +133,13 @@ class TestCharacter(TestTibiaPy):
         self.assertIsInstance(char.deletion_date, datetime.datetime)
         self.assertIsNone(char.guild_name)
         self.assertIsNone(char.last_login)
+
+    def testCharacterTibiaDataPosition(self):
+        content = self._load_resource(FILE_CHARACTER_TIBIADATA_SPECIAL_POSITION)
+        char = Character.from_tibiadata(content)
+        self.assertEqual(char.name, "Steve")
+        self.assertEqual(char.position, "CipSoft Member")
+        self.assertEqual(char.account_information.position, "CipSoft Member")
 
     def testCharacterTibiaDataNotFound(self):
         content = self._load_resource(FILE_CHARACTER_TIBIADATA_NOT_FOUND)

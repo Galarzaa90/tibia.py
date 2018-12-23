@@ -110,6 +110,8 @@ class Character(abc.BaseCharacter):
         The guild the character is a member of.
     last_login: :class:`datetime.datetime`, optional
         The last time the character logged in. It will be ``None`` if the character has never logged in.
+    position: :class:`str`, optional
+        The position of the character (e.g. CipSoft Member), if any.
     comment: :class:`str`, optional
         The displayed comment.
     account_status: :class:`AccountStatus`
@@ -125,8 +127,8 @@ class Character(abc.BaseCharacter):
         It will be empty if the character is hidden, otherwise, it will contain at least the character itself.
     """
     __slots__ = ("former_names", "sex", "vocation", "level", "achievement_points", "world", "former_world", "residence",
-                 "married_to", "house", "guild_membership", "last_login", "account_status", "comment", "achievements",
-                 "deaths", "account_information", "other_characters", "deletion_date")
+                 "married_to", "house", "guild_membership", "last_login", "account_status", "position", "comment",
+                 "achievements", "deaths", "account_information", "other_characters", "deletion_date")
 
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
         self.name = name
@@ -143,6 +145,8 @@ class Character(abc.BaseCharacter):
         self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
         self.last_login = try_datetime(kwargs.get("last_login"))
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
+        self.position = try_enum(AccountStatus, kwargs.get("account_status"))
+        self.position = kwargs.get("position")
         self.comment = kwargs.get("comment")
         self.achievements = kwargs.get("achievements", [])  # type: List[Achievement]
         self.deaths = kwargs.get("deaths", [])  # type: List[Death]
@@ -260,6 +264,7 @@ class Character(abc.BaseCharacter):
             char.deletion_date = parse_tibiadata_datetime(character_data["deleted"])
         char.married_to = character_data.get("married_to")
         char.former_world = character_data.get("former_world")
+        char.position = character_data.get("Position:")
         if "guild" in character_data:
             char.guild_membership = GuildMembership(character_data["guild"]["name"], character_data["guild"]["rank"])
         if "house" in character_data:
