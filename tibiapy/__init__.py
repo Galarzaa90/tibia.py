@@ -6,4 +6,4 @@ from tibiapy.guild import *
 from tibiapy.house import *
 from tibiapy.world import *
 
-__version__ = '1.0.0a'
+__version__ = '1.0.0'
