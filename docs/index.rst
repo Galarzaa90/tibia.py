@@ -2,59 +2,36 @@
    sphinx-quickstart on Mon Aug  6 17:46:14 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
-.. currentmodule:: tibiapy
-
-.. toctree::
-   :hidden:
-   :maxdepth: 3
-
-   api
 
 ========
 Tibia.py
 ========
 
 
-Tibia.py is a library for parsing HTML content from Tibia.com_. into python objects.
+Tibia.py is a library for parsing HTML content from Tibia.com_. into Python objects.
+It can also parse json content from TibiaData_.
 
-This library only performs parsing, to fetch content you need to use external libraries.
+**Features:**
 
-.. code-block:: python
-
-   import aiohttp
-   import requests
-   import tibiapy
-
-   # Asynchronously
-   async def get_character(name):
-      url = tibiapy.Character.get_url(name)
-
-      try:
-         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-               content = await resp.text()
-      character = tibiapy.Character.from_content(content)
-      return character
-
-   # Synchronously
-   def get_character_sync(name):
-      url = tibiapy.Character.get_url(name)
-
-      r = requests.get(url)
-      content = r.text()
-      character = tibiapy.Character.from_content(content)
-      return character
-
+- Converts data into well-structured Python objects.
+- Type consistent attributes.
+- All objects can be converted to JSON strings.
+- Can be used with any networking library.
+- Support for characters, guilds, houses and worlds.
 
 
 .. _Tibia.com: https://www.tibia.com/news/?subtopic=latestnews
-
-
-
+.. _TibiaData: https://www.tibiadata.com/
 
 
 Indices and tables
 ==================
+
+.. toctree::
+   :maxdepth: 3
+
+   intro
+   api
 
 * :ref:`genindex`
 * :ref:`search`

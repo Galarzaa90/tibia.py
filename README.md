@@ -9,6 +9,14 @@ No fetching is done by this module, you must provide the html content.
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tibia.py.svg)
 ![PyPI - License](https://img.shields.io/pypi/l/tibia.py.svg)
 
+**Features:**
+
+- Converts data into well-structured Python objects.
+- Type consistent attributes.
+- All objects can be converted to JSON strings.
+- Can be used with any networking library.
+- Support for characters, guilds, houses and worlds.
+
 ## Installing
 Install and update using pip
 
@@ -36,7 +44,7 @@ async def get_character(name):
 
   async with aiohttp.ClientSession() as session:
     async with session.get(url) as resp:
-    content = await resp.text()
+        content = await resp.text()
   character = tibiapy.Character.from_content(content)
   return character
 
