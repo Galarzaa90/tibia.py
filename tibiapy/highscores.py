@@ -1,9 +1,12 @@
+import re
 from collections import OrderedDict
 
-from tibiapy import abc, InvalidContent, VocationFilter, Category
+from tibiapy import abc, InvalidContent, VocationFilter, Category, Vocation
 from tibiapy.utils import parse_tibiacom_content, try_enum
 
 __all__ = ("Highscores", "HighscoresEntry")
+
+results_pattern = re.compile(r'Results: (\d+)')
 
 
 class Highscores(abc.Serializable):
@@ -13,6 +16,7 @@ class Highscores(abc.Serializable):
         self.vocation = try_enum(VocationFilter, kwargs.get("vocation"), VocationFilter.ALL)
         self.entries = kwargs.get("entries", [])
         self.results_count = kwargs.get("results_count")
+
 
     @classmethod
     def from_content(cls, content):
@@ -29,6 +33,13 @@ class Highscores(abc.Serializable):
         entries = tables.get("Highscores")
         if entries is None:
             return None
+        _, header, *rows = entries
+        info_row = rows.pop()
+        highscores.results_count = int(results_pattern.search(info_row.text).group(1))
+        for row in rows:
+            cols_raw = row.find_all('td')
+            cols_clean = [c.text.replace('\xa0', ' ').strip() for c in cols_raw]
+            highscores.parse_entry(cols_clean)
         return highscores
 
 
@@ -57,11 +68,21 @@ class Highscores(abc.Serializable):
         return output
     # endregion
 
+    def parse_entry(self, cols_clean):
+        rank, name, vocation, *values = cols_clean
+        rank = int(rank)
+        if self.category == Category.EXPERIENCE or self.category == Category.LOYALTY_POINTS:
+            _, value = values
+        else:
+            value, *_ = values
+        value = int(value.replace(',', ''))
+        entry = HighscoresEntry(name, rank, vocation, value)
+        self.entries.append(entry)
+
 
 class HighscoresEntry(abc.BaseCharacter):
-    def __init__(self, name, rank, vocation, value, extra=None):
+    def __init__(self, name, rank, vocation, value):
         self.name = name
         self.rank = rank
-        self.vocation = vocation
+        self.vocation = try_enum(Vocation, vocation)
         self.value = value
-        self.extra = extra
