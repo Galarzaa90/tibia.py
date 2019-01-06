@@ -1,6 +1,7 @@
 from enum import Enum
 
-__all__ = ('AccountStatus', 'HouseStatus', 'HouseType', 'PvpType', 'Sex', 'TransferType', 'Vocation', 'WorldLocation')
+__all__ = ('AccountStatus', 'Category', 'HouseStatus', 'HouseType', 'PvpType', 'Sex', 'TransferType', 'Vocation',
+           'VocationFilter', 'WorldLocation')
 
 
 class BaseEnum(Enum):
@@ -12,6 +13,19 @@ class AccountStatus(BaseEnum):
     """Possible account statuses."""
     FREE_ACCOUNT = "Free Account"
     PREMIUM_ACCOUNT = "Premium Account"
+
+
+class Category(BaseEnum):
+    ACHIEVEMENTS = "achievements"
+    AXE_FIGHTING = "axe"
+    CLUB_FIGHTING = "club"
+    DISTANCE_FIGHTING = "distance"
+    EXPERIENCE = "experience"
+    FISHING = "fishing"
+    FIST_FIGHTING = "fist"
+    LOYALTY_POINTS = "loyalty"
+    MAGIC_LEVEL = "magic"
+    SWORD_FIGHTING = "sword"
 
 
 class HouseStatus(BaseEnum):
@@ -61,6 +75,14 @@ class Vocation(BaseEnum):
     ELITE_KNIGHT = "Elite Knight"
     ROYAL_PALADIN = "Royal Paladin"
     MASTER_SORCERER = "Master Sorcerer"
+
+
+class VocationFilter(Enum):
+    ALL = 0
+    KNIGHTS = 1
+    PALADINS = 2
+    SORCERERS = 3
+    DRUIDS = 4
 
 
 class WorldLocation(BaseEnum):
