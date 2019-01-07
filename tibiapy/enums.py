@@ -16,6 +16,7 @@ class AccountStatus(BaseEnum):
 
 
 class Category(BaseEnum):
+    """The different highscores categories."""
     ACHIEVEMENTS = "achievements"
     AXE_FIGHTING = "axe"
     CLUB_FIGHTING = "club"
@@ -78,6 +79,7 @@ class Vocation(BaseEnum):
 
 
 class VocationFilter(Enum):
+    """The vocation filters available for Highscores."""
     ALL = 0
     KNIGHTS = 1
     PALADINS = 2

@@ -190,7 +190,7 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
 
     Returns
     -------
-    :class:`datetime.datetime`
+    :class:`datetime.datetime`, optional
         The represented datetime, or ``None`` if conversion wasn't possible.
     """
     if obj is None:
@@ -277,7 +277,7 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
 
     Returns
     -------
-    any
+    obj:
         The enum value if found, otherwise None.
     """
     if isinstance(val, cls):

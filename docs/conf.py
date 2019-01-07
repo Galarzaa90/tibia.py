@@ -96,9 +96,11 @@ html_theme = 'alabaster'
 # documentation.
 #
 html_theme_options = {
-    'github_user': 'galarzaa90',
+    'github_user': 'Galarzaa90',
     'github_repo': 'tibia.py',
-    'github_type': 'star'
+    'github_type': 'star',
+    'fixed_sidebar': True,
+    'travis_button': True
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

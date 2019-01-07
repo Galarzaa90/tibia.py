@@ -131,23 +131,22 @@ class Character(abc.BaseCharacter):
                  "achievements", "deaths", "account_information", "other_characters", "deletion_date")
 
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
-        self.name = name
-        self.former_names = kwargs.get("former_names", [])
+        self.name = name  # type: str
+        self.former_names = kwargs.get("former_names", [])  # type: List[str]
         self.sex = try_enum(Sex, sex)
         self.vocation = try_enum(Vocation, vocation)
-        self.level = level
-        self.achievement_points = kwargs.get("achievement_points", 0)
-        self.world = world
-        self.former_world = kwargs.get("former_world")
-        self.residence = kwargs.get("residence")
-        self.married_to = kwargs.get("married_to")
+        self.level = level  # type: int
+        self.achievement_points = kwargs.get("achievement_points", 0)  # type: int
+        self.world = world  # type: str
+        self.former_world = kwargs.get("former_world")  # type: Optional[str]
+        self.residence = kwargs.get("residence")  # type: str
+        self.married_to = kwargs.get("married_to")  # type: Optional[str]
         self.house = kwargs.get("house")  # type: Optional[CharacterHouse]
         self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
         self.last_login = try_datetime(kwargs.get("last_login"))
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
-        self.position = try_enum(AccountStatus, kwargs.get("account_status"))
-        self.position = kwargs.get("position")
-        self.comment = kwargs.get("comment")
+        self.position = kwargs.get("position")  # type: Optional[str]
+        self.comment = kwargs.get("comment")  # type: Optional[str]
         self.achievements = kwargs.get("achievements", [])  # type: List[Achievement]
         self.deaths = kwargs.get("deaths", [])  # type: List[Death]
         self.account_information = kwargs.get("account_information")  # type: Optional[AccountInformation]

@@ -20,6 +20,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: Category
+    :members:
+    :undoc-members:
+
 .. autoclass:: HouseStatus
     :members:
     :undoc-members:
@@ -37,6 +41,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :undoc-members:
 
 .. autoclass:: Vocation
+    :members:
+    :undoc-members:
+
+.. autoclass:: VocationFilter
     :members:
     :undoc-members:
 
@@ -58,6 +66,12 @@ Character
 Guild
 -----
 .. autoclass:: Guild
+   :members:
+   :inherited-members:
+
+Highscores
+----------
+.. autoclass:: Highscores
    :members:
    :inherited-members:
 
@@ -120,6 +134,12 @@ CharacterHouse
    :members:
    :inherited-members:
 
+ExpHighscoresEntry
+-------------------------
+.. autoclass:: ExpHighscoresEntry
+   :members:
+   :inherited-members:
+
 Death
 -----
 .. autoclass:: Death
@@ -150,9 +170,22 @@ GuildMembership
    :members:
    :inherited-members:
 
+
+HighscoresEntry
+---------------
+.. autoclass:: HighscoresEntry
+   :members:
+   :inherited-members:
+
 Killer
 ------
 .. autoclass:: Killer
+   :members:
+   :inherited-members:
+
+LoyaltyHighscoresEntry
+----------------------
+.. autoclass:: LoyaltyHighscoresEntry
    :members:
    :inherited-members:
 
