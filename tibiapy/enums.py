@@ -26,6 +26,7 @@ class Category(BaseEnum):
     FIST_FIGHTING = "fist"
     LOYALTY_POINTS = "loyalty"
     MAGIC_LEVEL = "magic"
+    SHIELDING = "shielding"
     SWORD_FIGHTING = "sword"
 
 
