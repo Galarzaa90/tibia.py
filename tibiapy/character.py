@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 import urllib.parse
 from collections import OrderedDict
@@ -12,8 +11,8 @@ from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
-from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, parse_tibiadata_date, \
-    parse_tibiadata_datetime, try_datetime, try_enum
+from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
+    parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
@@ -238,10 +237,7 @@ class Character(abc.BaseCharacter):
         ------
         InvalidContent
             If content is not a JSON string of the Character response."""
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a valid json string.")
+        json_content = parse_json(content)
         char = cls()
         try:
             character = json_content["characters"]

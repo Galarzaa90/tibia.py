@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 import urllib.parse
 from typing import Optional
@@ -8,8 +7,8 @@ import tibiapy.character
 from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, try_datetime, \
-    try_enum
+from tibiapy.utils import parse_json, parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, \
+    try_datetime, try_enum
 
 __all__ = ("House", "CharacterHouse", "GuildHouse", "ListedHouse")
 
@@ -191,10 +190,7 @@ class House(abc.BaseHouseWithId):
         InvalidContent
             If the content is not a house JSON response from TibiaData
         """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a json string.")
+        json_content = parse_json(content)
         try:
             house_json = json_content["house"]
             if not house_json["name"]:
@@ -424,10 +420,7 @@ class ListedHouse(abc.BaseHouseWithId):
         InvalidContent`
             Content is not the house list from TibiaData.com
         """
-        try:
-            json_data = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a json string")
+        json_data = parse_json(content)
         try:
             house_data = json_data["houses"]
             houses = []

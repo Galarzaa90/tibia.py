@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 import urllib.parse
 from collections import OrderedDict
@@ -11,8 +10,8 @@ from tibiapy import abc
 from tibiapy.enums import Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, try_date, try_datetime, \
-    try_enum
+from tibiapy.utils import parse_json, parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, try_date, \
+    try_datetime, try_enum
 
 __all__ = ("Guild", "GuildMember", "GuildInvite", "ListedGuild")
 
@@ -173,11 +172,7 @@ class Guild(abc.BaseGuild):
         InvalidContent
             If content is not a JSON response of a guild's page.
         """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a json string.")
-
+        json_content = parse_json(content)
         guild = cls()
         try:
             guild_obj = json_content["guild"]
@@ -543,10 +538,7 @@ class ListedGuild(abc.BaseGuild):
         InvalidContent
             If content is not a JSON response of TibiaData's guild list.
         """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a valid json string.")
+        json_content = parse_json(content)
         try:
             guilds_obj = json_content["guilds"]
             guilds = []

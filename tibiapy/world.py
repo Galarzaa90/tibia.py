@@ -1,4 +1,3 @@
-import json
 import re
 from collections import OrderedDict
 from typing import List
@@ -8,8 +7,8 @@ import bs4
 from tibiapy import InvalidContent, abc
 from tibiapy.character import OnlineCharacter
 from tibiapy.enums import PvpType, TransferType, WorldLocation
-from tibiapy.utils import parse_tibia_datetime, parse_tibia_full_date, parse_tibiacom_content, parse_tibiadata_datetime, \
-    try_date, try_datetime, try_enum
+from tibiapy.utils import parse_json, parse_tibia_datetime, parse_tibia_full_date, parse_tibiacom_content, \
+    parse_tibiadata_datetime, try_date, try_datetime, try_enum
 
 __all__ = ("ListedWorld", "World", "WorldOverview")
 
@@ -276,10 +275,7 @@ class World(abc.BaseWorld):
         InvalidContent
             If the provided content is not a TibiaData world response.
         """
-        try:
-            json_data = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a valid json string.")
+        json_data = parse_json(content)
         try:
             world_data = json_data["world"]
             world_info = world_data["world_information"]
@@ -514,10 +510,7 @@ class WorldOverview(abc.Serializable):
         InvalidContent
             If the provided content is the json content of the world section in TibiaData.com
         """
-        try:
-            json_data = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a valid json string.")
+        json_data = parse_json(content)
         try:
             worlds_json = json_data["worlds"]["allworlds"]
             world_overview = cls()
