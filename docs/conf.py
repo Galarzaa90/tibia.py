@@ -100,7 +100,8 @@ html_theme_options = {
     'github_repo': 'tibia.py',
     'github_type': 'star',
     'fixed_sidebar': True,
-    'travis_button': True
+    'travis_button': True,
+    'donate_url': 'https://beerpay.io/Galarzaa90/tibia.py'
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

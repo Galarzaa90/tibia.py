@@ -32,6 +32,7 @@ Indices and tables
 
    intro
    api
+   changelog
 
 * :ref:`genindex`
 * :ref:`search`

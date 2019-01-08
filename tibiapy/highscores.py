@@ -276,10 +276,10 @@ class HighscoresEntry(abc.BaseCharacter):
     value: :class:`int`
         The character's value for the highscores."""
     def __init__(self, name, rank, vocation, value):
-        self.name = name
-        self.rank = rank
+        self.name = name  # type: str
+        self.rank = rank  # type: int
         self.vocation = try_enum(Vocation, vocation)
-        self.value = value
+        self.value = value  # type: int
 
     def __repr__(self) -> str:
         return "<{0.__class__.__name__} rank={0.rank} name={0.name!r} value={0.value}>".format(self)
@@ -302,7 +302,7 @@ class ExpHighscoresEntry(HighscoresEntry):
             The character's level."""
     def __init__(self, name, rank, vocation, value, level):
         super().__init__(name, rank, vocation, value)
-        self.level = level
+        self.level = level  # type: int
 
 
 class LoyaltyHighscoresEntry(HighscoresEntry):
@@ -322,4 +322,4 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
             The character's loyalty title."""
     def __init__(self, name, rank, vocation, value, title):
         super().__init__(name, rank, vocation, value)
-        self.title = title
+        self.title = title  # type: str

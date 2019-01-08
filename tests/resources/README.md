@@ -54,6 +54,17 @@ exist.
 - [tibiadata_list.json](house/tibiadata_list.json) - A house list on TibiaData.
 - [tibiadata_list_not_found.json](house/tibiadata_list_not_found.json) - The TibiaData response for a house list that
 doesn't exist.
+
+## Highscores resources
+- [tibiacom_full.txt](highscores/tibiacom_full.txt) - The content of a correct highscore's pagem
+- [tibiacom_empty.txt](highscores/tibiacom_empty.txt) - The content of the highscores page of a nonexistent world.
+- [tibiacom_experience.txt](highscores/tibiacom_experience.txt) - The content of an experience highscores page.
+- [tibiacom_loyalty.txt](highscores/tibiacom_loyalty.txt) - The content of a loyalty highscores page.
+- [tibiadata_full.json](highscores/tibiadata_full.json) - A highscores response from TibiaData.
+- [tibiadata_empty.json](highscores/tibiadata_empty.json) - A highscores response from TibiaData of a nonexistent world.
+- [tibiadata_experience.json](highscores/tibiadata_experience.json) - A response containing experience highscores from
+TibiaData.
+- [tibiadata_loyalty.json](highscores/tibiadata_loyalty.json) - A response containing loyalty highscores from TibiaData.
  
  ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.

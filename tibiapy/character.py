@@ -48,9 +48,9 @@ class AccountInformation(abc.Serializable):
     __slots__ = ("created", "loyalty_title", "position")
 
     def __init__(self, created, loyalty_title=None, position=None):
-        self.created = created
-        self.loyalty_title = loyalty_title
-        self.position = position
+        self.created = try_datetime(created)
+        self.loyalty_title = loyalty_title  # type: Optional[str]
+        self.position = position  # type: Optional[str]
 
     def __repr__(self):
         return "<%s created=%r>" % (self.__class__.__name__, self.created)
@@ -69,8 +69,8 @@ class Achievement(abc.Serializable):
     __slots__ = ("name", "grade")
 
     def __init__(self, name, grade):
-        self.name = name
-        self.grade = grade
+        self.name = name   # type: str
+        self.grade = int(grade)
 
     def __repr__(self):
         return "<%s name=%r grade=%d>" % (self.__class__.__name__, self.name, self.grade)
@@ -134,8 +134,8 @@ class Character(abc.BaseCharacter):
         self.former_names = kwargs.get("former_names", [])  # type: List[str]
         self.sex = try_enum(Sex, sex)
         self.vocation = try_enum(Vocation, vocation)
-        self.level = level  # type: int
-        self.achievement_points = kwargs.get("achievement_points", 0)  # type: int
+        self.level = int(level)
+        self.achievement_points = int(kwargs.get("achievement_points", 0))
         self.world = world  # type: str
         self.former_world = kwargs.get("former_world")  # type: Optional[str]
         self.residence = kwargs.get("residence")  # type: str
@@ -622,8 +622,8 @@ class GuildMembership(abc.BaseGuild):
     __slots__ = ("rank",)
 
     def __init__(self, name, rank):
-        self.name = name
-        self.rank = rank
+        self.name = name  # type: str
+        self.rank = rank  # type: str
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} rank={0.rank!r}>".format(self)
@@ -651,9 +651,9 @@ class Killer(abc.Serializable):
     __slots__ = ("name", "player", "summon")
 
     def __init__(self, name, player=False, summon=None):
-        self.name = name
-        self.player = player
-        self.summon = summon
+        self.name = name  # type: str
+        self.player = player  # type: bool
+        self.summon = summon  # type: Optional[str]
 
     def __repr__(self):
         attributes = ""
@@ -695,11 +695,11 @@ class OtherCharacter(abc.BaseCharacter):
     """
     __slots__ = ("world", "online", "deleted")
 
-    def __init__(self, name, world=None, online=False, deleted=False):
-        self.name = name
-        self.world = world
-        self.online = online
-        self.deleted = deleted
+    def __init__(self, name, world, online=False, deleted=False):
+        self.name = name  # type: str
+        self.world = world  # type: str
+        self.online = online  # type: bool
+        self.deleted = deleted  # type: bool
 
 
 class OnlineCharacter(abc.BaseCharacter):
@@ -719,7 +719,7 @@ class OnlineCharacter(abc.BaseCharacter):
     __slots__ = ("world", "vocation", "level")
 
     def __init__(self, name, world, level, vocation):
-        self.name = name
-        self.world = world
+        self.name = name  # type: str
+        self.world = world  # type: str
         self.level = int(level)
         self.vocation = try_enum(Vocation, vocation)

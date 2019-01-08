@@ -44,16 +44,16 @@ class ListedWorld(abc.BaseWorld):
         Whether only premium account players are allowed to play in this server.
     """
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
-        self.name = name
+        self.name = name  # type: str
         self.location = try_enum(WorldLocation, location)
         self.pvp_type = try_enum(PvpType, pvp_type)
-        self.status = kwargs.get("status")
-        self.online_count = kwargs.get("online_count", 0)
+        self.status = kwargs.get("status")  # type: str
+        self.online_count = kwargs.get("online_count", 0)  # type: int
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
-        self.battleye_protected = kwargs.get("battleye_protected", False)
+        self.battleye_protected = kwargs.get("battleye_protected", False)  # type: bool
         self.battleye_date = try_date(kwargs.get("battleye_date"))
-        self.experimental = kwargs.get("experimental")
-        self.premium_only = kwargs.get("premium_only", False)
+        self.experimental = kwargs.get("experimental", False)  # type: bool
+        self.premium_only = kwargs.get("premium_only", False)  # type: bool
 
     # region Public methods
     @classmethod
@@ -187,21 +187,21 @@ class World(abc.BaseWorld):
     __slots__ = ("record_count", "record_date", "creation_date", "world_quest_titles", "online_players")
 
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
-        self.name = name
+        self.name = name  # type: str
         self.location = try_enum(WorldLocation, location)
         self.pvp_type = try_enum(PvpType, pvp_type)
-        self.status = kwargs.get("status")
-        self.online_count = kwargs.get("online_count", 0)
-        self.record_count = kwargs.get("record_count", 0)
+        self.status = kwargs.get("status")  # type: bool
+        self.online_count = kwargs.get("online_count", 0)  # type: int
+        self.record_count = kwargs.get("record_count", 0)  # type: int
         self.record_date = try_datetime(kwargs.get("record_date"))
-        self.creation_date = kwargs.get("creation_date")
+        self.creation_date = kwargs.get("creation_date")  # type: str
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
-        self.world_quest_titles = kwargs.get("world_quest_titles", [])
-        self.battleye_protected = kwargs.get("battleye_protected", False)
+        self.world_quest_titles = kwargs.get("world_quest_titles", [])  # type: List[str]
+        self.battleye_protected = kwargs.get("battleye_protected", False)  # type: bool
         self.battleye_date = try_date(kwargs.get("battleye_date"))
-        self.experimental = kwargs.get("experimental")
+        self.experimental = kwargs.get("experimental", False)  # type: bool
         self.online_players = kwargs.get("online_players", [])  # type: List[OnlineCharacter]
-        self.premium_only = kwargs.get("premium_only", False)
+        self.premium_only = kwargs.get("premium_only", False)  # type: bool
 
     # region Properties
     @property
@@ -408,7 +408,7 @@ class WorldOverview(abc.Serializable):
     __slots__ = ("record_count", "record_date", "worlds")
 
     def __init__(self, **kwargs):
-        self.record_count = kwargs.get("record_count", 0)
+        self.record_count = kwargs.get("record_count", 0)  # type: int
         self.record_date = try_datetime(kwargs.get("record_date"))
         self.worlds = kwargs.get("worlds", [])  # type: List[ListedWorld]
 
