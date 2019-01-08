@@ -48,6 +48,8 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+    .. automethod:: VocationFilter.from_name
+
 .. autoclass:: WorldLocation
     :members:
     :undoc-members:
