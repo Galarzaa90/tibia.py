@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.character &#8212; Tibia.py 1.1.0 documentation</title>
+    <title>tibiapy.character &#8212; Tibia.py 1.1.1 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -376,7 +376,8 @@
         <span class="k">if</span> <span class="s2">&quot;house&quot;</span> <span class="ow">in</span> <span class="n">character_data</span><span class="p">:</span>
             <span class="n">house</span> <span class="o">=</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;house&quot;</span><span class="p">]</span>
             <span class="n">paid_until_date</span> <span class="o">=</span> <span class="n">parse_tibiadata_date</span><span class="p">(</span><span class="n">house</span><span class="p">[</span><span class="s2">&quot;paid&quot;</span><span class="p">])</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">house</span> <span class="o">=</span> <span class="n">CharacterHouse</span><span class="p">(</span><span class="n">house</span><span class="p">[</span><span class="s2">&quot;houseid&quot;</span><span class="p">],</span> <span class="n">house</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">house</span><span class="p">[</span><span class="s2">&quot;town&quot;</span><span class="p">],</span> <span class="n">char</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">paid_until_date</span><span class="p">)</span>
+            <span class="n">char</span><span class="o">.</span><span class="n">house</span> <span class="o">=</span> <span class="n">CharacterHouse</span><span class="p">(</span><span class="n">house</span><span class="p">[</span><span class="s2">&quot;houseid&quot;</span><span class="p">],</span> <span class="n">house</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">char</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">house</span><span class="p">[</span><span class="s2">&quot;town&quot;</span><span class="p">],</span> <span class="n">char</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                        <span class="n">paid_until_date</span><span class="p">)</span>
         <span class="n">char</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">character_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;last_login&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">char</span><span class="o">.</span><span class="n">last_login</span> <span class="o">=</span> <span class="n">parse_tibiadata_datetime</span><span class="p">(</span><span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;last_login&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
