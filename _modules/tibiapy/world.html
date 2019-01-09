@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.world &#8212; Tibia.py 1.0.0 documentation</title>
+    <title>tibiapy.world &#8212; Tibia.py 1.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -24,9 +24,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
 
-    <div class="document">
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/Galarzaa90/tibia.py">
+    <img
+        alt="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+        src="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
           
@@ -34,8 +109,7 @@
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.world</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">re</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span>
 
@@ -44,8 +118,8 @@
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="k">import</span> <span class="n">InvalidContent</span><span class="p">,</span> <span class="n">abc</span>
 <span class="kn">from</span> <span class="nn">tibiapy.character</span> <span class="k">import</span> <span class="n">OnlineCharacter</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="k">import</span> <span class="n">PvpType</span><span class="p">,</span> <span class="n">TransferType</span><span class="p">,</span> <span class="n">WorldLocation</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="k">import</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibia_full_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">parse_tibiadata_datetime</span><span class="p">,</span> \
-    <span class="n">try_date</span><span class="p">,</span> <span class="n">try_datetime</span><span class="p">,</span> <span class="n">try_enum</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="k">import</span> <span class="n">parse_json</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibia_full_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> \
+    <span class="n">parse_tibiadata_datetime</span><span class="p">,</span> <span class="n">try_date</span><span class="p">,</span> <span class="n">try_datetime</span><span class="p">,</span> <span class="n">try_enum</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ListedWorld&quot;</span><span class="p">,</span> <span class="s2">&quot;World&quot;</span><span class="p">,</span> <span class="s2">&quot;WorldOverview&quot;</span><span class="p">)</span>
 
@@ -81,16 +155,16 @@
 <span class="sd">        Whether only premium account players are allowed to play in this server.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvp_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">WorldLocation</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pvp_type</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">PvpType</span><span class="p">,</span> <span class="n">pvp_type</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">online_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;online_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>  <span class="c1"># type: str</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">online_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;online_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># type: int</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transfer_type</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">TransferType</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transfer_type&quot;</span><span class="p">,</span> <span class="n">TransferType</span><span class="o">.</span><span class="n">REGULAR</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">battleye_protected</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;battleye_protected&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">battleye_protected</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;battleye_protected&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: bool</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">battleye_date</span> <span class="o">=</span> <span class="n">try_date</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;battleye_date&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">experimental</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;experimental&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">premium_only</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;premium_only&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">experimental</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;experimental&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: bool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">premium_only</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;premium_only&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: bool</span>
 
     <span class="c1"># region Public methods</span>
 <div class="viewcode-block" id="ListedWorld.get_list_url"><a class="viewcode-back" href="../../api.html#tibiapy.ListedWorld.get_list_url">[docs]</a>    <span class="nd">@classmethod</span>
@@ -224,21 +298,21 @@
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="s2">&quot;record_date&quot;</span><span class="p">,</span> <span class="s2">&quot;creation_date&quot;</span><span class="p">,</span> <span class="s2">&quot;world_quest_titles&quot;</span><span class="p">,</span> <span class="s2">&quot;online_players&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvp_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">WorldLocation</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pvp_type</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">PvpType</span><span class="p">,</span> <span class="n">pvp_type</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">online_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;online_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">record_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>  <span class="c1"># type: bool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">online_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;online_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># type: int</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">record_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># type: int</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">record_date</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;record_date&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creation_date&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creation_date&quot;</span><span class="p">)</span>  <span class="c1"># type: str</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transfer_type</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">TransferType</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transfer_type&quot;</span><span class="p">,</span> <span class="n">TransferType</span><span class="o">.</span><span class="n">REGULAR</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">world_quest_titles</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;world_quest_titles&quot;</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">battleye_protected</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;battleye_protected&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world_quest_titles</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;world_quest_titles&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[str]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">battleye_protected</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;battleye_protected&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: bool</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">battleye_date</span> <span class="o">=</span> <span class="n">try_date</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;battleye_date&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">experimental</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;experimental&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">experimental</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;experimental&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: bool</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">online_players</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;online_players&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[OnlineCharacter]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">premium_only</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;premium_only&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">premium_only</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;premium_only&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: bool</span>
 
     <span class="c1"># region Properties</span>
     <span class="nd">@property</span>
@@ -312,10 +386,7 @@
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If the provided content is not a TibiaData world response.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a valid json string.&quot;</span><span class="p">)</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">parse_json</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">world_data</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span>
             <span class="n">world_info</span> <span class="o">=</span> <span class="n">world_data</span><span class="p">[</span><span class="s2">&quot;world_information&quot;</span><span class="p">]</span>
@@ -448,7 +519,7 @@
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="s2">&quot;record_date&quot;</span><span class="p">,</span> <span class="s2">&quot;worlds&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">record_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">record_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># type: int</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">record_date</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;record_date&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">worlds</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;worlds&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[ListedWorld]</span>
 
@@ -550,10 +621,7 @@
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If the provided content is the json content of the world section in TibiaData.com</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a valid json string.&quot;</span><span class="p">)</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">parse_json</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">worlds_json</span> <span class="o">=</span> <span class="n">json_data</span><span class="p">[</span><span class="s2">&quot;worlds&quot;</span><span class="p">][</span><span class="s2">&quot;allworlds&quot;</span><span class="p">]</span>
             <span class="n">world_overview</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
@@ -604,63 +672,8 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
-
-
-
-
-
-
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
-
-
-
-
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2018, Allan Galarza.
       

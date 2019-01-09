@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Reference &#8212; Tibia.py 1.0.0 documentation</title>
+    <title>API Reference &#8212; Tibia.py 1.1.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -17,6 +17,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
     <link rel="prev" title="Introduction" href="intro.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -25,9 +26,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Tibia.py</a></h1>
 
-    <div class="document">
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/Galarzaa90/tibia.py">
+    <img
+        alt="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+        src="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#enumerations">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main-models">Main Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#guild">Guild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#highscores">Highscores</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#house">House</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listedguild">ListedGuild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listedhouse">ListedHouse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listedworld">ListedWorld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#world">World</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#worldoverview">WorldOverview</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#auxiliary-classes">Auxiliary Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#accountinformation">AccountInformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#achievement">Achievement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#characterhouse">CharacterHouse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exphighscoresentry">ExpHighscoresEntry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#death">Death</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#guildhouse">GuildHouse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#guildinvite">GuildInvite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#guildmember">GuildMember</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#guildmembership">GuildMembership</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#highscoresentry">HighscoresEntry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#killer">Killer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loyaltyhighscoresentry">LoyaltyHighscoresEntry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#onlinecharacter">OnlineCharacter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#othercharacter">OtherCharacter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tibiapy.utils">Utility functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="changelog.html" title="next chapter">Changelog</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
       <div class="documentwrapper">
         <div class="bodywrapper">
           
@@ -70,6 +181,67 @@ It is possible to create and edit these objects as desired, but it may lead to u
 <dl class="attribute">
 <dt id="tibiapy.AccountStatus.PREMIUM_ACCOUNT">
 <code class="descname">PREMIUM_ACCOUNT</code><em class="property"> = 'Premium Account'</em><a class="headerlink" href="#tibiapy.AccountStatus.PREMIUM_ACCOUNT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tibiapy.Category">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Category</code><a class="reference internal" href="_modules/tibiapy/enums.html#Category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Category" title="Permalink to this definition">¶</a></dt>
+<dd><p>The different highscores categories.</p>
+<dl class="attribute">
+<dt id="tibiapy.Category.ACHIEVEMENTS">
+<code class="descname">ACHIEVEMENTS</code><em class="property"> = 'achievements'</em><a class="headerlink" href="#tibiapy.Category.ACHIEVEMENTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.AXE_FIGHTING">
+<code class="descname">AXE_FIGHTING</code><em class="property"> = 'axe'</em><a class="headerlink" href="#tibiapy.Category.AXE_FIGHTING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.CLUB_FIGHTING">
+<code class="descname">CLUB_FIGHTING</code><em class="property"> = 'club'</em><a class="headerlink" href="#tibiapy.Category.CLUB_FIGHTING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.DISTANCE_FIGHTING">
+<code class="descname">DISTANCE_FIGHTING</code><em class="property"> = 'distance'</em><a class="headerlink" href="#tibiapy.Category.DISTANCE_FIGHTING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.EXPERIENCE">
+<code class="descname">EXPERIENCE</code><em class="property"> = 'experience'</em><a class="headerlink" href="#tibiapy.Category.EXPERIENCE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.FISHING">
+<code class="descname">FISHING</code><em class="property"> = 'fishing'</em><a class="headerlink" href="#tibiapy.Category.FISHING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.FIST_FIGHTING">
+<code class="descname">FIST_FIGHTING</code><em class="property"> = 'fist'</em><a class="headerlink" href="#tibiapy.Category.FIST_FIGHTING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.LOYALTY_POINTS">
+<code class="descname">LOYALTY_POINTS</code><em class="property"> = 'loyalty'</em><a class="headerlink" href="#tibiapy.Category.LOYALTY_POINTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.MAGIC_LEVEL">
+<code class="descname">MAGIC_LEVEL</code><em class="property"> = 'magic'</em><a class="headerlink" href="#tibiapy.Category.MAGIC_LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.SHIELDING">
+<code class="descname">SHIELDING</code><em class="property"> = 'shielding'</em><a class="headerlink" href="#tibiapy.Category.SHIELDING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Category.SWORD_FIGHTING">
+<code class="descname">SWORD_FIGHTING</code><em class="property"> = 'sword'</em><a class="headerlink" href="#tibiapy.Category.SWORD_FIGHTING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -208,6 +380,66 @@ It is possible to create and edit these objects as desired, but it may lead to u
 <dl class="attribute">
 <dt id="tibiapy.Vocation.MASTER_SORCERER">
 <code class="descname">MASTER_SORCERER</code><em class="property"> = 'Master Sorcerer'</em><a class="headerlink" href="#tibiapy.Vocation.MASTER_SORCERER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tibiapy.VocationFilter">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">VocationFilter</code><a class="reference internal" href="_modules/tibiapy/enums.html#VocationFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.VocationFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>The vocation filters available for Highscores.</p>
+<dl class="classmethod">
+<dt id="tibiapy.VocationFilter.from_name">
+<em class="property">classmethod </em><code class="descname">from_name</code><span class="sig-paren">(</span><em>name</em>, <em>all_fallback=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/enums.html#VocationFilter.from_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.VocationFilter.from_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a vocation filter from a vocation’s name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the vocation.</li>
+<li><strong>all_fallback</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to return <a class="reference internal" href="#tibiapy.VocationFilter.ALL" title="tibiapy.VocationFilter.ALL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ALL</span></code></a> if no match is found. Otherwise, <code class="docutils literal notranslate"><span class="pre">None</span></code> will be returned.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The matching vocation filter.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#tibiapy.VocationFilter" title="tibiapy.VocationFilter">VocationFilter</a>, optional</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.VocationFilter.ALL">
+<code class="descname">ALL</code><em class="property"> = 0</em><a class="headerlink" href="#tibiapy.VocationFilter.ALL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.VocationFilter.KNIGHTS">
+<code class="descname">KNIGHTS</code><em class="property"> = 1</em><a class="headerlink" href="#tibiapy.VocationFilter.KNIGHTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.VocationFilter.PALADINS">
+<code class="descname">PALADINS</code><em class="property"> = 2</em><a class="headerlink" href="#tibiapy.VocationFilter.PALADINS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.VocationFilter.SORCERERS">
+<code class="descname">SORCERERS</code><em class="property"> = 3</em><a class="headerlink" href="#tibiapy.VocationFilter.SORCERERS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.VocationFilter.DRUIDS">
+<code class="descname">DRUIDS</code><em class="property"> = 4</em><a class="headerlink" href="#tibiapy.VocationFilter.DRUIDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">from_name</code><em class="property"> = &lt;bound method VocationFilter.from_name of &lt;enum 'VocationFilter'&gt;&gt;</em><a class="reference internal" href="_modules/tibiapy/enums.html#VocationFilter.from_name"><span class="viewcode-link">[source]</span></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1121,6 +1353,286 @@ It will be empty if the character is hidden, otherwise, it will contain at least
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="highscores">
+<h3>Highscores<a class="headerlink" href="#highscores" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.Highscores">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Highscores</code><span class="sig-paren">(</span><em>world</em>, <em>category</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/highscores.html#Highscores"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Highscores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the highscores of a world.</p>
+<p>Tibia.com only shows 25 entries per page.
+TibiaData.com shows all results at once.</p>
+<dl class="attribute">
+<dt id="tibiapy.Highscores.world">
+<code class="descname">world</code><a class="headerlink" href="#tibiapy.Highscores.world" title="Permalink to this definition">¶</a></dt>
+<dd><p>The world the highscores belong to.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.category">
+<code class="descname">category</code><a class="headerlink" href="#tibiapy.Highscores.category" title="Permalink to this definition">¶</a></dt>
+<dd><p>The selected category to displays the highscores of.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.Category" title="tibiapy.Category"><code class="xref py py-class docutils literal notranslate"><span class="pre">Category</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.vocation">
+<code class="descname">vocation</code><a class="headerlink" href="#tibiapy.Highscores.vocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The selected vocation to filter out values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.VocationFilter" title="tibiapy.VocationFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">VocationFilter</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.results_count">
+<code class="descname">results_count</code><a class="headerlink" href="#tibiapy.Highscores.results_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total amount of highscores entries in this category. These may be shown in another page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.from_rank">
+<code class="descname">from_rank</code><a class="headerlink" href="#tibiapy.Highscores.from_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>The starting rank of the provided entries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.to_rank">
+<code class="descname">to_rank</code><a class="headerlink" href="#tibiapy.Highscores.to_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>The last rank of the provided entries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.page">
+<code class="descname">page</code><a class="headerlink" href="#tibiapy.Highscores.page" title="Permalink to this definition">¶</a></dt>
+<dd><p>The page number the shown results correspond to on Tibia.com</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.total_pages">
+<code class="descname">total_pages</code><a class="headerlink" href="#tibiapy.Highscores.total_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total of pages of the highscores category.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.Highscores.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL to the highscores page on Tibia.com containing the results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Highscores.url_tibiadata">
+<code class="descname">url_tibiadata</code><a class="headerlink" href="#tibiapy.Highscores.url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL to the highscores page on TibiaData.com containing the results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.Highscores.from_content">
+<em class="property">classmethod </em><code class="descname">from_content</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/highscores.html#Highscores.from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Highscores.from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of the class from the html content of a highscores page.</p>
+<p class="rubric">Notes</p>
+<p>Tibia.com only shows up to 25 entries per page, so in order to obtain the full highscores, all 12 pages must
+be parsed and merged into one.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The highscores results contained in the page.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.Highscores" title="tibiapy.Highscores"><code class="xref py py-class docutils literal notranslate"><span class="pre">Highscores</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#tibiapy.InvalidContent" title="tibiapy.InvalidContent"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidContent</span></code></a> – If content is not the HTML of a highscore’s page.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.Highscores.from_tibiadata">
+<em class="property">classmethod </em><code class="descname">from_tibiadata</code><span class="sig-paren">(</span><em>content</em>, <em>vocation=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/highscores.html#Highscores.from_tibiadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Highscores.from_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a highscores object from a TibiaData highscores response.</p>
+<p class="rubric">Notes</p>
+<p>Since TibiaData.com’s response doesn’t contain any indication of the vocation filter applied,
+<a class="reference internal" href="#tibiapy.Highscores.vocation" title="tibiapy.Highscores.vocation"><code class="xref py py-attr docutils literal notranslate"><span class="pre">vocation</span></code></a> can’t be determined from the response, so the attribute must be assigned manually.</p>
+<p>If the attribute is known, it can be passed for it to be assigned in this method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The JSON content of the response.</li>
+<li><strong>vocation</strong> (<a class="reference internal" href="#tibiapy.VocationFilter" title="tibiapy.VocationFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">VocationFilter</span></code></a>, optional) – The vocation filter to assign to the results. Note that this won’t affect the parsing.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The highscores contained in the page, or None if the content is for the highscores of a nonexistent world.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#tibiapy.Highscores" title="tibiapy.Highscores"><code class="xref py py-class docutils literal notranslate"><span class="pre">Highscores</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#tibiapy.InvalidContent" title="tibiapy.InvalidContent"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidContent</span></code></a> – If content is not a JSON string of the highscores response.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.Highscores.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>world</em>, <em>category=&lt;Category.EXPERIENCE: 'experience'&gt;</em>, <em>vocation=&lt;VocationFilter.ALL: 0&gt;</em>, <em>page=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/highscores.html#Highscores.get_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Highscores.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Tibia.com URL of the highscores for the given parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The game world of the desired highscores.</li>
+<li><strong>category</strong> (<a class="reference internal" href="#tibiapy.Category" title="tibiapy.Category"><code class="xref py py-class docutils literal notranslate"><span class="pre">Category</span></code></a>) – The desired highscores category.</li>
+<li><strong>vocation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">VocationFiler</span></code>) – The vocation filter to apply. By default all vocations will be shown.</li>
+<li><strong>page</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The page of highscores to show.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">The URL to the Tibia.com highscores.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.Highscores.get_url_tibiadata">
+<em class="property">classmethod </em><code class="descname">get_url_tibiadata</code><span class="sig-paren">(</span><em>world</em>, <em>category=&lt;Category.EXPERIENCE: 'experience'&gt;</em>, <em>vocation=&lt;VocationFilter.ALL: 0&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/highscores.html#Highscores.get_url_tibiadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Highscores.get_url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the TibiaData.com URL of the highscores for the given parameters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The game world of the desired highscores.</li>
+<li><strong>category</strong> (<a class="reference internal" href="#tibiapy.Category" title="tibiapy.Category"><code class="xref py py-class docutils literal notranslate"><span class="pre">Category</span></code></a>) – The desired highscores category.</li>
+<li><strong>vocation</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">VocationFiler</span></code>) – The vocation filter to apply. By default all vocations will be shown.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">The URL to the TibiaData.com highscores.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.Highscores.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.Highscores.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -3396,6 +3908,173 @@ and properties for their use.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="exphighscoresentry">
+<h3>ExpHighscoresEntry<a class="headerlink" href="#exphighscoresentry" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.ExpHighscoresEntry">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">ExpHighscoresEntry</code><span class="sig-paren">(</span><em>name</em>, <em>rank</em>, <em>vocation</em>, <em>value</em>, <em>level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/highscores.html#ExpHighscoresEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.ExpHighscoresEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a entry for the highscores’s experience category.</p>
+<dl class="attribute">
+<dt id="tibiapy.ExpHighscoresEntry.name">
+<code class="descname">name</code><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the character.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ExpHighscoresEntry.rank">
+<code class="descname">rank</code><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s rank in the respective highscores.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ExpHighscoresEntry.vocation">
+<code class="descname">vocation</code><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.vocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s vocation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.Vocation" title="tibiapy.Vocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vocation</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ExpHighscoresEntry.value">
+<code class="descname">value</code><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s experience points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ExpHighscoresEntry.level">
+<code class="descname">level</code><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.ExpHighscoresEntry.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Tibia.com URL for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.ExpHighscoresEntry.get_url_tibiadata">
+<em class="property">classmethod </em><code class="descname">get_url_tibiadata</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.get_url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the TibiaData.com URL for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page on TibiaData.com.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.ExpHighscoresEntry.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ExpHighscoresEntry.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL of the character’s information page on Tibia.com</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ExpHighscoresEntry.url_tibiadata">
+<code class="descname">url_tibiadata</code><a class="headerlink" href="#tibiapy.ExpHighscoresEntry.url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL of the character’s information on TibiaData.com.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="death">
 <h3>Death<a class="headerlink" href="#death" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
@@ -3599,6 +4278,20 @@ and properties for their use.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.GuildHouse.paid_until_date">
+<code class="descname">paid_until_date</code><a class="headerlink" href="#tibiapy.GuildHouse.paid_until_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>The date the last paid rent is due.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -4124,6 +4817,159 @@ and properties for their use.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="highscoresentry">
+<h3>HighscoresEntry<a class="headerlink" href="#highscoresentry" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.HighscoresEntry">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">HighscoresEntry</code><span class="sig-paren">(</span><em>name</em>, <em>rank</em>, <em>vocation</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/highscores.html#HighscoresEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.HighscoresEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a entry for the highscores.</p>
+<dl class="attribute">
+<dt id="tibiapy.HighscoresEntry.name">
+<code class="descname">name</code><a class="headerlink" href="#tibiapy.HighscoresEntry.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the character.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HighscoresEntry.rank">
+<code class="descname">rank</code><a class="headerlink" href="#tibiapy.HighscoresEntry.rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s rank in the respective highscores.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HighscoresEntry.vocation">
+<code class="descname">vocation</code><a class="headerlink" href="#tibiapy.HighscoresEntry.vocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s vocation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.Vocation" title="tibiapy.Vocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vocation</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HighscoresEntry.value">
+<code class="descname">value</code><a class="headerlink" href="#tibiapy.HighscoresEntry.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s value for the highscores.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.HighscoresEntry.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.HighscoresEntry.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Tibia.com URL for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.HighscoresEntry.get_url_tibiadata">
+<em class="property">classmethod </em><code class="descname">get_url_tibiadata</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.HighscoresEntry.get_url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the TibiaData.com URL for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page on TibiaData.com.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.HighscoresEntry.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.HighscoresEntry.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HighscoresEntry.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.HighscoresEntry.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL of the character’s information page on Tibia.com</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HighscoresEntry.url_tibiadata">
+<code class="descname">url_tibiadata</code><a class="headerlink" href="#tibiapy.HighscoresEntry.url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL of the character’s information on TibiaData.com.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="killer">
 <h3>Killer<a class="headerlink" href="#killer" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
@@ -4211,6 +5057,173 @@ and properties for their use.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="loyaltyhighscoresentry">
+<h3>LoyaltyHighscoresEntry<a class="headerlink" href="#loyaltyhighscoresentry" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.LoyaltyHighscoresEntry">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">LoyaltyHighscoresEntry</code><span class="sig-paren">(</span><em>name</em>, <em>rank</em>, <em>vocation</em>, <em>value</em>, <em>title</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/highscores.html#LoyaltyHighscoresEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a entry for the highscores loyalty points category.</p>
+<dl class="attribute">
+<dt id="tibiapy.LoyaltyHighscoresEntry.name">
+<code class="descname">name</code><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the character.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LoyaltyHighscoresEntry.rank">
+<code class="descname">rank</code><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s rank in the respective highscores.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LoyaltyHighscoresEntry.vocation">
+<code class="descname">vocation</code><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.vocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s vocation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.Vocation" title="tibiapy.Vocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vocation</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LoyaltyHighscoresEntry.value">
+<code class="descname">value</code><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s loyalty points.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LoyaltyHighscoresEntry.title">
+<code class="descname">title</code><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>The character’s loyalty title.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.LoyaltyHighscoresEntry.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Tibia.com URL for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.LoyaltyHighscoresEntry.get_url_tibiadata">
+<em class="property">classmethod </em><code class="descname">get_url_tibiadata</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.get_url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the TibiaData.com URL for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page on TibiaData.com.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.LoyaltyHighscoresEntry.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LoyaltyHighscoresEntry.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL of the character’s information page on Tibia.com</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LoyaltyHighscoresEntry.url_tibiadata">
+<code class="descname">url_tibiadata</code><a class="headerlink" href="#tibiapy.LoyaltyHighscoresEntry.url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL of the character’s information on TibiaData.com.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -4376,7 +5389,7 @@ and properties for their use.</p>
 <h3>OtherCharacter<a class="headerlink" href="#othercharacter" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="tibiapy.OtherCharacter">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">OtherCharacter</code><span class="sig-paren">(</span><em>name</em>, <em>world=None</em>, <em>online=False</em>, <em>deleted=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#OtherCharacter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.OtherCharacter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">OtherCharacter</code><span class="sig-paren">(</span><em>name</em>, <em>world</em>, <em>online=False</em>, <em>deleted=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#OtherCharacter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.OtherCharacter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents other character’s displayed in the Character’s information page.</p>
 <dl class="attribute">
 <dt id="tibiapy.OtherCharacter.name">
@@ -5502,7 +6515,7 @@ This is meant to be used in constructors.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The represented datetime, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if conversion wasn’t possible.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a>, optional</td>
 </tr>
 </tbody>
 </table>
@@ -5572,8 +6585,29 @@ This is meant to be used in constructors.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The enum value if found, otherwise None.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">any</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">obj</p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tibiapy.utils.parse_json">
+<code class="descclassname">tibiapy.utils.</code><code class="descname">parse_json</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#parse_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.utils.parse_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to parse a string into a json object.</p>
+<p>This also performs a trim of all values, recursively removing leading and trailing whitespace.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<em>A JSON format string.</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The object represented by the json string.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">obj</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidContent</span></code> – If the content is not a valid json string.</td>
 </tr>
 </tbody>
 </table>
@@ -5587,93 +6621,8 @@ This is meant to be used in constructors.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">Tibia.py</a></h1>
-
-
-
-
-
-
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#enumerations">Enumerations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#main-models">Main Models</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#guild">Guild</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#house">House</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#listedguild">ListedGuild</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#listedhouse">ListedHouse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#listedworld">ListedWorld</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#world">World</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#worldoverview">WorldOverview</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#auxiliary-classes">Auxiliary Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#accountinformation">AccountInformation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#achievement">Achievement</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#characterhouse">CharacterHouse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#death">Death</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#guildhouse">GuildHouse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#guildinvite">GuildInvite</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#guildmember">GuildMember</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#guildmembership">GuildMembership</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#killer">Killer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#onlinecharacter">OnlineCharacter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#othercharacter">OtherCharacter</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tibiapy.utils">Utility functions</a></li>
-</ul>
-</li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="intro.html" title="previous chapter">Introduction</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2018, Allan Galarza.
       
