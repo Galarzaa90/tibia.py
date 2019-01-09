@@ -2,7 +2,7 @@ import datetime
 
 import tests.tests_guild
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import Character, Death, InvalidContent, Killer
+from tibiapy import Character, CharacterHouse, Death, InvalidContent, Killer
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.utils import parse_tibia_datetime
 
@@ -60,6 +60,12 @@ class TestCharacter(TestTibiaPy):
         self.assertTrue(char.former_names)
         self.assertEqual(len(char.former_names), 2)
 
+        self.assertIsInstance(char.house, CharacterHouse)
+        self.assertEqual(char.house.owner, char.name)
+        self.assertEqual(char.house.town, "Darashia")
+        self.assertEqual(char.house.world, char.world)
+        self.assertIsInstance(char.house.paid_until_date, datetime.date)
+
     def testCharacterPosition(self):
         content = self._load_resource(FILE_CHARACTER_SPECIAL_POSITION)
         char = Character.from_content(content)
@@ -113,6 +119,12 @@ class TestCharacter(TestTibiaPy):
         self.assertIsNotNone(char.guild_name)
         self.assertIsInstance(char.last_login, datetime.datetime)
 
+        self.assertIsInstance(char.house, CharacterHouse)
+        self.assertEqual(char.house.owner, char.name)
+        self.assertEqual(char.house.town, "Ankrahmun")
+        self.assertEqual(char.house.world, char.world)
+        self.assertIsInstance(char.house.paid_until_date, datetime.date)
+
         self.assertTrue(char.deaths[3].by_player)
 
     def testCharacterTibiaDataUnhidden(self):
@@ -122,6 +134,12 @@ class TestCharacter(TestTibiaPy):
         self.assertIsNotNone(char.account_information)
         self.assertTrue(char.other_characters)
         self.assertFalse(char.hidden)
+
+        self.assertIsInstance(char.house, CharacterHouse)
+        self.assertEqual(char.house.owner, char.name)
+        self.assertEqual(char.house.town, "Kazordoon")
+        self.assertEqual(char.house.world, char.world)
+        self.assertIsInstance(char.house.paid_until_date, datetime.date)
 
     def testCharacterTibiaDataDeleted(self):
         content = self._load_resource(FILE_CHARACTER_TIBIADATA_DELETED)

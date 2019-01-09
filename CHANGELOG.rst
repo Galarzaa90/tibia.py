@@ -2,6 +2,13 @@
 Changelog
 =========
 
+.. _v1.1.1:
+
+1.1.1 (2019-01-09)
+==================
+
+- Fixed character houses having attributes mixed up.
+
 .. _v1.1.0:
 
 1.1.0 (2019-01-09)

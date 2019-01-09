@@ -265,7 +265,8 @@ class Character(abc.BaseCharacter):
         if "house" in character_data:
             house = character_data["house"]
             paid_until_date = parse_tibiadata_date(house["paid"])
-            char.house = CharacterHouse(house["houseid"], house["name"], house["town"], char.name, paid_until_date)
+            char.house = CharacterHouse(house["houseid"], house["name"], char.world, house["town"], char.name,
+                                        paid_until_date)
         char.comment = character_data.get("comment")
         if len(character_data["last_login"]) > 0:
             char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])
