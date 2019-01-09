@@ -130,3 +130,6 @@ class TestUtils(TestTibiaPy):
 
     def testEnumStr(self):
         self.assertEqual(str(enums.Sex.MALE), enums.Sex.MALE.value)
+        self.assertEqual(enums.VocationFilter.from_name("royal paladin"), enums.VocationFilter.PALADINS)
+        self.assertEqual(enums.VocationFilter.from_name("unknown"), enums.VocationFilter.ALL)
+        self.assertIsNone(enums.VocationFilter.from_name("unknown", False))
