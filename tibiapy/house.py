@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 import urllib.parse
 from typing import Optional
@@ -8,8 +7,8 @@ import tibiapy.character
 from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, try_datetime, \
-    try_enum
+from tibiapy.utils import parse_json, parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, \
+    try_datetime, try_enum
 
 __all__ = ("House", "CharacterHouse", "GuildHouse", "ListedHouse")
 
@@ -79,24 +78,24 @@ class House(abc.BaseHouseWithId):
                  "highest_bidder", "auction_end")
 
     def __init__(self, name, world=None, **kwargs):
-        self.id = kwargs.get("id", 0)
-        self.name = name
-        self.world = world
-        self.image_url = kwargs.get("image_url")
-        self.beds = kwargs.get("beds", 0)
+        self.id = kwargs.get("id", 0)  # type: int
+        self.name = name  # type: str
+        self.world = world  # type: str
+        self.image_url = kwargs.get("image_url")  # type: str
+        self.beds = kwargs.get("beds", 0)  # type: int
         self.type = try_enum(HouseType, kwargs.get("type"), HouseType.HOUSE)
-        self.size = kwargs.get("size", 0)
-        self.rent = kwargs.get("rent", 0)
+        self.size = kwargs.get("size", 0)  # type: int
+        self.rent = kwargs.get("rent", 0)  # type: int
         self.status = try_enum(HouseStatus, kwargs.get("status"), None)
-        self.owner = kwargs.get("owner")
+        self.owner = kwargs.get("owner")  # type: Optional[str]
         self.owner_sex = try_enum(Sex, kwargs.get("owner_sex"))
         self.paid_until = try_datetime(kwargs.get("paid_until"))
         self.transfer_date = try_datetime(kwargs.get("transfer_date"))
-        self.transferee = kwargs.get("transferee")
-        self.transfer_price = kwargs.get("transfer_price", 0)
-        self.transfer_accepted = kwargs.get("transfer_accepted", False)
-        self.highest_bid = kwargs.get("highest_bid", 0)
-        self.highest_bidder = kwargs.get("highest_bidder")
+        self.transferee = kwargs.get("transferee")  #type: Optional[str]
+        self.transfer_price = kwargs.get("transfer_price", 0)  # type: int
+        self.transfer_accepted = kwargs.get("transfer_accepted", False)  # type: bool
+        self.highest_bid = kwargs.get("highest_bid", 0)  # type: int
+        self.highest_bidder = kwargs.get("highest_bidder")  # type: Optional[str]
         self.auction_end = try_datetime(kwargs.get("auction_end"))
 
     # region Properties
@@ -191,10 +190,7 @@ class House(abc.BaseHouseWithId):
         InvalidContent
             If the content is not a house JSON response from TibiaData
         """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a json string.")
+        json_content = parse_json(content)
         try:
             house_json = json_content["house"]
             if not house_json["name"]:
@@ -277,10 +273,10 @@ class CharacterHouse(abc.BaseHouseWithId):
 
     def __init__(self, _id, name, world=None, town=None, owner=None, paid_until_date=None):
         self.id = int(_id)
-        self.name = name
-        self.town = town
-        self.world = world
-        self.owner = owner
+        self.name = name  # type: str
+        self.town = town  # type: str
+        self.world = world  # type: str
+        self.owner = owner  # type: str
         self.paid_until_date = try_date(paid_until_date)
         self.status = HouseStatus.RENTED
         self.type = HouseType.HOUSE
@@ -300,14 +296,16 @@ class GuildHouse(abc.BaseHouse):
     type: :class:`HouseType`
         The type of the house.
     owner: :class:`str`
-        The owner of the guildhall."""
+        The owner of the guildhall.
+    paid_until_date: :class:`datetime.date`
+        The date the last paid rent is due."""
     __slots__ = ("owner", "paid_until_date")
 
     def __init__(self, name, world=None, owner=None, paid_until_date=None):
-        self.name = name
-        self.world = world
-        self.owner = owner
-        self.paid_until_date = paid_until_date
+        self.name = name  # type: str
+        self.world = world  # type: str
+        self.owner = owner  # type: str
+        self.paid_until_date = try_date(paid_until_date)
         self.status = HouseStatus.RENTED
         self.type = HouseType.GUILDHALL
 
@@ -345,16 +343,16 @@ class ListedHouse(abc.BaseHouseWithId):
     __slots__ = ("town", "size", "rent", "time_left", "highest_bid")
 
     def __init__(self, name, world, houseid, **kwargs):
-        self.name = name
-        self.id = houseid
-        self.world = world
-        self.status = kwargs.get("status")
-        self.type = kwargs.get("type")
-        self.town = kwargs.get("town")
-        self.size = kwargs.get("size", 0)
-        self.rent = kwargs.get("rent", 0)
+        self.name = name  # type: str
+        self.id = int(houseid)
+        self.world = world  # type: str
+        self.status = try_enum(HouseStatus, kwargs.get("status"))
+        self.type = try_enum(HouseType, kwargs.get("type"))
+        self.town = kwargs.get("town")  # type: str
+        self.size = kwargs.get("size", 0)  # type int
+        self.rent = kwargs.get("rent", 0)  # type: int
         self.time_left = kwargs.get("time_left")  # type: Optional[datetime.timedelta]
-        self.highest_bid = kwargs.get("highest_bid", 0)
+        self.highest_bid = kwargs.get("highest_bid", 0)  # type: int
 
     # region Public methods
     @classmethod
@@ -424,10 +422,7 @@ class ListedHouse(abc.BaseHouseWithId):
         InvalidContent`
             Content is not the house list from TibiaData.com
         """
-        try:
-            json_data = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a json string")
+        json_data = parse_json(content)
         try:
             house_data = json_data["houses"]
             houses = []

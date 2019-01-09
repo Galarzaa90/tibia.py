@@ -26,12 +26,8 @@ class TestsHouse(TestTibiaPy):
     def setUp(self):
         self.guild = {}
 
-    @staticmethod
-    def _get_resource(resource):
-        return TestTibiaPy._load_resource(resource)
-
     def testHouse(self):
-        content = self._get_resource(FILE_HOUSE_FULL)
+        content = self._load_resource(FILE_HOUSE_FULL)
         house = House.from_content(content)
 
         self.assertIsInstance(house, House)
@@ -53,7 +49,7 @@ class TestsHouse(TestTibiaPy):
 
     def testHouseStatusTransferred(self):
         house = House("Name")
-        content = self._get_resource(FILE_HOUSE_STATUS_TRANSFER)
+        content = self._load_resource(FILE_HOUSE_STATUS_TRANSFER)
         house._parse_status(content)
         self.assertEqual(house.status, HouseStatus.RENTED)
         self.assertEqual(house.owner, "Xenaris mag")
@@ -64,7 +60,7 @@ class TestsHouse(TestTibiaPy):
 
     def testHouseStatusRented(self):
         house = House("Name")
-        content = self._get_resource(FILE_HOUSE_STATUS_RENTED)
+        content = self._load_resource(FILE_HOUSE_STATUS_RENTED)
         house._parse_status(content)
         self.assertEqual(house.status, HouseStatus.RENTED)
         self.assertEqual(house.owner, "Thorcen")
@@ -72,7 +68,7 @@ class TestsHouse(TestTibiaPy):
 
     def testHouseStatusWithBids(self):
         house = House("Name")
-        content = self._get_resource(FILE_HOUSE_STATUS_WITH_BIDS)
+        content = self._load_resource(FILE_HOUSE_STATUS_WITH_BIDS)
         house._parse_status(content)
         self.assertEqual(house.status, HouseStatus.AUCTIONED)
         self.assertIsNone(house.owner)
@@ -82,24 +78,24 @@ class TestsHouse(TestTibiaPy):
 
     def testHouseStatusWithoutBids(self):
         house = House("Name")
-        content = self._get_resource(FILE_HOUSE_STATUS_NO_BIDS)
+        content = self._load_resource(FILE_HOUSE_STATUS_NO_BIDS)
         house._parse_status(content)
         self.assertEqual(house.status, HouseStatus.AUCTIONED)
         self.assertIsNone(house.auction_end)
 
     def testHouseNotFound(self):
-        content = self._get_resource(FILE_HOUSE_NOT_FOUND)
+        content = self._load_resource(FILE_HOUSE_NOT_FOUND)
         house = House.from_content(content)
 
         self.assertIsNone(house)
 
     def testHouseUnrelated(self):
-        content = self._get_resource(self.FILE_UNRELATED_SECTION)
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             House.from_content(content)
 
     def testHouseList(self):
-        content = self._get_resource(FILE_HOUSE_LIST)
+        content = self._load_resource(FILE_HOUSE_LIST)
         houses = ListedHouse.list_from_content(content)
 
         self.assertIsInstance(houses, list)
@@ -115,24 +111,24 @@ class TestsHouse(TestTibiaPy):
         self.assertEqual(houses[25].highest_bid, 7500000)
 
     def testHouseListEmpty(self):
-        content = self._get_resource(FILE_HOUSE_LIST_EMPTY)
+        content = self._load_resource(FILE_HOUSE_LIST_EMPTY)
         houses = ListedHouse.list_from_content(content)
 
         self.assertEqual(len(houses), 0)
 
     def testHouseListNotFound(self):
-        content = self._get_resource(FILE_HOUSE_NOT_FOUND)
+        content = self._load_resource(FILE_HOUSE_NOT_FOUND)
         houses = ListedHouse.list_from_content(content)
 
         self.assertIsNone(houses)
 
     def testHouseListUnrelated(self):
-        content = self._get_resource(self.FILE_UNRELATED_SECTION)
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             ListedHouse.list_from_content(content)
 
     def testHouseTibiaData(self):
-        content = self._get_resource(FILE_HOUSE_TIBIADATA)
+        content = self._load_resource(FILE_HOUSE_TIBIADATA)
         house = House.from_tibiadata(content)
 
         self.assertIsInstance(house, House)
@@ -144,7 +140,7 @@ class TestsHouse(TestTibiaPy):
         self.assertIsNone(house.owner)
 
     def testHouseTibiaDataNotFound(self):
-        content = self._get_resource(FILE_HOUSE_TIBIADATA_NOT_FOUND)
+        content = self._load_resource(FILE_HOUSE_TIBIADATA_NOT_FOUND)
         house = House.from_tibiadata(content)
 
         self.assertIsNone(house)
@@ -154,12 +150,12 @@ class TestsHouse(TestTibiaPy):
             House.from_tibiadata("<p>Not json</p>")
 
     def testGuildTibiaDataUnrelated(self):
-        content = self._get_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA)
+        content = self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA)
         with self.assertRaises(InvalidContent):
             House.from_tibiadata(content)
 
     def testHouseTibiaDataList(self):
-        content = self._get_resource(FILE_HOUSE_TIBIADATA_LIST)
+        content = self._load_resource(FILE_HOUSE_TIBIADATA_LIST)
         houses = ListedHouse.list_from_tibiadata(content)
 
         self.assertIsInstance(houses, list)
@@ -172,7 +168,7 @@ class TestsHouse(TestTibiaPy):
         self.assertIsNotNone(ListedHouse.get_list_url_tibiadata(houses[0].world, houses[0].town))
 
     def testHouseTibiaDataListNotFound(self):
-        content = self._get_resource(FILE_HOUSE_TIBIADATA_LIST_NOT_FOUND)
+        content = self._load_resource(FILE_HOUSE_TIBIADATA_LIST_NOT_FOUND)
         houses = ListedHouse.list_from_tibiadata(content)
 
         self.assertIsInstance(houses, list)
@@ -184,4 +180,4 @@ class TestsHouse(TestTibiaPy):
 
     def testHouseTibiaDataListUnrelated(self):
         with self.assertRaises(InvalidContent):
-            ListedHouse.list_from_tibiadata(self._get_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))
+            ListedHouse.list_from_tibiadata(self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))

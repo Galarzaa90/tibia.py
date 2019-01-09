@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 import urllib.parse
 from collections import OrderedDict
@@ -11,8 +10,8 @@ from tibiapy import abc
 from tibiapy.enums import Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, try_date, try_datetime, \
-    try_enum
+from tibiapy.utils import parse_json, parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, try_date, \
+    try_datetime, try_enum
 
 __all__ = ("Guild", "GuildMember", "GuildInvite", "ListedGuild")
 
@@ -69,17 +68,17 @@ class Guild(abc.BaseGuild):
                  "disband_condition", "disband_date", "homepage", "members", "invites")
 
     def __init__(self, name=None, world=None, **kwargs):
-        self.name = name
-        self.world = world
-        self.logo_url = kwargs.get("logo_url")
-        self.description = kwargs.get("description")
+        self.name = name  # type: str
+        self.world = world  # type: str
+        self.logo_url = kwargs.get("logo_url")  # type: str
+        self.description = kwargs.get("description")  # type: Optional[str]
         self.founded = try_date(kwargs.get("founded"))
-        self.active = kwargs.get("active", False)
+        self.active = kwargs.get("active", False)  # type: bool
         self.guildhall = kwargs.get("guildhall")  # type: Optional[GuildHouse]
-        self.open_applications = kwargs.get("open_applications", False)
-        self.disband_condition = kwargs.get("disband_condition")
+        self.open_applications = kwargs.get("open_applications", False)  # type: bool
+        self.disband_condition = kwargs.get("disband_condition")  # type: Optional[str]
         self.disband_date = try_datetime(kwargs.get("disband_date"))
-        self.homepage = kwargs.get("homepage")
+        self.homepage = kwargs.get("homepage")  # type: Optional[str]
         self.members = kwargs.get("members", [])  # type: List[GuildMember]
         self.invites = kwargs.get("invites", [])  # type: List[GuildInvite]
 
@@ -173,11 +172,7 @@ class Guild(abc.BaseGuild):
         InvalidContent
             If content is not a JSON response of a guild's page.
         """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a json string.")
-
+        json_content = parse_json(content)
         guild = cls()
         try:
             guild_obj = json_content["guild"]
@@ -386,12 +381,12 @@ class GuildMember(abc.BaseCharacter):
     __slots__ = ("name", "rank", "title", "level", "vocation", "joined", "online")
 
     def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, **kwargs):
-        self.name = name
-        self.rank = rank
-        self.title = title
+        self.name = name  # type: str
+        self.rank = rank  # type: str
+        self.title = title  # type: Optional[str]
         self.vocation = try_enum(Vocation, vocation)
-        self.level = level
-        self.online = kwargs.get("online", False)
+        self.level = int(level)
+        self.online = kwargs.get("online", False)  # type: bool
         self.joined = try_date(kwargs.get("joined"))
 
 
@@ -409,7 +404,7 @@ class GuildInvite(abc.BaseCharacter):
     __slots__ = ("date", )
 
     def __init__(self, name=None, date=None):
-        self.name = name
+        self.name = name  # type: str
         self.date = try_date(date)
 
     def __repr__(self):
@@ -437,11 +432,11 @@ class ListedGuild(abc.BaseGuild):
     __slots__ = ("logo_url", "description", "world", "active")
 
     def __init__(self, name, world, logo_url=None, description=None, active=False):
-        self.name = name
-        self.world = world
-        self.logo_url = logo_url
-        self.description = description
-        self.active = active
+        self.name = name  # type: str
+        self.world = world  # type: str
+        self.logo_url = logo_url  # type: str
+        self.description = description  # type: Optional[str]
+        self.active = active  # type: bool
 
     # region Public methods
     @classmethod
@@ -543,10 +538,7 @@ class ListedGuild(abc.BaseGuild):
         InvalidContent
             If content is not a JSON response of TibiaData's guild list.
         """
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a valid json string.")
+        json_content = parse_json(content)
         try:
             guilds_obj = json_content["guilds"]
             guilds = []

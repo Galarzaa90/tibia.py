@@ -1,6 +1,7 @@
 from enum import Enum
 
-__all__ = ('AccountStatus', 'HouseStatus', 'HouseType', 'PvpType', 'Sex', 'TransferType', 'Vocation', 'WorldLocation')
+__all__ = ('AccountStatus', 'Category', 'HouseStatus', 'HouseType', 'PvpType', 'Sex', 'TransferType', 'Vocation',
+           'VocationFilter', 'WorldLocation')
 
 
 class BaseEnum(Enum):
@@ -12,6 +13,21 @@ class AccountStatus(BaseEnum):
     """Possible account statuses."""
     FREE_ACCOUNT = "Free Account"
     PREMIUM_ACCOUNT = "Premium Account"
+
+
+class Category(BaseEnum):
+    """The different highscores categories."""
+    ACHIEVEMENTS = "achievements"
+    AXE_FIGHTING = "axe"
+    CLUB_FIGHTING = "club"
+    DISTANCE_FIGHTING = "distance"
+    EXPERIENCE = "experience"
+    FISHING = "fishing"
+    FIST_FIGHTING = "fist"
+    LOYALTY_POINTS = "loyalty"
+    MAGIC_LEVEL = "magic"
+    SHIELDING = "shielding"
+    SWORD_FIGHTING = "sword"
 
 
 class HouseStatus(BaseEnum):
@@ -61,6 +77,39 @@ class Vocation(BaseEnum):
     ELITE_KNIGHT = "Elite Knight"
     ROYAL_PALADIN = "Royal Paladin"
     MASTER_SORCERER = "Master Sorcerer"
+
+
+class VocationFilter(Enum):
+    """The vocation filters available for Highscores."""
+    ALL = 0
+    KNIGHTS = 1
+    PALADINS = 2
+    SORCERERS = 3
+    DRUIDS = 4
+
+    @classmethod
+    def from_name(cls, name, all_fallback=True):
+        """Gets a vocation filter from a vocation's name.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the vocation.
+        all_fallback: :class:`bool`
+            Whether to return :py:attr:`ALL` if no match is found. Otherwise, ``None`` will be returned.
+
+        Returns
+        -------
+        VocationFilter, optional:
+            The matching vocation filter.
+        """
+        name = name.upper()
+        for vocation in cls:  # type: VocationFilter
+            if vocation.name in name or vocation.name[:-1] in name and vocation != cls.ALL:
+                return vocation
+        if all_fallback or name.upper() == "ALL":
+            return cls.ALL
+        return None
 
 
 class WorldLocation(BaseEnum):

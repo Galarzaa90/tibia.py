@@ -14,6 +14,24 @@ def get_version(package):
     return re.search("__version__ = ['\"]([^'\"]+)['\"]", init_py).group(1)
 
 
+version = get_version("tibiapy")
+if version.endswith(('a', 'b', 'rc')):
+    # append version identifier based on commit count
+    try:
+        import subprocess
+        p = subprocess.Popen(['git', 'rev-list', '--count', 'HEAD'],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        if out:
+            version += out.decode('utf-8').strip()
+        p = subprocess.Popen(['git', 'rev-parse', '--short', 'HEAD'],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        if out:
+            version += '+g' + out.decode('utf-8').strip()
+    except Exception:
+        pass
+
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
@@ -33,7 +51,7 @@ extras_require = {
 
 setup(
     name='tibia.py',
-    version=get_version("tibiapy"),
+    version=version,
     author='Galarzaa90',
     author_email="allan.galarza@gmail.com",
     url='https://github.com/Galarzaa90/tibia.py',

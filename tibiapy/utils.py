@@ -1,7 +1,10 @@
 import datetime
+import json
 from typing import Optional, Type, TypeVar, Union
 
 import bs4
+
+from tibiapy.errors import InvalidContent
 
 
 def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
@@ -190,7 +193,7 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
 
     Returns
     -------
-    :class:`datetime.datetime`
+    :class:`datetime.datetime`, optional
         The represented datetime, or ``None`` if conversion wasn't possible.
     """
     if obj is None:
@@ -277,7 +280,7 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
 
     Returns
     -------
-    any
+    obj:
         The enum value if found, otherwise None.
     """
     if isinstance(val, cls):
@@ -286,3 +289,39 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
         return cls(val)
     except ValueError:
         return default
+
+
+def parse_json(content):
+    """Tries to parse a string into a json object.
+
+    This also performs a trim of all values, recursively removing leading and trailing whitespace.
+
+    Parameters
+    ----------
+    content: A JSON format string.
+
+    Returns
+    -------
+    obj:
+        The object represented by the json string.
+
+    Raises
+    ------
+    InvalidContent
+        If the content is not a valid json string.
+    """
+    try:
+        json_content = json.loads(content)
+        return _recursive_strip(json_content)
+    except json.JSONDecodeError:
+        raise InvalidContent("content is not a json string.")
+
+
+def _recursive_strip(value):
+    if isinstance(value, dict):
+        return {k: _recursive_strip(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_recursive_strip(i) for i in value]
+    if isinstance(value, str):
+        return value.strip()
+    return value

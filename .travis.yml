@@ -10,7 +10,7 @@ cache: pip
 install:
   - pip install -U -r requirements.txt
   - pip install -U setuptools wheel
-  - pip install coverage
+  - pip install coverage codecov
   - pip install -U Sphinx
 
 before_script:
@@ -29,6 +29,7 @@ after_script:
   - coverage report
   - coverage xml
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then codecov; fi
 
 deploy:
   provider: pages

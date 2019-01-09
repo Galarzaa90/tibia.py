@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 import urllib.parse
 from collections import OrderedDict
@@ -12,8 +11,8 @@ from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
-from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, parse_tibiadata_date, \
-    parse_tibiadata_datetime, try_datetime, try_enum
+from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
+    parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum
 
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
@@ -49,9 +48,9 @@ class AccountInformation(abc.Serializable):
     __slots__ = ("created", "loyalty_title", "position")
 
     def __init__(self, created, loyalty_title=None, position=None):
-        self.created = created
-        self.loyalty_title = loyalty_title
-        self.position = position
+        self.created = try_datetime(created)
+        self.loyalty_title = loyalty_title  # type: Optional[str]
+        self.position = position  # type: Optional[str]
 
     def __repr__(self):
         return "<%s created=%r>" % (self.__class__.__name__, self.created)
@@ -70,8 +69,8 @@ class Achievement(abc.Serializable):
     __slots__ = ("name", "grade")
 
     def __init__(self, name, grade):
-        self.name = name
-        self.grade = grade
+        self.name = name   # type: str
+        self.grade = int(grade)
 
     def __repr__(self):
         return "<%s name=%r grade=%d>" % (self.__class__.__name__, self.name, self.grade)
@@ -131,23 +130,22 @@ class Character(abc.BaseCharacter):
                  "achievements", "deaths", "account_information", "other_characters", "deletion_date")
 
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
-        self.name = name
-        self.former_names = kwargs.get("former_names", [])
+        self.name = name  # type: str
+        self.former_names = kwargs.get("former_names", [])  # type: List[str]
         self.sex = try_enum(Sex, sex)
         self.vocation = try_enum(Vocation, vocation)
-        self.level = level
-        self.achievement_points = kwargs.get("achievement_points", 0)
-        self.world = world
-        self.former_world = kwargs.get("former_world")
-        self.residence = kwargs.get("residence")
-        self.married_to = kwargs.get("married_to")
+        self.level = int(level)
+        self.achievement_points = int(kwargs.get("achievement_points", 0))
+        self.world = world  # type: str
+        self.former_world = kwargs.get("former_world")  # type: Optional[str]
+        self.residence = kwargs.get("residence")  # type: str
+        self.married_to = kwargs.get("married_to")  # type: Optional[str]
         self.house = kwargs.get("house")  # type: Optional[CharacterHouse]
         self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
         self.last_login = try_datetime(kwargs.get("last_login"))
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
-        self.position = try_enum(AccountStatus, kwargs.get("account_status"))
-        self.position = kwargs.get("position")
-        self.comment = kwargs.get("comment")
+        self.position = kwargs.get("position")  # type: Optional[str]
+        self.comment = kwargs.get("comment")  # type: Optional[str]
         self.achievements = kwargs.get("achievements", [])  # type: List[Achievement]
         self.deaths = kwargs.get("deaths", [])  # type: List[Death]
         self.account_information = kwargs.get("account_information")  # type: Optional[AccountInformation]
@@ -239,10 +237,7 @@ class Character(abc.BaseCharacter):
         ------
         InvalidContent
             If content is not a JSON string of the Character response."""
-        try:
-            json_content = json.loads(content)
-        except json.JSONDecodeError:
-            raise InvalidContent("content is not a valid json string.")
+        json_content = parse_json(content)
         char = cls()
         try:
             character = json_content["characters"]
@@ -627,8 +622,8 @@ class GuildMembership(abc.BaseGuild):
     __slots__ = ("rank",)
 
     def __init__(self, name, rank):
-        self.name = name
-        self.rank = rank
+        self.name = name  # type: str
+        self.rank = rank  # type: str
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} rank={0.rank!r}>".format(self)
@@ -656,9 +651,9 @@ class Killer(abc.Serializable):
     __slots__ = ("name", "player", "summon")
 
     def __init__(self, name, player=False, summon=None):
-        self.name = name
-        self.player = player
-        self.summon = summon
+        self.name = name  # type: str
+        self.player = player  # type: bool
+        self.summon = summon  # type: Optional[str]
 
     def __repr__(self):
         attributes = ""
@@ -700,11 +695,11 @@ class OtherCharacter(abc.BaseCharacter):
     """
     __slots__ = ("world", "online", "deleted")
 
-    def __init__(self, name, world=None, online=False, deleted=False):
-        self.name = name
-        self.world = world
-        self.online = online
-        self.deleted = deleted
+    def __init__(self, name, world, online=False, deleted=False):
+        self.name = name  # type: str
+        self.world = world  # type: str
+        self.online = online  # type: bool
+        self.deleted = deleted  # type: bool
 
 
 class OnlineCharacter(abc.BaseCharacter):
@@ -724,7 +719,7 @@ class OnlineCharacter(abc.BaseCharacter):
     __slots__ = ("world", "vocation", "level")
 
     def __init__(self, name, world, level, vocation):
-        self.name = name
-        self.world = world
+        self.name = name  # type: str
+        self.world = world  # type: str
         self.level = int(level)
         self.vocation = try_enum(Vocation, vocation)
