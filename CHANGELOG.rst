@@ -4,7 +4,7 @@ Changelog
 
 .. _v1.1.0:
 
-1.1.0 (2019-01-08)
+1.1.0 (2019-01-09)
 ==================
 
 - Parsing Highscores from Tibia.com and TibiaData.
