@@ -2,6 +2,13 @@
 Changelog
 =========
 
+.. _v1.1.2:
+
+1.1.2 (2019-01-22)
+==================
+
+- Fixed TibiaData URLs of tibia characters with special characters in their names. (e.g Himmelhüpferin)
+
 .. _v1.1.1:
 
 1.1.1 (2019-01-09)

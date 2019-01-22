@@ -153,7 +153,7 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
         --------
         :class:`str`
             The URL to the character's page on TibiaData.com."""
-        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
+        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name)
 
 
 class BaseGuild(Serializable, metaclass=abc.ABCMeta):
@@ -212,7 +212,7 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         --------
         :class:`str`
             The URL to the guild's page on TibiaData.com."""
-        return GUILD_URL_TIBIADATA % urllib.parse.quote(name.encode('iso-8859-1'))
+        return GUILD_URL_TIBIADATA % urllib.parse.quote(name)
 
 
 class BaseHouse(Serializable, metaclass=abc.ABCMeta):
