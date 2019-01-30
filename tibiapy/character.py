@@ -455,7 +455,12 @@ class Character(abc.BaseCharacter):
             if m and m.group("assists"):
                 assists_str = [a.strip() for a in self._split_list(m.group("assists").strip())]
             for killer in killers_str:
-                _death.killers.append(Killer(killer, killer in involved))
+                summoner = next((i for i in involved if "of %s" % i in killer), None)
+                summon = None
+                if summoner:
+                    summon = killer.replace(" of %s" % summoner, "")
+                    killer = summoner
+                _death.killers.append(Killer(killer, killer in involved, summon=summon))
             for assist in assists_str:
                 _death.assists.append(Killer(assist, assist in involved))
             self.deaths.append(_death)

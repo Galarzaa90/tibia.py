@@ -18,6 +18,7 @@ FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character/tibiadata_unhidden.json"
 FILE_CHARACTER_TIBIADATA_DELETED = "character/tibiadata_deleted.json"
 FILE_CHARACTER_TIBIADATA_SPECIAL_POSITION = "character/tibiadata_special_position.json"
 FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character/tibiadata_not_found.json"
+FILE_CHARACTER_TIBIADATA_DEATHS_SUMMON = "character/tibiadata_deaths_summon.json"
 
 
 class TestCharacter(TestTibiaPy):
@@ -158,6 +159,15 @@ class TestCharacter(TestTibiaPy):
         self.assertEqual(char.name, "Steve")
         self.assertEqual(char.position, "CipSoft Member")
         self.assertEqual(char.account_information.position, "CipSoft Member")
+
+    def testCharacterSummonDeaths(self):
+        content = self._load_resource(FILE_CHARACTER_TIBIADATA_DEATHS_SUMMON)
+        char = Character.from_tibiadata(content)
+        self.assertTrue(char.deaths)
+
+        summon_death = char.deaths[2]
+        self.assertTrue(summon_death.killers[2].summon, "a fire elemental")
+        self.assertTrue(summon_death.killers[2].name, "Hasi Pupsi")
 
     def testCharacterTibiaDataNotFound(self):
         content = self._load_resource(FILE_CHARACTER_TIBIADATA_NOT_FOUND)

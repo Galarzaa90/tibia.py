@@ -14,6 +14,8 @@ deaths by summons, players, assisted deaths, etcetera.
 - [tibiadata_not_found.json](character/tibiadata_not_found.json) - The response of a character not found on TibiaData.
 - [tibiadata_unhidden.json](character/tibiadata_unhidden.json) - A character with visible account information and 
 other characters on TibiaData.
+- [tibiadata_deaths_summon.json](character/tibiadata_deaths_summon.json) - A character with deaths by summons on 
+TibiaData.
 
 ## Guild resources
 - [tibiacom_full.txt](guild/tibiacom_full.txt) - The content of a guild's page.
