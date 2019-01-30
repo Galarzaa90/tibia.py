@@ -2,6 +2,13 @@
 Changelog
 =========
 
+.. _v1.1.3:
+
+1.1.3 (2019-01-29)
+==================
+
+- Fixed incorrect parsing of deaths with summons involved when parsing characters from TibiaData.
+
 .. _v1.1.2:
 
 1.1.2 (2019-01-22)
