@@ -83,6 +83,12 @@ House
    :members:
    :inherited-members:
 
+KillStatistics
+--------------
+.. autoclass:: KillStatistics
+   :members:
+   :inherited-members:
+
 ListedGuild
 -----------
 .. autoclass:: ListedGuild
@@ -200,6 +206,18 @@ OnlineCharacter
 OtherCharacter
 --------------
 .. autoclass:: OtherCharacter
+   :members:
+   :inherited-members:
+
+RaceEntry
+---------
+.. autoclass:: RaceEntry
+   :members:
+   :inherited-members:
+
+TimeEntry
+---------
+.. autoclass:: TimeEntry
    :members:
    :inherited-members:
 

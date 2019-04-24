@@ -5,6 +5,7 @@ from tibiapy.errors import *
 from tibiapy.guild import *
 from tibiapy.highscores import *
 from tibiapy.house import *
+from tibiapy.killstatistics import *
 from tibiapy.world import *
 
 __version__ = '1.1.3'

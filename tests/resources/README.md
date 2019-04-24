@@ -58,7 +58,7 @@ exist.
 doesn't exist.
 
 ## Highscores resources
-- [tibiacom_full.txt](highscores/tibiacom_full.txt) - The content of a correct highscore's pagem
+- [tibiacom_full.txt](highscores/tibiacom_full.txt) - The content of a correct highscore's page.
 - [tibiacom_empty.txt](highscores/tibiacom_empty.txt) - The content of the highscores page of a nonexistent world.
 - [tibiacom_experience.txt](highscores/tibiacom_experience.txt) - The content of an experience highscores page.
 - [tibiacom_loyalty.txt](highscores/tibiacom_loyalty.txt) - The content of a loyalty highscores page.
@@ -67,6 +67,9 @@ doesn't exist.
 - [tibiadata_experience.json](highscores/tibiadata_experience.json) - A response containing experience highscores from
 TibiaData.
 - [tibiadata_loyalty.json](highscores/tibiadata_loyalty.json) - A response containing loyalty highscores from TibiaData.
+
+## Kill Statistics resources
+- [tibiacom_full.txt](kill_statistics/tibiacom_full.txt) - The content of a correct kill statistics' page.
  
  ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.
