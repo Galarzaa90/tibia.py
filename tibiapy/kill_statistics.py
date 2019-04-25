@@ -23,7 +23,7 @@ class KillStatistics(abc.Serializable):
     __slots__ = ("world", "entries", "total")
 
     def __init__(self, world, entries=None, total=None):
-        self.world = world
+        self.world = world  # type: str
         self.entries = entries or dict()  # type: Dict[str, RaceEntry]
         self.total = total or RaceEntry()  # type: RaceEntry
 

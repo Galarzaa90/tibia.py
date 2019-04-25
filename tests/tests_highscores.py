@@ -79,10 +79,6 @@ class TestHighscores(TestTibiaPy):
 
         self.assertIsNone(highscores)
 
-    def testHighscoresTibiaDataListUnrelated(self):
-        with self.assertRaises(InvalidContent):
-            Highscores.from_tibiadata(self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))
-
     def testHighscoresUnrelated(self):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
