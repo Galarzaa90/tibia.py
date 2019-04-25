@@ -70,6 +70,8 @@ TibiaData.
 
 ## Kill Statistics resources
 - [tibiacom_full.txt](kill_statistics/tibiacom_full.txt) - The content of a correct kill statistics' page.
+- [tibiacom_empty.txt](kill_statistics/tibiacom_empty.txt) - The content of the kill statistics's page of a 
+nonexistent world or a unselected world.
  
  ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.

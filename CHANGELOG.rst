@@ -2,6 +2,13 @@
 Changelog
 =========
 
+.. _v1.2.0:
+
+1.2.0 (Unreleased)
+==================
+
+- Added kill statistics parsing.
+
 .. _v1.1.3:
 
 1.1.3 (2019-01-29)
