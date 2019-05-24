@@ -106,6 +106,7 @@ def cli_world(name, tibiadata, json):
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
 def cli_worlds(tibiadata, json):
+    """Displays the list of worlds and their data."""
     worlds = _fetch_and_parse(ListedWorld.get_list_url, ListedWorld.list_from_content,
                               ListedWorld.get_list_url_tibiadata, ListedWorld.list_from_tibiadata,
                               tibiadata)
@@ -120,14 +121,15 @@ def cli_worlds(tibiadata, json):
 
 
 @cli.command(name="house")
-@click.argument('id')
+@click.argument('house_id')
 @click.argument('world')
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def cli_house(id, world, tibiadata, json):
+def cli_house(house_id, world, tibiadata, json):
+    """Displays information about a house."""
     house = _fetch_and_parse(House.get_url, House.from_content,
                              House.get_url_tibiadata, House.from_tibiadata,
-                             tibiadata, id, world)
+                             tibiadata, house_id, world)
     if json and house:
         print(house.to_json(indent=2))
         return
@@ -141,6 +143,7 @@ def cli_house(id, world, tibiadata, json):
 @click.option("-js", "--json", default=False, is_flag=True)
 @click.option("-gh", "--guildhalls", default=False, is_flag=True)
 def cli_houses(world, town, tibiadata, json, guildhalls):
+    """Displays the list of houses of a world."""
     town = " ".join(town)
     house_type = HouseType.GUILDHALL if guildhalls else HouseType.HOUSE
     houses = _fetch_and_parse(ListedHouse.get_list_url, ListedHouse.list_from_content,
