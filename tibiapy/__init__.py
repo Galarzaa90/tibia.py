@@ -7,5 +7,6 @@ from tibiapy.highscores import *
 from tibiapy.house import *
 from tibiapy.kill_statistics import *
 from tibiapy.world import *
+from tibiapy.client import Client
 
 __version__ = '1.1.3'
