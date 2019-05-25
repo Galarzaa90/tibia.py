@@ -1,4 +1,5 @@
 import asyncio
+
 import aiohttp
 
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
@@ -7,7 +8,7 @@ from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild,
 
 class Client():
     def __init__(self, loop=None, session=None):
-        self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if loop is None else loop
+        self.loop = asyncio.get_event_loop() if loop is None else loop  # type: asyncio.AbstractEventLoop
         if session is not None:
             self.session = session
         self.session = self.loop.run_until_complete(self._initialize_session())

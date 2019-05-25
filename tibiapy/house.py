@@ -8,7 +8,7 @@ from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import parse_json, parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, \
-    try_datetime, try_enum
+    try_datetime, try_enum, parse_tibia_money
 
 __all__ = ("House", "CharacterHouse", "GuildHouse", "ListedHouse")
 
@@ -164,7 +164,7 @@ class House(abc.BaseHouseWithId):
         m = info_regex.search(info)
         if m:
             house.world = m.group("world")
-            house.rent = int(m.group("rent"))
+            house.rent = parse_tibia_money(m.group("rent"))
             house.size = int(m.group("size"))
 
         house._parse_status(state)
@@ -396,7 +396,7 @@ class ListedHouse(abc.BaseHouseWithId):
             size = cols[1].text.replace('sqm', '')
             house.size = int(size)
             rent = cols[2].text.replace('gold', '')
-            house.rent = int(rent)
+            house.rent = parse_tibia_money(rent)
             status = cols[3].text.replace('\xa0', ' ')
             house._parse_status(status)
             id_input = cols[5].find("input", {'name': 'houseid'})

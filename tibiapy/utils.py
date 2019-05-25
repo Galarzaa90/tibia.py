@@ -1,10 +1,13 @@
 import datetime
 import json
+import re
 from typing import Optional, Type, TypeVar, Union
 
 import bs4
 
 from tibiapy.errors import InvalidContent
+
+TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
 
 def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
@@ -298,11 +301,12 @@ def parse_json(content):
 
     Parameters
     ----------
-    content: A JSON format string.
+    content: :class:`str`
+        A JSON format string.
 
     Returns
     -------
-    obj:
+    obj
         The object represented by the json string.
 
     Raises
@@ -315,6 +319,33 @@ def parse_json(content):
         return _recursive_strip(json_content)
     except json.JSONDecodeError:
         raise InvalidContent("content is not a json string.")
+
+
+def parse_tibia_money(argument):
+    """Parses a string that may contain 'k' as thousand suffix.
+
+    Parameters
+    ----------
+    argument: :class:`str`
+        A numeric string.
+
+    Returns
+    -------
+    int:
+        The value represented by the string.
+
+    """
+    try:
+        return int(argument)
+    except ValueError:
+        argument = argument.replace(",", "").strip().lower()
+        m = TIBIA_CASH_PATTERN.match(argument)
+        if not m or not m.group(1):
+            raise ValueError("not a numeric value")
+        num = float(m.group(1))
+        k_count = argument.count("k")
+        num *= pow(1000, k_count)
+        return int(num)
 
 
 def _recursive_strip(value):
