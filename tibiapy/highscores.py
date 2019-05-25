@@ -1,7 +1,8 @@
-import math
 import re
 from collections import OrderedDict
 from typing import List
+
+import math
 
 from tibiapy import Category, InvalidContent, Vocation, VocationFilter, abc
 from tibiapy.utils import parse_json, parse_tibiacom_content, try_enum
@@ -38,7 +39,7 @@ class Highscores(abc.Serializable):
         self.entries = kwargs.get("entries", [])  # type: List[HighscoresEntry]
         self.results_count = kwargs.get("results_count")  # type: int
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return "<{0.__class__.__name__} world={0.world!r} category={0.category!r} vocation={0.vocation!r}>".format(self)
 
     @property

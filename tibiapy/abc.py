@@ -108,7 +108,7 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
             return self.name.lower() == o.name.lower()
         return False
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r}>".format(self,)
 
     @property

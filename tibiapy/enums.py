@@ -44,6 +44,21 @@ class HouseType(BaseEnum):
     GUILDHALL = "guildhall"
 
 
+class NewsCategory(BaseEnum):
+    """The different news categories."""
+    CIPSOFT = "cipsoft"
+    COMMUNITY = "community"
+    DEVELOPMENT = "development"
+    SUPPORT = "support"
+    TECHNICAL_ISSUES = "technical"
+
+
+class NewsType(BaseEnum):
+    NEWS_TICKER = "News Ticker"
+    FEATURED_ARTICLE = "Featured Article"
+    NEWS = "News"
+
+
 class PvpType(BaseEnum):
     """The possible PvP types a World can have."""
     OPEN_PVP = "Open PvP"
