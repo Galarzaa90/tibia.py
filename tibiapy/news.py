@@ -5,13 +5,22 @@ from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.utils import parse_tibiacom_content, try_enum, parse_tibia_date
 
-__all__ = ("NewsEntry",)
+__all__ = ("ListedNews",)
 
 
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_small")
 
 
 class NewsEntry(abc.Serializable):
+    def __init__(self, news_id, title, content, date, category):
+        self.id = news_id
+        self.title = title
+        self.content = content
+        self.date = date
+        self.category = category
+
+
+class ListedNews(abc.Serializable):
     def __init__(self, news_id, title, news_type, category, date):
         self.id = news_id
         self.title = title
