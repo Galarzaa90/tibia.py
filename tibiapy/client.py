@@ -5,6 +5,7 @@ import aiohttp
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
     ListedHouse, HouseType, WorldOverview
 
+__all__ = ("Client",)
 
 class Client():
     def __init__(self, loop=None, session=None):
