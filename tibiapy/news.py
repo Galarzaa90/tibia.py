@@ -1,24 +1,43 @@
+import datetime
 import re
 import urllib.parse
+from typing import Optional
 
 from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.utils import parse_tibiacom_content, try_enum, parse_tibia_date
 
-__all__ = ("NewsEntry", "ListedNews",)
+__all__ = ("News", "ListedNews",)
 
 
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 
 
-class NewsEntry(abc.BaseNews):
+class News(abc.BaseNews):
+    """Represents a news entry.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The internal ID of the news entry.
+    title: :class:`str`
+        The title of the news entry.
+    category: :class:`NewsCategory`
+        The category this belongs to.
+    date: :class:`datetime.date`
+        The date when the news were published.
+    content: :class:`str`
+        The raw html content of the entry.
+    thread_id: :class:`int`, optional
+        The thread id of the designated discussion thread for this entry.
+    """
     def __init__(self, news_id, title, content, date, category, thread_id=None):
-        self.id = news_id
-        self.title = title
-        self.content = content
-        self.date = date
-        self.category = category
-        self.thread_id = thread_id
+        self.id = news_id  # type: int
+        self.title = title  # type: str
+        self.content = content  # type: content
+        self.date = date  # type: datetime.date
+        self.category = category  # type: NewsCategory
+        self.thread_id = thread_id  # type: Optional[int]
 
     __slots__ = ("content", "thread_id", )
 
@@ -51,12 +70,29 @@ class NewsEntry(abc.BaseNews):
 
 
 class ListedNews(abc.BaseNews):
+    """Represents a news entry.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The internal ID of the news entry.
+    title: :class:`str`
+        The title of the news entry.
+        News tickers have a fragment of their content as a title.
+    category: :class:`NewsCategory`
+        The category this belongs to.
+    date: :class:`datetime.date`
+        The date when the news were published.
+    type: :class:`NewsType`
+        The type of news of this list entry.
+    """
+
     def __init__(self, news_id, title, news_type, category, date):
-        self.id = news_id
-        self.title = title
-        self.type = news_type
-        self.category = category
-        self.date = date
+        self.id = news_id  # type: int
+        self.title = title  # type: str
+        self.type = news_type  # type: NewsType
+        self.category = category  # type: NewsCategory
+        self.date = date  # type: datetime.datetime
 
     __slots__ = ("type", )
 

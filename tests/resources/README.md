@@ -72,6 +72,11 @@ TibiaData.
 - [tibiacom_full.txt](kill_statistics/tibiacom_full.txt) - The content of a correct kill statistics' page.
 - [tibiacom_empty.txt](kill_statistics/tibiacom_empty.txt) - The content of the kill statistics's page of a 
 nonexistent world or a unselected world.
+
+## News resources
+- [tibiacom_list.txt](news/tibiacom_list.txt) - The content of the news search page with results.
+- [tibiacom_news.txt](news/tibiacom_news.txt) - The content of a news article.
+- [tibiacom_news_ticker.txt](news/tibiacom_news_ticker.txt) - The content of a news ticker.
  
  ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.

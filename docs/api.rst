@@ -28,6 +28,14 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: NewsCategory
+    :members:
+    :undoc-members:
+
+.. autoclass:: NewsType
+    :members:
+    :undoc-members:
+
 .. autoclass:: PvpType
     :members:
     :undoc-members:
@@ -101,9 +109,22 @@ ListedHouse
    :members:
    :inherited-members:
 
+ListedNews
+-----------
+.. autoclass:: ListedNews
+   :members:
+   :inherited-members:
+
+
 ListedWorld
 -----------
 .. autoclass:: ListedWorld
+   :members:
+   :inherited-members:
+
+News
+---------
+.. autoclass:: News
    :members:
    :inherited-members:
 
@@ -234,6 +255,10 @@ They implement methods and properties that can be inherited by other classes to 
     :inherited-members:
 
 .. autoclass:: tibiapy.abc.BaseHouseWithId
+    :members:
+    :inherited-members:
+
+.. autoclass:: tibiapy.abc.BaseNews
     :members:
     :inherited-members:
 

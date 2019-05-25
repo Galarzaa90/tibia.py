@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import ListedNews, NewsEntry
+from tibiapy import ListedNews, News
 from tibiapy.enums import NewsCategory, NewsType
 
 FILE_NEWS_LIST = "news/tibiacom_list.txt"
@@ -27,9 +27,9 @@ class TestNews(TestTibiaPy):
 
     def testNewsTicker(self):
         content = self._load_resource(FILE_NEWS_TICKER)
-        news = NewsEntry.from_content(content)
+        news = News.from_content(content)
 
-        self.assertIsInstance(news, NewsEntry)
+        self.assertIsInstance(news, News)
         self.assertEqual(news.category, NewsCategory.TECHNICAL_ISSUES)
         self.assertIsInstance(news.date, datetime.date)
         self.assertEqual(news.title, "News Ticker")
@@ -37,9 +37,9 @@ class TestNews(TestTibiaPy):
 
     def testNewsArticle(self):
         content = self._load_resource(FILE_NEWS_ARTICLE)
-        news = NewsEntry.from_content(content)
+        news = News.from_content(content)
 
-        self.assertIsInstance(news, NewsEntry)
+        self.assertIsInstance(news, News)
         self.assertEqual(news.category, NewsCategory.DEVELOPMENT)
         self.assertIsInstance(news.date, datetime.date)
         self.assertEqual(news.title, "Sign Up for the VANGUARD Tournament")

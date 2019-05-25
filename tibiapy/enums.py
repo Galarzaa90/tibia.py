@@ -1,7 +1,19 @@
 from enum import Enum
 
-__all__ = ('AccountStatus', 'Category', 'HouseStatus', 'HouseType', 'PvpType', 'Sex', 'TransferType', 'Vocation',
-           'VocationFilter', 'WorldLocation')
+__all__ = (
+    'AccountStatus',
+    'Category',
+    'HouseStatus',
+    'HouseType',
+    'NewsCategory',
+    'NewsType',
+    'PvpType',
+    'Sex',
+    'TransferType',
+    'Vocation',
+    'VocationFilter',
+    'WorldLocation',
+)
 
 
 class BaseEnum(Enum):
@@ -54,6 +66,7 @@ class NewsCategory(BaseEnum):
 
 
 class NewsType(BaseEnum):
+    """The different types of new entries."""
     NEWS_TICKER = "News Ticker"
     FEATURED_ARTICLE = "Featured Article"
     NEWS = "News"
