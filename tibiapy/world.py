@@ -535,6 +535,8 @@ class WorldOverview(abc.Serializable):
             cols = world_row.find_all("td")
             name = cols[0].text.strip()
             status = "Online"
+            if len(cols) < 6 or name == "World":
+                continue
             try:
                 online = int(cols[1].text.strip())
             except ValueError:

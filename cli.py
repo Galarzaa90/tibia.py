@@ -117,7 +117,7 @@ def cli_worlds(tibiadata, json):
             import json as _json
             print(_json.dumps(worlds, default=ListedWorld._try_dict, indent=2))
         return
-    print(print_world_overview(worlds))
+    print(print_world_list(worlds))
 
 
 @cli.command(name="house")
@@ -314,14 +314,12 @@ def print_world(world: World):
     return content
 
 
-def print_world_overview(world_overview):
+def print_world_list(world_list):
     content = build_header("Game World Overview", "=")
-    content += get_field("Total online", world_overview.total_online)
-    content += get_field("Overall Maximum", "%d players on %s" % (world_overview.record_count,
-                                                                  world_overview.record_date))
+    content += get_field("Total online", sum(w.online_count for w in world_list))
 
     content += build_header("Worlds")
-    for world in world_overview.worlds:
+    for world in world_list:
         content += "%s - %d Online - %s - %s\n" % (world.name, world.online_count, world.location, world.pvp_type)
     return content
 
