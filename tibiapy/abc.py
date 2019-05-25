@@ -7,10 +7,11 @@ from enum import Enum
 
 CHARACTER_URL = "https://www.tibia.com/community/?subtopic=characters&name=%s"
 CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
-URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
-URL_HOUSE_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
+HOUSE_URL = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
+HOUSE_URL_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
 GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName=%s"
 GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
+NEWS_URL = "https://www.tibia.com/news/?subtopic=newsarchive&id=%d"
 WORLD_URL = "https://www.tibia.com/community/?subtopic=worlds&world=%s"
 WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
@@ -257,7 +258,7 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         -------
         The URL to the house in Tibia.com
         """
-        return URL_HOUSE % (house_id, world)
+        return HOUSE_URL % (house_id, world)
 
     @classmethod
     def get_url_tibiadata(cls, house_id, world):
@@ -274,7 +275,7 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         -------
         The URL to the house in TibiaData.com
         """
-        return URL_HOUSE_TIBIADATA % (world, house_id)
+        return HOUSE_URL_TIBIADATA % (world, house_id)
 
 
 class BaseHouseWithId(BaseHouse):
@@ -317,6 +318,56 @@ class BaseHouseWithId(BaseHouse):
     def url_tibiadata(self):
         """:class:`str`: The URL to the TibiaData.com page of the house."""
         return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None
+
+
+class BaseNews(Serializable, metaclass=abc.ABCMeta):
+    """Base class for all news classes
+
+    Implements the :py:attr:`id` attribute and common properties.
+
+    The following implement this class:
+
+    - :class:`.News`
+    - :class:`.ListedNews`
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The internal ID of the news entry.
+    title: :class:`str`
+        The title of the news entry.
+    category: :class:`NewsCategory`
+        The category this belongs to.
+    date: :class:`datetime.date`
+        The date when the news were published.
+    """
+    __slots__ = ("id", "title", "category", "date",)
+
+    def __eq__(self, o: object) -> bool:
+        """Two news articles are considered equal if their names or ids are equal."""
+        if isinstance(o, self.__class__):
+            return self.id == o.id
+        return False
+
+    @property
+    def url(self):
+        """:class:`str`: The URL to the Tibia.com page of the house."""
+        return self.get_url(self.id)
+
+    @classmethod
+    def get_url(cls, news_id):
+        """Gets the Tibia.com URL for a news entry by its id.
+
+        Parameters
+        ------------
+        news_id: :class:`int`
+            The id of the news entry.
+
+        Returns
+        --------
+        :class:`str`
+            The URL to the news' page"""
+        return NEWS_URL % news_id
 
 
 class BaseWorld(Serializable):

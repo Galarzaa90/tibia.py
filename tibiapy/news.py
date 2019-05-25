@@ -5,28 +5,60 @@ from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.utils import parse_tibiacom_content, try_enum, parse_tibia_date
 
-__all__ = ("ListedNews",)
+__all__ = ("NewsEntry", "ListedNews",)
 
 
-ICON_PATTERN = re.compile(r"newsicon_([^_]+)_small")
+ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 
 
-class NewsEntry(abc.Serializable):
-    def __init__(self, news_id, title, content, date, category):
+class NewsEntry(abc.BaseNews):
+    def __init__(self, news_id, title, content, date, category, thread_id=None):
         self.id = news_id
         self.title = title
         self.content = content
         self.date = date
         self.category = category
+        self.thread_id = thread_id
+
+    __slots__ = ("content", "thread_id", )
+
+    @classmethod
+    def from_content(cls, content, news_id=0):
+        parsed_content = parse_tibiacom_content(content)
+        headline = parsed_content.find("div", attrs={"class": "NewsHeadline"})
+        img = headline.find('img')
+        img_url = img["src"]
+        category_name = ICON_PATTERN.search(img_url)
+        category = try_enum(NewsCategory, category_name.group(1))
+        title_div = headline.find("div", attrs={"class": "NewsHeadlineText"})
+        title = title_div.text.replace('\xa0', ' ')
+        date_div = headline.find("div", attrs={"class": "NewsHeadlineDate"})
+        date_str = date_div.text.replace('\xa0', ' ').replace('-', '').strip()
+        date = parse_tibia_date(date_str)
+
+        content_table = parsed_content.find("table")
+        content_row = content_table.find("td")
+        content = content_row.encode_contents()
+        thread_id = None
+        thread_div = content_table.find("div")
+        if thread_div:
+            news_link = thread_div.find('a')
+            url = urllib.parse.urlparse(news_link["href"])
+            query = urllib.parse.parse_qs(url.query)
+            thread_id = int(query["threadid"][0])
+
+        return cls(news_id, title, content, date, category, thread_id)
 
 
-class ListedNews(abc.Serializable):
+class ListedNews(abc.BaseNews):
     def __init__(self, news_id, title, news_type, category, date):
         self.id = news_id
         self.title = title
         self.type = news_type
         self.category = category
         self.date = date
+
+    __slots__ = ("type", )
 
     def __repr__(self):
         return "<{0.__class__.__name__} id={0.id} title={0.title!r} type={0.type!r} category={0.category!r}" \

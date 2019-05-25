@@ -1,0 +1,49 @@
+<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
+<div class='NewsHeadline'>
+  <div class='NewsHeadlineBackground' style='background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/newsheadline_background.gif)'>
+    <img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_big.gif" class='NewsHeadlineIcon' />
+    <div class='NewsHeadlineDate'>May&#160;21&#160;2019 - </div>
+    <div class='NewsHeadlineText'>News Ticker</div>
+  </div>
+</div>
+<table style='clear:both' border=0 cellpadding=0 cellspacing=0 width='100%' >
+<tr><td style='padding-left:10px;padding-right:10px;' ><br/><p>All game worlds are now back online! As announced, we had to reset them to the state of today's server save, 10:00 CEST, due to a critical technical issue. Please accept our sincerest apologies for the interruption.&nbsp;Also, you should&nbsp;now&nbsp;be able to create Tournament characters even if you have already reached the maximum number of characters on your account.</p></td></tr>
+</table><br/>
+<center>
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/news/?subtopic=newsarchive METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=filter_begin_month VALUE="4">
+<INPUT TYPE=hidden NAME=filter_begin_day VALUE="25">
+<INPUT TYPE=hidden NAME=filter_begin_year VALUE="2019">
+<INPUT TYPE=hidden NAME=filter_end_month VALUE="5">
+<INPUT TYPE=hidden NAME=filter_end_day VALUE="25">
+<INPUT TYPE=hidden NAME=filter_end_year VALUE="2019">
+<INPUT TYPE=hidden NAME=filter_ticker VALUE="ticker">
+<INPUT TYPE=hidden NAME=filter_article VALUE="article">
+<INPUT TYPE=hidden NAME=filter_news VALUE="news">
+<INPUT TYPE=hidden NAME=filter_support VALUE="support">
+<INPUT TYPE=hidden NAME=filter_community VALUE="community">
+<INPUT TYPE=hidden NAME=filter_technical VALUE="technical">
+<INPUT TYPE=hidden NAME=filter_cipsoft VALUE="cipsoft">
+<INPUT TYPE=hidden NAME=filter_development VALUE="development">
+<INPUT TYPE=image NAME="Back" ALT="Back" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</center><br/>
+        </div>
+      </div>
+    </div>
+    <div class="Border_1" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/border-1.gif);"></div>
+    <div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-bl.gif);"></div></div>
+    <div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-br.gif);"></div></div>
+  </div>
+              <div id="ThemeboxesColumn" >
+                <div id="DeactivationContainerThemebox" onClick="StopVideoIfExists();DisableDeactivationContainer();" ></div>
+                <div id="RightArtwork">
+                  <img id="Monster" title="Today's boosted creature: Minotaur Archer" src="https://ssl-static-tibia.akamaized.net/images/global/header/monsters/minotaurarcher.gif" onClick="window.location = 'https://www.tibia.com/library/?subtopic=creatures';" alt="Boosted Creature" /><img id="Pedestal" src="https://ssl-static-tibia.akamaized.net/images/global/header/pedestal.png" alt="Monster Pedestal Box"/>                </div>
+                <div id="Themeboxes">
+                  <!-- Tibia anniversary -->
+<!-- premium theme box -->
+<div id="PremiumBox" class="Themebox" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/themeboxes/premium/premiumbox.gif);">
+    <div class="ThemeboxButton" >
+    <form action="https://www.tibia.com/account/index.php?subtopic=redirectlogin&redirect=https%3A%2F%2Fwww.tibia.com%2Faccount%2F%3Fsubtopic%3Daccountmanagement%23Products%2BAvailable" method="post" style="padding:0px;margin:0px;" ><div class="BigButton" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_green.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_green_over.gif);" ></div><input class="ButtonText" type="image" name="Get Premium" alt="Get Premium" src="https://ssl-static-tibia.akamaized.net/images/global/buttons/_sbutton_getpremium.gif" ></div></div></form>  </div>
+  <div class="Bottom" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/general/box-bottom.gif);"></div>
+</div>
