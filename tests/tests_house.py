@@ -107,8 +107,7 @@ class TestsHouse(TestTibiaPy):
         self.assertIsInstance(houses[0].id, int)
         self.assertIsNotNone(ListedHouse.get_list_url(houses[0].world, houses[0].town))
 
-        self.assertEqual(houses[25].status, HouseStatus.AUCTIONED)
-        self.assertEqual(houses[25].highest_bid, 7500000)
+        self.assertEqual(houses[25].status, HouseStatus.RENTED)
 
     def testHouseListEmpty(self):
         content = self._load_resource(FILE_HOUSE_LIST_EMPTY)
