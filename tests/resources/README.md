@@ -75,6 +75,8 @@ nonexistent world or a unselected world.
 
 ## News resources
 - [tibiacom_list.txt](news/tibiacom_list.txt) - The content of the news search page with results.
+- [tibiacom_list_empty.txt](news/tibiacom_list_empty.txt) - The content of the news search page with no results.
+- [tibiacom_list_error.txt](news/tibiacom_list_error.txt) - The content of the news search page with an error.
 - [tibiacom_news.txt](news/tibiacom_news.txt) - The content of a news article.
 - [tibiacom_news_ticker.txt](news/tibiacom_news_ticker.txt) - The content of a news ticker.
  

@@ -3,7 +3,7 @@ import re
 import urllib.parse
 from typing import Optional
 
-from tibiapy import abc
+from tibiapy import abc, InvalidContent
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.utils import parse_tibiacom_content, try_enum, parse_tibia_date
 
@@ -101,19 +101,27 @@ class ListedNews(abc.BaseNews):
                " date={0.date!r}>".format(self)
 
     @classmethod
-    def from_content(cls, content):
-        parsed_content = parse_tibiacom_content(content)
-        tables = parsed_content.find_all("table", attrs={"width": "100%"})
-        news = []
-        if len(tables) < 2:
+    def list_from_content(cls, content):
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            tables = parsed_content.find_all("table", attrs={"width": "100%"})
+            news = []
+            if len(tables) < 2:
+                return news
+            news_table = tables[0]
+            title_row = news_table.find("td", attrs={"class": "white", "colspan": "3"})
+            if title_row.text != "Search Results":
+                raise InvalidContent("content is not from the news archive section in Tibia.com")
+            rows = news_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
+            for row in rows:
+                cols_raw = row.find_all('td')
+                if len(cols_raw) != 3:
+                    continue
+                entry = cls._parse_entry(cols_raw)
+                news.append(entry)
             return news
-        news_table = tables[0]
-        rows = news_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
-        for row in rows:
-            cols_raw = row.find_all('td')
-            entry = cls._parse_entry(cols_raw)
-            news.append(entry)
-        return news
+        except AttributeError:
+            raise InvalidContent("content is not from the news archive section in Tibia.com")
 
     @classmethod
     def _parse_entry(cls, cols_raw):
