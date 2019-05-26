@@ -11,6 +11,7 @@ __all__ = ("News", "ListedNews",)
 
 
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
+NEWS_SEARCH_URL = "https://www.tibia.com/news/?subtopic=newsarchive"
 
 
 class News(abc.BaseNews):

@@ -684,6 +684,29 @@ class Killer(abc.Serializable):
         return Character.get_url(self.name) if self.player else None
 
 
+class OnlineCharacter(abc.BaseCharacter):
+    """Represents an online character.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character.
+    world: :class:`str`
+        The name of the world.
+    vocation: :class:`Vocation`
+        The vocation of the character.
+    level: :class:`int`
+        The level of the character.
+    """
+    __slots__ = ("world", "vocation", "level")
+
+    def __init__(self, name, world, level, vocation):
+        self.name = name  # type: str
+        self.world = world  # type: str
+        self.level = int(level)
+        self.vocation = try_enum(Vocation, vocation)
+
+
 class OtherCharacter(abc.BaseCharacter):
     """
     Represents other character's displayed in the Character's information page.
@@ -706,26 +729,3 @@ class OtherCharacter(abc.BaseCharacter):
         self.world = world  # type: str
         self.online = online  # type: bool
         self.deleted = deleted  # type: bool
-
-
-class OnlineCharacter(abc.BaseCharacter):
-    """Represents an online character.
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The name of the character.
-    world: :class:`str`
-        The name of the world.
-    vocation: :class:`Vocation`
-        The vocation of the character.
-    level: :class:`int`
-        The level of the character.
-    """
-    __slots__ = ("world", "vocation", "level")
-
-    def __init__(self, name, world, level, vocation):
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.level = int(level)
-        self.vocation = try_enum(Vocation, vocation)
