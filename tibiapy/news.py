@@ -61,7 +61,7 @@ class News(abc.BaseNews):
 
             content_table = parsed_content.find("table")
             content_row = content_table.find("td")
-            content = content_row.encode_contents()
+            content = content_row.encode_contents().decode()
             thread_id = None
             thread_div = content_table.find("div")
             if thread_div:

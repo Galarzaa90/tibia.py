@@ -20,6 +20,10 @@ class BaseEnum(Enum):
     def __str__(self):
         return self.value
 
+    @classmethod
+    def items(cls):
+        return [i for i in cls]
+
 
 class AccountStatus(BaseEnum):
     """Possible account statuses."""

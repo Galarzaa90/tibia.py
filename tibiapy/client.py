@@ -1,9 +1,11 @@
 import asyncio
+import datetime
 
 import aiohttp
 
+import tibiapy
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
-    ListedHouse, HouseType, WorldOverview
+    ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News
 
 __all__ = ("Client",)
 
@@ -20,6 +22,10 @@ class Client():
 
     async def _get(self, url):
         async with self.session.get(url) as resp:
+            return await resp.text()
+
+    async def _post(self, url, data):
+        async with self.session.post(url, data=data) as resp:
             return await resp.text()
 
     async def fetch_character(self, name):
@@ -67,3 +73,58 @@ class Client():
         content = await self._get(WorldOverview.get_url())
         world_overview = WorldOverview.from_content(content)
         return world_overview
+
+    async def fetch_news_archive(self, begin_date, end_date, categories=None, types=None):
+        """Fetches news from the archive meeting the search criteria.
+
+        Parameters
+        ----------
+        begin_date: :class:`datetime.date`
+            The beginning date to search dates in.
+        end_date: :class:`datetime.date`
+            The end date to search dates in.
+        categories: `list` of :class:`NewsCategory`
+            The allowed categories to show. If left blank, all categories will be searched.
+        types : `list` of :class:`ListedNews`
+            The allowed news types to show. if unused, all types will be searched.
+        Returns
+        -------
+
+        """
+        if begin_date > end_date:
+            raise ValueError("begin_date can't be more recent than end_date")
+        if not categories:
+            categories = NewsCategory.items()
+        if not types:
+            types = NewsType.items()
+        data = {
+            "filter_begin_day": begin_date.day,
+            "filter_begin_month": begin_date.month,
+            "filter_begin_year": begin_date.year,
+            "filter_end_day": end_date.day,
+            "filter_end_month": end_date.month,
+            "filter_end_year": end_date.year,
+        }
+        for category in categories:
+            key = "filter_%s" % category.value
+            data[key] = category.value
+        if NewsType.FEATURED_ARTICLE in types:
+            data["filter_article"] = "article"
+        if NewsType.NEWS in types:
+            data["filter_news"] = "news"
+        if NewsType.NEWS_TICKER in types:
+            data["filter_ticker"] = "ticker"
+
+        content = await self._post(tibiapy.news.NEWS_SEARCH_URL, data)
+        news = ListedNews.list_from_content(content)
+        return news
+
+    async def fetch_recent_news(self, days=30):
+        end = datetime.date.today()
+        begin = end - datetime.timedelta(days=days)
+        return await self.fetch_news_archive(begin, end)
+
+    async def fetch_news(self, news_id):
+        content = await self._get(News.get_url(news_id))
+        news = News.from_content(content, news_id)
+        return news
