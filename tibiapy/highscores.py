@@ -29,6 +29,8 @@ class Highscores(abc.Serializable):
         The selected category to displays the highscores of.
     vocation: :class:`VocationFilter`
         The selected vocation to filter out values.
+    entries: :class:`list` of :class:`HighscoresEntry`
+        The highscores entries found.
     results_count: :class:`int`
         The total amount of highscores entries in this category. These may be shown in another page.
     """
@@ -38,6 +40,14 @@ class Highscores(abc.Serializable):
         self.vocation = try_enum(VocationFilter, kwargs.get("vocation"), VocationFilter.ALL)
         self.entries = kwargs.get("entries", [])  # type: List[HighscoresEntry]
         self.results_count = kwargs.get("results_count")  # type: int
+
+    __slots__ = (
+        'world',
+        'categroy',
+        'vocation',
+        'entries',
+        'results_count'
+    )
 
     def __repr__(self):
         return "<{0.__class__.__name__} world={0.world!r} category={0.category!r} vocation={0.vocation!r}>".format(self)
@@ -282,6 +292,12 @@ class HighscoresEntry(abc.BaseCharacter):
         self.vocation = try_enum(Vocation, vocation)
         self.value = value  # type: int
 
+    __slots__ = (
+        'rank',
+        'vocation',
+        'value',
+    )
+
     def __repr__(self) -> str:
         return "<{0.__class__.__name__} rank={0.rank} name={0.name!r} value={0.value}>".format(self)
 
@@ -305,6 +321,10 @@ class ExpHighscoresEntry(HighscoresEntry):
         super().__init__(name, rank, vocation, value)
         self.level = level  # type: int
 
+    __slots__ = (
+        'level',
+    )
+
 
 class LoyaltyHighscoresEntry(HighscoresEntry):
     """Represents a entry for the highscores loyalty points category.
@@ -324,3 +344,7 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
     def __init__(self, name, rank, vocation, value, title):
         super().__init__(name, rank, vocation, value)
         self.title = title  # type: str
+
+    __slots__ = (
+        'title',
+    )

@@ -14,7 +14,7 @@ __all__ = ("House", "CharacterHouse", "GuildHouse", "ListedHouse")
 
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
-info_regex = re.compile(r'The house has a size of (?P<size>\d+) square meter[s]?. The monthly rent is (?P<rent>\d+) gold and will be debited to the bank account on (?P<world>\w+).')
+info_regex = re.compile(r'The house has a size of (?P<size>\d+) square meter[s]?. The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).')
 
 rented_regex = re.compile(r'The house has been rented by (?P<owner>[^.]+)\. (?P<pronoun>\w+) has paid the rent until (?P<paid_until>[^.]+)\.')
 transfer_regex = re.compile(r'\w+ will move out on (?P<transfer_date>[^(]+)\([^)]+\)(?: and (?P<verb>wants to|will) pass the house to (?P<transferee>[\w\s]+) for (?P<transfer_price>\d+) gold coin)?')

@@ -43,30 +43,35 @@ class News(abc.BaseNews):
 
     @classmethod
     def from_content(cls, content, news_id=0):
-        parsed_content = parse_tibiacom_content(content)
-        headline = parsed_content.find("div", attrs={"class": "NewsHeadline"})
-        img = headline.find('img')
-        img_url = img["src"]
-        category_name = ICON_PATTERN.search(img_url)
-        category = try_enum(NewsCategory, category_name.group(1))
-        title_div = headline.find("div", attrs={"class": "NewsHeadlineText"})
-        title = title_div.text.replace('\xa0', ' ')
-        date_div = headline.find("div", attrs={"class": "NewsHeadlineDate"})
-        date_str = date_div.text.replace('\xa0', ' ').replace('-', '').strip()
-        date = parse_tibia_date(date_str)
+        if "(no news with id " in content:
+            return None
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            headline = parsed_content.find("div", attrs={"class": "NewsHeadline"})
+            img = headline.find('img')
+            img_url = img["src"]
+            category_name = ICON_PATTERN.search(img_url)
+            category = try_enum(NewsCategory, category_name.group(1))
+            title_div = headline.find("div", attrs={"class": "NewsHeadlineText"})
+            title = title_div.text.replace('\xa0', ' ')
+            date_div = headline.find("div", attrs={"class": "NewsHeadlineDate"})
+            date_str = date_div.text.replace('\xa0', ' ').replace('-', '').strip()
+            date = parse_tibia_date(date_str)
 
-        content_table = parsed_content.find("table")
-        content_row = content_table.find("td")
-        content = content_row.encode_contents()
-        thread_id = None
-        thread_div = content_table.find("div")
-        if thread_div:
-            news_link = thread_div.find('a')
-            url = urllib.parse.urlparse(news_link["href"])
-            query = urllib.parse.parse_qs(url.query)
-            thread_id = int(query["threadid"][0])
+            content_table = parsed_content.find("table")
+            content_row = content_table.find("td")
+            content = content_row.encode_contents()
+            thread_id = None
+            thread_div = content_table.find("div")
+            if thread_div:
+                news_link = thread_div.find('a')
+                url = urllib.parse.urlparse(news_link["href"])
+                query = urllib.parse.parse_qs(url.query)
+                thread_id = int(query["threadid"][0])
 
-        return cls(news_id, title, content, date, category, thread_id)
+            return cls(news_id, title, content, date, category, thread_id)
+        except AttributeError:
+            raise InvalidContent("content is not from the news archive section in Tibia.com")
 
 
 class ListedNews(abc.BaseNews):
@@ -102,12 +107,28 @@ class ListedNews(abc.BaseNews):
 
     @classmethod
     def list_from_content(cls, content):
+        """
+        Gets a list of news from the HTML content of the news search page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`list` of :class:`ListedNews`
+            List of news in the search results.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a news search's page.
+        """
         try:
             parsed_content = parse_tibiacom_content(content)
             tables = parsed_content.find_all("table", attrs={"width": "100%"})
             news = []
-            if len(tables) < 2:
-                return news
             news_table = tables[0]
             title_row = news_table.find("td", attrs={"class": "white", "colspan": "3"})
             if title_row.text != "Search Results":
@@ -120,7 +141,7 @@ class ListedNews(abc.BaseNews):
                 entry = cls._parse_entry(cols_raw)
                 news.append(entry)
             return news
-        except AttributeError:
+        except (AttributeError, IndexError):
             raise InvalidContent("content is not from the news archive section in Tibia.com")
 
     @classmethod

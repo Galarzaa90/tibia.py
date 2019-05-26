@@ -6,6 +6,7 @@ from tibiapy.enums import NewsCategory, NewsType
 
 FILE_NEWS_LIST = "news/tibiacom_list.txt"
 FILE_NEWS_LIST_EMPTY = "news/tibiacom_list_empty.txt"
+FILE_NEWS_EMPTY = "news/tibiacom_empty.txt"
 FILE_NEWS_ARTICLE = "news/tibiacom_news.txt"
 FILE_NEWS_TICKER = "news/tibiacom_news_ticker.txt"
 
@@ -33,9 +34,18 @@ class TestNews(TestTibiaPy):
 
     def testNewsListUnrelated(self):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
-        # with self.assertRaises(InvalidContent):
-        a = ListedNews.list_from_content(content)
-        print()
+        with self.assertRaises(InvalidContent):
+            ListedNews.list_from_content(content)
+
+    def testNewsEmpty(self):
+        content = self._load_resource(FILE_NEWS_EMPTY)
+        news = News.from_content(content)
+        self.assertIsNone(news)
+
+    def testNewsUnrelated(self):
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        with self.assertRaises(InvalidContent):
+            News.from_content(content)
 
     def testNewsTicker(self):
         content = self._load_resource(FILE_NEWS_TICKER)
