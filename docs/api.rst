@@ -8,6 +8,14 @@ This module implements a variety of classes used to hold the data parsed from Ti
 These objects are generally obtained from their respective ``from_content`` methods.
 It is possible to create and edit these objects as desired, but it may lead to unexpected behaviour if not done properly.
 
+Client
+======
+
+.. versionadded:: 2.0.0
+
+.. autoclass:: Client
+    :members:
+
 Enumerations
 ============
 Enumerations are provided for various values in order to avoid depending on strings.

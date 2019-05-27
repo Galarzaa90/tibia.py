@@ -10,6 +10,7 @@ import re
 
 def setup(app):
     app.add_stylesheet('custom.css')
+    app.add_javascript('custom.js')
 
 # -- Path setup --------------------------------------------------------------
 
@@ -81,7 +82,7 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'friendly'
 
 
 # -- Options for HTML output -------------------------------------------------

@@ -10,4 +10,4 @@ from tibiapy.news import *
 from tibiapy.world import *
 from tibiapy.client import *
 
-__version__ = '1.1.3'
+__version__ = '2.0.0'
