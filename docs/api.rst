@@ -11,8 +11,6 @@ It is possible to create and edit these objects as desired, but it may lead to u
 Client
 ======
 
-.. versionadded:: 2.0.0
-
 .. autoclass:: Client
     :members:
 
