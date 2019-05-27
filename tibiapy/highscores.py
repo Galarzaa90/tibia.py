@@ -21,6 +21,8 @@ class Highscores(abc.Serializable):
     Tibia.com only shows 25 entries per page.
     TibiaData.com shows all results at once.
 
+    .. versionadded:: 1.1.0
+
     Attributes
     ----------
     world: :class:`str`

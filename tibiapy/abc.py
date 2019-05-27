@@ -338,10 +338,18 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
         The title of the news entry.
     category: :class:`.NewsCategory`
         The category this belongs to.
+    category_icon: :class:`str`
+        The URL of the icon corresponding to the category.
     date: :class:`datetime.date`
         The date when the news were published.
     """
-    __slots__ = ("id", "title", "category", "date",)
+    __slots__ = (
+        "id",
+        "title",
+        "category",
+        "category_icon",
+        "date",
+    )
 
     def __eq__(self, o: object) -> bool:
         """Two news articles are considered equal if their names or ids are equal."""
@@ -351,7 +359,7 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
 
     @property
     def url(self):
-        """:class:`str`: The URL to the Tibia.com page of the house."""
+        """:class:`str`: The URL to the Tibia.com page of the news entry."""
         return self.get_url(self.id)
 
     @classmethod
