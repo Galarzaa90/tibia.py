@@ -336,7 +336,7 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
         The internal ID of the news entry.
     title: :class:`str`
         The title of the news entry.
-    category: :class:`NewsCategory`
+    category: :class:`.NewsCategory`
         The category this belongs to.
     date: :class:`datetime.date`
         The date when the news were published.
