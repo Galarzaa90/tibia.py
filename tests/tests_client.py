@@ -2,16 +2,17 @@ import datetime
 
 import asynctest
 from aioresponses import aioresponses
+from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 
 from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
 from tests.tests_highscores import FILE_HIGHSCORES_FULL
 from tests.tests_house import FILE_HOUSE_FULL, FILE_HOUSE_LIST
 from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
-from tests.tests_news import FILE_NEWS_LIST
+from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Client, Character, Guild, Highscores, VocationFilter, Category, House, ListedHouse, ListedGuild, \
-    KillStatistics, ListedNews
+    KillStatistics, ListedNews, News, World, WorldOverview
 
 
 class TestClient(asynctest.TestCase, TestCommons):
@@ -112,4 +113,34 @@ class TestClient(asynctest.TestCase, TestCommons):
         yesterday = today - datetime.timedelta(days=1)
         with self.assertRaises(ValueError):
             await self.client.fetch_news_archive(today, yesterday)
+
+    @aioresponses()
+    async def testFetchNews(self, mock):
+        news_id = 6000
+        content = self._load_resource(FILE_NEWS_ARTICLE)
+        mock.get(News.get_url(news_id), status=200, body=content)
+        news = await self.client.fetch_news(news_id)
+
+        self.assertIsInstance(news, News)
+
+    @aioresponses()
+    async def testFetchWorld(self, mock):
+        name = "Antica"
+        content = self._load_resource(FILE_WORLD_FULL)
+        mock.get(World.get_url(name), status=200, body=content)
+        world = await self.client.fetch_world(name)
+
+        self.assertIsInstance(world, World)
+
+    @aioresponses()
+    async def testFetchWorldList(self, mock):
+        content = self._load_resource(FILE_WORLD_LIST)
+        mock.get(WorldOverview.get_url(), status=200, body=content)
+        worlds = await self.client.fetch_world_list()
+
+        self.assertIsInstance(worlds, WorldOverview)
+
+
+
+
 
