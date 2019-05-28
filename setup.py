@@ -48,7 +48,7 @@ extras_require = {
         'sphinx==1.7.9',
     ],
     'test': [
-        'asynctest'
+        'asynctest',
         'aioresponses'
     ]
 }
