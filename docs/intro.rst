@@ -1,3 +1,5 @@
+.. currentmodule:: tibiapy
+
 ============
 Introduction
 ============
@@ -32,33 +34,33 @@ Tibia.py can be installed from `PyPi`_ using:
 
 Usage
 =====
-This library only performs parsing, to fetch content you need to use external libraries.
+This library is composed of two parts, parsers and a asynchronous request client.
+
+The parsing methods allow you to get Python objects given the html content of a page.
 
 The main models have a ``get_url``/``get_url_tibiadata`` method that can be used to get their Tibia.com/TibiaData.com page.
 With the url, the html/json content can be fetched and then passed to their ``from_content``/``from_tibiadata`` methods.
 
+This allows you to use any networking module to obtain the data, and use the library to parse it.
+
+This module comes with asynchronous client (:class:`tibiapy.Client`) with methods to obtain information from Tibia.com.
+
 .. code-block:: python
 
-   import aiohttp
-   import requests
-   import tibiapy
+    import requests
+    import tibiapy
 
-   # Asynchronously
-   async def get_character(name):
-      url = tibiapy.Character.get_url(name)
 
-      try:
-         async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-               content = await resp.text()
-      character = tibiapy.Character.from_content(content)
-      return character
+    client = tibiapy.Client()
 
-   # Synchronously
-   def get_character_sync(name):
-      url = tibiapy.Character.get_url(name)
+    async def run():
+        char = await client.fetch_character(name)
 
-      r = requests.get(url)
-      content = r.text
-      character = tibiapy.Character.from_content(content)
-      return character
+    # Synchronously
+    def get_character_sync(name):
+        url = tibiapy.Character.get_url(name)
+
+        r = requests.get(url)
+        content = r.text
+        character = tibiapy.Character.from_content(content)
+        return character
