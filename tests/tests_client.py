@@ -1,3 +1,5 @@
+import datetime
+
 import asynctest
 from aioresponses import aioresponses
 
@@ -5,8 +7,11 @@ from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FO
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
 from tests.tests_highscores import FILE_HIGHSCORES_FULL
 from tests.tests_house import FILE_HOUSE_FULL, FILE_HOUSE_LIST
+from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
+from tests.tests_news import FILE_NEWS_LIST
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Client, Character, Guild, Highscores, VocationFilter, Category, House, ListedHouse, ListedGuild
+from tibiapy import Client, Character, Guild, Highscores, VocationFilter, Category, House, ListedHouse, ListedGuild, \
+    KillStatistics, ListedNews
 
 
 class TestClient(asynctest.TestCase, TestCommons):
@@ -83,3 +88,28 @@ class TestClient(asynctest.TestCase, TestCommons):
 
         self.assertIsInstance(houses, list)
         self.assertIsInstance(houses[0], ListedHouse)
+
+    @aioresponses()
+    async def testFetchKillStatistics(self, mock):
+        world = "Antica"
+        content = self._load_resource(FILE_KILL_STATISTICS_FULL)
+        mock.get(KillStatistics.get_url(world), status=200, body=content)
+        kill_statistics = await self.client.fetch_kill_statistics(world)
+
+        self.assertIsInstance(kill_statistics, KillStatistics)
+
+    @aioresponses()
+    async def testFetchRecentNews(self, mock):
+        content = self._load_resource(FILE_NEWS_LIST)
+        mock.post(ListedNews.get_list_url(), status=200, body=content)
+        recent_news = await self.client.fetch_recent_news(30)
+
+        self.assertIsInstance(recent_news, list)
+        self.assertIsInstance(recent_news[0], ListedNews)
+
+    async def testFetchNewsInvalidDates(self):
+        today = datetime.date.today()
+        yesterday = today - datetime.timedelta(days=1)
+        with self.assertRaises(ValueError):
+            await self.client.fetch_news_archive(today, yesterday)
+

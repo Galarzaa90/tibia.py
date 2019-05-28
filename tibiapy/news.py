@@ -185,6 +185,10 @@ class ListedNews(abc.BaseNews):
             raise InvalidContent("content is not from the news archive section in Tibia.com")
 
     @classmethod
+    def get_list_url(cls):
+        return NEWS_SEARCH_URL
+
+    @classmethod
     def _parse_entry(cls, cols_raw):
         img = cols_raw[0].find('img')
         img_url = img["src"]
