@@ -1,6 +1,7 @@
 import datetime
+import unittest
 
-from tests.tests_tibiapy import TestTibiaPy
+from tests.tests_tibiapy import TestCommons
 from tibiapy import ListedNews, News, InvalidContent
 from tibiapy.enums import NewsCategory, NewsType
 
@@ -11,7 +12,7 @@ FILE_NEWS_ARTICLE = "news/tibiacom_news.txt"
 FILE_NEWS_TICKER = "news/tibiacom_news_ticker.txt"
 
 
-class TestNews(TestTibiaPy):
+class TestNews(TestCommons, unittest.TestCase):
     # region Tibia.com Tests
     def testNewsList(self):
         content = self._load_resource(FILE_NEWS_LIST)

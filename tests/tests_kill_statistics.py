@@ -1,11 +1,13 @@
-from tests.tests_tibiapy import TestTibiaPy
+import unittest
+
+from tests.tests_tibiapy import TestCommons
 from tibiapy import KillStatistics, InvalidContent
 
 FILE_KILL_STATISTICS_FULL = "kill_statistics/tibiacom_full.txt"
 FILE_KILL_STATISTICS_EMPTY = "kill_statistics/tibiacom_empty.txt"
 
 
-class TestHighscores(TestTibiaPy):
+class TestHighscores(TestCommons, unittest.TestCase):
     # region Tibia.com Tests
     def testKillStatistics(self):
         content = self._load_resource(FILE_KILL_STATISTICS_FULL)

@@ -1,7 +1,7 @@
 image: python:3.6
 
 before_script:
-  - pip install -r requirements.txt
+  - pip install -U -e .
   - pip install -U setuptools wheel
 
 stages:
@@ -21,7 +21,7 @@ build:
 docs:
   stage: build
   script:
-    - pip install Sphinx
+    - pip install -U -e .[docs]
     - cd docs
     - make html
   artifacts:
@@ -33,6 +33,7 @@ coverage:
   stage: test
   script:
       - pip install coverage
+      - pip install -U -e .[test]
       - coverage run setup.py test
       - coverage report
       - coverage html

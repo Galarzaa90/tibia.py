@@ -1,8 +1,9 @@
 import datetime
 import json
+import unittest
 
 import tests.tests_character
-from tests.tests_tibiapy import TestTibiaPy
+from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent, World, WorldOverview
 from tibiapy.enums import PvpType, TransferType, WorldLocation
 from tibiapy.world import ListedWorld
@@ -20,7 +21,7 @@ FILE_WORLD_LIST_TIBIADATA = "world/tibiadata_list_online.json"
 FILE_WORLD_LIST_TIBIADATA_OFFLINE = "world/tibiadata_list_offline.json"
 
 
-class TestWorld(TestTibiaPy):
+class TestWorld(TestCommons, unittest.TestCase):
 
     # region Tibia.com Tests
     def testWorld(self):

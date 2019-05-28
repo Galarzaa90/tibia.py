@@ -1,5 +1,7 @@
+import unittest
+
 import tests.tests_character
-from tests.tests_tibiapy import TestTibiaPy
+from tests.tests_tibiapy import TestCommons
 from tibiapy import Category, ExpHighscoresEntry, Highscores, HighscoresEntry, InvalidContent, LoyaltyHighscoresEntry, \
     Vocation, VocationFilter
 
@@ -14,7 +16,7 @@ FILE_HIGHSCORES_TIBIADATA_LOYALTY = "highscores/tibiadata_loyalty.json"
 FILE_HIGHSCORES_TIBIADATA_EMPTY = "highscores/tibiadata_empty.json"
 
 
-class TestHighscores(TestTibiaPy):
+class TestHighscores(unittest.TestCase, TestCommons):
     # region Tibia.com Tests
     def testHighscores(self):
         content = self._load_resource(FILE_HIGHSCORES_FULL)

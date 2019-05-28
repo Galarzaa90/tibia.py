@@ -26,7 +26,8 @@ class Client:
         self.loop = asyncio.get_event_loop() if loop is None else loop  # type: asyncio.AbstractEventLoop
         if session is not None:
             self.session = session  # type: aiohttp.ClientSession
-        self.loop.create_task(self._initialize_session())
+        else:
+            self.loop.create_task(self._initialize_session())
 
     async def _initialize_session(self):
         self.session = aiohttp.ClientSession()  # type: aiohttp.ClientSession

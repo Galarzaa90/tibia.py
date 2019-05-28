@@ -1,6 +1,9 @@
 import datetime
+import unittest
 
-from tests.tests_tibiapy import TestTibiaPy
+import tibiapy
+
+from tests.tests_tibiapy import TestCommons
 from tibiapy import enums, utils
 
 TIBIA_DATETIME_CEST = "Jul 10 2018, 07:13:32 CEST"
@@ -30,7 +33,30 @@ TIBIADATA_DATETIME_PST = {
 TIBIADATA_DATE = "2018-12-20"
 
 
-class TestUtils(TestTibiaPy):
+class TestUtils(TestCommons, unittest.TestCase):
+    def testSerializableGetItem(self):
+        # Class inherits from Serializable
+        world = tibiapy.World("Calmera")
+
+        # Serializable allows accessing attributes like a dictionary
+        self.assertEqual(world.name, world["name"])
+        # And setting values too
+        world["location"] = tibiapy.enums.WorldLocation.NORTH_AMERICA
+        self.assertEqual(world.location, tibiapy.enums.WorldLocation.NORTH_AMERICA)
+
+        # Accessing via __get__ returns KeyError instead of AttributeError to follow dictionary behaviour
+        with self.assertRaises(KeyError):
+            level = world["level"]  # NOSONAR
+
+        # Accessing an undefined attribute that is defined in __slots__ returns `None` instead of raising an exception.
+        del world.location
+        self.assertIsNone(world["location"])
+
+        # New attributes can't be created by assignation
+        with self.assertRaises(KeyError):
+            world["custom"] = "custom value"
+
+
     def testTibiaDateTime(self):
         time = utils.parse_tibia_datetime(TIBIA_DATETIME_CEST)
         self.assertIsInstance(time, datetime.datetime)
