@@ -20,6 +20,9 @@ class BaseEnum(Enum):
     def __str__(self):
         return self.value
 
+    def __repr__(self):
+        return "%s.%s" % (self.__class__.__name__, self.name)
+
     @classmethod
     def items(cls):
         return [i for i in cls]

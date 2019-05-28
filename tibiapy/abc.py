@@ -237,6 +237,10 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
     """
     __slots__ = ("name", "world", "status", "type")
 
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r} status={0.status!r} type={0.type!r}>"\
+            .format(self,)
+
     def __eq__(self, o: object) -> bool:
         """Two houses are considered equal if their names are equal."""
         if isinstance(o, self.__class__):
