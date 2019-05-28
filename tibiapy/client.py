@@ -5,7 +5,7 @@ import aiohttp
 
 import tibiapy
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
-    ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News
+    ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News, TooManyRequests, NetworkError
 
 __all__ = ("Client",)
 
@@ -30,15 +30,32 @@ class Client:
             self.loop.create_task(self._initialize_session())
 
     async def _initialize_session(self):
-        self.session = aiohttp.ClientSession()  # type: aiohttp.ClientSession
+        self.session = aiohttp.ClientSession(loop=self.loop)  # type: aiohttp.ClientSession
+
+    @classmethod
+    def _handle_status(cls, status_code):
+        if status_code < 400:
+            return
+        if status_code ==  503:
+            raise TooManyRequests("503 Service Unavailable: Might be getting rate-limited")
+        else:
+            raise NetworkError("Request error, status code: %d" % status_code)
 
     async def _get(self, url):
-        async with self.session.get(url) as resp:
-            return await resp.text()
+        try:
+            async with self.session.get(url) as resp:
+                self._handle_status(resp.status)
+                return await resp.text()
+        except aiohttp.ClientError as e:
+            raise NetworkError("aiohttp.ClientError: %s" % e, e)
 
     async def _post(self, url, data):
-        async with self.session.post(url, data=data) as resp:
-            return await resp.text()
+        try:
+            async with self.session.post(url, data=data) as resp:
+                self._handle_status(resp.status)
+                return await resp.text()
+        except aiohttp.ClientError as e:
+            raise NetworkError("aiohttp.ClientError: %s" % e, e)
 
     async def fetch_character(self, name):
         """Fetches a character by its name from Tibia.com

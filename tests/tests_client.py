@@ -1,5 +1,6 @@
 import datetime
 
+import aiohttp
 import asynctest
 from aioresponses import aioresponses
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
@@ -12,7 +13,7 @@ from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Client, Character, Guild, Highscores, VocationFilter, Category, House, ListedHouse, ListedGuild, \
-    KillStatistics, ListedNews, News, World, WorldOverview
+    KillStatistics, ListedNews, News, World, WorldOverview, TooManyRequests, NetworkError
 
 
 class TestClient(asynctest.TestCase, TestCommons):
@@ -21,6 +22,33 @@ class TestClient(asynctest.TestCase, TestCommons):
 
     async def tearDown(self):
         await self.client.session.close()
+
+    async def testPassSession(self):
+        headers = {"User-Agent": "Python Unit Test"}
+        session = aiohttp.ClientSession(headers=headers)
+        client = Client(session=session)
+
+        self.assertEqual(client.session._default_headers, headers)
+
+        await client.session.close()
+
+    @aioresponses()
+    async def testRequestErrors(self, mock):
+        mock.get(WorldOverview.get_url(), status=503)
+        with self.assertRaises(TooManyRequests):
+            await self.client.fetch_world_list()
+
+        mock.get(WorldOverview.get_url(), status=404)
+        with self.assertRaises(NetworkError):
+            await self.client.fetch_world_list()
+
+        mock.get(ListedNews.get_list_url(), exception=aiohttp.ClientError())
+        with self.assertRaises(NetworkError):
+            await self.client.fetch_world_list()
+
+        mock.post(ListedNews.get_list_url(), exception=aiohttp.ClientOSError())
+        with self.assertRaises(NetworkError):
+            await self.client.fetch_recent_news(30)
 
     @aioresponses()
     async def testFetchCharacter(self, mock):

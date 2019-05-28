@@ -282,6 +282,10 @@ Exceptions
 
 .. autoclass:: InvalidContent
 
+.. autoclass:: NetworkError
+
+.. autoclass:: TooManyRequests
+
 Utility functions
 ==================
 .. automodule:: tibiapy.utils

@@ -15,3 +15,23 @@ class InvalidContent(TibiapyException):
 
     In some cases this can mean that Tibia.com's format has changed and the library needs updating."""
     pass
+
+
+class NetworkError(TibiapyException):
+    """Exception thrown when there was a network error trying to fetch a resource from the web.
+
+    Attributes
+    ----------
+    original: :class:`Exception`
+        The original exception that caused this exception."""
+    def __init__(self, message, original=None):
+        super().__init__(message)
+        self.original = original
+
+
+class TooManyRequests(NetworkError):
+    """A subclass of network error thrown when Tibia.com returns a 503 status code.
+
+    Tibia.com returns a 502 status code when it detects that too many requests are being done.
+    This has its own subclass to let the user decide to treat this differently than other network errors.
+    """
