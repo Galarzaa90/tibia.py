@@ -64,7 +64,7 @@ class Serializable:
         except TypeError:
             return str(obj)
 
-    def to_json(self, *, indent=None, sort_keys = False):
+    def to_json(self, *, indent=None, sort_keys=False):
         """Gets the object's JSON representation.
 
         Parameters

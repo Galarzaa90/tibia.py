@@ -2,11 +2,17 @@
 Changelog
 =========
 
-.. _v1.2.0:
+.. note::
+    Due to this library relying on external content, older versions are not guaranteed to work.
+    Try to always use the latest version.
 
-1.2.0 (Unreleased)
+.. _v2.0.0:
+
+2.0.0 (Unreleased)
 ==================
 
+- Added asynchronous client to fetch and parse Tibia.com sections.
+- Added news parsing.
 - Added kill statistics parsing.
 
 .. _v1.1.3:

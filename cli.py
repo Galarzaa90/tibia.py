@@ -224,7 +224,7 @@ def get_character_string(character: Character):  # NOSONAR
         content += build_header("Other Characters")
         for other_char in character.other_characters:
             content += "- %s - %s - %s\n" % (other_char.name, other_char.world, "online" if other_char.online else
-            ("deleted" if other_char.deleted else "offline"))
+                                             ("deleted" if other_char.deleted else "offline"))
     return content
 
 
@@ -336,7 +336,7 @@ def get_house_string(house):
     if house.status == "auctioned":
         content += get_field("Highest bid", "%d gold by %s, auction ends on %s" %
                                             (house.highest_bid, house.highest_bidder, house.auction_end)
-        if house.highest_bidder else "None")
+                             if house.highest_bidder else "None")
     else:
         content += get_field("Rented by", "%s, paid until %s" % (house.owner, house.paid_until))
         if house.transfer_date:

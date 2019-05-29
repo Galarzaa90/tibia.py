@@ -11,7 +11,12 @@ __all__ = ("Client",)
 
 
 class Client:
-    """An asynchronous client that fetches information from Tibia.com
+    """An asynchronous client that fetches information from Tibia.com.ArithmeticError
+
+    The client uses a :class:`aiohttp.ClientSession` to request the information.
+    A single session is shared across all operations.
+
+    If desired, a custom ClientSession instance may be passed, instead of creating a new one.
 
     .. versionadded:: 2.0.0
 
@@ -34,14 +39,35 @@ class Client:
 
     @classmethod
     def _handle_status(cls, status_code):
+        """Handles error status codes, raising exceptions if neccesary."""
         if status_code < 400:
             return
-        if status_code ==  503:
+        if status_code == 503:
             raise TooManyRequests("503 Service Unavailable: Might be getting rate-limited")
         else:
             raise NetworkError("Request error, status code: %d" % status_code)
 
     async def _get(self, url):
+        """Base GET request, handling possible error statuses.
+        
+        Parameters
+        ----------
+        url: :class:`str`
+            The URL that will be requested.
+
+        Returns
+        -------
+        :class:`str`
+            The text content of the response.
+
+        Raises
+        ------
+        TooManyRequests:
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
         try:
             async with self.session.get(url) as resp:
                 self._handle_status(resp.status)
@@ -50,6 +76,20 @@ class Client:
             raise NetworkError("aiohttp.ClientError: %s" % e, e)
 
     async def _post(self, url, data):
+        """Base POST request, handling possible error statuses.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            The URL that will be requested.
+
+        Returns
+        -------
+        :class:`str`
+            The text content of the response
+        :class:`dict`
+            A mapping representing the form-data to send as part of the request.
+        """
         try:
             async with self.session.post(url, data=data) as resp:
                 self._handle_status(resp.status)
@@ -69,6 +109,14 @@ class Client:
         -------
         :class:`Character`
             The character if found, else ``None``.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(Character.get_url(name.strip()))
         char = Character.from_content(content)
@@ -86,6 +134,14 @@ class Client:
         -------
         :class:`Guild`
             The guild if found, else ``None``.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(Guild.get_url(name))
         guild = Guild.from_content(content)
@@ -105,6 +161,14 @@ class Client:
         -------
         :class:`House`
             The house if found, ``None`` otherwise.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(House.get_url(house_id, world))
         house = House.from_content(content)
@@ -129,6 +193,14 @@ class Client:
         -------
         :class:`Highscores`
             The highscores information or ``None`` if not found.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(Highscores.get_url(world, category, vocation, page))
         highscores = Highscores.from_content(content)
@@ -146,6 +218,14 @@ class Client:
         -------
         :class:`KillStatistics`
             The kill statistics of the world if found.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(KillStatistics.get_url(world))
         kill_statistics = KillStatistics.from_content(content)
@@ -163,6 +243,14 @@ class Client:
         -------
         :class:`World`
             The world's information if found, ```None`` otherwise.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(World.get_url(name))
         world = World.from_content(content)
@@ -184,6 +272,14 @@ class Client:
         -------
         list of :class:`ListedHouse`
             The lists of houses meeting the criteria if found.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(ListedHouse.get_list_url(world, town, house_type))
         houses = ListedHouse.list_from_content(content)
@@ -201,6 +297,14 @@ class Client:
         -------
         list of :class:`ListedGuild`
             The lists of guilds in the world.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(ListedGuild.get_world_list_url(world))
         guilds = ListedGuild.list_from_content(content)
@@ -213,6 +317,14 @@ class Client:
         -------
         :class:`WorldOverview`
             The world overview information.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(WorldOverview.get_url())
         world_overview = WorldOverview.from_content(content)
@@ -236,6 +348,16 @@ class Client:
         -------
         list of :class:`ListedNews`
             The news meeting the search criteria.
+
+        Raises
+        ------
+        ValueError:
+            If ``begin_date`` is more recent than ``end_date``.
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         if begin_date > end_date:
             raise ValueError("begin_date can't be more recent than end_date")
@@ -265,22 +387,36 @@ class Client:
         news = ListedNews.list_from_content(content)
         return news
 
-    async def fetch_recent_news(self, days=30):
+    async def fetch_recent_news(self, days=30, categories=None, types=None):
         """Fetches all the published news in the last specified days.
+
+        This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.
 
         Parameters
         ----------
         days: :class:`int`
             The number of days to search, by default 30.
+        categories: `list` of :class:`NewsCategory`
+            The allowed categories to show. If left blank, all categories will be searched.
+        types : `list` of :class:`ListedNews`
+            The allowed news types to show. if unused, all types will be searched.
 
         Returns
         -------
         list of :class:`ListedNews`
             The news posted in the last specified days.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         end = datetime.date.today()
         begin = end - datetime.timedelta(days=days)
-        return await self.fetch_news_archive(begin, end)
+        return await self.fetch_news_archive(begin, end, categories, types)
 
     async def fetch_news(self, news_id):
         """Fetches a news entry by its id from Tibia.com
@@ -294,6 +430,14 @@ class Client:
         -------
         :class:`News`
             The news entry if found, ``None`` otherwise.
+
+        Raises
+        ------
+        TooManyRequests
+            If a 503 Service Unavailable error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
         """
         content = await self._get(News.get_url(news_id))
         news = News.from_content(content, news_id)

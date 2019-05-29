@@ -136,12 +136,12 @@ def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
     """Parses a date from the format used in TibiaData.
 
     Parameters
-    -----------
+    ----------
     date_str: :class:`str`
         The date as represented in Tibia.com
 
     Returns
-    -----------
+    -------
     :class:`datetime.date`, optional
         The represended date."""
     try:
@@ -152,6 +152,18 @@ def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
 
 
 def parse_number_words(text_num):
+    """Parses the word representation of a number to a integer.
+
+    Parameters
+    ----------
+    text_num: :class:`str`
+        The text representation of a number.
+
+    Returns
+    -------
+    :class:`int`
+        The number represented by the string.
+    """
     numwords = {}
     units = [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",

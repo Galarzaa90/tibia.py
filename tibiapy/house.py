@@ -91,7 +91,7 @@ class House(abc.BaseHouseWithId):
         self.owner_sex = try_enum(Sex, kwargs.get("owner_sex"))
         self.paid_until = try_datetime(kwargs.get("paid_until"))
         self.transfer_date = try_datetime(kwargs.get("transfer_date"))
-        self.transferee = kwargs.get("transferee")  #type: Optional[str]
+        self.transferee = kwargs.get("transferee")  # type: Optional[str]
         self.transfer_price = kwargs.get("transfer_price", 0)  # type: int
         self.transfer_accepted = kwargs.get("transfer_accepted", False)  # type: bool
         self.highest_bid = kwargs.get("highest_bid", 0)  # type: int
@@ -142,7 +142,7 @@ class House(abc.BaseHouseWithId):
         image = image_column.find('img')
         for br in desc_column.find_all("br"):
             br.replace_with("\n")
-        description = desc_column.text.replace("\u00a0", " ").replace("\n\n","\n")
+        description = desc_column.text.replace("\u00a0", " ").replace("\n\n", "\n")
         lines = description.splitlines()
         try:
             name, beds, info, state, *_ = lines
