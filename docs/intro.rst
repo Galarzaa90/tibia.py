@@ -64,3 +64,43 @@ This module comes with asynchronous client (:class:`tibiapy.Client`) with method
         content = r.text
         character = tibiapy.Character.from_content(content)
         return character
+
+
+Suported Sections
+=================
+
++---------------------------+---------------------------------------+--------------------------------------+
+|          Section          |                Parsing                |               Fetching               |
++===========================+=======================================+======================================+
+| Characters_               | :meth:`Character.from_content`        | :meth:`Client.fetch_character`       |
++---------------------------+---------------------------------------+--------------------------------------+
+| Guilds_ (Individual)      | :meth:`Guild.from_content`            | :meth:`Client.fetch_guild`           |
++---------------------------+---------------------------------------+--------------------------------------+
+| Guilds_ (List)            | :meth:`ListedGuild.list_from_content` | :meth:`Client.fetch_world_guilds`    |
++---------------------------+---------------------------------------+--------------------------------------+
+| Highscores_               | :meth:`Highscores.from_content`       | :meth:`Client.fetch_highscores_page` |
++---------------------------+---------------------------------------+--------------------------------------+
+| Houses_ (Individual)      | :meth:`House.from_content`            | :meth:`Client.fetch_house`           |
++---------------------------+---------------------------------------+--------------------------------------+
+| Houses_ (List)            | :meth:`ListedHouse.list_from_content` | :meth:`Client.fetch_world_houses`    |
++---------------------------+---------------------------------------+--------------------------------------+
+| `Kill Statistics`_ (List) | :meth:`KillStatistics.from_content`   | :meth:`Client.fetch_kill_statistics` |
++---------------------------+---------------------------------------+--------------------------------------+
+| News_ (Individual)        | :meth:`News.from_content`             | :meth:`Client.fetch_news`            |
++---------------------------+---------------------------------------+--------------------------------------+
+| News_ (List)              | :meth:`ListedNews.list_from_content`  | :meth:`Client.fetch_news_archive`    |
+|                           |                                       | :meth:`Client.fetch_recent_news`     |
++---------------------------+---------------------------------------+--------------------------------------+
+| Worlds_ (Individual)      | :meth:`World.from_content`            | :meth:`Client.fetch_world`           |
++---------------------------+---------------------------------------+--------------------------------------+
+| Worlds_ (List)            | :meth:`WorldOverview.from_content`    | :meth:`Client.fetch_world_list`      |
++---------------------------+---------------------------------------+--------------------------------------+
+
+
+.. _Characters: https://secure.tibia.com/community/?subtopic=characters
+.. _Guilds: https://secure.tibia.com/community/?subtopic=guilds
+.. _Highscores: https://secure.tibia.com/community/?subtopic=highscores
+.. _Houses: https://secure.tibia.com/community/?subtopic=houses
+.. _Kill Statistics: https://secure.tibia.com/community/?subtopic=killstatistics
+.. _News: https://www.tibia.com/news/?subtopic=newsarchive
+.. _Worlds: https://www.tibia.com/community/?subtopic=worlds
