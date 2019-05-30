@@ -11,7 +11,7 @@ __all__ = ("News", "ListedNews",)
 
 
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
-NEWS_SEARCH_URL = "https://www.tibia.com/news/?subtopic=newsarchive"
+
 
 
 class News(abc.BaseNews):
@@ -184,9 +184,7 @@ class ListedNews(abc.BaseNews):
         except (AttributeError, IndexError):
             raise InvalidContent("content is not from the news archive section in Tibia.com")
 
-    @classmethod
-    def get_list_url(cls):
-        return NEWS_SEARCH_URL
+
 
     @classmethod
     def _parse_entry(cls, cols_raw):

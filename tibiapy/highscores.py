@@ -305,20 +305,22 @@ class HighscoresEntry(abc.BaseCharacter):
 
 
 class ExpHighscoresEntry(HighscoresEntry):
-    """Represents a entry for the highscores's experience category.
+    """Represents an entry for the highscores's experience category.
 
-        Attributes
-        ----------
-        name: :class:`str`
-            The name of the character.
-        rank: :class:`int`
-            The character's rank in the respective highscores.
-        vocation: :class:`Vocation`
-            The character's vocation.
-        value: :class:`int`
-            The character's experience points.
-        level: :class:`int`
-            The character's level."""
+    This is a subclass of :class:`HighscoresEntry`, adding an extra field for level.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character.
+    rank: :class:`int`
+        The character's rank in the respective highscores.
+    vocation: :class:`Vocation`
+        The character's vocation.
+    value: :class:`int`
+        The character's experience points.
+    level: :class:`int`
+        The character's level."""
     def __init__(self, name, rank, vocation, value, level):
         super().__init__(name, rank, vocation, value)
         self.level = level  # type: int
@@ -331,18 +333,20 @@ class ExpHighscoresEntry(HighscoresEntry):
 class LoyaltyHighscoresEntry(HighscoresEntry):
     """Represents a entry for the highscores loyalty points category.
 
-        Attributes
-        ----------
-        name: :class:`str`
-            The name of the character.
-        rank: :class:`int`
-            The character's rank in the respective highscores.
-        vocation: :class:`Vocation`
-            The character's vocation.
-        value: :class:`int`
-            The character's loyalty points.
-        title: :class:`str`
-            The character's loyalty title."""
+    This is a subclass of :class:`HighscoresEntry`, adding an extra field for title.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character.
+    rank: :class:`int`
+        The character's rank in the respective highscores.
+    vocation: :class:`Vocation`
+        The character's vocation.
+    value: :class:`int`
+        The character's loyalty points.
+    title: :class:`str`
+        The character's loyalty title."""
     def __init__(self, name, rank, vocation, value, title):
         super().__init__(name, rank, vocation, value)
         self.title = title  # type: str

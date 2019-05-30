@@ -383,7 +383,7 @@ class Client:
         if NewsType.NEWS_TICKER in types:
             data["filter_ticker"] = "ticker"
 
-        content = await self._post(tibiapy.news.NEWS_SEARCH_URL, data)
+        content = await self._post(tibiapy.abc.NEWS_SEARCH_URL, data)
         news = ListedNews.list_from_content(content)
         return news
 

@@ -1,6 +1,5 @@
 import datetime
 import re
-import urllib.parse
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -26,10 +25,6 @@ guildhall_regex = re.compile(r'Their home on \w+ is (?P<name>[^.]+). The rent is
 disband_regex = re.compile(r'It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).')
 disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
-
-GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
-GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
-
 
 class Guild(abc.BaseGuild):
     """
@@ -439,38 +434,6 @@ class ListedGuild(abc.BaseGuild):
         self.active = active  # type: bool
 
     # region Public methods
-    @classmethod
-    def get_world_list_url(cls, world):
-        """Gets the Tibia.com URL for the guild section of a specific world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's page
-        """
-        return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
-
-    @classmethod
-    def get_world_list_url_tibiadata(cls, world):
-        """Gets the TibiaData.com URL for the guild list of a specific world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's page.
-        """
-        return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
-
     @classmethod
     def list_from_content(cls, content):
         """

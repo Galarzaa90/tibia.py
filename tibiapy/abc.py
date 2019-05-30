@@ -5,13 +5,20 @@ import urllib.parse
 from collections import OrderedDict
 from enum import Enum
 
+from tibiapy.enums import HouseType
+
 CHARACTER_URL = "https://www.tibia.com/community/?subtopic=characters&name=%s"
 CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
 HOUSE_URL = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
 HOUSE_URL_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
+HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s"
+HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
 GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName=%s"
 GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
+GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
+GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
 NEWS_URL = "https://www.tibia.com/news/?subtopic=newsarchive&id=%d"
+NEWS_SEARCH_URL = "https://www.tibia.com/news/?subtopic=newsarchive"
 WORLD_URL = "https://www.tibia.com/community/?subtopic=worlds&world=%s"
 WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
@@ -215,6 +222,38 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
             The URL to the guild's page on TibiaData.com."""
         return GUILD_URL_TIBIADATA % urllib.parse.quote(name)
 
+    @classmethod
+    def get_world_list_url(cls, world):
+        """Gets the Tibia.com URL for the guild section of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page
+        """
+        return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
+
+    @classmethod
+    def get_world_list_url_tibiadata(cls, world):
+        """Gets the TibiaData.com URL for the guild list of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page.
+        """
+        return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
+
 
 class BaseHouse(Serializable, metaclass=abc.ABCMeta):
     """Base class for all house classes
@@ -280,6 +319,50 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         The URL to the house in TibiaData.com
         """
         return HOUSE_URL_TIBIADATA % (world, house_id)
+
+    @classmethod
+    def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE):
+        """
+        Gets the URL to the house list on Tibia.com with the specified parameters.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+        town: :class:`str`
+            The name of the town.
+        house_type: :class:`HouseType`
+            Whether to search for houses or guildhalls.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the list matching the parameters.
+        """
+        house_type = "%ss" % house_type.value
+        return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
+
+    @classmethod
+    def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):
+        """
+        Gets the URL to the house list on Tibia.com with the specified parameters.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+        town: :class:`str`
+            The name of the town.
+        house_type: :class:`HouseType`
+            Whether to search for houses or guildhalls.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the list matching the parameters.
+        """
+        house_type = "%ss" % house_type.value
+        return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
 
 
 class BaseHouseWithId(BaseHouse):
@@ -380,6 +463,22 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
         :class:`str`
             The URL to the news' page"""
         return NEWS_URL % news_id
+
+    @classmethod
+    def get_list_url(cls):
+        """Gets the URL to Tibia.com's news archive page.
+
+        Notes
+        -----
+        It is not possible to perform a search using query parameters.
+        News searches can only be performed using POST requests sending the parameters as form-data.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the news archive page on Tibia.com.
+        """
+        return NEWS_SEARCH_URL
 
 
 class BaseWorld(Serializable):

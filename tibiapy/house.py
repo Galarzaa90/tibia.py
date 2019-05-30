@@ -25,9 +25,6 @@ auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) a
 list_header_regex = re.compile(r'Available (?P<type>[\w\s]+) in (?P<town>[\w\s\']+) on (?P<world>\w+)')
 list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<time_unit>day|hour)s? left\)')
 
-HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s"
-HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
-
 
 class House(abc.BaseHouseWithId):
     """Represents a house in a specific world.
@@ -436,50 +433,6 @@ class ListedHouse(abc.BaseHouseWithId):
             return houses
         except KeyError:
             raise InvalidContent("content is not a house list json response from TibiaData.com")
-
-    @classmethod
-    def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE):
-        """
-        Gets the URL to the house list on Tibia.com with the specified parameters.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-        town: :class:`str`
-            The name of the town.
-        house_type: :class:`HouseType`
-            Whether to search for houses or guildhalls.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the list matching the parameters.
-        """
-        house_type = "%ss" % house_type.value
-        return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
-
-    @classmethod
-    def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):
-        """
-        Gets the URL to the house list on Tibia.com with the specified parameters.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-        town: :class:`str`
-            The name of the town.
-        house_type: :class:`HouseType`
-            Whether to search for houses or guildhalls.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the list matching the parameters.
-        """
-        house_type = "%ss" % house_type.value
-        return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
     # endregion
 
     # region Private methods
