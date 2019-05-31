@@ -9,6 +9,7 @@ __all__ = (
     'NewsType',
     'PvpType',
     'Sex',
+    'TournamentWorldType',
     'TransferType',
     'Vocation',
     'VocationFilter',
@@ -92,6 +93,12 @@ class Sex(BaseEnum):
     """Possible character sexes."""
     MALE = "male"
     FEMALE = "female"
+
+
+class TournamentWorldType(BaseEnum):
+    """The possible types of tournament worlds."""
+    REGUlAR = "Regular"
+    RESTRICTED = "Restricted Store"
 
 
 class TransferType(BaseEnum):

@@ -84,6 +84,7 @@ nonexistent world or a unselected world.
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.
  - [tibiacom_offline.txt](world/tibiacom_offline.txt) - An offline world on Tibia.com.
  - [tibiacom_not_found.txt](world/tibiacom_not_found.txt) - The page shown for a world that doesn't exist.
+ - [tibiacom_tournament.txt](world/tibiacom_tournament.txt) - The page shown for Tournament world.
  - [tibiacom_list_online.txt](world/tibiacom_list_online.txt) - The world list with all worlds online.
  - [tibiacom_list_offline.txt](world/tibiacom_list_offline.txt) - The world list with all worlds offline.
  - [tibiadata_online.json](world/tibiadata_online.json) - An online world on TibiaData.

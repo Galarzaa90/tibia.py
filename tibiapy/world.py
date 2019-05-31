@@ -4,7 +4,7 @@ from typing import List
 
 import bs4
 
-from tibiapy import InvalidContent, abc
+from tibiapy import InvalidContent, abc, TournamentWorldType
 from tibiapy.character import OnlineCharacter
 from tibiapy.enums import PvpType, TransferType, WorldLocation
 from tibiapy.utils import parse_json, parse_tibia_datetime, parse_tibia_full_date, parse_tibiacom_content, \
@@ -42,6 +42,8 @@ class ListedWorld(abc.BaseWorld):
         Whether the world is experimental or not.
     premium_only: :class:`bool`
         Whether only premium account players are allowed to play in this server.
+    tournament_world_type: :class:`TournamentWorldType`
+        The type of tournament world. ``None`` if this is not a tournament world.
     """
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
         self.name = name  # type: str
@@ -54,6 +56,7 @@ class ListedWorld(abc.BaseWorld):
         self.battleye_date = try_date(kwargs.get("battleye_date"))
         self.experimental = kwargs.get("experimental", False)  # type: bool
         self.premium_only = kwargs.get("premium_only", False)  # type: bool
+        self.tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
 
     # region Public methods
     @classmethod
@@ -135,7 +138,7 @@ class ListedWorld(abc.BaseWorld):
     # endregion
 
     # region Private methods
-    def _parse_additional_info(self, additional_info):
+    def _parse_additional_info(self, additional_info, tournament = False):
         if "blocked" in additional_info:
             self.transfer_type = TransferType.BLOCKED
         elif "locked" in additional_info:
@@ -144,6 +147,11 @@ class ListedWorld(abc.BaseWorld):
             self.transfer_type = TransferType.REGULAR
         self.experimental = "experimental" in additional_info
         self.premium_only = "premium" in additional_info
+        if tournament:
+            if "restricted Store products" in additional_info:
+                self.tournament_world_type = TournamentWorldType.RESTRICTED
+            else:
+                self.tournament_world_type = TournamentWorldType.REGUlAR
     # endregion
 
 
@@ -179,12 +187,20 @@ class World(abc.BaseWorld):
         If this is ``None`` and the world is protected, it means the world was protected from the beginning.
     experimental: :class:`bool`
         Whether the world is experimental or not.
+    tournament_world_type: :class:`TournamentWorldType`
+        The type of tournament world. ``None`` if this is not a tournament world.
     online_players: :obj:`list` of :class:`OnlineCharacter`.
         A list of characters currently online in the server.
     premium_only: :class:`bool`
         Whether only premium account players are allowed to play in this server.
     """
-    __slots__ = ("record_count", "record_date", "creation_date", "world_quest_titles", "online_players")
+    __slots__ = (
+        "record_count",
+        "record_date",
+        "creation_date",
+        "world_quest_titles",
+        "online_players"
+    )
 
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
         self.name = name  # type: str
@@ -202,6 +218,7 @@ class World(abc.BaseWorld):
         self.experimental = kwargs.get("experimental", False)  # type: bool
         self.online_players = kwargs.get("online_players", [])  # type: List[OnlineCharacter]
         self.premium_only = kwargs.get("premium_only", False)  # type: bool
+        self.tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
 
     # region Properties
     @property
@@ -332,7 +349,10 @@ class World(abc.BaseWorld):
             self.record_date = parse_tibia_datetime(m.group("date"))
         if "world_quest_titles" in world_info:
             self.world_quest_titles = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
-        self.experimental = world_info.pop("game_world_type") != "Regular"
+        if self.world_quest_titles and "currently has no title" in self.world_quest_titles[0]:
+            self.world_quest_titles = []
+        self.experimental = world_info.pop("game_world_type", None) == "Experimental"
+        self.tournament_world_type = try_enum(TournamentWorldType, world_info.pop("tournament_world_type", None))
         self._parse_battleye_status(world_info.pop("battleye_status"))
         self.premium_only = "premium_type" in world_info
 
@@ -466,7 +486,7 @@ class WorldOverview(abc.Serializable):
         parsed_content = parse_tibiacom_content(content, html_class="TableContentAndRightShadow")
         world_overview = WorldOverview()
         try:
-            record_row, titles_row, *rows = parsed_content.find_all("tr")
+            record_row, *rows = parsed_content.find_all("tr")
             m = record_regexp.search(record_row.text)
             if not m:
                 raise InvalidContent("content does not belong to the World Overview section in Tibia.com")
@@ -531,11 +551,18 @@ class WorldOverview(abc.Serializable):
         world_rows: :class:`list` of :class:`bs4.Tag`
             A list containing the rows of each world.
         """
+        tournament = False
         for world_row in world_rows:
             cols = world_row.find_all("td")
             name = cols[0].text.strip()
             status = "Online"
-            if len(cols) < 6 or name == "World":
+            if len(cols) == 1 and name == "Tournament Worlds":
+                tournament = True
+                continue
+            elif len(cols) == 1 and name == "Regular Worlds":
+                tournament = False
+                continue
+            elif name == "World":
                 continue
             try:
                 online = int(cols[1].text.strip())
@@ -555,5 +582,5 @@ class WorldOverview(abc.Serializable):
                     world.battleye_date = parse_tibia_full_date(m.group(1))
 
             additional_info = cols[5].text.strip()
-            world._parse_additional_info(additional_info)
+            world._parse_additional_info(additional_info, tournament)
             self.worlds.append(world)

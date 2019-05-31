@@ -510,11 +510,24 @@ class BaseWorld(Serializable):
         If this is ``None`` and the world is protected, it means the world was protected from the beginning.
     experimental: :class:`bool`
         Whether the world is experimental or not.
+    tournament_world_type: :class:`TournamentWorldType`
+        The type of tournament world. ``None`` if this is not a tournament world.
     premium_only: :class:`bool`
         Whether only premium account players are allowed to play in this server.
     """
-    __slots__ = ("name", "status", "location", "online_count", "pvp_type", "battleye_protected", "battleye_date",
-                 "experimental", "premium_only", "transfer_type")
+    __slots__ = (
+        "name",
+        "status",
+        "location",
+        "online_count",
+        "pvp_type",
+        "battleye_protected",
+        "battleye_date",
+        "experimental",
+        "premium_only",
+        "tournament_world_type",
+        "transfer_type"
+    )
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} location={0.location!r} pvp_type={0.pvp_type!r}>".format(self)
