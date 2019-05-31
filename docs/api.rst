@@ -284,7 +284,7 @@ Exceptions
 
 .. autoclass:: NetworkError
 
-.. autoclass:: TooManyRequests
+.. autoclass:: Forbidden
 
 Utility functions
 ==================

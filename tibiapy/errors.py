@@ -29,9 +29,9 @@ class NetworkError(TibiapyException):
         self.original = original
 
 
-class TooManyRequests(NetworkError):
-    """A subclass of network error thrown when Tibia.com returns a 503 status code.
+class Forbidden(NetworkError):
+    """A subclass of network error thrown when Tibia.com returns a 403 status code.
 
-    Tibia.com returns a 502 status code when it detects that too many requests are being done.
+    Tibia.com returns a 403 status code when it detects that too many requests are being done.
     This has its own subclass to let the user decide to treat this differently than other network errors.
     """

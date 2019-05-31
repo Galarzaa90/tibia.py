@@ -13,7 +13,7 @@ from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Client, Character, Guild, Highscores, VocationFilter, Category, House, ListedHouse, ListedGuild, \
-    KillStatistics, ListedNews, News, World, WorldOverview, TooManyRequests, NetworkError
+    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError
 
 
 class TestClient(asynctest.TestCase, TestCommons):
@@ -35,7 +35,7 @@ class TestClient(asynctest.TestCase, TestCommons):
     @aioresponses()
     async def testRequestErrors(self, mock):
         mock.get(WorldOverview.get_url(), status=503)
-        with self.assertRaises(TooManyRequests):
+        with self.assertRaises(Forbidden):
             await self.client.fetch_world_list()
 
         mock.get(WorldOverview.get_url(), status=404)

@@ -5,7 +5,7 @@ import aiohttp
 
 import tibiapy
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
-    ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News, TooManyRequests, NetworkError
+    ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News, Forbidden, NetworkError
 
 __all__ = ("Client",)
 
@@ -42,8 +42,8 @@ class Client:
         """Handles error status codes, raising exceptions if neccesary."""
         if status_code < 400:
             return
-        if status_code == 503:
-            raise TooManyRequests("503 Service Unavailable: Might be getting rate-limited")
+        if status_code == 403:
+            raise Forbidden("403 Forbidden: Might be getting rate-limited")
         else:
             raise NetworkError("Request error, status code: %d" % status_code)
 
@@ -62,8 +62,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests:
-            If a 503 Service Unavailable error was returned.
+        Forbidden:
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -112,8 +112,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -137,8 +137,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -164,8 +164,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -196,8 +196,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -221,8 +221,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -246,8 +246,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -275,8 +275,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -300,8 +300,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -320,8 +320,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -353,8 +353,8 @@ class Client:
         ------
         ValueError:
             If ``begin_date`` is more recent than ``end_date``.
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -408,8 +408,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
@@ -433,8 +433,8 @@ class Client:
 
         Raises
         ------
-        TooManyRequests
-            If a 503 Service Unavailable error was returned.
+        Forbidden
+            If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
