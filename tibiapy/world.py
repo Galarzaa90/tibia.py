@@ -12,7 +12,7 @@ from tibiapy.utils import parse_json, parse_tibia_datetime, parse_tibia_full_dat
 
 __all__ = ("ListedWorld", "World", "WorldOverview")
 
-record_regexp = re.compile(r'(?P<count>\d+) players \(on (?P<date>[^)]+)\)')
+record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
 
 
@@ -328,7 +328,7 @@ class World(abc.BaseWorld):
         self.transfer_type = try_enum(TransferType, world_info.pop("transfer_type", None), TransferType.REGULAR)
         m = record_regexp.match(world_info.pop("online_record"))
         if m:
-            self.record_count = int(m.group("count"))
+            self.record_count = int(m.group("count").replace(".", ""))
             self.record_date = parse_tibia_datetime(m.group("date"))
         if "world_quest_titles" in world_info:
             self.world_quest_titles = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
@@ -470,7 +470,7 @@ class WorldOverview(abc.Serializable):
             m = record_regexp.search(record_row.text)
             if not m:
                 raise InvalidContent("content does not belong to the World Overview section in Tibia.com")
-            world_overview.record_count = int(m.group("count"))
+            world_overview.record_count = int(m.group("count").replace(".", ""))
             world_overview.record_date = parse_tibia_datetime(m.group("date"))
             world_rows = rows
             world_overview._parse_worlds(world_rows)

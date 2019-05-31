@@ -34,7 +34,7 @@ class TestClient(asynctest.TestCase, TestCommons):
 
     @aioresponses()
     async def testRequestErrors(self, mock):
-        mock.get(WorldOverview.get_url(), status=503)
+        mock.get(WorldOverview.get_url(), status=403)
         with self.assertRaises(Forbidden):
             await self.client.fetch_world_list()
 

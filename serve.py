@@ -2,11 +2,22 @@ import json
 import traceback
 
 from aiohttp import web
+from aiohttp.web_routedef import RouteDef
 
 import tibiapy
 from tibiapy.utils import try_enum
 
 routes = web.RouteTableDef()
+
+@routes.get('/')
+async def home(request):
+    content = "<h1>Routes</hº><ul>"
+    for route in routes:  # type: RouteDef
+        if route.path == "/":
+            continue
+        content += '<li><a href="{0.path}">{0.handler.__name__}</a></li>'.format(route)
+    content += "</ul>"
+    return web.Response(text=content, content_type='text/html')
 
 
 @routes.get('/character/{name}')
@@ -75,7 +86,7 @@ async def get_worlds(request):
 
 
 @routes.get('/world/{name}')
-async def get_worlds(request):
+async def get_world(request):
     name = request.match_info['name']
     world = await app["tibiapy"].fetch_world(name)
     return web.Response(text=world.to_json())
