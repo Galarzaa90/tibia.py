@@ -13,7 +13,6 @@ __all__ = ("News", "ListedNews",)
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 
 
-
 class News(abc.BaseNews):
     """Represents a news entry.
 

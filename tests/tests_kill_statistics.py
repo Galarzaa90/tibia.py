@@ -34,6 +34,6 @@ class TestHighscores(TestCommons, unittest.TestCase):
     def testKillStatisticsUnrelated(self):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            kill_statistics = KillStatistics.from_content(content)
+            KillStatistics.from_content(content)
 
     # endregion

@@ -14,6 +14,8 @@ Changelog
 - Added asynchronous client to fetch and parse Tibia.com sections.
 - Added news parsing.
 - Added kill statistics parsing.
+- Added support for tournament worlds.
+- Added support for house prices with 'k' suffixes.
 
 .. _v1.1.3:
 
