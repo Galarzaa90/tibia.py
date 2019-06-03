@@ -40,24 +40,25 @@ import tibiapy
 import aiohttp
 
 async def get_character(name):
-  url = tibiapy.Character.get_url(name)
+    url = tibiapy.Character.get_url(name)
 
-  async with aiohttp.ClientSession() as session:
-    async with session.get(url) as resp:
-        content = await resp.text()
-  character = tibiapy.Character.from_content(content)
-  return character
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            content = await resp.text()
+    character = tibiapy.Character.from_content(content)
+    return character
 
 # Synchronously
 import requests
 
 def get_character_sync(name):
-  url = tibiapy.Character.get_url(name)
+    url = tibiapy.Character.get_url(name)
+    
+    r = requests.get(url)
+    content = r.text()
+    character = tibiapy.Character.from_content(content)
+    return character
 
-  r = requests.get(url)
-  content = r.text()
-  character = tibiapy.Character.from_content(content)
-  return character
 ```
 
 ## Documentation

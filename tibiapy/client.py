@@ -82,13 +82,13 @@ class Client:
         ----------
         url: :class:`str`
             The URL that will be requested.
+        data: :class:`dict`
+            A mapping representing the form-data to send as part of the request.
 
         Returns
         -------
         :class:`str`
-            The text content of the response
-        :class:`dict`
-            A mapping representing the form-data to send as part of the request.
+            The text content of the response.
         """
         try:
             async with self.session.post(url, data=data) as resp:

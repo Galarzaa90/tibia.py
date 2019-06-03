@@ -46,7 +46,7 @@ class TestUtils(TestCommons, unittest.TestCase):
 
         # Accessing via __get__ returns KeyError instead of AttributeError to follow dictionary behaviour
         with self.assertRaises(KeyError):
-            level = world["level"]  # NOSONAR
+            _level = world["level"]  # NOSONAR
 
         # Accessing an undefined attribute that is defined in __slots__ returns `None` instead of raising an exception.
         del world.location
@@ -55,7 +55,6 @@ class TestUtils(TestCommons, unittest.TestCase):
         # New attributes can't be created by assignation
         with self.assertRaises(KeyError):
             world["custom"] = "custom value"
-
 
     def testTibiaDateTime(self):
         time = utils.parse_tibia_datetime(TIBIA_DATETIME_CEST)
@@ -112,6 +111,8 @@ class TestUtils(TestCommons, unittest.TestCase):
         date = utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_PST)
         self.assertIsNone(date)
 
+        # noinspection PyTypeChecker
+        # Purposely providing wrong type.
         date = utils.parse_tibiadata_datetime(TIBIA_DATE)
         self.assertIsNone(date)
 

@@ -159,7 +159,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertIsNotNone(self.guild.invites)
         self.assertIsNotNone(self.guild.invites[0])
         self.assertEqual(self.guild.invites[0].name, name)
-        self.assertEqual(self.guild.invites[0].date, datetime.date(2018,6,20))
+        self.assertEqual(self.guild.invites[0].date, datetime.date(2018, 6, 20))
 
     def testMemberJoinDate(self):
         self.assertIsInstance(GuildMember(joined="Jul 20 2018").joined, datetime.date)

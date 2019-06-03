@@ -26,6 +26,7 @@ disband_regex = re.compile(r'It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).')
 disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
 
+
 class Guild(abc.BaseGuild):
     """
     Represents a Tibia guild.

@@ -9,6 +9,7 @@ from tibiapy.utils import try_enum
 
 routes = web.RouteTableDef()
 
+
 @routes.get('/')
 async def home(request):
     content = "<h1>Routes</hº><ul>"
@@ -149,6 +150,6 @@ if __name__ == "__main__":
     app.add_routes(routes)
     app.on_startup.append(init_client)
     print("Registered routes:")
-    for route in routes:
+    for route in routes:  # type: RouteDef
         print('\t[%s] %s' % (route.method, route.path))
     web.run_app(app, port=8000)

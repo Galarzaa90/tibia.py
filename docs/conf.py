@@ -21,6 +21,7 @@ def setup(app):
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 
+
 sys.path.insert(0, os.path.abspath('..'))
 
 autodoc_member_order = 'bysource'
@@ -32,7 +33,6 @@ copyright = '2018, Allan Galarza'
 author = 'Allan Galarza'
 
 # The short X.Y version
-version = ''
 with open('../tibiapy/__init__.py') as f:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 

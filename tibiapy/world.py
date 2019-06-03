@@ -138,7 +138,7 @@ class ListedWorld(abc.BaseWorld):
     # endregion
 
     # region Private methods
-    def _parse_additional_info(self, additional_info, tournament = False):
+    def _parse_additional_info(self, additional_info, tournament=False):
         if "blocked" in additional_info:
             self.transfer_type = TransferType.BLOCKED
         elif "locked" in additional_info:

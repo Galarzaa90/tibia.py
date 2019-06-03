@@ -1,6 +1,5 @@
 import datetime
 import re
-import urllib.parse
 from typing import Optional
 
 import tibiapy.character
@@ -14,12 +13,17 @@ __all__ = ("House", "CharacterHouse", "GuildHouse", "ListedHouse")
 
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
-info_regex = re.compile(r'The house has a size of (?P<size>\d+) square meter[s]?. The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).')
+info_regex = \
+    re.compile(r'The house has a size of (?P<size>\d+) square meter[s]?. '
+               r'The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).')
 
-rented_regex = re.compile(r'The house has been rented by (?P<owner>[^.]+)\. (?P<pronoun>\w+) has paid the rent until (?P<paid_until>[^.]+)\.')
-transfer_regex = re.compile(r'\w+ will move out on (?P<transfer_date>[^(]+)\([^)]+\)(?: and (?P<verb>wants to|will) pass the house to (?P<transferee>[\w\s]+) for (?P<transfer_price>\d+) gold coin)?')
+rented_regex = re.compile(r'The house has been rented by (?P<owner>[^.]+)\.'
+                          r' (?P<pronoun>\w+) has paid the rent until (?P<paid_until>[^.]+)\.')
+transfer_regex = re.compile(r'\w+ will move out on (?P<transfer_date>[^(]+)\([^)]+\)(?: and (?P<verb>wants to|will)'
+                            r' pass the house to (?P<transferee>[\w\s]+) for (?P<transfer_price>\d+) gold coin)?')
 moving_regex = re.compile(r'\w+ will move out on (?P<move_date>[^(]+)')
-bid_regex = re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
+bid_regex = \
+    re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
 auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).')
 
 list_header_regex = re.compile(r'Available (?P<type>[\w\s]+) in (?P<town>[\w\s\']+) on (?P<world>\w+)')

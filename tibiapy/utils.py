@@ -176,9 +176,12 @@ def parse_number_words(text_num):
     scales = ["hundred", "thousand", "million", "billion", "trillion"]
 
     numwords["and"] = (1, 0)
-    for idx, word in enumerate(units):    numwords[word] = (1, idx)
-    for idx, word in enumerate(tens):     numwords[word] = (1, idx * 10)
-    for idx, word in enumerate(scales):   numwords[word] = (10 ** (idx * 3 or 2), 0)
+    for idx, word in enumerate(units):
+        numwords[word] = (1, idx)
+    for idx, word in enumerate(tens):
+        numwords[word] = (1, idx * 10)
+    for idx, word in enumerate(scales):
+        numwords[word] = (10 ** (idx * 3 or 2), 0)
 
     current = result = 0
     text_num = text_num.replace("-", " ")

@@ -10,6 +10,9 @@ try:
     import colorama
     colorama.init()
 except ImportError:
+    click = None
+    requests = None
+    colorama = None
     print("Use as a command-line interface requires optional dependencies: click, requests and colorama")
     exit()
 

@@ -183,8 +183,6 @@ class ListedNews(abc.BaseNews):
         except (AttributeError, IndexError):
             raise InvalidContent("content is not from the news archive section in Tibia.com")
 
-
-
     @classmethod
     def _parse_entry(cls, cols_raw):
         img = cols_raw[0].find('img')
