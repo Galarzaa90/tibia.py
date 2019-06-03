@@ -14,6 +14,7 @@ from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
     parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum
 
+# Extracts the scheduled deletion date of a character."""
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
 # Extracts the death's level and killers.
 death_regexp = re.compile(r'Level (?P<level>\d+) by (?P<killers>.*)\.</td>')
@@ -29,8 +30,16 @@ death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
-__all__ = ("AccountInformation", "Achievement", "Character", "Death", "GuildMembership", "Killer", "OtherCharacter",
-           "OnlineCharacter")
+__all__ = (
+    "AccountInformation",
+    "Achievement",
+    "Character",
+    "Death",
+    "GuildMembership",
+    "Killer",
+    "OtherCharacter",
+    "OnlineCharacter",
+)
 
 
 class AccountInformation(abc.Serializable):
@@ -45,7 +54,11 @@ class AccountInformation(abc.Serializable):
     loyalty_title: :class:`str`, optional
         The loyalty title of the account, if any.
     """
-    __slots__ = ("created", "loyalty_title", "position")
+    __slots__ = (
+        "created",
+        "loyalty_title",
+        "position",
+    )
 
     def __init__(self, created, loyalty_title=None, position=None):
         self.created = try_datetime(created)
@@ -65,15 +78,22 @@ class Achievement(abc.Serializable):
         The name of the achievement.
     grade: :class:`int`
         The grade of the achievement, also known as stars.
+    secret: :class:´bool´
+        Whether the achievement is secret or not.
     """
-    __slots__ = ("name", "grade")
+    __slots__ = (
+        "name",
+        "grade",
+        "secret",
+    )
 
-    def __init__(self, name, grade):
+    def __init__(self, name, grade, secret = False):
         self.name = name   # type: str
         self.grade = int(grade)
+        self.secret = secret
 
     def __repr__(self):
-        return "<%s name=%r grade=%d>" % (self.__class__.__name__, self.name, self.grade)
+        return "<%s name=%r grade=%d secret=%s>" % (self.__class__.__name__, self.name, self.grade, self.secret)
 
 
 class Character(abc.BaseCharacter):
@@ -332,7 +352,11 @@ class Character(abc.BaseCharacter):
             field, value = cols
             grade = str(field).count("achievement-grade-symbol")
             name = value.text.strip()
-            self.achievements.append(Achievement(name, grade))
+            secret_image = value.find("img")
+            secret = False
+            if secret_image:
+                secret = True
+            self.achievements.append(Achievement(name, grade, secret))
 
     def _parse_character_information(self, rows):
         """
@@ -393,6 +417,8 @@ class Character(abc.BaseCharacter):
             try:
                 setattr(self, k, v)
             except AttributeError:
+                # This means that there is a attribute in the character's information table that does not have a
+                # corresponding class attribute.
                 pass
         if house:
             self.house = CharacterHouse(house["id"], house["name"], self.world, house["town"], self.name,
@@ -616,7 +642,8 @@ class Death(abc.Serializable):
 
 
 class GuildMembership(abc.BaseGuild):
-    """Represents the guild information of a character.
+    """
+    Represents the guild information of a character.
 
     Attributes
     ----------
@@ -685,7 +712,8 @@ class Killer(abc.Serializable):
 
 
 class OnlineCharacter(abc.BaseCharacter):
-    """Represents an online character.
+    """
+    Represents an online character.
 
     Attributes
     ----------
@@ -709,7 +737,7 @@ class OnlineCharacter(abc.BaseCharacter):
 
 class OtherCharacter(abc.BaseCharacter):
     """
-    Represents other character's displayed in the Character's information page.
+    Represents other characters displayed in the Character's information page.
 
     Attributes
     ----------

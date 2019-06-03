@@ -1,3 +1,5 @@
+import logging
+
 from tibiapy import abc, enums, utils
 from tibiapy.character import *
 from tibiapy.enums import *
@@ -11,3 +13,7 @@ from tibiapy.world import *
 from tibiapy.client import *
 
 __version__ = '2.0.0'
+
+from logging import NullHandler
+
+logging.getLogger(__name__).addHandler(NullHandler())
