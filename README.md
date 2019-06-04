@@ -31,7 +31,11 @@ pip install git+https://github.com/Galarzaa90/tibia.py.git -U
 ```
 
 ## Usage
-In order to use this library, you need to use an external library (`requests`, `aiohttp`) to fetch content from the website.
+This library is composed of two parts, parsers and an asynchronous request client.
+
+The asynchronous client (`tibiapy.Client`) contains methods to obtain information from Tibia.com.
+
+The parsing methods allow you to get Python objects given the html content of a page.
 
 ```python
 import tibiapy

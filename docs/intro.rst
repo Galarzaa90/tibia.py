@@ -59,8 +59,8 @@ This allows you to use any networking module to obtain the data, and use the lib
         return character
 
 
-Suported Sections
-=================
+Supported Sections
+==================
 
 +---------------------------+---------------------------------------+--------------------------------------+
 |          Section          |                Parsing                |               Fetching               |
