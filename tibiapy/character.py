@@ -145,9 +145,28 @@ class Character(abc.BaseCharacter):
         Other characters in the same account.
         It will be empty if the character is hidden, otherwise, it will contain at least the character itself.
     """
-    __slots__ = ("former_names", "sex", "vocation", "level", "achievement_points", "world", "former_world", "residence",
-                 "married_to", "house", "guild_membership", "last_login", "account_status", "position", "comment",
-                 "achievements", "deaths", "account_information", "other_characters", "deletion_date")
+    __slots__ = (
+        "former_names",
+        "sex",
+        "vocation",
+        "level",
+        "achievement_points",
+        "world",
+        "former_world",
+        "residence",
+        "married_to",
+        "house",
+        "guild_membership",
+        "last_login",
+        "account_status",
+        "position",
+        "comment",
+        "achievements",
+        "deaths",
+        "account_information",
+        "other_characters",
+        "deletion_date",
+    )
 
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
         self.name = name  # type: str
@@ -604,7 +623,12 @@ class Death(abc.Serializable):
     time: :class:`datetime.datetime`
         The time at which the death occurred.
     """
-    __slots__ = ("level", "killers", "time", "assists", "name")
+    __slots__ = (
+        "level",
+        "killers",
+        "time",
+        "assists",
+        "name")
 
     def __init__(self, name=None, level=0, **kwargs):
         self.name = name
@@ -652,7 +676,9 @@ class GuildMembership(abc.BaseGuild):
     rank: :class:`str`
         The name of the rank the member has.
     """
-    __slots__ = ("rank",)
+    __slots__ = (
+        "rank",
+    )
 
     def __init__(self, name, rank):
         self.name = name  # type: str
@@ -681,7 +707,11 @@ class Killer(abc.Serializable):
     summon: :class:`str`, optional
         The name of the summoned creature, if applicable.
     """
-    __slots__ = ("name", "player", "summon")
+    __slots__ = (
+        "name",
+        "player",
+        "summon"
+    )
 
     def __init__(self, name, player=False, summon=None):
         self.name = name  # type: str
@@ -726,7 +756,11 @@ class OnlineCharacter(abc.BaseCharacter):
     level: :class:`int`
         The level of the character.
     """
-    __slots__ = ("world", "vocation", "level")
+    __slots__ = (
+        "world",
+        "vocation",
+        "level",
+    )
 
     def __init__(self, name, world, level, vocation):
         self.name = name  # type: str
@@ -750,7 +784,11 @@ class OtherCharacter(abc.BaseCharacter):
     deleted: :class:`bool`
         Whether the character is scheduled for deletion or not.
     """
-    __slots__ = ("world", "online", "deleted")
+    __slots__ = (
+        "world",
+        "online",
+        "deleted"
+    )
 
     def __init__(self, name, world, online=False, deleted=False):
         self.name = name  # type: str

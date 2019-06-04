@@ -7,7 +7,12 @@ import math
 from tibiapy import Category, InvalidContent, Vocation, VocationFilter, abc
 from tibiapy.utils import parse_json, parse_tibiacom_content, try_enum
 
-__all__ = ("ExpHighscoresEntry", "Highscores", "HighscoresEntry", "LoyaltyHighscoresEntry")
+__all__ = (
+    "ExpHighscoresEntry",
+    "Highscores",
+    "HighscoresEntry",
+    "LoyaltyHighscoresEntry",
+)
 
 results_pattern = re.compile(r'Results: (\d+)')
 
@@ -48,7 +53,7 @@ class Highscores(abc.Serializable):
         'categroy',
         'vocation',
         'entries',
-        'results_count'
+        'results_count',
     )
 
     def __repr__(self):

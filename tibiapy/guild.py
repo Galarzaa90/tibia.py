@@ -12,7 +12,12 @@ from tibiapy.house import GuildHouse
 from tibiapy.utils import parse_json, parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, try_date, \
     try_datetime, try_enum
 
-__all__ = ("Guild", "GuildMember", "GuildInvite", "ListedGuild")
+__all__ = (
+    "Guild",
+    "GuildMember",
+    "GuildInvite",
+    "ListedGuild",
+)
 
 COLS_INVITED_MEMBER = 2
 COLS_GUILD_MEMBER = 6

@@ -7,7 +7,10 @@ from tibiapy import abc, InvalidContent
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.utils import parse_tibiacom_content, try_enum, parse_tibia_date
 
-__all__ = ("News", "ListedNews",)
+__all__ = (
+    "News",
+    "ListedNews",
+)
 
 
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")

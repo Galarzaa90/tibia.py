@@ -3,7 +3,10 @@ from typing import Dict
 from tibiapy import abc, InvalidContent
 from tibiapy.utils import parse_tibiacom_content
 
-__all__ = ("KillStatistics", "RaceEntry")
+__all__ = (
+    "KillStatistics",
+    "RaceEntry",
+)
 
 KILL_STATISTICS_URL = "https://www.tibia.com/community/?subtopic=killstatistics&world=%s"
 
@@ -20,7 +23,10 @@ class KillStatistics(abc.Serializable):
     total: :class:`RaceEntry`
         The kill statistics totals.
     """
-    __slots__ = ("world", "entries", "total")
+    __slots__ = (
+        "world",
+        "entries",
+        "total",)
 
     def __init__(self, world, entries=None, total=None):
         self.world = world  # type: str
@@ -111,7 +117,12 @@ class RaceEntry(abc.Serializable):
     last_week_players_killed: :class:`int`
         Number of players killed by this race in the last week.
     """
-    __slots__ = ("last_day_killed", "last_day_players_killed", "last_week_killed", "last_week_players_killed")
+    __slots__ = (
+        "last_day_killed",
+        "last_day_players_killed",
+        "last_week_killed",
+        "last_week_players_killed",
+    )
 
     def __init__(self, last_day_killed=0, last_day_players_killed=0, last_week_killed=0, last_week_players_killed=0):
         self.last_day_killed = last_day_killed

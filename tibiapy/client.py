@@ -7,7 +7,9 @@ import tibiapy
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
     ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News, Forbidden, NetworkError
 
-__all__ = ("Client",)
+__all__ = (
+    "Client",
+)
 
 
 class Client:

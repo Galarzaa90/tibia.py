@@ -9,7 +9,12 @@ from tibiapy.errors import InvalidContent
 from tibiapy.utils import parse_json, parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, \
     try_datetime, try_enum, parse_tibia_money
 
-__all__ = ("House", "CharacterHouse", "GuildHouse", "ListedHouse")
+__all__ = (
+    "House",
+    "CharacterHouse",
+    "GuildHouse",
+    "ListedHouse",
+)
 
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
@@ -74,9 +79,23 @@ class House(abc.BaseHouseWithId):
     auction_end: :class:`datetime.datetime`, optional
         The date when the auction will end.
     """
-    __slots__ = ("image_url", "beds", "type", "size", "rent", "owner", "owner_sex", "paid_until", "transfer_date",
-                 "transferee", "transfer_price", "transfer_accepted", "highest_bid",
-                 "highest_bidder", "auction_end")
+    __slots__ = (
+        "image_url",
+        "beds",
+        "type",
+        "size",
+        "rent",
+        "owner",
+        "owner_sex",
+        "paid_until",
+        "transfer_date",
+        "transferee",
+        "transfer_price",
+        "transfer_accepted",
+        "highest_bid",
+        "highest_bidder",
+        "auction_end",
+    )
 
     def __init__(self, name, world=None, **kwargs):
         self.id = kwargs.get("id", 0)  # type: int
@@ -270,7 +289,11 @@ class CharacterHouse(abc.BaseHouseWithId):
     paid_until_date: :class:`datetime.date`
         The date the last paid rent is due.
     """
-    __slots__ = ("town", "owner", "paid_until_date")
+    __slots__ = (
+        "town",
+        "owner",
+        "paid_until_date",
+    )
 
     def __init__(self, _id, name, world=None, town=None, owner=None, paid_until_date=None):
         self.id = int(_id)
@@ -300,7 +323,11 @@ class GuildHouse(abc.BaseHouse):
         The owner of the guildhall.
     paid_until_date: :class:`datetime.date`
         The date the last paid rent is due."""
-    __slots__ = ("owner", "paid_until_date")
+
+    __slots__ = (
+        "owner",
+        "paid_until_date",
+    )
 
     def __init__(self, name, world=None, owner=None, paid_until_date=None):
         self.name = name  # type: str
@@ -341,7 +368,13 @@ class ListedHouse(abc.BaseHouseWithId):
     highest_bid: :class:`int`
         The highest bid so far, if the auction has started.
     """
-    __slots__ = ("town", "size", "rent", "time_left", "highest_bid")
+    __slots__ = (
+        "town",
+        "size",
+        "rent",
+        "time_left",
+        "highest_bid",
+    )
 
     def __init__(self, name, world, houseid, **kwargs):
         self.name = name  # type: str

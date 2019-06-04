@@ -10,7 +10,11 @@ from tibiapy.enums import PvpType, TransferType, WorldLocation
 from tibiapy.utils import parse_json, parse_tibia_datetime, parse_tibia_full_date, parse_tibiacom_content, \
     parse_tibiadata_datetime, try_date, try_datetime, try_enum
 
-__all__ = ("ListedWorld", "World", "WorldOverview")
+__all__ = (
+    "ListedWorld",
+    "World",
+    "WorldOverview",
+)
 
 record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
