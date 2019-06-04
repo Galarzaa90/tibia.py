@@ -1,12 +1,18 @@
-import math
 import re
 from collections import OrderedDict
 from typing import List
 
+import math
+
 from tibiapy import Category, InvalidContent, Vocation, VocationFilter, abc
 from tibiapy.utils import parse_json, parse_tibiacom_content, try_enum
 
-__all__ = ("ExpHighscoresEntry", "Highscores", "HighscoresEntry", "LoyaltyHighscoresEntry")
+__all__ = (
+    "ExpHighscoresEntry",
+    "Highscores",
+    "HighscoresEntry",
+    "LoyaltyHighscoresEntry",
+)
 
 results_pattern = re.compile(r'Results: (\d+)')
 
@@ -20,6 +26,8 @@ class Highscores(abc.Serializable):
     Tibia.com only shows 25 entries per page.
     TibiaData.com shows all results at once.
 
+    .. versionadded:: 1.1.0
+
     Attributes
     ----------
     world: :class:`str`
@@ -28,6 +36,8 @@ class Highscores(abc.Serializable):
         The selected category to displays the highscores of.
     vocation: :class:`VocationFilter`
         The selected vocation to filter out values.
+    entries: :class:`list` of :class:`HighscoresEntry`
+        The highscores entries found.
     results_count: :class:`int`
         The total amount of highscores entries in this category. These may be shown in another page.
     """
@@ -38,7 +48,15 @@ class Highscores(abc.Serializable):
         self.entries = kwargs.get("entries", [])  # type: List[HighscoresEntry]
         self.results_count = kwargs.get("results_count")  # type: int
 
-    def __repr__(self) -> str:
+    __slots__ = (
+        'world',
+        'categroy',
+        'vocation',
+        'entries',
+        'results_count',
+    )
+
+    def __repr__(self):
         return "<{0.__class__.__name__} world={0.world!r} category={0.category!r} vocation={0.vocation!r}>".format(self)
 
     @property
@@ -281,45 +299,63 @@ class HighscoresEntry(abc.BaseCharacter):
         self.vocation = try_enum(Vocation, vocation)
         self.value = value  # type: int
 
+    __slots__ = (
+        'rank',
+        'vocation',
+        'value',
+    )
+
     def __repr__(self) -> str:
         return "<{0.__class__.__name__} rank={0.rank} name={0.name!r} value={0.value}>".format(self)
 
 
 class ExpHighscoresEntry(HighscoresEntry):
-    """Represents a entry for the highscores's experience category.
+    """Represents an entry for the highscores's experience category.
 
-        Attributes
-        ----------
-        name: :class:`str`
-            The name of the character.
-        rank: :class:`int`
-            The character's rank in the respective highscores.
-        vocation: :class:`Vocation`
-            The character's vocation.
-        value: :class:`int`
-            The character's experience points.
-        level: :class:`int`
-            The character's level."""
+    This is a subclass of :class:`HighscoresEntry`, adding an extra field for level.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character.
+    rank: :class:`int`
+        The character's rank in the respective highscores.
+    vocation: :class:`Vocation`
+        The character's vocation.
+    value: :class:`int`
+        The character's experience points.
+    level: :class:`int`
+        The character's level."""
     def __init__(self, name, rank, vocation, value, level):
         super().__init__(name, rank, vocation, value)
         self.level = level  # type: int
+
+    __slots__ = (
+        'level',
+    )
 
 
 class LoyaltyHighscoresEntry(HighscoresEntry):
     """Represents a entry for the highscores loyalty points category.
 
-        Attributes
-        ----------
-        name: :class:`str`
-            The name of the character.
-        rank: :class:`int`
-            The character's rank in the respective highscores.
-        vocation: :class:`Vocation`
-            The character's vocation.
-        value: :class:`int`
-            The character's loyalty points.
-        title: :class:`str`
-            The character's loyalty title."""
+    This is a subclass of :class:`HighscoresEntry`, adding an extra field for title.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character.
+    rank: :class:`int`
+        The character's rank in the respective highscores.
+    vocation: :class:`Vocation`
+        The character's vocation.
+    value: :class:`int`
+        The character's loyalty points.
+    title: :class:`str`
+        The character's loyalty title."""
     def __init__(self, name, rank, vocation, value, title):
         super().__init__(name, rank, vocation, value)
         self.title = title  # type: str
+
+    __slots__ = (
+        'title',
+    )

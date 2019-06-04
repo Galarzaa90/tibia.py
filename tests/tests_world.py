@@ -1,14 +1,16 @@
 import datetime
 import json
+import unittest
 
 import tests.tests_character
-from tests.tests_tibiapy import TestTibiaPy
-from tibiapy import InvalidContent, World, WorldOverview
+from tests.tests_tibiapy import TestCommons
+from tibiapy import InvalidContent, World, WorldOverview, TournamentWorldType
 from tibiapy.enums import PvpType, TransferType, WorldLocation
 from tibiapy.world import ListedWorld
 
 FILE_WORLD_FULL = "world/tibiacom_online.txt"
 FILE_WORLD_FULL_OFFLINE = "world/tibiacom_offline.txt"
+FILE_WORLD_TOURNAMENT = "world/tibiacom_tournament.txt"
 FILE_WORLD_NOT_FOUND = "world/tibiacom_not_found.txt"
 FILE_WORLD_LIST = "world/tibiacom_list_online.txt"
 FILE_WORLD_LIST_OFFLINE = "world/tibiacom_list_offline.txt"
@@ -20,7 +22,7 @@ FILE_WORLD_LIST_TIBIADATA = "world/tibiadata_list_online.json"
 FILE_WORLD_LIST_TIBIADATA_OFFLINE = "world/tibiadata_list_offline.json"
 
 
-class TestWorld(TestTibiaPy):
+class TestWorld(TestCommons, unittest.TestCase):
 
     # region Tibia.com Tests
     def testWorld(self):
@@ -83,6 +85,17 @@ class TestWorld(TestTibiaPy):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             World.from_content(content)
+
+    def testWorldTournament(self):
+        content = self._load_resource(FILE_WORLD_TOURNAMENT)
+        world = World.from_content(content)
+
+        self.assertIsInstance(world, World)
+        self.assertIsInstance(world.tournament_world_type, TournamentWorldType)
+        self.assertEqual(world.tournament_world_type, TournamentWorldType.REGUlAR)
+        self.assertEqual(world.record_count, 21)
+        self.assertTrue(world.premium_only)
+        self.assertFalse(world.world_quest_titles)
 
     # endregion
 

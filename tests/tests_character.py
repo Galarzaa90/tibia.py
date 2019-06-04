@@ -1,7 +1,8 @@
 import datetime
+import unittest
 
 import tests.tests_guild
-from tests.tests_tibiapy import TestTibiaPy
+from tests.tests_tibiapy import TestCommons
 from tibiapy import Character, CharacterHouse, Death, InvalidContent, Killer
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.utils import parse_tibia_datetime
@@ -21,7 +22,7 @@ FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character/tibiadata_not_found.json"
 FILE_CHARACTER_TIBIADATA_DEATHS_SUMMON = "character/tibiadata_deaths_summon.json"
 
 
-class TestCharacter(TestTibiaPy):
+class TestCharacter(TestCommons, unittest.TestCase):
     def _compare_character(self, mock_character, character):
         self.assertEqual(mock_character.name, character.name)
         self.assertEqual(mock_character.world, character.world)

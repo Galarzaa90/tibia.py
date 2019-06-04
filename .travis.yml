@@ -4,14 +4,16 @@ python:
   - "3.5"
   - "3.6"
   - "3.7-dev"
+  - "pypy3.5"
 
 cache: pip
 
 install:
-  - pip install -U -r requirements.txt
+  - pip install -U -e .
+  - pip install -U -e .[test]
+  - pip install -U -e .[docs]
   - pip install -U setuptools wheel
   - pip install coverage codecov
-  - pip install -U Sphinx
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter

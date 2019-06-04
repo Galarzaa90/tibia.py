@@ -6,10 +6,13 @@
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
 import re
+import os
+import sys
 
 
 def setup(app):
     app.add_stylesheet('custom.css')
+    app.add_javascript('custom.js')
 
 # -- Path setup --------------------------------------------------------------
 
@@ -17,8 +20,8 @@ def setup(app):
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
+
+
 sys.path.insert(0, os.path.abspath('..'))
 
 autodoc_member_order = 'bysource'
@@ -30,7 +33,6 @@ copyright = '2018, Allan Galarza'
 author = 'Allan Galarza'
 
 # The short X.Y version
-version = ''
 with open('../tibiapy/__init__.py') as f:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
@@ -53,7 +55,9 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
+    'sphinx.ext.coverage',
+    'sphinxcontrib.asyncio'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -81,7 +85,7 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'friendly'
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -190,4 +194,7 @@ texinfo_documents = [
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'https://docs.python.org/': None,
+    'aiohttp': ('https://aiohttp.readthedocs.io/en/stable/', None)
+}

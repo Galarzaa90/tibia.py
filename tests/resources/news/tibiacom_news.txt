@@ -1,0 +1,55 @@
+<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
+<div class='NewsHeadline'>
+  <div class='NewsHeadlineBackground' style='background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/newsheadline_background.gif)'>
+    <img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_big.gif" class='NewsHeadlineIcon' />
+    <div class='NewsHeadlineDate'>May&#160;21&#160;2019 - </div>
+    <div class='NewsHeadlineText'><p>Sign Up for the VANGUARD Tournament</p></div>
+  </div>
+</div>
+<table style='clear:both' border=0 cellpadding=0 cellspacing=0 width='100%' ><tr>
+<td style='padding-left:10px;padding-right:10px;' ><p><IMG SRC="https://ssl-static-tibia.akamaized.net/images/global/letters/letter_martel_T.gif" BORDER=0 ALIGN=bottom>ibians, you can now sign up for the upcoming Test Tournament! Help us put Tournaments to the test and get hands-on experience by becoming a part of this unique adventure.</p>
+<center><img src="https://ssl-static-tibia.akamaized.net/images/news/tournament_banner.png" hspace="4" vspace="4" width="416" height="95" /></center>
+<p>Check out the <a href="https://www.tibia.com/community/?subtopic=tournament" target="_blank">Tournament page</a>&nbsp;to find details about rules, score set and rewards for VANGUARD.</p>
+<p>Log into your account on the Tibia website to create a new character for the Tournament world type of your choice. You can then purchase your ticket in the game via the Tournament window and sign up the character, if you have at least one character with level 100 on your account. Keep in mind that you also need Premium status to buy a ticket and to play on a Tournament world.</p>
+<p>Of course, we hope we can count on your feedback and suggestions about Tournaments. Share your VANGUARD experiences with us and tell us what you liked and disliked, what you want to see changed or added for future Tournaments and why so we can understand your point of view better!</p>
+<hr />
+<p>With today's server save, we have also expanded the <strong>Cyclopedia character section</strong>. You can now see the following information for your current character there:</p>
+<table style="height: 118px; width: 100%;">
+<tbody>
+<tr>
+<td style="width: 489px;">
+<ul>
+<li>summary of all items you have in your character's Inventory, Depot Boxes, Stash, Inbox and Store Inbox</li>
+<li>summary of your character's mounts and outfits</li>
+<li>summary all Store products your character currently has</li>
+</ul>
+</td>
+<td style="width: 212px;"><center><img style="cursor: pointer;" src="https://ssl-static-tibia.akamaized.net/images/news/character_info_s.png" width="210" height="162" onclick="window.open('https://ssl-static-tibia.akamaized.net/images/news/character_info.png', 'contest_winners', 'width=700, height=538')" /></center></td>
+</tr>
+</tbody>
+</table>
+<p><br />A click on an item will bring you to its Cyclopedia entry. You will also be able to view the character details of your Tournament characters there once they have been logged in to the game for the first time.</p>
+<p>Sign up for VANGUARD!<br />Your Community Managers</p></td></tr>
+<tr><td><div style="text-align:right;margin-right:10px;" ><a href="https://www.tibia.com/forum/?action=thread&threadid=4725194" >&raquo; Comment on this news</a></div></td></tr></table><br/>
+<center>
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/news/?subtopic=newsarchive METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=filter_begin_month VALUE="2">
+<INPUT TYPE=hidden NAME=filter_begin_day VALUE="25">
+<INPUT TYPE=hidden NAME=filter_begin_year VALUE="2019">
+<INPUT TYPE=hidden NAME=filter_end_month VALUE="5">
+<INPUT TYPE=hidden NAME=filter_end_day VALUE="25">
+<INPUT TYPE=hidden NAME=filter_end_year VALUE="2019">
+<INPUT TYPE=hidden NAME=filter_ticker VALUE="ticker">
+<INPUT TYPE=hidden NAME=filter_article VALUE="article">
+<INPUT TYPE=hidden NAME=filter_news VALUE="news">
+<INPUT TYPE=hidden NAME=filter_support VALUE="support">
+<INPUT TYPE=hidden NAME=filter_community VALUE="community">
+<INPUT TYPE=hidden NAME=filter_technical VALUE="technical">
+<INPUT TYPE=hidden NAME=filter_cipsoft VALUE="cipsoft">
+<INPUT TYPE=hidden NAME=filter_development VALUE="development">
+<INPUT TYPE=image NAME="Back" ALT="Back" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</center><br/>
+        </div>
+      </div>
+    </div>

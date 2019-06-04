@@ -1,7 +1,8 @@
 import datetime
+import unittest
 
 import tests.tests_character
-from tests.tests_tibiapy import TestTibiaPy
+from tests.tests_tibiapy import TestCommons
 from tibiapy import Guild, GuildHouse, GuildInvite, GuildMember, InvalidContent, ListedGuild
 
 FILE_GUILD_FULL = "guild/tibiacom_full.txt"
@@ -21,7 +22,7 @@ FILE_GUILD_TIBIADATA_LIST = "guild/tibiadata_list.json"
 FILE_GUILD_TIBIADATA_LIST_NOT_FOUND = "guild/tibiadata_list_not_found.json"
 
 
-class TestsGuild(TestTibiaPy):
+class TestsGuild(TestCommons, unittest.TestCase):
     def setUp(self):
         self.guild = Guild()
 
@@ -158,7 +159,7 @@ class TestsGuild(TestTibiaPy):
         self.assertIsNotNone(self.guild.invites)
         self.assertIsNotNone(self.guild.invites[0])
         self.assertEqual(self.guild.invites[0].name, name)
-        self.assertEqual(self.guild.invites[0].date, datetime.date(2018,6,20))
+        self.assertEqual(self.guild.invites[0].date, datetime.date(2018, 6, 20))
 
     def testMemberJoinDate(self):
         self.assertIsInstance(GuildMember(joined="Jul 20 2018").joined, datetime.date)

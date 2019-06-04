@@ -1,10 +1,13 @@
 import datetime
 import json
+import re
 from typing import Optional, Type, TypeVar, Union
 
 import bs4
 
 from tibiapy.errors import InvalidContent
+
+TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
 
 def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
@@ -133,12 +136,12 @@ def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
     """Parses a date from the format used in TibiaData.
 
     Parameters
-    -----------
+    ----------
     date_str: :class:`str`
         The date as represented in Tibia.com
 
     Returns
-    -----------
+    -------
     :class:`datetime.date`, optional
         The represended date."""
     try:
@@ -149,6 +152,18 @@ def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
 
 
 def parse_number_words(text_num):
+    """Parses the word representation of a number to a integer.
+
+    Parameters
+    ----------
+    text_num: :class:`str`
+        The text representation of a number.
+
+    Returns
+    -------
+    :class:`int`
+        The number represented by the string.
+    """
     numwords = {}
     units = [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
@@ -161,9 +176,12 @@ def parse_number_words(text_num):
     scales = ["hundred", "thousand", "million", "billion", "trillion"]
 
     numwords["and"] = (1, 0)
-    for idx, word in enumerate(units):    numwords[word] = (1, idx)
-    for idx, word in enumerate(tens):     numwords[word] = (1, idx * 10)
-    for idx, word in enumerate(scales):   numwords[word] = (10 ** (idx * 3 or 2), 0)
+    for idx, word in enumerate(units):
+        numwords[word] = (1, idx)
+    for idx, word in enumerate(tens):
+        numwords[word] = (1, idx * 10)
+    for idx, word in enumerate(scales):
+        numwords[word] = (10 ** (idx * 3 or 2), 0)
 
     current = result = 0
     text_num = text_num.replace("-", " ")
@@ -298,11 +316,12 @@ def parse_json(content):
 
     Parameters
     ----------
-    content: A JSON format string.
+    content: :class:`str`
+        A JSON format string.
 
     Returns
     -------
-    obj:
+    obj
         The object represented by the json string.
 
     Raises
@@ -315,6 +334,33 @@ def parse_json(content):
         return _recursive_strip(json_content)
     except json.JSONDecodeError:
         raise InvalidContent("content is not a json string.")
+
+
+def parse_tibia_money(argument):
+    """Parses a string that may contain 'k' as thousand suffix.
+
+    Parameters
+    ----------
+    argument: :class:`str`
+        A numeric string.
+
+    Returns
+    -------
+    int:
+        The value represented by the string.
+
+    """
+    try:
+        return int(argument)
+    except ValueError:
+        argument = argument.replace(",", "").strip().lower()
+        m = TIBIA_CASH_PATTERN.match(argument)
+        if not m or not m.group(1):
+            raise ValueError("not a numeric value")
+        num = float(m.group(1))
+        k_count = argument.count("k")
+        num *= pow(1000, k_count)
+        return int(num)
 
 
 def _recursive_strip(value):

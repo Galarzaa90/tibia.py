@@ -31,7 +31,11 @@ pip install git+https://github.com/Galarzaa90/tibia.py.git -U
 ```
 
 ## Usage
-In order to use this library, you need to use an external library (`requests`, `aiohttp`) to fetch content from the website.
+This library is composed of two parts, parsers and an asynchronous request client.
+
+The asynchronous client (`tibiapy.Client`) contains methods to obtain information from Tibia.com.
+
+The parsing methods allow you to get Python objects given the html content of a page.
 
 ```python
 import tibiapy
@@ -40,24 +44,25 @@ import tibiapy
 import aiohttp
 
 async def get_character(name):
-  url = tibiapy.Character.get_url(name)
+    url = tibiapy.Character.get_url(name)
 
-  async with aiohttp.ClientSession() as session:
-    async with session.get(url) as resp:
-        content = await resp.text()
-  character = tibiapy.Character.from_content(content)
-  return character
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            content = await resp.text()
+    character = tibiapy.Character.from_content(content)
+    return character
 
 # Synchronously
 import requests
 
 def get_character_sync(name):
-  url = tibiapy.Character.get_url(name)
+    url = tibiapy.Character.get_url(name)
+    
+    r = requests.get(url)
+    content = r.text()
+    character = tibiapy.Character.from_content(content)
+    return character
 
-  r = requests.get(url)
-  content = r.text()
-  character = tibiapy.Character.from_content(content)
-  return character
 ```
 
 ## Documentation

@@ -10,6 +10,9 @@ try:
     import colorama
     colorama.init()
 except ImportError:
+    click = None
+    requests = None
+    colorama = None
     print("Use as a command-line interface requires optional dependencies: click, requests and colorama")
     exit()
 
@@ -106,6 +109,7 @@ def cli_world(name, tibiadata, json):
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
 def cli_worlds(tibiadata, json):
+    """Displays the list of worlds and their data."""
     worlds = _fetch_and_parse(ListedWorld.get_list_url, ListedWorld.list_from_content,
                               ListedWorld.get_list_url_tibiadata, ListedWorld.list_from_tibiadata,
                               tibiadata)
@@ -116,18 +120,19 @@ def cli_worlds(tibiadata, json):
             import json as _json
             print(_json.dumps(worlds, default=ListedWorld._try_dict, indent=2))
         return
-    print(print_world_overview(worlds))
+    print(print_world_list(worlds))
 
 
 @cli.command(name="house")
-@click.argument('id')
+@click.argument('house_id')
 @click.argument('world')
 @click.option("-td", "--tibiadata", default=False, is_flag=True)
 @click.option("-js", "--json", default=False, is_flag=True)
-def cli_house(id, world, tibiadata, json):
+def cli_house(house_id, world, tibiadata, json):
+    """Displays information about a house."""
     house = _fetch_and_parse(House.get_url, House.from_content,
                              House.get_url_tibiadata, House.from_tibiadata,
-                             tibiadata, id, world)
+                             tibiadata, house_id, world)
     if json and house:
         print(house.to_json(indent=2))
         return
@@ -141,6 +146,7 @@ def cli_house(id, world, tibiadata, json):
 @click.option("-js", "--json", default=False, is_flag=True)
 @click.option("-gh", "--guildhalls", default=False, is_flag=True)
 def cli_houses(world, town, tibiadata, json, guildhalls):
+    """Displays the list of houses of a world."""
     town = " ".join(town)
     house_type = HouseType.GUILDHALL if guildhalls else HouseType.HOUSE
     houses = _fetch_and_parse(ListedHouse.get_list_url, ListedHouse.list_from_content,
@@ -221,7 +227,7 @@ def get_character_string(character: Character):  # NOSONAR
         content += build_header("Other Characters")
         for other_char in character.other_characters:
             content += "- %s - %s - %s\n" % (other_char.name, other_char.world, "online" if other_char.online else
-            ("deleted" if other_char.deleted else "offline"))
+                                             ("deleted" if other_char.deleted else "offline"))
     return content
 
 
@@ -311,14 +317,12 @@ def print_world(world: World):
     return content
 
 
-def print_world_overview(world_overview):
+def print_world_list(world_list):
     content = build_header("Game World Overview", "=")
-    content += get_field("Total online", world_overview.total_online)
-    content += get_field("Overall Maximum", "%d players on %s" % (world_overview.record_count,
-                                                                  world_overview.record_date))
+    content += get_field("Total online", sum(w.online_count for w in world_list))
 
     content += build_header("Worlds")
-    for world in world_overview.worlds:
+    for world in world_list:
         content += "%s - %d Online - %s - %s\n" % (world.name, world.online_count, world.location, world.pvp_type)
     return content
 
@@ -335,7 +339,7 @@ def get_house_string(house):
     if house.status == "auctioned":
         content += get_field("Highest bid", "%d gold by %s, auction ends on %s" %
                                             (house.highest_bid, house.highest_bidder, house.auction_end)
-        if house.highest_bidder else "None")
+                             if house.highest_bidder else "None")
     else:
         content += get_field("Rented by", "%s, paid until %s" % (house.owner, house.paid_until))
         if house.transfer_date:

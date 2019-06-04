@@ -2,6 +2,21 @@
 Changelog
 =========
 
+.. note::
+    Due to this library relying on external content, older versions are not guaranteed to work.
+    Try to always use the latest version.
+
+.. _v2.0.0:
+
+2.0.0 (2019-06-03)
+==================
+
+- Added asynchronous client to fetch and parse Tibia.com sections.
+- Added news parsing.
+- Added kill statistics parsing.
+- Added support for tournament worlds.
+- Added support for house prices with 'k' suffixes.
+
 .. _v1.1.3:
 
 1.1.3 (2019-01-29)

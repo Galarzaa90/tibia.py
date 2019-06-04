@@ -5,12 +5,20 @@ import urllib.parse
 from collections import OrderedDict
 from enum import Enum
 
+from tibiapy.enums import HouseType
+
 CHARACTER_URL = "https://www.tibia.com/community/?subtopic=characters&name=%s"
 CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
-URL_HOUSE = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
-URL_HOUSE_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
+HOUSE_URL = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
+HOUSE_URL_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
+HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s"
+HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
 GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName=%s"
 GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
+GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
+GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
+NEWS_URL = "https://www.tibia.com/news/?subtopic=newsarchive&id=%d"
+NEWS_SEARCH_URL = "https://www.tibia.com/news/?subtopic=newsarchive"
 WORLD_URL = "https://www.tibia.com/community/?subtopic=worlds&world=%s"
 WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
@@ -63,7 +71,7 @@ class Serializable:
         except TypeError:
             return str(obj)
 
-    def to_json(self, *, indent=None, sort_keys = False):
+    def to_json(self, *, indent=None, sort_keys=False):
         """Gets the object's JSON representation.
 
         Parameters
@@ -108,7 +116,7 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
             return self.name.lower() == o.name.lower()
         return False
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r}>".format(self,)
 
     @property
@@ -214,6 +222,38 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
             The URL to the guild's page on TibiaData.com."""
         return GUILD_URL_TIBIADATA % urllib.parse.quote(name)
 
+    @classmethod
+    def get_world_list_url(cls, world):
+        """Gets the Tibia.com URL for the guild section of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page
+        """
+        return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
+
+    @classmethod
+    def get_world_list_url_tibiadata(cls, world):
+        """Gets the TibiaData.com URL for the guild list of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page.
+        """
+        return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
+
 
 class BaseHouse(Serializable, metaclass=abc.ABCMeta):
     """Base class for all house classes
@@ -236,6 +276,10 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
     """
     __slots__ = ("name", "world", "status", "type")
 
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r} status={0.status!r} type={0.type!r}>"\
+            .format(self,)
+
     def __eq__(self, o: object) -> bool:
         """Two houses are considered equal if their names are equal."""
         if isinstance(o, self.__class__):
@@ -257,7 +301,7 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         -------
         The URL to the house in Tibia.com
         """
-        return URL_HOUSE % (house_id, world)
+        return HOUSE_URL % (house_id, world)
 
     @classmethod
     def get_url_tibiadata(cls, house_id, world):
@@ -274,7 +318,51 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         -------
         The URL to the house in TibiaData.com
         """
-        return URL_HOUSE_TIBIADATA % (world, house_id)
+        return HOUSE_URL_TIBIADATA % (world, house_id)
+
+    @classmethod
+    def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE):
+        """
+        Gets the URL to the house list on Tibia.com with the specified parameters.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+        town: :class:`str`
+            The name of the town.
+        house_type: :class:`HouseType`
+            Whether to search for houses or guildhalls.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the list matching the parameters.
+        """
+        house_type = "%ss" % house_type.value
+        return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
+
+    @classmethod
+    def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):
+        """
+        Gets the URL to the house list on Tibia.com with the specified parameters.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+        town: :class:`str`
+            The name of the town.
+        house_type: :class:`HouseType`
+            Whether to search for houses or guildhalls.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the list matching the parameters.
+        """
+        house_type = "%ss" % house_type.value
+        return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
 
 
 class BaseHouseWithId(BaseHouse):
@@ -319,6 +407,80 @@ class BaseHouseWithId(BaseHouse):
         return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None
 
 
+class BaseNews(Serializable, metaclass=abc.ABCMeta):
+    """Base class for all news classes
+
+    Implements the :py:attr:`id` attribute and common properties.
+
+    The following implement this class:
+
+    - :class:`.News`
+    - :class:`.ListedNews`
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The internal ID of the news entry.
+    title: :class:`str`
+        The title of the news entry.
+    category: :class:`.NewsCategory`
+        The category this belongs to.
+    category_icon: :class:`str`
+        The URL of the icon corresponding to the category.
+    date: :class:`datetime.date`
+        The date when the news were published.
+    """
+    __slots__ = (
+        "id",
+        "title",
+        "category",
+        "category_icon",
+        "date",
+    )
+
+    def __eq__(self, o: object) -> bool:
+        """Two news articles are considered equal if their names or ids are equal."""
+        if isinstance(o, self.__class__):
+            return self.id == o.id
+        return False
+
+    @property
+    def url(self):
+        """:class:`str`: The URL to the Tibia.com page of the news entry."""
+        return self.get_url(self.id)
+
+    @classmethod
+    def get_url(cls, news_id):
+        """Gets the Tibia.com URL for a news entry by its id.
+
+        Parameters
+        ------------
+        news_id: :class:`int`
+            The id of the news entry.
+
+        Returns
+        --------
+        :class:`str`
+            The URL to the news' page"""
+        return NEWS_URL % news_id
+
+    @classmethod
+    def get_list_url(cls):
+        """Gets the URL to Tibia.com's news archive page.
+
+        Notes
+        -----
+        It is not possible to perform a search using query parameters.
+        News searches can only be performed using POST requests sending the parameters as form-data.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the news archive page on Tibia.com.
+        """
+        return NEWS_SEARCH_URL
+
+
 class BaseWorld(Serializable):
     """Base class for all World classes.
 
@@ -348,11 +510,24 @@ class BaseWorld(Serializable):
         If this is ``None`` and the world is protected, it means the world was protected from the beginning.
     experimental: :class:`bool`
         Whether the world is experimental or not.
+    tournament_world_type: :class:`TournamentWorldType`
+        The type of tournament world. ``None`` if this is not a tournament world.
     premium_only: :class:`bool`
         Whether only premium account players are allowed to play in this server.
     """
-    __slots__ = ("name", "status", "location", "online_count", "pvp_type", "battleye_protected", "battleye_date",
-                 "experimental", "premium_only", "transfer_type")
+    __slots__ = (
+        "name",
+        "status",
+        "location",
+        "online_count",
+        "pvp_type",
+        "battleye_protected",
+        "battleye_date",
+        "experimental",
+        "premium_only",
+        "tournament_world_type",
+        "transfer_type"
+    )
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} location={0.location!r} pvp_type={0.pvp_type!r}>".format(self)

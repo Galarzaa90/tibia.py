@@ -1,8 +1,9 @@
 import datetime
 import json
+import unittest
 
 import tests.tests_character
-from tests.tests_tibiapy import TestTibiaPy
+from tests.tests_tibiapy import TestCommons
 from tibiapy import House, InvalidContent, ListedHouse
 from tibiapy.enums import HouseStatus, HouseType
 
@@ -22,7 +23,7 @@ FILE_HOUSE_TIBIADATA_LIST = "house/tibiadata_list.json"
 FILE_HOUSE_TIBIADATA_LIST_NOT_FOUND = "house/tibiadata_list_not_found.json"
 
 
-class TestsHouse(TestTibiaPy):
+class TestsHouse(TestCommons, unittest.TestCase):
     def setUp(self):
         self.guild = {}
 
@@ -107,8 +108,7 @@ class TestsHouse(TestTibiaPy):
         self.assertIsInstance(houses[0].id, int)
         self.assertIsNotNone(ListedHouse.get_list_url(houses[0].world, houses[0].town))
 
-        self.assertEqual(houses[25].status, HouseStatus.AUCTIONED)
-        self.assertEqual(houses[25].highest_bid, 7500000)
+        self.assertEqual(houses[25].status, HouseStatus.RENTED)
 
     def testHouseListEmpty(self):
         content = self._load_resource(FILE_HOUSE_LIST_EMPTY)

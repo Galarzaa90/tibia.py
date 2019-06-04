@@ -1,6 +1,5 @@
 import datetime
 import re
-import urllib.parse
 from typing import Optional
 
 import tibiapy.character
@@ -8,25 +7,32 @@ from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import parse_json, parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, \
-    try_datetime, try_enum
+    try_datetime, try_enum, parse_tibia_money
 
-__all__ = ("House", "CharacterHouse", "GuildHouse", "ListedHouse")
+__all__ = (
+    "House",
+    "CharacterHouse",
+    "GuildHouse",
+    "ListedHouse",
+)
 
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
-info_regex = re.compile(r'The house has a size of (?P<size>\d+) square meter[s]?. The monthly rent is (?P<rent>\d+) gold and will be debited to the bank account on (?P<world>\w+).')
+info_regex = \
+    re.compile(r'The house has a size of (?P<size>\d+) square meter[s]?. '
+               r'The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).')
 
-rented_regex = re.compile(r'The house has been rented by (?P<owner>[^.]+)\. (?P<pronoun>\w+) has paid the rent until (?P<paid_until>[^.]+)\.')
-transfer_regex = re.compile(r'\w+ will move out on (?P<transfer_date>[^(]+)\([^)]+\)(?: and (?P<verb>wants to|will) pass the house to (?P<transferee>[\w\s]+) for (?P<transfer_price>\d+) gold coin)?')
+rented_regex = re.compile(r'The house has been rented by (?P<owner>[^.]+)\.'
+                          r' (?P<pronoun>\w+) has paid the rent until (?P<paid_until>[^.]+)\.')
+transfer_regex = re.compile(r'\w+ will move out on (?P<transfer_date>[^(]+)\([^)]+\)(?: and (?P<verb>wants to|will)'
+                            r' pass the house to (?P<transferee>[\w\s]+) for (?P<transfer_price>\d+) gold coin)?')
 moving_regex = re.compile(r'\w+ will move out on (?P<move_date>[^(]+)')
-bid_regex = re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
+bid_regex = \
+    re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
 auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).')
 
 list_header_regex = re.compile(r'Available (?P<type>[\w\s]+) in (?P<town>[\w\s\']+) on (?P<world>\w+)')
 list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<time_unit>day|hour)s? left\)')
-
-HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s"
-HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
 
 
 class House(abc.BaseHouseWithId):
@@ -73,9 +79,23 @@ class House(abc.BaseHouseWithId):
     auction_end: :class:`datetime.datetime`, optional
         The date when the auction will end.
     """
-    __slots__ = ("image_url", "beds", "type", "size", "rent", "owner", "owner_sex", "paid_until", "transfer_date",
-                 "transferee", "transfer_price", "transfer_accepted", "highest_bid",
-                 "highest_bidder", "auction_end")
+    __slots__ = (
+        "image_url",
+        "beds",
+        "type",
+        "size",
+        "rent",
+        "owner",
+        "owner_sex",
+        "paid_until",
+        "transfer_date",
+        "transferee",
+        "transfer_price",
+        "transfer_accepted",
+        "highest_bid",
+        "highest_bidder",
+        "auction_end",
+    )
 
     def __init__(self, name, world=None, **kwargs):
         self.id = kwargs.get("id", 0)  # type: int
@@ -91,7 +111,7 @@ class House(abc.BaseHouseWithId):
         self.owner_sex = try_enum(Sex, kwargs.get("owner_sex"))
         self.paid_until = try_datetime(kwargs.get("paid_until"))
         self.transfer_date = try_datetime(kwargs.get("transfer_date"))
-        self.transferee = kwargs.get("transferee")  #type: Optional[str]
+        self.transferee = kwargs.get("transferee")  # type: Optional[str]
         self.transfer_price = kwargs.get("transfer_price", 0)  # type: int
         self.transfer_accepted = kwargs.get("transfer_accepted", False)  # type: bool
         self.highest_bid = kwargs.get("highest_bid", 0)  # type: int
@@ -142,7 +162,7 @@ class House(abc.BaseHouseWithId):
         image = image_column.find('img')
         for br in desc_column.find_all("br"):
             br.replace_with("\n")
-        description = desc_column.text.replace("\u00a0", " ").replace("\n\n","\n")
+        description = desc_column.text.replace("\u00a0", " ").replace("\n\n", "\n")
         lines = description.splitlines()
         try:
             name, beds, info, state, *_ = lines
@@ -164,7 +184,7 @@ class House(abc.BaseHouseWithId):
         m = info_regex.search(info)
         if m:
             house.world = m.group("world")
-            house.rent = int(m.group("rent"))
+            house.rent = parse_tibia_money(m.group("rent"))
             house.size = int(m.group("size"))
 
         house._parse_status(state)
@@ -269,7 +289,11 @@ class CharacterHouse(abc.BaseHouseWithId):
     paid_until_date: :class:`datetime.date`
         The date the last paid rent is due.
     """
-    __slots__ = ("town", "owner", "paid_until_date")
+    __slots__ = (
+        "town",
+        "owner",
+        "paid_until_date",
+    )
 
     def __init__(self, _id, name, world=None, town=None, owner=None, paid_until_date=None):
         self.id = int(_id)
@@ -299,7 +323,11 @@ class GuildHouse(abc.BaseHouse):
         The owner of the guildhall.
     paid_until_date: :class:`datetime.date`
         The date the last paid rent is due."""
-    __slots__ = ("owner", "paid_until_date")
+
+    __slots__ = (
+        "owner",
+        "paid_until_date",
+    )
 
     def __init__(self, name, world=None, owner=None, paid_until_date=None):
         self.name = name  # type: str
@@ -340,7 +368,13 @@ class ListedHouse(abc.BaseHouseWithId):
     highest_bid: :class:`int`
         The highest bid so far, if the auction has started.
     """
-    __slots__ = ("town", "size", "rent", "time_left", "highest_bid")
+    __slots__ = (
+        "town",
+        "size",
+        "rent",
+        "time_left",
+        "highest_bid",
+    )
 
     def __init__(self, name, world, houseid, **kwargs):
         self.name = name  # type: str
@@ -396,7 +430,7 @@ class ListedHouse(abc.BaseHouseWithId):
             size = cols[1].text.replace('sqm', '')
             house.size = int(size)
             rent = cols[2].text.replace('gold', '')
-            house.rent = int(rent)
+            house.rent = parse_tibia_money(rent)
             status = cols[3].text.replace('\xa0', ' ')
             house._parse_status(status)
             id_input = cols[5].find("input", {'name': 'houseid'})
@@ -436,50 +470,6 @@ class ListedHouse(abc.BaseHouseWithId):
             return houses
         except KeyError:
             raise InvalidContent("content is not a house list json response from TibiaData.com")
-
-    @classmethod
-    def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE):
-        """
-        Gets the URL to the house list on Tibia.com with the specified parameters.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-        town: :class:`str`
-            The name of the town.
-        house_type: :class:`HouseType`
-            Whether to search for houses or guildhalls.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the list matching the parameters.
-        """
-        house_type = "%ss" % house_type.value
-        return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
-
-    @classmethod
-    def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):
-        """
-        Gets the URL to the house list on Tibia.com with the specified parameters.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-        town: :class:`str`
-            The name of the town.
-        house_type: :class:`HouseType`
-            Whether to search for houses or guildhalls.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the list matching the parameters.
-        """
-        house_type = "%ss" % house_type.value
-        return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
     # endregion
 
     # region Private methods

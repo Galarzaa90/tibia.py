@@ -58,7 +58,7 @@ exist.
 doesn't exist.
 
 ## Highscores resources
-- [tibiacom_full.txt](highscores/tibiacom_full.txt) - The content of a correct highscore's pagem
+- [tibiacom_full.txt](highscores/tibiacom_full.txt) - The content of a correct highscore's page.
 - [tibiacom_empty.txt](highscores/tibiacom_empty.txt) - The content of the highscores page of a nonexistent world.
 - [tibiacom_experience.txt](highscores/tibiacom_experience.txt) - The content of an experience highscores page.
 - [tibiacom_loyalty.txt](highscores/tibiacom_loyalty.txt) - The content of a loyalty highscores page.
@@ -67,11 +67,24 @@ doesn't exist.
 - [tibiadata_experience.json](highscores/tibiadata_experience.json) - A response containing experience highscores from
 TibiaData.
 - [tibiadata_loyalty.json](highscores/tibiadata_loyalty.json) - A response containing loyalty highscores from TibiaData.
+
+## Kill Statistics resources
+- [tibiacom_full.txt](kill_statistics/tibiacom_full.txt) - The content of a correct kill statistics' page.
+- [tibiacom_empty.txt](kill_statistics/tibiacom_empty.txt) - The content of the kill statistics's page of a 
+nonexistent world or a unselected world.
+
+## News resources
+- [tibiacom_list.txt](news/tibiacom_list.txt) - The content of the news search page with results.
+- [tibiacom_list_empty.txt](news/tibiacom_list_empty.txt) - The content of the news search page with no results.
+- [tibiacom_list_error.txt](news/tibiacom_list_error.txt) - The content of the news search page with an error.
+- [tibiacom_news.txt](news/tibiacom_news.txt) - The content of a news article.
+- [tibiacom_news_ticker.txt](news/tibiacom_news_ticker.txt) - The content of a news ticker.
  
  ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.
  - [tibiacom_offline.txt](world/tibiacom_offline.txt) - An offline world on Tibia.com.
  - [tibiacom_not_found.txt](world/tibiacom_not_found.txt) - The page shown for a world that doesn't exist.
+ - [tibiacom_tournament.txt](world/tibiacom_tournament.txt) - The page shown for Tournament world.
  - [tibiacom_list_online.txt](world/tibiacom_list_online.txt) - The world list with all worlds online.
  - [tibiacom_list_offline.txt](world/tibiacom_list_offline.txt) - The world list with all worlds offline.
  - [tibiadata_online.json](world/tibiadata_online.json) - An online world on TibiaData.

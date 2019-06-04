@@ -8,6 +8,12 @@ This module implements a variety of classes used to hold the data parsed from Ti
 These objects are generally obtained from their respective ``from_content`` methods.
 It is possible to create and edit these objects as desired, but it may lead to unexpected behaviour if not done properly.
 
+Client
+======
+
+.. autoclass:: Client
+    :members:
+
 Enumerations
 ============
 Enumerations are provided for various values in order to avoid depending on strings.
@@ -25,6 +31,14 @@ Enumerations are provided for various values in order to avoid depending on stri
     :undoc-members:
 
 .. autoclass:: HouseStatus
+    :members:
+    :undoc-members:
+
+.. autoclass:: NewsCategory
+    :members:
+    :undoc-members:
+
+.. autoclass:: NewsType
     :members:
     :undoc-members:
 
@@ -83,6 +97,12 @@ House
    :members:
    :inherited-members:
 
+KillStatistics
+--------------
+.. autoclass:: KillStatistics
+   :members:
+   :inherited-members:
+
 ListedGuild
 -----------
 .. autoclass:: ListedGuild
@@ -95,9 +115,22 @@ ListedHouse
    :members:
    :inherited-members:
 
+ListedNews
+-----------
+.. autoclass:: ListedNews
+   :members:
+   :inherited-members:
+
+
 ListedWorld
 -----------
 .. autoclass:: ListedWorld
+   :members:
+   :inherited-members:
+
+News
+---------
+.. autoclass:: News
    :members:
    :inherited-members:
 
@@ -203,6 +236,12 @@ OtherCharacter
    :members:
    :inherited-members:
 
+RaceEntry
+---------
+.. autoclass:: RaceEntry
+   :members:
+   :inherited-members:
+
 Base Classes
 ============
 The following classes are not meant to be used or instantiated, but are documented here for informational purposes.
@@ -225,6 +264,10 @@ They implement methods and properties that can be inherited by other classes to 
     :members:
     :inherited-members:
 
+.. autoclass:: tibiapy.abc.BaseNews
+    :members:
+    :inherited-members:
+
 .. autoclass:: tibiapy.abc.BaseWorld
     :members:
     :inherited-members:
@@ -239,8 +282,14 @@ Exceptions
 
 .. autoclass:: InvalidContent
 
+.. autoclass:: NetworkError
+
+.. autoclass:: Forbidden
+
 Utility functions
 ==================
+These are functions used thorough the module and are not intended for public use.
+
 .. automodule:: tibiapy.utils
    :members:
 

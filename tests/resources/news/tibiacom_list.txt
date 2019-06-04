@@ -1,0 +1,266 @@
+<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
+<table cellspacing=1 cellpadding=4 width='100%'><tr bgcolor=#505050><td colspan=3 class=white><b>Search Results</b></td></tr><tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;21&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5061&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>All game worlds are now back online! As announced, we had to reset the...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;21&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5060&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Due to a critical technical issue that needs to be fixed, we have to t...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>May&#160;21&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5059&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Sign Up for the VANGUARD Tournament</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;21&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5049&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Today, the fansite FunTibia.com is nine years old! Happy anniversary a...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>May&#160;20&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5057&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Tibia Tournaments</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;20&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5058&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>There are only 4 days left to participate in the anniversary contest o...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>May&#160;20&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5052&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Due to a patch, tomorrow's server save will be prolongued until approx...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;20&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5055&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>With today's server save, we have removed the premium only status of B...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;20&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5054&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>The server save on the following game worlds will take about an hour l...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;17&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5053&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>BomDiaTibia.com has released a new episode of their BDTCast. In their ...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;17&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5051&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>TibiaLife.com.br has two new articles to share with you. The first one...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;17&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5050&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>TibiaEvents.com has started a new articles series. Do you remember you...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;15&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5048&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Update: All game worlds are now up and running again. Please accept ou...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;15&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5044&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Congratulations to OrcSearch.com! Today it is the fansite's second ann...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;14&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5040&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Tomorrow's server save will be prolonged until approximately 10:30 CES...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;13&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5042&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>A&nbsp;short downtime for Monza, Menera, Zuna, and Zunera is necessary...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;13&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5041&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>On CasalTibiano.com.br you can find several articles about Tibian coup...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;10&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5039&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>TibiaLife.com.br has published several new articles in Portuguese! Eve...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>May&#160;10&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4994&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>New Mounts</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;10&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5038&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>In order to celebrate their third anniversary, BomDiaTibia.com has sta...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;08&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5037&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>There is a new contest in town! TibiaEvents.com proudly presents "Let'...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;08&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5036&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>BomDiaTibia.com has released a new episode of their BDTCast. Their BDT...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;08&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5035&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>TibiaData.com is celebrating their third anniversary today. Happy Birt...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;08&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5034&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Happy Birthday, TibiaWiki.com.br! The fansite has been around for twel...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;07&#160;2019<br/><small>Featured&#160;Article</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5004&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Casualty</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;06&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5026&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Demon's Lullaby</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;06&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5033&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Rookie.com.pl has started a quick draw lottery, using their new automa...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;06&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5031&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>As compensation for the recent reset of Gentebra, a double XP/skill we...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;06&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5028&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Tomorrow's server save will be prolonged until approximately 10:45 CES...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;06&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5029&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Happy third anniversary, BomDiaTibia.com! Best wishes and good luck fr...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;06&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5032&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Please welcome a new addition to the fansite programme, CasalTibiano.c...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>May&#160;03&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5030&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>We had to reset Gentebra to the state of Mai 02, 10:00 CEST, due to a ...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>May&#160;02&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5027&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>New publications on TibiaLife.com.br, in Portuguese: Check out 10 chan...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;30&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5023&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Tibiopedia.pl has extended their monster section and has released an a...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;29&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5021&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Rookie.com.pl has reintroduced their monster list with several new fea...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>Apr&#160;29&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5022&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Due to maintenance work, the Webshop services on our website will not ...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;29&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5020&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Tibia Live, the Android app for Tibia, is now available in Spanish in ...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;29&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5019&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>If you are planning on training your skills during the upcoming double...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;29&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5003&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Farewell</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;26&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5010&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Double XP and Double Skill Weekend</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;26&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5018&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>TibiaBosses.com has released a new feature! Now you can check with one...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Apr&#160;24&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5013&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>The following game worlds are now accessible for free account players:...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Apr&#160;24&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5014&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>A new client version, which&nbsp;comes with some performance improveme...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>Apr&#160;23&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5012&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Tomorrow's server save will be prolonged until approximately 10:45 CES...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;23&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5015&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Unfortunately, RadioGoroma.com.br has left the fansite programme today...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;19&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5011&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Not much time left to participate in the Golden Questions of April eve...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;17&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4951&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Today is the second anniversary of TibiArt.com.ve! Happy Birthday to t...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;17&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5006&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Please welcome a new addition to the fansite programme! NabBot is a va...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Apr&#160;16&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5008&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>The new Open PvP worlds Belluma, Dibra and Torpera are now up and runn...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Apr&#160;16&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5007&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>With&nbsp;the implementation of new rents&nbsp;for all houses and guil...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;16&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4992&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Spring into Life</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;16&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5005&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>There are only four days left to participate in the Dress Like a Boss ...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Apr&#160;12&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4993&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>New Outfit</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;10&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4950&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Happy 10, TibiaLottery.com! Today, it is the tenth anniversary of Tibi...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;10&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5001&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>TibiaMagazine.com.ve has published a new chapter of their series "La V...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Apr&#160;09&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=5000&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>The Tibia macOS launcher is now available&nbsp;as .dmg file. This shou...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Apr&#160;09&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4997&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>New Open PvP Game Worlds</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>Apr&#160;08&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4999&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Due to technical maintenance work, tomorrow's server save will be prol...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;08&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4998&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Guildstats.eu has added new, interesting statistics to their site. Bes...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;04&#160;2019<br/><small>Featured&#160;Article</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4929&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Snoopy, a Spy?</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;03&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4996&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Congratulations to the winners of our April Fools' raffle! Five lucky ...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;02&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4995&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>A new month, a new contest on&nbsp;TibiaEvents.com! This time, The Ren...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Apr&#160;02&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4988&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Bugfixes and Content Changes</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;01&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4949&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Happy third anniversary, TibiaBosses.com! In order to celebrate their ...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;01&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4990&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Tibiart.com.ve&nbsp;published a new chapter&nbsp;of of their story&nbs...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;01&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4986&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Backpack Hunt</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Apr&#160;01&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4989&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Hoaxette has returned for a full month to provide you with useful item...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>Apr&#160;01&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4987&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>The server save on Tuesday April 02, will be prolonged until approxima...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Mar&#160;29&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4983&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>TibiaQA.com&nbsp;has started the Golden Question of April event. Parti...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif"/></td>
+<td width=5 align=center>Mar&#160;29&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4977&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Rapid Respawn Weekend</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Mar&#160;29&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4985&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>On Sunday, March 31, the change to summer time will take place in Germ...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Mar&#160;28&#160;2019<br/><small>News</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4984&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>New House Rents on April 15</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Mar&#160;27&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4982&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>We fixed an issue that occured after yesterday's server save. The&nbsp...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Mar&#160;26&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4981&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>Upon discharge, the&nbsp;enchanted pendulet currently disappears inste...</a></td></tr>
+<tr class=Odd><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif"/></td>
+<td width=5 align=center>Mar&#160;26&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4980&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>With today's server save, we fixed a&nbsp;few minor issues. For exampl...</a></td></tr>
+<tr class=Even><td width=16><img src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif"/></td>
+<td width=5 align=center>Mar&#160;25&#160;2019<br/><small>News&#160;Ticker</small></td>
+<td><a href='https://www.tibia.com/news/?subtopic=newsarchive&amp;id=4979&fbegind=25&fbeginm=3&fbeginy=2019&fendd=25&fendm=5&fendy=2019&flist=11111111'>The server save tomorrow will take a bit longer than usual due to main...</a></td></tr>
+</table><br/>    <form action="https://www.tibia.com/news/?subtopic=newsarchive" method=post>
+      <table border=0 cellspacing=1 cellpadding=4 width="100%">
+        <tr bgcolor=#505050><td colspan=4 class=white><b>News Archive Search</b></td></tr>
+        <tr bgcolor=#D4C0A1 valign=middle align=center>
+          <td width=25%><b>Time Period</b></td>
+          <td width=30%><b>Type</b></td>
+          <td width=30%><b>Category</b></td>
+        </tr>
+        <tr bgcolor=#D4C0A1 valign=middle align=center >
+          <td>
+<TABLE CELLSPACING=0 CELLPADDING=0 BORDER=0 ALIGN=LEFT><TR><TD></TD><TD>Day:&#160;</TD><TD>Month:&#160;</TD><TD>Year:</TD></TR><TR><td>From:&#160;</td><TD nowrap=nowrap><SELECT NAME="filter_begin_day"><OPTION VALUE="1">1<OPTION VALUE="2">2<OPTION VALUE="3">3<OPTION VALUE="4">4<OPTION VALUE="5">5<OPTION VALUE="6">6<OPTION VALUE="7">7<OPTION VALUE="8">8<OPTION VALUE="9">9<OPTION VALUE="10">10<OPTION VALUE="11">11<OPTION VALUE="12">12<OPTION VALUE="13">13<OPTION VALUE="14">14<OPTION VALUE="15">15<OPTION VALUE="16">16<OPTION VALUE="17">17<OPTION VALUE="18">18<OPTION VALUE="19">19<OPTION VALUE="20">20<OPTION VALUE="21">21<OPTION VALUE="22">22<OPTION VALUE="23">23<OPTION VALUE="24">24<OPTION VALUE="25" SELECTED>25<OPTION VALUE="26">26<OPTION VALUE="27">27<OPTION VALUE="28">28<OPTION VALUE="29">29<OPTION VALUE="30">30<OPTION VALUE="31">31</SELECT>&#160;</TD><TD nowrap=nowrap><SELECT NAME="filter_begin_month"><OPTION VALUE="1">1<OPTION VALUE="2">2<OPTION VALUE="3" SELECTED>3<OPTION VALUE="4">4<OPTION VALUE="5">5<OPTION VALUE="6">6<OPTION VALUE="7">7<OPTION VALUE="8">8<OPTION VALUE="9">9<OPTION VALUE="10">10<OPTION VALUE="11">11<OPTION VALUE="12">12</SELECT>&#160;</TD><TD><SELECT NAME="filter_begin_year"><OPTION VALUE="2000">2000<OPTION VALUE="2001">2001<OPTION VALUE="2002">2002<OPTION VALUE="2003">2003<OPTION VALUE="2004">2004<OPTION VALUE="2005">2005<OPTION VALUE="2006">2006<OPTION VALUE="2007">2007<OPTION VALUE="2008">2008<OPTION VALUE="2009">2009<OPTION VALUE="2010">2010<OPTION VALUE="2011">2011<OPTION VALUE="2012">2012<OPTION VALUE="2013">2013<OPTION VALUE="2014">2014<OPTION VALUE="2015">2015<OPTION VALUE="2016">2016<OPTION VALUE="2017">2017<OPTION VALUE="2018">2018<OPTION VALUE="2019" SELECTED>2019</SELECT></TD></TR><tr><td>&#160;</td></tr><TR><TD></TD><TD>Day:&#160;</TD><TD>Month:&#160;</TD><TD>Year: </TD></TR><TR><td ALIGN=right>To:&#160;</td><TD nowrap=nowrap><SELECT NAME="filter_end_day"><OPTION VALUE="1">1<OPTION VALUE="2">2<OPTION VALUE="3">3<OPTION VALUE="4">4<OPTION VALUE="5">5<OPTION VALUE="6">6<OPTION VALUE="7">7<OPTION VALUE="8">8<OPTION VALUE="9">9<OPTION VALUE="10">10<OPTION VALUE="11">11<OPTION VALUE="12">12<OPTION VALUE="13">13<OPTION VALUE="14">14<OPTION VALUE="15">15<OPTION VALUE="16">16<OPTION VALUE="17">17<OPTION VALUE="18">18<OPTION VALUE="19">19<OPTION VALUE="20">20<OPTION VALUE="21">21<OPTION VALUE="22">22<OPTION VALUE="23">23<OPTION VALUE="24">24<OPTION VALUE="25" SELECTED>25<OPTION VALUE="26">26<OPTION VALUE="27">27<OPTION VALUE="28">28<OPTION VALUE="29">29<OPTION VALUE="30">30<OPTION VALUE="31">31</SELECT>&#160;</TD><TD nowrap=nowrap><SELECT NAME="filter_end_month"><OPTION VALUE="1">1<OPTION VALUE="2">2<OPTION VALUE="3">3<OPTION VALUE="4">4<OPTION VALUE="5" SELECTED>5<OPTION VALUE="6">6<OPTION VALUE="7">7<OPTION VALUE="8">8<OPTION VALUE="9">9<OPTION VALUE="10">10<OPTION VALUE="11">11<OPTION VALUE="12">12</SELECT>&#160;</TD><TD><SELECT NAME="filter_end_year"><OPTION VALUE="2000">2000<OPTION VALUE="2001">2001<OPTION VALUE="2002">2002<OPTION VALUE="2003">2003<OPTION VALUE="2004">2004<OPTION VALUE="2005">2005<OPTION VALUE="2006">2006<OPTION VALUE="2007">2007<OPTION VALUE="2008">2008<OPTION VALUE="2009">2009<OPTION VALUE="2010">2010<OPTION VALUE="2011">2011<OPTION VALUE="2012">2012<OPTION VALUE="2013">2013<OPTION VALUE="2014">2014<OPTION VALUE="2015">2015<OPTION VALUE="2016">2016<OPTION VALUE="2017">2017<OPTION VALUE="2018">2018<OPTION VALUE="2019" SELECTED>2019</SELECT></TD></TR></TABLE>          </td>
+          <td nowrap=nowrap>
+            <div align=left>
+              <input type="checkbox" name="filter_ticker" value="ticker" checked/>News Ticker<br/>
+              <input type="checkbox" name="filter_article" value="article" checked/>Featured Article<br/>
+              <input type="checkbox" name="filter_news" value="news" checked/>News<br/>
+            </div>
+          </td>
+          <td nowrap=nowrap valign=middle >
+            <div align=left >
+              <table cellspacing=1 cellpadding=0 border=0 align=left>
+              <tr><td nowrap=nowrap valign=middle><input style="position: relative; top: -1px;" type="checkbox" name="filter_cipsoft" value="cipsoft" checked/><img style="position: relative; top: 1px;" src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_cipsoft_small.gif" /></td><td nowrap=nowrap valign=middle>CipSoft</td></tr>
+              <tr><td nowrap=nowrap valign=middle><input style="position: relative; top: -1px;" type="checkbox" name="filter_community" value="community" checked/><img style="position: relative; top: 1px;" src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_community_small.gif" /></td><td nowrap=nowrap valign=middle>Community</td></tr>
+              <tr><td nowrap=nowrap valign=middle><input style="position: relative; top: -1px;" type="checkbox" name="filter_development" value="development" checked/><img style="position: relative; top: 1px;" src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_development_small.gif" /></td><td nowrap=nowrap valign=middle>Development</td></tr>
+              <tr><td nowrap=nowrap valign=middle><input style="position: relative; top: -1px;" type="checkbox" name="filter_support" value="support" checked/><img style="position: relative; top: 1px;" src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_support_small.gif" /></td><td nowrap=nowrap valign=middle>Support</td></tr>
+              <tr><td nowrap=nowrap valign=middle><input style="position: relative; top: -1px;" type="checkbox" name="filter_technical" value="technical" checked/><img style="position: relative; top: 1px;" src="https://ssl-static-tibia.akamaized.net/images/global/content/newsicon_technical_small.gif" /></td><td nowrap=nowrap valign=middle>Technical Issues</td></tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </table><br/>
+      <center><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD>
+<INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</center>
+        </div>
+      </div>

@@ -1,12 +1,32 @@
 from enum import Enum
 
-__all__ = ('AccountStatus', 'Category', 'HouseStatus', 'HouseType', 'PvpType', 'Sex', 'TransferType', 'Vocation',
-           'VocationFilter', 'WorldLocation')
+__all__ = (
+    'AccountStatus',
+    'Category',
+    'HouseStatus',
+    'HouseType',
+    'NewsCategory',
+    'NewsType',
+    'PvpType',
+    'Sex',
+    'TournamentWorldType',
+    'TransferType',
+    'Vocation',
+    'VocationFilter',
+    'WorldLocation',
+)
 
 
 class BaseEnum(Enum):
     def __str__(self):
         return self.value
+
+    def __repr__(self):
+        return "%s.%s" % (self.__class__.__name__, self.name)
+
+    @classmethod
+    def items(cls):
+        return [i for i in cls]
 
 
 class AccountStatus(BaseEnum):
@@ -44,6 +64,22 @@ class HouseType(BaseEnum):
     GUILDHALL = "guildhall"
 
 
+class NewsCategory(BaseEnum):
+    """The different news categories."""
+    CIPSOFT = "cipsoft"
+    COMMUNITY = "community"
+    DEVELOPMENT = "development"
+    SUPPORT = "support"
+    TECHNICAL_ISSUES = "technical"
+
+
+class NewsType(BaseEnum):
+    """The different types of new entries."""
+    NEWS_TICKER = "News Ticker"
+    FEATURED_ARTICLE = "Featured Article"
+    NEWS = "News"
+
+
 class PvpType(BaseEnum):
     """The possible PvP types a World can have."""
     OPEN_PVP = "Open PvP"
@@ -57,6 +93,12 @@ class Sex(BaseEnum):
     """Possible character sexes."""
     MALE = "male"
     FEMALE = "female"
+
+
+class TournamentWorldType(BaseEnum):
+    """The possible types of tournament worlds."""
+    REGUlAR = "Regular"
+    RESTRICTED = "Restricted Store"
 
 
 class TransferType(BaseEnum):
