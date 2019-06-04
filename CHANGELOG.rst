@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.0.1:
+
+2.0.1 (2019-06-04)
+==================
+
+- Replaced references to ``secure.tibia.com`` with ``www.tibia.com`` as the former always redirects to the front page.
+
 .. _v2.0.0:
 
 2.0.0 (2019-06-03)

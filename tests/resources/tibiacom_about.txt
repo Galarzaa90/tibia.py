@@ -59,7 +59,7 @@
         "MMORPG",
         "Massively multiplayer online role-playing game"
       ],
-      "url":"https://secure.tibia.com",
+      "url":"https://wwww.tibia.com",
       "image":"https://ssl-static-tibia.akamaized.net/images/global/general/streaming/youtube/poster.jpg",
       "screenshot":"https://ssl-static-tibia.akamaized.net/images/images/global/general/streaming/youtube/backgroundart.jpg",
       "sameAs": [
