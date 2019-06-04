@@ -90,7 +90,7 @@ Supported Sections
 +---------------------------+---------------------------------------+--------------------------------------+
 
 
-.. _Characters: https://wwww.tibia.com/community/?subtopic=characters
+.. _Characters: https://www.tibia.com/community/?subtopic=characters
 .. _Guilds: https://www.tibia.com/community/?subtopic=guilds
 .. _Highscores: https://www.tibia.com/community/?subtopic=highscores
 .. _Houses: https://www.tibia.com/community/?subtopic=houses
