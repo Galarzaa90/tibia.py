@@ -8,7 +8,7 @@ Changelog
 
 .. _v2.0.0:
 
-2.0.0 (Unreleased)
+2.0.0 (2019-06-03)
 ==================
 
 - Added asynchronous client to fetch and parse Tibia.com sections.
