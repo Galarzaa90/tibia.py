@@ -90,10 +90,10 @@ Supported Sections
 +---------------------------+---------------------------------------+--------------------------------------+
 
 
-.. _Characters: https://secure.tibia.com/community/?subtopic=characters
-.. _Guilds: https://secure.tibia.com/community/?subtopic=guilds
-.. _Highscores: https://secure.tibia.com/community/?subtopic=highscores
-.. _Houses: https://secure.tibia.com/community/?subtopic=houses
-.. _Kill Statistics: https://secure.tibia.com/community/?subtopic=killstatistics
+.. _Characters: https://wwww.tibia.com/community/?subtopic=characters
+.. _Guilds: https://www.tibia.com/community/?subtopic=guilds
+.. _Highscores: https://www.tibia.com/community/?subtopic=highscores
+.. _Houses: https://www.tibia.com/community/?subtopic=houses
+.. _Kill Statistics: https://www.tibia.com/community/?subtopic=killstatistics
 .. _News: https://www.tibia.com/news/?subtopic=newsarchive
 .. _Worlds: https://www.tibia.com/community/?subtopic=worlds
