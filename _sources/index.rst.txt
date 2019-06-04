@@ -16,12 +16,14 @@ It can also parse json content from TibiaData_.
 - Converts data into well-structured Python objects.
 - Type consistent attributes.
 - All objects can be converted to JSON strings.
-- Can be used with any networking library.
+- Asynchronous requests using aiohttp_.
+- Standalone parsing methods, allowing to use any network library of your choice.
 - Support for characters, guilds, houses and worlds.
 
 
 .. _Tibia.com: https://www.tibia.com/news/?subtopic=latestnews
 .. _TibiaData: https://www.tibiadata.com/
+.. _aiohttp: https://aiohttp.readthedocs.io/en/stable/
 
 
 Indices and tables

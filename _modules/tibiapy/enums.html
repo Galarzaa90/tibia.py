@@ -6,26 +6,210 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.enums &#8212; Tibia.py 1.1.3 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <title>tibiapy.enums &#8212; Tibia.py 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
 
   </head><body>
-  <div class="document">
-    
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.enums</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;AccountStatus&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Category&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;HouseStatus&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;HouseType&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;NewsCategory&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;NewsType&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PvpType&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Sex&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TournamentWorldType&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TransferType&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Vocation&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;VocationFilter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;WorldLocation&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">BaseEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="AccountStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AccountStatus">[docs]</a><span class="k">class</span> <span class="nc">AccountStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Possible account statuses.&quot;&quot;&quot;</span>
+    <span class="n">FREE_ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;Free Account&quot;</span>
+    <span class="n">PREMIUM_ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;Premium Account&quot;</span></div>
+
+
+<div class="viewcode-block" id="Category"><a class="viewcode-back" href="../../api.html#tibiapy.Category">[docs]</a><span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The different highscores categories.&quot;&quot;&quot;</span>
+    <span class="n">ACHIEVEMENTS</span> <span class="o">=</span> <span class="s2">&quot;achievements&quot;</span>
+    <span class="n">AXE_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;axe&quot;</span>
+    <span class="n">CLUB_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;club&quot;</span>
+    <span class="n">DISTANCE_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;distance&quot;</span>
+    <span class="n">EXPERIENCE</span> <span class="o">=</span> <span class="s2">&quot;experience&quot;</span>
+    <span class="n">FISHING</span> <span class="o">=</span> <span class="s2">&quot;fishing&quot;</span>
+    <span class="n">FIST_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;fist&quot;</span>
+    <span class="n">LOYALTY_POINTS</span> <span class="o">=</span> <span class="s2">&quot;loyalty&quot;</span>
+    <span class="n">MAGIC_LEVEL</span> <span class="o">=</span> <span class="s2">&quot;magic&quot;</span>
+    <span class="n">SHIELDING</span> <span class="o">=</span> <span class="s2">&quot;shielding&quot;</span>
+    <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;sword&quot;</span></div>
+
+
+<div class="viewcode-block" id="HouseStatus"><a class="viewcode-back" href="../../api.html#tibiapy.HouseStatus">[docs]</a><span class="k">class</span> <span class="nc">HouseStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Renting statuses of a house.&quot;&quot;&quot;</span>
+    <span class="n">RENTED</span> <span class="o">=</span> <span class="s2">&quot;rented&quot;</span>
+    <span class="n">AUCTIONED</span> <span class="o">=</span> <span class="s2">&quot;auctioned&quot;</span></div>
+
+
+<div class="viewcode-block" id="HouseType"><a class="viewcode-back" href="../../api.html#tibiapy.HouseType">[docs]</a><span class="k">class</span> <span class="nc">HouseType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The types of house available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">HOUSE</span> <span class="o">=</span> <span class="s2">&quot;house&quot;</span>
+    <span class="n">GUILDHALL</span> <span class="o">=</span> <span class="s2">&quot;guildhall&quot;</span></div>
+
+
+<div class="viewcode-block" id="NewsCategory"><a class="viewcode-back" href="../../api.html#tibiapy.NewsCategory">[docs]</a><span class="k">class</span> <span class="nc">NewsCategory</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The different news categories.&quot;&quot;&quot;</span>
+    <span class="n">CIPSOFT</span> <span class="o">=</span> <span class="s2">&quot;cipsoft&quot;</span>
+    <span class="n">COMMUNITY</span> <span class="o">=</span> <span class="s2">&quot;community&quot;</span>
+    <span class="n">DEVELOPMENT</span> <span class="o">=</span> <span class="s2">&quot;development&quot;</span>
+    <span class="n">SUPPORT</span> <span class="o">=</span> <span class="s2">&quot;support&quot;</span>
+    <span class="n">TECHNICAL_ISSUES</span> <span class="o">=</span> <span class="s2">&quot;technical&quot;</span></div>
+
+
+<div class="viewcode-block" id="NewsType"><a class="viewcode-back" href="../../api.html#tibiapy.NewsType">[docs]</a><span class="k">class</span> <span class="nc">NewsType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The different types of new entries.&quot;&quot;&quot;</span>
+    <span class="n">NEWS_TICKER</span> <span class="o">=</span> <span class="s2">&quot;News Ticker&quot;</span>
+    <span class="n">FEATURED_ARTICLE</span> <span class="o">=</span> <span class="s2">&quot;Featured Article&quot;</span>
+    <span class="n">NEWS</span> <span class="o">=</span> <span class="s2">&quot;News&quot;</span></div>
+
+
+<div class="viewcode-block" id="PvpType"><a class="viewcode-back" href="../../api.html#tibiapy.PvpType">[docs]</a><span class="k">class</span> <span class="nc">PvpType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible PvP types a World can have.&quot;&quot;&quot;</span>
+    <span class="n">OPEN_PVP</span> <span class="o">=</span> <span class="s2">&quot;Open PvP&quot;</span>
+    <span class="n">OPTIONAL_PVP</span> <span class="o">=</span> <span class="s2">&quot;Optional PvP&quot;</span>
+    <span class="n">RETRO_OPEN_PVP</span> <span class="o">=</span> <span class="s2">&quot;Retro Open PvP&quot;</span>
+    <span class="n">RETRO_HARDCORE_PVP</span> <span class="o">=</span> <span class="s2">&quot;Retro Hardcore PvP&quot;</span>
+    <span class="n">HARDCORE_PVP</span> <span class="o">=</span> <span class="s2">&quot;Hardcore PvP&quot;</span></div>
+
+
+<div class="viewcode-block" id="Sex"><a class="viewcode-back" href="../../api.html#tibiapy.Sex">[docs]</a><span class="k">class</span> <span class="nc">Sex</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Possible character sexes.&quot;&quot;&quot;</span>
+    <span class="n">MALE</span> <span class="o">=</span> <span class="s2">&quot;male&quot;</span>
+    <span class="n">FEMALE</span> <span class="o">=</span> <span class="s2">&quot;female&quot;</span></div>
+
+
+<span class="k">class</span> <span class="nc">TournamentWorldType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible types of tournament worlds.&quot;&quot;&quot;</span>
+    <span class="n">REGUlAR</span> <span class="o">=</span> <span class="s2">&quot;Regular&quot;</span>
+    <span class="n">RESTRICTED</span> <span class="o">=</span> <span class="s2">&quot;Restricted Store&quot;</span>
+
+
+<div class="viewcode-block" id="TransferType"><a class="viewcode-back" href="../../api.html#tibiapy.TransferType">[docs]</a><span class="k">class</span> <span class="nc">TransferType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible special transfer restrictions a world may have.&quot;&quot;&quot;</span>
+    <span class="n">REGULAR</span> <span class="o">=</span> <span class="s2">&quot;regular&quot;</span>  <span class="c1">#: No special transfer restrictions</span>
+    <span class="n">BLOCKED</span> <span class="o">=</span> <span class="s2">&quot;blocked&quot;</span>  <span class="c1">#: Can&#39;t transfer to this world, but can transfer out of this world.</span>
+    <span class="n">LOCKED</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span>  <span class="c1">#: Can transfer to this world, but can&#39;t transfer out of this world.</span></div>
+
+
+<div class="viewcode-block" id="Vocation"><a class="viewcode-back" href="../../api.html#tibiapy.Vocation">[docs]</a><span class="k">class</span> <span class="nc">Vocation</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible vocation types.&quot;&quot;&quot;</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+    <span class="n">DRUID</span> <span class="o">=</span> <span class="s2">&quot;Druid&quot;</span>
+    <span class="n">KNIGHT</span> <span class="o">=</span> <span class="s2">&quot;Knight&quot;</span>
+    <span class="n">PALADIN</span> <span class="o">=</span> <span class="s2">&quot;Paladin&quot;</span>
+    <span class="n">SORCERER</span> <span class="o">=</span> <span class="s2">&quot;Sorcerer&quot;</span>
+    <span class="n">ELDER_DRUID</span> <span class="o">=</span> <span class="s2">&quot;Elder Druid&quot;</span>
+    <span class="n">ELITE_KNIGHT</span> <span class="o">=</span> <span class="s2">&quot;Elite Knight&quot;</span>
+    <span class="n">ROYAL_PALADIN</span> <span class="o">=</span> <span class="s2">&quot;Royal Paladin&quot;</span>
+    <span class="n">MASTER_SORCERER</span> <span class="o">=</span> <span class="s2">&quot;Master Sorcerer&quot;</span></div>
+
+
+<div class="viewcode-block" id="VocationFilter"><a class="viewcode-back" href="../../api.html#tibiapy.VocationFilter">[docs]</a><span class="k">class</span> <span class="nc">VocationFilter</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The vocation filters available for Highscores.&quot;&quot;&quot;</span>
+    <span class="n">ALL</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">KNIGHTS</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">PALADINS</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">SORCERERS</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">DRUIDS</span> <span class="o">=</span> <span class="mi">4</span>
+
+<div class="viewcode-block" id="VocationFilter.from_name"><a class="viewcode-back" href="../../api.html#tibiapy.VocationFilter.from_name">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">all_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets a vocation filter from a vocation&#39;s name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the vocation.</span>
+<span class="sd">        all_fallback: :class:`bool`</span>
+<span class="sd">            Whether to return :py:attr:`ALL` if no match is found. Otherwise, ``None`` will be returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        VocationFilter, optional:</span>
+<span class="sd">            The matching vocation filter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">vocation</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>  <span class="c1"># type: VocationFilter</span>
+            <span class="k">if</span> <span class="n">vocation</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">vocation</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">vocation</span> <span class="o">!=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ALL</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">vocation</span>
+        <span class="k">if</span> <span class="n">all_fallback</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ALL&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ALL</span>
+        <span class="k">return</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="WorldLocation"><a class="viewcode-back" href="../../api.html#tibiapy.WorldLocation">[docs]</a><span class="k">class</span> <span class="nc">WorldLocation</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible physical locations for servers.&quot;&quot;&quot;</span>
+    <span class="n">EUROPE</span> <span class="o">=</span> <span class="s2">&quot;Europe&quot;</span>
+    <span class="n">NORTH_AMERICA</span> <span class="o">=</span> <span class="s2">&quot;North America&quot;</span>
+    <span class="n">SOUTH_AMERICA</span> <span class="o">=</span> <span class="s2">&quot;South America&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
@@ -102,151 +286,12 @@
 
         </div>
       </div>
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <h1>Source code for tibiapy.enums</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
-
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;AccountStatus&#39;</span><span class="p">,</span> <span class="s1">&#39;Category&#39;</span><span class="p">,</span> <span class="s1">&#39;HouseStatus&#39;</span><span class="p">,</span> <span class="s1">&#39;HouseType&#39;</span><span class="p">,</span> <span class="s1">&#39;PvpType&#39;</span><span class="p">,</span> <span class="s1">&#39;Sex&#39;</span><span class="p">,</span> <span class="s1">&#39;TransferType&#39;</span><span class="p">,</span> <span class="s1">&#39;Vocation&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;VocationFilter&#39;</span><span class="p">,</span> <span class="s1">&#39;WorldLocation&#39;</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">BaseEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
-
-
-<div class="viewcode-block" id="AccountStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AccountStatus">[docs]</a><span class="k">class</span> <span class="nc">AccountStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Possible account statuses.&quot;&quot;&quot;</span>
-    <span class="n">FREE_ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;Free Account&quot;</span>
-    <span class="n">PREMIUM_ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;Premium Account&quot;</span></div>
-
-
-<div class="viewcode-block" id="Category"><a class="viewcode-back" href="../../api.html#tibiapy.Category">[docs]</a><span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The different highscores categories.&quot;&quot;&quot;</span>
-    <span class="n">ACHIEVEMENTS</span> <span class="o">=</span> <span class="s2">&quot;achievements&quot;</span>
-    <span class="n">AXE_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;axe&quot;</span>
-    <span class="n">CLUB_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;club&quot;</span>
-    <span class="n">DISTANCE_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;distance&quot;</span>
-    <span class="n">EXPERIENCE</span> <span class="o">=</span> <span class="s2">&quot;experience&quot;</span>
-    <span class="n">FISHING</span> <span class="o">=</span> <span class="s2">&quot;fishing&quot;</span>
-    <span class="n">FIST_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;fist&quot;</span>
-    <span class="n">LOYALTY_POINTS</span> <span class="o">=</span> <span class="s2">&quot;loyalty&quot;</span>
-    <span class="n">MAGIC_LEVEL</span> <span class="o">=</span> <span class="s2">&quot;magic&quot;</span>
-    <span class="n">SHIELDING</span> <span class="o">=</span> <span class="s2">&quot;shielding&quot;</span>
-    <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;sword&quot;</span></div>
-
-
-<div class="viewcode-block" id="HouseStatus"><a class="viewcode-back" href="../../api.html#tibiapy.HouseStatus">[docs]</a><span class="k">class</span> <span class="nc">HouseStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Renting statuses of a house.&quot;&quot;&quot;</span>
-    <span class="n">RENTED</span> <span class="o">=</span> <span class="s2">&quot;rented&quot;</span>
-    <span class="n">AUCTIONED</span> <span class="o">=</span> <span class="s2">&quot;auctioned&quot;</span></div>
-
-
-<div class="viewcode-block" id="HouseType"><a class="viewcode-back" href="../../api.html#tibiapy.HouseType">[docs]</a><span class="k">class</span> <span class="nc">HouseType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The types of house available.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">HOUSE</span> <span class="o">=</span> <span class="s2">&quot;house&quot;</span>
-    <span class="n">GUILDHALL</span> <span class="o">=</span> <span class="s2">&quot;guildhall&quot;</span></div>
-
-
-<div class="viewcode-block" id="PvpType"><a class="viewcode-back" href="../../api.html#tibiapy.PvpType">[docs]</a><span class="k">class</span> <span class="nc">PvpType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The possible PvP types a World can have.&quot;&quot;&quot;</span>
-    <span class="n">OPEN_PVP</span> <span class="o">=</span> <span class="s2">&quot;Open PvP&quot;</span>
-    <span class="n">OPTIONAL_PVP</span> <span class="o">=</span> <span class="s2">&quot;Optional PvP&quot;</span>
-    <span class="n">RETRO_OPEN_PVP</span> <span class="o">=</span> <span class="s2">&quot;Retro Open PvP&quot;</span>
-    <span class="n">RETRO_HARDCORE_PVP</span> <span class="o">=</span> <span class="s2">&quot;Retro Hardcore PvP&quot;</span>
-    <span class="n">HARDCORE_PVP</span> <span class="o">=</span> <span class="s2">&quot;Hardcore PvP&quot;</span></div>
-
-
-<div class="viewcode-block" id="Sex"><a class="viewcode-back" href="../../api.html#tibiapy.Sex">[docs]</a><span class="k">class</span> <span class="nc">Sex</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Possible character sexes.&quot;&quot;&quot;</span>
-    <span class="n">MALE</span> <span class="o">=</span> <span class="s2">&quot;male&quot;</span>
-    <span class="n">FEMALE</span> <span class="o">=</span> <span class="s2">&quot;female&quot;</span></div>
-
-
-<div class="viewcode-block" id="TransferType"><a class="viewcode-back" href="../../api.html#tibiapy.TransferType">[docs]</a><span class="k">class</span> <span class="nc">TransferType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The possible special transfer restrictions a world may have.&quot;&quot;&quot;</span>
-    <span class="n">REGULAR</span> <span class="o">=</span> <span class="s2">&quot;regular&quot;</span>  <span class="c1">#: No special transfer restrictions</span>
-    <span class="n">BLOCKED</span> <span class="o">=</span> <span class="s2">&quot;blocked&quot;</span>  <span class="c1">#: Can&#39;t transfer to this world, but can transfer out of this world.</span>
-    <span class="n">LOCKED</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span>  <span class="c1">#: Can transfer to this world, but can&#39;t transfer out of this world.</span></div>
-
-
-<div class="viewcode-block" id="Vocation"><a class="viewcode-back" href="../../api.html#tibiapy.Vocation">[docs]</a><span class="k">class</span> <span class="nc">Vocation</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The possible vocation types.&quot;&quot;&quot;</span>
-    <span class="n">NONE</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
-    <span class="n">DRUID</span> <span class="o">=</span> <span class="s2">&quot;Druid&quot;</span>
-    <span class="n">KNIGHT</span> <span class="o">=</span> <span class="s2">&quot;Knight&quot;</span>
-    <span class="n">PALADIN</span> <span class="o">=</span> <span class="s2">&quot;Paladin&quot;</span>
-    <span class="n">SORCERER</span> <span class="o">=</span> <span class="s2">&quot;Sorcerer&quot;</span>
-    <span class="n">ELDER_DRUID</span> <span class="o">=</span> <span class="s2">&quot;Elder Druid&quot;</span>
-    <span class="n">ELITE_KNIGHT</span> <span class="o">=</span> <span class="s2">&quot;Elite Knight&quot;</span>
-    <span class="n">ROYAL_PALADIN</span> <span class="o">=</span> <span class="s2">&quot;Royal Paladin&quot;</span>
-    <span class="n">MASTER_SORCERER</span> <span class="o">=</span> <span class="s2">&quot;Master Sorcerer&quot;</span></div>
-
-
-<div class="viewcode-block" id="VocationFilter"><a class="viewcode-back" href="../../api.html#tibiapy.VocationFilter">[docs]</a><span class="k">class</span> <span class="nc">VocationFilter</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The vocation filters available for Highscores.&quot;&quot;&quot;</span>
-    <span class="n">ALL</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">KNIGHTS</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">PALADINS</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">SORCERERS</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">DRUIDS</span> <span class="o">=</span> <span class="mi">4</span>
-
-<div class="viewcode-block" id="VocationFilter.from_name"><a class="viewcode-back" href="../../api.html#tibiapy.VocationFilter.from_name">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">all_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets a vocation filter from a vocation&#39;s name.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name: :class:`str`</span>
-<span class="sd">            The name of the vocation.</span>
-<span class="sd">        all_fallback: :class:`bool`</span>
-<span class="sd">            Whether to return :py:attr:`ALL` if no match is found. Otherwise, ``None`` will be returned.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        VocationFilter, optional:</span>
-<span class="sd">            The matching vocation filter.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">vocation</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>  <span class="c1"># type: VocationFilter</span>
-            <span class="k">if</span> <span class="n">vocation</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">vocation</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">vocation</span> <span class="o">!=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ALL</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">vocation</span>
-        <span class="k">if</span> <span class="n">all_fallback</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ALL&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ALL</span>
-        <span class="k">return</span> <span class="kc">None</span></div></div>
-
-
-<div class="viewcode-block" id="WorldLocation"><a class="viewcode-back" href="../../api.html#tibiapy.WorldLocation">[docs]</a><span class="k">class</span> <span class="nc">WorldLocation</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The possible physical locations for servers.&quot;&quot;&quot;</span>
-    <span class="n">EUROPE</span> <span class="o">=</span> <span class="s2">&quot;Europe&quot;</span>
-    <span class="n">NORTH_AMERICA</span> <span class="o">=</span> <span class="s2">&quot;North America&quot;</span>
-    <span class="n">SOUTH_AMERICA</span> <span class="o">=</span> <span class="s2">&quot;South America&quot;</span></div>
-</pre></div>
-
-          </div>
-          
-        </div>
-      </div>
-    <div class="clearer"></div>
-  </div>
-    <div class="footer">
-      &copy;2018, Allan Galarza.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
+      <div class="clearer"></div>
     </div>
-
-    
-
-    
+  <div class="footer">
+    &copy; Copyright 2018, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+  </div>
+  
   </body>
 </html>

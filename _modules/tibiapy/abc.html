@@ -6,106 +6,41 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.abc &#8212; Tibia.py 1.1.3 documentation</title>
-    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <title>tibiapy.abc &#8212; Tibia.py 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
-  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
 
   </head><body>
-  <div class="document">
-    
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
+  
+  
 
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
 
-
-
-
-
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
-
-
-
-
-    
-
-<p>
-<a class="badge" href="https://travis-ci.org/Galarzaa90/tibia.py">
-    <img
-        alt="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
-        src="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
-    />
-</a>
-</p>
-
-
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../index.html">Documentation overview</a><ul>
-  <li><a href="../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-<h3 class="donation">Donate/support</h3>
-
-
-
-<p>
-<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
-<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
-</a>
-</p>
-
-
-
-
-
-        </div>
-      </div>
+    <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.abc</h1><div class="highlight"><pre>
@@ -116,12 +51,20 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="k">import</span> <span class="n">HouseType</span>
+
 <span class="n">CHARACTER_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=characters&amp;name=</span><span class="si">%s</span><span class="s2">&quot;</span>
 <span class="n">CHARACTER_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/characters/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
-<span class="n">URL_HOUSE</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=houses&amp;page=view&amp;houseid=</span><span class="si">%d</span><span class="s2">&amp;world=</span><span class="si">%s</span><span class="s2">&quot;</span>
-<span class="n">URL_HOUSE_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/house/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%d</span><span class="s2">.json&quot;</span>
+<span class="n">HOUSE_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=houses&amp;page=view&amp;houseid=</span><span class="si">%d</span><span class="s2">&amp;world=</span><span class="si">%s</span><span class="s2">&quot;</span>
+<span class="n">HOUSE_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/house/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%d</span><span class="s2">.json&quot;</span>
+<span class="n">HOUSE_LIST_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=houses&amp;world=</span><span class="si">%s</span><span class="s2">&amp;town=</span><span class="si">%s</span><span class="s2">&amp;type=</span><span class="si">%s</span><span class="s2">&quot;</span>
+<span class="n">HOUSE_LIST_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/houses/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
 <span class="n">GUILD_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=guilds&amp;page=view&amp;GuildName=</span><span class="si">%s</span><span class="s2">&quot;</span>
 <span class="n">GUILD_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/guild/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
+<span class="n">GUILD_LIST_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=guilds&amp;world=&quot;</span>
+<span class="n">GUILD_LIST_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/guilds/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
+<span class="n">NEWS_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/news/?subtopic=newsarchive&amp;id=</span><span class="si">%d</span><span class="s2">&quot;</span>
+<span class="n">NEWS_SEARCH_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/news/?subtopic=newsarchive&quot;</span>
 <span class="n">WORLD_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=worlds&amp;world=</span><span class="si">%s</span><span class="s2">&quot;</span>
 <span class="n">WORLD_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/world/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
 
@@ -174,7 +117,7 @@
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Serializable.to_json"><a class="viewcode-back" href="../../api.html#tibiapy.Serializable.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_keys</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Serializable.to_json"><a class="viewcode-back" href="../../api.html#tibiapy.Serializable.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets the object&#39;s JSON representation.</span>
 
 <span class="sd">        Parameters</span>
@@ -219,7 +162,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> name=</span><span class="si">{0.name!r}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,)</span>
 
     <span class="nd">@property</span>
@@ -323,7 +266,39 @@
 <span class="sd">        --------</span>
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the guild&#39;s page on TibiaData.com.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">GUILD_URL_TIBIADATA</span> <span class="o">%</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">GUILD_URL_TIBIADATA</span> <span class="o">%</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseGuild.get_world_list_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseGuild.get_world_list_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_world_list_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the Tibia.com URL for the guild section of a specific world.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the guild&#39;s page</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">GUILD_LIST_URL</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseGuild.get_world_list_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseGuild.get_world_list_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_world_list_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the TibiaData.com URL for the guild list of a specific world.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the guild&#39;s page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">GUILD_LIST_URL_TIBIADATA</span> <span class="o">%</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="BaseHouse"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouse">[docs]</a><span class="k">class</span> <span class="nc">BaseHouse</span><span class="p">(</span><span class="n">Serializable</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
@@ -347,6 +322,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;world&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> name=</span><span class="si">{0.name!r}</span><span class="s2"> world=</span><span class="si">{0.world!r}</span><span class="s2"> status=</span><span class="si">{0.status!r}</span><span class="s2"> type=</span><span class="si">{0.type!r}</span><span class="s2">&gt;&quot;</span>\
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,)</span>
+
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Two houses are considered equal if their names are equal.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
@@ -368,7 +347,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        The URL to the house in Tibia.com</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">URL_HOUSE</span> <span class="o">%</span> <span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">HOUSE_URL</span> <span class="o">%</span> <span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseHouse.get_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouse.get_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
@@ -385,7 +364,51 @@
 <span class="sd">        -------</span>
 <span class="sd">        The URL to the house in TibiaData.com</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">URL_HOUSE_TIBIADATA</span> <span class="o">%</span> <span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">house_id</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">HOUSE_URL_TIBIADATA</span> <span class="o">%</span> <span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">house_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseHouse.get_list_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouse.get_list_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_list_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="p">:</span> <span class="n">HouseType</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the URL to the house list on Tibia.com with the specified parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        town: :class:`str`</span>
+<span class="sd">            The name of the town.</span>
+<span class="sd">        house_type: :class:`HouseType`</span>
+<span class="sd">            Whether to search for houses or guildhalls.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the list matching the parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">house_type</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="n">house_type</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">HOUSE_LIST_URL</span> <span class="o">%</span> <span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">town</span><span class="p">),</span> <span class="n">house_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseHouse.get_list_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouse.get_list_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_list_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="p">:</span> <span class="n">HouseType</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the URL to the house list on Tibia.com with the specified parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        town: :class:`str`</span>
+<span class="sd">            The name of the town.</span>
+<span class="sd">        house_type: :class:`HouseType`</span>
+<span class="sd">            Whether to search for houses or guildhalls.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the list matching the parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">house_type</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="n">house_type</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="n">HOUSE_LIST_URL_TIBIADATA</span> <span class="o">%</span> <span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">town</span><span class="p">),</span> <span class="n">house_type</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="BaseHouseWithId"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouseWithId">[docs]</a><span class="k">class</span> <span class="nc">BaseHouseWithId</span><span class="p">(</span><span class="n">BaseHouse</span><span class="p">):</span>
@@ -430,6 +453,80 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url_tibiadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="BaseNews"><a class="viewcode-back" href="../../api.html#tibiapy.BaseNews">[docs]</a><span class="k">class</span> <span class="nc">BaseNews</span><span class="p">(</span><span class="n">Serializable</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all news classes</span>
+
+<span class="sd">    Implements the :py:attr:`id` attribute and common properties.</span>
+
+<span class="sd">    The following implement this class:</span>
+
+<span class="sd">    - :class:`.News`</span>
+<span class="sd">    - :class:`.ListedNews`</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    id: :class:`int`</span>
+<span class="sd">        The internal ID of the news entry.</span>
+<span class="sd">    title: :class:`str`</span>
+<span class="sd">        The title of the news entry.</span>
+<span class="sd">    category: :class:`.NewsCategory`</span>
+<span class="sd">        The category this belongs to.</span>
+<span class="sd">    category_icon: :class:`str`</span>
+<span class="sd">        The URL of the icon corresponding to the category.</span>
+<span class="sd">    date: :class:`datetime.date`</span>
+<span class="sd">        The date when the news were published.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;category&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;category_icon&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;date&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Two news articles are considered equal if their names or ids are equal.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the Tibia.com page of the news entry.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseNews.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseNews.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">news_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the Tibia.com URL for a news entry by its id.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ------------</span>
+<span class="sd">        news_id: :class:`int`</span>
+<span class="sd">            The id of the news entry.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the news&#39; page&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">NEWS_URL</span> <span class="o">%</span> <span class="n">news_id</span></div>
+
+<div class="viewcode-block" id="BaseNews.get_list_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseNews.get_list_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_list_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the URL to Tibia.com&#39;s news archive page.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        It is not possible to perform a search using query parameters.</span>
+<span class="sd">        News searches can only be performed using POST requests sending the parameters as form-data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the news archive page on Tibia.com.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">NEWS_SEARCH_URL</span></div></div>
+
+
 <div class="viewcode-block" id="BaseWorld"><a class="viewcode-back" href="../../api.html#tibiapy.BaseWorld">[docs]</a><span class="k">class</span> <span class="nc">BaseWorld</span><span class="p">(</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for all World classes.</span>
 
@@ -459,11 +556,24 @@
 <span class="sd">        If this is ``None`` and the world is protected, it means the world was protected from the beginning.</span>
 <span class="sd">    experimental: :class:`bool`</span>
 <span class="sd">        Whether the world is experimental or not.</span>
+<span class="sd">    tournament_world_type: :class:`TournamentWorldType`</span>
+<span class="sd">        The type of tournament world. ``None`` if this is not a tournament world.</span>
 <span class="sd">    premium_only: :class:`bool`</span>
 <span class="sd">        Whether only premium account players are allowed to play in this server.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;online_count&quot;</span><span class="p">,</span> <span class="s2">&quot;pvp_type&quot;</span><span class="p">,</span> <span class="s2">&quot;battleye_protected&quot;</span><span class="p">,</span> <span class="s2">&quot;battleye_date&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;experimental&quot;</span><span class="p">,</span> <span class="s2">&quot;premium_only&quot;</span><span class="p">,</span> <span class="s2">&quot;transfer_type&quot;</span><span class="p">)</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;location&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;online_count&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pvp_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;battleye_protected&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;battleye_date&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;experimental&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;premium_only&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tournament_world_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;transfer_type&quot;</span>
+    <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> name=</span><span class="si">{0.name!r}</span><span class="s2"> location=</span><span class="si">{0.location!r}</span><span class="s2"> pvp_type=</span><span class="si">{0.pvp_type!r}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -512,22 +622,90 @@
 </pre></div>
 
           </div>
-          
         </div>
       </div>
-    <div class="clearer"></div>
-  </div>
-    <div class="footer">
-      &copy;2018, Allan Galarza.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/Galarzaa90/tibia.py">
+    <img
+        alt="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+        src="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
     </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
 
-    
 
-    
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2018, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+  </div>
+  
   </body>
 </html>

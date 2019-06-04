@@ -1,0 +1,582 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tibiapy.client &#8212; Tibia.py 2.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/custom.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.client</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">import</span> <span class="nn">aiohttp</span>
+
+<span class="kn">import</span> <span class="nn">tibiapy</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="k">import</span> <span class="n">Character</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">World</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">ListedGuild</span><span class="p">,</span> <span class="n">Highscores</span><span class="p">,</span> <span class="n">Category</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="p">,</span> \
+    <span class="n">ListedHouse</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">WorldOverview</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span><span class="p">,</span> <span class="n">ListedNews</span><span class="p">,</span> <span class="n">News</span><span class="p">,</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;Client&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../api.html#tibiapy.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;An asynchronous client that fetches information from Tibia.com.ArithmeticError</span>
+
+<span class="sd">    The client uses a :class:`aiohttp.ClientSession` to request the information.</span>
+<span class="sd">    A single session is shared across all operations.</span>
+
+<span class="sd">    If desired, a custom ClientSession instance may be passed, instead of creating a new one.</span>
+
+<span class="sd">    .. versionadded:: 2.0.0</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    loop : :class:`asyncio.AbstractEventLoop`</span>
+<span class="sd">        The event loop to use. The default one will be used if not defined.</span>
+<span class="sd">    session: :class:`aiohttp.ClientSession`</span>
+<span class="sd">        The client session that will be used for the requests. One will be created by default.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span> <span class="k">if</span> <span class="n">loop</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">loop</span>  <span class="c1"># type: asyncio.AbstractEventLoop</span>
+        <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>  <span class="c1"># type: aiohttp.ClientSession</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initialize_session</span><span class="p">())</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_initialize_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>  <span class="c1"># type: aiohttp.ClientSession</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_handle_status</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">status_code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handles error status codes, raising exceptions if neccesary.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">400</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Forbidden</span><span class="p">(</span><span class="s2">&quot;403 Forbidden: Might be getting rate-limited&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;Request error, status code: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">status_code</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Base GET request, handling possible error statuses.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        url: :class:`str`</span>
+<span class="sd">            The URL that will be requested.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The text content of the response.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden:</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_handle_status</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Base POST request, handling possible error statuses.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        url: :class:`str`</span>
+<span class="sd">            The URL that will be requested.</span>
+<span class="sd">        data: :class:`dict`</span>
+<span class="sd">            A mapping representing the form-data to send as part of the request.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The text content of the response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_handle_status</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Client.fetch_character"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_character">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_character</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches a character by its name from Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the character.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Character`</span>
+<span class="sd">            The character if found, else ``None``.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+        <span class="n">char</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">char</span></div>
+
+<div class="viewcode-block" id="Client.fetch_guild"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_guild">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches a guild by its name from Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the guild. The case must match exactly.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Guild`</span>
+<span class="sd">            The guild if found, else ``None``.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">Guild</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">guild</span> <span class="o">=</span> <span class="n">Guild</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">guild</span></div>
+
+<div class="viewcode-block" id="Client.fetch_house"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_house">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_house</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches a house in a specific world by its id.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        house_id: :class:`int`</span>
+<span class="sd">            The house&#39;s internal id.</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world to look for.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`House`</span>
+<span class="sd">            The house if found, ``None`` otherwise.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">House</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">))</span>
+        <span class="n">house</span> <span class="o">=</span> <span class="n">House</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">house</span></div>
+
+<div class="viewcode-block" id="Client.fetch_highscores_page"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_highscores_page">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_highscores_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span>
+                                    <span class="n">vocation</span><span class="o">=</span><span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches a single highscores page from Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The world to search the highscores in.</span>
+<span class="sd">        category: :class:`Category`</span>
+<span class="sd">            The highscores category to search, by default Experience.</span>
+<span class="sd">        vocation: :class:`VocationFilter`</span>
+<span class="sd">            The vocation filter to use. No filter used by default.</span>
+<span class="sd">        page: :class:`int`</span>
+<span class="sd">            The page to fetch, by default the first page is fetched.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Highscores`</span>
+<span class="sd">            The highscores information or ``None`` if not found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">Highscores</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">page</span><span class="p">))</span>
+        <span class="n">highscores</span> <span class="o">=</span> <span class="n">Highscores</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">highscores</span></div>
+
+<div class="viewcode-block" id="Client.fetch_kill_statistics"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_kill_statistics">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_kill_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches the kill statistics of a world from Tibia.com.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`KillStatistics`</span>
+<span class="sd">            The kill statistics of the world if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">KillStatistics</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">world</span><span class="p">))</span>
+        <span class="n">kill_statistics</span> <span class="o">=</span> <span class="n">KillStatistics</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kill_statistics</span></div>
+
+<div class="viewcode-block" id="Client.fetch_world"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches a world from Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`World`</span>
+<span class="sd">            The world&#39;s information if found, ```None`` otherwise.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">World</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">world</span> <span class="o">=</span> <span class="n">World</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">world</span></div>
+
+<div class="viewcode-block" id="Client.fetch_world_houses"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_houses">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_houses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="o">=</span><span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches the house list of a world and type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        town: :class:`str`</span>
+<span class="sd">            The name of the town.</span>
+<span class="sd">        house_type: :class:`HouseType`</span>
+<span class="sd">            The type of building. House by default.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of :class:`ListedHouse`</span>
+<span class="sd">            The lists of houses meeting the criteria if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">ListedHouse</span><span class="o">.</span><span class="n">get_list_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="p">))</span>
+        <span class="n">houses</span> <span class="o">=</span> <span class="n">ListedHouse</span><span class="o">.</span><span class="n">list_from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">houses</span></div>
+
+<div class="viewcode-block" id="Client.fetch_world_guilds"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_guilds">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches the list of guilds in a world from Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of :class:`ListedGuild`</span>
+<span class="sd">            The lists of guilds in the world.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">ListedGuild</span><span class="o">.</span><span class="n">get_world_list_url</span><span class="p">(</span><span class="n">world</span><span class="p">))</span>
+        <span class="n">guilds</span> <span class="o">=</span> <span class="n">ListedGuild</span><span class="o">.</span><span class="n">list_from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">guilds</span></div>
+
+<div class="viewcode-block" id="Client.fetch_world_list"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_list">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches the world overview information from Tibia.com.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`WorldOverview`</span>
+<span class="sd">            The world overview information.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">WorldOverview</span><span class="o">.</span><span class="n">get_url</span><span class="p">())</span>
+        <span class="n">world_overview</span> <span class="o">=</span> <span class="n">WorldOverview</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">world_overview</span></div>
+
+<div class="viewcode-block" id="Client.fetch_news_archive"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_news_archive">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news_archive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">categories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches news from the archive meeting the search criteria.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        begin_date: :class:`datetime.date`</span>
+<span class="sd">            The beginning date to search dates in.</span>
+<span class="sd">        end_date: :class:`datetime.date`</span>
+<span class="sd">            The end date to search dates in.</span>
+<span class="sd">        categories: `list` of :class:`NewsCategory`</span>
+<span class="sd">            The allowed categories to show. If left blank, all categories will be searched.</span>
+<span class="sd">        types : `list` of :class:`ListedNews`</span>
+<span class="sd">            The allowed news types to show. if unused, all types will be searched.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of :class:`ListedNews`</span>
+<span class="sd">            The news meeting the search criteria.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError:</span>
+<span class="sd">            If ``begin_date`` is more recent than ``end_date``.</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">begin_date</span> <span class="o">&gt;</span> <span class="n">end_date</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;begin_date can&#39;t be more recent than end_date&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">categories</span><span class="p">:</span>
+            <span class="n">categories</span> <span class="o">=</span> <span class="n">NewsCategory</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">types</span><span class="p">:</span>
+            <span class="n">types</span> <span class="o">=</span> <span class="n">NewsType</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;filter_begin_day&quot;</span><span class="p">:</span> <span class="n">begin_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span>
+            <span class="s2">&quot;filter_begin_month&quot;</span><span class="p">:</span> <span class="n">begin_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span>
+            <span class="s2">&quot;filter_begin_year&quot;</span><span class="p">:</span> <span class="n">begin_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+            <span class="s2">&quot;filter_end_day&quot;</span><span class="p">:</span> <span class="n">end_date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span>
+            <span class="s2">&quot;filter_end_month&quot;</span><span class="p">:</span> <span class="n">end_date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span>
+            <span class="s2">&quot;filter_end_year&quot;</span><span class="p">:</span> <span class="n">end_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;filter_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">category</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">if</span> <span class="n">NewsType</span><span class="o">.</span><span class="n">FEATURED_ARTICLE</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;filter_article&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;article&quot;</span>
+        <span class="k">if</span> <span class="n">NewsType</span><span class="o">.</span><span class="n">NEWS</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;filter_news&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;news&quot;</span>
+        <span class="k">if</span> <span class="n">NewsType</span><span class="o">.</span><span class="n">NEWS_TICKER</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;filter_ticker&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ticker&quot;</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">tibiapy</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">NEWS_SEARCH_URL</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">news</span> <span class="o">=</span> <span class="n">ListedNews</span><span class="o">.</span><span class="n">list_from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">news</span></div>
+
+<div class="viewcode-block" id="Client.fetch_recent_news"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_recent_news">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_recent_news</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">categories</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches all the published news in the last specified days.</span>
+
+<span class="sd">        This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        days: :class:`int`</span>
+<span class="sd">            The number of days to search, by default 30.</span>
+<span class="sd">        categories: `list` of :class:`NewsCategory`</span>
+<span class="sd">            The allowed categories to show. If left blank, all categories will be searched.</span>
+<span class="sd">        types : `list` of :class:`ListedNews`</span>
+<span class="sd">            The allowed news types to show. if unused, all types will be searched.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of :class:`ListedNews`</span>
+<span class="sd">            The news posted in the last specified days.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+        <span class="n">begin</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch_news_archive</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">types</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_news"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_news">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">news_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches a news entry by its id from Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        news_id: :class:`int`</span>
+<span class="sd">            The id of the news entry.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`News`</span>
+<span class="sd">            The news entry if found, ``None`` otherwise.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">News</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">news_id</span><span class="p">))</span>
+        <span class="n">news</span> <span class="o">=</span> <span class="n">News</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">news_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">news</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/Galarzaa90/tibia.py">
+    <img
+        alt="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+        src="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2018, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+  </div>
+  
+  </body>
+</html>
