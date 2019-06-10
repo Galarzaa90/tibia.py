@@ -444,6 +444,18 @@ class WorldOverview(abc.Serializable):
         """:class:`int`: Total players online across all worlds."""
         return sum(w.online_count for w in self.worlds)
 
+    @property
+    def tournament_worlds(self):
+        """:class:`list` of :class:`GuildMember`: List of tournament worlds.
+
+        Note that tournament worlds are not listed when there are no active or upcoming tournaments."""
+        return [w for w in self.worlds if w.tournament_world_type is not None]
+
+    @property
+    def regular_worlds(self):
+        """:class:`list` of :class:`ListedWorld`: List of worlds that are not tournament worlds."""
+        return [w for w in self.worlds if w.tournament_world_type is None]
+
     @classmethod
     def get_url(cls):
         """

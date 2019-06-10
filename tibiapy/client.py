@@ -37,7 +37,10 @@ class Client:
             self.loop.create_task(self._initialize_session())
 
     async def _initialize_session(self):
-        self.session = aiohttp.ClientSession(loop=self.loop)  # type: aiohttp.ClientSession
+        headers = {
+            'User-Agent ': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py" % tibiapy.__version__
+        }
+        self.session = aiohttp.ClientSession(loop=self.loop, headers=headers)  # type: aiohttp.ClientSession
 
     @classmethod
     def _handle_status(cls, status_code):
