@@ -145,6 +145,7 @@ class TestUtils(TestCommons, unittest.TestCase):
 
     def testParseNumberWords(self):
         self.assertEqual(utils.parse_number_words("one"), 1)
+        self.assertEqual(utils.parse_number_words("no"), 0)
         self.assertEqual(utils.parse_number_words("..."), 0)
         self.assertEqual(utils.parse_number_words("twenty-one"), 21)
         self.assertEqual(utils.parse_number_words("one hundred two"), 102)

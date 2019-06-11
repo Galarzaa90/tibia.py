@@ -174,12 +174,12 @@ class House(abc.BaseHouseWithId):
         house.id = int(id_regex.search(house.image_url).group(1))
         m = bed_regex.search(beds)
         if m:
-            house.type = HouseType.GUILDHALL if m.group("type") in ["guildhall", "clanhall"] else HouseType.HOUSE
-            beds_word = m.group("beds")
-            if beds_word == "no":
-                house.beds = 0
+            if m.group("type").lower() in ["guildhall", "clanhall"]:
+                house.type = HouseType.GUILDHALL
             else:
-                house.beds = parse_number_words(beds_word)
+                house.type = HouseType.HOUSE
+            beds_word = m.group("beds")
+            house.beds = parse_number_words(beds_word)
 
         m = info_regex.search(info)
         if m:

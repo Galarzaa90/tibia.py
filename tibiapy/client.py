@@ -5,7 +5,8 @@ import aiohttp
 
 import tibiapy
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
-    ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News, Forbidden, NetworkError
+    ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News, Forbidden, NetworkError, \
+    HouseStatus, HouseOrder
 
 __all__ = (
     "Client",
@@ -44,7 +45,7 @@ class Client:
 
     @classmethod
     def _handle_status(cls, status_code):
-        """Handles error status codes, raising exceptions if neccesary."""
+        """Handles error status codes, raising exceptions if necessary."""
         if status_code < 400:
             return
         if status_code == 403:
@@ -261,7 +262,8 @@ class Client:
         world = World.from_content(content)
         return world
 
-    async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE):
+    async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status: HouseStatus = None,
+                                 order=HouseOrder.NAME):
         """Fetches the house list of a world and type.
 
         Parameters
@@ -272,6 +274,10 @@ class Client:
             The name of the town.
         house_type: :class:`HouseType`
             The type of building. House by default.
+        status: :class:`HouseStatus`, optional
+            The house status to filter results. By default no filters will be applied.
+        order: :class:`HouseOrder`, optional
+            The ordering to use for the results. By default they are sorted by name.
 
         Returns
         -------
@@ -286,7 +292,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(ListedHouse.get_list_url(world, town, house_type))
+        content = await self._get(ListedHouse.get_list_url(world, town, house_type, status, order))
         houses = ListedHouse.list_from_content(content)
         return houses
 
@@ -294,7 +300,7 @@ class Client:
         """Fetches the list of guilds in a world from Tibia.com
 
         Parameters
-        ----------
+        ---------cl-
         world: :class:`str`
             The name of the world.
 
