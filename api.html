@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Reference &#8212; Tibia.py 2.0.1 documentation</title>
+    <title>API Reference &#8212; Tibia.py 2.1.0 documentation</title>
     <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.0.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.1.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -77,6 +77,34 @@ A single session is shared across all operations.</p>
 <dt id="tibiapy.Client.session">
 <code class="descname">session</code><a class="headerlink" href="#tibiapy.Client.session" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> – The client session that will be used for the requests. One will be created by default.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.Client.fetch_boosted_creature">
+<em class="property">coroutine </em><code class="descname">fetch_boosted_creature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_boosted_creature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client.fetch_boosted_creature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches today’s boosted creature.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 2.1.0.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The boosted creature of the day.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#tibiapy.BoostedCreature" title="tibiapy.BoostedCreature"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoostedCreature</span></code></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Forbidden</span></code></a> – If a 403 Forbidden error was returned.
+This usually means that Tibia.com is rate-limiting the client because of too many requests.</li>
+<li><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NetworkError</span></code></a> – If there’s any connection errors during the request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -354,20 +382,22 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <dt id="tibiapy.Client.fetch_world_guilds">
 <em class="property">coroutine </em><code class="descname">fetch_world_guilds</code><span class="sig-paren">(</span><em>world: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world_guilds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client.fetch_world_guilds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetches the list of guilds in a world from Tibia.com</p>
+<p>Parameters
+———cl-
+world: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<blockquote>
+<div>The name of the world.</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The lists of guilds in the world.</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The lists of guilds in the world.</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list of <a class="reference internal" href="#tibiapy.ListedGuild" title="tibiapy.ListedGuild"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListedGuild</span></code></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list of <a class="reference internal" href="#tibiapy.ListedGuild" title="tibiapy.ListedGuild"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListedGuild</span></code></a></p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Forbidden</span></code></a> – If a 403 Forbidden error was returned.
 This usually means that Tibia.com is rate-limiting the client because of too many requests.</li>
 <li><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NetworkError</span></code></a> – If there’s any connection errors during the request.</li>
@@ -380,7 +410,7 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 
 <dl class="method">
 <dt id="tibiapy.Client.fetch_world_houses">
-<em class="property">coroutine </em><code class="descname">fetch_world_houses</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type=HouseType.HOUSE</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world_houses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client.fetch_world_houses" title="Permalink to this definition">¶</a></dt>
+<em class="property">coroutine </em><code class="descname">fetch_world_houses</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type=HouseType.HOUSE</em>, <em>status: tibiapy.enums.HouseStatus = None</em>, <em>order=HouseOrder.NAME</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world_houses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client.fetch_world_houses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetches the house list of a world and type.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -390,6 +420,8 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</li>
 <li><strong>town</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the town.</li>
 <li><strong>house_type</strong> (<a class="reference internal" href="#tibiapy.HouseType" title="tibiapy.HouseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseType</span></code></a>) – The type of building. House by default.</li>
+<li><strong>status</strong> (<a class="reference internal" href="#tibiapy.HouseStatus" title="tibiapy.HouseStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseStatus</span></code></a>, optional) – The house status to filter results. By default no filters will be applied.</li>
+<li><strong>order</strong> (<a class="reference internal" href="#tibiapy.HouseOrder" title="tibiapy.HouseOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseOrder</span></code></a>, optional) – The ordering to use for the results. By default they are sorted by name.</li>
 </ul>
 </td>
 </tr>
@@ -441,22 +473,6 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <div class="section" id="enumerations">
 <h2>Enumerations<a class="headerlink" href="#enumerations" title="Permalink to this headline">¶</a></h2>
 <p>Enumerations are provided for various values in order to avoid depending on strings.</p>
-<dl class="class">
-<dt id="tibiapy.HouseType">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">HouseType</code><a class="reference internal" href="_modules/tibiapy/enums.html#HouseType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.HouseType" title="Permalink to this definition">¶</a></dt>
-<dd><p>The types of house available.</p>
-<dl class="attribute">
-<dt id="tibiapy.HouseType.HOUSE">
-<code class="descname">HOUSE</code><em class="property"> = 'house'</em><a class="headerlink" href="#tibiapy.HouseType.HOUSE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="tibiapy.HouseType.GUILDHALL">
-<code class="descname">GUILDHALL</code><em class="property"> = 'guildhall'</em><a class="headerlink" href="#tibiapy.HouseType.GUILDHALL" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="tibiapy.AccountStatus">
 <em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">AccountStatus</code><a class="reference internal" href="_modules/tibiapy/enums.html#AccountStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.AccountStatus" title="Permalink to this definition">¶</a></dt>
@@ -535,6 +551,37 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 </dd></dl>
 
 <dl class="class">
+<dt id="tibiapy.HouseOrder">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">HouseOrder</code><a class="reference internal" href="_modules/tibiapy/enums.html#HouseOrder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.HouseOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>The possible ordering methods for house lists in Tibia.com</p>
+<dl class="attribute">
+<dt id="tibiapy.HouseOrder.NAME">
+<code class="descname">NAME</code><em class="property"> = 'name'</em><a class="headerlink" href="#tibiapy.HouseOrder.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HouseOrder.SIZE">
+<code class="descname">SIZE</code><em class="property"> = 'size'</em><a class="headerlink" href="#tibiapy.HouseOrder.SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HouseOrder.RENT">
+<code class="descname">RENT</code><em class="property"> = 'rent'</em><a class="headerlink" href="#tibiapy.HouseOrder.RENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HouseOrder.BID">
+<code class="descname">BID</code><em class="property"> = 'bid'</em><a class="headerlink" href="#tibiapy.HouseOrder.BID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HouseOrder.AUCTION_END">
+<code class="descname">AUCTION_END</code><em class="property"> = 'end'</em><a class="headerlink" href="#tibiapy.HouseOrder.AUCTION_END" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="tibiapy.HouseStatus">
 <em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">HouseStatus</code><a class="reference internal" href="_modules/tibiapy/enums.html#HouseStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.HouseStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renting statuses of a house.</p>
@@ -546,6 +593,22 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <dl class="attribute">
 <dt id="tibiapy.HouseStatus.AUCTIONED">
 <code class="descname">AUCTIONED</code><em class="property"> = 'auctioned'</em><a class="headerlink" href="#tibiapy.HouseStatus.AUCTIONED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tibiapy.HouseType">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">HouseType</code><a class="reference internal" href="_modules/tibiapy/enums.html#HouseType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.HouseType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The types of house available.</p>
+<dl class="attribute">
+<dt id="tibiapy.HouseType.HOUSE">
+<code class="descname">HOUSE</code><em class="property"> = 'house'</em><a class="headerlink" href="#tibiapy.HouseType.HOUSE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.HouseType.GUILDHALL">
+<code class="descname">GUILDHALL</code><em class="property"> = 'guildhall'</em><a class="headerlink" href="#tibiapy.HouseType.GUILDHALL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -645,6 +708,22 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <dl class="attribute">
 <dt id="tibiapy.Sex.FEMALE">
 <code class="descname">FEMALE</code><em class="property"> = 'female'</em><a class="headerlink" href="#tibiapy.Sex.FEMALE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tibiapy.TournamentWorldType">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">TournamentWorldType</code><a class="reference internal" href="_modules/tibiapy/enums.html#TournamentWorldType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.TournamentWorldType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The possible types of tournament worlds.</p>
+<dl class="attribute">
+<dt id="tibiapy.TournamentWorldType.REGUlAR">
+<code class="descname">REGUlAR</code><em class="property"> = 'Regular'</em><a class="headerlink" href="#tibiapy.TournamentWorldType.REGUlAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentWorldType.RESTRICTED">
+<code class="descname">RESTRICTED</code><em class="property"> = 'Restricted Store'</em><a class="headerlink" href="#tibiapy.TournamentWorldType.RESTRICTED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -805,6 +884,73 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <h2>Main Models<a class="headerlink" href="#main-models" title="Permalink to this headline">¶</a></h2>
 <p>The following models all contain their respective <code class="docutils literal notranslate"><span class="pre">from_content</span></code> methods.
 They all have their respective section in Tibia.com</p>
+<div class="section" id="boostedcreature">
+<h3>BoostedCreature<a class="headerlink" href="#boostedcreature" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.BoostedCreature">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">BoostedCreature</code><span class="sig-paren">(</span><em>name</em>, <em>image_url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#BoostedCreature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.BoostedCreature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a boosted creature entry.</p>
+<p>This creature changes every server save and applies to all Game Worlds.
+Boosted creatures yield twice the amount of experience points, carry more loot and respawn at a faster rate.</p>
+<dl class="attribute">
+<dt id="tibiapy.BoostedCreature.name">
+<code class="descname">name</code><a class="headerlink" href="#tibiapy.BoostedCreature.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the boosted creature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.BoostedCreature.image_url">
+<code class="descname">image_url</code><a class="headerlink" href="#tibiapy.BoostedCreature.image_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – An URL containing the boosted creature’s image.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.BoostedCreature.from_content">
+<em class="property">classmethod </em><code class="descname">from_content</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#BoostedCreature.from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.BoostedCreature.from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the boosted creature from any Tibia.com page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of a Tibia.com page.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The boosted article shown.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.News" title="tibiapy.News"><code class="xref py py-class docutils literal notranslate"><span class="pre">News</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#tibiapy.InvalidContent" title="tibiapy.InvalidContent"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidContent</span></code></a> – If content is not the HTML of a Tibia.com’s page.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.BoostedCreature.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.BoostedCreature.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="character">
 <h3>Character<a class="headerlink" href="#character" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
@@ -1737,7 +1883,7 @@ be parsed and merged into one.</p>
 
 <dl class="classmethod">
 <dt id="tibiapy.House.get_list_url">
-<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.House.get_list_url" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em>, <em>status: tibiapy.enums.HouseStatus = None</em>, <em>order=HouseOrder.NAME</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.House.get_list_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the URL to the house list on Tibia.com with the specified parameters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1747,6 +1893,8 @@ be parsed and merged into one.</p>
 <li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</li>
 <li><strong>town</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the town.</li>
 <li><strong>house_type</strong> (<a class="reference internal" href="#tibiapy.HouseType" title="tibiapy.HouseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseType</span></code></a>) – Whether to search for houses or guildhalls.</li>
+<li><strong>status</strong> (<a class="reference internal" href="#tibiapy.HouseStatus" title="tibiapy.HouseStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseStatus</span></code></a>, optional) – The house status to filter results. By default no filters will be applied.</li>
+<li><strong>order</strong> (<a class="reference internal" href="#tibiapy.HouseOrder" title="tibiapy.HouseOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseOrder</span></code></a>, optional) – The ordering to use for the results. By default they are sorted by name.</li>
 </ul>
 </td>
 </tr>
@@ -2269,7 +2417,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 
 <dl class="classmethod">
 <dt id="tibiapy.ListedHouse.get_list_url">
-<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ListedHouse.get_list_url" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em>, <em>status: tibiapy.enums.HouseStatus = None</em>, <em>order=HouseOrder.NAME</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ListedHouse.get_list_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the URL to the house list on Tibia.com with the specified parameters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2279,6 +2427,8 @@ This is not an exact measure, it is rounded to hours or days.</p>
 <li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</li>
 <li><strong>town</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the town.</li>
 <li><strong>house_type</strong> (<a class="reference internal" href="#tibiapy.HouseType" title="tibiapy.HouseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseType</span></code></a>) – Whether to search for houses or guildhalls.</li>
+<li><strong>status</strong> (<a class="reference internal" href="#tibiapy.HouseStatus" title="tibiapy.HouseStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseStatus</span></code></a>, optional) – The house status to filter results. By default no filters will be applied.</li>
+<li><strong>order</strong> (<a class="reference internal" href="#tibiapy.HouseOrder" title="tibiapy.HouseOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseOrder</span></code></a>, optional) – The ordering to use for the results. By default they are sorted by name.</li>
 </ul>
 </td>
 </tr>
@@ -2607,7 +2757,7 @@ If this is <code class="docutils literal notranslate"><span class="pre">None</sp
 <dl class="attribute">
 <dt id="tibiapy.ListedWorld.tournament_world_type">
 <code class="descname">tournament_world_type</code><a class="headerlink" href="#tibiapy.ListedWorld.tournament_world_type" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentWorldType</span></code> – The type of tournament world. <code class="docutils literal notranslate"><span class="pre">None</span></code> if this is not a tournament world.</p>
+<dd><p><a class="reference internal" href="#tibiapy.TournamentWorldType" title="tibiapy.TournamentWorldType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentWorldType</span></code></a> – The type of tournament world. <code class="docutils literal notranslate"><span class="pre">None</span></code> if this is not a tournament world.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -3001,7 +3151,7 @@ If this is <code class="docutils literal notranslate"><span class="pre">None</sp
 <dl class="attribute">
 <dt id="tibiapy.World.tournament_world_type">
 <code class="descname">tournament_world_type</code><a class="headerlink" href="#tibiapy.World.tournament_world_type" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentWorldType</span></code> – The type of tournament world. <code class="docutils literal notranslate"><span class="pre">None</span></code> if this is not a tournament world.</p>
+<dd><p><a class="reference internal" href="#tibiapy.TournamentWorldType" title="tibiapy.TournamentWorldType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentWorldType</span></code></a> – The type of tournament world. <code class="docutils literal notranslate"><span class="pre">None</span></code> if this is not a tournament world.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3171,6 +3321,19 @@ If this is <code class="docutils literal notranslate"><span class="pre">None</sp
 <dt id="tibiapy.WorldOverview.total_online">
 <code class="descname">total_online</code><a class="headerlink" href="#tibiapy.WorldOverview.total_online" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – Total players online across all worlds.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.WorldOverview.tournament_worlds">
+<code class="descname">tournament_worlds</code><a class="headerlink" href="#tibiapy.WorldOverview.tournament_worlds" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.GuildMember" title="tibiapy.GuildMember"><code class="xref py py-class docutils literal notranslate"><span class="pre">GuildMember</span></code></a> – List of tournament worlds.</p>
+<p>Note that tournament worlds are not listed when there are no active or upcoming tournaments.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.WorldOverview.regular_worlds">
+<code class="descname">regular_worlds</code><a class="headerlink" href="#tibiapy.WorldOverview.regular_worlds" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.ListedWorld" title="tibiapy.ListedWorld"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListedWorld</span></code></a> – List of worlds that are not tournament worlds.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -3445,7 +3608,7 @@ and properties for their use.</p>
 
 <dl class="classmethod">
 <dt id="tibiapy.CharacterHouse.get_list_url">
-<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.CharacterHouse.get_list_url" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em>, <em>status: tibiapy.enums.HouseStatus = None</em>, <em>order=HouseOrder.NAME</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.CharacterHouse.get_list_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the URL to the house list on Tibia.com with the specified parameters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3455,6 +3618,8 @@ and properties for their use.</p>
 <li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</li>
 <li><strong>town</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the town.</li>
 <li><strong>house_type</strong> (<a class="reference internal" href="#tibiapy.HouseType" title="tibiapy.HouseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseType</span></code></a>) – Whether to search for houses or guildhalls.</li>
+<li><strong>status</strong> (<a class="reference internal" href="#tibiapy.HouseStatus" title="tibiapy.HouseStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseStatus</span></code></a>, optional) – The house status to filter results. By default no filters will be applied.</li>
+<li><strong>order</strong> (<a class="reference internal" href="#tibiapy.HouseOrder" title="tibiapy.HouseOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseOrder</span></code></a>, optional) – The ordering to use for the results. By default they are sorted by name.</li>
 </ul>
 </td>
 </tr>
@@ -3812,7 +3977,7 @@ and properties for their use.</p>
 
 <dl class="classmethod">
 <dt id="tibiapy.GuildHouse.get_list_url">
-<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.GuildHouse.get_list_url" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em>, <em>status: tibiapy.enums.HouseStatus = None</em>, <em>order=HouseOrder.NAME</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.GuildHouse.get_list_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the URL to the house list on Tibia.com with the specified parameters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3822,6 +3987,8 @@ and properties for their use.</p>
 <li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</li>
 <li><strong>town</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the town.</li>
 <li><strong>house_type</strong> (<a class="reference internal" href="#tibiapy.HouseType" title="tibiapy.HouseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseType</span></code></a>) – Whether to search for houses or guildhalls.</li>
+<li><strong>status</strong> (<a class="reference internal" href="#tibiapy.HouseStatus" title="tibiapy.HouseStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseStatus</span></code></a>, optional) – The house status to filter results. By default no filters will be applied.</li>
+<li><strong>order</strong> (<a class="reference internal" href="#tibiapy.HouseOrder" title="tibiapy.HouseOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">HouseOrder</span></code></a>, optional) – The ordering to use for the results. By default they are sorted by name.</li>
 </ul>
 </td>
 </tr>
@@ -5133,7 +5300,7 @@ and properties for their use.</p>
 
 <dl class="classmethod">
 <dt id="tibiapy.abc.BaseHouse.get_list_url">
-<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/abc.html#BaseHouse.get_list_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.abc.BaseHouse.get_list_url" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em>, <em>status: tibiapy.enums.HouseStatus = None</em>, <em>order=HouseOrder.NAME</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/abc.html#BaseHouse.get_list_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.abc.BaseHouse.get_list_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the URL to the house list on Tibia.com with the specified parameters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -5143,6 +5310,8 @@ and properties for their use.</p>
 <li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</li>
 <li><strong>town</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the town.</li>
 <li><strong>house_type</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">HouseType</span></code>) – Whether to search for houses or guildhalls.</li>
+<li><strong>status</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">HouseStatus</span></code>, optional) – The house status to filter results. By default no filters will be applied.</li>
+<li><strong>order</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">HouseOrder</span></code>, optional) – The ordering to use for the results. By default they are sorted by name.</li>
 </ul>
 </td>
 </tr>
@@ -5261,7 +5430,7 @@ and properties for their use.</p>
 
 <dl class="classmethod">
 <dt id="tibiapy.abc.BaseHouseWithId.get_list_url">
-<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.abc.BaseHouseWithId.get_list_url" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_list_url</code><span class="sig-paren">(</span><em>world</em>, <em>town</em>, <em>house_type: tibiapy.enums.HouseType = HouseType.HOUSE</em>, <em>status: tibiapy.enums.HouseStatus = None</em>, <em>order=HouseOrder.NAME</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.abc.BaseHouseWithId.get_list_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the URL to the house list on Tibia.com with the specified parameters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -5271,6 +5440,8 @@ and properties for their use.</p>
 <li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</li>
 <li><strong>town</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the town.</li>
 <li><strong>house_type</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">HouseType</span></code>) – Whether to search for houses or guildhalls.</li>
+<li><strong>status</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">HouseStatus</span></code>, optional) – The house status to filter results. By default no filters will be applied.</li>
+<li><strong>order</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">HouseOrder</span></code>, optional) – The ordering to use for the results. By default they are sorted by name.</li>
 </ul>
 </td>
 </tr>
@@ -5723,6 +5894,31 @@ This has its own subclass to let the user decide to treat this differently than 
 <h2>Utility functions<a class="headerlink" href="#utility-functions" title="Permalink to this headline">¶</a></h2>
 <p>These are functions used thorough the module and are not intended for public use.</p>
 <span class="target" id="module-tibiapy.utils"></span><dl class="function">
+<dt id="tibiapy.utils.parse_integer">
+<code class="descclassname">tibiapy.utils.</code><code class="descname">parse_integer</code><span class="sig-paren">(</span><em>number: str</em>, <em>default=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#parse_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.utils.parse_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a string representing an integer, ignoring commas or periods.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>number</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – A string representing a number.</li>
+<li><strong>default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The default value to use if the string is not numeric.
+By default, 0 is used.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The represented integer, or the default value if invalid.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="tibiapy.utils.parse_tibia_datetime">
 <code class="descclassname">tibiapy.utils.</code><code class="descname">parse_tibia_datetime</code><span class="sig-paren">(</span><em>datetime_str</em><span class="sig-paren">)</span> &#x2192; Optional[datetime.datetime]<a class="reference internal" href="_modules/tibiapy/utils.html#parse_tibia_datetime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.utils.parse_tibia_datetime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses date and time from the format used in Tibia.com</p>
@@ -6022,6 +6218,7 @@ This is meant to be used in constructors.</p>
 <li class="toctree-l2"><a class="reference internal" href="#client">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#enumerations">Enumerations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#main-models">Main Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#boostedcreature">BoostedCreature</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#character">Character</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#guild">Guild</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#highscores">Highscores</a></li>

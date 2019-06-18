@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.enums &#8212; Tibia.py 2.0.1 documentation</title>
+    <title>tibiapy.enums &#8212; Tibia.py 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -49,6 +49,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s1">&#39;AccountStatus&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Category&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;HouseOrder&#39;</span><span class="p">,</span>
     <span class="s1">&#39;HouseStatus&#39;</span><span class="p">,</span>
     <span class="s1">&#39;HouseType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;NewsCategory&#39;</span><span class="p">,</span>
@@ -96,6 +97,15 @@
     <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;sword&quot;</span></div>
 
 
+<div class="viewcode-block" id="HouseOrder"><a class="viewcode-back" href="../../api.html#tibiapy.HouseOrder">[docs]</a><span class="k">class</span> <span class="nc">HouseOrder</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible ordering methods for house lists in Tibia.com&quot;&quot;&quot;</span>
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
+    <span class="n">SIZE</span> <span class="o">=</span> <span class="s2">&quot;size&quot;</span>
+    <span class="n">RENT</span> <span class="o">=</span> <span class="s2">&quot;rent&quot;</span>
+    <span class="n">BID</span> <span class="o">=</span> <span class="s2">&quot;bid&quot;</span>
+    <span class="n">AUCTION_END</span> <span class="o">=</span> <span class="s2">&quot;end&quot;</span></div>
+
+
 <div class="viewcode-block" id="HouseStatus"><a class="viewcode-back" href="../../api.html#tibiapy.HouseStatus">[docs]</a><span class="k">class</span> <span class="nc">HouseStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Renting statuses of a house.&quot;&quot;&quot;</span>
     <span class="n">RENTED</span> <span class="o">=</span> <span class="s2">&quot;rented&quot;</span>
@@ -141,10 +151,10 @@
     <span class="n">FEMALE</span> <span class="o">=</span> <span class="s2">&quot;female&quot;</span></div>
 
 
-<span class="k">class</span> <span class="nc">TournamentWorldType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="TournamentWorldType"><a class="viewcode-back" href="../../api.html#tibiapy.TournamentWorldType">[docs]</a><span class="k">class</span> <span class="nc">TournamentWorldType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The possible types of tournament worlds.&quot;&quot;&quot;</span>
     <span class="n">REGUlAR</span> <span class="o">=</span> <span class="s2">&quot;Regular&quot;</span>
-    <span class="n">RESTRICTED</span> <span class="o">=</span> <span class="s2">&quot;Restricted Store&quot;</span>
+    <span class="n">RESTRICTED</span> <span class="o">=</span> <span class="s2">&quot;Restricted Store&quot;</span></div>
 
 
 <div class="viewcode-block" id="TransferType"><a class="viewcode-back" href="../../api.html#tibiapy.TransferType">[docs]</a><span class="k">class</span> <span class="nc">TransferType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.client &#8212; Tibia.py 2.0.1 documentation</title>
+    <title>tibiapy.client &#8212; Tibia.py 2.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -51,7 +51,8 @@
 
 <span class="kn">import</span> <span class="nn">tibiapy</span>
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="k">import</span> <span class="n">Character</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">World</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">ListedGuild</span><span class="p">,</span> <span class="n">Highscores</span><span class="p">,</span> <span class="n">Category</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="p">,</span> \
-    <span class="n">ListedHouse</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">WorldOverview</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span><span class="p">,</span> <span class="n">ListedNews</span><span class="p">,</span> <span class="n">News</span><span class="p">,</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span>
+    <span class="n">ListedHouse</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">WorldOverview</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span><span class="p">,</span> <span class="n">ListedNews</span><span class="p">,</span> <span class="n">News</span><span class="p">,</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> \
+    <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">BoostedCreature</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;Client&quot;</span><span class="p">,</span>
@@ -83,11 +84,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initialize_session</span><span class="p">())</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_initialize_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>  <span class="c1"># type: aiohttp.ClientSession</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;User-Agent &#39;</span><span class="p">:</span> <span class="s2">&quot;Tibia.py/</span><span class="si">%s</span><span class="s2"> (+https://github.com/Galarzaa90/tibia.py&quot;</span> <span class="o">%</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">__version__</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>  <span class="c1"># type: aiohttp.ClientSession</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_handle_status</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">status_code</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Handles error status codes, raising exceptions if neccesary.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Handles error status codes, raising exceptions if necessary.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">400</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
@@ -144,6 +148,28 @@
                 <span class="k">return</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Client.fetch_boosted_creature"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_creature">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_creature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches today&#39;s boosted creature.</span>
+
+<span class="sd">        .. versionadded:: 2.1.0</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`BoostedCreature`</span>
+<span class="sd">            The boosted creature of the day.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">News</span><span class="o">.</span><span class="n">get_list_url</span><span class="p">())</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostedCreature</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">boosted_creature</span></div>
 
 <div class="viewcode-block" id="Client.fetch_character"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_character">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_character</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fetches a character by its name from Tibia.com</span>
@@ -304,7 +330,8 @@
         <span class="n">world</span> <span class="o">=</span> <span class="n">World</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">world</span></div>
 
-<div class="viewcode-block" id="Client.fetch_world_houses"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_houses">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_houses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="o">=</span><span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.fetch_world_houses"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_houses">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_houses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="o">=</span><span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">HouseStatus</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">order</span><span class="o">=</span><span class="n">HouseOrder</span><span class="o">.</span><span class="n">NAME</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fetches the house list of a world and type.</span>
 
 <span class="sd">        Parameters</span>
@@ -315,6 +342,10 @@
 <span class="sd">            The name of the town.</span>
 <span class="sd">        house_type: :class:`HouseType`</span>
 <span class="sd">            The type of building. House by default.</span>
+<span class="sd">        status: :class:`HouseStatus`, optional</span>
+<span class="sd">            The house status to filter results. By default no filters will be applied.</span>
+<span class="sd">        order: :class:`HouseOrder`, optional</span>
+<span class="sd">            The ordering to use for the results. By default they are sorted by name.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -329,7 +360,7 @@
 <span class="sd">        NetworkError</span>
 <span class="sd">            If there&#39;s any connection errors during the request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">ListedHouse</span><span class="o">.</span><span class="n">get_list_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="p">))</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">ListedHouse</span><span class="o">.</span><span class="n">get_list_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">order</span><span class="p">))</span>
         <span class="n">houses</span> <span class="o">=</span> <span class="n">ListedHouse</span><span class="o">.</span><span class="n">list_from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">houses</span></div>
 
@@ -337,7 +368,7 @@
         <span class="sd">&quot;&quot;&quot;Fetches the list of guilds in a world from Tibia.com</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
+<span class="sd">        ---------cl-</span>
 <span class="sd">        world: :class:`str`</span>
 <span class="sd">            The name of the world.</span>
 
