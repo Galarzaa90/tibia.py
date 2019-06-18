@@ -6,7 +6,7 @@ import aiohttp
 import tibiapy
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
     ListedHouse, HouseType, WorldOverview, NewsCategory, NewsType, ListedNews, News, Forbidden, NetworkError, \
-    HouseStatus, HouseOrder
+    HouseStatus, HouseOrder, BoostedCreature
 
 __all__ = (
     "Client",
@@ -102,6 +102,28 @@ class Client:
                 return await resp.text()
         except aiohttp.ClientError as e:
             raise NetworkError("aiohttp.ClientError: %s" % e, e)
+
+    async def fetch_boosted_creature(self):
+        """Fetches today's boosted creature.
+
+        .. versionadded:: 2.1.0
+
+        Returns
+        -------
+        :class:`BoostedCreature`
+            The boosted creature of the day.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        content = await self._get(News.get_list_url())
+        boosted_creature = BoostedCreature.from_content(content)
+        return boosted_creature
 
     async def fetch_character(self, name):
         """Fetches a character by its name from Tibia.com

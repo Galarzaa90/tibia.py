@@ -1,7 +1,7 @@
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import BoostedCreature
+from tibiapy import BoostedCreature, InvalidContent
 
 
 class TestCreature(TestCommons, unittest.TestCase):
@@ -12,5 +12,9 @@ class TestCreature(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(creature, BoostedCreature)
         self.assertEqual("Skeleton Warrior", creature.name)
+
+    def testBoostedCreatureNotTibiaCom(self):
+        with self.assertRaises(InvalidContent):
+            BoostedCreature.from_content("<html><div><p>Nothing</p></div></html>")
 
     # endregion

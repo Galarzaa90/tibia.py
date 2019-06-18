@@ -83,6 +83,12 @@ Main Models
 The following models all contain their respective ``from_content`` methods.
 They all have their respective section in Tibia.com
 
+BoostedCreature
+---------------
+.. autoclass:: BoostedCreature
+   :members:
+   :inherited-members:
+
 Character
 ---------
 .. autoclass:: Character
