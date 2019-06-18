@@ -10,6 +10,29 @@ from tibiapy.errors import InvalidContent
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
 
+def parse_integer(number: str, default=0):
+    """Parses a string representing an integer, ignoring commas or periods.
+
+    Parameters
+    ----------
+    number: :class:`str`
+        A string representing a number.
+    default: :class:`int`
+        The default value to use if the string is not numeric.
+        By default, 0 is used.
+
+    Returns
+    -------
+    :class:`int`
+        The represented integer, or the default value if invalid.
+    """
+    try:
+        number = re.sub(r'[,.]', '', number.strip())
+        return int(number)
+    except ValueError:
+        return default
+
+
 def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
     """Parses date and time from the format used in Tibia.com
 

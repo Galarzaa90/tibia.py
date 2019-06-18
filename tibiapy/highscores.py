@@ -187,8 +187,7 @@ class Highscores(abc.Serializable):
             highscores.results_count = len(highscores.entries)
         except KeyError:
             raise InvalidContent("content is not a TibiaData highscores response.")
-        if isinstance(vocation, VocationFilter):
-            highscores.vocation = vocation
+        highscores.vocation = vocation or VocationFilter.ALL
         return highscores
 
     @classmethod

@@ -5,13 +5,13 @@ import urllib.parse
 from collections import OrderedDict
 from enum import Enum
 
-from tibiapy.enums import HouseType
+from tibiapy.enums import HouseType, HouseStatus, HouseOrder
 
 CHARACTER_URL = "https://www.tibia.com/community/?subtopic=characters&name=%s"
 CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
 HOUSE_URL = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
 HOUSE_URL_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
-HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s"
+HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s&status=%s&order=%s"
 HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
 GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName=%s"
 GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
@@ -321,7 +321,8 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         return HOUSE_URL_TIBIADATA % (world, house_id)
 
     @classmethod
-    def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE):
+    def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE, status: HouseStatus = None,
+                     order=HouseOrder.NAME):
         """
         Gets the URL to the house list on Tibia.com with the specified parameters.
 
@@ -333,6 +334,10 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
             The name of the town.
         house_type: :class:`HouseType`
             Whether to search for houses or guildhalls.
+        status: :class:`HouseStatus`, optional
+            The house status to filter results. By default no filters will be applied.
+        order: :class:`HouseOrder`, optional
+            The ordering to use for the results. By default they are sorted by name.
 
         Returns
         -------
@@ -340,7 +345,8 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
             The URL to the list matching the parameters.
         """
         house_type = "%ss" % house_type.value
-        return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
+        status = "" if status is None else status.value
+        return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type, status, order.value)
 
     @classmethod
     def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):

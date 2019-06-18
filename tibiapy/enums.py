@@ -3,6 +3,7 @@ from enum import Enum
 __all__ = (
     'AccountStatus',
     'Category',
+    'HouseOrder',
     'HouseStatus',
     'HouseType',
     'NewsCategory',
@@ -48,6 +49,15 @@ class Category(BaseEnum):
     MAGIC_LEVEL = "magic"
     SHIELDING = "shielding"
     SWORD_FIGHTING = "sword"
+
+
+class HouseOrder(BaseEnum):
+    """The possible ordering methods for house lists in Tibia.com"""
+    NAME = "name"
+    SIZE = "size"
+    RENT = "rent"
+    BID = "bid"
+    AUCTION_END = "end"
 
 
 class HouseStatus(BaseEnum):

@@ -98,6 +98,9 @@ class TestHighscores(unittest.TestCase, TestCommons):
         self.assertEqual(highscores.category, Category.AXE_FIGHTING)
         self.assertEqual(highscores.results_count, 300)
 
+        self.assertEqual(highscores.url_tibiadata,
+                         Highscores.get_url_tibiadata(highscores.world, highscores.category, highscores.vocation))
+
         for entry in highscores.entries:
             self.assertIsInstance(entry, HighscoresEntry)
             self.assertIsInstance(entry.name, str)

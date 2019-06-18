@@ -111,6 +111,8 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertGreater(world_overview.total_online, 0)
         self.assertIsNotNone(world_overview.record_date)
         self.assertIsNotNone(world_overview.record_count)
+        self.assertEqual(len(world_overview.regular_worlds), 65)
+        self.assertEqual(len(world_overview.tournament_worlds), 6)
 
         worlds = ListedWorld.list_from_content(content)
         self.assertEqual(len(world_overview.worlds), len(worlds))
@@ -206,6 +208,7 @@ class TestWorld(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(world_overview, WorldOverview)
         self.assertEqual(WorldOverview.get_url(), ListedWorld.get_list_url())
+        self.assertEqual(WorldOverview.get_url_tibiadata(), ListedWorld.get_list_url_tibiadata())
         self.assertGreater(sum(w.online_count for w in world_overview.worlds), 0)
         self.assertIsInstance(world_overview.worlds[0], ListedWorld)
         self.assertIsInstance(world_overview.worlds[0].pvp_type, PvpType)

@@ -13,7 +13,7 @@ from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Client, Character, Guild, Highscores, VocationFilter, Category, House, ListedHouse, ListedGuild, \
-    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError
+    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, BoostedCreature
 
 
 class TestClient(asynctest.TestCase, TestCommons):
@@ -168,7 +168,13 @@ class TestClient(asynctest.TestCase, TestCommons):
 
         self.assertIsInstance(worlds, WorldOverview)
 
+    @aioresponses()
+    async def testFetchBoostedCreature(self, mock):
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        mock.get(News.get_list_url(), status=200, body=content)
+        creature = await self.client.fetch_boosted_creature()
 
+        self.assertIsInstance(creature, BoostedCreature)
 
 
 

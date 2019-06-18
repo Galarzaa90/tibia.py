@@ -18,9 +18,6 @@ Enumerations
 ============
 Enumerations are provided for various values in order to avoid depending on strings.
 
-.. autoclass:: HouseType
-    :members:
-    :undoc-members:
 
 .. autoclass:: AccountStatus
     :members:
@@ -30,7 +27,15 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: HouseOrder
+    :members:
+    :undoc-members:
+
 .. autoclass:: HouseStatus
+    :members:
+    :undoc-members:
+
+.. autoclass:: HouseType
     :members:
     :undoc-members:
 
@@ -49,6 +54,11 @@ Enumerations are provided for various values in order to avoid depending on stri
 .. autoclass:: Sex
     :members:
     :undoc-members:
+
+.. autoclass:: TournamentWorldType
+    :members:
+    :undoc-members:
+
 
 .. autoclass:: TransferType
     :members:
@@ -72,6 +82,12 @@ Main Models
 ===========
 The following models all contain their respective ``from_content`` methods.
 They all have their respective section in Tibia.com
+
+BoostedCreature
+---------------
+.. autoclass:: BoostedCreature
+   :members:
+   :inherited-members:
 
 Character
 ---------

@@ -8,7 +8,7 @@ from tibiapy import InvalidContent, abc, TournamentWorldType
 from tibiapy.character import OnlineCharacter
 from tibiapy.enums import PvpType, TransferType, WorldLocation
 from tibiapy.utils import parse_json, parse_tibia_datetime, parse_tibia_full_date, parse_tibiacom_content, \
-    parse_tibiadata_datetime, try_date, try_datetime, try_enum
+    parse_tibiadata_datetime, try_date, try_datetime, try_enum, parse_integer
 
 __all__ = (
     "ListedWorld",
@@ -349,7 +349,7 @@ class World(abc.BaseWorld):
         self.transfer_type = try_enum(TransferType, world_info.pop("transfer_type", None), TransferType.REGULAR)
         m = record_regexp.match(world_info.pop("online_record"))
         if m:
-            self.record_count = int(m.group("count").replace(".", ""))
+            self.record_count = parse_integer(m.group("count"))
             self.record_date = parse_tibia_datetime(m.group("date"))
         if "world_quest_titles" in world_info:
             self.world_quest_titles = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
@@ -444,6 +444,18 @@ class WorldOverview(abc.Serializable):
         """:class:`int`: Total players online across all worlds."""
         return sum(w.online_count for w in self.worlds)
 
+    @property
+    def tournament_worlds(self):
+        """:class:`list` of :class:`GuildMember`: List of tournament worlds.
+
+        Note that tournament worlds are not listed when there are no active or upcoming tournaments."""
+        return [w for w in self.worlds if w.tournament_world_type is not None]
+
+    @property
+    def regular_worlds(self):
+        """:class:`list` of :class:`ListedWorld`: List of worlds that are not tournament worlds."""
+        return [w for w in self.worlds if w.tournament_world_type is None]
+
     @classmethod
     def get_url(cls):
         """
@@ -492,9 +504,7 @@ class WorldOverview(abc.Serializable):
         try:
             record_row, *rows = parsed_content.find_all("tr")
             m = record_regexp.search(record_row.text)
-            if not m:
-                raise InvalidContent("content does not belong to the World Overview section in Tibia.com")
-            world_overview.record_count = int(m.group("count").replace(".", ""))
+            world_overview.record_count = parse_integer(m.group("count"))
             world_overview.record_date = parse_tibia_datetime(m.group("date"))
             world_rows = rows
             world_overview._parse_worlds(world_rows)
