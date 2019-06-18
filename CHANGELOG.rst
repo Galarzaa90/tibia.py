@@ -6,6 +6,14 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.1.0:
+
+2.1.0 (2019-06-17)
+==================
+
+- Added ways to sort and filter House list results like in Tibia.com.
+- Added support to get the Boosted Creature of the day.
+
 .. _v2.0.1:
 
 2.0.1 (2019-06-04)
