@@ -504,8 +504,6 @@ class WorldOverview(abc.Serializable):
         try:
             record_row, *rows = parsed_content.find_all("tr")
             m = record_regexp.search(record_row.text)
-            if not m:
-                raise InvalidContent("content does not belong to the World Overview section in Tibia.com")
             world_overview.record_count = parse_integer(m.group("count"))
             world_overview.record_date = parse_tibia_datetime(m.group("date"))
             world_rows = rows

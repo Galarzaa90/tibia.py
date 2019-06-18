@@ -31,6 +31,9 @@ class BoostedCreature(abc.Serializable):
         self.name = name
         self.image_url = image_url
 
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} image_url={0.image_url!r}>".format(self)
+
     @classmethod
     def from_content(cls, content):
         """

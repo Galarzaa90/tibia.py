@@ -5,6 +5,7 @@ import tibiapy
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import enums, utils
+from tibiapy.utils import parse_integer, parse_tibia_money
 
 TIBIA_DATETIME_CEST = "Jul 10 2018, 07:13:32 CEST"
 TIBIA_DATETIME_CET = "Jan 10 2018, 07:13:32 CET"
@@ -161,3 +162,18 @@ class TestUtils(TestCommons, unittest.TestCase):
         self.assertEqual(enums.VocationFilter.from_name("royal paladin"), enums.VocationFilter.PALADINS)
         self.assertEqual(enums.VocationFilter.from_name("unknown"), enums.VocationFilter.ALL)
         self.assertIsNone(enums.VocationFilter.from_name("unknown", False))
+
+    def testParseTibiaMoney(self):
+        self.assertEqual(1000, parse_tibia_money("1k"))
+        self.assertEqual(5000000, parse_tibia_money("5kk"))
+        self.assertEqual(2500, parse_tibia_money("2.5k"))
+        self.assertEqual(50, parse_tibia_money("50"))
+        with self.assertRaises(ValueError):
+            parse_tibia_money("abc")
+
+    def testParseInteger(self):
+        self.assertEqual(1450, parse_integer("1.450"))
+        self.assertEqual(1110, parse_integer("1,110"))
+        self.assertEqual(15, parse_integer("15"))
+        self.assertEqual(0, parse_integer("abc"))
+        self.assertEqual(-1, parse_integer("abc", -1))
