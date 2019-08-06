@@ -31,6 +31,7 @@ house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
 __all__ = (
+    "AccountBadge",
     "AccountInformation",
     "Achievement",
     "Character",
@@ -40,6 +41,14 @@ __all__ = (
     "OtherCharacter",
     "OnlineCharacter",
 )
+
+
+class AccountBadge(abc.Serializable):
+    __slots__ = (
+        "name",
+        "icon_url",
+        "description",
+    )
 
 
 class AccountInformation(abc.Serializable):
@@ -67,6 +76,7 @@ class AccountInformation(abc.Serializable):
 
     def __repr__(self):
         return "<%s created=%r>" % (self.__class__.__name__, self.created)
+
 
 
 class Achievement(abc.Serializable):
@@ -107,6 +117,10 @@ class Character(abc.BaseCharacter):
         The date when the character will be deleted if it is scheduled for deletion.
     former_names: :class:`list` of :class:`str`
         Previous names of the character.
+    title: :class:`str`
+        The character's selected title.
+    unlocked_titles: :class:`int`
+        The number of titles the character has unlocked.
     sex: :class:`Sex`
         The character's sex.
     vocation: :class:`Vocation`
@@ -148,6 +162,8 @@ class Character(abc.BaseCharacter):
     __slots__ = (
         "former_names",
         "sex",
+        "title",
+        "unlocked_titles"
         "vocation",
         "level",
         "achievement_points",
@@ -171,6 +187,8 @@ class Character(abc.BaseCharacter):
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
         self.name = name  # type: str
         self.former_names = kwargs.get("former_names", [])  # type: List[str]
+        self.title = kwargs.get("title")  # type: str
+        self.unlocked_titles = kwargs.get("unlocked_titles", 0)
         self.sex = try_enum(Sex, sex)
         self.vocation = try_enum(Vocation, vocation)
         self.level = int(level)
@@ -550,7 +568,11 @@ class Character(abc.BaseCharacter):
                 continue
             name, world, status, __, __ = cols
             name = name.replace("\xa0", " ").split(". ")[1]
-            self.other_characters.append(OtherCharacter(name, world, status == "online", status == "deleted"))
+            main_img = cols_raw[0].find('img')
+            main = False
+            if main_img and main_img['title'] == "Main Character":
+                main = True
+            self.other_characters.append(OtherCharacter(name, world, status == "online", status == "deleted", main))
 
     @classmethod
     def _parse_tables(cls, parsed_content):
@@ -783,15 +805,20 @@ class OtherCharacter(abc.BaseCharacter):
         Whether the character is online or not.
     deleted: :class:`bool`
         Whether the character is scheduled for deletion or not.
+    main: :class:`bool`
+        Whether this is the main character or not.
     """
     __slots__ = (
         "world",
         "online",
-        "deleted"
+        "deleted",
+        "main",
     )
 
-    def __init__(self, name, world, online=False, deleted=False):
+    def __init__(self, name, world, online=False, deleted=False, main=False):
         self.name = name  # type: str
         self.world = world  # type: str
         self.online = online  # type: bool
         self.deleted = deleted  # type: bool
+        self.main = main  # type: bool
+
