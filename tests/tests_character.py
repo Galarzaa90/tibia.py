@@ -13,6 +13,7 @@ FILE_CHARACTER_FORMER_NAMES = "character/tibiacom_former_names.txt"
 FILE_CHARACTER_SPECIAL_POSITION = "character/tibiacom_special_position.txt"
 FILE_CHARACTER_DELETION = "character/tibiacom_deletion.txt"
 FILE_CHARACTER_DEATHS_COMPLEX = "character/tibiacom_deaths_complex.txt"
+FILE_CHARACTER_TITLE_BADGES = "character/tibiacom_title_badges.txt"
 
 FILE_CHARACTER_TIBIADATA = "character/tibiadata.json"
 FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character/tibiadata_unhidden.json"
@@ -93,6 +94,11 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual(len(char.deaths), 19)
         oldest_death = char.deaths[-1]
         self.assertEqual(oldest_death.killer.summon, "a fire elemental")
+
+    def testCharacterBadgesTitles(self):
+        content = self._load_resource(FILE_CHARACTER_TITLE_BADGES)
+        char = Character.from_content(content)
+        self.assertEqual(5, len(char.account_badges))
 
     def testCharacterUnrelated(self):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)

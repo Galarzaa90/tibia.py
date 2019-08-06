@@ -30,6 +30,8 @@ death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
 
+title_regexp = re.compile(r'(.*)\((\d+) titles unlocked\)')
+
 __all__ = (
     "AccountBadge",
     "AccountInformation",
@@ -44,11 +46,30 @@ __all__ = (
 
 
 class AccountBadge(abc.Serializable):
+    """Represents an account badge.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the badge.
+    icon_url: :class:`str`
+        The URL to the badge's icon URL.
+    description: :class:`str`
+        The description of the badge.
+    """
     __slots__ = (
         "name",
         "icon_url",
         "description",
     )
+
+    def __init__(self, name, icon_url, description):
+        self.name = name  # type: str
+        self.icon_url = icon_url  # type: str
+        self.description = description  # type: str
+
+    def __repr__(self):
+        return "<%s name=%r> description=%r>" % (self.__class__.__name__, self.name, self.description)
 
 
 class AccountInformation(abc.Serializable):
@@ -76,7 +97,6 @@ class AccountInformation(abc.Serializable):
 
     def __repr__(self):
         return "<%s created=%r>" % (self.__class__.__name__, self.created)
-
 
 
 class Achievement(abc.Serializable):
@@ -149,6 +169,8 @@ class Character(abc.BaseCharacter):
         The displayed comment.
     account_status: :class:`AccountStatus`
         Whether the character's account is Premium or Free.
+    account_badges: :class:`list` of :class:`AccountBadge`
+        The displayed account badges.
     achievements: :class:`list` of :class:`Achievement`
         The achievements chosen to be displayed.
     deaths: :class:`list` of :class:`Death`
@@ -163,7 +185,7 @@ class Character(abc.BaseCharacter):
         "former_names",
         "sex",
         "title",
-        "unlocked_titles"
+        "unlocked_titles",
         "vocation",
         "level",
         "achievement_points",
@@ -177,6 +199,7 @@ class Character(abc.BaseCharacter):
         "account_status",
         "position",
         "comment",
+        "account_badges",
         "achievements",
         "deaths",
         "account_information",
@@ -203,6 +226,7 @@ class Character(abc.BaseCharacter):
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
         self.position = kwargs.get("position")  # type: Optional[str]
         self.comment = kwargs.get("comment")  # type: Optional[str]
+        self.account_badges = kwargs.get("account_badges", [])  # type: List[AccountBadge]
         self.achievements = kwargs.get("achievements", [])  # type: List[Achievement]
         self.deaths = kwargs.get("deaths", [])  # type: List[Death]
         self.account_information = kwargs.get("account_information")  # type: Optional[AccountInformation]
@@ -271,6 +295,7 @@ class Character(abc.BaseCharacter):
         else:
             raise InvalidContent("content does not contain a tibia.com character information page.")
         char._parse_achievements(tables.get("Account Achievements", []))
+        char._parse_badges(tables.get("Account Badges", []))
         char._parse_deaths(tables.get("Character Deaths", []))
         char._parse_account_information(tables.get("Account Information", []))
         char._parse_other_characters(tables.get("Characters", []))
@@ -395,6 +420,26 @@ class Character(abc.BaseCharacter):
                 secret = True
             self.achievements.append(Achievement(name, grade, secret))
 
+    def _parse_badges(self, rows):
+        """
+        Parses the character's displayed achievements
+
+        Parameters
+        ----------
+        rows: :class:`list` of :class:`bs4.Tag`
+            A list of all rows contained in the table.
+        """
+        for row in rows:
+            cols = row.find_all('td')
+            if len(cols) != 2:
+                continue
+            icon, text = cols
+            name = text.text.strip()
+            icon_image = icon.find("img")
+            description = icon_image['title']
+            icon_url = icon_image['src']
+            self.account_badges.append(AccountBadge(name, icon_url, description))
+
     def _parse_character_information(self, rows):
         """
         Parses the character's basic information and applies the found values.
@@ -445,6 +490,16 @@ class Character(abc.BaseCharacter):
             char["last_login"] = None
         else:
             char["last_login"] = parse_tibia_datetime(char["last_login"])
+
+        if "title" in char:
+            m = title_regexp.match(char["title"])
+            if m:
+                name = m.group(1).strip()
+                unlocked = int(m.group(2))
+                if name == "None":
+                    name = None
+                char["title"] = name
+                char["unlocked_titles"] = unlocked
 
         char["vocation"] = try_enum(Vocation, char["vocation"])
         char["sex"] = try_enum(Sex, char["sex"])
