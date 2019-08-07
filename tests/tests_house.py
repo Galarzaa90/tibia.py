@@ -27,7 +27,8 @@ class TestsHouse(TestCommons, unittest.TestCase):
     def setUp(self):
         self.guild = {}
 
-    def testHouse(self):
+    def test_house_from_content(self):
+        """Testing parsing a house"""
         content = self._load_resource(FILE_HOUSE_FULL)
         house = House.from_content(content)
 
@@ -48,7 +49,8 @@ class TestsHouse(TestCommons, unittest.TestCase):
         house_json = json.loads(house_json_raw)
         self.assertEqual(house.image_url, house_json["image_url"])
 
-    def testHouseStatusTransferred(self):
+    def test_house_from_content_transferred(self):
+        """Testing parsing a house being transferred"""
         house = House("Name")
         content = self._load_resource(FILE_HOUSE_STATUS_TRANSFER)
         house._parse_status(content)
@@ -59,7 +61,8 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertTrue(house.transfer_accepted)
         self.assertEqual(house.transfer_price, 850000)
 
-    def testHouseStatusRented(self):
+    def test_house_parse_status_rented(self):
+        """Testing parsing a rented status"""
         house = House("Name")
         content = self._load_resource(FILE_HOUSE_STATUS_RENTED)
         house._parse_status(content)
