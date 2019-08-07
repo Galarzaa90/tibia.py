@@ -3,7 +3,7 @@ import unittest
 
 import tests.tests_guild
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Character, CharacterHouse, Death, InvalidContent, Killer
+from tibiapy import Character, CharacterHouse, Death, InvalidContent, Killer, AccountBadge
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.utils import parse_tibia_datetime
 
@@ -98,7 +98,17 @@ class TestCharacter(TestCommons, unittest.TestCase):
     def testCharacterBadgesTitles(self):
         content = self._load_resource(FILE_CHARACTER_TITLE_BADGES)
         char = Character.from_content(content)
+        self.assertEqual("Lord Feremis", char.name)
+        self.assertEqual(140, char.achievement_points)
+        self.assertIsNone(char.title)
+        self.assertEqual(6, char.unlocked_titles)
         self.assertEqual(5, len(char.account_badges))
+        self.assertEqual(1, len(char.former_names))
+        for badge in char.account_badges:
+            self.assertIsInstance(badge, AccountBadge)
+            self.assertIsInstance(badge.name, str)
+            self.assertIsInstance(badge.icon_url, str)
+            self.assertIsInstance(badge.description, str)
 
     def testCharacterUnrelated(self):
         content = self._load_resource(self.FILE_UNRELATED_SECTION)

@@ -69,7 +69,7 @@ class AccountBadge(abc.Serializable):
         self.description = description  # type: str
 
     def __repr__(self):
-        return "<%s name=%r> description=%r>" % (self.__class__.__name__, self.name, self.description)
+        return "<%s name=%r description=%r>" % (self.__class__.__name__, self.name, self.description)
 
 
 class AccountInformation(abc.Serializable):
@@ -422,7 +422,7 @@ class Character(abc.BaseCharacter):
 
     def _parse_badges(self, rows):
         """
-        Parses the character's displayed achievements
+        Parses the character's displayed badges
 
         Parameters
         ----------
@@ -491,15 +491,14 @@ class Character(abc.BaseCharacter):
         else:
             char["last_login"] = parse_tibia_datetime(char["last_login"])
 
-        if "title" in char:
-            m = title_regexp.match(char["title"])
-            if m:
-                name = m.group(1).strip()
-                unlocked = int(m.group(2))
-                if name == "None":
-                    name = None
-                char["title"] = name
-                char["unlocked_titles"] = unlocked
+        m = title_regexp.match(char.get("title", ""))
+        if m:
+            name = m.group(1).strip()
+            unlocked = int(m.group(2))
+            if name == "None":
+                name = None
+            char["title"] = name
+            char["unlocked_titles"] = unlocked
 
         char["vocation"] = try_enum(Vocation, char["vocation"])
         char["sex"] = try_enum(Sex, char["sex"])
