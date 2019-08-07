@@ -137,8 +137,8 @@ class Character(abc.BaseCharacter):
         The date when the character will be deleted if it is scheduled for deletion.
     former_names: :class:`list` of :class:`str`
         Previous names of the character.
-    title: :class:`str`
-        The character's selected title.
+    title: :class:`str`, optional
+        The character's selected title, if any.
     unlocked_titles: :class:`int`
         The number of titles the character has unlocked.
     sex: :class:`Sex`
@@ -210,8 +210,8 @@ class Character(abc.BaseCharacter):
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
         self.name = name  # type: str
         self.former_names = kwargs.get("former_names", [])  # type: List[str]
-        self.title = kwargs.get("title")  # type: str
-        self.unlocked_titles = kwargs.get("unlocked_titles", 0)
+        self.title = kwargs.get("title")  # type: Optional[str]
+        self.unlocked_titles = int(kwargs.get("unlocked_titles", 0))
         self.sex = try_enum(Sex, sex)
         self.vocation = try_enum(Vocation, vocation)
         self.level = int(level)
