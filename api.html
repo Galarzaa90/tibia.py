@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Reference &#8212; Tibia.py 2.1.0 documentation</title>
+    <title>API Reference &#8212; Tibia.py 2.2.0 documentation</title>
     <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.2.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -382,22 +382,20 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <dt id="tibiapy.Client.fetch_world_guilds">
 <em class="property">coroutine </em><code class="descname">fetch_world_guilds</code><span class="sig-paren">(</span><em>world: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world_guilds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client.fetch_world_guilds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetches the list of guilds in a world from Tibia.com</p>
-<p>Parameters
-———cl-
-world: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-<blockquote>
-<div>The name of the world.</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The lists of guilds in the world.</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list of <a class="reference internal" href="#tibiapy.ListedGuild" title="tibiapy.ListedGuild"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListedGuild</span></code></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The lists of guilds in the world.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list of <a class="reference internal" href="#tibiapy.ListedGuild" title="tibiapy.ListedGuild"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListedGuild</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Forbidden</span></code></a> – If a 403 Forbidden error was returned.
 This usually means that Tibia.com is rate-limiting the client because of too many requests.</li>
 <li><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NetworkError</span></code></a> – If there’s any connection errors during the request.</li>
@@ -976,6 +974,18 @@ Boosted creatures yield twice the amount of experience points, carry more loot a
 </dd></dl>
 
 <dl class="attribute">
+<dt id="tibiapy.Character.title">
+<code class="descname">title</code><a class="headerlink" href="#tibiapy.Character.title" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, optional – The character’s selected title, if any.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Character.unlocked_titles">
+<code class="descname">unlocked_titles</code><a class="headerlink" href="#tibiapy.Character.unlocked_titles" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The number of titles the character has unlocked.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="tibiapy.Character.sex">
 <code class="descname">sex</code><a class="headerlink" href="#tibiapy.Character.sex" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#tibiapy.Sex" title="tibiapy.Sex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sex</span></code></a> – The character’s sex.</p>
@@ -1057,6 +1067,12 @@ Boosted creatures yield twice the amount of experience points, carry more loot a
 <dt id="tibiapy.Character.account_status">
 <code class="descname">account_status</code><a class="headerlink" href="#tibiapy.Character.account_status" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#tibiapy.AccountStatus" title="tibiapy.AccountStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccountStatus</span></code></a> – Whether the character’s account is Premium or Free.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Character.account_badges">
+<code class="descname">account_badges</code><a class="headerlink" href="#tibiapy.Character.account_badges" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.AccountBadge" title="tibiapy.AccountBadge"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccountBadge</span></code></a> – The displayed account badges.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3450,6 +3466,57 @@ The following attributes are unavailable:</p>
 <h2>Auxiliary Classes<a class="headerlink" href="#auxiliary-classes" title="Permalink to this headline">¶</a></h2>
 <p>Auxiliary classes are used to hold certain data in a standardized way, in some cases, introducing additional methods
 and properties for their use.</p>
+<div class="section" id="accountbadge">
+<h3>AccountBadge<a class="headerlink" href="#accountbadge" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.AccountBadge">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">AccountBadge</code><span class="sig-paren">(</span><em>name</em>, <em>icon_url</em>, <em>description</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#AccountBadge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.AccountBadge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an account badge.</p>
+<dl class="attribute">
+<dt id="tibiapy.AccountBadge.name">
+<code class="descname">name</code><a class="headerlink" href="#tibiapy.AccountBadge.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the badge.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.AccountBadge.icon_url">
+<code class="descname">icon_url</code><a class="headerlink" href="#tibiapy.AccountBadge.icon_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the badge’s icon URL.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.AccountBadge.description">
+<code class="descname">description</code><a class="headerlink" href="#tibiapy.AccountBadge.description" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The description of the badge.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.AccountBadge.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.AccountBadge.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="accountinformation">
 <h3>AccountInformation<a class="headerlink" href="#accountinformation" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
@@ -4836,7 +4903,7 @@ and properties for their use.</p>
 <h3>OtherCharacter<a class="headerlink" href="#othercharacter" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="tibiapy.OtherCharacter">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">OtherCharacter</code><span class="sig-paren">(</span><em>name</em>, <em>world</em>, <em>online=False</em>, <em>deleted=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#OtherCharacter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.OtherCharacter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">OtherCharacter</code><span class="sig-paren">(</span><em>name</em>, <em>world</em>, <em>online=False</em>, <em>deleted=False</em>, <em>main=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/character.html#OtherCharacter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.OtherCharacter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents other characters displayed in the Character’s information page.</p>
 <dl class="attribute">
 <dt id="tibiapy.OtherCharacter.name">
@@ -4860,6 +4927,12 @@ and properties for their use.</p>
 <dt id="tibiapy.OtherCharacter.deleted">
 <code class="descname">deleted</code><a class="headerlink" href="#tibiapy.OtherCharacter.deleted" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the character is scheduled for deletion or not.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.OtherCharacter.main">
+<code class="descname">main</code><a class="headerlink" href="#tibiapy.OtherCharacter.main" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether this is the main character or not.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -6234,6 +6307,7 @@ This is meant to be used in constructors.</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#auxiliary-classes">Auxiliary Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#accountbadge">AccountBadge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#accountinformation">AccountInformation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#achievement">Achievement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#characterhouse">CharacterHouse</a></li>
