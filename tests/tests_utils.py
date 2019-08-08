@@ -2,7 +2,6 @@ import datetime
 import unittest
 
 import tibiapy
-
 from tests.tests_tibiapy import TestCommons
 from tibiapy import enums, utils
 from tibiapy.utils import parse_integer, parse_tibia_money
@@ -35,7 +34,8 @@ TIBIADATA_DATE = "2018-12-20"
 
 
 class TestUtils(TestCommons, unittest.TestCase):
-    def testSerializableGetItem(self):
+    def test_serializable_get_item(self):
+        """Testing the muliple ways to use __get__ for Serializable"""
         # Class inherits from Serializable
         world = tibiapy.World("Calmera")
 
@@ -57,7 +57,7 @@ class TestUtils(TestCommons, unittest.TestCase):
         with self.assertRaises(KeyError):
             world["custom"] = "custom value"
 
-    def testTibiaDateTime(self):
+    def test_parse_tibia_datetime(self):
         time = utils.parse_tibia_datetime(TIBIA_DATETIME_CEST)
         self.assertIsInstance(time, datetime.datetime)
         self.assertEqual(time.month, 7)
@@ -76,33 +76,33 @@ class TestUtils(TestCommons, unittest.TestCase):
         self.assertEqual(time.minute, 13)
         self.assertEqual(time.second, 32)
 
-    def testTibiaDateInvalidTimezone(self):
+    def test_parse_tibia_datetime_invalid_timezone(self):
         time = utils.parse_tibia_datetime(TIBIA_DATETIME_PST)
         self.assertIsNone(time)
 
-    def testTibiaDateTimeInvalid(self):
+    def test_parse_tibia_datetime_invalid_datetime(self):
         time = utils.parse_tibia_datetime(TIBIA_DATETIME_INVALID)
         self.assertIsNone(time)
 
-    def testTibiaDate(self):
+    def test_parse_tibia_date(self):
         date = utils.parse_tibia_date(TIBIA_DATE)
         self.assertIsInstance(date, datetime.date)
         self.assertEqual(date.month, 6)
         self.assertEqual(date.day, 20)
         self.assertEqual(date.year, 2018)
 
-    def testTibiaFullDate(self):
+    def test_parse_tibia_date_full(self):
         date = utils.parse_tibia_full_date(TIBIA_FULL_DATE)
         self.assertIsInstance(date, datetime.date)
         self.assertEqual(date.month, 7)
         self.assertEqual(date.day, 23)
         self.assertEqual(date.year, 2015)
 
-    def testTibiaDateInvalid(self):
+    def test_parse_tibia_date_invalid(self):
         date = utils.parse_tibia_date(TIBIA_DATETIME_INVALID)
         self.assertIsNone(date)
 
-    def testTibiaDataDatetime(self):
+    def test_parse_tibia_datetime_from_datetime(self):
         date = utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_CET)
         self.assertIsInstance(date, datetime.datetime)
 
@@ -117,7 +117,7 @@ class TestUtils(TestCommons, unittest.TestCase):
         date = utils.parse_tibiadata_datetime(TIBIA_DATE)
         self.assertIsNone(date)
 
-    def testTryDate(self):
+    def test_try_date(self):
         date = utils.try_date(datetime.datetime.now())
         self.assertIsInstance(date, datetime.date)
 
@@ -134,7 +134,7 @@ class TestUtils(TestCommons, unittest.TestCase):
         date = utils.try_date(TIBIADATA_DATE)
         self.assertIsInstance(date, datetime.date)
 
-    def testTryDateTime(self):
+    def test_try_date_time(self):
         date_time = utils.try_datetime(datetime.datetime.now())
         self.assertIsInstance(date_time, datetime.datetime)
 
@@ -144,7 +144,7 @@ class TestUtils(TestCommons, unittest.TestCase):
         date_time = utils.try_datetime(TIBIADATA_DATETIME_CET)
         self.assertIsInstance(date_time, datetime.datetime)
 
-    def testParseNumberWords(self):
+    def test_parse_number_words(self):
         self.assertEqual(utils.parse_number_words("one"), 1)
         self.assertEqual(utils.parse_number_words("no"), 0)
         self.assertEqual(utils.parse_number_words("..."), 0)
@@ -152,18 +152,18 @@ class TestUtils(TestCommons, unittest.TestCase):
         self.assertEqual(utils.parse_number_words("one hundred two"), 102)
         self.assertEqual(utils.parse_number_words("two thousand forty five"), 2045)
 
-    def testTryEnum(self):
+    def test_try_enum(self):
         self.assertEqual(utils.try_enum(enums.Sex, "male"), enums.Sex.MALE)
         self.assertEqual(utils.try_enum(enums.TransferType, "", enums.TransferType.REGULAR), enums.TransferType.REGULAR)
         self.assertEqual(utils.try_enum(enums.WorldLocation, enums.WorldLocation.EUROPE), enums.WorldLocation.EUROPE)
 
-    def testEnumStr(self):
+    def test_enum_str(self):
         self.assertEqual(str(enums.Sex.MALE), enums.Sex.MALE.value)
         self.assertEqual(enums.VocationFilter.from_name("royal paladin"), enums.VocationFilter.PALADINS)
         self.assertEqual(enums.VocationFilter.from_name("unknown"), enums.VocationFilter.ALL)
         self.assertIsNone(enums.VocationFilter.from_name("unknown", False))
 
-    def testParseTibiaMoney(self):
+    def test_parse_tibia_money(self):
         self.assertEqual(1000, parse_tibia_money("1k"))
         self.assertEqual(5000000, parse_tibia_money("5kk"))
         self.assertEqual(2500, parse_tibia_money("2.5k"))
@@ -171,7 +171,7 @@ class TestUtils(TestCommons, unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_tibia_money("abc")
 
-    def testParseInteger(self):
+    def test_parse_integer(self):
         self.assertEqual(1450, parse_integer("1.450"))
         self.assertEqual(1110, parse_integer("1,110"))
         self.assertEqual(15, parse_integer("15"))

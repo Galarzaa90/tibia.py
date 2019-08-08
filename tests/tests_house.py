@@ -27,7 +27,8 @@ class TestsHouse(TestCommons, unittest.TestCase):
     def setUp(self):
         self.guild = {}
 
-    def testHouse(self):
+    def test_house_from_content(self):
+        """Testing parsing a house"""
         content = self._load_resource(FILE_HOUSE_FULL)
         house = House.from_content(content)
 
@@ -48,7 +49,8 @@ class TestsHouse(TestCommons, unittest.TestCase):
         house_json = json.loads(house_json_raw)
         self.assertEqual(house.image_url, house_json["image_url"])
 
-    def testHouseStatusTransferred(self):
+    def test_house_from_content_transferred(self):
+        """Testing parsing a house being transferred"""
         house = House("Name")
         content = self._load_resource(FILE_HOUSE_STATUS_TRANSFER)
         house._parse_status(content)
@@ -59,7 +61,8 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertTrue(house.transfer_accepted)
         self.assertEqual(house.transfer_price, 850000)
 
-    def testHouseStatusRented(self):
+    def test_house_parse_status_rented(self):
+        """Testing parsing a rented status"""
         house = House("Name")
         content = self._load_resource(FILE_HOUSE_STATUS_RENTED)
         house._parse_status(content)
@@ -67,7 +70,8 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertEqual(house.owner, "Thorcen")
         self.assertIsInstance(house.paid_until, datetime.datetime)
 
-    def testHouseStatusWithBids(self):
+    def test_house_parse_status_with_bids(self):
+        """Testing parsing a house status with bids"""
         house = House("Name")
         content = self._load_resource(FILE_HOUSE_STATUS_WITH_BIDS)
         house._parse_status(content)
@@ -77,25 +81,29 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertEqual(house.highest_bidder, "King of Bosnia")
         self.assertIsInstance(house.auction_end, datetime.datetime)
 
-    def testHouseStatusWithoutBids(self):
+    def test_house_parse_status_without_bids(self):
+        """Testing parsing the status of a house with no bids"""
         house = House("Name")
         content = self._load_resource(FILE_HOUSE_STATUS_NO_BIDS)
         house._parse_status(content)
         self.assertEqual(house.status, HouseStatus.AUCTIONED)
         self.assertIsNone(house.auction_end)
 
-    def testHouseNotFound(self):
+    def test_house_from_content_not_found(self):
+        """Testing parsing a house that doesn't exist"""
         content = self._load_resource(FILE_HOUSE_NOT_FOUND)
         house = House.from_content(content)
 
         self.assertIsNone(house)
 
-    def testHouseUnrelated(self):
+    def test_house_from_content_unrelated(self):
+        """Testing parsing an unrelated section"""
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             House.from_content(content)
 
-    def testHouseList(self):
+    def test_listed_house_from_content(self):
+        """Testing parsing the house list of a world and city"""
         content = self._load_resource(FILE_HOUSE_LIST)
         houses = ListedHouse.list_from_content(content)
 
@@ -110,24 +118,28 @@ class TestsHouse(TestCommons, unittest.TestCase):
 
         self.assertEqual(houses[25].status, HouseStatus.RENTED)
 
-    def testHouseListEmpty(self):
+    def test_listed_house_from_content_empty(self):
+        """Testing parsing an empty house list"""
         content = self._load_resource(FILE_HOUSE_LIST_EMPTY)
         houses = ListedHouse.list_from_content(content)
 
         self.assertEqual(len(houses), 0)
 
-    def testHouseListNotFound(self):
+    def test_listed_house_from_content_not_found(self):
+        """Testing parsing an empty house list"""
         content = self._load_resource(FILE_HOUSE_NOT_FOUND)
         houses = ListedHouse.list_from_content(content)
 
         self.assertIsNone(houses)
 
-    def testHouseListUnrelated(self):
+    def test_listed_house_from_content_unrelated(self):
+        """Testing parsing an unrelated section"""
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             ListedHouse.list_from_content(content)
 
-    def testHouseTibiaData(self):
+    def test_house_from_tibiadata(self):
+        """Testing parsing a house from TibiaData"""
         content = self._load_resource(FILE_HOUSE_TIBIADATA)
         house = House.from_tibiadata(content)
 
@@ -139,22 +151,26 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertEqual(house.status, HouseStatus.AUCTIONED)
         self.assertIsNone(house.owner)
 
-    def testHouseTibiaDataNotFound(self):
+    def test_house_from_tibiadata_not_found(self):
+        """Testing parsing a house that doesn't exist"""
         content = self._load_resource(FILE_HOUSE_TIBIADATA_NOT_FOUND)
         house = House.from_tibiadata(content)
 
         self.assertIsNone(house)
 
-    def testHouseTibiaDataInvalid(self):
+    def test_house_from_tibiadata_invalid_json(self):
+        """Testing parsing an invalid json"""
         with self.assertRaises(InvalidContent):
             House.from_tibiadata("<p>Not json</p>")
 
-    def testGuildTibiaDataUnrelated(self):
+    def test_house_from_tibiadata_unrelated(self):
+        """Testing parsing an unrelated section"""
         content = self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA)
         with self.assertRaises(InvalidContent):
             House.from_tibiadata(content)
 
-    def testHouseTibiaDataList(self):
+    def test_listed_house_list_from_tibiadata(self):
+        """Testing parsing a house list from TibiaData"""
         content = self._load_resource(FILE_HOUSE_TIBIADATA_LIST)
         houses = ListedHouse.list_from_tibiadata(content)
 
@@ -167,17 +183,20 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertIsInstance(houses[0].id, int)
         self.assertIsNotNone(ListedHouse.get_list_url_tibiadata(houses[0].world, houses[0].town))
 
-    def testHouseTibiaDataListNotFound(self):
+    def test_listed_house_list_from_tibiadata_not_found(self):
+        """Testing parsing a list of a world that doesn't exist"""
         content = self._load_resource(FILE_HOUSE_TIBIADATA_LIST_NOT_FOUND)
         houses = ListedHouse.list_from_tibiadata(content)
 
         self.assertIsInstance(houses, list)
         self.assertEqual(len(houses), 0)
 
-    def testHouseTibiaDataListInvalidJson(self):
+    def test_listed_house_list_from_tibiadata_invalid_json(self):
+        """Testing parsing an invalid json"""
         with self.assertRaises(InvalidContent):
             ListedHouse.list_from_tibiadata("nope")
 
-    def testHouseTibiaDataListUnrelated(self):
+    def test_listed_house_list_from_tibiadata_unrelated_section(self):
+        """Testing parsing an unrelated section"""
         with self.assertRaises(InvalidContent):
             ListedHouse.list_from_tibiadata(self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))

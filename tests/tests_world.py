@@ -25,7 +25,8 @@ FILE_WORLD_LIST_TIBIADATA_OFFLINE = "world/tibiadata_list_offline.json"
 class TestWorld(TestCommons, unittest.TestCase):
 
     # region Tibia.com Tests
-    def testWorld(self):
+    def test_world_from_content_full(self):
+        """Testing parsing a world with full information"""
         content = self._load_resource(FILE_WORLD_FULL)
         world = World.from_content(content)
 
@@ -52,7 +53,8 @@ class TestWorld(TestCommons, unittest.TestCase):
         world_json = json.loads(world_json_raw)
         self.assertEqual(len(world.online_players), len(world_json["online_players"]))
 
-    def testWorldOffline(self):
+    def test_world_from_content_offline(self):
+        """Testing parsing an offline world"""
         content = self._load_resource(FILE_WORLD_FULL_OFFLINE,)
         world = World.from_content(content)
 
@@ -75,18 +77,21 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(World.get_url(world.name), world.url)
 
-    def testWorldNotFound(self):
+    def test_world_from_content_not_found(self):
+        """Testing parsing a world that doesn't exist"""
         content = self._load_resource(FILE_WORLD_NOT_FOUND)
         world = World.from_content(content)
 
         self.assertIsNone(world)
 
-    def testWorldUnrelated(self):
+    def test_world_from_content_unrelated_section(self):
+        """Testing parsing a world using an unrelated section"""
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             World.from_content(content)
 
-    def testWorldTournament(self):
+    def test_world_from_content_tournament(self):
+        """Testing parsing a tournament world"""
         content = self._load_resource(FILE_WORLD_TOURNAMENT)
         world = World.from_content(content)
 
@@ -100,7 +105,8 @@ class TestWorld(TestCommons, unittest.TestCase):
     # endregion
 
     # region Tibia.com WorldOverview Tests
-    def testWorldOverview(self):
+    def test_world_overview_from_content(self):
+        """Testing parsing world overview"""
         content = self._load_resource(FILE_WORLD_LIST)
         world_overview = WorldOverview.from_content(content)
 
@@ -117,7 +123,8 @@ class TestWorld(TestCommons, unittest.TestCase):
         worlds = ListedWorld.list_from_content(content)
         self.assertEqual(len(world_overview.worlds), len(worlds))
 
-    def testWorldOverviewOffline(self):
+    def test_world_overview_from_content_offline(self):
+        """Testing parsing world overview with offline worlds"""
         content = self._load_resource(FILE_WORLD_LIST_OFFLINE)
         world_overview = WorldOverview.from_content(content)
 
@@ -130,7 +137,8 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertIsInstance(world_overview.worlds[0].location, WorldLocation)
         self.assertIsInstance(world_overview.worlds[0].online_count, int)
 
-    def testWorldOverviewUnrelated(self):
+    def test_world_overview_from_content_unrelated(self):
+        """Testing parsing an unrealted tibia section"""
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             ListedWorld.list_from_content(content)
@@ -139,7 +147,8 @@ class TestWorld(TestCommons, unittest.TestCase):
 
     # region TibiaData Tests
 
-    def testWorldTibiadata(self):
+    def test_world_from_tibiadata(self):
+        """Testing parsing a world from TibiaData"""
         content = self._load_resource(FILE_WORLD_TIBIADATA)
         world = World.from_tibiadata(content)
 
@@ -162,7 +171,8 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(World.get_url_tibiadata(world.name), world.url_tibiadata)
 
-    def testWorldTibiaDataOffline(self):
+    def test_world_from_tibiadata_offline(self):
+        """Testing parsing an offline world"""
         content = self._load_resource(FILE_WORLD_TIBIADATA_OFFLINE)
         world = World.from_tibiadata(content)
 
@@ -184,17 +194,20 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(World.get_url_tibiadata(world.name), world.url_tibiadata)
 
-    def testWorldTibiaDataNotFound(self):
+    def test_world_from_tibiadata_not_found(self):
+        """Testing parsing a world that doesn't exist in TibiaData"""
         content = self._load_resource(FILE_WORLD_TIBIADATA_NOT_FOUND)
         world = World.from_tibiadata(content)
 
         self.assertIsNone(world)
 
-    def testWorldTibiaDataInvalidJson(self):
+    def test_world_from_tibiadata_invalid_json(self):
+        """Testing parsing an invalid json"""
         with self.assertRaises(InvalidContent):
             World.from_tibiadata("<html><b>Not a json string</b></html>")
 
-    def testWorldTibiaDataUnrelated(self):
+    def test_world_tibiadata_unrelated_section(self):
+        """Testing parsing an unrelated TibiaData section"""
         with self.assertRaises(InvalidContent):
             World.from_tibiadata(self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))
 
@@ -202,7 +215,8 @@ class TestWorld(TestCommons, unittest.TestCase):
 
     # region TibiaData WorldOverview Tests
 
-    def testWorldOverviewTibiaData(self):
+    def test_world_overview_from_content(self):
+        """Testing parsing the world overview from TibiaData"""
         content = self._load_resource(FILE_WORLD_LIST_TIBIADATA)
         world_overview = WorldOverview.from_tibiadata(content)
 
@@ -216,7 +230,8 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertIsInstance(world_overview.worlds[0].location, WorldLocation)
         self.assertIsInstance(world_overview.worlds[0].online_count, int)
 
-    def testWorldOverviewTibiaDataOffline(self):
+    def test_world_overview_from_content_offline(self):
+        """Testing parsing the world overview with offline worlds"""
         content = self._load_resource(FILE_WORLD_LIST_TIBIADATA_OFFLINE)
         worlds = ListedWorld.list_from_tibiadata(content)
 
@@ -228,12 +243,14 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertIsInstance(worlds[0].location, WorldLocation)
         self.assertIsInstance(worlds[0].online_count, int)
 
-    def testWorldOverviewTibiaDataUnrelated(self):
+    def test_world_overview_from_content_unrelated(self):
+        """Testing parsing an unrelated json"""
         content = self._load_resource(FILE_WORLD_TIBIADATA)
         with self.assertRaises(InvalidContent):
             ListedWorld.list_from_tibiadata(content)
 
-    def testWorldOverviewTibiaDataInvalidJson(self):
+    def test_world_overview_from_content_invalid_json(self):
+        """Testing parsing an invalid json"""
         with self.assertRaises(InvalidContent):
             ListedWorld.list_from_tibiadata("<html><b>Not a json string</b></html>")
     # endregion

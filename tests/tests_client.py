@@ -3,7 +3,6 @@ import datetime
 import aiohttp
 import asynctest
 from aioresponses import aioresponses
-from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 
 from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
@@ -12,6 +11,7 @@ from tests.tests_house import FILE_HOUSE_FULL, FILE_HOUSE_LIST
 from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
+from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 from tibiapy import Client, Character, Guild, Highscores, VocationFilter, Category, House, ListedHouse, ListedGuild, \
     KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, BoostedCreature
 
@@ -23,7 +23,8 @@ class TestClient(asynctest.TestCase, TestCommons):
     async def tearDown(self):
         await self.client.session.close()
 
-    async def testPassSession(self):
+    async def test_client_init_pass_session(self):
+        """Testing creating an instance passing a session"""
         headers = {"User-Agent": "Python Unit Test"}
         session = aiohttp.ClientSession(headers=headers)
         client = Client(session=session)
@@ -33,7 +34,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         await client.session.close()
 
     @aioresponses()
-    async def testRequestErrors(self, mock):
+    async def test_client_handle_errors(self, mock):
+        """Testing error handling"""
         mock.get(WorldOverview.get_url(), status=403)
         with self.assertRaises(Forbidden):
             await self.client.fetch_world_list()
@@ -51,7 +53,8 @@ class TestClient(asynctest.TestCase, TestCommons):
             await self.client.fetch_recent_news(30)
 
     @aioresponses()
-    async def testFetchCharacter(self, mock):
+    async def test_client_fetch_character(self, mock):
+        """Testing fetching a character"""
         name = "Tschas"
         content = self._load_resource(FILE_CHARACTER_RESOURCE)
         mock.get(Character.get_url(name), status=200, body=content)
@@ -60,7 +63,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(character, Character)
 
     @aioresponses()
-    async def testFetchCharacterNotFound(self, mock):
+    async def test_client_fetch_character_not_found(self, mock):
+        """Testing fetching a non existent character"""
         name = "Nezune"
         content = self._load_resource(FILE_CHARACTER_NOT_FOUND)
         mock.get(Character.get_url(name), status=200, body=content)
@@ -69,7 +73,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsNone(character)
 
     @aioresponses()
-    async def testFetchGuild(self, mock):
+    async def test_client_fetch_guild(self, mock):
+        """Testing fetching a guild"""
         name = "Vitam et Mortem"
         content = self._load_resource(FILE_GUILD_FULL)
         mock.get(Guild.get_url(name), status=200, body=content)
@@ -78,7 +83,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(guild, Guild)
 
     @aioresponses()
-    async def testFetchGuildList(self, mock):
+    async def test_client_fetch_world_guilds(self, mock):
+        """Testing fetching a world's guild list"""
         world = "Zuna"
         content = self._load_resource(FILE_GUILD_LIST)
         mock.get(ListedGuild.get_world_list_url(world), status=200, body=content)
@@ -87,7 +93,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(guilds[0], ListedGuild)
 
     @aioresponses()
-    async def testFetchHighscores(self, mock):
+    async def test_client_fetch_highscores_page(self, mock):
+        """Testing fetching a highscores page"""
         world = "Estela"
         category = Category.MAGIC_LEVEL
         vocations = VocationFilter.KNIGHTS
@@ -98,7 +105,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(highscores, Highscores)
 
     @aioresponses()
-    async def testFetchHouse(self, mock):
+    async def test_client_fetch_house(self, mock):
+        """Testing fetching a house"""
         world = "Antica"
         house_id = 5236
         content = self._load_resource(FILE_HOUSE_FULL)
@@ -108,7 +116,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(house, House)
 
     @aioresponses()
-    async def testFetchHouseList(self, mock):
+    async def test_client_fetch_world_houses(self, mock):
+        """Testing fetching a world's houses"""
         world = "Antica"
         city = "Edron"
         content = self._load_resource(FILE_HOUSE_LIST)
@@ -119,7 +128,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(houses[0], ListedHouse)
 
     @aioresponses()
-    async def testFetchKillStatistics(self, mock):
+    async def test_client_fetch_kill_statistics(self, mock):
+        """Testing fetching kill statistics"""
         world = "Antica"
         content = self._load_resource(FILE_KILL_STATISTICS_FULL)
         mock.get(KillStatistics.get_url(world), status=200, body=content)
@@ -128,7 +138,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(kill_statistics, KillStatistics)
 
     @aioresponses()
-    async def testFetchRecentNews(self, mock):
+    async def test_client_fetch_recent_news(self, mock):
+        """Testing fetching recent nows"""
         content = self._load_resource(FILE_NEWS_LIST)
         mock.post(ListedNews.get_list_url(), status=200, body=content)
         recent_news = await self.client.fetch_recent_news(30)
@@ -136,14 +147,16 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(recent_news, list)
         self.assertIsInstance(recent_news[0], ListedNews)
 
-    async def testFetchNewsInvalidDates(self):
+    async def test_client_fetch_news_archive_invalid_dates(self):
+        """Testing fetching news archive with invalid dates"""
         today = datetime.date.today()
         yesterday = today - datetime.timedelta(days=1)
         with self.assertRaises(ValueError):
             await self.client.fetch_news_archive(today, yesterday)
 
     @aioresponses()
-    async def testFetchNews(self, mock):
+    async def test_client_fetch_news(self, mock):
+        """Testing fetch news"""
         news_id = 6000
         content = self._load_resource(FILE_NEWS_ARTICLE)
         mock.get(News.get_url(news_id), status=200, body=content)
@@ -152,7 +165,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(news, News)
 
     @aioresponses()
-    async def testFetchWorld(self, mock):
+    async def test_client_fetch_world(self, mock):
+        """Testing fetching a world"""
         name = "Antica"
         content = self._load_resource(FILE_WORLD_FULL)
         mock.get(World.get_url(name), status=200, body=content)
@@ -161,7 +175,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(world, World)
 
     @aioresponses()
-    async def testFetchWorldList(self, mock):
+    async def test_client_fetch_world_list(self, mock):
+        """Testing fetching the world list"""
         content = self._load_resource(FILE_WORLD_LIST)
         mock.get(WorldOverview.get_url(), status=200, body=content)
         worlds = await self.client.fetch_world_list()
@@ -169,7 +184,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         self.assertIsInstance(worlds, WorldOverview)
 
     @aioresponses()
-    async def testFetchBoostedCreature(self, mock):
+    async def test_client_fetch_boosted_creature(self, mock):
+        """Testing fetching the boosted creature"""
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         mock.get(News.get_list_url(), status=200, body=content)
         creature = await self.client.fetch_boosted_creature()

@@ -167,6 +167,13 @@ Auxiliary Classes
 Auxiliary classes are used to hold certain data in a standardized way, in some cases, introducing additional methods
 and properties for their use.
 
+AccountBadge
+------------------
+.. autoclass:: AccountBadge
+   :members:
+   :inherited-members:
+
+
 AccountInformation
 ------------------
 .. autoclass:: AccountInformation

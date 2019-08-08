@@ -18,7 +18,8 @@ FILE_HIGHSCORES_TIBIADATA_EMPTY = "highscores/tibiadata_empty.json"
 
 class TestHighscores(unittest.TestCase, TestCommons):
     # region Tibia.com Tests
-    def testHighscores(self):
+    def test_highscores_from_content(self):
+        """Testing parsing Highscores"""
         content = self._load_resource(FILE_HIGHSCORES_FULL)
         highscores = Highscores.from_content(content)
 
@@ -39,7 +40,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.rank, int)
             self.assertIsInstance(entry.value, int)
 
-    def testHighscoresExperience(self):
+    def test_highscores_from_content_highscores(self):
+        """Testing parsing experience highscores"""
         content = self._load_resource(FILE_HIGHSCORES_EXPERIENCE)
         highscores = Highscores.from_content(content)
 
@@ -57,7 +59,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.value, int)
             self.assertIsInstance(entry.level, int)
 
-    def testHighscoresLoyalty(self):
+    def test_highscores_from_content_loyalty(self):
+        """Testing parsing experience loyalty"""
         content = self._load_resource(FILE_HIGHSCORES_LOYALTY)
         highscores = Highscores.from_content(content)
 
@@ -75,13 +78,15 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.value, int)
             self.assertIsInstance(entry.title, str)
 
-    def testHighscoresEmpty(self):
+    def test_highscores_from_content_empty(self):
+        """Testing parsing highscores empty highscores"""
         content = self._load_resource(FILE_HIGHSCORES_EMPTY)
         highscores = Highscores.from_content(content)
 
         self.assertIsNone(highscores)
 
-    def testHighscoresUnrelated(self):
+    def test_highscores_from_content_unrelated_section(self):
+        """Testing parsing an unrelated section"""
         content = self._load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             Highscores.from_content(content)
@@ -89,7 +94,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
     # endregion
 
     # region TibiaData.com Tests
-    def testHighscoresTibiaData(self):
+    def test_highscores_from_tibiadata(self):
+        """Testing parsing highscores from TibiaData"""
         content = self._load_resource(FILE_HIGHSCORES_TIBIADATA_FULL)
         highscores = Highscores.from_tibiadata(content)
 
@@ -108,7 +114,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.rank, int)
             self.assertIsInstance(entry.value, int)
 
-    def testHighscoresTibiaDataExperience(self):
+    def test_highscores_from_tibiadata_experience(self):
+        """Testing parsing experience highscores"""
         content = self._load_resource(FILE_HIGHSCORES_TIBIADATA_EXPERIENCE)
         highscores = Highscores.from_tibiadata(content)
 
@@ -125,7 +132,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.value, int)
             self.assertIsInstance(entry.level, int)
 
-    def testHighscoresTibiaDataLoyalty(self):
+    def test_highscores_from_tibiadata_loyalty(self):
+        """Testing parsing loyalty highscores"""
         content = self._load_resource(FILE_HIGHSCORES_TIBIADATA_LOYALTY)
         highscores = Highscores.from_tibiadata(content)
 
@@ -142,13 +150,15 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.value, int)
             self.assertIsInstance(entry.title, str)
 
-    def testHighscoresTibaDataEmpty(self):
+    def test_highscores_from_tibiadata_empty(self):
+        """Testing parsing empty highscores"""
         content = self._load_resource(FILE_HIGHSCORES_TIBIADATA_EMPTY)
         highscores = Highscores.from_tibiadata(content)
 
         self.assertIsNone(highscores)
 
-    def testHighscoresTibiaDataListUnrelated(self):
+    def test_highscores_from_tibiadata_unrelated_section(self):
+        """Testing parsing an unrelated section"""
         with self.assertRaises(InvalidContent):
             Highscores.from_tibiadata(self._load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))
 

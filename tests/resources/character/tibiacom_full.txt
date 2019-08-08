@@ -1,50 +1,35 @@
-<div id="characters" class="Box">
-    <div class="Corner-tl" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-tl.gif);"></div>
-    <div class="Corner-tr" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-tr.gif);"></div>
-    <div class="Border_1" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/border-1.gif);"></div>
-    <div class="BorderTitleText" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/title-background-green.gif);"></div><img id="ContentBoxHeadline" class="Title" src="https://ssl-static-tibia.akamaized.net/images/global/strings/headline-characters.gif" alt="Contentbox headline">
-    <div class="Border_2">
-      <div class="Border_3">
-        <div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
-<table border="0" cellspacing="1" cellpadding="4" width="100%"><tbody><tr bgcolor="#505050"><td colspan="2" class="white"><b>Character Information</b></td></tr><tr bgcolor="#F1E0C6"><td width="20%">Name:</td><td>Tschas <div style="float: right"></div></td></tr><tr bgcolor="#D4C0A1"><td>Sex:</td><td>female</td></tr><tr bgcolor="#F1E0C6"><td>Vocation:</td><td>Druid</td></tr><tr bgcolor="#D4C0A1"><td>Level:</td><td>205</td></tr><tr bgcolor="#F1E0C6"><td><nobr>Achievement Points:</nobr></td><td>139</td></tr><tr bgcolor="#D4C0A1"><td>World:</td><td>Gladera</td></tr><tr bgcolor="#F1E0C6"><td>Residence:</td><td>Thais</td></tr><tr bgcolor="#D4C0A1"><td>Guild&nbsp;Membership:</td><td>Mentor of the <a href="https://www.tibia.com/community/?subtopic=guilds&amp;page=view&amp;GuildName=Redd+Alliance&amp;character=Tschas&amp;action=characters">Redd&nbsp;Alliance</a></td></tr><tr bgcolor="#F1E0C6"><td>Last Login:</td><td>Apr&nbsp;22&nbsp;2018,&nbsp;16:00:38&nbsp;CEST</td></tr><tr bgcolor="#D4C0A1"><td>Account&nbsp;Status:</td><td>Free Account</td></tr></tbody></table>
-<br><br><table border="0" cellspacing="1" cellpadding="4" width="100%"><tbody><tr bgcolor="#505050"><td colspan="2" class="white"><b>Account Achievements</b></td></tr><tr bgcolor="#F1E0C6"><td colspan="2">There are no achievements set to be displayed for this character.</td></tr></tbody></table><br><br><table border="0" cellspacing="1" cellpadding="4" width="100%"><tbody><tr bgcolor="#505050"><td colspan="2" class="white"><b>Account Information</b></td></tr><tr bgcolor="#F1E0C6"><td width="20%">Loyalty Title:</td><td>Warden of Tibia</td></tr><tr bgcolor="#D4C0A1"><td width="20%">Created:</td><td>Jan&nbsp;30&nbsp;2004,&nbsp;21:55:11&nbsp;CET</td></tr></tbody></table><br><br><table border="0" cellspacing="1" cellpadding="4" width="100%"><tbody><tr bgcolor="#505050"><td colspan="4" class="white"><b>Characters</b></td></tr><tr bgcolor="#D4C0A1"><td><b>Name</b></td><td><b>World</b></td><td><b>Status</b></td><td><b>&nbsp;</b></td></tr><tr bgcolor="#F1E0C6"><td width="20%"><nobr>1.&nbsp;Tschas</nobr></td><td width="10%"><nobr>Gladera</nobr></td><td width="70%"><img src"="https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif&quot;" width="1" height="1" border="0"><br></td><td><table border="0" cellspacing="0" cellpadding="0"><form action="https://www.tibia.com/community/?subtopic=characters" method="post"></form><tbody><tr><td>
-<input type="hidden" name="name" value="Tschas">
-<input type="image" name="View Tschas" alt="View Tschas" src="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" border="0" width="120" height="18">
-</td></tr></tbody></table>
-</td></tr><tr bgcolor="#D4C0A1"><td width="20%"><nobr>2.&nbsp;Tsches</nobr></td><td width="10%"><nobr>Vunira</nobr></td><td width="70%"><img src"="https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif&quot;" width="1" height="1" border="0"><br></td><td><table border="0" cellspacing="0" cellpadding="0"><form action="https://www.tibia.com/community/?subtopic=characters" method="post"></form><tbody><tr><td>
-<input type="hidden" name="name" value="Tsches">
-<input type="image" name="View Tsches" alt="View Tsches" src="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" border="0" width="120" height="18">
-</td></tr></tbody></table>
-</td></tr><tr bgcolor="#F1E0C6"><td width="20%"><nobr>3.&nbsp;Tschis</nobr></td><td width="10%"><nobr>Vunira</nobr></td><td width="70%"><img src"="https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif&quot;" width="1" height="1" border="0"><br></td><td><table border="0" cellspacing="0" cellpadding="0"><form action="https://www.tibia.com/community/?subtopic=characters" method="post"></form><tbody><tr><td>
-<input type="hidden" name="name" value="Tschis">
-<input type="image" name="View Tschis" alt="View Tschis" src="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" border="0" width="120" height="18">
-</td></tr></tbody></table>
-</td></tr><tr bgcolor="#D4C0A1"><td width="20%"><nobr>4.&nbsp;Tschiss</nobr></td><td width="10%"><nobr>Belobra</nobr></td><td width="70%"><img src"="https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif&quot;" width="1" height="1" border="0"><br></td><td><table border="0" cellspacing="0" cellpadding="0"><form action="https://www.tibia.com/community/?subtopic=characters" method="post"></form><tbody><tr><td>
-<input type="hidden" name="name" value="Tschiss">
-<input type="image" name="View Tschiss" alt="View Tschiss" src="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" border="0" width="120" height="18">
-</td></tr></tbody></table>
-</td></tr><tr bgcolor="#F1E0C6"><td width="20%"><nobr>5.&nbsp;Tschos</nobr></td><td width="10%"><nobr>Gladera</nobr></td><td width="70%"><img src"="https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif&quot;" width="1" height="1" border="0"><br></td><td><table border="0" cellspacing="0" cellpadding="0"><form action="https://www.tibia.com/community/?subtopic=characters" method="post"></form><tbody><tr><td>
-<input type="hidden" name="name" value="Tschos">
-<input type="image" name="View Tschos" alt="View Tschos" src="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" border="0" width="120" height="18">
-</td></tr></tbody></table>
-</td></tr><tr bgcolor="#D4C0A1"><td width="20%"><nobr>6.&nbsp;Tschus</nobr></td><td width="10%"><nobr>Solidera</nobr></td><td width="70%"><img src"="https://ssl-static-tibia.akamaized.net/images/global/general/blank.gif&quot;" width="1" height="1" border="0"><br></td><td><table border="0" cellspacing="0" cellpadding="0"><form action="https://www.tibia.com/community/?subtopic=characters" method="post"></form><tbody><tr><td>
-<input type="hidden" name="name" value="Tschus">
-<input type="image" name="View Tschus" alt="View Tschus" src="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_view.gif" border="0" width="120" height="18">
-</td></tr></tbody></table>
-</td></tr></tbody></table>
-<br><br>  <form action="https://www.tibia.com/community/?subtopic=characters" method="post">
-  <table width="100%" border="0" cellspacing="1" cellpadding="4">
-  <tbody><tr><td bgcolor="#505050" class="white"><b>Search Character</b></td></tr>
-  <tr><td bgcolor="#D4C0A1"><table border="0" cellpadding="1"><tbody><tr>
-  <td>Name:</td><td><input name="name" value="tschas" size="29" maxlength="29"></td>
-  <td><input type="image" name="Submit" src="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_submit.gif" border="0" width="120" height="18"></td>
-  </tr></tbody></table></td></tr>
-  </tbody></table>
-  </form>
-          </div>
-      </div>
-    </div>
-    <div class="Border_1" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/border-1.gif);"></div>
-    <div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-bl.gif);"></div></div>
-    <div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-br.gif);"></div></div>
-  </div>
+<div class="BoxContent" style="background-image:url(https://static.tibia.com/images/global/content/scroll.gif);">
+<table border="0" cellspacing="1" cellpadding="4" width="100%"><tr bgcolor=#505050><td colspan=2 class=white><b>Character Information</b></td></tr><tr bgcolor=#F1E0C6><td width=20%>Name:</td><td>Tschas <div style="float: right"></div></td></tr><tr bgcolor=#D4C0A1><td>Title:</td><td>None (5 titles unlocked)</td></tr><tr bgcolor=#F1E0C6><td>Sex:</td><td>female</td></tr><tr bgcolor=#D4C0A1><td>Vocation:</td><td>Druid</td></tr><tr bgcolor=#F1E0C6><td>Level:</td><td>260</td></tr><tr bgcolor=#D4C0A1><td><nobr>Achievement Points:</nobr></td><td>182</td></tr><tr bgcolor=#F1E0C6><td>World:</td><td>Gladera</td></tr><tr bgcolor=#D4C0A1><td>Residence:</td><td>Thais</td></tr><tr bgcolor=#F1E0C6><td>Guild&#160;Membership:</td><td>Gaia of the <a href="https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName=Atlantis&amp;character=Tschas&amp;action=characters">Atlantis</a></td></tr><tr bgcolor=#D4C0A1><td>Last Login:</td><td>Aug&#160;04&#160;2019,&#160;13:56:59&#160;CEST</td></tr><tr bgcolor=#F1E0C6><td>Account&#160;Status:</td><td>Free Account</td></tr></table>
+<br /><br /><table border="0" cellspacing="1" cellpadding="4" width="100%"><tr bgcolor="#505050"><td colspan="2" class="white"><b>Account Achievements</b></td></tr><tr bgcolor="#F1E0C6"><td colspan="2">There are no achievements set to be displayed for this character.</td></tr></table><br /><br /><table border="0" cellspacing="1" cellpadding="4" width="100%"><tr bgcolor="#505050"><td colspan="2" class="white"><b>Account Information</b></td></tr><tr bgcolor="#F1E0C6"><td width="20%">Loyalty Title:</td><td>Squire of Tibia</td></tr><tr bgcolor="#D4C0A1"><td width="20%">Created:</td><td>Jan&#160;30&#160;2004,&#160;21:55:11&#160;CET</td></tr></table><br /><br /><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=#505050><TD COLSPAN=4 CLASS=white><B>Characters</B></TD></TR><TR BGCOLOR=#D4C0A1><TD><B>Name</B></TD><TD><B>World</B></TD><TD><B>Status</B></TD><TD><B>&#160;</B></TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>1.&#160;Tschas</NOBR> <img src='https://static.tibia.com/images//account/maincharacter.png' alt='(Main Character)' title='Main Character' /></TD><TD WIDTH=10%><NOBR>Gladera</NOBR></TD><TD WIDTH=70%><IMG SRC"=https://static.tibia.com/images/global/general/blank.gif" WIDTH=1 HEIGHT=1 BORDER=0><BR></TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Tschas">
+<INPUT TYPE=image NAME="View Tschas" ALT="View Tschas" SRC="https://static.tibia.com/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>2.&#160;Tsches</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%><IMG SRC"=https://static.tibia.com/images/global/general/blank.gif" WIDTH=1 HEIGHT=1 BORDER=0><BR></TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Tsches">
+<INPUT TYPE=image NAME="View Tsches" ALT="View Tsches" SRC="https://static.tibia.com/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>3.&#160;Tschis</NOBR></TD><TD WIDTH=10%><NOBR>Vunira</NOBR></TD><TD WIDTH=70%><IMG SRC"=https://static.tibia.com/images/global/general/blank.gif" WIDTH=1 HEIGHT=1 BORDER=0><BR></TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Tschis">
+<INPUT TYPE=image NAME="View Tschis" ALT="View Tschis" SRC="https://static.tibia.com/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#D4C0A1><TD WIDTH=20%><NOBR>4.&#160;Tschos</NOBR></TD><TD WIDTH=10%><NOBR>Gladera</NOBR></TD><TD WIDTH=70%><IMG SRC"=https://static.tibia.com/images/global/general/blank.gif" WIDTH=1 HEIGHT=1 BORDER=0><BR></TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Tschos">
+<INPUT TYPE=image NAME="View Tschos" ALT="View Tschos" SRC="https://static.tibia.com/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR><TR BGCOLOR=#F1E0C6><TD WIDTH=20%><NOBR>5.&#160;Tschus</NOBR></TD><TD WIDTH=10%><NOBR>Solidera</NOBR></TD><TD WIDTH=70%><IMG SRC"=https://static.tibia.com/images/global/general/blank.gif" WIDTH=1 HEIGHT=1 BORDER=0><BR></TD><TD><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=https://www.tibia.com/community/?subtopic=characters METHOD=post><TR><TD>
+<INPUT TYPE=hidden NAME=name VALUE="Tschus">
+<INPUT TYPE=image NAME="View Tschus" ALT="View Tschus" SRC="https://static.tibia.com/images/global/buttons/sbutton_view.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+</TD></TR></FORM></TABLE>
+</TD></TR></TABLE>
+<br /><br /> <FORM ACTION="https://www.tibia.com/community/?subtopic=characters" METHOD=post>
+<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
+<TR><TD BGCOLOR="#505050" CLASS=white><B>Search Character</B></TD></TR>
+<TR><TD BGCOLOR="#D4C0A1"><TABLE BORDER=0 CELLPADDING=1><TR>
+<TD>Name:</TD><TD><INPUT NAME="name" VALUE="Tschas" SIZE=29 MAXLENGTH=29></TD>
+<TD><INPUT TYPE=image NAME="Submit" SRC="https://static.tibia.com/images/global/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD>
+</TR></TABLE></TD></TR>
+</TABLE>
+</FORM>
+</div>
+</div>
+</div>
