@@ -322,7 +322,7 @@ class Client:
         """Fetches the list of guilds in a world from Tibia.com
 
         Parameters
-        ---------cl-
+        ----------
         world: :class:`str`
             The name of the world.
 

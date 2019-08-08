@@ -6,6 +6,14 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+
+.. _v2.2.0:
+
+2.2.0 (2019-08-08)
+==================
+
+- Added support for account badges and character titles.
+
 .. _v2.1.0:
 
 2.1.0 (2019-06-17)
