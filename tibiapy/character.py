@@ -28,7 +28,7 @@ link_content = re.compile(r'>([^<]+)<')
 death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists>.+))?', re.DOTALL)
 
 house_regexp = re.compile(r'paid until (.*)')
-guild_regexp = re.compile(r'([\s\w]+)\sof the\s(.+)')
+guild_regexp = re.compile(r'([\s\w()]+)\sof the\s(.+)')
 
 title_regexp = re.compile(r'(.*)\((\d+) titles unlocked\)')
 

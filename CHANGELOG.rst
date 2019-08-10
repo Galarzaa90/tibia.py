@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.2.1:
+
+2.2.1 (2019-08-10)
+==================
+
+- Fixed bug with character parsing failing when the guild rank is ``(member)``.
 
 .. _v2.2.0:
 
