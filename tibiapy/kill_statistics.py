@@ -92,8 +92,10 @@ class KillStatistics(abc.Serializable):
             for i, row in enumerate(rows):
                 columns_raw = row.find_all('td')
                 columns = [c.text.replace('\xa0', ' ').strip() for c in columns_raw]
-                entry = RaceEntry(last_day_killed=int(columns[1]), last_day_players_killed=int(columns[2]),
-                                  last_week_killed=int(columns[3]), last_week_players_killed=int(columns[4]))
+                entry = RaceEntry(last_day_players_killed=int(columns[1]),
+                                  last_day_killed=int(columns[2]),
+                                  last_week_players_killed=int(columns[3]),
+                                  last_week_killed=int(columns[4]), )
                 if i == len(rows) - 1:
                     total = entry
                 else:

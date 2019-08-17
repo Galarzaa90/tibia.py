@@ -26,6 +26,13 @@ class TestHighscores(TestCommons, unittest.TestCase):
         self.assertEqual(kill_statistics.players.last_week_killed, 7)
         self.assertEqual(kill_statistics.players.last_week_killed, kill_statistics.players.last_week_players_killed)
 
+        # demons
+        demons_entry = kill_statistics.entries["demons"]
+        self.assertEqual(2071, demons_entry.last_day_killed)
+        self.assertEqual(1, demons_entry.last_day_players_killed)
+        self.assertEqual(18484, demons_entry.last_week_killed)
+        self.assertEqual(8, demons_entry.last_week_players_killed)
+
     def test_kill_statistics_from_content_empty(self):
         """Testing parsing empty kill statistics"""
         content = self._load_resource(FILE_KILL_STATISTICS_EMPTY)
