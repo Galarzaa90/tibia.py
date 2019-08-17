@@ -6,12 +6,19 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.2.3:
+
+2.2.3 (2019-08-17)
+==================
+
+- Enabled client side compression
+
 .. _v2.2.2:
 
 2.2.2 (2019-08-17)
 ==================
 
-- Fixed killed by players and palyers kill stats being inverted for ``KillStatistics``
+- Fixed killed by players and players kill stats being inverted for ``KillStatistics``
 
 .. _v2.2.1:
 

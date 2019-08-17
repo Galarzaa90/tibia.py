@@ -39,7 +39,8 @@ class Client:
 
     async def _initialize_session(self):
         headers = {
-            'User-Agent ': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py" % tibiapy.__version__
+            'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py" % tibiapy.__version__,
+            'Accept-Encoding': "deflate, gzip"
         }
         self.session = aiohttp.ClientSession(loop=self.loop, headers=headers)  # type: aiohttp.ClientSession
 
@@ -75,7 +76,7 @@ class Client:
             If there's any connection errors during the request.
         """
         try:
-            async with self.session.get(url) as resp:
+            async with self.session.get(url, compress=True) as resp:
                 self._handle_status(resp.status)
                 return await resp.text()
         except aiohttp.ClientError as e:
@@ -97,7 +98,7 @@ class Client:
             The text content of the response.
         """
         try:
-            async with self.session.post(url, data=data) as resp:
+            async with self.session.post(url, data=data, compress=True) as resp:
                 self._handle_status(resp.status)
                 return await resp.text()
         except aiohttp.ClientError as e:
