@@ -98,9 +98,10 @@ class Client:
             The text content of the response.
         """
         try:
-            async with self.session.post(url, data=data, compress=True) as resp:
+            async with self.session.post(url, data=data) as resp:
                 self._handle_status(resp.status)
-                return await resp.text()
+                var = await resp.text()
+                return var
         except aiohttp.ClientError as e:
             raise NetworkError("aiohttp.ClientError: %s" % e, e)
 
