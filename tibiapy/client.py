@@ -100,8 +100,7 @@ class Client:
         try:
             async with self.session.post(url, data=data) as resp:
                 self._handle_status(resp.status)
-                var = await resp.text()
-                return var
+                return await resp.text()
         except aiohttp.ClientError as e:
             raise NetworkError("aiohttp.ClientError: %s" % e, e)
 
