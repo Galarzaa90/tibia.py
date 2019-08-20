@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.2.4:
+
+2.2.4 (2019-08-20)
+==================
+
+- Disabled client compression for POST requests.
+
 .. _v2.2.3:
 
 2.2.3 (2019-08-17)
