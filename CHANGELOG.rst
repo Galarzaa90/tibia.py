@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.2.5:
+
+2.2.5 (2019-08-22)
+==================
+
+- Fixed account badges parsing due to changes on the layout by CipSoft.
+
 .. _v2.2.4:
 
 2.2.4 (2019-08-20)

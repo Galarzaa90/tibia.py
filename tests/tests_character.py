@@ -105,12 +105,11 @@ class TestCharacter(TestCommons, unittest.TestCase):
         """Testing parsing a character with account badges and a title"""
         content = self._load_resource(FILE_CHARACTER_TITLE_BADGES)
         char = Character.from_content(content)
-        self.assertEqual("Lord Feremis", char.name)
-        self.assertEqual(140, char.achievement_points)
-        self.assertIsNone(char.title)
-        self.assertEqual(6, char.unlocked_titles)
-        self.assertEqual(5, len(char.account_badges))
-        self.assertEqual(1, len(char.former_names))
+        self.assertEqual("Galarzaa Fidera", char.name)
+        self.assertEqual(406, char.achievement_points)
+        self.assertEqual("Gold Hoarder", char.title)
+        self.assertEqual(8, char.unlocked_titles)
+        self.assertEqual(6, len(char.account_badges))
         for badge in char.account_badges:
             self.assertIsInstance(badge, AccountBadge)
             self.assertIsInstance(badge.name, str)

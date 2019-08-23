@@ -31,6 +31,7 @@ house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w()]+)\sof the\s(.+)')
 
 title_regexp = re.compile(r'(.*)\((\d+) titles unlocked\)')
+badge_popup_regexp = re.compile(r"\$\(this\),\s+'([^']+)',\s+'([^']+)',")
 
 __all__ = (
     "AccountBadge",
@@ -295,7 +296,8 @@ class Character(abc.BaseCharacter):
         else:
             raise InvalidContent("content does not contain a tibia.com character information page.")
         char._parse_achievements(tables.get("Account Achievements", []))
-        char._parse_badges(tables.get("Account Badges", []))
+        if "Account Badges" in tables:
+            char._parse_badges(tables["Account Badges"])
         char._parse_deaths(tables.get("Character Deaths", []))
         char._parse_account_information(tables.get("Account Information", []))
         char._parse_other_characters(tables.get("Characters", []))
@@ -429,14 +431,17 @@ class Character(abc.BaseCharacter):
         rows: :class:`list` of :class:`bs4.Tag`
             A list of all rows contained in the table.
         """
-        for row in rows:
-            cols = row.find_all('td')
-            if len(cols) != 2:
+        row = rows[0]
+        columns = row.find_all('td')
+        for column in columns:
+            popup = column.find("span", attrs={"class": "HelperDivIndicator"})
+            m = badge_popup_regexp.search(popup['onmouseover'])
+            if m:
+                name = m.group(1)
+                description = m.group(2)
+            else:
                 continue
-            icon, text = cols
-            name = text.text.strip()
-            icon_image = icon.find("img")
-            description = icon_image['title']
+            icon_image = column.find("img")
             icon_url = icon_image['src']
             self.account_badges.append(AccountBadge(name, icon_url, description))
 
