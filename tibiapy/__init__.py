@@ -13,7 +13,7 @@ from tibiapy.world import *
 from tibiapy.creature import *
 from tibiapy.client import *
 
-__version__ = '2.2.5'
+__version__ = '2.2.6'
 
 from logging import NullHandler
 

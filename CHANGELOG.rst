@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.2.6:
+
+2.2.6 (2019-09-01)
+==================
+- Fixed bug with account badges parsing failing when no badges were selected.
+
 .. _v2.2.5:
 
 2.2.5 (2019-08-22)

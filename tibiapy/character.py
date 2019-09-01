@@ -435,6 +435,9 @@ class Character(abc.BaseCharacter):
         columns = row.find_all('td')
         for column in columns:
             popup = column.find("span", attrs={"class": "HelperDivIndicator"})
+            if not popup:
+                # Badges are visible, but none selected.
+                return
             m = badge_popup_regexp.search(popup['onmouseover'])
             if m:
                 name = m.group(1)

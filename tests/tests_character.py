@@ -14,6 +14,7 @@ FILE_CHARACTER_SPECIAL_POSITION = "character/tibiacom_special_position.txt"
 FILE_CHARACTER_DELETION = "character/tibiacom_deletion.txt"
 FILE_CHARACTER_DEATHS_COMPLEX = "character/tibiacom_deaths_complex.txt"
 FILE_CHARACTER_TITLE_BADGES = "character/tibiacom_title_badges.txt"
+FILE_CHARACTER_NO_BADGES_SELECTED = "character/tibiacom_no_badges_selected.txt"
 
 FILE_CHARACTER_TIBIADATA = "character/tibiadata.json"
 FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character/tibiadata_unhidden.json"
@@ -115,6 +116,17 @@ class TestCharacter(TestCommons, unittest.TestCase):
             self.assertIsInstance(badge.name, str)
             self.assertIsInstance(badge.icon_url, str)
             self.assertIsInstance(badge.description, str)
+
+    def test_character_from_content_no_selected_badges(self):
+        """Testing parsing a character with visible badges but none selected."""
+        content = self._load_resource(FILE_CHARACTER_NO_BADGES_SELECTED)
+        char = Character.from_content(content)
+        self.assertEqual("Cozzackirycerz", char.name)
+        self.assertEqual(25, char.achievement_points)
+        self.assertIsNone(char.title)
+        self.assertEqual(3, char.unlocked_titles)
+        self.assertEqual(0, len(char.account_badges))
+        self.assertEqual(0, len(char.former_names))
 
     def test_character_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
