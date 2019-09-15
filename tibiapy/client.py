@@ -2,6 +2,7 @@ import asyncio
 import datetime
 
 import aiohttp
+import aiohttp_socks
 
 import tibiapy
 from tibiapy import Character, Guild, World, House, KillStatistics, ListedGuild, Highscores, Category, VocationFilter, \
@@ -14,7 +15,7 @@ __all__ = (
 
 
 class Client:
-    """An asynchronous client that fetches information from Tibia.com.ArithmeticError
+    """An asynchronous client that fetches information from Tibia.com
 
     The client uses a :class:`aiohttp.ClientSession` to request the information.
     A single session is shared across all operations.
@@ -29,20 +30,26 @@ class Client:
         The event loop to use. The default one will be used if not defined.
     session: :class:`aiohttp.ClientSession`
         The client session that will be used for the requests. One will be created by default.
+    proxy_url: :class:`str`
+        The URL of the SOCKS proxy to use for requests.
+        Note that if a session is passed, the SOCKS proxy won't be used and must be applied when creating the session.
     """
-    def __init__(self, loop=None, session=None):
+
+    def __init__(self, loop=None, session=None, *, proxy_url=None):
         self.loop = asyncio.get_event_loop() if loop is None else loop  # type: asyncio.AbstractEventLoop
         if session is not None:
             self.session = session  # type: aiohttp.ClientSession
         else:
-            self.loop.create_task(self._initialize_session())
+            self.loop.create_task(self._initialize_session(proxy_url))
 
-    async def _initialize_session(self):
+    async def _initialize_session(self, proxy_url=None):
         headers = {
             'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py" % tibiapy.__version__,
             'Accept-Encoding': "deflate, gzip"
         }
-        self.session = aiohttp.ClientSession(loop=self.loop, headers=headers)  # type: aiohttp.ClientSession
+        connector = aiohttp_socks.SocksConnector.from_url('socks5://127.0.0.1:7744') if proxy_url else None
+        self.session = aiohttp.ClientSession(loop=self.loop, headers=headers,
+                                             connector=connector)  # type: aiohttp.ClientSession
 
     @classmethod
     def _handle_status(cls, status_code):
@@ -81,6 +88,8 @@ class Client:
                 return await resp.text()
         except aiohttp.ClientError as e:
             raise NetworkError("aiohttp.ClientError: %s" % e, e)
+        except aiohttp_socks.SocksConnectionError as e:
+            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
 
     async def _post(self, url, data):
         """Base POST request, handling possible error statuses.
