@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Reference &#8212; Tibia.py 2.2.6 documentation</title>
+    <title>API Reference &#8212; Tibia.py 2.3.0 documentation</title>
     <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.2.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.3.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -59,9 +59,9 @@ It is possible to create and edit these objects as desired, but it may lead to u
 <h2>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="tibiapy.Client">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>loop=None</em>, <em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client" title="Permalink to this definition">¶</a></dt>
-<dd><p>An asynchronous client that fetches information from Tibia.com.ArithmeticError</p>
-<p>The client uses a <a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> to request the information.
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>loop=None</em>, <em>session=None</em>, <em>*</em>, <em>proxy_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>An asynchronous client that fetches information from Tibia.com</p>
+<p>The client uses a <a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> to request the information.
 A single session is shared across all operations.</p>
 <p>If desired, a custom ClientSession instance may be passed, instead of creating a new one.</p>
 <div class="versionadded">
@@ -76,7 +76,14 @@ A single session is shared across all operations.</p>
 <dl class="attribute">
 <dt id="tibiapy.Client.session">
 <code class="descname">session</code><a class="headerlink" href="#tibiapy.Client.session" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> – The client session that will be used for the requests. One will be created by default.</p>
+<dd><p><a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> – The client session that will be used for the requests. One will be created by default.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Client.proxy_url">
+<code class="descname">proxy_url</code><a class="headerlink" href="#tibiapy.Client.proxy_url" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL of the SOCKS proxy to use for requests.
+Note that if a session is passed, the SOCKS proxy won’t be used and must be applied when creating the session.</p>
 </dd></dl>
 
 <dl class="method">
