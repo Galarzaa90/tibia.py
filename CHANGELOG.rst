@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.3.0:
+
+2.3.0 (2019-09-16)
+==================
+- Added proxy option to client.
+
 .. _v2.2.6:
 
 2.2.6 (2019-09-01)
