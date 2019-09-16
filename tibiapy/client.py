@@ -47,7 +47,7 @@ class Client:
             'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py" % tibiapy.__version__,
             'Accept-Encoding': "deflate, gzip"
         }
-        connector = aiohttp_socks.SocksConnector.from_url('socks5://127.0.0.1:7744') if proxy_url else None
+        connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
         self.session = aiohttp.ClientSession(loop=self.loop, headers=headers,
                                              connector=connector)  # type: aiohttp.ClientSession
 
