@@ -215,7 +215,7 @@ class TestWorld(TestCommons, unittest.TestCase):
 
     # region TibiaData WorldOverview Tests
 
-    def test_world_overview_from_content(self):
+    def test_world_overview_from_content_tibiadata(self):
         """Testing parsing the world overview from TibiaData"""
         content = self._load_resource(FILE_WORLD_LIST_TIBIADATA)
         world_overview = WorldOverview.from_tibiadata(content)
@@ -230,7 +230,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertIsInstance(world_overview.worlds[0].location, WorldLocation)
         self.assertIsInstance(world_overview.worlds[0].online_count, int)
 
-    def test_world_overview_from_content_offline(self):
+    def test_listed_world_list_from_tibiadata_offline(self):
         """Testing parsing the world overview with offline worlds"""
         content = self._load_resource(FILE_WORLD_LIST_TIBIADATA_OFFLINE)
         worlds = ListedWorld.list_from_tibiadata(content)
@@ -243,13 +243,13 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertIsInstance(worlds[0].location, WorldLocation)
         self.assertIsInstance(worlds[0].online_count, int)
 
-    def test_world_overview_from_content_unrelated(self):
+    def test_listed_world_list_from_tibiadata_unrelated(self):
         """Testing parsing an unrelated json"""
         content = self._load_resource(FILE_WORLD_TIBIADATA)
         with self.assertRaises(InvalidContent):
             ListedWorld.list_from_tibiadata(content)
 
-    def test_world_overview_from_content_invalid_json(self):
+    def test_listed_world_list_from_tibiadata_invalid_json(self):
         """Testing parsing an invalid json"""
         with self.assertRaises(InvalidContent):
             ListedWorld.list_from_tibiadata("<html><b>Not a json string</b></html>")
