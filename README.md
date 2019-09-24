@@ -59,7 +59,7 @@ def get_character_sync(name):
     url = tibiapy.Character.get_url(name)
     
     r = requests.get(url)
-    content = r.text()
+    content = r.text
     character = tibiapy.Character.from_content(content)
     return character
 
