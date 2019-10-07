@@ -22,6 +22,7 @@ death_regexp = re.compile(r'Level (?P<level>\d+) by (?P<killers>.*)\.</td>')
 death_assisted = re.compile(r'(?P<killers>.+)\.<br/>Assisted by (?P<assists>.+)')
 # From a killer entry, extracts the summoned creature
 death_summon = re.compile(r'(?P<summon>.+) of <a[^>]+>(?P<name>[^<]+)</a>')
+link_search = re.compile(r'<a[^>]+>[^<]+</a>')
 # Extracts the contents of a tag
 link_content = re.compile(r'>([^<]+)<')
 # Extracts reason from TibiaData death
@@ -551,7 +552,8 @@ class Character(abc.BaseCharacter):
                 # Filter out assists
                 killers_desc = assist_match.group("killers")
                 # Split assists into a list.
-                assists_name_list = self._split_list(assist_match.group("assists"))
+                assists_desc = assist_match.group("assists")
+                assists_name_list = link_search.findall(assists_desc)
             killers_name_list = self._split_list(killers_desc)
             for killer in killers_name_list:
                 killer_dict = self._parse_killer(killer)
