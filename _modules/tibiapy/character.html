@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.character &#8212; Tibia.py 2.3.0 documentation</title>
+    <title>tibiapy.character &#8212; Tibia.py 2.3.1 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.3.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.3.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -68,6 +68,7 @@
 <span class="n">death_assisted</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;killers&gt;.+)\.&lt;br/&gt;Assisted by (?P&lt;assists&gt;.+)&#39;</span><span class="p">)</span>
 <span class="c1"># From a killer entry, extracts the summoned creature</span>
 <span class="n">death_summon</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;summon&gt;.+) of &lt;a[^&gt;]+&gt;(?P&lt;name&gt;[^&lt;]+)&lt;/a&gt;&#39;</span><span class="p">)</span>
+<span class="n">link_search</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;a[^&gt;]+&gt;[^&lt;]+&lt;/a&gt;&#39;</span><span class="p">)</span>
 <span class="c1"># Extracts the contents of a tag</span>
 <span class="n">link_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&gt;([^&lt;]+)&lt;&#39;</span><span class="p">)</span>
 <span class="c1"># Extracts reason from TibiaData death</span>
@@ -597,7 +598,8 @@
                 <span class="c1"># Filter out assists</span>
                 <span class="n">killers_desc</span> <span class="o">=</span> <span class="n">assist_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">)</span>
                 <span class="c1"># Split assists into a list.</span>
-                <span class="n">assists_name_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_list</span><span class="p">(</span><span class="n">assist_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">))</span>
+                <span class="n">assists_desc</span> <span class="o">=</span> <span class="n">assist_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">)</span>
+                <span class="n">assists_name_list</span> <span class="o">=</span> <span class="n">link_search</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">assists_desc</span><span class="p">)</span>
             <span class="n">killers_name_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_list</span><span class="p">(</span><span class="n">killers_desc</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">killer</span> <span class="ow">in</span> <span class="n">killers_name_list</span><span class="p">:</span>
                 <span class="n">killer_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_killer</span><span class="p">(</span><span class="n">killer</span><span class="p">)</span>
