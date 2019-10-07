@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.3.1:
+
+2.3.1 (2019-10-06)
+==================
+- Fixed a bug with deaths not being parsed when a killer had ``and`` in their name.
+
 .. _v2.3.0:
 
 2.3.0 (2019-09-16)
