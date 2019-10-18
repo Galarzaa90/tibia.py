@@ -16,7 +16,7 @@ __all__ = (
 
 results_pattern = re.compile(r'Results: (\d+)')
 
-HIGHSCORES_URL = "https://wwww.tibia.com/community/?subtopic=highscores&world=%s&list=%s&profession=%d&currentpage=%d"
+HIGHSCORES_URL = "https://www.tibia.com/community/?subtopic=highscores&world=%s&list=%s&profession=%d&currentpage=%d"
 HIGHSCORES_URL_TIBIADATA = "https://api.tibiadata.com/v2/highscores/%s/%s/%s.json"
 
 

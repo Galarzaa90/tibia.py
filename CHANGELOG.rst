@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.3.2:
+
+2.3.2 (2019-10-17)
+==================
+- Fixed incorrect highscores URL.
+
 .. _v2.3.1:
 
 2.3.1 (2019-10-06)
