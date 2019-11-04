@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.3.3:
+
+2.3.3 (2019-11-04)
+==================
+- Fixed bug with world parsing when there are more than 1000 players online.
+
 .. _v2.3.2:
 
 2.3.2 (2019-10-17)

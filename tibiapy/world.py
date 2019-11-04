@@ -31,6 +31,7 @@ class ListedWorld(abc.BaseWorld):
         The current status of the world.
     online_count: :class:`int`
         The number of currently online players in the world.
+
     location: :class:`WorldLocation`
         The physical location of the game servers.
     pvp_type: :class:`PvpType`
@@ -341,7 +342,7 @@ class World(abc.BaseWorld):
             value = value.replace("\xa0", " ")
             world_info[field] = value
         try:
-            self.online_count = int(world_info.pop("players_online"))
+            self.online_count = parse_integer(world_info.pop("players_online"))
         except KeyError:
             self.online_count = 0
         self.location = try_enum(WorldLocation, world_info.pop("location"))
@@ -579,7 +580,7 @@ class WorldOverview(abc.Serializable):
             elif name == "World":
                 continue
             try:
-                online = int(cols[1].text.strip())
+                online = parse_integer(cols[1].text.strip())
             except ValueError:
                 online = 0
                 status = "Offline"
