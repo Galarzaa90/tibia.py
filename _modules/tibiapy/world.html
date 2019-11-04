@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.world &#8212; Tibia.py 2.3.2 documentation</title>
+    <title>tibiapy.world &#8212; Tibia.py 2.3.3 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.3.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.3.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -77,6 +77,7 @@
 <span class="sd">        The current status of the world.</span>
 <span class="sd">    online_count: :class:`int`</span>
 <span class="sd">        The number of currently online players in the world.</span>
+
 <span class="sd">    location: :class:`WorldLocation`</span>
 <span class="sd">        The physical location of the game servers.</span>
 <span class="sd">    pvp_type: :class:`PvpType`</span>
@@ -387,7 +388,7 @@
             <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
             <span class="n">world_info</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">online_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">world_info</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;players_online&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">online_count</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">world_info</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;players_online&quot;</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">online_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">WorldLocation</span><span class="p">,</span> <span class="n">world_info</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">))</span>
@@ -625,7 +626,7 @@
             <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;World&quot;</span><span class="p">:</span>
                 <span class="k">continue</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">online</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">online</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">online</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;Offline&quot;</span>
