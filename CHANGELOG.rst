@@ -6,6 +6,11 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.3.4:
+2.3.4 (2019-11-14)
+==================
+- Fixed bug with deaths not being parsed when a killer had ``and`` in their name.
+
 .. _v2.3.3:
 
 2.3.3 (2019-11-04)
@@ -22,7 +27,7 @@ Changelog
 
 2.3.1 (2019-10-06)
 ==================
-- Fixed a bug with deaths not being parsed when a killer had ``and`` in their name.
+- Fixed a bug with deaths not being parsed when a killer in assists had ``and`` in their name.
 
 .. _v2.3.0:
 

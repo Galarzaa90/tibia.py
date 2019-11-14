@@ -137,6 +137,7 @@ async def error_middleware(app, handler):
             raise
         except Exception as e:
             tb = traceback.format_exc()
+            print(tb)
             return json_error(500, e, tb)
 
     return middleware_handler

@@ -686,8 +686,8 @@ class Character(abc.BaseCharacter):
         last_item = items[-1]
         last_split = last_item.split(last_separator)
         if len(last_split) > 1:
-            items[-1] = last_split[0]
-            items.append(last_split[1])
+            items[-1] = last_separator.join(last_split[:-1])
+            items.append(last_split[-1])
         return [e.strip() for e in items]
     # endregion
 
