@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Reference &#8212; Tibia.py 2.3.4 documentation</title>
+    <title>API Reference &#8212; Tibia.py 2.4.0 documentation</title>
     <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.3.4 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -1041,9 +1041,9 @@ Boosted creatures yield twice the amount of experience points, carry more loot a
 </dd></dl>
 
 <dl class="attribute">
-<dt id="tibiapy.Character.house">
-<code class="descname">house</code><a class="headerlink" href="#tibiapy.Character.house" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#tibiapy.CharacterHouse" title="tibiapy.CharacterHouse"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterHouse</span></code></a>, optional – The house currently owned by the character.</p>
+<dt id="tibiapy.Character.houses">
+<code class="descname">houses</code><a class="headerlink" href="#tibiapy.Character.houses" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.CharacterHouse" title="tibiapy.CharacterHouse"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterHouse</span></code></a> – The houses currently owned by the character.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1141,6 +1141,16 @@ It will be empty if the character is hidden, otherwise, it will contain at least
 <dt id="tibiapy.Character.married_to_url">
 <code class="descname">married_to_url</code><a class="headerlink" href="#tibiapy.Character.married_to_url" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the husband/spouse information page on Tibia.com, if applicable.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Character.house">
+<code class="descname">house</code><a class="headerlink" href="#tibiapy.Character.house" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#tibiapy.CharacterHouse" title="tibiapy.CharacterHouse"><code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterHouse</span></code></a> – The house currently owned by the character.</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 2.4.0: </span>Characters may have more than one house. This will only return the first if any. Use <a class="reference internal" href="#tibiapy.Character.houses" title="tibiapy.Character.houses"><code class="xref py py-attr docutils literal notranslate"><span class="pre">houses</span></code></a> instead.</p>
+<p>Only kept for backwards compatibility and may be removed in the next major update.</p>
+</div>
 </dd></dl>
 
 <dl class="classmethod">
