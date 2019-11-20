@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.character &#8212; Tibia.py 2.4.0 documentation</title>
+    <title>tibiapy.character &#8212; Tibia.py 2.4.1 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -269,7 +269,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">former_world</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;former_world&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">residence</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;residence&quot;</span><span class="p">)</span>  <span class="c1"># type: str</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">married_to</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;married_to&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">houses</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;house&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[CharacterHouse]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">houses</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;houses&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[CharacterHouse]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_membership&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[GuildMembership]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_login</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_login&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">account_status</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">AccountStatus</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account_status&quot;</span><span class="p">))</span>
