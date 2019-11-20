@@ -15,6 +15,7 @@ FILE_CHARACTER_DELETION = "character/tibiacom_deletion.txt"
 FILE_CHARACTER_DEATHS_COMPLEX = "character/tibiacom_deaths_complex.txt"
 FILE_CHARACTER_TITLE_BADGES = "character/tibiacom_title_badges.txt"
 FILE_CHARACTER_NO_BADGES_SELECTED = "character/tibiacom_no_badges_selected.txt"
+FILE_CHARACTER_MULTIPLE_HOUSES = "character/tibiacom_multiple_houses.txt"
 
 FILE_CHARACTER_TIBIADATA = "character/tibiadata.json"
 FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character/tibiadata_unhidden.json"
@@ -127,6 +128,20 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual(3, char.unlocked_titles)
         self.assertEqual(0, len(char.account_badges))
         self.assertEqual(0, len(char.former_names))
+
+    def test_character_from_content_multiple_houses(self):
+        """Testing parsing a character with multiple houses."""
+        content = self._load_resource(FILE_CHARACTER_MULTIPLE_HOUSES)
+        char = Character.from_content(content)
+        self.assertEqual("Sayuri Nowan", char.name)
+        self.assertEqual(2, len(char.houses))
+        self.assertEqual(char.house.name, char.houses[0].name)
+        first_house = char.houses[0]
+        second_house = char.houses[1]
+        self.assertEqual("Cormaya 10", first_house.name)
+        self.assertEqual("Old Heritage Estate", second_house.name)
+        self.assertEqual("Edron", first_house.town)
+        self.assertEqual("Rathleton", second_house.town)
 
     def test_character_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""

@@ -1,6 +1,7 @@
 import datetime
 import re
 import urllib.parse
+import warnings
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -12,7 +13,7 @@ from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
-    parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum
+    parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum, deprecated
 
 # Extracts the scheduled deletion date of a character."""
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
@@ -159,8 +160,8 @@ class Character(abc.BaseCharacter):
         The current hometown of the character.
     married_to: :class:`str`, optional
         The name of the character's spouse.
-    house: :class:`CharacterHouse`, optional
-        The house currently owned by the character.
+    houses: :class:`list` of :class:`CharacterHouse`
+        The houses currently owned by the character.
     guild_membership: :class:`GuildMembership`, optional
         The guild the character is a member of.
     last_login: :class:`datetime.datetime`, optional
@@ -195,7 +196,7 @@ class Character(abc.BaseCharacter):
         "former_world",
         "residence",
         "married_to",
-        "house",
+        "houses",
         "guild_membership",
         "last_login",
         "account_status",
@@ -222,7 +223,7 @@ class Character(abc.BaseCharacter):
         self.former_world = kwargs.get("former_world")  # type: Optional[str]
         self.residence = kwargs.get("residence")  # type: str
         self.married_to = kwargs.get("married_to")  # type: Optional[str]
-        self.house = kwargs.get("house")  # type: Optional[CharacterHouse]
+        self.houses = kwargs.get("house", [])  # type: List[CharacterHouse]
         self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
         self.last_login = try_datetime(kwargs.get("last_login"))
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
@@ -265,6 +266,18 @@ class Character(abc.BaseCharacter):
     def married_to_url(self):
         """:class:`str`: The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return self.get_url(self.married_to) if self.married_to else None
+
+    @property
+    @deprecated("houses")
+    def house(self):
+        """:class:`CharacterHouse`: The house currently owned by the character.
+
+        .. deprecated:: 2.4.0
+            Characters may have more than one house. This will only return the first if any. Use :attr:`houses` instead.
+
+            Only kept for backwards compatibility and may be removed in the next major update.
+        """
+        return self.houses[0] if self.houses else None
     # endregion
 
     # region Public methods
@@ -350,8 +363,8 @@ class Character(abc.BaseCharacter):
         if "house" in character_data:
             house = character_data["house"]
             paid_until_date = parse_tibiadata_date(house["paid"])
-            char.house = CharacterHouse(house["houseid"], house["name"], char.world, house["town"], char.name,
-                                        paid_until_date)
+            char.houses.append(CharacterHouse(house["houseid"], house["name"], char.world, house["town"], char.name,
+                                              paid_until_date))
         char.comment = character_data.get("comment")
         if len(character_data["last_login"]) > 0:
             char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])
@@ -460,7 +473,7 @@ class Character(abc.BaseCharacter):
         """
         int_rows = ["level", "achievement_points"]
         char = {}
-        house = {}
+        houses = []
         for row in rows:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
@@ -475,8 +488,8 @@ class Character(abc.BaseCharacter):
                 house_link = cols_raw[1].find('a')
                 url = urllib.parse.urlparse(house_link["href"])
                 query = urllib.parse.parse_qs(url.query)
-                house = {"id": int(query["houseid"][0]), "name": house_link.text.strip(),
-                         "town": query["town"][0], "paid_until": paid_until_date}
+                houses.append({"id": int(query["houseid"][0]), "name": house_link.text.strip(),
+                               "town": query["town"][0], "paid_until": paid_until_date})
                 continue
             if field in int_rows:
                 value = int(value)
@@ -520,9 +533,8 @@ class Character(abc.BaseCharacter):
                 # This means that there is a attribute in the character's information table that does not have a
                 # corresponding class attribute.
                 pass
-        if house:
-            self.house = CharacterHouse(house["id"], house["name"], self.world, house["town"], self.name,
-                                        house["paid_until"])
+        self.houses = [CharacterHouse(h["id"], h["name"], self.world, h["town"], self.name, h["paid_until"])
+                       for h in houses]
 
     def _parse_deaths(self, rows):
         """

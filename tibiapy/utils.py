@@ -1,6 +1,8 @@
 import datetime
+import functools
 import json
 import re
+import warnings
 from typing import Optional, Type, TypeVar, Union
 
 import bs4
@@ -394,3 +396,20 @@ def _recursive_strip(value):
     if isinstance(value, str):
         return value.strip()
     return value
+
+
+def deprecated(instead=None):
+    def actual_decorator(func):
+        @functools.wraps(func)
+        def decorated(*args, **kwargs):
+            warnings.simplefilter('always', DeprecationWarning)
+            if instead:
+                fmt = "{0.__name__} is deprecated, use {1} instead."
+            else:
+                fmt = '{0.__name__} is deprecated.'
+
+            warnings.warn(fmt.format(func, instead), stacklevel=3, category=DeprecationWarning)
+            warnings.simplefilter('default', DeprecationWarning)
+            return func(*args, **kwargs)
+        return decorated
+    return actual_decorator

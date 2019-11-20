@@ -11,6 +11,7 @@ deaths by summons, players, assisted deaths, etcetera.
 - [tibiacom_not_found.txt](character/tibiacom_not_found.txt) - A character not found page.
 - [tibiacom_title_badges.txt](character/tibiacom_title_badges.txt) - A character with unlocked titles and badges.
 - [tibiacom_no_badges_selected.txt](character/tibiacom_no_badges_selected.txt) - A character with no selected badges.
+- [tibiacom_multiple_houses.txt](character/tibiacom_multiple_houses.txt) - A character with two houses.
 - [tibiadata.json](character/tibiadata.json) - A character on TibiaData, also showing Pvp deaths with assists.
 - [tibiadata_deleted.json](character/tibiadata_deleted.json) - A character scheduled for deletion on TibiaData.
 - [tibiadata_not_found.json](character/tibiadata_not_found.json) - The response of a character not found on TibiaData.
