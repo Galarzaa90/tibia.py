@@ -223,7 +223,7 @@ class Character(abc.BaseCharacter):
         self.former_world = kwargs.get("former_world")  # type: Optional[str]
         self.residence = kwargs.get("residence")  # type: str
         self.married_to = kwargs.get("married_to")  # type: Optional[str]
-        self.houses = kwargs.get("house", [])  # type: List[CharacterHouse]
+        self.houses = kwargs.get("houses", [])  # type: List[CharacterHouse]
         self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
         self.last_login = try_datetime(kwargs.get("last_login"))
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
