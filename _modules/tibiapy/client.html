@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.client &#8212; Tibia.py 2.4.1 documentation</title>
+    <title>tibiapy.client &#8212; Tibia.py 2.4.2 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -51,7 +51,7 @@
 <span class="kn">import</span> <span class="nn">aiohttp_socks</span>
 
 <span class="kn">import</span> <span class="nn">tibiapy</span>
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="k">import</span> <span class="n">Character</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">World</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">ListedGuild</span><span class="p">,</span> <span class="n">Highscores</span><span class="p">,</span> <span class="n">Category</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">Character</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">World</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">ListedGuild</span><span class="p">,</span> <span class="n">Highscores</span><span class="p">,</span> <span class="n">Category</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="p">,</span> \
     <span class="n">ListedHouse</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">WorldOverview</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span><span class="p">,</span> <span class="n">ListedNews</span><span class="p">,</span> <span class="n">News</span><span class="p">,</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> \
     <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">BoostedCreature</span>
 
@@ -81,7 +81,7 @@
 <span class="sd">        Note that if a session is passed, the SOCKS proxy won&#39;t be used and must be applied when creating the session.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">proxy_url</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">proxy_url</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span> <span class="k">if</span> <span class="n">loop</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">loop</span>  <span class="c1"># type: asyncio.AbstractEventLoop</span>
         <span class="k">if</span> <span class="n">session</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">session</span>  <span class="c1"># type: aiohttp.ClientSession</span>
