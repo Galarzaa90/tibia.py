@@ -50,7 +50,7 @@ class Highscores(abc.Serializable):
 
     __slots__ = (
         'world',
-        'categroy',
+        'category',
         'vocation',
         'entries',
         'results_count',
@@ -133,6 +133,8 @@ class Highscores(abc.Serializable):
         highscores.results_count = int(results_pattern.search(info_row.text).group(1))
         for row in rows:
             cols_raw = row.find_all('td')
+            if "There is currently no data" in cols_raw[0].text:
+                break
             highscores._parse_entry(cols_raw)
         return highscores
 

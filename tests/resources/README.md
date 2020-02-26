@@ -47,7 +47,7 @@ with the bare minimum (no description, no guildhall, no homepage)
 - [tibiacom_status_rented.txt](house/tibiacom_status_rented.txt) - The status string of a rented house.
 - [tibiacom_status_transfer.txt](house/tibiacom_status_transfer.txt) - The status string of a rented house that is set
  for transfer.
- - [tibiacom_status_with_bids.txt](house/tibiacom_status_with_bids.txt) - The status string of a auctioned house with 
+- [tibiacom_status_with_bids.txt](house/tibiacom_status_with_bids.txt) - The status string of a auctioned house with
  bids.
 - [tibiacom_not_found.txt](house/tibiacom_not_found.txt) - The content of a page for a house not found.
 - [tibiacom_list.txt](house/tibiacom_list.txt) - The house list of a world.
@@ -63,6 +63,7 @@ doesn't exist.
 ## Highscores resources
 - [tibiacom_full.txt](highscores/tibiacom_full.txt) - The content of a correct highscore's page.
 - [tibiacom_empty.txt](highscores/tibiacom_empty.txt) - The content of the highscores page of a nonexistent world.
+- [tibiacom_no_results.txt](highscores/tibiacom_no_results.txt) - The content of the highscores page of a new world (no results shown).
 - [tibiacom_experience.txt](highscores/tibiacom_experience.txt) - The content of an experience highscores page.
 - [tibiacom_loyalty.txt](highscores/tibiacom_loyalty.txt) - The content of a loyalty highscores page.
 - [tibiadata_full.json](highscores/tibiadata_full.json) - A highscores response from TibiaData.

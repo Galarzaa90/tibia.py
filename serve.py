@@ -42,11 +42,11 @@ async def get_guilds(request):
     return web.Response(text=json.dumps(guild_list, default=dict))
 
 
-@routes.get('/highscores/{world}/{category}/{vocations}/{page}')
+@routes.get(r'/highscores/{world}/{category}/{vocations:\d+}/{page}')
 async def get_highscores(request):
     world = request.match_info['world']
     category = request.match_info['category']
-    vocations = request.match_info['vocations']
+    vocations = int(request.match_info['vocations'])
     page = request.match_info['page']
     highscores = await app["tibiapy"].fetch_highscores_page(world,
                                                             try_enum(tibiapy.Category, category,

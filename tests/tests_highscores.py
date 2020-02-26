@@ -9,6 +9,7 @@ FILE_HIGHSCORES_FULL = "highscores/tibiacom_full.txt"
 FILE_HIGHSCORES_EXPERIENCE = "highscores/tibiacom_experience.txt"
 FILE_HIGHSCORES_LOYALTY = "highscores/tibiacom_loyalty.txt"
 FILE_HIGHSCORES_EMPTY = "highscores/tibiacom_empty.txt"
+FILE_HIGHSCORES_NO_RESULTS = "highscores/tibiacom_no_results.txt"
 
 FILE_HIGHSCORES_TIBIADATA_FULL = "highscores/tibiadata_full.json"
 FILE_HIGHSCORES_TIBIADATA_EXPERIENCE = "highscores/tibiadata_experience.json"
@@ -79,11 +80,23 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.title, str)
 
     def test_highscores_from_content_empty(self):
-        """Testing parsing highscores empty highscores"""
+        """Testing parsing highscores when empty (world doesn't exist)"""
         content = self._load_resource(FILE_HIGHSCORES_EMPTY)
         highscores = Highscores.from_content(content)
 
         self.assertIsNone(highscores)
+
+    def test_highscores_from_content_no_results(self):
+        """Testing parsing highscores with no results (first day of a new world)"""
+        content = self._load_resource(FILE_HIGHSCORES_NO_RESULTS)
+        highscores = Highscores.from_content(content)
+
+        self.assertIsInstance(highscores, Highscores)
+        self.assertEqual(highscores.world, "Unica")
+        self.assertEqual(highscores.category, Category.EXPERIENCE)
+        self.assertEqual(highscores.vocation, VocationFilter.ALL)
+        self.assertEqual(highscores.total_pages, 0)
+        self.assertEqual(len(highscores.entries), 0)
 
     def test_highscores_from_content_unrelated_section(self):
         """Testing parsing an unrelated section"""

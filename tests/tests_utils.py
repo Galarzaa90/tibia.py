@@ -156,6 +156,7 @@ class TestUtils(TestCommons, unittest.TestCase):
         self.assertEqual(utils.try_enum(enums.Sex, "male"), enums.Sex.MALE)
         self.assertEqual(utils.try_enum(enums.TransferType, "", enums.TransferType.REGULAR), enums.TransferType.REGULAR)
         self.assertEqual(utils.try_enum(enums.WorldLocation, enums.WorldLocation.EUROPE), enums.WorldLocation.EUROPE)
+        self.assertEqual(utils.try_enum(enums.VocationFilter, 4), enums.VocationFilter.DRUIDS)
 
     def test_enum_str(self):
         self.assertEqual(str(enums.Sex.MALE), enums.Sex.MALE.value)

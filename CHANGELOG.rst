@@ -6,18 +6,27 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.4.2:
+
+2.4.2 (2020-02-26)
+==================
+- Fixed exception when attempting to parse highscores with no results (e.g. a new world on its first day).
+
 .. _v2.4.1:
+
 2.4.1 (2019-11-20)
 ==================
 - Fixed incorrect argument name (house) in ``Character`` constructor.
 
 .. _v2.4.0:
+
 2.4.0 (2019-11-20)
 ==================
 - Added support for multiple houses per character. Accessible on ``Character.houses`` field.
 - ``Character.house`` is now deprecated. It will contain the character's first house or ``None``.
 
 .. _v2.3.4:
+
 2.3.4 (2019-11-14)
 ==================
 - Fixed bug with deaths not being parsed when a killer had ``and`` in their name.
