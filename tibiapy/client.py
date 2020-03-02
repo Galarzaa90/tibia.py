@@ -13,6 +13,21 @@ __all__ = (
     "Client",
 )
 
+# Tibia.com's cache for the community section is 5 minutes.
+# This limit is not sent anywhere, so there's no way to automate it.
+CACHE_LIMIT = 300
+
+
+class TibiaResponse:
+    def __init__(self, data=None, cache_limit=CACHE_LIMIT, **kwargs):
+        self.data = None
+        self.cached = kwargs.get("cached")
+        self.cache_age = kwargs.get("cache_age")
+        self.response_timestamp = None
+        self.data_timestamp = None
+        self.parsing_time = None
+        self.response_time = None
+
 
 class Client:
     """An asynchronous client that fetches information from Tibia.com
