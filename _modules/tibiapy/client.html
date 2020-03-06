@@ -59,6 +59,21 @@
     <span class="s2">&quot;Client&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="c1"># Tibia.com&#39;s cache for the community section is 5 minutes.</span>
+<span class="c1"># This limit is not sent anywhere, so there&#39;s no way to automate it.</span>
+<span class="n">CACHE_LIMIT</span> <span class="o">=</span> <span class="mi">300</span>
+
+
+<span class="k">class</span> <span class="nc">TibiaResponse</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cache_limit</span><span class="o">=</span><span class="n">CACHE_LIMIT</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cached&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_age</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cache_age&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response_timestamp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_timestamp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parsing_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response_time</span> <span class="o">=</span> <span class="kc">None</span>
+
 
 <div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../api.html#tibiapy.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;An asynchronous client that fetches information from Tibia.com</span>
