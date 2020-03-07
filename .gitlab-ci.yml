@@ -11,6 +11,7 @@ before_script:
 stages:
   - build
   - test
+  - analyze
   - deploy
 
 build:
@@ -23,6 +24,7 @@ build:
       - dist/
 
 sonarcloud-check:
+  stage: analyze
   image:
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -30,10 +32,11 @@ sonarcloud-check:
     key: "${CI_JOB_NAME}"
     paths:
       - .sonar/cache
-  stage: build
   before_script: []
   script:
     - sonar-scanner
+  dependencies:
+    - coverage
   only:
     - merge_requests
     - master
@@ -58,10 +61,12 @@ coverage:
       - coverage run setup.py test
       - coverage report
       - coverage html
+      - coverage xml
   artifacts:
     name: Coverage_Report
     paths:
       - htmlcov/
+      - coverage.xml
 
 pages:
   stage: deploy
