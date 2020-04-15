@@ -11,6 +11,7 @@ from tibiapy.kill_statistics import *
 from tibiapy.news import *
 from tibiapy.world import *
 from tibiapy.creature import *
+from tibiapy.tournament import *
 from tibiapy.client import *
 
 __version__ = '2.4.2'

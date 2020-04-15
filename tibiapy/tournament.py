@@ -1,5 +1,9 @@
-class Tournament:
-    """
+from tibiapy import abc
+from tibiapy.utils import parse_tibiacom_content, parse_tibia_datetime, split_list
+
+
+class Tournament(abc.Serializable):
+    """Represents a tournament's information.
 
     Attributes
     ----------
@@ -16,8 +20,73 @@ class Tournament:
     rule_set: :class:`RuleSet`
         The specific rules for this tournament.
     """
-    def __init__(self):
-        pass
+
+    __slots__ = (
+        "title",
+        "phase",
+        "start_date",
+        "end_date",
+        "worlds",
+        "rule_set",
+    )
+
+    def __init__(self, **kwargs):
+        self.title = kwargs.get("title")
+        self.phase = kwargs.get("phase")
+        self.start_date = kwargs.get("start_date")
+        self.end_date = kwargs.get("end_date")
+        self.worlds = kwargs.get("worlds")
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
+               "end_date={0.start_date!r}>".format(self)
+
+    @classmethod
+    def from_content(cls, content):
+        """Creates an instance of the class from the html content of the tournament's page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`Tournament`
+            The tournament contained in the page, or None if the tournament doesn't exist
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a tournament's page.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content, builder='html5lib')
+            tables = parsed_content.find_all('table', attrs={"class": "Table5"})
+            tournament_details_table = tables[1]
+            info_tables = tournament_details_table.find_all('table', attrs={'class': 'TableContent'})
+            main_info = info_tables[0]
+            rows = main_info.find_all('tr')
+            date_fields = ("start_date", "end_date")
+            list_fields = ("worlds",)
+            tournament = cls()
+            for row in rows:
+                cols_raw = row.find_all('td')
+                cols = [ele.text.strip() for ele in cols_raw]
+                field, value = cols
+                field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
+                value = value.replace("\xa0", " ")
+                if field in date_fields:
+                    value = parse_tibia_datetime(value)
+                if field in list_fields:
+                    value = split_list(value, ",", ",")
+                try:
+                    setattr(tournament, field, value)
+                except AttributeError:
+                    pass
+            return tournament
+        except Exception:
+            raise
 
 class RuleSet:
     """

@@ -1,7 +1,6 @@
 import datetime
 import re
 import urllib.parse
-import warnings
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -13,7 +12,7 @@ from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
-    parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum, deprecated
+    parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum, deprecated, split_list
 
 # Extracts the scheduled deletion date of a character."""
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
@@ -566,7 +565,7 @@ class Character(abc.BaseCharacter):
                 # Split assists into a list.
                 assists_desc = assist_match.group("assists")
                 assists_name_list = link_search.findall(assists_desc)
-            killers_name_list = self._split_list(killers_desc)
+            killers_name_list = split_list(killers_desc)
             for killer in killers_name_list:
                 killer_dict = self._parse_killer(killer)
                 death.killers.append(Killer(**killer_dict))
@@ -590,9 +589,9 @@ class Character(abc.BaseCharacter):
             assists_str = []
             involved = [i["name"] for i in death["involved"]]
             if m and m.group("killers"):
-                killers_str = [k.strip() for k in self._split_list(m.group("killers").strip())]
+                killers_str = [k.strip() for k in split_list(m.group("killers").strip())]
             if m and m.group("assists"):
-                assists_str = [a.strip() for a in self._split_list(m.group("assists").strip())]
+                assists_str = [a.strip() for a in split_list(m.group("assists").strip())]
             for killer in killers_str:
                 summoner = next((i for i in involved if "of %s" % i in killer), None)
                 summon = None
@@ -671,36 +670,6 @@ class Character(abc.BaseCharacter):
             title = table.find("td").text
             output[title] = table.find_all("tr")[1:]
         return output
-
-    # Todo: This might be turned into a function if it's needed elsewhere
-    @classmethod
-    def _split_list(cls, items, separator=",", last_separator=" and "):
-        """
-        Splits a string listing elements into an actual list.
-
-        Parameters
-        ----------
-        items: :class:`str`
-            A string listing elements.
-        separator: :class:`str`
-            The separator between each item. A comma by default.
-        last_separator: :class:`str`
-            The separator used for the last item. ' and ' by default.
-
-        Returns
-        -------
-        :class:`list` of :class:`str`
-            A list containing each one of the items.
-        """
-        if items is None:
-            return None
-        items = items.split(separator)
-        last_item = items[-1]
-        last_split = last_item.split(last_separator)
-        if len(last_split) > 1:
-            items[-1] = last_separator.join(last_split[:-1])
-            items.append(last_split[-1])
-        return [e.strip() for e in items]
     # endregion
 
 

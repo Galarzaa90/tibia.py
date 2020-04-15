@@ -59,7 +59,6 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
-
 .. autoclass:: TransferType
     :members:
     :undoc-members:
@@ -147,6 +146,12 @@ ListedWorld
 News
 ---------
 .. autoclass:: News
+   :members:
+   :inherited-members:
+
+Tournament
+----------
+.. autoclass:: Tournament
    :members:
    :inherited-members:
 
