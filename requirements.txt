@@ -2,3 +2,4 @@ beautifulsoup4
 lxml
 aiohttp
 aiohttp-socks
+html5lib
