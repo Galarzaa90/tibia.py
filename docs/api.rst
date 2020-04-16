@@ -270,6 +270,12 @@ RaceEntry
    :members:
    :inherited-members:
 
+RuleSet
+-------
+.. autoclass:: RuleSet
+   :members:
+   :inherited-members:
+
 Base Classes
 ============
 The following classes are not meant to be used or instantiated, but are documented here for informational purposes.
