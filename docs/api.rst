@@ -270,9 +270,21 @@ RaceEntry
    :members:
    :inherited-members:
 
+RewardEntry
+-----------
+.. autoclass:: RewardEntry
+   :members:
+   :inherited-members:
+
 RuleSet
 -------
 .. autoclass:: RuleSet
+   :members:
+   :inherited-members:
+
+ScoreSet
+--------
+.. autoclass:: ScoreSet
    :members:
    :inherited-members:
 

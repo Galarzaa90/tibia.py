@@ -1,7 +1,21 @@
 import datetime
+import re
+
+import bs4
 
 from tibiapy import abc, PvpType
-from tibiapy.utils import parse_tibiacom_content, parse_tibia_datetime, split_list, try_enum
+from tibiapy.utils import parse_integer, parse_tibia_datetime, parse_tibiacom_content, split_list, try_enum
+
+__all__ = (
+    "Tournament",
+    "RuleSet",
+    "ScoreSet",
+    "RewardEntry",
+)
+
+RANGE_PATTERN = re.compile(r'(\d+)(?:-(\d+))?')
+CUP_PATTERN = re.compile(r'(\w+ cup)')
+DEED_PATTERN = re.compile(r'(\w+ deed)')
 
 
 class Tournament(abc.Serializable):
@@ -17,10 +31,13 @@ class Tournament(abc.Serializable):
         The start date of the tournament.
     end_date: :class:`datetime.datetime`
         The end date of the tournament.
-    worlds: :obj:`list` of :class:`str`.
+    worlds: :obj:`list` of :class:`str`
         The worlds where this tournament is active on.
     rule_set: :class:`RuleSet`
         The specific rules for this tournament.
+    score_set: :class:`ScoreSet`
+        The ways to gain points in the tournament.
+    reward_set: :obj:`list` of :class:`RewardEntry`
     """
 
     __slots__ = (
@@ -30,6 +47,8 @@ class Tournament(abc.Serializable):
         "end_date",
         "worlds",
         "rule_set",
+        "score_set",
+        "reward_set",
     )
 
     def __init__(self, **kwargs):
@@ -39,6 +58,8 @@ class Tournament(abc.Serializable):
         self.end_date = kwargs.get("end_date")
         self.worlds = kwargs.get("worlds")
         self.rule_set = kwargs.get("rule_set")
+        self.score_set = kwargs.get("score_set")
+        self.reward_set = kwargs.get("reward_set", [])
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
@@ -70,9 +91,13 @@ class Tournament(abc.Serializable):
             info_tables = tournament_details_table.find_all('table', attrs={'class': 'TableContent'})
             main_info = info_tables[0]
             rule_set = info_tables[1]
+            score_set = info_tables[2]
+            reward_set = info_tables[3]
             tournament = cls()
             tournament._parse_tournament_info(main_info)
             tournament._parse_tournament_rules(rule_set)
+            tournament._parse_tournament_scores(score_set)
+            tournament._parse_tournament_rewards(reward_set)
             return tournament
         except Exception:
             raise
@@ -122,6 +147,69 @@ class Tournament(abc.Serializable):
                 value = int(value.replace("%", ""))
             rules[field] = value
         self.rule_set = RuleSet(**rules)
+
+    def _parse_tournament_scores(self, table):
+        rows = table.find_all('tr')
+        rules = {}
+        for row in rows[1:]:
+            cols_raw = row.find_all('td')
+            cols = [ele.text.strip() for ele in cols_raw]
+            field, value, *_ = cols
+            field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").replace("/", "_").lower()
+            value = re.sub(r'[^-0-9]', '', value)
+            rules[field] = parse_integer(value)
+        self.score_set = ScoreSet(**rules)
+
+    def _parse_tournament_rewards(self, table):
+        rows = table.find_all('tr')
+        rewards = []
+        for row in rows[1:]:
+            cols_raw = row.find_all('td')
+            rank_row, *rewards_cols = cols_raw
+            rank_text = rank_row.text
+            if not rank_text:
+                break
+            first, last = self._parse_rank_range(rank_text)
+            entry = RewardEntry(initial_rank=first, last_rank=last)
+            for col in rewards_cols:
+                col_str = str(col)
+                img = col.find('img')
+                if img and "tibiacoin" in img["src"]:
+                    entry.tibia_coins = parse_integer(col.text)
+                if img and "tournamentcoin" in img["src"]:
+                    entry.tournament_coins = parse_integer(col.text)
+                if img and "trophy" in img["src"]:
+                    m = CUP_PATTERN.search(col_str)
+                    if m:
+                        entry.cup = m.group(1)
+                    m = DEED_PATTERN.search(col_str)
+                    if m:
+                        entry.deed = m.group(1)
+                if img and "reward" in img["src"]:
+                    span = col.find('span', attrs={"class": "HelperDivIndicator"})
+                    mouse_over = span["onmouseover"]
+                    title, popup = self._parse_popup(mouse_over)
+                    label = popup.find('div', attrs={'class': 'ItemOverLabel'})
+                    entry.other_rewards = label.text.strip()
+            rewards.append(entry)
+        self.reward_set = rewards
+
+    @staticmethod
+    def _parse_popup(popup_content):
+        parts = popup_content.split(",", 2)
+        title = parts[1].replace(r"'", "").strip()
+        html = parts[-1].replace(r"\'",'"').replace(r"'", "").replace(",);","").strip()
+        parsed_html = bs4.BeautifulSoup(html, 'lxml')
+        return title, parsed_html
+
+    @staticmethod
+    def _parse_rank_range(rank_text):
+        m = RANGE_PATTERN.search(rank_text)
+        first = int(m.group(1))
+        last = first
+        if m.group(2):
+            last = int(m.group(2))
+        return first, last
 
 
 class RuleSet:
@@ -196,8 +284,9 @@ class RuleSet:
         t = datetime.datetime.strptime(interval, "%H:%M:%S")
         return datetime.timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
 
+
 class ScoreSet:
-    """
+    """Represents the ways to earn or lose points in the tournament.
 
     Attributes
     ----------
@@ -209,8 +298,27 @@ class ScoreSet:
         The points lost for dying.
     """
 
+    __slots__ = (
+        "level_gain_loss",
+        "charm_point_multiplier",
+        "character_death",
+    )
+
+    def __init__(self, **kwargs):
+        self.level_gain_loss = kwargs.get("level_gain_loss")
+        self.charm_point_multiplier = kwargs.get("charm_point_multiplier")
+        self.character_death = kwargs.get("character_death")
+
+    def __repr__(self):
+        attributes = ""
+        for attr in self.__slots__:
+            v = getattr(self, attr)
+            attributes += " %s=%r" % (attr, v)
+        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+
+
 class RewardEntry:
-    """
+    """Represents the rewards for a specific rank range.
 
     Attributes
     ----------
@@ -230,5 +338,28 @@ class RewardEntry:
         Other rewards given for this rank.
     """
 
-    def __init__(self):
-        pass
+    __slots__ = (
+        "initial_rank",
+        "last_rank",
+        "tibia_coins",
+        "tournament_coins",
+        "cup",
+        "deed",
+        "other_rewards",
+    )
+
+    def __init__(self, **kwargs):
+        self.initial_rank = kwargs.get("initial_rank")
+        self.last_rank = kwargs.get("last_rank")
+        self.tibia_coins = kwargs.get("tibia_coins", 0)
+        self.tournament_coins = kwargs.get("tournament_coins", 0)
+        self.cup = kwargs.get("cup")
+        self.deed = kwargs.get("deed")
+        self.other_rewards = kwargs.get("other_rewards")
+
+    def __repr__(self):
+        attributes = ""
+        for attr in self.__slots__:
+            v = getattr(self, attr)
+            attributes += " %s=%r" % (attr, v)
+        return "<{0.__class__.__name__}{1}>".format(self, attributes)
