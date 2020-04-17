@@ -39,6 +39,7 @@ class Tournament(abc.Serializable):
     score_set: :class:`ScoreSet`
         The ways to gain points in the tournament.
     reward_set: :obj:`list` of :class:`RewardEntry`
+        The list of rewards awarded for the specified ranges.
     """
 
     __slots__ = (
@@ -65,6 +66,29 @@ class Tournament(abc.Serializable):
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
                "end_date={0.start_date!r}>".format(self)
+
+    @property
+    def rewards_range(self):
+        """:class:`tuple`:The range of ranks that might receive rewards."""
+        return (self.reward_set[0].initial_rank, self.reward_set[-1].last_rank) if self.reward_set else (0, 0)
+
+    def rewards_for_rank(self, rank):
+        """Gets the rewards for a given rank, if any.
+
+        Parameters
+        ----------
+        rank: :class:`int`
+            The rank to check.
+
+        Returns
+        -------
+        :class:`RewardEntry`, optional:
+            The rewards for the given rank or None if there are no rewards.
+        """
+        for rewards in self.reward_set:
+            if rewards.initial_rank <= rank <= rewards.last_rank:
+                return rewards
+        return None
 
     @classmethod
     def from_content(cls, content):
@@ -359,8 +383,8 @@ class RewardEntry:
     )
 
     def __init__(self, **kwargs):
-        self.initial_rank = kwargs.get("initial_rank")
-        self.last_rank = kwargs.get("last_rank")
+        self.initial_rank = kwargs.get("initial_rank", 0)
+        self.last_rank = kwargs.get("last_rank", 0)
         self.tibia_coins = kwargs.get("tibia_coins", 0)
         self.tournament_coins = kwargs.get("tournament_coins", 0)
         self.tournament_ticker_voucher = kwargs.get("tournament_ticker_voucher", 0)
