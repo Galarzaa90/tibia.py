@@ -1,5 +1,6 @@
 import datetime
 import re
+from typing import List
 
 import bs4
 
@@ -54,12 +55,12 @@ class Tournament(abc.Serializable):
     def __init__(self, **kwargs):
         self.title = kwargs.get("title")
         self.phase = kwargs.get("phase")
-        self.start_date = kwargs.get("start_date")
-        self.end_date = kwargs.get("end_date")
-        self.worlds = kwargs.get("worlds")
-        self.rule_set = kwargs.get("rule_set")
-        self.score_set = kwargs.get("score_set")
-        self.reward_set = kwargs.get("reward_set", [])
+        self.start_date = kwargs.get("start_date")  # type: datetime.datetime
+        self.end_date = kwargs.get("end_date")  # type: datetime.datetime
+        self.worlds = kwargs.get("worlds")  # type: List[str]
+        self.rule_set = kwargs.get("rule_set")  # type: RuleSet
+        self.score_set = kwargs.get("score_set")  # type: ScoreSet
+        self.reward_set = kwargs.get("reward_set", [])  # type: List[RewardEntry]
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
@@ -86,8 +87,9 @@ class Tournament(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content, builder='html5lib')
-            tables = parsed_content.find_all('table', attrs={"class": "Table5"})
-            tournament_details_table = tables[1]
+            box_content = parsed_content.find("div", attrs={"class": "BoxContent"})
+            tables = box_content.find_all('table', attrs={"class": "Table5"})
+            tournament_details_table = tables[-1]
             info_tables = tournament_details_table.find_all('table', attrs={'class': 'TableContent'})
             main_info = info_tables[0]
             rule_set = info_tables[1]
@@ -156,7 +158,7 @@ class Tournament(abc.Serializable):
             cols = [ele.text.strip() for ele in cols_raw]
             field, value, *_ = cols
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").replace("/", "_").lower()
-            value = re.sub(r'[^-0-9]', '', value)
+            value = re.sub(r'[^-0-9]', '', value.replace("+/-",""))
             rules[field] = parse_integer(value)
         self.score_set = ScoreSet(**rules)
 
@@ -178,6 +180,8 @@ class Tournament(abc.Serializable):
                     entry.tibia_coins = parse_integer(col.text)
                 if img and "tournamentcoin" in img["src"]:
                     entry.tournament_coins = parse_integer(col.text)
+                if img and "tournamentvoucher" in img["src"]:
+                    entry.tournament_ticker_voucher = parse_integer(col.text)
                 if img and "trophy" in img["src"]:
                     m = CUP_PATTERN.search(col_str)
                     if m:
@@ -281,8 +285,11 @@ class RuleSet:
             return None
         if isinstance(interval, datetime.timedelta):
             return interval
-        t = datetime.datetime.strptime(interval, "%H:%M:%S")
-        return datetime.timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        try:
+            t = datetime.datetime.strptime(interval, "%H:%M:%S")
+            return datetime.timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        except ValueError:
+            return None
 
 
 class ScoreSet:
@@ -305,9 +312,9 @@ class ScoreSet:
     )
 
     def __init__(self, **kwargs):
-        self.level_gain_loss = kwargs.get("level_gain_loss")
-        self.charm_point_multiplier = kwargs.get("charm_point_multiplier")
-        self.character_death = kwargs.get("character_death")
+        self.level_gain_loss = kwargs.get("level_gain_loss", 0)
+        self.charm_point_multiplier = kwargs.get("charm_point_multiplier", 0)
+        self.character_death = kwargs.get("character_death", 0)
 
     def __repr__(self):
         attributes = ""
@@ -330,6 +337,8 @@ class RewardEntry:
         The amount of tibia coins awarded.
     tournament_coins: :class:`int`
         The amount of tournament coins awarded.
+    tournament_ticket_voucher: :class:`int`
+        The amount of tournament ticker vouchers awarded.
     cup: :class:`str`
         The type of cup awarded.
     deed: :class:`str`
@@ -343,6 +352,7 @@ class RewardEntry:
         "last_rank",
         "tibia_coins",
         "tournament_coins",
+        "tournament_ticker_voucher",
         "cup",
         "deed",
         "other_rewards",
@@ -353,6 +363,7 @@ class RewardEntry:
         self.last_rank = kwargs.get("last_rank")
         self.tibia_coins = kwargs.get("tibia_coins", 0)
         self.tournament_coins = kwargs.get("tournament_coins", 0)
+        self.tournament_ticker_voucher = kwargs.get("tournament_ticker_voucher", 0)
         self.cup = kwargs.get("cup")
         self.deed = kwargs.get("deed")
         self.other_rewards = kwargs.get("other_rewards")
