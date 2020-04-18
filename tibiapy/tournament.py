@@ -18,6 +18,26 @@ RANGE_PATTERN = re.compile(r'(\d+)(?:-(\d+))?')
 CUP_PATTERN = re.compile(r'(\w+ cup)')
 DEED_PATTERN = re.compile(r'(\w+ deed)')
 
+TOURNAMENTS_URL = "https://www.tibia.com/community/?subtopic=tournament"
+
+class ArchivedTournament(abc.Serializable):
+    """Represents an tournament in the archived tournaments list.
+
+    Attributes:
+    -----------
+    title: :class:`str`
+        The title of the tournament.
+    start_date: :class:`datetime.date`
+        The start date of the tournament.
+    end_date: :class:`datetime.date`
+        The end date of the tournament.
+    """
+
+    def __init__(self, title, start_date, end_date):
+        self.title = title
+        self.start_date = start_date
+        self.end_date = end_date
+
 
 class Tournament(abc.Serializable):
     """Represents a tournament's information.
@@ -40,6 +60,8 @@ class Tournament(abc.Serializable):
         The ways to gain points in the tournament.
     reward_set: :obj:`list` of :class:`RewardEntry`
         The list of rewards awarded for the specified ranges.
+    archived_tournaments: :obj:`list` of :class:`ArchivedTournament`
+        The list of other archieved tournaments. This is only present when viewing an archived tournament.
     """
 
     __slots__ = (
@@ -113,6 +135,7 @@ class Tournament(abc.Serializable):
             parsed_content = parse_tibiacom_content(content, builder='html5lib')
             box_content = parsed_content.find("div", attrs={"class": "BoxContent"})
             tables = box_content.find_all('table', attrs={"class": "Table5"})
+            archive_table = box_content.find('table', attrs={"class": "Table4"})
             tournament_details_table = tables[-1]
             info_tables = tournament_details_table.find_all('table', attrs={'class': 'TableContent'})
             main_info = info_tables[0]
@@ -120,6 +143,8 @@ class Tournament(abc.Serializable):
             score_set = info_tables[2]
             reward_set = info_tables[3]
             tournament = cls()
+            if archive_table:
+                tournament._parse_archive_list(archive_table)
             tournament._parse_tournament_info(main_info)
             tournament._parse_tournament_rules(rule_set)
             tournament._parse_tournament_scores(score_set)
@@ -187,6 +212,13 @@ class Tournament(abc.Serializable):
         self.score_set = ScoreSet(**rules)
 
     def _parse_tournament_rewards(self, table):
+        """Parses the reward section of the tournament information section.
+
+        Parameters
+        ----------
+        table: :class:`bs4.BeautifulSoup`
+            The parsed table containing the information.
+        """
         rows = table.find_all('tr')
         rewards = []
         for row in rows[1:]:
@@ -198,29 +230,41 @@ class Tournament(abc.Serializable):
             first, last = self._parse_rank_range(rank_text)
             entry = RewardEntry(initial_rank=first, last_rank=last)
             for col in rewards_cols:
-                col_str = str(col)
-                img = col.find('img')
-                if img and "tibiacoin" in img["src"]:
-                    entry.tibia_coins = parse_integer(col.text)
-                if img and "tournamentcoin" in img["src"]:
-                    entry.tournament_coins = parse_integer(col.text)
-                if img and "tournamentvoucher" in img["src"]:
-                    entry.tournament_ticker_voucher = parse_integer(col.text)
-                if img and "trophy" in img["src"]:
-                    m = CUP_PATTERN.search(col_str)
-                    if m:
-                        entry.cup = m.group(1)
-                    m = DEED_PATTERN.search(col_str)
-                    if m:
-                        entry.deed = m.group(1)
-                if img and "reward" in img["src"]:
-                    span = col.find('span', attrs={"class": "HelperDivIndicator"})
-                    mouse_over = span["onmouseover"]
-                    title, popup = self._parse_popup(mouse_over)
-                    label = popup.find('div', attrs={'class': 'ItemOverLabel'})
-                    entry.other_rewards = label.text.strip()
+                self._parse_rewards_column(col, entry)
             rewards.append(entry)
         self.reward_set = rewards
+
+    def _parse_rewards_column(self, column, entry):
+        """Parses a column from the tournament's reward section.
+
+        Parameters
+        ----------
+        column: :class:`bs4.BeautifulSoup`
+            The parsed content of the column.
+        entry: :class:`RewardEntry`
+            The reward entry where the data will be stored to.
+        """
+        col_str = str(column)
+        img = column.find('img')
+        if img and "tibiacoin" in img["src"]:
+            entry.tibia_coins = parse_integer(column.text)
+        if img and "tournamentcoin" in img["src"]:
+            entry.tournament_coins = parse_integer(column.text)
+        if img and "tournamentvoucher" in img["src"]:
+            entry.tournament_ticker_voucher = parse_integer(column.text)
+        if img and "trophy" in img["src"]:
+            m = CUP_PATTERN.search(col_str)
+            if m:
+                entry.cup = m.group(1)
+            m = DEED_PATTERN.search(col_str)
+            if m:
+                entry.deed = m.group(1)
+        if img and "reward" in img["src"]:
+            span = column.find('span', attrs={"class": "HelperDivIndicator"})
+            mouse_over = span["onmouseover"]
+            title, popup = self._parse_popup(mouse_over)
+            label = popup.find('div', attrs={'class': 'ItemOverLabel'})
+            entry.other_rewards = label.text.strip()
 
     @staticmethod
     def _parse_popup(popup_content):
@@ -239,8 +283,12 @@ class Tournament(abc.Serializable):
             last = int(m.group(2))
         return first, last
 
+    def _parse_archive_list(self, archive_table):
+        _, *options = archive_table.find_all("option")
+        pass
 
-class RuleSet:
+
+class RuleSet(abc.Serializable):
     """Contains the tournament rule set.
 
     Attributes
@@ -316,7 +364,7 @@ class RuleSet:
             return None
 
 
-class ScoreSet:
+class ScoreSet(abc.Serializable):
     """Represents the ways to earn or lose points in the tournament.
 
     Attributes
@@ -348,7 +396,7 @@ class ScoreSet:
         return "<{0.__class__.__name__}{1}>".format(self, attributes)
 
 
-class RewardEntry:
+class RewardEntry(abc.Serializable):
     """Represents the rewards for a specific rank range.
 
     Attributes

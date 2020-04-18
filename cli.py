@@ -1,6 +1,6 @@
 import time
 
-from tibiapy import Character, Guild, House, ListedGuild, ListedWorld, World, WorldOverview, __version__
+from tibiapy import Character, Guild, House, ListedGuild, ListedWorld, Tournament, World, WorldOverview, __version__
 from tibiapy.enums import HouseType
 from tibiapy.house import ListedHouse
 
@@ -21,7 +21,8 @@ BOLD = '\033[1m'
 CEND = '\033[0m'
 
 
-def _fetch_and_parse(regular_url, regular_parse, tibiadata_url, tibiadata_parse, tibiadata: bool, *args):
+def _fetch_and_parse(regular_url, regular_parse, tibiadata_url=None, tibiadata_parse=None, tibiadata: bool=False,
+                     *args):
     url = regular_url(*args) if not tibiadata else tibiadata_url(*args)
     parse_func = regular_parse if not tibiadata else tibiadata_parse
     start = time.perf_counter()
@@ -157,6 +158,16 @@ def cli_houses(world, town, tibiadata, json, guildhalls):
         print(_json.dumps(houses, default=House._try_dict, indent=2))
         return
     print(get_houses_string(houses))
+
+
+@cli.command(name="tournament")
+@click.option("-js", "--json", default=False, is_flag=True)
+def cli_tournaments(json):
+    """Displays the list of houses of a world."""
+    url = "https://www.tibia.com/community/?subtopic=tournament"
+    tournament = _fetch_and_parse(lambda: url, Tournament.from_content)
+    if json and tournament or True:
+        print(tournament.to_json(indent=2))
 
 
 def get_field(field, content):

@@ -53,6 +53,10 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertEqual("gold cup", first_prize.cup)
         self.assertEqual("golden deed", first_prize.deed)
         self.assertEqual("golden crown", first_prize.other_rewards)
+        self.assertEqual((1, 9999), tournament.rewards_range)
+        reward = tournament.rewards_for_rank(80)
+        self.assertEqual(400, reward.tournament_coins)
+        self.assertIsNone(tournament.rewards_for_rank(50000))
 
         last_prize = reward_set[-1]
         self.assertEqual(201, last_prize.initial_rank)
@@ -104,6 +108,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertEqual(3000, first_prize.tibia_coins)
         self.assertEqual(1750, first_prize.tournament_coins)
         self.assertEqual(1, first_prize.tournament_ticker_voucher)
+
 
         last_prize = reward_set[-1]
         self.assertEqual(201, last_prize.initial_rank)
