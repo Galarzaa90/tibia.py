@@ -178,7 +178,6 @@ AccountBadge
    :members:
    :inherited-members:
 
-
 AccountInformation
 ------------------
 .. autoclass:: AccountInformation
@@ -188,6 +187,12 @@ AccountInformation
 Achievement
 --------------
 .. autoclass:: Achievement
+   :members:
+   :inherited-members:
+
+ArchivedTournamentEntry
+-----------------------
+.. autoclass:: ArchivedTournamentEntry
    :members:
    :inherited-members:
 
@@ -311,6 +316,10 @@ They implement methods and properties that can be inherited by other classes to 
     :inherited-members:
 
 .. autoclass:: tibiapy.abc.BaseNews
+    :members:
+    :inherited-members:
+
+.. autoclass:: tibiapy.abc.BaseTournament
     :members:
     :inherited-members:
 
