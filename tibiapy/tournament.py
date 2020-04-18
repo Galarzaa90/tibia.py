@@ -17,6 +17,7 @@ __all__ = (
 RANGE_PATTERN = re.compile(r'(\d+)(?:-(\d+))?')
 CUP_PATTERN = re.compile(r'(\w+ cup)')
 DEED_PATTERN = re.compile(r'(\w+ deed)')
+ARCHIVE_LIST_PATTERN = re.compile(r'([\w\s]+)\s\(([^-]+)-\s([^)]+)\)')
 
 TOURNAMENTS_URL = "https://www.tibia.com/community/?subtopic=tournament"
 
