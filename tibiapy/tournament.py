@@ -10,7 +10,7 @@ from tibiapy.utils import parse_integer, parse_tibia_date, parse_tibia_datetime,
     try_enum
 
 __all__ = (
-    "ArchivedTournament",
+    "ArchivedTournamentEntry",
     "RewardEntry",
     "RuleSet",
     "ScoreSet",
@@ -23,11 +23,11 @@ DEED_PATTERN = re.compile(r'(\w+ deed)')
 ARCHIVE_LIST_PATTERN = re.compile(r'([\w\s]+)\s\(([^-]+)-\s([^)]+)\)')
 
 
-class ArchivedTournament(abc.BaseTournament):
+class ArchivedTournamentEntry(abc.BaseTournament):
     """Represents an tournament in the archived tournaments list.
 
-    Attributes:
-    -----------
+    Attributes
+    ----------
     title: :class:`str`
         The title of the tournament.
     cycle: :class:`int`
@@ -262,7 +262,7 @@ class Tournament(abc.BaseTournament):
         self.rule_set = kwargs.get("rule_set")  # type: RuleSet
         self.score_set = kwargs.get("score_set")  # type: ScoreSet
         self.reward_set = kwargs.get("reward_set", [])  # type: List[RewardEntry]
-        self.archived_tournaments = kwargs.get("archived_tournaments", [])  # type: List[ArchivedTournament]
+        self.archived_tournaments = kwargs.get("archived_tournaments", [])  # type: List[ArchivedTournamentEntry]
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
@@ -475,5 +475,5 @@ class Tournament(abc.BaseTournament):
             value = int(option["value"])
             if title == self.title:
                 self.cycle = value
-            self.archived_tournaments.append(ArchivedTournament(title=title, start_date=start_date, end_date=end_date,
-                                                                cycle=value))
+            self.archived_tournaments.append(ArchivedTournamentEntry(title=title, start_date=start_date, end_date=end_date,
+                                                                     cycle=value))
