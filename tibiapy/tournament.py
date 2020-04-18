@@ -256,7 +256,7 @@ class Tournament(abc.BaseTournament):
 
     def __init__(self, **kwargs):
         self.title = kwargs.get("title")
-        self.title = kwargs.get("cycle", 0)
+        self.cycle = kwargs.get("cycle", 0)
         self.phase = kwargs.get("phase")
         self.start_date = kwargs.get("start_date")  # type: datetime.datetime
         self.end_date = kwargs.get("end_date")  # type: datetime.datetime

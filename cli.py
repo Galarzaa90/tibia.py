@@ -161,11 +161,11 @@ def cli_houses(world, town, tibiadata, json, guildhalls):
 
 
 @cli.command(name="tournament")
+@click.argument('cycle', default=0)
 @click.option("-js", "--json", default=False, is_flag=True)
-def cli_tournaments(json):
+def cli_tournaments(json, cycle):
     """Displays the list of houses of a world."""
-    url = "https://www.tibia.com/community/?subtopic=tournament"
-    tournament = _fetch_and_parse(lambda: url, Tournament.from_content)
+    tournament = _fetch_and_parse(Tournament.get_url, Tournament.from_content, None, None, False, cycle)
     if json and tournament or True:
         print(tournament.to_json(indent=2))
 
