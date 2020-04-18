@@ -10,7 +10,7 @@ from tibiapy.utils import parse_integer, parse_tibia_date, parse_tibia_datetime,
     try_enum
 
 __all__ = (
-    "ArchivedTournamentEntry",
+    "ListedTournament",
     "RewardEntry",
     "RuleSet",
     "ScoreSet",
@@ -23,7 +23,7 @@ DEED_PATTERN = re.compile(r'(\w+ deed)')
 ARCHIVE_LIST_PATTERN = re.compile(r'([\w\s]+)\s\(([^-]+)-\s([^)]+)\)')
 
 
-class ArchivedTournamentEntry(abc.BaseTournament):
+class ListedTournament(abc.BaseTournament):
     """Represents an tournament in the archived tournaments list.
 
     Attributes
@@ -36,7 +36,6 @@ class ArchivedTournamentEntry(abc.BaseTournament):
         The start date of the tournament.
     end_date: :class:`datetime.date`
         The end date of the tournament.
-
     """
 
     __slots__ = (
@@ -224,6 +223,8 @@ class Tournament(abc.BaseTournament):
         The title of the tournament.
     cycle: :class:`int`
         An internal number used to get direct access to a specific tournament in the archive.
+
+        This will only be present when viewing an archived tournament, otherwise it will default to 0.
     phase: :class:`str`
         The current phase of the tournament.
     start_date: :class:`datetime.datetime`
@@ -238,8 +239,8 @@ class Tournament(abc.BaseTournament):
         The ways to gain points in the tournament.
     reward_set: :obj:`list` of :class:`RewardEntry`
         The list of rewards awarded for the specified ranges.
-    archived_tournaments: :obj:`list` of :class:`ArchivedTournament`
-        The list of other archieved tournaments. This is only present when viewing an archived tournament.
+    archived_tournaments: :obj:`list` of :class:`ListedTournament`
+        The list of other archived tournaments. This is only present when viewing an archived tournament.
     """
 
     __slots__ = (
@@ -255,6 +256,7 @@ class Tournament(abc.BaseTournament):
 
     def __init__(self, **kwargs):
         self.title = kwargs.get("title")
+        self.title = kwargs.get("cycle", 0)
         self.phase = kwargs.get("phase")
         self.start_date = kwargs.get("start_date")  # type: datetime.datetime
         self.end_date = kwargs.get("end_date")  # type: datetime.datetime
@@ -262,7 +264,7 @@ class Tournament(abc.BaseTournament):
         self.rule_set = kwargs.get("rule_set")  # type: RuleSet
         self.score_set = kwargs.get("score_set")  # type: ScoreSet
         self.reward_set = kwargs.get("reward_set", [])  # type: List[RewardEntry]
-        self.archived_tournaments = kwargs.get("archived_tournaments", [])  # type: List[ArchivedTournamentEntry]
+        self.archived_tournaments = kwargs.get("archived_tournaments", [])  # type: List[ListedTournament]
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
@@ -475,5 +477,5 @@ class Tournament(abc.BaseTournament):
             value = int(option["value"])
             if title == self.title:
                 self.cycle = value
-            self.archived_tournaments.append(ArchivedTournamentEntry(title=title, start_date=start_date, end_date=end_date,
-                                                                     cycle=value))
+            self.archived_tournaments.append(ListedTournament(title=title, start_date=start_date, end_date=end_date,
+                                                              cycle=value))

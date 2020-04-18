@@ -505,10 +505,24 @@ class BaseTournament(Serializable, metaclass=abc.ABCMeta):
 
     @property
     def url(self):
+        """:class:`str`: The URL to the tournament's information page."""
         return self.get_url(self.cycle)
 
     @classmethod
     def get_url(cls, tournament_cycle):
+        """Gets the URL to a tournament's information page if its cycle is provided,
+        otherwise it shows the current tournament.
+
+        Parameters
+        ----------
+        tournament_cycle: :class:`int`
+            The tournament's cycle.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the specified tournament.
+        """
         if tournament_cycle:
             return TOURNAMENTS_URL + ("&action=archive&tournamentcycle=%d" % tournament_cycle)
         return TOURNAMENTS_URL

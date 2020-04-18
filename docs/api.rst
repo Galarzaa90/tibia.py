@@ -136,6 +136,11 @@ ListedNews
    :members:
    :inherited-members:
 
+ListedTournament
+-----------------------
+.. autoclass:: ListedTournament
+   :members:
+   :inherited-members:
 
 ListedWorld
 -----------
@@ -187,12 +192,6 @@ AccountInformation
 Achievement
 --------------
 .. autoclass:: Achievement
-   :members:
-   :inherited-members:
-
-ArchivedTournamentEntry
------------------------
-.. autoclass:: ArchivedTournamentEntry
    :members:
    :inherited-members:
 
