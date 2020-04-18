@@ -5,13 +5,16 @@ from typing import List
 import bs4
 
 from tibiapy import abc, PvpType
-from tibiapy.utils import parse_integer, parse_tibia_datetime, parse_tibiacom_content, split_list, try_enum
+from tibiapy.utils import parse_integer, parse_tibia_date, parse_tibia_datetime, parse_tibia_full_date, \
+    parse_tibiacom_content, split_list, \
+    try_enum
 
 __all__ = (
-    "Tournament",
+    "ArchivedTournament",
+    "RewardEntry",
     "RuleSet",
     "ScoreSet",
-    "RewardEntry",
+    "Tournament",
 )
 
 RANGE_PATTERN = re.compile(r'(\d+)(?:-(\d+))?')
@@ -19,34 +22,208 @@ CUP_PATTERN = re.compile(r'(\w+ cup)')
 DEED_PATTERN = re.compile(r'(\w+ deed)')
 ARCHIVE_LIST_PATTERN = re.compile(r'([\w\s]+)\s\(([^-]+)-\s([^)]+)\)')
 
-TOURNAMENTS_URL = "https://www.tibia.com/community/?subtopic=tournament"
 
-class ArchivedTournament(abc.Serializable):
+class ArchivedTournament(abc.BaseTournament):
     """Represents an tournament in the archived tournaments list.
 
     Attributes:
     -----------
     title: :class:`str`
         The title of the tournament.
+    cycle: :class:`int`
+        An internal number used to get direct access to a specific tournament in the archive.
     start_date: :class:`datetime.date`
         The start date of the tournament.
     end_date: :class:`datetime.date`
         The end date of the tournament.
+
     """
 
-    def __init__(self, title, start_date, end_date):
+    __slots__ = (
+        "start_date",
+        "end_date",
+    )
+
+    def __init__(self, title, start_date, end_date, **kwargs):
         self.title = title
         self.start_date = start_date
         self.end_date = end_date
+        self.cycle = kwargs.get("cycle", 0)
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} title={0.title!r} cycle={0.cycle} start_date={0.start_date!r} " \
+               "end_date={0.end_date!r}>".format(self)
 
 
-class Tournament(abc.Serializable):
+class RewardEntry(abc.Serializable):
+    """Represents the rewards for a specific rank range.
+
+    Attributes
+    ----------
+    initial_rank: :class:`int`
+        The highest rank that gets this reward.
+    last_rank: :class:`int`
+        The lowest rank that gets this reward.
+    tibia_coins: :class`int`
+        The amount of tibia coins awarded.
+    tournament_coins: :class:`int`
+        The amount of tournament coins awarded.
+    tournament_ticket_voucher: :class:`int`
+        The amount of tournament ticker vouchers awarded.
+    cup: :class:`str`
+        The type of cup awarded.
+    deed: :class:`str`
+        The type of deed awarded.
+    other_rewards: :class:`str`
+        Other rewards given for this rank.
+    """
+
+    __slots__ = (
+        "initial_rank",
+        "last_rank",
+        "tibia_coins",
+        "tournament_coins",
+        "tournament_ticker_voucher",
+        "cup",
+        "deed",
+        "other_rewards",
+    )
+
+    def __init__(self, **kwargs):
+        self.initial_rank = kwargs.get("initial_rank", 0)
+        self.last_rank = kwargs.get("last_rank", 0)
+        self.tibia_coins = kwargs.get("tibia_coins", 0)
+        self.tournament_coins = kwargs.get("tournament_coins", 0)
+        self.tournament_ticker_voucher = kwargs.get("tournament_ticker_voucher", 0)
+        self.cup = kwargs.get("cup")
+        self.deed = kwargs.get("deed")
+        self.other_rewards = kwargs.get("other_rewards")
+
+    def __repr__(self):
+        attributes = ""
+        for attr in self.__slots__:
+            v = getattr(self, attr)
+            attributes += " %s=%r" % (attr, v)
+        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+
+
+class RuleSet(abc.Serializable):
+    """Contains the tournament rule set.
+
+    Attributes
+    ----------
+    pvp_type: :class:`PvPType`
+        The PvP type of the tournament.
+    daily_tournament_playtime: :class:`datetime.timedelta`
+        The maximum amount of time participants can play each day.
+    total_tournament_playtime: :class:`datetime.timedelta`
+        The total amount of time participants can play in the tournament.
+    playtime_reduced_only_in_combat: :class:`bool`
+        Whether playtime will only be reduced while in combat or not.
+    death_penalty_modifier: :class:`float`
+        The modifier for the death penalty.
+    xp_multiplier: :class:`float`
+        The multiplier for experience gained.
+    skill_multiplier: :class:`float`
+        The multiplier for skill gained.
+    spawn_rate_multiplier: :class:`float`
+        The multiplier for the spawn rate.
+    loot_probability: :class:`float`
+        The multiplier for the loot rate.
+    rent_percentage: :class:`int`
+        The percentage of rent prices relative to the regular price.
+    house_auction_durations: :class:`int`
+        The duration of house auctions.
+    """
+
+    __slots__ = (
+        "pvp_type",
+        "daily_tournament_playtime",
+        "total_tournament_playtime",
+        "playtime_reduced_only_in_combat",
+        "death_penalty_modifier",
+        "xp_multiplier",
+        "skill_multiplier",
+        "spawn_rate_multiplier",
+        "loot_probability",
+        "rent_percentage",
+        "house_auction_durations",
+    )
+
+    def __init__(self, **kwargs):
+        self.pvp_type = try_enum(PvpType, kwargs.get("pvp_type"))
+        self.daily_tournament_playtime = self._try_parse_interval(kwargs.get("daily_tournament_playtime"))
+        self.total_tournament_playtime = self._try_parse_interval(kwargs.get("total_tournament_playtime"))
+        self.playtime_reduced_only_in_combat = kwargs.get("playtime_reduced_only_in_combat")
+        self.death_penalty_modifier = kwargs.get("death_penalty_modifier")
+        self.xp_multiplier = kwargs.get("xp_multiplier")
+        self.skill_multiplier = kwargs.get("skill_multiplier")
+        self.spawn_rate_multiplier = kwargs.get("spawn_rate_multiplier")
+        self.loot_probability = kwargs.get("loot_probability")
+        self.rent_percentage = kwargs.get("rent_percentage")
+        self.house_auction_durations = kwargs.get("house_auction_durations")
+
+    def __repr__(self):
+        attributes = ""
+        for attr in self.__slots__:
+            v = getattr(self, attr)
+            attributes += " %s=%r" % (attr, v)
+        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+
+    @staticmethod
+    def _try_parse_interval(interval):
+        if interval is None:
+            return None
+        if isinstance(interval, datetime.timedelta):
+            return interval
+        try:
+            t = datetime.datetime.strptime(interval, "%H:%M:%S")
+            return datetime.timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+        except ValueError:
+            return None
+
+
+class ScoreSet(abc.Serializable):
+    """Represents the ways to earn or lose points in the tournament.
+
+    Attributes
+    ----------
+    level_gain_loss: :class:`int`
+        The points gained for leveling up or lost for losing a level.
+    charm_point_multiplier: :class:`int`
+        The multiplier for every charm point.
+    character_death: :class:`int`
+        The points lost for dying.
+    """
+
+    __slots__ = (
+        "level_gain_loss",
+        "charm_point_multiplier",
+        "character_death",
+    )
+
+    def __init__(self, **kwargs):
+        self.level_gain_loss = kwargs.get("level_gain_loss", 0)
+        self.charm_point_multiplier = kwargs.get("charm_point_multiplier", 0)
+        self.character_death = kwargs.get("character_death", 0)
+
+    def __repr__(self):
+        attributes = ""
+        for attr in self.__slots__:
+            v = getattr(self, attr)
+            attributes += " %s=%r" % (attr, v)
+        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+
+
+class Tournament(abc.BaseTournament):
     """Represents a tournament's information.
 
     Attributes
     ----------
     title: :class:`str`
         The title of the tournament.
+    cycle: :class:`int`
+        An internal number used to get direct access to a specific tournament in the archive.
     phase: :class:`str`
         The current phase of the tournament.
     start_date: :class:`datetime.datetime`
@@ -66,7 +243,6 @@ class Tournament(abc.Serializable):
     """
 
     __slots__ = (
-        "title",
         "phase",
         "start_date",
         "end_date",
@@ -74,6 +250,7 @@ class Tournament(abc.Serializable):
         "rule_set",
         "score_set",
         "reward_set",
+        "archived_tournaments",
     )
 
     def __init__(self, **kwargs):
@@ -85,6 +262,7 @@ class Tournament(abc.Serializable):
         self.rule_set = kwargs.get("rule_set")  # type: RuleSet
         self.score_set = kwargs.get("score_set")  # type: ScoreSet
         self.reward_set = kwargs.get("reward_set", [])  # type: List[RewardEntry]
+        self.archived_tournaments = kwargs.get("archived_tournaments", [])  # type: List[ArchivedTournament]
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
@@ -144,12 +322,12 @@ class Tournament(abc.Serializable):
             score_set = info_tables[2]
             reward_set = info_tables[3]
             tournament = cls()
-            if archive_table:
-                tournament._parse_archive_list(archive_table)
             tournament._parse_tournament_info(main_info)
             tournament._parse_tournament_rules(rule_set)
             tournament._parse_tournament_scores(score_set)
             tournament._parse_tournament_rewards(reward_set)
+            if archive_table:
+                tournament._parse_archive_list(archive_table)
             return tournament
         except Exception:
             raise
@@ -286,164 +464,16 @@ class Tournament(abc.Serializable):
 
     def _parse_archive_list(self, archive_table):
         _, *options = archive_table.find_all("option")
-        pass
-
-
-class RuleSet(abc.Serializable):
-    """Contains the tournament rule set.
-
-    Attributes
-    ----------
-    pvp_type: :class:`PvPType`
-        The PvP type of the tournament.
-    daily_tournament_playtime: :class:`datetime.timedelta`
-        The maximum amount of time participants can play each day.
-    total_tournament_playtime: :class:`datetime.timedelta`
-        The total amount of time participants can play in the tournament.
-    playtime_reduced_only_in_combat: :class:`bool`
-        Whether playtime will only be reduced while in combat or not.
-    death_penalty_modifier: :class:`float`
-        The modifier for the death penalty.
-    xp_multiplier: :class:`float`
-        The multiplier for experience gained.
-    skill_multiplier: :class:`float`
-        The multiplier for skill gained.
-    spawn_rate_multiplier: :class:`float`
-        The multiplier for the spawn rate.
-    loot_probability: :class:`float`
-        The multiplier for the loot rate.
-    rent_percentage: :class:`int`
-        The percentage of rent prices relative to the regular price.
-    house_auction_durations: :class:`int`
-        The duration of house auctions.
-    """
-
-    __slots__ = (
-        "pvp_type",
-        "daily_tournament_playtime",
-        "total_tournament_playtime",
-        "playtime_reduced_only_in_combat",
-        "death_penalty_modifier",
-        "xp_multiplier",
-        "skill_multiplier",
-        "spawn_rate_multiplier",
-        "loot_probability",
-        "rent_percentage",
-        "house_auction_durations",
-    )
-
-    def __init__(self, **kwargs):
-        self.pvp_type = try_enum(PvpType, kwargs.get("pvp_type"))
-        self.daily_tournament_playtime = self._try_parse_interval(kwargs.get("daily_tournament_playtime"))
-        self.total_tournament_playtime = self._try_parse_interval(kwargs.get("total_tournament_playtime"))
-        self.playtime_reduced_only_in_combat = kwargs.get("playtime_reduced_only_in_combat")
-        self.death_penalty_modifier = kwargs.get("death_penalty_modifier")
-        self.xp_multiplier = kwargs.get("xp_multiplier")
-        self.skill_multiplier = kwargs.get("skill_multiplier")
-        self.spawn_rate_multiplier = kwargs.get("spawn_rate_multiplier")
-        self.loot_probability = kwargs.get("loot_probability")
-        self.rent_percentage = kwargs.get("rent_percentage")
-        self.house_auction_durations = kwargs.get("house_auction_durations")
-
-    def __repr__(self):
-        attributes = ""
-        for attr in self.__slots__:
-            v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
-
-    @staticmethod
-    def _try_parse_interval(interval):
-        if interval is None:
-            return None
-        if isinstance(interval, datetime.timedelta):
-            return interval
-        try:
-            t = datetime.datetime.strptime(interval, "%H:%M:%S")
-            return datetime.timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
-        except ValueError:
-            return None
-
-
-class ScoreSet(abc.Serializable):
-    """Represents the ways to earn or lose points in the tournament.
-
-    Attributes
-    ----------
-    level_gain_loss: :class:`int`
-        The points gained for leveling up or lost for losing a level.
-    charm_point_multiplier: :class:`int`
-        The multiplier for every charm point.
-    character_death: :class:`int`
-        The points lost for dying.
-    """
-
-    __slots__ = (
-        "level_gain_loss",
-        "charm_point_multiplier",
-        "character_death",
-    )
-
-    def __init__(self, **kwargs):
-        self.level_gain_loss = kwargs.get("level_gain_loss", 0)
-        self.charm_point_multiplier = kwargs.get("charm_point_multiplier", 0)
-        self.character_death = kwargs.get("character_death", 0)
-
-    def __repr__(self):
-        attributes = ""
-        for attr in self.__slots__:
-            v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
-
-
-class RewardEntry(abc.Serializable):
-    """Represents the rewards for a specific rank range.
-
-    Attributes
-    ----------
-    initial_rank: :class:`int`
-        The highest rank that gets this reward.
-    last_rank: :class:`int`
-        The lowest rank that gets this reward.
-    tibia_coins: :class`int`
-        The amount of tibia coins awarded.
-    tournament_coins: :class:`int`
-        The amount of tournament coins awarded.
-    tournament_ticket_voucher: :class:`int`
-        The amount of tournament ticker vouchers awarded.
-    cup: :class:`str`
-        The type of cup awarded.
-    deed: :class:`str`
-        The type of deed awarded.
-    other_rewards: :class:`str`
-        Other rewards given for this rank.
-    """
-
-    __slots__ = (
-        "initial_rank",
-        "last_rank",
-        "tibia_coins",
-        "tournament_coins",
-        "tournament_ticker_voucher",
-        "cup",
-        "deed",
-        "other_rewards",
-    )
-
-    def __init__(self, **kwargs):
-        self.initial_rank = kwargs.get("initial_rank", 0)
-        self.last_rank = kwargs.get("last_rank", 0)
-        self.tibia_coins = kwargs.get("tibia_coins", 0)
-        self.tournament_coins = kwargs.get("tournament_coins", 0)
-        self.tournament_ticker_voucher = kwargs.get("tournament_ticker_voucher", 0)
-        self.cup = kwargs.get("cup")
-        self.deed = kwargs.get("deed")
-        self.other_rewards = kwargs.get("other_rewards")
-
-    def __repr__(self):
-        attributes = ""
-        for attr in self.__slots__:
-            v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+        self.archived_tournaments = []
+        for option in options:
+            m = ARCHIVE_LIST_PATTERN.match(option.text)
+            if not m:
+                continue
+            title = m.group(1).strip()
+            start_date = parse_tibia_full_date(m.group(2))
+            end_date = parse_tibia_full_date(m.group(3))
+            value = int(option["value"])
+            if title == self.title:
+                self.cycle = value
+            self.archived_tournaments.append(ArchivedTournament(title=title, start_date=start_date, end_date=end_date,
+                                                                cycle=value))

@@ -19,6 +19,7 @@ GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
 GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
 NEWS_URL = "https://www.tibia.com/news/?subtopic=newsarchive&id=%d"
 NEWS_SEARCH_URL = "https://www.tibia.com/news/?subtopic=newsarchive"
+TOURNAMENTS_URL = "https://www.tibia.com/community/?subtopic=tournament"
 WORLD_URL = "https://www.tibia.com/community/?subtopic=worlds&world=%s"
 WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
@@ -487,7 +488,33 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
         return NEWS_SEARCH_URL
 
 
-class BaseWorld(Serializable):
+class BaseTournament(Serializable, metaclass=abc.ABCMeta):
+    """Base class for tournament classes.
+
+    Attributes
+    ----------
+    title: :class:`str`
+        The tournament's title.
+    cycle: :class:`int`
+        The tournament's cycle.
+    """
+    __slots__ = (
+        "title",
+        "cycle",
+    )
+
+    @property
+    def url(self):
+        return self.get_url(self.cycle)
+
+    @classmethod
+    def get_url(cls, tournament_cycle):
+        if tournament_cycle:
+            return TOURNAMENTS_URL + ("&action=archive&tournamentcycle=%d" % tournament_cycle)
+        return TOURNAMENTS_URL
+
+
+class BaseWorld(Serializable, metaclass=abc.ABCMeta):
     """Base class for all World classes.
 
     The following implement this class:
