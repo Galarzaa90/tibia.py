@@ -599,7 +599,7 @@ class TournamentLeaderboard(abc.Serializable):
         The world this leaderboard belongs to.
     tournament: :class:`ListedTournament`
         The tournament this leaderboard belongs to.
-    entries: :obj:`list` of :class:``LeaderboardEntry`
+    entries: :obj:`list` of :class:`LeaderboardEntry`
         The leaderboard entries.
     results_count: :class:`int`
         The total number of leaderboard entries. These might be in a different page.
