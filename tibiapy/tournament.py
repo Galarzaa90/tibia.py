@@ -638,6 +638,23 @@ class TournamentLeaderboard(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
+        """Creates an instance of the class from the html content of the tournament's leaderboards page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`TournamentLeaderboard`
+            The tournament contained in the page, or None if the tournament leaderboard doesn't exist.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a tournament's leaderboard page.
+        """
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all('div', attrs={'class': 'TableContainer'})
         if len(tables) != 2:
@@ -649,6 +666,12 @@ class TournamentLeaderboard(abc.Serializable):
         return leaderboard
 
     def _parse_leaderboard_selectors(self, selector_table):
+        """Parses the option selectors from the leaderboards to get their information.
+
+        Parameters
+        ----------
+        selector_table: :class:`bs4.BeautifulSoup`
+        """
         world_select = selector_table.find("select", attrs={"name": "tournamentworld"})
         selected_world = world_select.find("option", {"selected": "selected"})
         self.world = selected_world.text
@@ -661,6 +684,13 @@ class TournamentLeaderboard(abc.Serializable):
         self.tournament = ListedTournament(title=m.group(1), start_date=start_date, end_date=end_date, cycle=cycle)
 
     def _parse_leaderboard_entries(self, ranking_table):
+        """Parses the leaderboards' entries.
+
+        Parameters
+        ----------
+        ranking_table: :class:`bs4.BeautifulSoup`
+            The table containing the rankings.
+        """
         ranking_table_content = ranking_table.find("table", attrs={"class": "TableContent"})
         small = ranking_table.find("small")
         pagination_text = small.text
