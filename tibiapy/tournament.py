@@ -4,23 +4,59 @@ from typing import List
 
 import bs4
 
-from tibiapy import abc, PvpType
+from tibiapy import abc, InvalidContent, PvpType, Vocation
 from tibiapy.utils import parse_integer, parse_tibia_date, parse_tibia_datetime, parse_tibia_full_date, \
     parse_tibiacom_content, split_list, \
     try_enum
 
 __all__ = (
+    "LeaderboardsEntry",
     "ListedTournament",
     "RewardEntry",
     "RuleSet",
     "ScoreSet",
     "Tournament",
+    "TournamentLeaderboard",
 )
 
 RANGE_PATTERN = re.compile(r'(\d+)(?:-(\d+))?')
 CUP_PATTERN = re.compile(r'(\w+ cup)')
 DEED_PATTERN = re.compile(r'(\w+ deed)')
 ARCHIVE_LIST_PATTERN = re.compile(r'([\w\s]+)\s\(([^-]+)-\s([^)]+)\)')
+RANK_PATTERN = re.compile(r'(\d+)\.\s\(\+?(-?\d+)\)')
+
+
+class LeaderboardsEntry(abc.BaseCharacter):
+    """Represents a single leaderboards entry.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The character's name.
+    rank: :class:`int`
+        The entry's rank.
+    change: :class:`int`
+        The entry's change.
+    vocation: :class:`Vocation`
+        The character's vocation.
+    score: :class:`int`
+        The entry's score.
+    """
+
+    __slots__ = (
+        "name",
+        "rank",
+        "change",
+        "vocation",
+        "score",
+    )
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get("name")
+        self.rank = kwargs.get("rank")
+        self.change = kwargs.get("change")
+        self.vocation = kwargs.get("vocation")
+        self.score = kwargs.get("score")
 
 
 class ListedTournament(abc.BaseTournament):
@@ -52,6 +88,11 @@ class ListedTournament(abc.BaseTournament):
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} cycle={0.cycle} start_date={0.start_date!r} " \
                "end_date={0.end_date!r}>".format(self)
+
+    @property
+    def duration(self):
+        """:class:`datetime.timedelta`: The total duration of the tournament."""
+        return self.end_date - self.start_date
 
 
 class RewardEntry(abc.Serializable):
@@ -275,6 +316,11 @@ class Tournament(abc.BaseTournament):
         """:class:`tuple`:The range of ranks that might receive rewards."""
         return (self.reward_set[0].initial_rank, self.reward_set[-1].last_rank) if self.reward_set else (0, 0)
 
+    @property
+    def duration(self):
+        """:class:`datetime.timedelta`: The total duration of the tournament."""
+        return self.end_date - self.start_date
+
     def rewards_for_rank(self, rank):
         """Gets the rewards for a given rank, if any.
 
@@ -305,7 +351,7 @@ class Tournament(abc.BaseTournament):
         Returns
         -------
         :class:`Tournament`
-            The tournament contained in the page, or None if the tournament doesn't exist
+            The tournament contained in the page, or None if the tournament doesn't exist.
 
         Raises
         ------
@@ -313,6 +359,8 @@ class Tournament(abc.BaseTournament):
             If content is not the HTML of a tournament's page.
         """
         try:
+            if "An internal error has occurred" in content:
+                return None
             parsed_content = parse_tibiacom_content(content, builder='html5lib')
             box_content = parsed_content.find("div", attrs={"class": "BoxContent"})
             tables = box_content.find_all('table', attrs={"class": "Table5"})
@@ -331,10 +379,17 @@ class Tournament(abc.BaseTournament):
             if archive_table:
                 tournament._parse_archive_list(archive_table)
             return tournament
-        except Exception:
-            raise
+        except IndexError as e:
+            raise InvalidContent("content does not belong to the Tibia.com's tournament section", e)
 
     def _parse_tournament_info(self, table):
+        """Parses the tournament info table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.BeautifulSoup`
+            The parsed table containing the tournament's information.
+        """
         rows = table.find_all('tr')
         date_fields = ("start_date", "end_date")
         list_fields = ("worlds",)
@@ -354,6 +409,13 @@ class Tournament(abc.BaseTournament):
                 pass
 
     def _parse_tournament_rules(self, table):
+        """Parses the tournament rules table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.BeautifulSoup`
+            The table containing the tournament rule set.
+        """
         rows = table.find_all('tr')
         bool_fields = ("playtime_reduced_only_in_combat",)
         float_fields = (
@@ -381,6 +443,13 @@ class Tournament(abc.BaseTournament):
         self.rule_set = RuleSet(**rules)
 
     def _parse_tournament_scores(self, table):
+        """Parses the tournament scores table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.BeautifulSoup`
+            The parsed table containing the tournament score set.
+        """
         rows = table.find_all('tr')
         rules = {}
         for row in rows[1:]:
@@ -388,7 +457,7 @@ class Tournament(abc.BaseTournament):
             cols = [ele.text.strip() for ele in cols_raw]
             field, value, *_ = cols
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").replace("/", "_").lower()
-            value = re.sub(r'[^-0-9]', '', value.replace("+/-",""))
+            value = re.sub(r'[^-0-9]', '', value.replace("+/-", ""))
             rules[field] = parse_integer(value)
         self.score_set = ScoreSet(**rules)
 
@@ -447,16 +516,45 @@ class Tournament(abc.BaseTournament):
             label = popup.find('div', attrs={'class': 'ItemOverLabel'})
             entry.other_rewards = label.text.strip()
 
+    # TODO: It might be worth implementing a private class for this and using it in other parts (e.g. badges and worlds)
     @staticmethod
     def _parse_popup(popup_content):
+        """Parses the information popups used through Tibia.com.
+
+        Parameters
+        ----------
+        popup_content: :class:`str`
+            The raw content of the javascript function that creates the popup.
+
+        Returns
+        -------
+        :class:`str`
+            The popup's title.
+        :class:`bs4.BeautifulSoup`
+            The parsed HTML content of the popup.
+        """
         parts = popup_content.split(",", 2)
         title = parts[1].replace(r"'", "").strip()
-        html = parts[-1].replace(r"\'",'"').replace(r"'", "").replace(",);","").strip()
+        html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").strip()
         parsed_html = bs4.BeautifulSoup(html, 'lxml')
         return title, parsed_html
 
     @staticmethod
     def _parse_rank_range(rank_text):
+        """Parses the rank range text from the reward set table.
+
+        Parameters
+        ----------
+        rank_text: :class:`str`
+            The string describing the ranks.
+
+        Returns
+        -------
+        :class:`tuple` of :class:`int`
+            A tuple containing the highest and lower rank for this reward bracket.
+
+            If the reward is for a single rank, both tuple elements will be the same.
+        """
         m = RANGE_PATTERN.search(rank_text)
         first = int(m.group(1))
         last = first
@@ -465,6 +563,15 @@ class Tournament(abc.BaseTournament):
         return first, last
 
     def _parse_archive_list(self, archive_table):
+        """Parses the archive list table.
+
+        This table is only visible when viewing a tournament from the archive.
+
+        Parameters
+        ----------
+        archive_table: :class:`bs4.BeautifulSoup`
+            The parsed element containing the table.
+        """
         _, *options = archive_table.find_all("option")
         self.archived_tournaments = []
         for option in options:
@@ -479,3 +586,68 @@ class Tournament(abc.BaseTournament):
                 self.cycle = value
             self.archived_tournaments.append(ListedTournament(title=title, start_date=start_date, end_date=end_date,
                                                               cycle=value))
+
+
+class TournamentLeaderboard(abc.Serializable):
+    """Represents a tournament's leaderboards.
+
+    Attributes
+    ----------
+    world: :class:`str`
+        The world this leaderboard belongs to.
+    tournament: :class:`ListedTournament`
+        The tournament this leaderboard belongs to.
+    entries: :obj:`list` of :class:``LeaderboardEntry`
+    """
+    __slots__ = (
+        "world",
+        "tournament",
+        "entries",
+    )
+
+    def __init__(self, **kwargs):
+        self.world = kwargs.get("world")  # type: str
+        self.tournament = kwargs.get("tournament")  # type: ListedTournament
+        self.entries = kwargs.get("entries", [])  # type: List[LeaderboardsEntry]
+
+    @classmethod
+    def from_content(cls, content):
+        parsed_content = parse_tibiacom_content(content)
+        tables = parsed_content.find_all('div', attrs={'class': 'TableContainer'})
+        if len(tables) != 2:
+            return None
+        leaderboard = cls()
+        selector_table, ranking_table = tables
+        leaderboard._parse_leaderboard_selectors(selector_table)
+        leaderboard._parse_leaderboard_entries(ranking_table)
+        return leaderboard
+
+    def _parse_leaderboard_selectors(self, selector_table):
+        world_select = selector_table.find("select", attrs={"name": "tournamentworld"})
+        selected_world = world_select.find("option", {"selected": "selected"})
+        self.world = selected_world.text
+        tournament_select = selector_table.find("select", attrs={"name": "tournamentcycle"})
+        selected_tournament = tournament_select.find("option", {"selected": "selected"})
+        m = ARCHIVE_LIST_PATTERN.search(selected_tournament.text)
+        start_date = parse_tibia_full_date(m.group(2))
+        end_date = parse_tibia_full_date(m.group(3))
+        cycle = int(selected_tournament["value"])
+        self.tournament = ListedTournament(title=m.group(1), start_date=start_date, end_date=end_date, cycle=cycle)
+
+    def _parse_leaderboard_entries(self, ranking_table):
+        ranking_table_content = ranking_table.find("table", attrs={"class": "TableContent"})
+        header, *rows = ranking_table_content.find_all('tr')
+        entries = []
+        for row in rows:
+            raw_columns = row.find_all("td")
+            if len(raw_columns) != 4:
+                break
+            cols = [c.text.strip() for c in raw_columns]
+            rank_and_change, character, vocation, score = cols
+            m = RANK_PATTERN.search(rank_and_change)
+            rank = int(m.group(1))
+            change = int(m.group(2))
+            voc = try_enum(Vocation, vocation)
+            score = parse_integer(score, 0)
+            entries.append(LeaderboardsEntry(rank=rank, change=change, name=character, vocation=voc, score=score))
+        self.entries = entries

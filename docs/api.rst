@@ -160,6 +160,12 @@ Tournament
    :members:
    :inherited-members:
 
+TournamentLeaderboard
+---------------------
+.. autoclass:: TournamentLeaderboard
+   :members:
+   :inherited-members:
+
 World
 -----
 .. autoclass:: World
@@ -247,6 +253,12 @@ HighscoresEntry
 Killer
 ------
 .. autoclass:: Killer
+   :members:
+   :inherited-members:
+
+LeaderboardEntry
+----------------
+.. autoclass:: LeaderboardEntry
    :members:
    :inherited-members:
 

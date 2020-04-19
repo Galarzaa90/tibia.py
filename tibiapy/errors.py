@@ -13,8 +13,15 @@ class InvalidContent(TibiapyException):
     This usually means that the content provided belongs to a different website or section of the website.
     This serves as a way to differentiate those cases from a parsing that returned no results (e.g. Character not found)
 
-    In some cases this can mean that Tibia.com's format has changed and the library needs updating."""
-    pass
+    In some cases this can mean that Tibia.com's format has changed and the library needs updating.
+
+    Attributes
+    ----------
+    original: :class:`Exception`
+        The original exception that caused this exception."""
+    def __init__(self, message, original=None):
+        super().__init__(message)
+        self.original = original
 
 
 class NetworkError(TibiapyException):

@@ -503,6 +503,11 @@ class BaseTournament(Serializable, metaclass=abc.ABCMeta):
         "cycle",
     )
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.title.lower() == other.title.lower()
+        return False
+
     @property
     def url(self):
         """:class:`str`: The URL to the tournament's information page."""

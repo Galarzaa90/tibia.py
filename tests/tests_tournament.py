@@ -2,10 +2,12 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import PvpType, RuleSet, ScoreSet, Tournament
+from tibiapy import InvalidContent, PvpType, RuleSet, ScoreSet, Tournament, TournamentLeaderboard
 
-FILE_TOURNAMENT_SIGN_UP = "tournaments/tournament_information_sign_up.txt"
-FILE_TOURNAMENT_ARCHIVE = "tournaments/tournament_archive.txt"
+FILE_TOURNAMENT_SIGN_UP = "tournaments/tibiacom_sign_up.txt"
+FILE_TOURNAMENT_ARCHIVE = "tournaments/tibiacom_archive.txt"
+FILE_TOURNAMENT_NOT_FOUND = "tournaments/tibiacom_not_found.txt"
+FILE_TOURNAMENT_LEADERBOARD = "tournaments/tibiacom_leaderboard_ended.txt"
 
 
 class TestTournaments(TestCommons, unittest.TestCase):
@@ -119,4 +121,20 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertIsNone(last_prize.cup)
         self.assertIsNone(last_prize.deed)
         self.assertIsNone(last_prize.other_rewards)
+
+    def test_tournament_from_content_not_found(self):
+        """Testing parsing a tournament that doesn't exist."""
+        content = self._load_resource(FILE_TOURNAMENT_NOT_FOUND)
+        tournament = Tournament.from_content(content)
+        self.assertIsNone(tournament)
+
+    def test_tournament_from_content_unrelated(self):
+        """Testing parsing an unrelated tibia.com section"""
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        with self.assertRaises(InvalidContent):
+            Tournament.from_content(content)
     # endregion
+
+    def test_tournament_leaderboard_from_content(self):
+        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD)
+        leaderboard = TournamentLeaderboard.from_content(content)
