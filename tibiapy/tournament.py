@@ -1,4 +1,5 @@
 import datetime
+import math
 import re
 from typing import List
 
@@ -24,6 +25,7 @@ CUP_PATTERN = re.compile(r'(\w+ cup)')
 DEED_PATTERN = re.compile(r'(\w+ deed)')
 ARCHIVE_LIST_PATTERN = re.compile(r'([\w\s]+)\s\(([^-]+)-\s([^)]+)\)')
 RANK_PATTERN = re.compile(r'(\d+)\.\s\(\+?(-?\d+)\)')
+RESULTS_PATTERN = re.compile(r'Results: (\d+)')
 
 
 class LeaderboardsEntry(abc.BaseCharacter):
@@ -598,17 +600,41 @@ class TournamentLeaderboard(abc.Serializable):
     tournament: :class:`ListedTournament`
         The tournament this leaderboard belongs to.
     entries: :obj:`list` of :class:``LeaderboardEntry`
+        The leaderboard entries.
+    results_count: :class:`int`
+        The total number of leaderboard entries. These might be in a different page.
     """
     __slots__ = (
         "world",
         "tournament",
         "entries",
+        "results_count",
     )
 
     def __init__(self, **kwargs):
         self.world = kwargs.get("world")  # type: str
         self.tournament = kwargs.get("tournament")  # type: ListedTournament
         self.entries = kwargs.get("entries", [])  # type: List[LeaderboardsEntry]
+
+    @property
+    def from_rank(self):
+        """:class:`int`: The starting rank of the provided entries."""
+        return self.entries[0].rank if self.entries else 0
+
+    @property
+    def to_rank(self):
+        """:class:`int`: The last rank of the provided entries."""
+        return self.entries[-1].rank if self.entries else 0
+
+    @property
+    def page(self):
+        """:class:`int`: The page number the shown results correspond to on Tibia.com"""
+        return int(math.floor(self.from_rank / 200)) + 1 if self.from_rank else 0
+
+    @property
+    def total_pages(self):
+        """:class:`int`: The total of pages of the highscores category."""
+        return int(math.ceil(self.results_count / 200))
 
     @classmethod
     def from_content(cls, content):
@@ -636,6 +662,10 @@ class TournamentLeaderboard(abc.Serializable):
 
     def _parse_leaderboard_entries(self, ranking_table):
         ranking_table_content = ranking_table.find("table", attrs={"class": "TableContent"})
+        small = ranking_table.find("small")
+        pagination_text = small.text
+        results_str = RESULTS_PATTERN.search(pagination_text)
+        self.results_count = int(results_str.group(1))
         header, *rows = ranking_table_content.find_all('tr')
         entries = []
         for row in rows:
