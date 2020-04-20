@@ -26,6 +26,7 @@ DEED_PATTERN = re.compile(r'(\w+ deed)')
 ARCHIVE_LIST_PATTERN = re.compile(r'([\w\s]+)\s\(([^-]+)-\s([^)]+)\)')
 RANK_PATTERN = re.compile(r'(\d+)\.\s\(\+?(-?\d+)\)')
 RESULTS_PATTERN = re.compile(r'Results: (\d+)')
+CURRENT_TOURNAMENT_PATTERN = re.compile(r'(?:.*- (\w+))')
 
 TOURNAMENT_LEADERBOARDS_URL = "https://www.tibia.com/community/?subtopic=tournamentleaderboard"
 
@@ -42,7 +43,7 @@ class LeaderboardsEntry(abc.BaseCharacter):
     change: :class:`int`
         The entry's change.
     vocation: :class:`Vocation`
-        The character's vocation.
+        The character's vocation. This will always show the base vocation, without promotions.
     score: :class:`int`
         The entry's score.
     """
@@ -62,9 +63,16 @@ class LeaderboardsEntry(abc.BaseCharacter):
         self.vocation = kwargs.get("vocation")
         self.score = kwargs.get("score")
 
+    def __repr__(self):
+        return "<{0.__class__.__name__} rank={0.rank} name={0.name!r} vocation={0.vocation!r} " \
+               "points={0.score}>".format(self)
+
 
 class ListedTournament(abc.BaseTournament):
     """Represents an tournament in the archived tournaments list.
+
+    :py:attr:`start_date` and :py:attr:`end_date` might be ``None`` when a tournament that is currently running
+    is on the list (e.g. on the leaderboards tournament selection section).
 
     Attributes
     ----------
@@ -96,7 +104,9 @@ class ListedTournament(abc.BaseTournament):
     @property
     def duration(self):
         """:class:`datetime.timedelta`: The total duration of the tournament."""
-        return self.end_date - self.start_date
+        if self.start_date and self.end_date:
+            return self.end_date - self.start_date
+        return None
 
 
 class RewardEntry(abc.Serializable):
@@ -601,11 +611,14 @@ class TournamentLeaderboard(abc.Serializable):
         The world this leaderboard belongs to.
     tournament: :class:`ListedTournament`
         The tournament this leaderboard belongs to.
-    entries: :obj:`list` of :class:`LeaderboardEntry`
+    entries: :obj:`list` of :class:`LeaderboardsEntry`
         The leaderboard entries.
     results_count: :class:`int`
         The total number of leaderboard entries. These might be in a different page.
     """
+
+    ENTRIES_PER_PAGE = 100
+
     __slots__ = (
         "world",
         "tournament",
@@ -631,12 +644,12 @@ class TournamentLeaderboard(abc.Serializable):
     @property
     def page(self):
         """:class:`int`: The page number the shown results correspond to on Tibia.com"""
-        return int(math.floor(self.from_rank / 200)) + 1 if self.from_rank else 0
+        return int(math.floor(self.from_rank / self.ENTRIES_PER_PAGE)) + 1 if self.from_rank else 0
 
     @property
     def total_pages(self):
         """:class:`int`: The total of pages of the highscores category."""
-        return int(math.ceil(self.results_count / 200))
+        return int(math.ceil(self.results_count / self.ENTRIES_PER_PAGE))
 
     @property
     def url(self):
@@ -705,11 +718,19 @@ class TournamentLeaderboard(abc.Serializable):
         self.world = selected_world.text
         tournament_select = selector_table.find("select", attrs={"name": "tournamentcycle"})
         selected_tournament = tournament_select.find("option", {"selected": "selected"})
-        m = ARCHIVE_LIST_PATTERN.search(selected_tournament.text)
-        start_date = parse_tibia_full_date(m.group(2))
-        end_date = parse_tibia_full_date(m.group(3))
+        tournament_text = selected_tournament.text
+        start_date = None
+        end_date = None
         cycle = int(selected_tournament["value"])
-        self.tournament = ListedTournament(title=m.group(1), start_date=start_date, end_date=end_date, cycle=cycle)
+        if "current tournament" in tournament_text.lower():
+            tournament_title = CURRENT_TOURNAMENT_PATTERN.sub(r"\g<1>", tournament_text)
+        else:
+            m = ARCHIVE_LIST_PATTERN.search(tournament_text)
+            tournament_title = m.group(1).strip()
+            start_date = parse_tibia_full_date(m.group(2))
+            end_date = parse_tibia_full_date(m.group(3))
+        self.tournament = ListedTournament(title=tournament_title, start_date=start_date, end_date=end_date,
+                                           cycle=cycle)
 
     def _parse_leaderboard_entries(self, ranking_table):
         """Parses the leaderboards' entries.

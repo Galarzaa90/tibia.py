@@ -2,12 +2,13 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, PvpType, RuleSet, ScoreSet, Tournament, TournamentLeaderboard
+from tibiapy import InvalidContent, ListedTournament, PvpType, RuleSet, ScoreSet, Tournament, TournamentLeaderboard
 
 FILE_TOURNAMENT_SIGN_UP = "tournaments/tibiacom_sign_up.txt"
 FILE_TOURNAMENT_ARCHIVE = "tournaments/tibiacom_archive.txt"
 FILE_TOURNAMENT_NOT_FOUND = "tournaments/tibiacom_not_found.txt"
-FILE_TOURNAMENT_LEADERBOARD = "tournaments/tibiacom_leaderboard_ended.txt"
+FILE_TOURNAMENT_LEADERBOARD_ENDED = "tournaments/tibiacom_leaderboard_ended.txt"
+FILE_TOURNAMENT_LEADERBOARD_CURRENT = "tournaments/tibiacom_leaderboard_current.txt"
 
 
 class TestTournaments(TestCommons, unittest.TestCase):
@@ -23,6 +24,8 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertEqual(6, len(tournament.worlds))
         self.assertIsInstance(tournament.rule_set, RuleSet)
         self.assertIsInstance(tournament.score_set, ScoreSet)
+
+        self.assertEqual(datetime.timedelta(days=7), tournament.duration)
 
         # Rule Set
         rule_set = tournament.rule_set
@@ -111,7 +114,6 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertEqual(1750, first_prize.tournament_coins)
         self.assertEqual(1, first_prize.tournament_ticker_voucher)
 
-
         last_prize = reward_set[-1]
         self.assertEqual(201, last_prize.initial_rank)
         self.assertEqual(99999, last_prize.last_rank)
@@ -135,6 +137,38 @@ class TestTournaments(TestCommons, unittest.TestCase):
             Tournament.from_content(content)
     # endregion
 
-    def test_tournament_leaderboard_from_content(self):
-        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD)
+    def test_tournament_leaderboard_from_content_running(self):
+        """Testing parsing the leaderboards for a tournament that is currently running."""
+        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD_CURRENT)
         leaderboard = TournamentLeaderboard.from_content(content)
+
+        self.assertIsInstance(leaderboard.tournament, ListedTournament)
+        self.assertEqual("TRIUMPH", leaderboard.tournament.title)
+        self.assertIsNone(leaderboard.tournament.start_date)
+        self.assertIsNone(leaderboard.tournament.end_date)
+        self.assertIsNone(leaderboard.tournament.duration)
+        self.assertEqual(4, leaderboard.tournament.cycle)
+        self.assertEqual(1, leaderboard.from_rank)
+        self.assertEqual(100, leaderboard.to_rank)
+        self.assertEqual(100, len(leaderboard.entries))
+        self.assertEqual(1, leaderboard.page)
+        self.assertEqual(2, leaderboard.total_pages)
+        self.assertEqual(198, leaderboard.results_count)
+        self.assertEqual("Endebra", leaderboard.world)
+
+    def test_tournament_leaderboard_from_content_ended(self):
+        """Testing parsing the leaderboards for a tournament that already ended."""
+        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD_ENDED)
+        leaderboard = TournamentLeaderboard.from_content(content)
+
+        self.assertIsInstance(leaderboard.tournament, ListedTournament)
+        self.assertEqual("GLORY", leaderboard.tournament.title)
+        self.assertIsInstance(leaderboard.tournament.start_date, datetime.date)
+        self.assertIsInstance(leaderboard.tournament.end_date, datetime.date)
+        self.assertEqual(datetime.timedelta(days=7), leaderboard.tournament.duration)
+        self.assertEqual(3, leaderboard.tournament.cycle)
+        self.assertEqual(1, leaderboard.from_rank)
+        self.assertEqual(65, len(leaderboard.entries))
+        self.assertEqual(1, leaderboard.total_pages)
+        self.assertEqual(65, leaderboard.results_count)
+        self.assertEqual("Endebra", leaderboard.world)
