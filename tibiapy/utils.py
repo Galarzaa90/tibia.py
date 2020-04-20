@@ -4,6 +4,7 @@ import json
 import re
 import urllib.parse
 import warnings
+from collections import OrderedDict
 from typing import Optional, Type, TypeVar, Union
 
 import bs4
@@ -14,8 +15,24 @@ TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
 
 def get_tibia_url(section, subtopic, parameters):
+    """
+
+    Parameters
+    ----------
+    section: :class:`str`
+        The desired section (e.g. community, abouttibia, manual, library)
+    subtopic: :class:`str`
+        The desired subtopic (e.g. characters, guilds, houses, etc)
+    parameters: :class:`dict`
+        A dictionary specifying the additional parameters (e.g. name, page, world, etc)
+
+    Returns
+    -------
+    :class:`str`
+        The generated Tibia.com URL.
+    """
     url = "https://www.tibia.com/%s/?" % section
-    params = {"subtopic": subtopic}
+    params = OrderedDict(subtopic=subtopic)
     if isinstance(params, dict):
         for key, value in parameters.items():
             if isinstance(value, str):
