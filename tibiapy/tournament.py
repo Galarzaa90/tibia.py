@@ -11,7 +11,7 @@ from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, pa
     try_enum
 
 __all__ = (
-    "LeaderboardsEntry",
+    "LeaderboardEntry",
     "ListedTournament",
     "RewardEntry",
     "RuleSet",
@@ -31,8 +31,8 @@ CURRENT_TOURNAMENT_PATTERN = re.compile(r'(?:.*- (\w+))')
 TOURNAMENT_LEADERBOARDS_URL = "https://www.tibia.com/community/?subtopic=tournamentleaderboard"
 
 
-class LeaderboardsEntry(abc.BaseCharacter):
-    """Represents a single leaderboards entry.
+class LeaderboardEntry(abc.BaseCharacter):
+    """Represents a single tournament leaderboard's entry.
 
     Attributes
     ----------
@@ -611,7 +611,7 @@ class TournamentLeaderboard(abc.Serializable):
         The world this leaderboard belongs to.
     tournament: :class:`ListedTournament`
         The tournament this leaderboard belongs to.
-    entries: :obj:`list` of :class:`LeaderboardsEntry`
+    entries: :obj:`list` of :class:`LeaderboardEntry`
         The leaderboard entries.
     results_count: :class:`int`
         The total number of leaderboard entries. These might be in a different page.
@@ -629,7 +629,12 @@ class TournamentLeaderboard(abc.Serializable):
     def __init__(self, **kwargs):
         self.world = kwargs.get("world")  # type: str
         self.tournament = kwargs.get("tournament")  # type: ListedTournament
-        self.entries = kwargs.get("entries", [])  # type: List[LeaderboardsEntry]
+        self.entries = kwargs.get("entries", [])  # type: List[LeaderboardEntry]
+        self.results_count = kwargs.get("results_count", 0)
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} world={0.world!r} tournament={0.tournament} results_count={0.results_count}"\
+            .format(self)
 
     @property
     def from_rank(self):
@@ -696,15 +701,21 @@ class TournamentLeaderboard(abc.Serializable):
         InvalidContent
             If content is not the HTML of a tournament's leaderboard page.
         """
-        parsed_content = parse_tibiacom_content(content)
-        tables = parsed_content.find_all('div', attrs={'class': 'TableContainer'})
-        if len(tables) != 2:
-            return None
-        leaderboard = cls()
-        selector_table, ranking_table = tables
-        leaderboard._parse_leaderboard_selectors(selector_table)
-        leaderboard._parse_leaderboard_entries(ranking_table)
-        return leaderboard
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            tables = parsed_content.find_all('div', attrs={'class': 'TableContainer'})
+            if not tables:
+                raise InvalidContent("content does not belong to the Tibia.com's tournament leaderboards section")
+            selector_table = tables[0]
+            leaderboard = cls()
+            result = leaderboard._parse_leaderboard_selectors(selector_table)
+            if not result:
+                return None
+            ranking_table = tables[1]
+            leaderboard._parse_leaderboard_entries(ranking_table)
+            return leaderboard
+        except AttributeError as e:
+            raise InvalidContent("content does not belong to the Tibia.com's tournament leaderboards section", e)
 
     def _parse_leaderboard_selectors(self, selector_table):
         """Parses the option selectors from the leaderboards to get their information.
@@ -712,9 +723,16 @@ class TournamentLeaderboard(abc.Serializable):
         Parameters
         ----------
         selector_table: :class:`bs4.BeautifulSoup`
+
+        Returns
+        -------
+        :class:`bool`
+            Whether the selectors could be parsed or not.
         """
         world_select = selector_table.find("select", attrs={"name": "tournamentworld"})
         selected_world = world_select.find("option", {"selected": "selected"})
+        if not selected_world:
+            return False
         self.world = selected_world.text
         tournament_select = selector_table.find("select", attrs={"name": "tournamentcycle"})
         selected_tournament = tournament_select.find("option", {"selected": "selected"})
@@ -731,6 +749,7 @@ class TournamentLeaderboard(abc.Serializable):
             end_date = parse_tibia_full_date(m.group(3))
         self.tournament = ListedTournament(title=tournament_title, start_date=start_date, end_date=end_date,
                                            cycle=cycle)
+        return True
 
     def _parse_leaderboard_entries(self, ranking_table):
         """Parses the leaderboards' entries.
@@ -741,10 +760,6 @@ class TournamentLeaderboard(abc.Serializable):
             The table containing the rankings.
         """
         ranking_table_content = ranking_table.find("table", attrs={"class": "TableContent"})
-        small = ranking_table.find("small")
-        pagination_text = small.text
-        results_str = RESULTS_PATTERN.search(pagination_text)
-        self.results_count = int(results_str.group(1))
         header, *rows = ranking_table_content.find_all('tr')
         entries = []
         for row in rows:
@@ -758,5 +773,11 @@ class TournamentLeaderboard(abc.Serializable):
             change = int(m.group(2))
             voc = try_enum(Vocation, vocation)
             score = parse_integer(score, 0)
-            entries.append(LeaderboardsEntry(rank=rank, change=change, name=character, vocation=voc, score=score))
+            entries.append(LeaderboardEntry(rank=rank, change=change, name=character, vocation=voc, score=score))
+        # Results footer
+        small = ranking_table.find("small")
+        if small:
+            pagination_text = small.text
+            results_str = RESULTS_PATTERN.search(pagination_text)
+            self.results_count = int(results_str.group(1))
         self.entries = entries

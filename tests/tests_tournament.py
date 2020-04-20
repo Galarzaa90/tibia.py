@@ -9,10 +9,12 @@ FILE_TOURNAMENT_ARCHIVE = "tournaments/tibiacom_archive.txt"
 FILE_TOURNAMENT_NOT_FOUND = "tournaments/tibiacom_not_found.txt"
 FILE_TOURNAMENT_LEADERBOARD_ENDED = "tournaments/tibiacom_leaderboard_ended.txt"
 FILE_TOURNAMENT_LEADERBOARD_CURRENT = "tournaments/tibiacom_leaderboard_current.txt"
+FILE_TOURNAMENT_LEADERBOARD_NO_DATA = "tournaments/tibiacom_leaderboard_no_data.txt"
+FILE_TOURNAMENT_LEADERBOARD_SELECTOR = "tournaments/tibiacom_leaderboard_selector.txt"
 
 
 class TestTournaments(TestCommons, unittest.TestCase):
-    # region Tibia.com Tests
+    # region Tournaments Tests
     def test_tournament_from_content(self):
         """Testing parsing a tournament's info page"""
         content = self._load_resource(FILE_TOURNAMENT_SIGN_UP)
@@ -136,6 +138,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         with self.assertRaises(InvalidContent):
             Tournament.from_content(content)
     # endregion
+    # region Tournament Leaderboards
 
     def test_tournament_leaderboard_from_content_running(self):
         """Testing parsing the leaderboards for a tournament that is currently running."""
@@ -172,3 +175,37 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertEqual(1, leaderboard.total_pages)
         self.assertEqual(65, leaderboard.results_count)
         self.assertEqual("Endebra", leaderboard.world)
+
+    def test_tournament_leaderboard_from_content_no_data(self):
+        """Testing parsing the leaderboards's when there's no data."""
+        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD_NO_DATA)
+        leaderboard = TournamentLeaderboard.from_content(content)
+
+        self.assertIsInstance(leaderboard.tournament, ListedTournament)
+        self.assertEqual("TRIUMPH", leaderboard.tournament.title)
+        self.assertIsNone(leaderboard.tournament.start_date)
+        self.assertIsNone(leaderboard.tournament.end_date)
+        self.assertIsNone(leaderboard.tournament.duration)
+        self.assertEqual(4, leaderboard.tournament.cycle)
+        self.assertEqual(0, leaderboard.from_rank)
+        self.assertEqual(0, leaderboard.to_rank)
+        self.assertEqual(0, len(leaderboard.entries))
+        self.assertEqual(0, leaderboard.page)
+        self.assertEqual(0, leaderboard.total_pages)
+        self.assertEqual(198, leaderboard.results_count)
+        self.assertEqual("Endebra", leaderboard.world)
+
+    def test_tournament_leaderboard_from_content_selector(self):
+        """Testing parsing the leaderboards's initial page."""
+        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD_SELECTOR)
+        leaderboard = TournamentLeaderboard.from_content(content)
+
+        self.assertIsNone(leaderboard)
+
+    def test_tournament_leaderboards_from_content_unrelated(self):
+        """Testing parsing an unrelated tibia.com section"""
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        with self.assertRaises(InvalidContent):
+            TournamentLeaderboard.from_content(content)
+
+    # endregion
