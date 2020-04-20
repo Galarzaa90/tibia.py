@@ -2,6 +2,7 @@ import datetime
 import functools
 import json
 import re
+import urllib.parse
 import warnings
 from typing import Optional, Type, TypeVar, Union
 
@@ -10,6 +11,17 @@ import bs4
 from tibiapy.errors import InvalidContent
 
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
+
+
+def get_tibia_url(section, subtopic, parameters):
+    url = "https://www.tibia.com/%s/?" % section
+    params = {"subtopic": subtopic}
+    if isinstance(params, dict):
+        for key, value in parameters.items():
+            if isinstance(value, str):
+                value = value.encode('iso-8859-1')
+            params[key] = value
+    return url + urllib.parse.urlencode(params)
 
 
 def parse_integer(number: str, default=0):

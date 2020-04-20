@@ -6,7 +6,7 @@ from typing import List
 import bs4
 
 from tibiapy import abc, InvalidContent, PvpType, Vocation
-from tibiapy.utils import parse_integer, parse_tibia_date, parse_tibia_datetime, parse_tibia_full_date, \
+from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
     parse_tibiacom_content, split_list, \
     try_enum
 
@@ -26,6 +26,8 @@ DEED_PATTERN = re.compile(r'(\w+ deed)')
 ARCHIVE_LIST_PATTERN = re.compile(r'([\w\s]+)\s\(([^-]+)-\s([^)]+)\)')
 RANK_PATTERN = re.compile(r'(\d+)\.\s\(\+?(-?\d+)\)')
 RESULTS_PATTERN = re.compile(r'Results: (\d+)')
+
+TOURNAMENT_LEADERBOARDS_URL = "https://www.tibia.com/community/?subtopic=tournamentleaderboard"
 
 
 class LeaderboardsEntry(abc.BaseCharacter):
@@ -635,6 +637,32 @@ class TournamentLeaderboard(abc.Serializable):
     def total_pages(self):
         """:class:`int`: The total of pages of the highscores category."""
         return int(math.ceil(self.results_count / 200))
+
+    @property
+    def url(self):
+        """:class:`str`: Gets the URL to the current leaderboard and page."""
+        return self.get_url(self.world, self.tournament.cycle, self.page)
+
+    @classmethod
+    def get_url(cls, world, tournament_cycle, page=1):
+        """Gets the URL to the leaderboards of a specific world, tournament and page.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The world to get the leaderboards for.
+        tournament_cycle: :class:`int`
+            The cycle of the tournament to get the leaderboards for.
+        page: :class:`int`
+            The leader board's page to view. By default 1.
+
+        Returns
+        -------
+        The URL to the specified leaderboard.
+        """
+        return get_tibia_url("community", "tournamentleaderboards", {"tournamentworld": world,
+                                                                     "tournamentcycle": tournament_cycle,
+                                                                     "selectedleaderboardpage": page})
 
     @classmethod
     def from_content(cls, content):

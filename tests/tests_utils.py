@@ -4,7 +4,7 @@ import unittest
 import tibiapy
 from tests.tests_tibiapy import TestCommons
 from tibiapy import enums, utils
-from tibiapy.utils import parse_integer, parse_tibia_money
+from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_money
 
 TIBIA_DATETIME_CEST = "Jul 10 2018, 07:13:32 CEST"
 TIBIA_DATETIME_CET = "Jan 10 2018, 07:13:32 CET"
@@ -178,3 +178,9 @@ class TestUtils(TestCommons, unittest.TestCase):
         self.assertEqual(15, parse_integer("15"))
         self.assertEqual(0, parse_integer("abc"))
         self.assertEqual(-1, parse_integer("abc", -1))
+
+    def test_get_tibia_url(self):
+        self.assertEqual("https://www.tibia.com/community/?subtopic=character&name=Galarzaa+Fidera",
+                         get_tibia_url("community", "character", {"name": "Galarzaa Fidera"}))
+        self.assertEqual("https://www.tibia.com/community/?subtopic=character&name=Fn%F6",
+                         get_tibia_url("community", "character", {"name": "Fnö"}))
