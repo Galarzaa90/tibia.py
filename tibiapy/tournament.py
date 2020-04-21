@@ -41,7 +41,7 @@ class LeaderboardEntry(abc.BaseCharacter):
     rank: :class:`int`
         The entry's rank.
     change: :class:`int`
-        The entry's change.
+        The entry's change in rank since the last server save.
     vocation: :class:`Vocation`
         The character's vocation. This will always show the base vocation, without promotions.
     score: :class:`int`
