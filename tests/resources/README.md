@@ -22,6 +22,7 @@ TibiaData.
 
 ## Guild resources
 - [tibiacom_full.txt](guild/tibiacom_full.txt) - The content of a guild's page.
+- [tibiacom_war.txt](guild/tibiacom_war.txt) - The content of a guild's page for a guild with an active war.
 - [tibiacom_info_complete.txt](guild/tibiacom_info_complete.txt) - An extract of the information container of a guild
 with description, guildhall and homepage.
 - [tibiacom_info_disbanding.txt](guild/tibiacom_info_disbanding.txt) - An extract of the information container of a
@@ -40,6 +41,12 @@ with the bare minimum (no description, no guildhall, no homepage)
 - [tibiadata_list.json](guild/tibiadata_list.json) - The guild list of a world on TibiaData.
 - [tibiadata_list_not_found.json](guild/tibiadata_list_not_found.json) - The guild list of a world that doesn't exist on
  TibiaData
+ 
+### War resources
+
+- [tibiacom_empty.txt](guild/wars/tibiacom_empty.txt) - A guild with no active wars and no war history.
+- [tibiacom_unactive_history.txt](guild/wars/tibiacom_unactive_history.txt) - A guild with no active wars and a previous war (enemy disbanded).
+- [tibiacom_active_history.txt](guild/wars/tibiacom_active_history.txt) - A guild with an active war and two previous wars.
 
 ## House resources
 - [tibiacom_full.txt](house/tibiacom_full.txt) - The content of a house's page
