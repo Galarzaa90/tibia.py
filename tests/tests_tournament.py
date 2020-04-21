@@ -192,7 +192,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertEqual(0, len(leaderboard.entries))
         self.assertEqual(0, leaderboard.page)
         self.assertEqual(0, leaderboard.total_pages)
-        self.assertEqual(198, leaderboard.results_count)
+        self.assertEqual(0, leaderboard.results_count)
         self.assertEqual("Endebra", leaderboard.world)
 
     def test_tournament_leaderboard_from_content_selector(self):
