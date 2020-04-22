@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.4.3:
+
+2.4.3 (2020-04-22)
+==================
+- Fixed an error when trying to parse a character with more deaths than what can be displayed in Tibia.com
+    - ``Character.deaths_truncated`` field was added to keep track of this case.
+
 .. _v2.4.2:
 
 2.4.2 (2020-02-26)

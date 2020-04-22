@@ -16,6 +16,7 @@ FILE_CHARACTER_DEATHS_COMPLEX = "character/tibiacom_deaths_complex.txt"
 FILE_CHARACTER_TITLE_BADGES = "character/tibiacom_title_badges.txt"
 FILE_CHARACTER_NO_BADGES_SELECTED = "character/tibiacom_no_badges_selected.txt"
 FILE_CHARACTER_MULTIPLE_HOUSES = "character/tibiacom_multiple_houses.txt"
+FILE_CHARACTER_TRUNCATED_DEATHS = "character/tibiacom_truncated_deaths.txt"
 
 FILE_CHARACTER_TIBIADATA = "character/tibiadata.json"
 FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character/tibiadata_unhidden.json"
@@ -142,6 +143,14 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual("Old Heritage Estate", second_house.name)
         self.assertEqual("Edron", first_house.town)
         self.assertEqual("Rathleton", second_house.town)
+
+    def test_character_from_content_truncated_deaths(self):
+        """Testing parsing a character with truncated daths"""
+        content = self._load_resource(FILE_CHARACTER_TRUNCATED_DEATHS)
+        char = Character.from_content(content)
+        self.assertEqual("Godlike Terror", char.name)
+        self.assertEqual(51, len(char.deaths))
+        self.assertTrue(char.deaths_truncated)
 
     def test_character_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""

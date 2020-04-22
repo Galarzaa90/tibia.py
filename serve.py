@@ -144,7 +144,7 @@ async def error_middleware(app, handler):
 
 
 async def init_client(app):
-    app["tibiapy"] = tibiapy.Client(proxy_url='socks5://127.0.0.1:7744')
+    app["tibiapy"] = tibiapy.Client()
 
 if __name__ == "__main__":
     app = web.Application(middlewares=[error_middleware])

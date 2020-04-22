@@ -178,10 +178,15 @@ class Character(abc.BaseCharacter):
         The achievements chosen to be displayed.
     deaths: :class:`list` of :class:`Death`
         The character's recent deaths.
+    deaths_truncated: :class:`bool`
+        Whether the character's deaths are truncated or not.
+
+        In some cases, there are more deaths in the last 30 days than what can be displayed.
     account_information: :class:`AccountInformation`, optional
         The character's account information, if visible.
     other_characters: :class:`list` of :class:`OtherCharacter`
         Other characters in the same account.
+
         It will be empty if the character is hidden, otherwise, it will contain at least the character itself.
     """
     __slots__ = (
@@ -205,6 +210,7 @@ class Character(abc.BaseCharacter):
         "account_badges",
         "achievements",
         "deaths",
+        "deaths_truncated",
         "account_information",
         "other_characters",
         "deletion_date",
@@ -232,6 +238,7 @@ class Character(abc.BaseCharacter):
         self.account_badges = kwargs.get("account_badges", [])  # type: List[AccountBadge]
         self.achievements = kwargs.get("achievements", [])  # type: List[Achievement]
         self.deaths = kwargs.get("deaths", [])  # type: List[Death]
+        self.deaths_truncated = kwargs.get("deaths", False)  # type: bool
         self.account_information = kwargs.get("account_information")  # type: Optional[AccountInformation]
         self.other_characters = kwargs.get("other_characters", [])  # type: List[OtherCharacter]
         self.deletion_date = try_datetime(kwargs.get("deletion_date"))
@@ -547,6 +554,9 @@ class Character(abc.BaseCharacter):
         """
         for row in rows:
             cols = row.find_all('td')
+            if len(cols) != 2:
+                self.deaths_truncated = True
+                break
             death_time_str = cols[0].text.replace("\xa0", " ").strip()
             death_time = parse_tibia_datetime(death_time_str)
             death = str(cols[1]).replace("\xa0", " ")
