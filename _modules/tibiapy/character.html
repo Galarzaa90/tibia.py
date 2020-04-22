@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.character &#8212; Tibia.py 2.4.2 documentation</title>
+    <title>tibiapy.character &#8212; Tibia.py 2.4.3 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -224,10 +224,15 @@
 <span class="sd">        The achievements chosen to be displayed.</span>
 <span class="sd">    deaths: :class:`list` of :class:`Death`</span>
 <span class="sd">        The character&#39;s recent deaths.</span>
+<span class="sd">    deaths_truncated: :class:`bool`</span>
+<span class="sd">        Whether the character&#39;s deaths are truncated or not.</span>
+
+<span class="sd">        In some cases, there are more deaths in the last 30 days than what can be displayed.</span>
 <span class="sd">    account_information: :class:`AccountInformation`, optional</span>
 <span class="sd">        The character&#39;s account information, if visible.</span>
 <span class="sd">    other_characters: :class:`list` of :class:`OtherCharacter`</span>
 <span class="sd">        Other characters in the same account.</span>
+
 <span class="sd">        It will be empty if the character is hidden, otherwise, it will contain at least the character itself.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
@@ -251,6 +256,7 @@
         <span class="s2">&quot;account_badges&quot;</span><span class="p">,</span>
         <span class="s2">&quot;achievements&quot;</span><span class="p">,</span>
         <span class="s2">&quot;deaths&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;deaths_truncated&quot;</span><span class="p">,</span>
         <span class="s2">&quot;account_information&quot;</span><span class="p">,</span>
         <span class="s2">&quot;other_characters&quot;</span><span class="p">,</span>
         <span class="s2">&quot;deletion_date&quot;</span><span class="p">,</span>
@@ -278,6 +284,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">account_badges</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account_badges&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[AccountBadge]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">achievements</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;achievements&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[Achievement]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deaths</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deaths&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[Death]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deaths_truncated</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deaths&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: bool</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">account_information</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account_information&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[AccountInformation]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">other_characters</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;other_characters&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[OtherCharacter]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deletion_date</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deletion_date&quot;</span><span class="p">))</span>
@@ -593,6 +600,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deaths_truncated</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
             <span class="n">death_time_str</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="n">death_time</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">death_time_str</span><span class="p">)</span>
             <span class="n">death</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>

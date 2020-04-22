@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Reference &#8212; Tibia.py 2.4.2 documentation</title>
+    <title>API Reference &#8212; Tibia.py 2.4.3 documentation</title>
     <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.4.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.4.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -1095,6 +1095,13 @@ Boosted creatures yield twice the amount of experience points, carry more loot a
 </dd></dl>
 
 <dl class="attribute">
+<dt id="tibiapy.Character.deaths_truncated">
+<code class="descname">deaths_truncated</code><a class="headerlink" href="#tibiapy.Character.deaths_truncated" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether the character’s deaths are truncated or not.</p>
+<p>In some cases, there are more deaths in the last 30 days than what can be displayed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="tibiapy.Character.account_information">
 <code class="descname">account_information</code><a class="headerlink" href="#tibiapy.Character.account_information" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="#tibiapy.AccountInformation" title="tibiapy.AccountInformation"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccountInformation</span></code></a>, optional – The character’s account information, if visible.</p>
@@ -1103,8 +1110,8 @@ Boosted creatures yield twice the amount of experience points, carry more loot a
 <dl class="attribute">
 <dt id="tibiapy.Character.other_characters">
 <code class="descname">other_characters</code><a class="headerlink" href="#tibiapy.Character.other_characters" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.OtherCharacter" title="tibiapy.OtherCharacter"><code class="xref py py-class docutils literal notranslate"><span class="pre">OtherCharacter</span></code></a> – Other characters in the same account.
-It will be empty if the character is hidden, otherwise, it will contain at least the character itself.</p>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.OtherCharacter" title="tibiapy.OtherCharacter"><code class="xref py py-class docutils literal notranslate"><span class="pre">OtherCharacter</span></code></a> – Other characters in the same account.</p>
+<p>It will be empty if the character is hidden, otherwise, it will contain at least the character itself.</p>
 </dd></dl>
 
 <dl class="attribute">
