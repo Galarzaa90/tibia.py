@@ -558,7 +558,7 @@ class Character(abc.BaseCharacter):
                 break
             death_time_str = cols[0].text.replace("\xa0", " ").strip()
             death_time = parse_tibia_datetime(death_time_str)
-            death = str(cols[1]).replace("\xa0", " ")
+            death = str(cols[1])
             death_info = death_regexp.search(death)
             if death_info:
                 level = int(death_info.group("level"))
@@ -577,6 +577,7 @@ class Character(abc.BaseCharacter):
                 assists_name_list = link_search.findall(assists_desc)
             killers_name_list = split_list(killers_desc)
             for killer in killers_name_list:
+                killer = killer.replace("\xa0", " ")
                 killer_dict = self._parse_killer(killer)
                 death.killers.append(Killer(**killer_dict))
             for assist in assists_name_list:
@@ -628,7 +629,8 @@ class Character(abc.BaseCharacter):
         """
         # If the killer contains a link, it is a player.
         if "href" in killer:
-            killer_dict = {"name": link_content.search(killer).group(1), "player": True}
+            m = link_content.search(killer)
+            killer_dict = {"name": m.group(1), "player": True}
         else:
             killer_dict = {"name": killer, "player": False}
         # Check if it contains a summon.
