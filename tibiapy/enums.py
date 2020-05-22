@@ -26,10 +26,6 @@ class BaseEnum(Enum):
     def __repr__(self):
         return "%s.%s" % (self.__class__.__name__, self.name)
 
-    @classmethod
-    def items(cls):
-        return [i for i in cls]
-
 
 class AccountStatus(BaseEnum):
     """Possible account statuses."""

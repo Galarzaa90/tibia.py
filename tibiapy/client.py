@@ -18,7 +18,8 @@ __all__ = (
 CACHE_LIMIT = 300
 
 
-class TibiaResponse:
+# This class is not used in this release.
+class _TibiaResponse:  # pragma: no cover
     def __init__(self, data=None, cache_limit=CACHE_LIMIT, **kwargs):
         self.data = None
         self.cached = kwargs.get("cached")
@@ -59,7 +60,7 @@ class Client:
 
     async def _initialize_session(self, proxy_url=None):
         headers = {
-            'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py" % tibiapy.__version__,
+            'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py)" % tibiapy.__version__,
             'Accept-Encoding': "deflate, gzip"
         }
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
@@ -105,6 +106,8 @@ class Client:
             raise NetworkError("aiohttp.ClientError: %s" % e, e)
         except aiohttp_socks.SocksConnectionError as e:
             raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
+        except UnicodeDecodeError as e:
+            raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
     async def _post(self, url, data):
         """Base POST request, handling possible error statuses.
@@ -127,6 +130,10 @@ class Client:
                 return await resp.text()
         except aiohttp.ClientError as e:
             raise NetworkError("aiohttp.ClientError: %s" % e, e)
+        except aiohttp_socks.SocksConnectionError as e:
+            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
+        except UnicodeDecodeError as e:
+            raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
     async def fetch_boosted_creature(self):
         """Fetches today's boosted creature.
@@ -420,9 +427,9 @@ class Client:
         if begin_date > end_date:
             raise ValueError("begin_date can't be more recent than end_date")
         if not categories:
-            categories = NewsCategory.items()
+            categories = list(NewsCategory)
         if not types:
-            types = NewsType.items()
+            types = list(NewsType)
         data = {
             "filter_begin_day": begin_date.day,
             "filter_begin_month": begin_date.month,
