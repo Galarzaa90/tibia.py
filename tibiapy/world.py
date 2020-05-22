@@ -7,7 +7,8 @@ import bs4
 from tibiapy import InvalidContent, abc, TournamentWorldType
 from tibiapy.character import OnlineCharacter
 from tibiapy.enums import PvpType, TransferType, WorldLocation
-from tibiapy.utils import parse_json, parse_tibia_datetime, parse_tibia_full_date, parse_tibiacom_content, \
+from tibiapy.utils import get_tibia_url, parse_json, parse_tibia_datetime, parse_tibia_full_date, \
+    parse_tibiacom_content, \
     parse_tibiadata_datetime, try_date, try_datetime, try_enum, parse_integer
 
 __all__ = (
@@ -467,7 +468,7 @@ class WorldOverview(abc.Serializable):
         :class:`str`
             The URL to the World Overview's page.
         """
-        return "https://www.tibia.com/community/?subtopic=worlds"
+        return get_tibia_url("community", "worlds")
 
     @classmethod
     def get_url_tibiadata(cls):

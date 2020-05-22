@@ -6,6 +6,7 @@ from tibiapy import InvalidContent, ListedTournament, PvpType, RuleSet, ScoreSet
 
 FILE_TOURNAMENT_SIGN_UP = "tournaments/tibiacom_sign_up.txt"
 FILE_TOURNAMENT_ARCHIVE = "tournaments/tibiacom_archive.txt"
+FILE_TOURNAMENT_NOT_ACTIVE = "tournaments/tibiacom_not_active.txt"
 FILE_TOURNAMENT_NOT_FOUND = "tournaments/tibiacom_not_found.txt"
 FILE_TOURNAMENT_LEADERBOARD_ENDED = "tournaments/tibiacom_leaderboard_ended.txt"
 FILE_TOURNAMENT_LEADERBOARD_CURRENT = "tournaments/tibiacom_leaderboard_current.txt"
@@ -125,6 +126,12 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertIsNone(last_prize.cup)
         self.assertIsNone(last_prize.deed)
         self.assertIsNone(last_prize.other_rewards)
+
+    def test_tournament_from_content_not_active(self):
+        """Testing parsing the tournament page when ther'es no active tournament.."""
+        content = self._load_resource(FILE_TOURNAMENT_NOT_ACTIVE)
+        tournament = Tournament.from_content(content)
+        self.assertIsNone(tournament)
 
     def test_tournament_from_content_not_found(self):
         """Testing parsing a tournament that doesn't exist."""

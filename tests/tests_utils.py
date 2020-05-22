@@ -181,6 +181,6 @@ class TestUtils(TestCommons, unittest.TestCase):
 
     def test_get_tibia_url(self):
         self.assertEqual("https://www.tibia.com/community/?subtopic=character&name=Galarzaa+Fidera",
-                         get_tibia_url("community", "character", {"name": "Galarzaa Fidera"}))
+                         get_tibia_url("community", "character", name="Galarzaa Fidera"))
         self.assertEqual("https://www.tibia.com/community/?subtopic=character&name=Fn%F6",
-                         get_tibia_url("community", "character", {"name": "Fnö"}))
+                         get_tibia_url("community", "character", name="Fnö"))

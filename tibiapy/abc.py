@@ -8,19 +8,11 @@ from enum import Enum
 from tibiapy.enums import HouseType, HouseStatus, HouseOrder
 from tibiapy.utils import get_tibia_url
 
-CHARACTER_URL = "https://www.tibia.com/community/?subtopic=characters&name=%s"
 CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
-HOUSE_URL = "https://www.tibia.com/community/?subtopic=houses&page=view&houseid=%d&world=%s"
 HOUSE_URL_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
-HOUSE_LIST_URL = "https://www.tibia.com/community/?subtopic=houses&world=%s&town=%s&type=%s&status=%s&order=%s"
 HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
-GUILD_URL = "https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName=%s"
 GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
-GUILD_LIST_URL = "https://www.tibia.com/community/?subtopic=guilds&world="
 GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
-NEWS_URL = "https://www.tibia.com/news/?subtopic=newsarchive&id=%d"
-NEWS_SEARCH_URL = "https://www.tibia.com/news/?subtopic=newsarchive"
-WORLD_URL = "https://www.tibia.com/community/?subtopic=worlds&world=%s"
 WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
 
@@ -147,7 +139,7 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
         --------
         :class:`str`
             The URL to the character's page."""
-        return CHARACTER_URL % urllib.parse.quote(name.encode('iso-8859-1'))
+        return get_tibia_url("community", "characters", name=name)
 
     @classmethod
     def get_url_tibiadata(cls, name):
@@ -206,7 +198,7 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         --------
         :class:`str`
             The URL to the guild's page"""
-        return GUILD_URL % urllib.parse.quote(name.encode('iso-8859-1'))
+        return get_tibia_url("community", "guilds", page="view", GuildName=name)
 
     @classmethod
     def get_url_tibiadata(cls, name):
@@ -237,7 +229,7 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         :class:`str`
             The URL to the guild's page
         """
-        return GUILD_LIST_URL + urllib.parse.quote(world.title().encode('iso-8859-1'))
+        return get_tibia_url("community", "guilds", world=world)
 
     @classmethod
     def get_world_list_url_tibiadata(cls, world):
@@ -302,7 +294,7 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         -------
         The URL to the house in Tibia.com
         """
-        return HOUSE_URL % (house_id, world)
+        return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
 
     @classmethod
     def get_url_tibiadata(cls, house_id, world):
@@ -347,7 +339,8 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         """
         house_type = "%ss" % house_type.value
         status = "" if status is None else status.value
-        return HOUSE_LIST_URL % (urllib.parse.quote(world), urllib.parse.quote(town), house_type, status, order.value)
+        return get_tibia_url("community", "houses", world=world, town=town, type=house_type, status=status,
+                             order=order.value)
 
     @classmethod
     def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):
@@ -469,7 +462,7 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
         --------
         :class:`str`
             The URL to the news' page"""
-        return NEWS_URL % news_id
+        return get_tibia_url("news", "newsarchive", id=news_id)
 
     @classmethod
     def get_list_url(cls):
@@ -485,7 +478,7 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
         :class:`str`
             The URL to the news archive page on Tibia.com.
         """
-        return NEWS_SEARCH_URL
+        return get_tibia_url("news", "newsarchive")
 
 
 class BaseTournament(Serializable, metaclass=abc.ABCMeta):
@@ -530,8 +523,11 @@ class BaseTournament(Serializable, metaclass=abc.ABCMeta):
         """
         params = None
         if tournament_cycle:
-            params = {"tournamentcycle": tournament_cycle}
-        return get_tibia_url("community", "tournament", params)
+            params = {
+                "tournamentcycle": tournament_cycle,
+                "action": "archive",
+            }
+        return get_tibia_url("community", "tournament", **params)
 
 
 class BaseWorld(Serializable, metaclass=abc.ABCMeta):
@@ -609,7 +605,7 @@ class BaseWorld(Serializable, metaclass=abc.ABCMeta):
         :class:`str`
             The URL to the world's information page.
         """
-        return WORLD_URL % name.title()
+        return get_tibia_url("community", "worlds", world=name.title())
 
     @classmethod
     def get_url_tibiadata(cls, name):

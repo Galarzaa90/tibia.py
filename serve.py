@@ -21,21 +21,21 @@ async def home(request):
     return web.Response(text=content, content_type='text/html')
 
 
-@routes.get('/character/{name}')
+@routes.get('/characters/{name}')
 async def get_character(request):
     name = request.match_info['name']
     char = await app["tibiapy"].fetch_character(name)
     return web.Response(text=char.to_json())
 
 
-@routes.get('/guild/{name}')
+@routes.get('/guilds/{name}')
 async def get_guild(request):
     name = request.match_info['name']
     char = await app["tibiapy"].fetch_guild(name)
     return web.Response(text=char.to_json())
 
 
-@routes.get('/guilds/{name}')
+@routes.get('/worlds/{name}/guilds')
 async def get_guilds(request):
     name = request.match_info['name']
     guild_list = await app["tibiapy"].fetch_world_guilds(name)
@@ -86,7 +86,7 @@ async def get_worlds(request):
     return web.Response(text=worlds.to_json())
 
 
-@routes.get('/world/{name}')
+@routes.get('/worlds/{name}')
 async def get_world(request):
     name = request.match_info['name']
     world = await app["tibiapy"].fetch_world(name)
@@ -111,6 +111,22 @@ async def get_news_html(request):
     news_id = request.match_info['news_id']
     news = await app["tibiapy"].fetch_news(int(news_id))
     return web.Response(text=news.content, content_type='text/html')
+
+
+@routes.get('/tournaments/{tournament_id}')
+async def get_tournaments(request):
+    tournament_id = request.match_info['tournament_id']
+    tournament = await app["tibiapy"].fetch_tournament(int(tournament_id))
+    return web.Response(text=tournament.to_json())
+
+
+@routes.get('/tournaments/{tournament_id}/leaderboards/{world}/{page}')
+async def get_tournaments_leaderboard(request):
+    tournament_id = request.match_info['tournament_id']
+    world = request.match_info['world']
+    page = request.match_info['page']
+    tournament = await app["tibiapy"].fetch_tournament_leaderboard(int(tournament_id), world, int(page))
+    return web.Response(text=tournament.to_json())
 
 
 def json_error(status_code: int, exception: Exception, tb=None) -> web.Response:

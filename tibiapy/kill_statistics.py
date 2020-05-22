@@ -1,14 +1,12 @@
 from typing import Dict
 
 from tibiapy import abc, InvalidContent
-from tibiapy.utils import parse_tibiacom_content
+from tibiapy.utils import get_tibia_url, parse_tibiacom_content
 
 __all__ = (
     "KillStatistics",
     "RaceEntry",
 )
-
-KILL_STATISTICS_URL = "https://www.tibia.com/community/?subtopic=killstatistics&world=%s"
 
 
 class KillStatistics(abc.Serializable):
@@ -56,7 +54,7 @@ class KillStatistics(abc.Serializable):
         -------
         The URL to the Tibia.com kill statistics for this world.
         """
-        return KILL_STATISTICS_URL % world
+        return get_tibia_url("community", "killstatistics", world=world)
 
     @classmethod
     def from_content(cls, content):

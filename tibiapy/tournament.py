@@ -375,6 +375,8 @@ class Tournament(abc.BaseTournament):
         try:
             if "An internal error has occurred" in content:
                 return None
+            if "Currently there is no Tournament running." in content:
+                return None
             parsed_content = parse_tibiacom_content(content, builder='html5lib')
             box_content = parsed_content.find("div", attrs={"class": "BoxContent"})
             tables = box_content.find_all('table', attrs={"class": "Table5"})
@@ -678,9 +680,8 @@ class TournamentLeaderboard(abc.Serializable):
         -------
         The URL to the specified leaderboard.
         """
-        return get_tibia_url("community", "tournamentleaderboards", {"tournamentworld": world,
-                                                                     "tournamentcycle": tournament_cycle,
-                                                                     "selectedleaderboardpage": page})
+        return get_tibia_url("community", "tournamentleaderboards", tournamentworld=world,
+                             tournamentcycle=tournament_cycle, selectedleaderboardpage=page)
 
     @classmethod
     def from_content(cls, content):

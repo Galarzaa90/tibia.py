@@ -100,6 +100,7 @@ nonexistent world or a unselected world.
 - [tibiacom_leaderboard_selector.txt](tournaments/tibiacom_leaderboard_selector.txt) - The content of the tournament leaderboards before selecting any options.
 - [tibiacom_not_found.txt](tournaments/tibiacom_not_found.txt) - The content of the tournament section for a tournament that doesn't exist.
 - [tibiacom_sign_up.txt](tournaments/tibiacom_sign_up.txt) - The content for the tournament's page for a upcoming tournament.
+- [tibiacomnot_active.txt](tournaments/tibiacom_not_active.txt) - The content for the tournament's page when there's no running tournament.
  
 ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.

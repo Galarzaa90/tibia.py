@@ -5,7 +5,7 @@ from typing import List
 import math
 
 from tibiapy import Category, InvalidContent, Vocation, VocationFilter, abc
-from tibiapy.utils import parse_json, parse_tibiacom_content, try_enum
+from tibiapy.utils import get_tibia_url, parse_json, parse_tibiacom_content, try_enum
 
 __all__ = (
     "ExpHighscoresEntry",
@@ -16,7 +16,6 @@ __all__ = (
 
 results_pattern = re.compile(r'Results: (\d+)')
 
-HIGHSCORES_URL = "https://www.tibia.com/community/?subtopic=highscores&world=%s&list=%s&profession=%d&currentpage=%d"
 HIGHSCORES_URL_TIBIADATA = "https://api.tibiadata.com/v2/highscores/%s/%s/%s.json"
 
 
@@ -211,7 +210,8 @@ class Highscores(abc.Serializable):
         -------
         The URL to the Tibia.com highscores.
         """
-        return HIGHSCORES_URL % (world, category.value, vocation.value, page)
+        return get_tibia_url("community", "highscores", world=world, list=category.value, profession=vocation.value,
+                             currentpage=page)
 
     @classmethod
     def get_url_tibiadata(cls, world, category=Category.EXPERIENCE, vocation=VocationFilter.ALL):
