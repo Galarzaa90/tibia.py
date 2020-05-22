@@ -30,6 +30,17 @@ def get_tibia_url(section, subtopic, **kwargs):
     -------
     :class:`str`
         The generated Tibia.com URL.
+
+    Examples
+    --------
+    >>> get_tibia_url("community", "houses", page="view", houseid=55302, world="Gladera")
+    https://www.tibia.com/community/?subtopic=houses&page=view&houseid=55302&world=Gladera
+
+    You can also build a dictionary and pass it like:
+
+    >>> params = {'world': "Gladera", }
+    >>> get_tibia_url("community", "worlds", **params)
+    https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
     url = "https://www.tibia.com/%s/?" % section
     params = OrderedDict(subtopic=subtopic)

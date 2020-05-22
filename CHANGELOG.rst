@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.5.0:
+
+2.5.0 (2020-05-22)
+==================
+- Added parsing of Tournaments and Tournament Leaderboards.
+- Fixed parsing errors with characters that had deaths by killers with "and" in their name.
+
 .. _v2.4.3:
 
 2.4.3 (2020-04-22)
