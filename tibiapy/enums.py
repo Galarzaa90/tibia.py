@@ -11,6 +11,7 @@ __all__ = (
     'PvpType',
     'Sex',
     'TournamentWorldType',
+    'TournamentPhase',
     'TransferType',
     'Vocation',
     'VocationFilter',
@@ -67,9 +68,7 @@ class HouseStatus(BaseEnum):
 
 
 class HouseType(BaseEnum):
-    """
-    The types of house available.
-    """
+    """The types of house available."""
     HOUSE = "house"
     GUILDHALL = "guildhall"
 
@@ -109,6 +108,13 @@ class TournamentWorldType(BaseEnum):
     """The possible types of tournament worlds."""
     REGUlAR = "Regular"
     RESTRICTED = "Restricted Store"
+
+
+class TournamentPhase(BaseEnum):
+    """The possible tournament phases."""
+    SIGN_UP = "sign up"
+    RUNNING = "running"
+    ENDED = "ended"
 
 
 class TransferType(BaseEnum):

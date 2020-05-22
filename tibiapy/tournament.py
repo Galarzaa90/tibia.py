@@ -5,7 +5,7 @@ from typing import List
 
 import bs4
 
-from tibiapy import abc, InvalidContent, PvpType, Vocation
+from tibiapy import abc, InvalidContent, PvpType, TournamentPhase, Vocation
 from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
     parse_tibiacom_content, split_list, \
     try_enum
@@ -280,7 +280,7 @@ class Tournament(abc.BaseTournament):
         An internal number used to get direct access to a specific tournament in the archive.
 
         This will only be present when viewing an archived tournament, otherwise it will default to 0.
-    phase: :class:`str`
+    phase: :class:`TournamentPhase`
         The current phase of the tournament.
     start_date: :class:`datetime.datetime`
         The start date of the tournament.
@@ -312,7 +312,7 @@ class Tournament(abc.BaseTournament):
     def __init__(self, **kwargs):
         self.title = kwargs.get("title")
         self.cycle = kwargs.get("cycle", 0)
-        self.phase = kwargs.get("phase")
+        self.phase = try_enum(TournamentPhase, kwargs.get("phase"))
         self.start_date = kwargs.get("start_date")  # type: datetime.datetime
         self.end_date = kwargs.get("end_date")  # type: datetime.datetime
         self.worlds = kwargs.get("worlds")  # type: List[str]
@@ -419,6 +419,8 @@ class Tournament(abc.BaseTournament):
                 value = parse_tibia_datetime(value)
             if field in list_fields:
                 value = split_list(value, ",", ",")
+            if field == "phase":
+                value = try_enum(TournamentPhase, value)
             try:
                 setattr(self, field, value)
             except AttributeError:

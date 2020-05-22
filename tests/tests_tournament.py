@@ -2,7 +2,8 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, ListedTournament, PvpType, RuleSet, ScoreSet, Tournament, TournamentLeaderboard
+from tibiapy import InvalidContent, ListedTournament, PvpType, RuleSet, ScoreSet, Tournament, TournamentLeaderboard, \
+    TournamentPhase
 
 FILE_TOURNAMENT_SIGN_UP = "tournaments/tibiacom_sign_up.txt"
 FILE_TOURNAMENT_ARCHIVE = "tournaments/tibiacom_archive.txt"
@@ -21,7 +22,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         content = self._load_resource(FILE_TOURNAMENT_SIGN_UP)
         tournament = Tournament.from_content(content)
         self.assertEqual(tournament.title, "TRIUMPH")
-        self.assertEqual("sign up", tournament.phase)
+        self.assertEqual(TournamentPhase.SIGN_UP, tournament.phase)
         self.assertIsInstance(tournament.start_date, datetime.datetime)
         self.assertIsInstance(tournament.end_date, datetime.datetime)
         self.assertEqual(6, len(tournament.worlds))
@@ -81,7 +82,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         content = self._load_resource(FILE_TOURNAMENT_ARCHIVE)
         tournament = Tournament.from_content(content)
         self.assertEqual(tournament.title, "GLORY")
-        self.assertEqual("ended", tournament.phase)
+        self.assertEqual(TournamentPhase.ENDED, tournament.phase)
         self.assertIsInstance(tournament.start_date, datetime.datetime)
         self.assertIsInstance(tournament.end_date, datetime.datetime)
         self.assertEqual(6, len(tournament.worlds))

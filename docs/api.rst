@@ -59,6 +59,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: TournamentPhase
+    :members:
+    :undoc-members:
+
 .. autoclass:: TransferType
     :members:
     :undoc-members:
