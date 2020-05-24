@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.abc &#8212; Tibia.py 2.4.3 documentation</title>
+    <title>tibiapy.abc &#8212; Tibia.py 2.5.0 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.5.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -52,20 +52,13 @@
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseOrder</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">get_tibia_url</span>
 
-<span class="n">CHARACTER_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=characters&amp;name=</span><span class="si">%s</span><span class="s2">&quot;</span>
 <span class="n">CHARACTER_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/characters/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
-<span class="n">HOUSE_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=houses&amp;page=view&amp;houseid=</span><span class="si">%d</span><span class="s2">&amp;world=</span><span class="si">%s</span><span class="s2">&quot;</span>
 <span class="n">HOUSE_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/house/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%d</span><span class="s2">.json&quot;</span>
-<span class="n">HOUSE_LIST_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=houses&amp;world=</span><span class="si">%s</span><span class="s2">&amp;town=</span><span class="si">%s</span><span class="s2">&amp;type=</span><span class="si">%s</span><span class="s2">&amp;status=</span><span class="si">%s</span><span class="s2">&amp;order=</span><span class="si">%s</span><span class="s2">&quot;</span>
 <span class="n">HOUSE_LIST_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/houses/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
-<span class="n">GUILD_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=guilds&amp;page=view&amp;GuildName=</span><span class="si">%s</span><span class="s2">&quot;</span>
 <span class="n">GUILD_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/guild/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
-<span class="n">GUILD_LIST_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=guilds&amp;world=&quot;</span>
 <span class="n">GUILD_LIST_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/guilds/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
-<span class="n">NEWS_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/news/?subtopic=newsarchive&amp;id=</span><span class="si">%d</span><span class="s2">&quot;</span>
-<span class="n">NEWS_SEARCH_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/news/?subtopic=newsarchive&quot;</span>
-<span class="n">WORLD_URL</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/community/?subtopic=worlds&amp;world=</span><span class="si">%s</span><span class="s2">&quot;</span>
 <span class="n">WORLD_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/world/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
 
 
@@ -192,7 +185,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the character&#39;s page.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">CHARACTER_URL</span> <span class="o">%</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;characters&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseCharacter.get_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseCharacter.get_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -251,7 +244,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the guild&#39;s page&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">GUILD_URL</span> <span class="o">%</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">GuildName</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseGuild.get_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseGuild.get_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -282,7 +275,7 @@
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the guild&#39;s page</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">GUILD_LIST_URL</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseGuild.get_world_list_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseGuild.get_world_list_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_world_list_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
@@ -347,7 +340,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        The URL to the house in Tibia.com</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">HOUSE_URL</span> <span class="o">%</span> <span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;houses&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">houseid</span><span class="o">=</span><span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseHouse.get_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouse.get_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
@@ -392,7 +385,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">house_type</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="n">house_type</span><span class="o">.</span><span class="n">value</span>
         <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">status</span><span class="o">.</span><span class="n">value</span>
-        <span class="k">return</span> <span class="n">HOUSE_LIST_URL</span> <span class="o">%</span> <span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">town</span><span class="p">),</span> <span class="n">house_type</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">order</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;houses&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="o">=</span><span class="n">town</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">house_type</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
+                             <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseHouse.get_list_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouse.get_list_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_list_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="p">:</span> <span class="n">HouseType</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">):</span>
@@ -514,7 +508,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the news&#39; page&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">NEWS_URL</span> <span class="o">%</span> <span class="n">news_id</span></div>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="s2">&quot;newsarchive&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">news_id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseNews.get_list_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseNews.get_list_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_list_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -530,10 +524,59 @@
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the news archive page on Tibia.com.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">NEWS_SEARCH_URL</span></div></div>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="s2">&quot;newsarchive&quot;</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BaseWorld"><a class="viewcode-back" href="../../api.html#tibiapy.BaseWorld">[docs]</a><span class="k">class</span> <span class="nc">BaseWorld</span><span class="p">(</span><span class="n">Serializable</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseTournament"><a class="viewcode-back" href="../../api.html#tibiapy.BaseTournament">[docs]</a><span class="k">class</span> <span class="nc">BaseTournament</span><span class="p">(</span><span class="n">Serializable</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for tournament classes.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    title: :class:`str`</span>
+<span class="sd">        The tournament&#39;s title.</span>
+<span class="sd">    cycle: :class:`int`</span>
+<span class="sd">        The tournament&#39;s cycle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cycle&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the tournament&#39;s information page.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycle</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseTournament.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseTournament.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tournament_cycle</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the URL to a tournament&#39;s information page if its cycle is provided,</span>
+<span class="sd">        otherwise it shows the current tournament.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tournament_cycle: :class:`int`</span>
+<span class="sd">            The tournament&#39;s cycle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the specified tournament.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">tournament_cycle</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;tournamentcycle&quot;</span><span class="p">:</span> <span class="n">tournament_cycle</span><span class="p">,</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;archive&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;tournament&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BaseWorld"><a class="viewcode-back" href="../../api.html#tibiapy.BaseWorld">[docs]</a><span class="k">class</span> <span class="nc">BaseWorld</span><span class="p">(</span><span class="n">Serializable</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for all World classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -608,7 +651,7 @@
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the world&#39;s information page.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">WORLD_URL</span> <span class="o">%</span> <span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;worlds&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="BaseWorld.get_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.BaseWorld.get_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>

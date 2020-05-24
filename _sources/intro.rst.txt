@@ -62,32 +62,36 @@ This allows you to use any networking module to obtain the data, and use the lib
 Supported Sections
 ==================
 
-+---------------------------+---------------------------------------+--------------------------------------+
-|          Section          |                Parsing                |               Fetching               |
-+===========================+=======================================+======================================+
-| Characters_               | :meth:`Character.from_content`        | :meth:`Client.fetch_character`       |
-+---------------------------+---------------------------------------+--------------------------------------+
-| Guilds_ (Individual)      | :meth:`Guild.from_content`            | :meth:`Client.fetch_guild`           |
-+---------------------------+---------------------------------------+--------------------------------------+
-| Guilds_ (List)            | :meth:`ListedGuild.list_from_content` | :meth:`Client.fetch_world_guilds`    |
-+---------------------------+---------------------------------------+--------------------------------------+
-| Highscores_               | :meth:`Highscores.from_content`       | :meth:`Client.fetch_highscores_page` |
-+---------------------------+---------------------------------------+--------------------------------------+
-| Houses_ (Individual)      | :meth:`House.from_content`            | :meth:`Client.fetch_house`           |
-+---------------------------+---------------------------------------+--------------------------------------+
-| Houses_ (List)            | :meth:`ListedHouse.list_from_content` | :meth:`Client.fetch_world_houses`    |
-+---------------------------+---------------------------------------+--------------------------------------+
-| `Kill Statistics`_ (List) | :meth:`KillStatistics.from_content`   | :meth:`Client.fetch_kill_statistics` |
-+---------------------------+---------------------------------------+--------------------------------------+
-| News_ (Individual)        | :meth:`News.from_content`             | :meth:`Client.fetch_news`            |
-+---------------------------+---------------------------------------+--------------------------------------+
-| News_ (List)              | :meth:`ListedNews.list_from_content`  | :meth:`Client.fetch_news_archive`    |
-|                           |                                       | :meth:`Client.fetch_recent_news`     |
-+---------------------------+---------------------------------------+--------------------------------------+
-| Worlds_ (Individual)      | :meth:`World.from_content`            | :meth:`Client.fetch_world`           |
-+---------------------------+---------------------------------------+--------------------------------------+
-| Worlds_ (List)            | :meth:`WorldOverview.from_content`    | :meth:`Client.fetch_world_list`      |
-+---------------------------+---------------------------------------+--------------------------------------+
++----------------------------+--------------------------------------------+---------------------------------------------+
+|          Section           |                  Parsing                   |                  Fetching                   |
++============================+============================================+=============================================+
+| Characters_                | :meth:`Character.from_content`             | :meth:`Client.fetch_character`              |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Guilds_ (Individual)       | :meth:`Guild.from_content`                 | :meth:`Client.fetch_guild`                  |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Guilds_ (List)             | :meth:`ListedGuild.list_from_content`      | :meth:`Client.fetch_world_guilds`           |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Highscores_                | :meth:`Highscores.from_content`            | :meth:`Client.fetch_highscores_page`        |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Houses_ (Individual)       | :meth:`House.from_content`                 | :meth:`Client.fetch_house`                  |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Houses_ (List)             | :meth:`ListedHouse.list_from_content`      | :meth:`Client.fetch_world_houses`           |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| `Kill Statistics`_ (List)  | :meth:`KillStatistics.from_content`        | :meth:`Client.fetch_kill_statistics`        |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| News_ (Individual)         | :meth:`News.from_content`                  | :meth:`Client.fetch_news`                   |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| News_ (List)               | :meth:`ListedNews.list_from_content`       | :meth:`Client.fetch_news_archive`           |
+|                            |                                            | :meth:`Client.fetch_recent_news`            |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Tournaments_               | :meth:`Tournament.from_content`            | :meth:`Client.fetch_tournament`             |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| `Tournament Leaderboards`_ | :meth:`TournamentLeaderboard.from_content` | :meth:`Client.fetch_tournament_leaderboard` |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Worlds_ (Individual)       | :meth:`World.from_content`                 | :meth:`Client.fetch_world`                  |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Worlds_ (List)             | :meth:`WorldOverview.from_content`         | :meth:`Client.fetch_world_list`             |
++----------------------------+--------------------------------------------+---------------------------------------------+
 
 
 .. _Characters: https://www.tibia.com/community/?subtopic=characters
@@ -97,3 +101,5 @@ Supported Sections
 .. _Kill Statistics: https://www.tibia.com/community/?subtopic=killstatistics
 .. _News: https://www.tibia.com/news/?subtopic=newsarchive
 .. _Worlds: https://www.tibia.com/community/?subtopic=worlds
+.. _Tournaments: https://www.tibia.com/community/?subtopic=tournament
+.. _Tournament Leaderboards: https://www.tibia.com/community/?subtopic=tournamentleaderboards

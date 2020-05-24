@@ -59,6 +59,9 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: TournamentPhase
+    :members:
+    :undoc-members:
 
 .. autoclass:: TransferType
     :members:
@@ -137,6 +140,11 @@ ListedNews
    :members:
    :inherited-members:
 
+ListedTournament
+-----------------------
+.. autoclass:: ListedTournament
+   :members:
+   :inherited-members:
 
 ListedWorld
 -----------
@@ -147,6 +155,18 @@ ListedWorld
 News
 ---------
 .. autoclass:: News
+   :members:
+   :inherited-members:
+
+Tournament
+----------
+.. autoclass:: Tournament
+   :members:
+   :inherited-members:
+
+TournamentLeaderboard
+---------------------
+.. autoclass:: TournamentLeaderboard
    :members:
    :inherited-members:
 
@@ -172,7 +192,6 @@ AccountBadge
 .. autoclass:: AccountBadge
    :members:
    :inherited-members:
-
 
 AccountInformation
 ------------------
@@ -241,6 +260,12 @@ Killer
    :members:
    :inherited-members:
 
+LeaderboardEntry
+----------------
+.. autoclass:: LeaderboardEntry
+   :members:
+   :inherited-members:
+
 LoyaltyHighscoresEntry
 ----------------------
 .. autoclass:: LoyaltyHighscoresEntry
@@ -262,6 +287,24 @@ OtherCharacter
 RaceEntry
 ---------
 .. autoclass:: RaceEntry
+   :members:
+   :inherited-members:
+
+RewardEntry
+-----------
+.. autoclass:: RewardEntry
+   :members:
+   :inherited-members:
+
+RuleSet
+-------
+.. autoclass:: RuleSet
+   :members:
+   :inherited-members:
+
+ScoreSet
+--------
+.. autoclass:: ScoreSet
    :members:
    :inherited-members:
 
@@ -291,6 +334,10 @@ They implement methods and properties that can be inherited by other classes to 
     :members:
     :inherited-members:
 
+.. autoclass:: tibiapy.abc.BaseTournament
+    :members:
+    :inherited-members:
+
 .. autoclass:: tibiapy.abc.BaseWorld
     :members:
     :inherited-members:
@@ -311,7 +358,7 @@ Exceptions
 
 Utility functions
 ==================
-These are functions used thorough the module and are not intended for public use.
+These are functions used thorough the module that may not be intended for public use.
 
 .. automodule:: tibiapy.utils
    :members:

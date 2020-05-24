@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.utils &#8212; Tibia.py 2.4.3 documentation</title>
+    <title>tibiapy.utils &#8212; Tibia.py 2.5.0 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.5.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -48,7 +48,9 @@
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
@@ -56,6 +58,44 @@
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
 
 <span class="n">TIBIA_CASH_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d*\.?\d*)k*$&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_tibia_url"><a class="viewcode-back" href="../../api.html#tibiapy.utils.get_tibia_url">[docs]</a><span class="k">def</span> <span class="nf">get_tibia_url</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">subtopic</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    section: :class:`str`</span>
+<span class="sd">        The desired section (e.g. community, abouttibia, manual, library)</span>
+<span class="sd">    subtopic: :class:`str`</span>
+<span class="sd">        The desired subtopic (e.g. characters, guilds, houses, etc)</span>
+<span class="sd">    kwargs:</span>
+<span class="sd">        Additional parameters to pass to the url (e.g name, world, houseid, etc)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`str`</span>
+<span class="sd">        The generated Tibia.com URL.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; get_tibia_url(&quot;community&quot;, &quot;houses&quot;, page=&quot;view&quot;, houseid=55302, world=&quot;Gladera&quot;)</span>
+<span class="sd">    https://www.tibia.com/community/?subtopic=houses&amp;page=view&amp;houseid=55302&amp;world=Gladera</span>
+
+<span class="sd">    You can also build a dictionary and pass it like:</span>
+
+<span class="sd">    &gt;&gt;&gt; params = {&#39;world&#39;: &quot;Gladera&quot;, }</span>
+<span class="sd">    &gt;&gt;&gt; get_tibia_url(&quot;community&quot;, &quot;worlds&quot;, **params)</span>
+<span class="sd">    https://www.tibia.com/community/?subtopic=worlds&amp;world=Gladera</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://www.tibia.com/</span><span class="si">%s</span><span class="s2">/?&quot;</span> <span class="o">%</span> <span class="n">section</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="n">subtopic</span><span class="o">=</span><span class="n">subtopic</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">url</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="parse_integer"><a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_integer">[docs]</a><span class="k">def</span> <span class="nf">parse_integer</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -347,8 +387,8 @@
 <span class="sd">    :class:`bs4.BeautifulSoup`, optional</span>
 <span class="sd">        The parsed content.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">builder</span><span class="p">,</span>
-                             <span class="n">parse_only</span><span class="o">=</span><span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="n">html_class</span><span class="p">))</span></div>
+    <span class="n">strainer</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="n">html_class</span><span class="p">)</span> <span class="k">if</span> <span class="n">builder</span> <span class="o">!=</span> <span class="s2">&quot;html5lib&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">builder</span><span class="p">,</span> <span class="n">parse_only</span><span class="o">=</span><span class="n">strainer</span><span class="p">)</span></div>
 
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
@@ -432,6 +472,34 @@
         <span class="n">k_count</span> <span class="o">=</span> <span class="n">argument</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
         <span class="n">num</span> <span class="o">*=</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">k_count</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="split_list"><a class="viewcode-back" href="../../api.html#tibiapy.utils.split_list">[docs]</a><span class="k">def</span> <span class="nf">split_list</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">last_separator</span><span class="o">=</span><span class="s2">&quot; and &quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits a string listing elements into an actual list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    items: :class:`str`</span>
+<span class="sd">        A string listing elements.</span>
+<span class="sd">    separator: :class:`str`</span>
+<span class="sd">        The separator between each item. A comma by default.</span>
+<span class="sd">    last_separator: :class:`str`</span>
+<span class="sd">        The separator used for the last item. &#39; and &#39; by default.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`list` of :class:`str`</span>
+<span class="sd">        A list containing each one of the items.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator</span><span class="p">)</span>
+    <span class="n">last_item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">last_split</span> <span class="o">=</span> <span class="n">last_item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">last_separator</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_split</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">last_separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">last_split</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_split</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span></div>
 
 
 <span class="k">def</span> <span class="nf">_recursive_strip</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>

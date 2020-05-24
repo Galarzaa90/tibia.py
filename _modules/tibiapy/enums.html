@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.enums &#8212; Tibia.py 2.4.3 documentation</title>
+    <title>tibiapy.enums &#8212; Tibia.py 2.5.0 documentation</title>
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.4.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.5.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -57,6 +57,7 @@
     <span class="s1">&#39;PvpType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Sex&#39;</span><span class="p">,</span>
     <span class="s1">&#39;TournamentWorldType&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TournamentPhase&#39;</span><span class="p">,</span>
     <span class="s1">&#39;TransferType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Vocation&#39;</span><span class="p">,</span>
     <span class="s1">&#39;VocationFilter&#39;</span><span class="p">,</span>
@@ -70,10 +71,6 @@
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="AccountStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AccountStatus">[docs]</a><span class="k">class</span> <span class="nc">AccountStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
@@ -113,9 +110,7 @@
 
 
 <div class="viewcode-block" id="HouseType"><a class="viewcode-back" href="../../api.html#tibiapy.HouseType">[docs]</a><span class="k">class</span> <span class="nc">HouseType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The types of house available.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The types of house available.&quot;&quot;&quot;</span>
     <span class="n">HOUSE</span> <span class="o">=</span> <span class="s2">&quot;house&quot;</span>
     <span class="n">GUILDHALL</span> <span class="o">=</span> <span class="s2">&quot;guildhall&quot;</span></div>
 
@@ -155,6 +150,13 @@
     <span class="sd">&quot;&quot;&quot;The possible types of tournament worlds.&quot;&quot;&quot;</span>
     <span class="n">REGUlAR</span> <span class="o">=</span> <span class="s2">&quot;Regular&quot;</span>
     <span class="n">RESTRICTED</span> <span class="o">=</span> <span class="s2">&quot;Restricted Store&quot;</span></div>
+
+
+<div class="viewcode-block" id="TournamentPhase"><a class="viewcode-back" href="../../api.html#tibiapy.TournamentPhase">[docs]</a><span class="k">class</span> <span class="nc">TournamentPhase</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible tournament phases.&quot;&quot;&quot;</span>
+    <span class="n">SIGN_UP</span> <span class="o">=</span> <span class="s2">&quot;sign up&quot;</span>
+    <span class="n">RUNNING</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+    <span class="n">ENDED</span> <span class="o">=</span> <span class="s2">&quot;ended&quot;</span></div>
 
 
 <div class="viewcode-block" id="TransferType"><a class="viewcode-back" href="../../api.html#tibiapy.TransferType">[docs]</a><span class="k">class</span> <span class="nc">TransferType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>

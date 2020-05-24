@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>API Reference &#8212; Tibia.py 2.4.3 documentation</title>
+    <title>API Reference &#8212; Tibia.py 2.5.0 documentation</title>
     <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.4.3 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 2.5.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -61,7 +61,7 @@ It is possible to create and edit these objects as desired, but it may lead to u
 <dt id="tibiapy.Client">
 <em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Client</code><span class="sig-paren">(</span><em>loop=None</em>, <em>session=None</em>, <em>*</em>, <em>proxy_url=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client" title="Permalink to this definition">¶</a></dt>
 <dd><p>An asynchronous client that fetches information from Tibia.com</p>
-<p>The client uses a <a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> to request the information.
+<p>The client uses a <a class="reference external" href="https://docs.aiohttp.org/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> to request the information.
 A single session is shared across all operations.</p>
 <p>If desired, a custom ClientSession instance may be passed, instead of creating a new one.</p>
 <div class="versionadded">
@@ -76,7 +76,7 @@ A single session is shared across all operations.</p>
 <dl class="attribute">
 <dt id="tibiapy.Client.session">
 <code class="descname">session</code><a class="headerlink" href="#tibiapy.Client.session" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> – The client session that will be used for the requests. One will be created by default.</p>
+<dd><p><a class="reference external" href="https://docs.aiohttp.org/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> – The client session that will be used for the requests. One will be created by default.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -344,6 +344,66 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">list of <a class="reference internal" href="#tibiapy.ListedNews" title="tibiapy.ListedNews"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListedNews</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Forbidden</span></code></a> – If a 403 Forbidden error was returned.
+This usually means that Tibia.com is rate-limiting the client because of too many requests.</li>
+<li><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NetworkError</span></code></a> – If there’s any connection errors during the request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.Client.fetch_tournament">
+<em class="property">coroutine </em><code class="descname">fetch_tournament</code><span class="sig-paren">(</span><em>tournament_cycle=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_tournament"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client.fetch_tournament" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches a tournament from Tibia.com</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>tournament_cycle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The cycle of the tournament. if unspecified, it will get the currently running tournament.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The tournament if found, <code class="docutils literal notranslate"><span class="pre">None</span></code> otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#tibiapy.Tournament" title="tibiapy.Tournament"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tournament</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><code class="xref py py-exc docutils literal notranslate"><span class="pre">Forbidden</span></code></a> – If a 403 Forbidden error was returned.
+This usually means that Tibia.com is rate-limiting the client because of too many requests.</li>
+<li><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NetworkError</span></code></a> – If there’s any connection errors during the request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.Client.fetch_tournament_leaderboard">
+<em class="property">coroutine </em><code class="descname">fetch_tournament_leaderboard</code><span class="sig-paren">(</span><em>tournament_cycle</em>, <em>world</em>, <em>page=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_tournament_leaderboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Client.fetch_tournament_leaderboard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches a tournament leaderboard from Tibia.com</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tournament_cycle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The cycle of the tournament. if unspecified, it will get the currently running tournament.</li>
+<li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world to get the leaderboards for.</li>
+<li><strong>page</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The desired leaderboards page, by default 1 is used.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The tournament’s leaderboard if found, <code class="docutils literal notranslate"><span class="pre">None</span></code> otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#tibiapy.TournamentLeaderboard" title="tibiapy.TournamentLeaderboard"><code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentLeaderboard</span></code></a></p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
@@ -729,6 +789,27 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <dl class="attribute">
 <dt id="tibiapy.TournamentWorldType.RESTRICTED">
 <code class="descname">RESTRICTED</code><em class="property"> = 'Restricted Store'</em><a class="headerlink" href="#tibiapy.TournamentWorldType.RESTRICTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tibiapy.TournamentPhase">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">TournamentPhase</code><a class="reference internal" href="_modules/tibiapy/enums.html#TournamentPhase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.TournamentPhase" title="Permalink to this definition">¶</a></dt>
+<dd><p>The possible tournament phases.</p>
+<dl class="attribute">
+<dt id="tibiapy.TournamentPhase.SIGN_UP">
+<code class="descname">SIGN_UP</code><em class="property"> = 'sign up'</em><a class="headerlink" href="#tibiapy.TournamentPhase.SIGN_UP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentPhase.RUNNING">
+<code class="descname">RUNNING</code><em class="property"> = 'running'</em><a class="headerlink" href="#tibiapy.TournamentPhase.RUNNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentPhase.ENDED">
+<code class="descname">ENDED</code><em class="property"> = 'ended'</em><a class="headerlink" href="#tibiapy.TournamentPhase.ENDED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2727,6 +2808,96 @@ News searches can only be performed using POST requests sending the parameters a
 </dd></dl>
 
 </div>
+<div class="section" id="listedtournament">
+<h3>ListedTournament<a class="headerlink" href="#listedtournament" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.ListedTournament">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">ListedTournament</code><span class="sig-paren">(</span><em>title</em>, <em>start_date</em>, <em>end_date</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#ListedTournament"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.ListedTournament" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an tournament in the archived tournaments list.</p>
+<p><a class="reference internal" href="#tibiapy.ListedTournament.start_date" title="tibiapy.ListedTournament.start_date"><code class="xref py py-attr docutils literal notranslate"><span class="pre">start_date</span></code></a> and <a class="reference internal" href="#tibiapy.ListedTournament.end_date" title="tibiapy.ListedTournament.end_date"><code class="xref py py-attr docutils literal notranslate"><span class="pre">end_date</span></code></a> might be <code class="docutils literal notranslate"><span class="pre">None</span></code> when a tournament that is currently running
+is on the list (e.g. on the leaderboards tournament selection section).</p>
+<dl class="attribute">
+<dt id="tibiapy.ListedTournament.title">
+<code class="descname">title</code><a class="headerlink" href="#tibiapy.ListedTournament.title" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The title of the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ListedTournament.cycle">
+<code class="descname">cycle</code><a class="headerlink" href="#tibiapy.ListedTournament.cycle" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – An internal number used to get direct access to a specific tournament in the archive.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ListedTournament.start_date">
+<code class="descname">start_date</code><a class="headerlink" href="#tibiapy.ListedTournament.start_date" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a> – The start date of the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ListedTournament.end_date">
+<code class="descname">end_date</code><a class="headerlink" href="#tibiapy.ListedTournament.end_date" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a> – The end date of the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ListedTournament.duration">
+<code class="descname">duration</code><a class="headerlink" href="#tibiapy.ListedTournament.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.timedelta</span></code></a> – The total duration of the tournament.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.ListedTournament.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>tournament_cycle</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ListedTournament.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the URL to a tournament’s information page if its cycle is provided,
+otherwise it shows the current tournament.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tournament_cycle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The tournament’s cycle.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the specified tournament.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.ListedTournament.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ListedTournament.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ListedTournament.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.ListedTournament.url" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the tournament’s information page.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="listedworld">
 <h3>ListedWorld<a class="headerlink" href="#listedworld" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
@@ -3098,6 +3269,307 @@ News searches can only be performed using POST requests sending the parameters a
 <dt id="tibiapy.News.url">
 <code class="descname">url</code><a class="headerlink" href="#tibiapy.News.url" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the Tibia.com page of the news entry.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="tournament">
+<h3>Tournament<a class="headerlink" href="#tournament" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.Tournament">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">Tournament</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#Tournament"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Tournament" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a tournament’s information.</p>
+<dl class="attribute">
+<dt id="tibiapy.Tournament.title">
+<code class="descname">title</code><a class="headerlink" href="#tibiapy.Tournament.title" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The title of the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.cycle">
+<code class="descname">cycle</code><a class="headerlink" href="#tibiapy.Tournament.cycle" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – An internal number used to get direct access to a specific tournament in the archive.</p>
+<p>This will only be present when viewing an archived tournament, otherwise it will default to 0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.phase">
+<code class="descname">phase</code><a class="headerlink" href="#tibiapy.Tournament.phase" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#tibiapy.TournamentPhase" title="tibiapy.TournamentPhase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentPhase</span></code></a> – The current phase of the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.start_date">
+<code class="descname">start_date</code><a class="headerlink" href="#tibiapy.Tournament.start_date" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> – The start date of the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.end_date">
+<code class="descname">end_date</code><a class="headerlink" href="#tibiapy.Tournament.end_date" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.datetime</span></code></a> – The end date of the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.worlds">
+<code class="descname">worlds</code><a class="headerlink" href="#tibiapy.Tournament.worlds" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The worlds where this tournament is active on.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.rule_set">
+<code class="descname">rule_set</code><a class="headerlink" href="#tibiapy.Tournament.rule_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#tibiapy.RuleSet" title="tibiapy.RuleSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuleSet</span></code></a> – The specific rules for this tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.score_set">
+<code class="descname">score_set</code><a class="headerlink" href="#tibiapy.Tournament.score_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#tibiapy.ScoreSet" title="tibiapy.ScoreSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScoreSet</span></code></a> – The ways to gain points in the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.reward_set">
+<code class="descname">reward_set</code><a class="headerlink" href="#tibiapy.Tournament.reward_set" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.RewardEntry" title="tibiapy.RewardEntry"><code class="xref py py-class docutils literal notranslate"><span class="pre">RewardEntry</span></code></a> – The list of rewards awarded for the specified ranges.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.archived_tournaments">
+<code class="descname">archived_tournaments</code><a class="headerlink" href="#tibiapy.Tournament.archived_tournaments" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.ListedTournament" title="tibiapy.ListedTournament"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListedTournament</span></code></a> – The list of other archived tournaments. This is only present when viewing an archived tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.rewards_range">
+<code class="descname">rewards_range</code><a class="headerlink" href="#tibiapy.Tournament.rewards_range" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a> – The range of ranks that might receive rewards.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.duration">
+<code class="descname">duration</code><a class="headerlink" href="#tibiapy.Tournament.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.timedelta</span></code></a> – The total duration of the tournament.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.Tournament.rewards_for_rank">
+<code class="descname">rewards_for_rank</code><span class="sig-paren">(</span><em>rank</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#Tournament.rewards_for_rank"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Tournament.rewards_for_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the rewards for a given rank, if any.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rank</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The rank to check.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The rewards for the given rank or None if there are no rewards.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.RewardEntry" title="tibiapy.RewardEntry"><code class="xref py py-class docutils literal notranslate"><span class="pre">RewardEntry</span></code></a>, optional</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.Tournament.from_content">
+<em class="property">classmethod </em><code class="descname">from_content</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#Tournament.from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Tournament.from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of the class from the html content of the tournament’s page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The tournament contained in the page, or None if the tournament doesn’t exist.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.Tournament" title="tibiapy.Tournament"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tournament</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#tibiapy.InvalidContent" title="tibiapy.InvalidContent"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidContent</span></code></a> – If content is not the HTML of a tournament’s page.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.Tournament.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>tournament_cycle</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.Tournament.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the URL to a tournament’s information page if its cycle is provided,
+otherwise it shows the current tournament.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tournament_cycle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The tournament’s cycle.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the specified tournament.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.Tournament.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.Tournament.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.Tournament.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.Tournament.url" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the tournament’s information page.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="tournamentleaderboard">
+<h3>TournamentLeaderboard<a class="headerlink" href="#tournamentleaderboard" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.TournamentLeaderboard">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">TournamentLeaderboard</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#TournamentLeaderboard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.TournamentLeaderboard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a tournament’s leaderboards.</p>
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.world">
+<code class="descname">world</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.world" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The world this leaderboard belongs to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.tournament">
+<code class="descname">tournament</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.tournament" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#tibiapy.ListedTournament" title="tibiapy.ListedTournament"><code class="xref py py-class docutils literal notranslate"><span class="pre">ListedTournament</span></code></a> – The tournament this leaderboard belongs to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.entries">
+<code class="descname">entries</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.entries" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.LeaderboardEntry" title="tibiapy.LeaderboardEntry"><code class="xref py py-class docutils literal notranslate"><span class="pre">LeaderboardEntry</span></code></a> – The leaderboard entries.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.results_count">
+<code class="descname">results_count</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.results_count" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The total number of leaderboard entries. These might be in a different page.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.from_rank">
+<code class="descname">from_rank</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.from_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The starting rank of the provided entries.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.to_rank">
+<code class="descname">to_rank</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.to_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The last rank of the provided entries.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.page">
+<code class="descname">page</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.page" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The page number the shown results correspond to on Tibia.com</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.total_pages">
+<code class="descname">total_pages</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.total_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The total of pages of the highscores category.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.TournamentLeaderboard.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.TournamentLeaderboard.url" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – Gets the URL to the current leaderboard and page.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.TournamentLeaderboard.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>world</em>, <em>tournament_cycle</em>, <em>page=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#TournamentLeaderboard.get_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.TournamentLeaderboard.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the URL to the leaderboards of a specific world, tournament and page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>world</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The world to get the leaderboards for.</li>
+<li><strong>tournament_cycle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The cycle of the tournament to get the leaderboards for.</li>
+<li><strong>page</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The leader board’s page to view. By default 1.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">The URL to the specified leaderboard.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.TournamentLeaderboard.from_content">
+<em class="property">classmethod </em><code class="descname">from_content</code><span class="sig-paren">(</span><em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#TournamentLeaderboard.from_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.TournamentLeaderboard.from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of the class from the html content of the tournament’s leaderboards page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The tournament contained in the page, or None if the tournament leaderboard doesn’t exist.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#tibiapy.TournamentLeaderboard" title="tibiapy.TournamentLeaderboard"><code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentLeaderboard</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#tibiapy.InvalidContent" title="tibiapy.InvalidContent"><code class="xref py py-exc docutils literal notranslate"><span class="pre">InvalidContent</span></code></a> – If content is not the HTML of a tournament’s leaderboard page.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.TournamentLeaderboard.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.TournamentLeaderboard.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -4706,6 +5178,117 @@ and properties for their use.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="leaderboardentry">
+<h3>LeaderboardEntry<a class="headerlink" href="#leaderboardentry" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.LeaderboardEntry">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">LeaderboardEntry</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#LeaderboardEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.LeaderboardEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a single tournament leaderboard’s entry.</p>
+<dl class="attribute">
+<dt id="tibiapy.LeaderboardEntry.name">
+<code class="descname">name</code><a class="headerlink" href="#tibiapy.LeaderboardEntry.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The character’s name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LeaderboardEntry.rank">
+<code class="descname">rank</code><a class="headerlink" href="#tibiapy.LeaderboardEntry.rank" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The entry’s rank.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LeaderboardEntry.change">
+<code class="descname">change</code><a class="headerlink" href="#tibiapy.LeaderboardEntry.change" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The entry’s change in rank since the last server save.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LeaderboardEntry.vocation">
+<code class="descname">vocation</code><a class="headerlink" href="#tibiapy.LeaderboardEntry.vocation" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#tibiapy.Vocation" title="tibiapy.Vocation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vocation</span></code></a> – The character’s vocation. This will always show the base vocation, without promotions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LeaderboardEntry.score">
+<code class="descname">score</code><a class="headerlink" href="#tibiapy.LeaderboardEntry.score" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The entry’s score.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.LeaderboardEntry.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.LeaderboardEntry.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Tibia.com URL for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.LeaderboardEntry.get_url_tibiadata">
+<em class="property">classmethod </em><code class="descname">get_url_tibiadata</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.LeaderboardEntry.get_url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the TibiaData.com URL for a given character name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the character’s page on TibiaData.com.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.LeaderboardEntry.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.LeaderboardEntry.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LeaderboardEntry.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.LeaderboardEntry.url" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL of the character’s information page on Tibia.com</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.LeaderboardEntry.url_tibiadata">
+<code class="descname">url_tibiadata</code><a class="headerlink" href="#tibiapy.LeaderboardEntry.url_tibiadata" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL of the character’s information on TibiaData.com.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="loyaltyhighscoresentry">
 <h3>LoyaltyHighscoresEntry<a class="headerlink" href="#loyaltyhighscoresentry" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
@@ -5067,6 +5650,237 @@ and properties for their use.</p>
 <dl class="method">
 <dt id="tibiapy.RaceEntry.to_json">
 <code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.RaceEntry.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="rewardentry">
+<h3>RewardEntry<a class="headerlink" href="#rewardentry" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.RewardEntry">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">RewardEntry</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#RewardEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.RewardEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the rewards for a specific rank range.</p>
+<dl class="attribute">
+<dt id="tibiapy.RewardEntry.initial_rank">
+<code class="descname">initial_rank</code><a class="headerlink" href="#tibiapy.RewardEntry.initial_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The highest rank that gets this reward.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RewardEntry.last_rank">
+<code class="descname">last_rank</code><a class="headerlink" href="#tibiapy.RewardEntry.last_rank" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The lowest rank that gets this reward.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RewardEntry.tibia_coins">
+<code class="descname">tibia_coins</code><a class="headerlink" href="#tibiapy.RewardEntry.tibia_coins" title="Permalink to this definition">¶</a></dt>
+<dd><p>:class`int` – The amount of tibia coins awarded.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RewardEntry.tournament_coins">
+<code class="descname">tournament_coins</code><a class="headerlink" href="#tibiapy.RewardEntry.tournament_coins" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The amount of tournament coins awarded.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RewardEntry.tournament_ticket_voucher">
+<code class="descname">tournament_ticket_voucher</code><a class="headerlink" href="#tibiapy.RewardEntry.tournament_ticket_voucher" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The amount of tournament ticker vouchers awarded.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RewardEntry.cup">
+<code class="descname">cup</code><a class="headerlink" href="#tibiapy.RewardEntry.cup" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The type of cup awarded.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RewardEntry.deed">
+<code class="descname">deed</code><a class="headerlink" href="#tibiapy.RewardEntry.deed" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The type of deed awarded.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RewardEntry.other_rewards">
+<code class="descname">other_rewards</code><a class="headerlink" href="#tibiapy.RewardEntry.other_rewards" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – Other rewards given for this rank.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.RewardEntry.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.RewardEntry.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="ruleset">
+<h3>RuleSet<a class="headerlink" href="#ruleset" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.RuleSet">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">RuleSet</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#RuleSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.RuleSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains the tournament rule set.</p>
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.pvp_type">
+<code class="descname">pvp_type</code><a class="headerlink" href="#tibiapy.RuleSet.pvp_type" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref py py-class docutils literal notranslate"><span class="pre">PvPType</span></code> – The PvP type of the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.daily_tournament_playtime">
+<code class="descname">daily_tournament_playtime</code><a class="headerlink" href="#tibiapy.RuleSet.daily_tournament_playtime" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.timedelta</span></code></a> – The maximum amount of time participants can play each day.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.total_tournament_playtime">
+<code class="descname">total_tournament_playtime</code><a class="headerlink" href="#tibiapy.RuleSet.total_tournament_playtime" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.timedelta" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.timedelta</span></code></a> – The total amount of time participants can play in the tournament.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.playtime_reduced_only_in_combat">
+<code class="descname">playtime_reduced_only_in_combat</code><a class="headerlink" href="#tibiapy.RuleSet.playtime_reduced_only_in_combat" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a> – Whether playtime will only be reduced while in combat or not.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.death_penalty_modifier">
+<code class="descname">death_penalty_modifier</code><a class="headerlink" href="#tibiapy.RuleSet.death_penalty_modifier" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> – The modifier for the death penalty.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.xp_multiplier">
+<code class="descname">xp_multiplier</code><a class="headerlink" href="#tibiapy.RuleSet.xp_multiplier" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> – The multiplier for experience gained.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.skill_multiplier">
+<code class="descname">skill_multiplier</code><a class="headerlink" href="#tibiapy.RuleSet.skill_multiplier" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> – The multiplier for skill gained.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.spawn_rate_multiplier">
+<code class="descname">spawn_rate_multiplier</code><a class="headerlink" href="#tibiapy.RuleSet.spawn_rate_multiplier" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> – The multiplier for the spawn rate.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.loot_probability">
+<code class="descname">loot_probability</code><a class="headerlink" href="#tibiapy.RuleSet.loot_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> – The multiplier for the loot rate.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.rent_percentage">
+<code class="descname">rent_percentage</code><a class="headerlink" href="#tibiapy.RuleSet.rent_percentage" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The percentage of rent prices relative to the regular price.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.RuleSet.house_auction_durations">
+<code class="descname">house_auction_durations</code><a class="headerlink" href="#tibiapy.RuleSet.house_auction_durations" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The duration of house auctions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.RuleSet.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.RuleSet.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="scoreset">
+<h3>ScoreSet<a class="headerlink" href="#scoreset" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="tibiapy.ScoreSet">
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">ScoreSet</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/tournament.html#ScoreSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.ScoreSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the ways to earn or lose points in the tournament.</p>
+<dl class="attribute">
+<dt id="tibiapy.ScoreSet.level_gain_loss">
+<code class="descname">level_gain_loss</code><a class="headerlink" href="#tibiapy.ScoreSet.level_gain_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The points gained for leveling up or lost for losing a level.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ScoreSet.charm_point_multiplier">
+<code class="descname">charm_point_multiplier</code><a class="headerlink" href="#tibiapy.ScoreSet.charm_point_multiplier" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The multiplier for every charm point.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.ScoreSet.character_death">
+<code class="descname">character_death</code><a class="headerlink" href="#tibiapy.ScoreSet.character_death" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The points lost for dying.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.ScoreSet.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ScoreSet.to_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the object’s JSON representation.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -5761,6 +6575,73 @@ News searches can only be performed using POST requests sending the parameters a
 </dd></dl>
 
 <dl class="class">
+<dt id="tibiapy.abc.BaseTournament">
+<em class="property">class </em><code class="descclassname">tibiapy.abc.</code><code class="descname">BaseTournament</code><a class="reference internal" href="_modules/tibiapy/abc.html#BaseTournament"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.abc.BaseTournament" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for tournament classes.</p>
+<dl class="attribute">
+<dt id="tibiapy.abc.BaseTournament.title">
+<code class="descname">title</code><a class="headerlink" href="#tibiapy.abc.BaseTournament.title" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The tournament’s title.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.abc.BaseTournament.cycle">
+<code class="descname">cycle</code><a class="headerlink" href="#tibiapy.abc.BaseTournament.cycle" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> – The tournament’s cycle.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tibiapy.abc.BaseTournament.url">
+<code class="descname">url</code><a class="headerlink" href="#tibiapy.abc.BaseTournament.url" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> – The URL to the tournament’s information page.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tibiapy.abc.BaseTournament.get_url">
+<em class="property">classmethod </em><code class="descname">get_url</code><span class="sig-paren">(</span><em>tournament_cycle</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/abc.html#BaseTournament.get_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.abc.BaseTournament.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the URL to a tournament’s information page if its cycle is provided,
+otherwise it shows the current tournament.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tournament_cycle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The tournament’s cycle.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The URL to the specified tournament.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="tibiapy.abc.BaseTournament.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>*</em>, <em>indent=None</em>, <em>sort_keys=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.abc.BaseTournament.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <code class="docutils literal notranslate"><span class="pre">None</span></code> will return the shortest possible string.</li>
+<li><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">JSON representation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="tibiapy.abc.BaseWorld">
 <em class="property">class </em><code class="descclassname">tibiapy.abc.</code><code class="descname">BaseWorld</code><a class="reference internal" href="_modules/tibiapy/abc.html#BaseWorld"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.abc.BaseWorld" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all World classes.</p>
@@ -5959,11 +6840,17 @@ If this is <code class="docutils literal notranslate"><span class="pre">None</sp
 
 <dl class="class">
 <dt id="tibiapy.InvalidContent">
-<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">InvalidContent</code><a class="reference internal" href="_modules/tibiapy/errors.html#InvalidContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.InvalidContent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">tibiapy.</code><code class="descname">InvalidContent</code><span class="sig-paren">(</span><em>message</em>, <em>original=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/errors.html#InvalidContent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.InvalidContent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exception thrown when the provided content is unrelated for the calling function.</p>
 <p>This usually means that the content provided belongs to a different website or section of the website.
 This serves as a way to differentiate those cases from a parsing that returned no results (e.g. Character not found)</p>
 <p>In some cases this can mean that Tibia.com’s format has changed and the library needs updating.</p>
+<dl class="attribute">
+<dt id="tibiapy.InvalidContent.original">
+<code class="descname">original</code><a class="headerlink" href="#tibiapy.InvalidContent.original" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a> – The original exception that caused this exception.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -5989,8 +6876,43 @@ This has its own subclass to let the user decide to treat this differently than 
 </div>
 <div class="section" id="utility-functions">
 <h2>Utility functions<a class="headerlink" href="#utility-functions" title="Permalink to this headline">¶</a></h2>
-<p>These are functions used thorough the module and are not intended for public use.</p>
+<p>These are functions used thorough the module that may not be intended for public use.</p>
 <span class="target" id="module-tibiapy.utils"></span><dl class="function">
+<dt id="tibiapy.utils.get_tibia_url">
+<code class="descclassname">tibiapy.utils.</code><code class="descname">get_tibia_url</code><span class="sig-paren">(</span><em>section</em>, <em>subtopic</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#get_tibia_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.utils.get_tibia_url" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The desired section (e.g. community, abouttibia, manual, library)</li>
+<li><strong>subtopic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The desired subtopic (e.g. characters, guilds, houses, etc)</li>
+<li><strong>kwargs</strong> – Additional parameters to pass to the url (e.g name, world, houseid, etc)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The generated Tibia.com URL.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;houses&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">houseid</span><span class="o">=</span><span class="mi">55302</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="s2">&quot;Gladera&quot;</span><span class="p">)</span>
+<span class="go">https://www.tibia.com/community/?subtopic=houses&amp;page=view&amp;houseid=55302&amp;world=Gladera</span>
+</pre></div>
+</div>
+<p>You can also build a dictionary and pass it like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;world&#39;</span><span class="p">:</span> <span class="s2">&quot;Gladera&quot;</span><span class="p">,</span> <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;worlds&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="go">https://www.tibia.com/community/?subtopic=worlds&amp;world=Gladera</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="tibiapy.utils.parse_integer">
 <code class="descclassname">tibiapy.utils.</code><code class="descname">parse_integer</code><span class="sig-paren">(</span><em>number: str</em>, <em>default=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#parse_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.utils.parse_integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses a string representing an integer, ignoring commas or periods.</p>
@@ -6271,6 +7193,31 @@ This is meant to be used in constructors.</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="tibiapy.utils.split_list">
+<code class="descclassname">tibiapy.utils.</code><code class="descname">split_list</code><span class="sig-paren">(</span><em>items</em>, <em>separator='</em>, <em>'</em>, <em>last_separator=' and '</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#split_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.utils.split_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits a string listing elements into an actual list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – A string listing elements.</li>
+<li><strong>separator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The separator between each item. A comma by default.</li>
+<li><strong>last_separator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The separator used for the last item. ‘ and ‘ by default.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list containing each one of the items.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 </div>
 
@@ -6324,8 +7271,11 @@ This is meant to be used in constructors.</p>
 <li class="toctree-l3"><a class="reference internal" href="#listedguild">ListedGuild</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#listedhouse">ListedHouse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#listednews">ListedNews</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listedtournament">ListedTournament</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#listedworld">ListedWorld</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#news">News</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tournament">Tournament</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tournamentleaderboard">TournamentLeaderboard</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#world">World</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#worldoverview">WorldOverview</a></li>
 </ul>
@@ -6343,10 +7293,14 @@ This is meant to be used in constructors.</p>
 <li class="toctree-l3"><a class="reference internal" href="#guildmembership">GuildMembership</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#highscoresentry">HighscoresEntry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#killer">Killer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#leaderboardentry">LeaderboardEntry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#loyaltyhighscoresentry">LoyaltyHighscoresEntry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#onlinecharacter">OnlineCharacter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#othercharacter">OtherCharacter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#raceentry">RaceEntry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rewardentry">RewardEntry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ruleset">RuleSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scoreset">ScoreSet</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
