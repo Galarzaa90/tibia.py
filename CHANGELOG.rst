@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. _v2.5.1:
+
+2.5.1 (2020-05-27)
+==================
+- Fixed bed count not being parsed on houses.
+
 .. _v2.5.0:
 
 2.5.0 (2020-05-22)

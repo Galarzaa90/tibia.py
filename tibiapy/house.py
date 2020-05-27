@@ -17,7 +17,7 @@ __all__ = (
 )
 
 id_regex = re.compile(r'house_(\d+)\.')
-bed_regex = re.compile(r'This (?P<type>\w+) has (?P<beds>[\w-]+) bed')
+bed_regex = re.compile(r'This (?P<type>\w+) can have up to (?P<beds>[\d-]+) bed')
 info_regex = \
     re.compile(r'The house has a size of (?P<size>\d+) square meter[s]?. '
                r'The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).')
@@ -178,8 +178,7 @@ class House(abc.BaseHouseWithId):
                 house.type = HouseType.GUILDHALL
             else:
                 house.type = HouseType.HOUSE
-            beds_word = m.group("beds")
-            house.beds = parse_number_words(beds_word)
+            house.beds = int(m.group("beds"))
 
         m = info_regex.search(info)
         if m:
