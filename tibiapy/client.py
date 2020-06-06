@@ -1,11 +1,14 @@
 import asyncio
 import datetime
+import time
 
 import aiohttp
 import aiohttp_socks
+import typing
 
 import tibiapy
-from tibiapy import BoostedCreature, Category, Character, Forbidden, Guild, Highscores, House, HouseOrder, HouseStatus, \
+from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, Guild, Highscores, House, HouseOrder, \
+    HouseStatus, \
     HouseType, KillStatistics, ListedGuild, ListedHouse, ListedNews, NetworkError, News, NewsCategory, NewsType, \
     Tournament, TournamentLeaderboard, VocationFilter, World, WorldOverview
 
@@ -17,17 +20,41 @@ __all__ = (
 # This limit is not sent anywhere, so there's no way to automate it.
 CACHE_LIMIT = 300
 
+T = typing.TypeVar('T')
 
-# This class is not used in this release.
-class _TibiaResponse:  # pragma: no cover
-    def __init__(self, data=None, cache_limit=CACHE_LIMIT, **kwargs):
-        self.data = None
-        self.cached = kwargs.get("cached")
-        self.cache_age = kwargs.get("cache_age")
-        self.response_timestamp = None
-        self.data_timestamp = None
-        self.parsing_time = None
-        self.response_time = None
+
+class TibiaResponse(typing.Generic[T], abc.Serializable):
+    def __init__(self, raw_response, data: T, parsing_time=None):
+        self.timestamp = raw_response.timestamp
+        self.cached = raw_response.cached
+        self.age = raw_response.age
+        self.time_left = CACHE_LIMIT - self.age
+        self.fetching_time = raw_response.fetching_time
+        self.parsing_time = parsing_time
+        self.data = data
+
+    __slots__ = (
+        'timestamp',
+        'cached',
+        'age',
+        'time_left',
+        'fetching_time',
+        'parsing_time',
+        'data',
+    )
+
+class RawResponse:
+    def __init__(self, response: aiohttp.ClientResponse, fetching_time):
+        self.timestamp = datetime.datetime.utcnow()
+        self.fetching_time = fetching_time
+        self.cached = response.headers.get("CF-Cache-Status") == "HIT"
+        age = response.headers.get("Age")
+        if age is not None and age.isnumeric():
+            self.age = int(age)
+        else:
+            self.age = 0
+        self.content = None
+
 
 
 class Client:
@@ -53,8 +80,10 @@ class Client:
 
     def __init__(self, loop=None, session=None, *, proxy_url=None):
         self.loop = asyncio.get_event_loop() if loop is None else loop  # type: asyncio.AbstractEventLoop
+        self._session_ready = asyncio.Event()
         if session is not None:
             self.session = session  # type: aiohttp.ClientSession
+            self._session_ready.set()
         else:
             self.loop.create_task(self._initialize_session(proxy_url))
 
@@ -66,6 +95,7 @@ class Client:
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
         self.session = aiohttp.ClientSession(loop=self.loop, headers=headers,
                                              connector=connector)  # type: aiohttp.ClientSession
+        self._session_ready.set()
 
     @classmethod
     def _handle_status(cls, status_code):
@@ -135,6 +165,23 @@ class Client:
         except UnicodeDecodeError as e:
             raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
+    async def _request(self, method, url, data=None):
+        """Performs a request, handing possible error statuses"""
+        await self._session_ready.wait()
+        try:
+            init_time = time.perf_counter()
+            async with self.session.request(method, url, data=data) as resp:
+                self._handle_status(resp.status)
+                response = RawResponse(resp, time.perf_counter()-init_time)
+                response.content = await resp.text()
+                return response
+        except aiohttp.ClientError as e:
+            raise NetworkError("aiohttp.ClientError: %s" % e, e)
+        except aiohttp_socks.SocksConnectionError as e:
+            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
+        except UnicodeDecodeError as e:
+            raise NetworkError('UnicodeDecodeError: %s' % e, e)
+
     async def fetch_boosted_creature(self):
         """Fetches today's boosted creature.
 
@@ -178,9 +225,12 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(Character.get_url(name.strip()))
-        char = Character.from_content(content)
-        return char
+        response = await self._request("get", Character.get_url(name.strip()))
+        start_time = time.perf_counter()
+        char = Character.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, char, parsing_time)
+
 
     async def fetch_guild(self, name):
         """Fetches a guild by its name from Tibia.com
@@ -561,4 +611,3 @@ class Client:
         content = await self._get(TournamentLeaderboard.get_url(world, tournament_cycle, page))
         tournament_leaderboard = TournamentLeaderboard.from_content(content)
         return tournament_leaderboard
-
