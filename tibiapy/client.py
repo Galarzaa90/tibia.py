@@ -13,6 +13,7 @@ from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, Guild,
     Tournament, TournamentLeaderboard, VocationFilter, World, WorldOverview
 
 __all__ = (
+    "TibiaResponse",
     "Client",
 )
 
@@ -24,11 +25,27 @@ T = typing.TypeVar('T')
 
 
 class TibiaResponse(typing.Generic[T], abc.Serializable):
+    """Represents a response from Tibia.com
+
+    Attributes
+    ----------
+    timestamp: :class:`datetime.datetime`
+        The date and time when the page was fetched, in UTC.
+    cached: :class:`bool`
+        Whether the response is cached or it is a fresh response.
+    age: :class:`int`
+        The age of the cache in seconds.
+    fetching_time: :class:`int`
+        The time in seconds it took for Tibia.com to respond.
+    parsing_time: :class:`int`
+        The time in seconds it took for the response to be parsed into data.
+    data:
+        The data contained in the response.
+    """
     def __init__(self, raw_response, data: T, parsing_time=None):
-        self.timestamp = raw_response.timestamp
-        self.cached = raw_response.cached
-        self.age = raw_response.age
-        self.time_left = CACHE_LIMIT - self.age
+        self.timestamp = raw_response.timestamp  # type: datetime.datetime
+        self.cached = raw_response.cached  # type: bool
+        self.age = raw_response.age  # type: int
         self.fetching_time = raw_response.fetching_time
         self.parsing_time = parsing_time
         self.data = data
@@ -37,11 +54,19 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
         'timestamp',
         'cached',
         'age',
-        'time_left',
         'fetching_time',
         'parsing_time',
         'data',
     )
+
+    def time_left(self):
+        if not self.age:
+            return datetime.timedelta()
+        return datetime.timedelta(seconds=CACHE_LIMIT-self.age)-(datetime.datetime.utcnow()-self.timestamp)
+
+    def seconds_left(self):
+        return self.time_left().seconds
+
 
 class RawResponse:
     def __init__(self, response: aiohttp.ClientResponse, fetching_time):
@@ -54,7 +79,6 @@ class RawResponse:
         else:
             self.age = 0
         self.content = None
-
 
 
 class Client:
