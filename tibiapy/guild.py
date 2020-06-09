@@ -9,7 +9,8 @@ from tibiapy import abc
 from tibiapy.enums import Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import parse_json, parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, try_date, \
+from tibiapy.utils import get_tibia_url, parse_json, parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, \
+    try_date, \
     try_datetime, try_enum
 
 __all__ = (
@@ -54,6 +55,8 @@ class Guild(abc.BaseGuild):
         The guild's guildhall if any.
     open_applications: :class:`bool`
         Whether applications are open or not.
+    active_war: :class:`bool`
+        Whether the guild is currently in an active war or not.
     disband_date: :class:`datetime.datetime`, optional
         The date when the guild will be disbanded if the condition hasn't been meet.
     disband_condition: :class:`str`, optional
@@ -65,8 +68,21 @@ class Guild(abc.BaseGuild):
     invites: :class:`list` of :class:`GuildInvite`
         List of invited characters.
     """
-    __slots__ = ("world", "logo_url", "description", "founded", "active", "guildhall", "open_applications",
-                 "disband_condition", "disband_date", "homepage", "members", "invites")
+    __slots__ = (
+        "world",
+        "logo_url",
+        "description",
+        "founded",
+        "active",
+        "guildhall",
+        "open_applications",
+        "active_war",
+        "disband_condition",
+        "disband_date",
+        "homepage",
+        "members",
+        "invites",
+    )
 
     def __init__(self, name=None, world=None, **kwargs):
         self.name = name  # type: str
@@ -77,6 +93,7 @@ class Guild(abc.BaseGuild):
         self.active = kwargs.get("active", False)  # type: bool
         self.guildhall = kwargs.get("guildhall")  # type: Optional[GuildHouse]
         self.open_applications = kwargs.get("open_applications", False)  # type: bool
+        self.active_war = kwargs.get("active_war", False)  # type: bool
         self.disband_condition = kwargs.get("disband_condition")  # type: Optional[str]
         self.disband_date = try_datetime(kwargs.get("disband_date"))
         self.homepage = kwargs.get("homepage")  # type: Optional[str]
@@ -244,6 +261,7 @@ class Guild(abc.BaseGuild):
         m = applications_regex.search(info_container.text)
         if m:
             self.open_applications = m.group(1) == "opened"
+        self.active_war = "during war" in info_container.text
 
     def _parse_guild_disband_info(self, info_container):
         """
@@ -411,6 +429,103 @@ class GuildInvite(abc.BaseCharacter):
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} " \
                "date={0.date!r}>".format(self)
+
+
+class GuildWars(abc.Serializable):
+    """Represents a guild's wars.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the guild.
+    current: :class:`GuildWarEntry`
+        The current war the guild is involved in.
+    history: :class:`list` of :class:`GuildWarEntry`
+        The previous wars the guild has been involved in."""
+
+    __slots__ = (
+        'name',
+        'current',
+        'history',
+    )
+
+    def __init__(self, name, current=None, history=None):
+        self.name = name
+        self.current = current
+        self.history = history or []
+
+    @property
+    def url(self):
+        return self.get_url(self.name)
+
+    @classmethod
+    def get_url(cls, name):
+        return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
+
+    @classmethod
+    def from_content(cls, content):
+        parsed_content = parse_tibiacom_content(content)
+        pass
+
+
+class GuildWarEntry:
+    """Represents a guild war entry.
+
+    guild_name: :class`str`
+        The name of the guild.
+    guild_score: :class:`int`
+        The number of kills the guild has scored.
+    guild_fee: :class:`int`
+        The number of gold coins the guild will pay if they lose the war.
+    opponent_name: :class:`str`
+        The name of the opposing guild. If the guild no longer exist, this will be ``None``.
+    opponent_score: :class:`int`
+        The number of kills the opposing guild has scored.
+    opponent_fee: :class:`int`
+        The number of gold coins the opposing guild will pay if they lose the war.
+    start_date: :class:`datetime.date`
+        The date when the war started.
+    score_limit: :class:`int`
+        The number of kills needed to win the war.
+    duration: :class:`datetime.timedelta`
+        The set duration of the war.
+    end_date: :class:`datetime.date`
+        The date when the war ended. ``None`` if it hasn't ended.
+    winner: :class:`str`
+        The name of the guild that won.
+
+        Note that if the winning guild is disbanded, this may be ``None``.
+    surrender: :class:`bool`
+        Whether the losing guild surrendered or not.
+    """
+    __slots__ = (
+        "guild_name",
+        "guild_score",
+        "guild_fee",
+        "opponent_name",
+        "opponent_score",
+        "opponent_fee",
+        "start_date",
+        "score_limit",
+        "duration",
+        "end_date",
+        "winner",
+        "surrender",
+    )
+
+    def __init__(self, **kwargs):
+        self.guild_name = kwargs.get("guild_name")
+        self.guild_score = kwargs.get("guild_score")
+        self.guild_fee = kwargs.get("guild_fee")
+        self.opponent_name = kwargs.get("opponent_name")
+        self.opponent_score = kwargs.get("opponent_score")
+        self.opponent_fee = kwargs.get("opponent_fee")
+        self.start_date = kwargs.get("start_date")
+        self.score_limit = kwargs.get("score_limit")
+        self.duration = kwargs.get("duration")
+        self.end_date = kwargs.get("end_date")
+        self.winner = kwargs.get("winner")
+        self.surrender = kwargs.get("surrender")
 
 
 class ListedGuild(abc.BaseGuild):

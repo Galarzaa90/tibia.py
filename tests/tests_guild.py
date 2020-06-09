@@ -13,6 +13,7 @@ FILE_GUILD_INFO_DISBANDING = "guild/tibiacom_info_disbanding.txt"
 FILE_GUILD_INFO_FORMATION = "guild/tibiacom_info_formation.txt"
 FILE_GUILD_LIST = "guild/tibiacom_list.txt"
 FILE_GUILD_LIST_NOT_FOUND = "guild/tibiacom_list_not_found.txt"
+FILE_GUILD_IN_WAR = "guild/tibiacom_war.txt"
 
 FILE_GUILD_TIBIADATA = "guild/tibiadata.json"
 FILE_GUILD_TIBIADATA_NOT_FOUND = "guild/tibiadata_not_found.json"
@@ -110,6 +111,14 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertIsNone(self.guild.description, "Guild description must not exist")
         self.assertEqual("Gladera", self.guild.world)
         self.assertEqual(datetime.date(year=2018, month=5, day=18), self.guild.founded)
+
+    def test_guild_from_content_in_war(self):
+        content = self._load_resource(FILE_GUILD_IN_WAR)
+        guild = Guild.from_content(content)
+
+        self.assertIsInstance(guild, Guild)
+        self.assertFalse(guild.open_applications)
+        self.assertTrue(guild.active_war)
 
     def test_guild_from_content_disbanding(self):
         """Testing parsing a guild that is disbanding"""
