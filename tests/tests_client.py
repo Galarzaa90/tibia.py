@@ -60,7 +60,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(Character.get_url(name), status=200, body=content)
         character = await self.client.fetch_character(name)
 
-        self.assertIsInstance(character, Character)
+        self.assertIsInstance(character.data, Character)
 
     @aioresponses()
     async def test_client_fetch_character_not_found(self, mock):
@@ -70,7 +70,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(Character.get_url(name), status=200, body=content)
         character = await self.client.fetch_character(name)
 
-        self.assertIsNone(character)
+        self.assertIsNone(character.data)
 
     @aioresponses()
     async def test_client_fetch_guild(self, mock):
@@ -80,7 +80,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(Guild.get_url(name), status=200, body=content)
         guild = await self.client.fetch_guild(name)
 
-        self.assertIsInstance(guild, Guild)
+        self.assertIsInstance(guild.data, Guild)
 
     @aioresponses()
     async def test_client_fetch_world_guilds(self, mock):
@@ -90,7 +90,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(ListedGuild.get_world_list_url(world), status=200, body=content)
         guilds = await self.client.fetch_world_guilds(world)
 
-        self.assertIsInstance(guilds[0], ListedGuild)
+        self.assertIsInstance(guilds.data[0], ListedGuild)
 
     @aioresponses()
     async def test_client_fetch_highscores_page(self, mock):
@@ -102,7 +102,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(Highscores.get_url(world, category, vocations), status=200, body=content)
         highscores = await self.client.fetch_highscores_page(world, category, vocations)
 
-        self.assertIsInstance(highscores, Highscores)
+        self.assertIsInstance(highscores.data, Highscores)
 
     @aioresponses()
     async def test_client_fetch_house(self, mock):
@@ -113,7 +113,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(House.get_url(house_id, world), status=200, body=content)
         house = await self.client.fetch_house(house_id, world)
 
-        self.assertIsInstance(house, House)
+        self.assertIsInstance(house.data, House)
 
     @aioresponses()
     async def test_client_fetch_world_houses(self, mock):
@@ -124,8 +124,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(ListedHouse.get_list_url(world, city), status=200, body=content)
         houses = await self.client.fetch_world_houses(world, city)
 
-        self.assertIsInstance(houses, list)
-        self.assertIsInstance(houses[0], ListedHouse)
+        self.assertIsInstance(houses.data, list)
+        self.assertIsInstance(houses.data[0], ListedHouse)
 
     @aioresponses()
     async def test_client_fetch_kill_statistics(self, mock):
@@ -135,7 +135,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(KillStatistics.get_url(world), status=200, body=content)
         kill_statistics = await self.client.fetch_kill_statistics(world)
 
-        self.assertIsInstance(kill_statistics, KillStatistics)
+        self.assertIsInstance(kill_statistics.data, KillStatistics)
 
     @aioresponses()
     async def test_client_fetch_recent_news(self, mock):
@@ -144,8 +144,8 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.post(ListedNews.get_list_url(), status=200, body=content)
         recent_news = await self.client.fetch_recent_news(30)
 
-        self.assertIsInstance(recent_news, list)
-        self.assertIsInstance(recent_news[0], ListedNews)
+        self.assertIsInstance(recent_news.data, list)
+        self.assertIsInstance(recent_news.data[0], ListedNews)
 
     async def test_client_fetch_news_archive_invalid_dates(self):
         """Testing fetching news archive with invalid dates"""
@@ -162,7 +162,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(News.get_url(news_id), status=200, body=content)
         news = await self.client.fetch_news(news_id)
 
-        self.assertIsInstance(news, News)
+        self.assertIsInstance(news.data, News)
 
     @aioresponses()
     async def test_client_fetch_world(self, mock):
@@ -172,7 +172,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(World.get_url(name), status=200, body=content)
         world = await self.client.fetch_world(name)
 
-        self.assertIsInstance(world, World)
+        self.assertIsInstance(world.data, World)
 
     @aioresponses()
     async def test_client_fetch_world_list(self, mock):
@@ -181,7 +181,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(WorldOverview.get_url(), status=200, body=content)
         worlds = await self.client.fetch_world_list()
 
-        self.assertIsInstance(worlds, WorldOverview)
+        self.assertIsInstance(worlds.data, WorldOverview)
 
     @aioresponses()
     async def test_client_fetch_boosted_creature(self, mock):
@@ -190,7 +190,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(News.get_list_url(), status=200, body=content)
         creature = await self.client.fetch_boosted_creature()
 
-        self.assertIsInstance(creature, BoostedCreature)
+        self.assertIsInstance(creature.data, BoostedCreature)
 
 
 

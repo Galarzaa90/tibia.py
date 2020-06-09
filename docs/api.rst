@@ -14,6 +14,9 @@ Client
 .. autoclass:: Client
     :members:
 
+.. autoclass:: TibiaResponse
+    :members:
+
 Enumerations
 ============
 Enumerations are provided for various values in order to avoid depending on strings.

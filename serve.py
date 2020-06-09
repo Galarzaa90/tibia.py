@@ -20,6 +20,11 @@ async def home(request):
     content += "</ul>"
     return web.Response(text=content, content_type='text/html')
 
+@routes.get('/boostedcreature/')
+async def get_boosted_creature(request):
+    boosted = await app["tibiapy"].fetch_boosted_creature()
+    return web.Response(text=boosted.to_json())
+
 
 @routes.get('/characters/{name}')
 async def get_character(request):
