@@ -107,6 +107,12 @@ Guild
    :members:
    :inherited-members:
 
+GuildWars
+---------
+.. autoclass:: GuildWars
+   :members:
+   :inherited-members:
+
 Highscores
 ----------
 .. autoclass:: Highscores
@@ -250,6 +256,11 @@ GuildMembership
    :members:
    :inherited-members:
 
+GuildWarEntry
+-------------
+.. autoclass:: GuildWarEntry
+   :members:
+   :inherited-members:
 
 HighscoresEntry
 ---------------

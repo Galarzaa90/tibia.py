@@ -40,6 +40,13 @@ async def get_guild(request):
     return web.Response(text=char.to_json())
 
 
+@routes.get('/guilds/{name}/wars')
+async def get_guild_wars(request):
+    name = request.match_info['name']
+    char = await app["tibiapy"].fetch_guild_wars(name)
+    return web.Response(text=char.to_json())
+
+
 @routes.get('/worlds/{name}/guilds')
 async def get_guilds(request):
     name = request.match_info['name']

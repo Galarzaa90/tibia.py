@@ -58,6 +58,8 @@ class Serializable:
         try:
             if isinstance(obj, datetime.datetime):
                 return obj.isoformat()
+            if isinstance(obj, datetime.timedelta):
+                return obj.total_seconds()
             if isinstance(obj, Enum):
                 return obj.value
             return {k: v for k, v in dict(obj).items() if v is not None}

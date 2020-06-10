@@ -7,7 +7,8 @@ import aiohttp_socks
 import typing
 
 import tibiapy
-from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, Guild, Highscores, House, HouseOrder, \
+from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, Guild, GuildWars, Highscores, House, \
+    HouseOrder, \
     HouseStatus, \
     HouseType, KillStatistics, ListedGuild, ListedHouse, ListedNews, NetworkError, News, NewsCategory, NewsType, \
     Tournament, TournamentLeaderboard, VocationFilter, World, WorldOverview
@@ -313,6 +314,33 @@ class Client:
         guild = Guild.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guild, parsing_time)
+
+    async def fetch_guild_wars(self, name):
+        """Fetches a guild's wars by its name from Tibia.com
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the guild. The case must match exactly.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`GuildWars`
+            A response containing the found guild's wars, if any.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("get", GuildWars.get_url(name))
+        start_time = time.perf_counter()
+        guild_wars = GuildWars.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, guild_wars, parsing_time)
 
     async def fetch_house(self, house_id, world):
         """Fetches a house in a specific world by its id.

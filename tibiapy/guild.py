@@ -35,7 +35,7 @@ disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
 
 war_guilds_regegx = re.compile(r'The guild ([\w\s]+) is at war with the guild ([^.]+).')
-war_score_regex = re.compile(r'guild [\w\s]+ scored ([\d,]+) kills? against')
+war_score_regex = re.compile(r'scored ([\d,]+) kills? against')
 war_fee_regex = re.compile(r'the guild [\w\s]+ wins the war, they will receive ([\d,]+) gold.')
 war_score_limit_regex = re.compile(r'guild scores ([\d,]+) kills against')
 war_end_regex = re.compile(r'war will end on (\w{3}\s\d{2}\s\d{4})')
@@ -562,6 +562,12 @@ class GuildWars(abc.Serializable):
             winner = guild_name if surrending_guild != guild_name else opposing_name
             surrender = True
 
+        war_score_match = war_score_regex.findall(text)
+        if war_score_match:
+            guild_score, opponent_score = war_score_match
+            guild_score = int(guild_score)
+            opponent_score = int(guild_score)
+
         war_end_match = war_ended_regex.search(text)
         if war_end_match:
             end_date = parse_tibia_date(war_end_match.group(1))
@@ -574,6 +580,9 @@ class GuildWars(abc.Serializable):
             guild_score = kills_needed if guild_name == winner else loser_score
             opponent_score = kills_needed if guild_name != winner else loser_score
 
+        if "no guild had reached the needed kills" in text:
+            winner = guild_name if guild_score > opponent_score else opposing_name
+
         entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, start_date=start_date,
                               duration=duration, score_limit=kills_needed, guild_fee=int(guild_fee),
                               opponent_fee=int(opponent_fee), surrender=surrender, winner=winner, end_date=end_date,
@@ -581,10 +590,12 @@ class GuildWars(abc.Serializable):
         return entry
 
 
-class GuildWarEntry:
+class GuildWarEntry(abc.Serializable):
     """Represents a guild war entry.
 
-    guild_name: :class`str`
+    Attributes
+    ----------
+    guild_name: :class:`str`
         The name of the guild.
     guild_score: :class:`int`
         The number of kills the guild has scored.
