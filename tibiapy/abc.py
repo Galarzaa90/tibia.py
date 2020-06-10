@@ -185,6 +185,11 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         """:class:`str`: The URL to the guild on TibiaData.com."""
         return self.get_url_tibiadata(self.name)
 
+    @property
+    def url_wars(self):
+        """:class:`str` The URL to the guild's wars page on Tibia.com."""
+        return self.get_url_wars(self.name)
+
     @classmethod
     def get_url(cls, name):
         """Gets the Tibia.com URL for a given guild name.
@@ -214,6 +219,21 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         :class:`str`
             The URL to the guild's page on TibiaData.com."""
         return GUILD_URL_TIBIADATA % urllib.parse.quote(name)
+
+    @classmethod
+    def get_url_wars(cls, name):
+        """Gets the Tibia.com URL for the guild wars of a guild with a given name.
+
+        Parameters
+        ------------
+        name: :class:`str`
+            The name of the guild.
+
+        Returns
+        --------
+        :class:`str`
+            The URL to the guild's wars page."""
+        return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
 
     @classmethod
     def get_world_list_url(cls, world):

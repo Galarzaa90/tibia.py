@@ -24,6 +24,7 @@ FILE_GUILD_TIBIADATA_LIST_NOT_FOUND = "guild/tibiadata_list_not_found.json"
 
 FILE_GUILD_WAR_ACTIVE_HISTORY = "guild/wars/tibiacom_active_history.txt"
 FILE_GUILD_WAR_EMPTY = "guild/wars/tibiacom_empty.txt"
+FILE_GUILD_WAR_UNACTIVE_HISTORY = "guild/wars/tibiacom_unactive_history.txt"
 
 
 class TestsGuild(TestCommons, unittest.TestCase):
@@ -283,7 +284,8 @@ class TestsGuild(TestCommons, unittest.TestCase):
             ListedGuild.list_from_tibiadata("<b>Not JSON</b>")
 
     # region Guild War Tests
-    def test_guild_wars_from_content(self):
+    def test_guild_wars_from_content_active_history(self):
+        "Testing parsing the guild wars of a guild currently in war and with war history."
         content = self._load_resource(FILE_GUILD_WAR_ACTIVE_HISTORY)
         guild_wars = GuildWars.from_content(content)
 
@@ -320,5 +322,24 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertEqual("Redd Alliance", guild_wars.name)
         self.assertIsNone(guild_wars.current)
         self.assertFalse(guild_wars.history)
+
+    def test_guild_wars_from_content_unactive_history(self):
+        """Testing parsing the guild wars of a war currently not in war and with war history."""
+        content = self._load_resource(FILE_GUILD_WAR_UNACTIVE_HISTORY)
+        guild_wars = GuildWars.from_content(content)
+
+        self.assertIsInstance(guild_wars, GuildWars)
+        self.assertEqual("Dinastia de Perrones", guild_wars.name)
+        self.assertIsNone(guild_wars.current)
+
+        self.assertEqual(1, len(guild_wars.history))
+
+        self.assertEqual(guild_wars.name, guild_wars.history[0].guild_name)
+        self.assertEqual(0, guild_wars.history[0].guild_score)
+        self.assertEqual(None, guild_wars.history[0].opponent_name)
+        self.assertEqual(0, guild_wars.history[0].opponent_score)
+        self.assertEqual(1000, guild_wars.history[0].score_limit)
+        self.assertTrue(guild_wars.history[0].surrender)
+
 
     # endregion

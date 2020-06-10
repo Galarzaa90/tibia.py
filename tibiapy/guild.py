@@ -44,11 +44,12 @@ war_history_header_regex = re.compile(r'guild ([\w\s]+) fought against ([\w\s]+)
 war_start_duration_regex = re.compile(r'started on (\w{3}\s\d{2}\s\d{4}) and had been set for a duration of (\w+) days')
 kills_needed_regex = re.compile(r'(\w+) kills were needed')
 war_history_fee_regex = re.compile(r'agreed on a fee of (\w+) gold for the guild [\w\s]+ and a fee of (\d+) gold')
-surrender_regex = re.compile(r'([\w\s]+) surrendered on (\w{3}\s\d{2}\s\d{4}) and lost (\d+) gold')
+surrender_regex = re.compile(r'(?:The guild ([\w\s]+)|A disbanded guild) surrendered on (\w{3}\s\d{2}\s\d{4})')
 war_ended_regex = re.compile(r'war ended on (\w{3}\s\d{2}\s\d{4}) when the guild ([\w\s]+) had reached the')
 war_score_end_regex = re.compile(r'scored (\d+) kills against')
 
 war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
+
 
 class Guild(abc.BaseGuild):
     """
@@ -471,13 +472,16 @@ class GuildWars(abc.Serializable):
         self.current = current  # type: Optional[GuildWarEntry]
         self.history = history or []   # type: List[GuildWarEntry]
 
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r}>".format(self)
+
     @property
     def url(self):
         return self.get_url(self.name)
 
     @classmethod
     def get_url(cls, name):
-        return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
+        return Guild.get_url_wars(name)
 
     @classmethod
     def from_content(cls, content):
@@ -555,8 +559,6 @@ class GuildWars(abc.Serializable):
         if surrender_match:
             surrending_guild = surrender_match.group(1)
             end_date = parse_tibia_date(surrender_match.group(2))
-            if "disbanded guild" in surrending_guild:
-                surrending_guild = None
             winner = guild_name if surrending_guild != guild_name else opposing_name
             surrender = True
 
@@ -577,7 +579,6 @@ class GuildWars(abc.Serializable):
                               opponent_fee=int(opponent_fee), surrender=surrender, winner=winner, end_date=end_date,
                               opponent_score=opponent_score, guild_score=guild_score)
         return entry
-
 
 
 class GuildWarEntry:
@@ -646,6 +647,14 @@ class GuildWarEntry:
 
     def __repr__(self):
         return "<{0.__class__.__name__} guild_name={0.guild_name!r} opponent_name={0.opponent_name!r}>".format(self)
+
+    @property
+    def guild_url(self):
+        return Guild.get_url(self.guild_name)
+
+    @property
+    def opponent_guild_url(self):
+        return Guild.get_url(self.opponent_name) if self.opponent_name else None
 
 
 class ListedGuild(abc.BaseGuild):
