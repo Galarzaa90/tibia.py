@@ -3,7 +3,7 @@ import unittest
 
 import tests.tests_character
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Guild, GuildHouse, GuildInvite, GuildMember, InvalidContent, ListedGuild
+from tibiapy import Guild, GuildHouse, GuildInvite, GuildMember, GuildWars, InvalidContent, ListedGuild
 
 FILE_GUILD_FULL = "guild/tibiacom_full.txt"
 FILE_GUILD_NOT_FOUND = "guild/tibiacom_not_found.txt"
@@ -21,6 +21,8 @@ FILE_GUILD_TIBIADATA_DISBANDING = "guild/tibiadata_disbanding.json"
 FILE_GUILD_TIBIADATA_INVITED = "guild/tibiadata_invited.json"
 FILE_GUILD_TIBIADATA_LIST = "guild/tibiadata_list.json"
 FILE_GUILD_TIBIADATA_LIST_NOT_FOUND = "guild/tibiadata_list_not_found.json"
+
+FILE_GUILD_WAR_ACTIVE_HISTORY = "guild/wars/tibiacom_active_history.txt"
 
 
 class TestsGuild(TestCommons, unittest.TestCase):
@@ -278,3 +280,10 @@ class TestsGuild(TestCommons, unittest.TestCase):
         """Testing parsing an invalid json"""
         with self.assertRaises(InvalidContent):
             ListedGuild.list_from_tibiadata("<b>Not JSON</b>")
+
+    # region Guild War Tests
+    def test_guild_wars_from_content(self):
+        content = self._load_resource(FILE_GUILD_WAR_ACTIVE_HISTORY)
+        guild_wars = GuildWars.from_content(content)
+
+    # endregion

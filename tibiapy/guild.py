@@ -17,6 +17,8 @@ __all__ = (
     "Guild",
     "GuildMember",
     "GuildInvite",
+    "GuildWars",
+    "GuildWarEntry",
     "ListedGuild",
 )
 
@@ -31,6 +33,8 @@ guildhall_regex = re.compile(r'Their home on \w+ is (?P<name>[^.]+). The rent is
 disband_regex = re.compile(r'It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).')
 disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
+
+war_guilds_regegx = re.compile(r'The guild ([\w\s]+) is at war with the guild ([^.]+).')
 
 
 class Guild(abc.BaseGuild):
@@ -465,6 +469,11 @@ class GuildWars(abc.Serializable):
     @classmethod
     def from_content(cls, content):
         parsed_content = parse_tibiacom_content(content)
+        table_current, table_history = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+        container_current = table_current.find("div", attrs={"class": "InnerTableContainer"})
+        for br in container_current.find_all("br"):
+            br.replace_with("\n")
+        text = container_current.text
         pass
 
 
