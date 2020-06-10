@@ -286,4 +286,28 @@ class TestsGuild(TestCommons, unittest.TestCase):
         content = self._load_resource(FILE_GUILD_WAR_ACTIVE_HISTORY)
         guild_wars = GuildWars.from_content(content)
 
+        self.assertIsInstance(guild_wars, GuildWars)
+        self.assertEqual("Army Geddon", guild_wars.name)
+        self.assertIsNotNone(guild_wars.current)
+        self.assertEqual(guild_wars.name, guild_wars.current.guild_name)
+        self.assertEqual(178, guild_wars.current.guild_score)
+        self.assertEqual("Willyboiis Boys", guild_wars.current.opponent_name)
+        self.assertEqual(218, guild_wars.current.opponent_score)
+        self.assertEqual(1000, guild_wars.current.score_limit)
+
+        self.assertEqual(2, len(guild_wars.history))
+
+        self.assertEqual(guild_wars.name, guild_wars.history[0].guild_name)
+        self.assertEqual(0, guild_wars.history[0].guild_score)
+        self.assertEqual(None, guild_wars.history[0].opponent_name)
+        self.assertEqual(0, guild_wars.history[0].opponent_score)
+        self.assertEqual(420, guild_wars.history[0].score_limit)
+        self.assertTrue(guild_wars.history[0].surrender)
+
+        self.assertEqual(guild_wars.name, guild_wars.history[1].guild_name)
+        self.assertEqual(500, guild_wars.history[1].guild_score)
+        self.assertEqual(None, guild_wars.history[1].opponent_name)
+        self.assertEqual(491, guild_wars.history[1].opponent_score)
+        self.assertEqual(500, guild_wars.history[1].score_limit)
+        self.assertEqual(guild_wars.name, guild_wars.history[1].winner)
     # endregion

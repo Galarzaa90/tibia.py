@@ -35,7 +35,18 @@ disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
 
 war_guilds_regegx = re.compile(r'The guild ([\w\s]+) is at war with the guild ([^.]+).')
+war_score_regex = re.compile(r'guild [\w\s]+ scored ([\d,]+) kills? against')
+war_fee_regex = re.compile(r'the guild [\w\s]+ wins the war, they will receive ([\d,]+) gold.')
+war_score_limit_regex = re.compile(r'guild scores ([\d,]+) kills against')
+war_end_regex = re.compile(r'war will end on (\w{3}\s\d{2}\s\d{4})')
 
+war_history_header_regex = re.compile(r'guild ([\w\s]+) fought against ([\w\s]+).')
+war_start_duration_regex = re.compile(r'started on (\w{3}\s\d{2}\s\d{4}) and had been set for a duration of (\w+) days')
+kills_needed_regex = re.compile(r'(\w+) kills were needed')
+war_history_fee_regex = re.compile(r'agreed on a fee of (\w+) gold for the guild [\w\s]+ and a fee of (\d+) gold')
+surrender_regex = re.compile(r'([\w\s]+) surrendered on (\w{3}\s\d{2}\s\d{4}) and lost (\d+) gold')
+war_ended_regex = re.compile(r'war ended on (\w{3}\s\d{2}\s\d{4}) when the guild ([\w\s]+) had reached the')
+war_score_end_regex = re.compile(r'scored (\d+) kills against')
 
 class Guild(abc.BaseGuild):
     """
@@ -454,9 +465,9 @@ class GuildWars(abc.Serializable):
     )
 
     def __init__(self, name, current=None, history=None):
-        self.name = name
-        self.current = current
-        self.history = history or []
+        self.name = name   # type: str
+        self.current = current  # type: Optional[GuildWarEntry]
+        self.history = history or []   # type: List[GuildWarEntry]
 
     @property
     def url(self):
@@ -470,11 +481,94 @@ class GuildWars(abc.Serializable):
     def from_content(cls, content):
         parsed_content = parse_tibiacom_content(content)
         table_current, table_history = parsed_content.find_all("div", attrs={"class": "TableContainer"})
-        container_current = table_current.find("div", attrs={"class": "InnerTableContainer"})
-        for br in container_current.find_all("br"):
+        current_table_content = table_current.find("table", attrs={"class": "TableContent"})
+        for br in current_table_content.find_all("br"):
             br.replace_with("\n")
-        text = container_current.text
-        pass
+        current_war = cls._parse_current_war_information(current_table_content.text)
+
+        history_entries = []
+        history_contents = table_history.find_all("table", attrs={"class": "TableContent"})
+        for history_content in history_contents:
+            for br in history_content.find_all("br"):
+                br.replace_with("\n")
+            entry = cls._parse_war_history_entry(history_content.text)
+            history_entries.append(entry)
+
+        if current_war:
+            guild_name = current_war.guild_name
+        elif history_entries:
+            guild_name = history_entries[0].guild_name
+
+        return cls(guild_name, current=current_war, history=history_entries)
+
+    @classmethod
+    def _parse_current_war_information(cls, text):
+        text = text.replace('\xa0', ' ').strip()
+        names_match = war_guilds_regegx.search(text)
+        guild_name, opposing_name = names_match.groups()
+        scores_match = war_score_regex.findall(text)
+        guild_score, opposing_score = scores_match
+        fee_match = war_fee_regex.findall(text)
+        guild_fee, opposing_fee = fee_match
+
+        score_limit_match = war_score_limit_regex.search(text)
+        score_limit = score_limit_match.group(1)
+
+        end_date_match = war_end_regex.search(text)
+        end_date_str = end_date_match.group(1)
+        end_date = parse_tibia_date(end_date_str)
+
+        entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, guild_score=int(guild_score),
+                              opponent_score=int(opposing_score), guild_fee=int(guild_fee),
+                              opponent_fee=int(opposing_fee), score_limit=int(score_limit), end_date=end_date)
+        return entry
+
+    @classmethod
+    def _parse_war_history_entry(cls, text):
+        text = text.replace('\xa0', ' ').strip()
+        header_match = war_history_header_regex.search(text)
+        guild_name, opposing_name = header_match.groups()
+        if "disbanded guild" in opposing_name:
+            opposing_name = None
+        start_duration_match = war_start_duration_regex.search(text)
+        start_str, duration_str = start_duration_match.groups()
+        start_date = parse_tibia_date(start_str)
+        duration = datetime.timedelta(days=int(duration_str))
+        kills_match = kills_needed_regex.search(text)
+        kills_needed = int(kills_match.group(1))
+        fee_match = war_history_fee_regex.search(text)
+        guild_fee, opponent_fee = fee_match.groups()
+        winner = None
+        surrender = False
+        end_date = None
+        guild_score = opponent_score = 0
+        surrender_match = surrender_regex.search(text)
+        if surrender_match:
+            surrending_guild = surrender_match.group(1)
+            end_date = parse_tibia_date(surrender_match.group(2))
+            if "disbanded guild" in surrending_guild:
+                surrending_guild = None
+            winner = guild_name if surrending_guild != guild_name else opposing_name
+            surrender = True
+
+        war_end_match = war_ended_regex.search(text)
+        if war_end_match:
+            end_date = parse_tibia_date(war_end_match.group(1))
+            winning_guild = war_end_match.group(2)
+            if "disbanded guild" in winning_guild:
+                winning_guild = None
+            winner = guild_name if winning_guild == guild_name else opposing_name
+            loser_score_match = war_score_end_regex.search(text)
+            loser_score = int(loser_score_match.group(1)) if loser_score_match else 0
+            guild_score = kills_needed if guild_name == winner else loser_score
+            opponent_score = kills_needed if guild_name != winner else loser_score
+
+        entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, start_date=start_date,
+                              duration=duration, score_limit=kills_needed, guild_fee=int(guild_fee),
+                              opponent_fee=int(opponent_fee), surrender=surrender, winner=winner, end_date=end_date,
+                              opponent_score=opponent_score, guild_score=guild_score)
+        return entry
+
 
 
 class GuildWarEntry:
@@ -494,12 +588,17 @@ class GuildWarEntry:
         The number of gold coins the opposing guild will pay if they lose the war.
     start_date: :class:`datetime.date`
         The date when the war started.
+
+        When a war is in progress, the start date is not visible.
     score_limit: :class:`int`
         The number of kills needed to win the war.
     duration: :class:`datetime.timedelta`
         The set duration of the war.
+
+        When a war is in progress, the durationis not visible.
     end_date: :class:`datetime.date`
-        The date when the war ended. ``None`` if it hasn't ended.
+        The deadline for the war to finish if the score is not reached for wars in progress, or the date when the
+        war ended.
     winner: :class:`str`
         The name of the guild that won.
 
@@ -524,17 +623,20 @@ class GuildWarEntry:
 
     def __init__(self, **kwargs):
         self.guild_name = kwargs.get("guild_name")
-        self.guild_score = kwargs.get("guild_score")
-        self.guild_fee = kwargs.get("guild_fee")
+        self.guild_score = kwargs.get("guild_score", 0)
+        self.guild_fee = kwargs.get("guild_fee", 0)
         self.opponent_name = kwargs.get("opponent_name")
-        self.opponent_score = kwargs.get("opponent_score")
-        self.opponent_fee = kwargs.get("opponent_fee")
+        self.opponent_score = kwargs.get("opponent_score", 0)
+        self.opponent_fee = kwargs.get("opponent_fee", 0)
         self.start_date = kwargs.get("start_date")
-        self.score_limit = kwargs.get("score_limit")
+        self.score_limit = kwargs.get("score_limit", 0)
         self.duration = kwargs.get("duration")
         self.end_date = kwargs.get("end_date")
         self.winner = kwargs.get("winner")
-        self.surrender = kwargs.get("surrender")
+        self.surrender = kwargs.get("surrender", False)
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} guild_name={0.guild_name!r} opponent_name={0.opponent_name!r}>".format(self)
 
 
 class ListedGuild(abc.BaseGuild):
