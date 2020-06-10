@@ -23,6 +23,7 @@ FILE_GUILD_TIBIADATA_LIST = "guild/tibiadata_list.json"
 FILE_GUILD_TIBIADATA_LIST_NOT_FOUND = "guild/tibiadata_list_not_found.json"
 
 FILE_GUILD_WAR_ACTIVE_HISTORY = "guild/wars/tibiacom_active_history.txt"
+FILE_GUILD_WAR_EMPTY = "guild/wars/tibiacom_empty.txt"
 
 
 class TestsGuild(TestCommons, unittest.TestCase):
@@ -310,4 +311,14 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertEqual(491, guild_wars.history[1].opponent_score)
         self.assertEqual(500, guild_wars.history[1].score_limit)
         self.assertEqual(guild_wars.name, guild_wars.history[1].winner)
+
+    def test_guild_wars_from_content_empty(self):
+        """Testing parsing the guild wars of a guild that has never been in a war"""
+        content = self._load_resource(FILE_GUILD_WAR_EMPTY)
+        guild_wars = GuildWars.from_content(content)
+
+        self.assertEqual("Redd Alliance", guild_wars.name)
+        self.assertIsNone(guild_wars.current)
+        self.assertFalse(guild_wars.history)
+
     # endregion

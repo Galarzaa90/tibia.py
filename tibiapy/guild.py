@@ -48,6 +48,8 @@ surrender_regex = re.compile(r'([\w\s]+) surrendered on (\w{3}\s\d{2}\s\d{4}) an
 war_ended_regex = re.compile(r'war ended on (\w{3}\s\d{2}\s\d{4}) when the guild ([\w\s]+) had reached the')
 war_score_end_regex = re.compile(r'scored (\d+) kills against')
 
+war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
+
 class Guild(abc.BaseGuild):
     """
     Represents a Tibia guild.
@@ -482,9 +484,16 @@ class GuildWars(abc.Serializable):
         parsed_content = parse_tibiacom_content(content)
         table_current, table_history = parsed_content.find_all("div", attrs={"class": "TableContainer"})
         current_table_content = table_current.find("table", attrs={"class": "TableContent"})
-        for br in current_table_content.find_all("br"):
-            br.replace_with("\n")
-        current_war = cls._parse_current_war_information(current_table_content.text)
+        current_war = None
+        guild_name = None
+        if current_table_content is not None:
+            for br in current_table_content.find_all("br"):
+                br.replace_with("\n")
+            current_war = cls._parse_current_war_information(current_table_content.text)
+        else:
+            current_war_text = table_current.text
+            current_war_match = war_current_empty.search(current_war_text)
+            guild_name = current_war_match.group(1)
 
         history_entries = []
         history_contents = table_history.find_all("table", attrs={"class": "TableContent"})
