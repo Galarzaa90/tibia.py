@@ -9,7 +9,7 @@ thread_id_regex = re.compile(r'threadid=(\d+)')
 timezone_regex = re.compile(r'times are (CEST?)')
 
 
-class ListedBoard:
+class ListedBoard(abc.Serializable):
     """Represents a board in the list of boards.
 
     Attributes
@@ -34,6 +34,15 @@ class ListedBoard:
         self.posts = kwargs.get("posts")
         self.threads = kwargs.get("threads")
         self.last_post = kwargs.get("last_post")
+
+    __slots__ = (
+        "name",
+        "board_id",
+        "description",
+        "posts",
+        "threads",
+        "last_post",
+    )
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} board_id={0.board_id} posts={0.posts} threads={0.threads}" \
@@ -82,24 +91,14 @@ class ListedBoard:
             threads = int(threads_column.text)
 
             last_post_column = columns[4]
-            last_post_info = last_post_column.find("div", attrs={"class": "LastPostInfo"})
-            permalink = last_post_info.find("a")
-            link = permalink['href']
-            post_id = int(post_id_regex.search(link).group(1))
-            date_text = last_post_info.text.replace("\xa0", " ").strip()
-            last_post_date = parse_tibia_forum_datetime(date_text, offset)
-
-            last_post_author_tag = last_post_column.find("font")
-            author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
-
-            last_post = LastPost(author, post_id,last_post_date)
+            last_post = LastPost._parse_column(last_post_column)
 
             boards.append(cls(name=name, board_id=board_id, description=description, posts=posts, threads=threads,
                               last_post=last_post))
         return boards
 
 
-class ListedThread:
+class ListedThread(abc.Serializable):
     """Represents a thread in a forum board.
 
     Attributes
@@ -125,16 +124,26 @@ class ListedThread:
         self.thread_starter = kwargs.get("thread_starter")
         self.replies = kwargs.get("replies")
         self.views = kwargs.get("views")
-        self.last_post_by = kwargs.get("last_post_by")
-        self.last_post_date = kwargs.get("last_post_date")
+        self.last_post = kwargs.get("last_post")
         self.status = kwargs.get("status")
         self.emoticon = kwargs.get("emoticon")
+
+    __slots__ = (
+        "title",
+        "thread_id",
+        "thread_starter",
+        "replies",
+        "views",
+        "last_post",
+        "status",
+        "emoticon",
+    )
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} thread_id={0.thread_id} " \
                "thread_starter={0.thread_starter!r} replies={0.replies} views={0.views}>".format(self)
 
-class ForumBoard:
+class ForumBoard(abc.Serializable):
     """Represents a forum's board.
 
     Attributes
@@ -149,7 +158,7 @@ class ForumBoard:
         The current page being viewed.
     pages: :class:`int`
         The number of pages the board has for the current display range.
-    threads: list of :class:`ForumThread`
+    threads: list of :class:`ListedThread`
         The list of threads currently visible.
     """
 
@@ -161,14 +170,26 @@ class ForumBoard:
         self.pages = kwargs.get("pages")
         self.threads = kwargs.get("threads")
 
+    __slots__ = (
+        "name",
+        "section",
+        "displayed_range",
+        "current_page",
+        "pages",
+        "threads",
+    )
+
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} section={0.section!r}>".format(self)
+
+    @classmethod
+    def get_url(cls, board_id):
+        return get_tibia_url("forum", None, action="board", boardid=board_id)
 
     @classmethod
     def from_content(cls, content):
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all("table", attrs={"width": "100%"})
-        tables_text = [t.text for t in tables]
         header_table, time_selector_table, threads_table, timezone_table, boardjump_table = tables
         header_text = header_table.text.strip()
         section, name = split_list(header_text, "|", "|")
@@ -193,17 +214,7 @@ class ForumBoard:
             views = int(views_column.text)
 
             last_post_column = columns[6]
-            last_post_info = last_post_column.find("div", attrs={"class": "LastPostInfo"})
-            permalink = last_post_info.find("a")
-            link = permalink['href']
-            post_id = int(post_id_regex.search(link).group(1))
-            date_text = last_post_info.text.replace("\xa0", " ").strip()
-            last_post_date = parse_tibia_forum_datetime(date_text)
-
-            last_post_author_tag = last_post_column.find("font")
-            author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
-
-            last_post = LastPost(author, post_id, last_post_date)
+            last_post = LastPost._parse_column(last_post_column)
 
             thread = ListedThread(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
                                   views=views, last_post=last_post)
@@ -258,7 +269,7 @@ class ForumPost:
         pass
 
 
-class ForumThread:
+class ForumThread(abc.Serializable):
     """Represents a forum thread.
 
     Attributes
@@ -283,8 +294,7 @@ class ForumThread:
     def __init__(self, **kwargs):
         pass
 
-
-class LastPost:
+class LastPost(abc.Serializable):
     """Represents a forum thread.
 
     Attributes
@@ -302,5 +312,27 @@ class LastPost:
         self.post_id = post_id
         self.date = date
 
+    __slots__ = (
+        "author",
+        "post_id",
+        "date",
+    )
+
     def __repr__(self):
         return "<{0.__class__.__name__} author={0.author!r} post_id={0.post_id} date={0.date!r}>".format(self)
+
+    @classmethod
+    def _parse_column(cls, last_post_column, offset=1):
+        last_post_info = last_post_column.find("div", attrs={"class": "LastPostInfo"})
+        if last_post_info is None:
+            return None
+        permalink = last_post_info.find("a")
+        link = permalink['href']
+        post_id = int(post_id_regex.search(link).group(1))
+        date_text = last_post_info.text.replace("\xa0", " ").strip()
+        last_post_date = parse_tibia_forum_datetime(date_text, offset)
+
+        last_post_author_tag = last_post_column.find("font")
+        author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
+
+        return cls(author, post_id, last_post_date)

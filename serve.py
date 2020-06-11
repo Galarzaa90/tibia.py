@@ -25,6 +25,36 @@ async def get_boosted_creature(request):
     boosted = await app["tibiapy"].fetch_boosted_creature()
     return web.Response(text=boosted.to_json())
 
+@routes.get('/forums/community/')
+async def get_community_boards(request):
+    boards = await app["tibiapy"].fetch_forum_community_boards()
+    return web.Response(text=boards.to_json())
+
+
+@routes.get('/forums/support/')
+async def get_support_boards(request):
+    boards = await app["tibiapy"].fetch_forum_support_boards()
+    return web.Response(text=boards.to_json())
+
+
+@routes.get('/forums/world/')
+async def get_world_boards(request):
+    boards = await app["tibiapy"].fetch_forum_world_boards()
+    return web.Response(text=boards.to_json())
+
+
+@routes.get('/forums/trade/')
+async def get_trade_boards(request):
+    boards = await app["tibiapy"].fetch_forum_trade_boards()
+    return web.Response(text=boards.to_json())
+
+
+@routes.get('/forums/board/{board_id}')
+async def get_board_threads(request):
+    board_id = request.match_info['board_id']
+    board = await app["tibiapy"].fetch_forum_board_threads(int(board_id))
+    return web.Response(text=board.to_json())
+
 
 @routes.get('/characters/{name}')
 async def get_character(request):

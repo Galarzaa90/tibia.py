@@ -14,14 +14,14 @@ from tibiapy.errors import InvalidContent
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
 
-def get_tibia_url(section, subtopic, *, anchor=None, **kwargs):
+def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
     """
 
     Parameters
     ----------
     section: :class:`str`
         The desired section (e.g. community, abouttibia, manual, library)
-    subtopic: :class:`str`
+    subtopic: :class:`str`, optional
         The desired subtopic (e.g. characters, guilds, houses, etc)
     anchor: :class:`str`
         A link anchor to add to the link.

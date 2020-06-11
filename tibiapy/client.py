@@ -7,10 +7,12 @@ import aiohttp_socks
 import typing
 
 import tibiapy
-from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, Guild, GuildWars, Highscores, House, \
+from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, ForumBoard, Guild, GuildWars, Highscores, \
+    House, \
     HouseOrder, \
     HouseStatus, \
-    HouseType, KillStatistics, ListedGuild, ListedHouse, ListedNews, NetworkError, News, NewsCategory, NewsType, \
+    HouseType, KillStatistics, ListedBoard, ListedGuild, ListedHouse, ListedNews, NetworkError, News, NewsCategory, \
+    NewsType, \
     Tournament, TournamentLeaderboard, VocationFilter, World, WorldOverview
 
 __all__ = (
@@ -178,6 +180,41 @@ class Client:
             raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
         except UnicodeDecodeError as e:
             raise NetworkError('UnicodeDecodeError: %s' % e, e)
+
+    async def fetch_forum_community_boards(self):
+        response = await self._request("get", ListedBoard.get_community_boards_url())
+        start_time = time.perf_counter()
+        boards = ListedBoard.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boards, parsing_time)
+
+    async def fetch_forum_support_boards(self):
+        response = await self._request("get", ListedBoard.get_support_boards_url())
+        start_time = time.perf_counter()
+        boards = ListedBoard.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boards, parsing_time)
+
+    async def fetch_forum_world_boards(self):
+        response = await self._request("get", ListedBoard.get_world_boards_url())
+        start_time = time.perf_counter()
+        boards = ListedBoard.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boards, parsing_time)
+
+    async def fetch_forum_trade_boards(self):
+        response = await self._request("get", ListedBoard.get_trade_boards_url())
+        start_time = time.perf_counter()
+        boards = ListedBoard.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boards, parsing_time)
+
+    async def fetch_forum_board_threads(self, board_id):
+        response = await self._request("get", ForumBoard.get_url(board_id))
+        start_time = time.perf_counter()
+        board = ForumBoard.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, board, parsing_time)
 
     async def fetch_boosted_creature(self):
         """Fetches today's boosted creature.
