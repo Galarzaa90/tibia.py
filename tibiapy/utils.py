@@ -14,7 +14,7 @@ from tibiapy.errors import InvalidContent
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
 
-def get_tibia_url(section, subtopic, **kwargs):
+def get_tibia_url(section, subtopic, *, anchor=None, **kwargs):
     """
 
     Parameters
@@ -23,6 +23,8 @@ def get_tibia_url(section, subtopic, **kwargs):
         The desired section (e.g. community, abouttibia, manual, library)
     subtopic: :class:`str`
         The desired subtopic (e.g. characters, guilds, houses, etc)
+    anchor: :class:`str`
+        A link anchor to add to the link.
     kwargs:
         Additional parameters to pass to the url (e.g name, world, houseid, etc)
 
@@ -49,7 +51,10 @@ def get_tibia_url(section, subtopic, **kwargs):
             if isinstance(value, str):
                 value = value.encode('iso-8859-1')
             params[key] = value
-    return url + urllib.parse.urlencode(params)
+    url += urllib.parse.urlencode(params)
+    if anchor:
+        url += "#%s" % anchor
+    return url
 
 
 def parse_integer(number: str, default=0):

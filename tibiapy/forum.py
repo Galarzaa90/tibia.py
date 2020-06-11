@@ -1,10 +1,11 @@
 import re
 
 from tibiapy import abc
-from tibiapy.utils import parse_tibia_forum_datetime, parse_tibiacom_content
+from tibiapy.utils import get_tibia_url, parse_tibia_forum_datetime, parse_tibiacom_content, split_list
 
 board_id_regex = re.compile(r'boardid=(\d+)')
 post_id_regex = re.compile(r'postid=(\d+)')
+thread_id_regex = re.compile(r'threadid=(\d+)')
 timezone_regex = re.compile(r'times are (CEST?)')
 
 
@@ -39,10 +40,25 @@ class ListedBoard:
                " description={0.description!r}>".format(self)
 
     @classmethod
+    def get_world_boards_url(cls):
+        return get_tibia_url("forum", "worldboards")
+
+    @classmethod
+    def get_trade_boards_url(cls):
+        return get_tibia_url("forum", "tradeboards")
+
+    @classmethod
+    def get_community_boards_url(cls):
+        return get_tibia_url("forum", "communityboards")
+
+    @classmethod
+    def get_support_boards_url(cls):
+        return get_tibia_url("forum", "supportboards")
+
+    @classmethod
     def list_from_content(cls, content):
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all("table", attrs={"width": "100%"})
-        tables_text = [t.text for t in tables]
         _, board_list_table, timezone_table = tables
         _, *board_rows = board_list_table.find_all("tr")
         timezone_text = timezone_table.text
@@ -80,7 +96,7 @@ class ListedBoard:
 
             boards.append(cls(name=name, board_id=board_id, description=description, posts=posts, threads=threads,
                               last_post=last_post))
-        pass
+        return boards
 
 
 class ListedThread:
@@ -90,21 +106,22 @@ class ListedThread:
     ----------
     title: :class:`str`
         The title of the thread.
+    thread_id: class:`int`
+        The internal id of the thread.
     thread_started: :class:`str`
         The character that started the thread.
     replies: :class:`int`
         The number of replies.
     views: :class:`int`
         The number of views.
-    last_post_by: :class:`name`
-        The name of the character that posted the last post.
-    last_post_date: :class:`datetime.datetime`
-        The date of the last post in this thread.
+    last_post: :class:`LastPost`
+        The information of the last post made in this board.
     emoticon: :class:`str`
         The emoticon used for the thread.
     """
     def __init__(self, **kwargs):
         self.title = kwargs.get("title")
+        self.thread_id = kwargs.get("thread_id")
         self.thread_starter = kwargs.get("thread_starter")
         self.replies = kwargs.get("replies")
         self.views = kwargs.get("views")
@@ -112,6 +129,88 @@ class ListedThread:
         self.last_post_date = kwargs.get("last_post_date")
         self.status = kwargs.get("status")
         self.emoticon = kwargs.get("emoticon")
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} title={0.title!r} thread_id={0.thread_id} " \
+               "thread_starter={0.thread_starter!r} replies={0.replies} views={0.views}>".format(self)
+
+class ForumBoard:
+    """Represents a forum's board.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the board.
+    section: :class:`str`
+        The section of the board.
+    displayed_range:
+        The currently viewed display range.
+    current_page: :class:`int`
+        The current page being viewed.
+    pages: :class:`int`
+        The number of pages the board has for the current display range.
+    threads: list of :class:`ForumThread`
+        The list of threads currently visible.
+    """
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get("name")
+        self.section = kwargs.get("section")
+        self.displayed_range = kwargs.get("displayed_range")
+        self.current_page = kwargs.get("current_page")
+        self.pages = kwargs.get("pages")
+        self.threads = kwargs.get("threads")
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} section={0.section!r}>".format(self)
+
+    @classmethod
+    def from_content(cls, content):
+        parsed_content = parse_tibiacom_content(content)
+        tables = parsed_content.find_all("table", attrs={"width": "100%"})
+        tables_text = [t.text for t in tables]
+        header_table, time_selector_table, threads_table, timezone_table, boardjump_table = tables
+        header_text = header_table.text.strip()
+        section, name = split_list(header_text, "|", "|")
+        thread_rows = threads_table.find_all("tr")
+        entries = []
+        for thread_row in thread_rows[2:]:
+            columns = thread_row.find_all("td")
+            if len(columns) != 7:
+                continue
+            thread_column = columns[2]
+            title = thread_column.text.strip()
+            thread_link = thread_column.find("a")
+            thread_id = int(thread_id_regex.search(thread_link["href"]).group(1))
+
+            thread_starter_column = columns[3]
+            thread_starter = thread_starter_column.text.strip()
+
+            replies_column = columns[4]
+            replies = int(replies_column.text)
+
+            views_column = columns[5]
+            views = int(views_column.text)
+
+            last_post_column = columns[6]
+            last_post_info = last_post_column.find("div", attrs={"class": "LastPostInfo"})
+            permalink = last_post_info.find("a")
+            link = permalink['href']
+            post_id = int(post_id_regex.search(link).group(1))
+            date_text = last_post_info.text.replace("\xa0", " ").strip()
+            last_post_date = parse_tibia_forum_datetime(date_text)
+
+            last_post_author_tag = last_post_column.find("font")
+            author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
+
+            last_post = LastPost(author, post_id, last_post_date)
+
+            thread = ListedThread(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
+                                  views=views, last_post=last_post)
+            entries.append(thread)
+
+        board = cls(name=name, section=section, threads=entries)
+        return board
 
 
 class ForumAuthor(abc.BaseCharacter):
@@ -166,7 +265,7 @@ class ForumThread:
     ----------
     title: :class:`str`
         The title of the thread.
-    thread_number: :class:`int`
+    thread_id: :class:`int`
         The thread's number.
     board: :class:`str`
         The board this thread belongs to.
