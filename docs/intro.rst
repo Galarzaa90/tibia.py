@@ -71,6 +71,8 @@ Supported Sections
 +----------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (List)             | :meth:`ListedGuild.list_from_content`      | :meth:`Client.fetch_world_guilds`           |
 +----------------------------+--------------------------------------------+---------------------------------------------+
+| Guilds_ (Wars)             | :meth:`GuildWars.from_content`             | :meth:`Client.fetch_guild_wars`             |
++----------------------------+--------------------------------------------+---------------------------------------------+
 | Highscores_                | :meth:`Highscores.from_content`            | :meth:`Client.fetch_highscores_page`        |
 +----------------------------+--------------------------------------------+---------------------------------------------+
 | Houses_ (Individual)       | :meth:`House.from_content`                 | :meth:`Client.fetch_house`                  |

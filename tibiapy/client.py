@@ -326,7 +326,10 @@ class Client:
         Returns
         -------
         :class:`TibiaResponse` of :class:`GuildWars`
-            A response containing the found guild's wars, if any.
+            A response containing the found guild's wars.
+
+            If the guild doesn't exist, the displayed data will show a guild with no wars instead of indicating the
+            guild doesn't exist.
 
         Raises
         ------

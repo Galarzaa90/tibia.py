@@ -80,10 +80,16 @@ class TestCharacter(TestCommons, unittest.TestCase):
     def test_character_from_content_with_position(self):
         """Testing parsing a character with a position"""
         content = self._load_resource(FILE_CHARACTER_SPECIAL_POSITION)
+
+        position = "CipSoft Member"
+
         char = Character.from_content(content)
-        self.assertEqual(char.name, "Steve")
-        self.assertEqual(char.position, "CipSoft Member")
-        self.assertEqual(char.account_information.position, "CipSoft Member")
+        self.assertEqual("Steve", char.name)
+        self.assertEqual(position, char.position)
+        self.assertEqual(position, char.account_information.position)
+        steve_other = char.other_characters[2]
+        self.assertEqual("Steve", steve_other.name)
+        self.assertEqual("CipSoft Member", steve_other.position)
 
     def test_character_from_content_deleted_character(self):
         """Testing parsing a character scheduled for deletion"""

@@ -242,6 +242,10 @@ class Character(abc.BaseCharacter):
         self.other_characters = kwargs.get("other_characters", [])  # type: List[OtherCharacter]
         self.deletion_date = try_datetime(kwargs.get("deletion_date"))
 
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r} vocation={0.vocation!r} level={0.level}" \
+               " sex={0.sex!r}>".format(self,)
+
     # region Properties
     @property
     def deleted(self) -> bool:
@@ -659,7 +663,11 @@ class Character(abc.BaseCharacter):
             main = False
             if main_img and main_img['title'] == "Main Character":
                 main = True
-            self.other_characters.append(OtherCharacter(name, world, status == "online", status == "deleted", main))
+            position = None
+            if "CipSoft Member" in status:
+                position = "CipSoft Member"
+            self.other_characters.append(OtherCharacter(name, world, "online" in status, "deleted" in status, main,
+                                                        position))
 
     @classmethod
     def _parse_tables(cls, parsed_content):
@@ -864,18 +872,25 @@ class OtherCharacter(abc.BaseCharacter):
         Whether the character is scheduled for deletion or not.
     main: :class:`bool`
         Whether this is the main character or not.
+    position: :class:`str`
+        The character's official position, if any.
     """
     __slots__ = (
         "world",
         "online",
         "deleted",
         "main",
+        "position",
     )
 
-    def __init__(self, name, world, online=False, deleted=False, main=False):
+    def __init__(self, name, world, online=False, deleted=False, main=False, position=None):
         self.name = name  # type: str
         self.world = world  # type: str
         self.online = online  # type: bool
         self.deleted = deleted  # type: bool
         self.main = main  # type: bool
+        self.position = position  # type: Optional[str]
 
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r} online={0.online!r} main={0.main}" \
+               " position={0.position!r}>".format(self,)

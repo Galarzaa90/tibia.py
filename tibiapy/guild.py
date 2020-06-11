@@ -477,14 +477,40 @@ class GuildWars(abc.Serializable):
 
     @property
     def url(self):
+        """":class:`str`: The URL of this guild's war page on Tibia.com."""
         return self.get_url(self.name)
 
     @classmethod
     def get_url(cls, name):
+        """
+        Gets the URL to the guild's war page of a guild with the given name.
+
+        Parameters
+        ----------
+        name: class:`str`
+            The name of the guild.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's war page.
+        """
         return Guild.get_url_wars(name)
 
     @classmethod
     def from_content(cls, content):
+        """Gets a guild's war information from Tibia.com's content
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of a guild's war section in Tibia.com
+
+        Returns
+        -------
+        :class:`GuildWars`
+            The guild's war information.
+        """
         try:
             parsed_content = parse_tibiacom_content(content)
             table_current, table_history = parsed_content.find_all("div", attrs={"class": "TableContainer"})
@@ -519,6 +545,18 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def _parse_current_war_information(cls, text):
+        """Parses the guild's current war information.
+
+        Parameters
+        ----------
+        text: :class:`str`
+            The text describing the current war's information.
+
+        Returns
+        -------
+        :class:`GuildWarEntry`
+            The guild's war entry for the current war.
+        """
         text = text.replace('\xa0', ' ').strip()
         names_match = war_guilds_regegx.search(text)
         guild_name, opposing_name = names_match.groups()
@@ -541,6 +579,18 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def _parse_war_history_entry(cls, text):
+        """Parses a guild's war information.
+
+        Parameters
+        ----------
+        text: :class:`str`
+            The text describing the war's information.
+
+        Returns
+        -------
+        :class:`GuildWarEntry`
+            The guild's war entry described in the text..
+        """
         text = text.replace('\xa0', ' ').strip()
         header_match = war_history_header_regex.search(text)
         guild_name, opposing_name = header_match.groups()
@@ -566,7 +616,7 @@ class GuildWars(abc.Serializable):
             surrender = True
 
         war_score_match = war_score_regex.findall(text)
-        if war_score_match:
+        if war_score_match and len(war_score_match) == 2:
             guild_score, opponent_score = war_score_match
             guild_score = int(guild_score)
             opponent_score = int(guild_score)
@@ -664,10 +714,12 @@ class GuildWarEntry(abc.Serializable):
 
     @property
     def guild_url(self):
+        """:class:`str`: The URL to the guild's information page on Tibia.com."""
         return Guild.get_url(self.guild_name)
 
     @property
     def opponent_guild_url(self):
+        """:class:`str`: The URL to the opposing guild's information page on Tibia.com."""
         return Guild.get_url(self.opponent_name) if self.opponent_name else None
 
 
