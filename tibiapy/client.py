@@ -139,64 +139,6 @@ class Client:
         else:
             raise NetworkError("Request error, status code: %d" % status_code)
 
-    async def _get(self, url):
-        """Base GET request, handling possible error statuses.
-        
-        Parameters
-        ----------
-        url: :class:`str`
-            The URL that will be requested.
-
-        Returns
-        -------
-        :class:`str`
-            The text content of the response.
-
-        Raises
-        ------
-        Forbidden:
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        try:
-            async with self.session.get(url, compress=True) as resp:
-                self._handle_status(resp.status)
-                return await resp.text()
-        except aiohttp.ClientError as e:
-            raise NetworkError("aiohttp.ClientError: %s" % e, e)
-        except aiohttp_socks.SocksConnectionError as e:
-            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
-        except UnicodeDecodeError as e:
-            raise NetworkError('UnicodeDecodeError: %s' % e, e)
-
-    async def _post(self, url, data):
-        """Base POST request, handling possible error statuses.
-
-        Parameters
-        ----------
-        url: :class:`str`
-            The URL that will be requested.
-        data: :class:`dict`
-            A mapping representing the form-data to send as part of the request.
-
-        Returns
-        -------
-        :class:`str`
-            The text content of the response.
-        """
-        try:
-            async with self.session.post(url, data=data) as resp:
-                self._handle_status(resp.status)
-                return await resp.text()
-        except aiohttp.ClientError as e:
-            raise NetworkError("aiohttp.ClientError: %s" % e, e)
-        except aiohttp_socks.SocksConnectionError as e:
-            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
-        except UnicodeDecodeError as e:
-            raise NetworkError('UnicodeDecodeError: %s' % e, e)
-
     async def _request(self, method, url, data=None):
         """Base GET request, handling possible error statuses.
 

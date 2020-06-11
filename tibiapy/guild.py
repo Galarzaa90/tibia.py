@@ -477,7 +477,7 @@ class GuildWars(abc.Serializable):
 
     @property
     def url(self):
-        """":class:`str`: The URL of this guild's war page on Tibia.com."""
+        """:class:`str`: The URL of this guild's war page on Tibia.com."""
         return self.get_url(self.name)
 
     @classmethod
