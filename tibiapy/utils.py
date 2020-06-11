@@ -138,6 +138,13 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
         return None
 
 
+def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
+    t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S")
+    # Add/subtract hours to get the real time
+    t = t - datetime.timedelta(hours=utc_offset)
+    return t.replace(tzinfo=datetime.timezone.utc)
+
+
 def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
     """Parses a date in the fuller format used in Tibia.com
 
