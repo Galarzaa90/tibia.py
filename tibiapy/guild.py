@@ -485,34 +485,37 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        parsed_content = parse_tibiacom_content(content)
-        table_current, table_history = parsed_content.find_all("div", attrs={"class": "TableContainer"})
-        current_table_content = table_current.find("table", attrs={"class": "TableContent"})
-        current_war = None
-        guild_name = None
-        if current_table_content is not None:
-            for br in current_table_content.find_all("br"):
-                br.replace_with("\n")
-            current_war = cls._parse_current_war_information(current_table_content.text)
-        else:
-            current_war_text = table_current.text
-            current_war_match = war_current_empty.search(current_war_text)
-            guild_name = current_war_match.group(1)
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            table_current, table_history = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+            current_table_content = table_current.find("table", attrs={"class": "TableContent"})
+            current_war = None
+            guild_name = None
+            if current_table_content is not None:
+                for br in current_table_content.find_all("br"):
+                    br.replace_with("\n")
+                current_war = cls._parse_current_war_information(current_table_content.text)
+            else:
+                current_war_text = table_current.text
+                current_war_match = war_current_empty.search(current_war_text)
+                guild_name = current_war_match.group(1)
 
-        history_entries = []
-        history_contents = table_history.find_all("table", attrs={"class": "TableContent"})
-        for history_content in history_contents:
-            for br in history_content.find_all("br"):
-                br.replace_with("\n")
-            entry = cls._parse_war_history_entry(history_content.text)
-            history_entries.append(entry)
+            history_entries = []
+            history_contents = table_history.find_all("table", attrs={"class": "TableContent"})
+            for history_content in history_contents:
+                for br in history_content.find_all("br"):
+                    br.replace_with("\n")
+                entry = cls._parse_war_history_entry(history_content.text)
+                history_entries.append(entry)
 
-        if current_war:
-            guild_name = current_war.guild_name
-        elif history_entries:
-            guild_name = history_entries[0].guild_name
+            if current_war:
+                guild_name = current_war.guild_name
+            elif history_entries:
+                guild_name = history_entries[0].guild_name
 
-        return cls(guild_name, current=current_war, history=history_entries)
+            return cls(guild_name, current=current_war, history=history_entries)
+        except ValueError as e:
+            raise InvalidContent("content does not belong to the guild wars section", e)
 
     @classmethod
     def _parse_current_war_information(cls, text):
@@ -616,7 +619,7 @@ class GuildWarEntry(abc.Serializable):
     duration: :class:`datetime.timedelta`
         The set duration of the war.
 
-        When a war is in progress, the durationis not visible.
+        When a war is in progress, the duration is not visible.
     end_date: :class:`datetime.date`
         The deadline for the war to finish if the score is not reached for wars in progress, or the date when the
         war ended.
