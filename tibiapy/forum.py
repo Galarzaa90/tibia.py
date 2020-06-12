@@ -115,7 +115,7 @@ class ListedThread(abc.Serializable):
         The number of views.
     last_post: :class:`LastPost`
         The information of the last post made in this board.
-    emoticon: :class:`str`
+    emoticon: :class:`ForumEmoticon`
         The emoticon used for the thread.
     """
     def __init__(self, **kwargs):
@@ -142,6 +142,27 @@ class ListedThread(abc.Serializable):
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} thread_id={0.thread_id} " \
                "thread_starter={0.thread_starter!r} replies={0.replies} views={0.views}>".format(self)
+
+
+class ForumEmoticon(abc.Serializable):
+    """Represents a forum's emoticon.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The emoticon's name.
+    url: :class:`str`
+        The URL to the emoticon`s image.
+    """
+
+    def __init__(self, name, url):
+        self.name = name
+        self.url = url
+
+    __slots__ = (
+        "name",
+        "url",
+    )
 
 class ForumBoard(abc.Serializable):
     """Represents a forum's board.
@@ -199,6 +220,15 @@ class ForumBoard(abc.Serializable):
             columns = thread_row.find_all("td")
             if len(columns) != 7:
                 continue
+
+            emoticon = None
+            emoticon_column = columns[1]
+            emoticon_img = emoticon_column.find("img")
+            if emoticon_img:
+                url = emoticon_img["src"]
+                name = emoticon_img["alt"]
+                emoticon = ForumEmoticon(name, url)
+
             thread_column = columns[2]
             title = thread_column.text.strip()
             thread_link = thread_column.find("a")
@@ -217,7 +247,7 @@ class ForumBoard(abc.Serializable):
             last_post = LastPost._parse_column(last_post_column)
 
             thread = ListedThread(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
-                                  views=views, last_post=last_post)
+                                  views=views, last_post=last_post, emoticon=emoticon)
             entries.append(thread)
 
         board = cls(name=name, section=section, threads=entries)

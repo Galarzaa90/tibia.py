@@ -99,6 +99,11 @@ class Sex(BaseEnum):
     MALE = "male"
     FEMALE = "female"
 
+class ThreadStatus(BaseEnum):
+    """Possible thread status"""
+    NEW = "New"  #: Thread has new posts since last visit.
+    HOT = "Hot"  #: Thread has more than 16 replies.
+    HOT_NEW = "Hot New"  #: Thread has more than 16 replies and has new posts since last visit.
 
 class TournamentWorldType(BaseEnum):
     """The possible types of tournament worlds."""
