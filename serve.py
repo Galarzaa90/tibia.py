@@ -49,6 +49,13 @@ async def get_trade_boards(request):
     return web.Response(text=boards.to_json())
 
 
+@routes.get('/forums/thread/{thread_id}')
+async def get_forum_thread(request):
+    thread_id = request.match_info['thread_id']
+    thread = await app["tibiapy"].fetch_forum_thread(int(thread_id))
+    return web.Response(text=thread.to_json())
+
+
 @routes.get('/forums/board/{board_id}')
 async def get_board_threads(request):
     board_id = request.match_info['board_id']

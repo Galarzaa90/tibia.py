@@ -7,7 +7,8 @@ import aiohttp_socks
 import typing
 
 import tibiapy
-from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, ForumBoard, Guild, GuildWars, Highscores, \
+from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, ForumBoard, ForumThread, Guild, GuildWars, \
+    Highscores, \
     House, \
     HouseOrder, \
     HouseStatus, \
@@ -215,6 +216,13 @@ class Client:
         board = ForumBoard.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, board, parsing_time)
+
+    async def fetch_forum_thread(self, thread_id):
+        response = await self._request("get", ForumThread.get_url(thread_id))
+        start_time = time.perf_counter()
+        thread = ForumThread.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, thread, parsing_time)
 
     async def fetch_boosted_creature(self):
         """Fetches today's boosted creature.

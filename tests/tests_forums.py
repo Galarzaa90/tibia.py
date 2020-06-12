@@ -3,8 +3,8 @@ import unittest
 from tests.tests_tibiapy import TestCommons
 from tibiapy import BoostedCreature, ForumBoard, InvalidContent, LastPost, ListedBoard
 
-FILE_WORLD_BOARDS = "forums/tibiacom_world_boards.txt"
-FILE_BOARD_THREAD_LIST = "forums/tibiacom_thread_list.txt"
+FILE_WORLD_BOARDS = "forums/tibiacom_section.txt"
+FILE_BOARD_THREAD_LIST = "forums/tibiacom_board.txt"
 
 
 class TestForum(TestCommons, unittest.TestCase):

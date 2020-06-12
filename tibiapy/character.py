@@ -762,14 +762,18 @@ class GuildMembership(abc.BaseGuild):
         The name of the guild.
     rank: :class:`str`
         The name of the rank the member has.
+    title: :class:`str`
+        The title of the member in the guild.
     """
     __slots__ = (
         "rank",
+        "title",
     )
 
-    def __init__(self, name, rank):
+    def __init__(self, name, rank, title=None):
         self.name = name  # type: str
         self.rank = rank  # type: str
+        self.title = title  # type: Optional[str]
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} rank={0.rank!r}>".format(self)
