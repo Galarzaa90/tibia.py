@@ -1,12 +1,14 @@
 import re
 
 from tibiapy import abc
+from tibiapy.enums import ThreadStatus
 from tibiapy.utils import get_tibia_url, parse_tibia_forum_datetime, parse_tibiacom_content, split_list
 
 board_id_regex = re.compile(r'boardid=(\d+)')
 post_id_regex = re.compile(r'postid=(\d+)')
 thread_id_regex = re.compile(r'threadid=(\d+)')
 timezone_regex = re.compile(r'times are (CEST?)')
+filename_regex = re.compile(r'([\w_]+.gif)')
 
 
 class ListedBoard(abc.Serializable):
@@ -16,7 +18,7 @@ class ListedBoard(abc.Serializable):
     ----------
     name: :class:`str`
         The name of the board.
-    board_id: :class:`int`
+    board_id: :class:`inst`
         The board's internal id.
     description: :class:`str`
         The description of the board.
@@ -115,6 +117,8 @@ class ListedThread(abc.Serializable):
         The number of views.
     last_post: :class:`LastPost`
         The information of the last post made in this board.
+    status: :class:`ThreadStatus`
+        The status of the thread.
     emoticon: :class:`ForumEmoticon`
         The emoticon used for the thread.
     """
@@ -221,6 +225,14 @@ class ForumBoard(abc.Serializable):
             if len(columns) != 7:
                 continue
 
+            status = None
+            status_column = columns[0]
+            status_img = status_column.find("img")
+            if status_img:
+                url = status_img["src"]
+                filename = filename_regex.search(url).group(1)
+                status = ThreadStatus.from_icon(filename)
+
             emoticon = None
             emoticon_column = columns[1]
             emoticon_img = emoticon_column.find("img")
@@ -247,7 +259,7 @@ class ForumBoard(abc.Serializable):
             last_post = LastPost._parse_column(last_post_column)
 
             thread = ListedThread(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
-                                  views=views, last_post=last_post, emoticon=emoticon)
+                                  views=views, last_post=last_post, emoticon=emoticon, status=status)
             entries.append(thread)
 
         board = cls(name=name, section=section, threads=entries)

@@ -105,6 +105,14 @@ class ThreadStatus(BaseEnum):
     HOT = "Hot"  #: Thread has more than 16 replies.
     HOT_NEW = "Hot New"  #: Thread has more than 16 replies and has new posts since last visit.
 
+    @classmethod
+    def from_icon(cls, icon):
+        return {
+            "logo_new.gif": cls.NEW,
+            "logo_hot.gif": cls.HOT,
+            "logo_hotnew.gif": cls.HOT_NEW,
+            }.get(icon)
+
 class TournamentWorldType(BaseEnum):
     """The possible types of tournament worlds."""
     REGUlAR = "Regular"
