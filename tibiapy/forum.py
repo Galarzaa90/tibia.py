@@ -21,6 +21,7 @@ __all__ = (
 board_id_regex = re.compile(r'boardid=(\d+)')
 post_id_regex = re.compile(r'postid=(\d+)')
 thread_id_regex = re.compile(r'threadid=(\d+)')
+announcement_id_regex = re.compile(r'announcementid=(\d+)')
 page_number_regex = re.compile(r'pagenumber=(\d+)')
 timezone_regex = re.compile(r'times are (CEST?)')
 filename_regex = re.compile(r'([\w_]+.gif)')
@@ -50,6 +51,8 @@ class ForumBoard(abc.Serializable):
         The current page being viewed.
     pages: :class:`int`
         The number of pages the board has for the current display range.
+    announcements: list of :class:`ListedAnnouncement`
+        The list of announcements currently visible.
     threads: list of :class:`ListedThread`
         The list of threads currently visible.
     """
@@ -60,6 +63,7 @@ class ForumBoard(abc.Serializable):
         self.displayed_range = kwargs.get("displayed_range")
         self.current_page = kwargs.get("current_page")
         self.pages = kwargs.get("pages")
+        self.announcements = kwargs.get("announcements")
         self.threads = kwargs.get("threads")
 
     __slots__ = (
@@ -68,6 +72,7 @@ class ForumBoard(abc.Serializable):
         "displayed_range",
         "current_page",
         "pages",
+        "announcements",
         "threads",
     )
 
@@ -88,15 +93,19 @@ class ForumBoard(abc.Serializable):
         section, name = split_list(header_text, "|", "|")
         thread_rows = threads_table.find_all("tr")
         entries = []
-        for thread_row in thread_rows[2:]:
+        announcements = []
+        for thread_row in thread_rows[1:]:
             columns = thread_row.find_all("td")
             if len(columns) != 7:
                 continue
 
-            thread = cls._parse_thread_row(columns)
-            entries.append(thread)
+            entry = cls._parse_thread_row(columns)
+            if isinstance(entry, ListedThread):
+                entries.append(entry)
+            elif isinstance(entry, ListedAnnouncement):
+                announcements.append(entry)
 
-        board = cls(name=name, section=section, threads=entries)
+        board = cls(name=name, section=section, threads=entries, announcements=announcements)
         return board
 
     @classmethod
@@ -115,7 +124,7 @@ class ForumBoard(abc.Serializable):
         emoticon = None
         emoticon_column = columns[1]
         emoticon_img = emoticon_column.find("img")
-        if emoticon_img:
+        if emoticon_img and emoticon_img.get("alt"):
             url = emoticon_img["src"]
             name = emoticon_img["alt"]
             emoticon = ForumEmoticon(name, url)
@@ -123,28 +132,38 @@ class ForumBoard(abc.Serializable):
         pages = 1
         thread_column = columns[2]
         title = thread_column.text.strip()
-        thread_link, *page_links = thread_column.find_all("a")
+        try:
+            thread_link, *page_links = thread_column.find_all("a")
+        except ValueError:
+            return
         if page_links:
             last_page_link = page_links[-1]
             pages = int(page_number_regex.search(last_page_link["href"]).group(1))
             title = pages_regex.sub("", title).strip()
-        thread_id = int(thread_id_regex.search(thread_link["href"]).group(1))
+        thread_id_match = thread_id_regex.search(thread_link["href"])
         # Fourth Column: Thread startert
         thread_starter_column = columns[3]
         thread_starter = thread_starter_column.text.strip()
-        # Fifth Column: Number of replies
-        replies_column = columns[4]
-        replies = int(replies_column.text)
-        # Sixth Column: Number of views
-        views_column = columns[5]
-        views = int(views_column.text)
-        # Seventh Column: Last post information
-        last_post_column = columns[6]
-        last_post = LastPost._parse_column(last_post_column)
-        thread = ListedThread(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
-                              views=views, last_post=last_post, emoticon=emoticon, status=status, pages=pages,
-                              status_icon=status_icon)
-        return thread
+        if thread_id_match:
+            thread_id = int(thread_id_match.group(1))
+            # Fifth Column: Number of replies
+            replies_column = columns[4]
+            replies = int(replies_column.text)
+            # Sixth Column: Number of views
+            views_column = columns[5]
+            views = int(views_column.text)
+            # Seventh Column: Last post information
+            last_post_column = columns[6]
+            last_post = LastPost._parse_column(last_post_column)
+
+            entry = ListedThread(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
+                                 views=views, last_post=last_post, emoticon=emoticon, status=status, pages=pages,
+                                 status_icon=status_icon)
+        else:
+            title = title.replace("Announcement: ", "")
+            announcement_id = int(announcement_id_regex.search(thread_link["href"]).group(1))
+            entry = ListedAnnouncement(title=title, announcement_id=announcement_id, announcement_author=thread_starter)
+        return entry
 
 
 class ForumEmoticon(abc.Serializable):
@@ -239,6 +258,7 @@ class ForumThread(abc.Serializable):
     current_page: :class:`int`
         The page being viewed.
     posts: list of :class:`ForumPost`
+        The list of posts the thread has.
     """
     __slots__ = (
         "title",
@@ -438,6 +458,34 @@ class LastPost(abc.Serializable):
 
         return cls(author, post_id, last_post_date)
 
+
+class ListedAnnouncement(abc.Serializable):
+    """Represents an announcement in the forum boards.
+
+    Attributes
+    ----------
+    title: :class:`str`
+        The title of the announcement.
+    announcement_id: class:`int`
+        The internal id of the announcement.
+    announcement_author: :class:`str`
+        The character that made the announcement.
+    """
+
+    def __init__(self, **kwargs):
+        self.title = kwargs.get("title")
+        self.announcement_id = kwargs.get("announcement_id")
+        self.announcement_author = kwargs.get("announcement_author")
+
+    __slots__ = (
+        "title",
+        "announcement_id",
+        "announcement_author",
+    )
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} title={0.title!r} announcement_id={0.announcement_id} " \
+               "announcement_author={0.announcement_author!r}>".format(self)
 
 class ListedBoard(abc.Serializable):
     """Represents a board in the list of boards.
