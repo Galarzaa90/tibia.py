@@ -6,6 +6,18 @@ from tibiapy import abc, GuildMembership
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.utils import get_tibia_url, parse_tibia_forum_datetime, parse_tibiacom_content, split_list, try_enum
 
+
+__all__ = (
+    'ForumBoard',
+    'ForumEmoticon',
+    'ForumPost',
+    'ForumThread',
+    'LastPost',
+    'ListedBoard',
+    'ListedThread',
+    'PostAuthor',
+)
+
 board_id_regex = re.compile(r'boardid=(\d+)')
 post_id_regex = re.compile(r'postid=(\d+)')
 thread_id_regex = re.compile(r'threadid=(\d+)')
@@ -21,172 +33,6 @@ guild_title_regexp = re.compile(r'([^(]+)\s\(([^)]+)\)')
 post_dates_regex = re.compile(r'(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})')
 
 signature_separator = "________________"
-
-class ListedBoard(abc.Serializable):
-    """Represents a board in the list of boards.
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The name of the board.
-    board_id: :class:`inst`
-        The board's internal id.
-    description: :class:`str`
-        The description of the board.
-    posts: :class:`int`
-        The number of posts in this board.
-    threads: :class:`int`
-        The number of threads in this board.
-    last_post: :class:`LastPost`
-        The information of the last post made in this board.
-    """
-    def __init__(self, **kwargs):
-        self.name = kwargs.get("name")
-        self.board_id = kwargs.get("board_id")
-        self.description = kwargs.get("description")
-        self.posts = kwargs.get("posts")
-        self.threads = kwargs.get("threads")
-        self.last_post = kwargs.get("last_post")
-
-    __slots__ = (
-        "name",
-        "board_id",
-        "description",
-        "posts",
-        "threads",
-        "last_post",
-    )
-
-    def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} board_id={0.board_id} posts={0.posts} threads={0.threads}" \
-               " description={0.description!r}>".format(self)
-
-    @classmethod
-    def get_world_boards_url(cls):
-        return get_tibia_url("forum", "worldboards")
-
-    @classmethod
-    def get_trade_boards_url(cls):
-        return get_tibia_url("forum", "tradeboards")
-
-    @classmethod
-    def get_community_boards_url(cls):
-        return get_tibia_url("forum", "communityboards")
-
-    @classmethod
-    def get_support_boards_url(cls):
-        return get_tibia_url("forum", "supportboards")
-
-    @classmethod
-    def list_from_content(cls, content):
-        parsed_content = parse_tibiacom_content(content)
-        tables = parsed_content.find_all("table", attrs={"width": "100%"})
-        _, board_list_table, timezone_table = tables
-        _, *board_rows = board_list_table.find_all("tr")
-        timezone_text = timezone_table.text
-        timezone = timezone_regex.search(timezone_text).group(1)
-        offset = 1 if timezone == "CES" else 2
-        boards = []
-        for board_row in board_rows[:-3]:
-            board = cls._parse_board_row(board_row, offset)
-            boards.append(board)
-        return boards
-
-    @classmethod
-    def _parse_board_row(cls, board_row, offset):
-        columns = board_row.find_all("td")
-        # Second Column: Name and description
-        name_column = columns[1]
-        board_link_tag = name_column.find("a")
-        description_tag = name_column.find("font")
-        description = description_tag.text
-        name = board_link_tag.text
-        link = board_link_tag['href']
-        board_id = int(board_id_regex.search(link).group(1))
-        # Third Column: Post count
-        posts_column = columns[2]
-        posts = int(posts_column.text)
-        # Fourth Column: View count
-        threads_column = columns[3]
-        threads = int(threads_column.text)
-        # Fifth Column: Last post information
-        last_post_column = columns[4]
-        last_post = LastPost._parse_column(last_post_column, offset)
-        return cls(name=name, board_id=board_id, description=description, posts=posts, threads=threads,
-                   last_post=last_post)
-
-
-class ListedThread(abc.Serializable):
-    """Represents a thread in a forum board.
-
-    Attributes
-    ----------
-    title: :class:`str`
-        The title of the thread.
-    thread_id: class:`int`
-        The internal id of the thread.
-    thread_started: :class:`str`
-        The character that started the thread.
-    replies: :class:`int`
-        The number of replies.
-    views: :class:`int`
-        The number of views.
-    last_post: :class:`LastPost`
-        The information of the last post made in this board.
-    status: :class:`ThreadStatus`
-        The status of the thread.
-    emoticon: :class:`ForumEmoticon`
-        The emoticon used for the thread.
-    pages: :class:`int`
-        The number of pages the thread has.
-    """
-    def __init__(self, **kwargs):
-        self.title = kwargs.get("title")
-        self.thread_id = kwargs.get("thread_id")
-        self.thread_starter = kwargs.get("thread_starter")
-        self.replies = kwargs.get("replies")
-        self.views = kwargs.get("views")
-        self.last_post = kwargs.get("last_post")
-        self.status = kwargs.get("status")
-        self.emoticon = kwargs.get("emoticon")
-        self.pages = kwargs.get("pages", 1)
-
-    __slots__ = (
-        "title",
-        "thread_id",
-        "thread_starter",
-        "replies",
-        "views",
-        "last_post",
-        "status",
-        "emoticon",
-        "pages",
-    )
-
-    def __repr__(self):
-        return "<{0.__class__.__name__} title={0.title!r} thread_id={0.thread_id} " \
-               "thread_starter={0.thread_starter!r} replies={0.replies} views={0.views}>".format(self)
-
-
-class ForumEmoticon(abc.Serializable):
-    """Represents a forum's emoticon.
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The emoticon's name.
-    url: :class:`str`
-        The URL to the emoticon`s image.
-    """
-
-    def __init__(self, name, url):
-        self.name = name
-        self.url = url
-
-    __slots__ = (
-        "name",
-        "url",
-    )
 
 
 class ForumBoard(abc.Serializable):
@@ -259,9 +105,11 @@ class ForumBoard(abc.Serializable):
         status = None
         status_column = columns[0]
         status_img = status_column.find("img")
+        status_icon = None
         if status_img:
             url = status_img["src"]
             filename = filename_regex.search(url).group(1)
+            status_icon = url
             status = ThreadStatus.from_icon(filename)
         # Second column: Thread's emoticon
         emoticon = None
@@ -281,7 +129,7 @@ class ForumBoard(abc.Serializable):
             pages = int(page_number_regex.search(last_page_link["href"]).group(1))
             title = pages_regex.sub("", title).strip()
         thread_id = int(thread_id_regex.search(thread_link["href"]).group(1))
-        # Fourth Column: Thread starter
+        # Fourth Column: Thread startert
         thread_starter_column = columns[3]
         thread_starter = thread_starter_column.text.strip()
         # Fifth Column: Number of replies
@@ -294,54 +142,30 @@ class ForumBoard(abc.Serializable):
         last_post_column = columns[6]
         last_post = LastPost._parse_column(last_post_column)
         thread = ListedThread(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
-                              views=views, last_post=last_post, emoticon=emoticon, status=status, pages=pages)
+                              views=views, last_post=last_post, emoticon=emoticon, status=status, pages=pages,
+                              status_icon=status_icon)
         return thread
 
 
-class PostAuthor(abc.BaseCharacter):
-    """Represents a post's author.
+class ForumEmoticon(abc.Serializable):
+    """Represents a forum's emoticon.
 
     Attributes
     ----------
     name: :class:`str`
-        The name of the character, author of the post.
-    level: :class:`int`
-        The level of the character.
-    world: :class:`str`
-        The world the character belongs to.
-    position: :class:`str`
-        The character's position, if any.
-    title: :class:`str`
-        The character's title, if any.
-    vocation: :class:`Vocation`
-        The vocation of the character.
-    guild: :class:`GuildMembership`
-        The guild the author belongs to, if any.
-    posts: :class:`int`
-        The number of posts this character has made.
-
+        The emoticon's name.
+    url: :class:`str`
+        The URL to the emoticon`s image.
     """
+
+    def __init__(self, name, url):
+        self.name = name
+        self.url = url
 
     __slots__ = (
         "name",
-        "level",
-        "world",
-        "vocation",
-        "title",
-        "position",
-        "guild",
-        "posts",
+        "url",
     )
-
-    def __init__(self, **kwargs):
-        self.name = kwargs.get("name")
-        self.level = kwargs.get("level")
-        self.world = kwargs.get("world")
-        self.vocation = kwargs.get("vocation")
-        self.title = kwargs.get("title")
-        self.position = kwargs.get("position")
-        self.guild = kwargs.get("guild")
-        self.posts = kwargs.get("posts")
 
 
 class ForumPost(abc.Serializable):
@@ -613,3 +437,200 @@ class LastPost(abc.Serializable):
         author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
 
         return cls(author, post_id, last_post_date)
+
+
+class ListedBoard(abc.Serializable):
+    """Represents a board in the list of boards.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the board.
+    board_id: :class:`inst`
+        The board's internal id.
+    description: :class:`str`
+        The description of the board.
+    posts: :class:`int`
+        The number of posts in this board.
+    threads: :class:`int`
+        The number of threads in this board.
+    last_post: :class:`LastPost`
+        The information of the last post made in this board.
+    """
+    def __init__(self, **kwargs):
+        self.name = kwargs.get("name")
+        self.board_id = kwargs.get("board_id")
+        self.description = kwargs.get("description")
+        self.posts = kwargs.get("posts")
+        self.threads = kwargs.get("threads")
+        self.last_post = kwargs.get("last_post")
+
+    __slots__ = (
+        "name",
+        "board_id",
+        "description",
+        "posts",
+        "threads",
+        "last_post",
+    )
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r} board_id={0.board_id} posts={0.posts} threads={0.threads}" \
+               " description={0.description!r}>".format(self)
+
+    @classmethod
+    def get_world_boards_url(cls):
+        return get_tibia_url("forum", "worldboards")
+
+    @classmethod
+    def get_trade_boards_url(cls):
+        return get_tibia_url("forum", "tradeboards")
+
+    @classmethod
+    def get_community_boards_url(cls):
+        return get_tibia_url("forum", "communityboards")
+
+    @classmethod
+    def get_support_boards_url(cls):
+        return get_tibia_url("forum", "supportboards")
+
+    @classmethod
+    def list_from_content(cls, content):
+        parsed_content = parse_tibiacom_content(content)
+        tables = parsed_content.find_all("table", attrs={"width": "100%"})
+        _, board_list_table, timezone_table = tables
+        _, *board_rows = board_list_table.find_all("tr")
+        timezone_text = timezone_table.text
+        timezone = timezone_regex.search(timezone_text).group(1)
+        offset = 1 if timezone == "CES" else 2
+        boards = []
+        for board_row in board_rows[:-3]:
+            board = cls._parse_board_row(board_row, offset)
+            boards.append(board)
+        return boards
+
+    @classmethod
+    def _parse_board_row(cls, board_row, offset):
+        columns = board_row.find_all("td")
+        # Second Column: Name and description
+        name_column = columns[1]
+        board_link_tag = name_column.find("a")
+        description_tag = name_column.find("font")
+        description = description_tag.text
+        name = board_link_tag.text
+        link = board_link_tag['href']
+        board_id = int(board_id_regex.search(link).group(1))
+        # Third Column: Post count
+        posts_column = columns[2]
+        posts = int(posts_column.text)
+        # Fourth Column: View count
+        threads_column = columns[3]
+        threads = int(threads_column.text)
+        # Fifth Column: Last post information
+        last_post_column = columns[4]
+        last_post = LastPost._parse_column(last_post_column, offset)
+        return cls(name=name, board_id=board_id, description=description, posts=posts, threads=threads,
+                   last_post=last_post)
+
+
+class ListedThread(abc.Serializable):
+    """Represents a thread in a forum board.
+
+    Attributes
+    ----------
+    title: :class:`str`
+        The title of the thread.
+    thread_id: class:`int`
+        The internal id of the thread.
+    thread_started: :class:`str`
+        The character that started the thread.
+    replies: :class:`int`
+        The number of replies.
+    views: :class:`int`
+        The number of views.
+    last_post: :class:`LastPost`
+        The information of the last post made in this board.
+    status: :class:`ThreadStatus`
+        The status of the thread.
+    status_icon: :class:`str`
+        The URL of the icon displayed as status.
+    emoticon: :class:`ForumEmoticon`
+        The emoticon used for the thread.
+    pages: :class:`int`
+        The number of pages the thread has.
+    """
+    def __init__(self, **kwargs):
+        self.title = kwargs.get("title")
+        self.thread_id = kwargs.get("thread_id")
+        self.thread_starter = kwargs.get("thread_starter")
+        self.replies = kwargs.get("replies")
+        self.views = kwargs.get("views")
+        self.last_post = kwargs.get("last_post")
+        self.status = kwargs.get("status")
+        self.status_icon = kwargs.get("status_icon")
+        self.icon = kwargs.get("icon")
+        self.emoticon = kwargs.get("emoticon")
+        self.pages = kwargs.get("pages", 1)
+
+    __slots__ = (
+        "title",
+        "thread_id",
+        "thread_starter",
+        "replies",
+        "views",
+        "last_post",
+        "status",
+        "status_icon",
+        "emoticon",
+        "pages",
+    )
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} title={0.title!r} thread_id={0.thread_id} " \
+               "thread_starter={0.thread_starter!r} replies={0.replies} views={0.views}>".format(self)
+
+
+class PostAuthor(abc.BaseCharacter):
+    """Represents a post's author.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character, author of the post.
+    level: :class:`int`
+        The level of the character.
+    world: :class:`str`
+        The world the character belongs to.
+    position: :class:`str`
+        The character's position, if any.
+    title: :class:`str`
+        The character's title, if any.
+    vocation: :class:`Vocation`
+        The vocation of the character.
+    guild: :class:`GuildMembership`
+        The guild the author belongs to, if any.
+    posts: :class:`int`
+        The number of posts this character has made.
+
+    """
+
+    __slots__ = (
+        "name",
+        "level",
+        "world",
+        "vocation",
+        "title",
+        "position",
+        "guild",
+        "posts",
+    )
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get("name")
+        self.level = kwargs.get("level")
+        self.world = kwargs.get("world")
+        self.vocation = kwargs.get("vocation")
+        self.title = kwargs.get("title")
+        self.position = kwargs.get("position")
+        self.guild = kwargs.get("guild")
+        self.posts = kwargs.get("posts")

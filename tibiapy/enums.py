@@ -1,4 +1,4 @@
-from enum import Enum
+import enum
 
 __all__ = (
     'AccountStatus',
@@ -10,6 +10,7 @@ __all__ = (
     'NewsType',
     'PvpType',
     'Sex',
+    'ThreadStatus',
     'TournamentWorldType',
     'TournamentPhase',
     'TransferType',
@@ -19,7 +20,7 @@ __all__ = (
 )
 
 
-class BaseEnum(Enum):
+class BaseEnum(enum.Enum):
     def __str__(self):
         return self.value
 
@@ -99,19 +100,36 @@ class Sex(BaseEnum):
     MALE = "male"
     FEMALE = "female"
 
-class ThreadStatus(BaseEnum):
-    """Possible thread status"""
-    NEW = "New"  #: Thread has new posts since last visit.
-    HOT = "Hot"  #: Thread has more than 16 replies.
-    HOT_NEW = "Hot New"  #: Thread has more than 16 replies and has new posts since last visit.
+
+class ThreadStatus(enum.Flag):
+    """The possible statuses a thread can have."""
+    NONE = 0
+    HOT = 1  #: Thread has more than 16 replies.
+    NEW = 2  #: Thread has new posts since last visit.
+    CLOSED = 4  #: Thread is closed.
+    STICKY = 8  #: Thread is stickied.
+
+    def __str__(self):
+        return ", ".join(v.name.title() for v in list(self))
+
+    def __iter__(self):
+        for entry in list(self.__class__):
+            if entry in self and entry is not self.NONE:
+                yield entry
+
+    def get_icon_name(self):
+        if self.value == 0:
+            return None
+        joined_str = "".join(v.name.lower() for v in list(self))
+        return "logo_%s.gif" % joined_str
 
     @classmethod
     def from_icon(cls, icon):
-        return {
-            "logo_new.gif": cls.NEW,
-            "logo_hot.gif": cls.HOT,
-            "logo_hotnew.gif": cls.HOT_NEW,
-            }.get(icon)
+        flags = 0
+        for entry in list(cls):
+            if entry.name.lower() in icon:
+                flags += entry.value
+        return cls(flags)
 
 class TournamentWorldType(BaseEnum):
     """The possible types of tournament worlds."""
@@ -146,7 +164,7 @@ class Vocation(BaseEnum):
     MASTER_SORCERER = "Master Sorcerer"
 
 
-class VocationFilter(Enum):
+class VocationFilter(enum.Enum):
     """The vocation filters available for Highscores."""
     ALL = 0
     KNIGHTS = 1

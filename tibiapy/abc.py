@@ -3,7 +3,7 @@ import datetime
 import json
 import urllib.parse
 from collections import OrderedDict
-from enum import Enum
+import enum
 
 from tibiapy.enums import HouseType, HouseStatus, HouseOrder
 from tibiapy.utils import get_tibia_url
@@ -60,7 +60,9 @@ class Serializable:
                 return obj.isoformat()
             if isinstance(obj, datetime.timedelta):
                 return obj.total_seconds()
-            if isinstance(obj, Enum):
+            if isinstance(obj, enum.Flag):
+                return [str(i) for i in obj]
+            if isinstance(obj, enum.Enum):
                 return obj.value
             return {k: v for k, v in dict(obj).items() if v is not None}
         except TypeError:
