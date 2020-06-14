@@ -21,14 +21,15 @@ async def main():
         response = await client.fetch_world_list()
         assert isinstance(response, tibiapy.TibiaResponse)
         assert isinstance(response.data, tibiapy.WorldOverview)
-        log.info("{} worlds found.".format(len(response.data.worlds)))
+        log.info(f"{len(response.data.worlds)} worlds found.")
         assert isinstance(response.data.record_count, int)
         assert response.data.record_count > 0
         assert isinstance(response.data.record_date, datetime.datetime)
 
         selected = random.choice(response.data.worlds)
         assert isinstance(selected, tibiapy.ListedWorld)
-        log.info("World {0.name} selected: {0.online_count} online | {0.pvp_type} | {0.location}".format(selected))
+        log.info(f"World {selected.name} selected: {selected.online_count} online | {selected.pvp_type}"
+                 f" | {selected.location}")
         assert isinstance(selected.pvp_type, tibiapy.PvpType)
         assert isinstance(selected.location, tibiapy.WorldLocation)
         log.info("Fetching world...")

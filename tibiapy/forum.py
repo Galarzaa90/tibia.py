@@ -86,9 +86,9 @@ class ForumBoard(abc.Serializable):
     @classmethod
     def from_content(cls, content):
         parsed_content = parse_tibiacom_content(content)
-        tables = parsed_content.find_all("table", attrs={"width": "100%"})
-        # TODO: Parse proposals board, it has a different style
-        header_table, time_selector_table, threads_table, timezone_table, boardjump_table = tables
+        tables = parsed_content.find_all("table")
+        tables = [t for t in tables]
+        header_table, time_selector_table, threads_table, timezone_table, boardjump_table, *_ = tables
         header_text = header_table.text.strip()
         section, name = split_list(header_text, "|", "|")
         thread_rows = threads_table.find_all("tr")
