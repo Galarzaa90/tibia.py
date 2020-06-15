@@ -8,6 +8,7 @@ from tibiapy.utils import get_tibia_url, parse_tibia_forum_datetime, parse_tibia
 
 
 __all__ = (
+    'ForumAnnouncement',
     'ForumBoard',
     'ForumEmoticon',
     'ForumPost',
@@ -32,8 +33,90 @@ author_posts_regex = re.compile(r'Posts: (\d+)')
 guild_regexp = re.compile(r'([\s\w()]+)\sof the\s(.+)')
 guild_title_regexp = re.compile(r'([^(]+)\s\(([^)]+)\)')
 post_dates_regex = re.compile(r'(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})')
+edited_by_regex = re.compile(r'Edited by (.*) on \d{2}')
 
 signature_separator = "________________"
+
+
+class ForumAnnouncement(abc.Serializable):
+    """Represent's a forum announcement.
+
+    Attributes
+    ----------
+    announcement_id: :class:`int`
+        The id of the announcement.
+    board: :class:`str`
+        The board this thread belongs to.
+    section: :class:`str`
+        The board section this thread belongs to.
+    author: :class:`PostAuthor`
+        The author of the announcement.
+    title: :class:`str`
+        The title of the announcement.
+    content: :class:`str`
+        The content of the announcement.
+    start_date: :class:`datetime.datetime`
+        The starting date of the announcement.
+    end_date: :class:`datetime.datetime`
+        The end date of the announcement.
+    """
+
+    __slots__ = (
+        "announcement_id",
+        "board",
+        "section",
+        "author",
+        "title",
+        "content",
+        "start_date",
+        "end_date",
+    )
+
+    def __init__(self, **kwargs):
+        self.announcement_id = kwargs.get("announcement_id")
+        self.board = kwargs.get("board")
+        self.section = kwargs.get("section")
+        self.author = kwargs.get("author")
+        self.title = kwargs.get("title")
+        self.content = kwargs.get("content")
+        self.start_date = kwargs.get("start_date")
+        self.end_date = kwargs.get("end_date")
+
+    @classmethod
+    def get_url(cls, thread_id):
+        return get_tibia_url("forum", None, action="announcement", announcementid=thread_id)
+
+    @classmethod
+    def from_content(cls, content):
+        parsed_content = parse_tibiacom_content(content)
+        tables = parsed_content.find_all("table", attrs={"width": "100%"})
+        root_tables = [t for t in tables if "BoxContent" in t.parent.attrs.get("class", [])]
+        forum_info_table, posts_table, footer_table = root_tables
+
+        header_text = forum_info_table.text
+        section, board, *_ = split_list(header_text, "|", "|")
+
+
+        timezone = timezone_regex.search(footer_table.text).group(1)
+        offset = 1 if timezone == "CES" else 2
+
+        announcement_container = posts_table.find("td", attrs={"class": "CipPost"})
+        character_info_container = announcement_container.find("div", attrs={"class": "PostCharacterText"})
+        author = PostAuthor._parse_author_table(character_info_container)
+
+        post_container = posts_table.find("div", attrs={"class":"PostText"})
+        title_tag = post_container.find("b")
+        title = title_tag.text
+        dates_container = post_container.find("font")
+        dates = post_dates_regex.findall(dates_container.text)
+        announcement_content = post_container.encode_contents().decode()
+        _, announcement_content = announcement_content.split("<hr/>", 1)
+
+        start_date, end_date = (parse_tibia_forum_datetime(date, offset) for date in dates)
+
+        announcement = cls(title=title, author=author, start_date=start_date, end_date=end_date,
+                           content=announcement_content)
+        return announcement
 
 
 class ForumBoard(abc.Serializable):
@@ -45,12 +128,14 @@ class ForumBoard(abc.Serializable):
         The name of the board.
     section: :class:`str`
         The section of the board.
-    displayed_range:
-        The currently viewed display range.
     current_page: :class:`int`
         The current page being viewed.
     pages: :class:`int`
         The number of pages the board has for the current display range.
+    age: :class:ìnt`
+        The maximum age of the displayed threads, in days.
+
+        -1 means all threads will be shown.
     announcements: list of :class:`ListedAnnouncement`
         The list of announcements currently visible.
     threads: list of :class:`ListedThread`
@@ -60,18 +145,20 @@ class ForumBoard(abc.Serializable):
     def __init__(self, **kwargs):
         self.name = kwargs.get("name")
         self.section = kwargs.get("section")
-        self.displayed_range = kwargs.get("displayed_range")
-        self.current_page = kwargs.get("current_page")
-        self.pages = kwargs.get("pages")
-        self.announcements = kwargs.get("announcements")
-        self.threads = kwargs.get("threads")
+        self.board_id = kwargs.get("board_id")
+        self.current_page = kwargs.get("current_page", 1)
+        self.pages = kwargs.get("pages", 1)
+        self.age = kwargs.get("age", 1)
+        self.announcements = kwargs.get("announcements", [])
+        self.threads = kwargs.get("threads", [])
 
     __slots__ = (
         "name",
         "section",
-        "displayed_range",
+        "board_id",
         "current_page",
         "pages",
+        "age",
         "announcements",
         "threads",
     )
@@ -80,20 +167,43 @@ class ForumBoard(abc.Serializable):
         return "<{0.__class__.__name__} name={0.name!r} section={0.section!r}>".format(self)
 
     @classmethod
-    def get_url(cls, board_id):
-        return get_tibia_url("forum", None, action="board", boardid=board_id)
+    def get_url(cls, board_id, page=1, age=30):
+        return get_tibia_url("forum", None, action="board", boardid=board_id, pagenumber=page, threadage=age)
 
     @classmethod
     def from_content(cls, content):
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all("table")
-        tables = [t for t in tables]
         header_table, time_selector_table, threads_table, timezone_table, boardjump_table, *_ = tables
         header_text = header_table.text.strip()
         section, name = split_list(header_text, "|", "|")
         thread_rows = threads_table.find_all("tr")
         entries = []
         announcements = []
+
+        board_selector = boardjump_table.find("select")
+        selected_board = board_selector.find("option", {"selected": True})
+        board_id = int(selected_board["value"])
+
+        age_selector = time_selector_table.find("select")
+        if not age_selector:
+            return cls(section=section, name=name)
+        selected_age = age_selector.find("option", {"selected": True})
+        if selected_age:
+            age = int(selected_age["value"])
+        else:
+            age = 1
+
+        current_page = 1
+        pages = 1
+        page_info = threads_table.find("td", attrs={"class": "ff_info"})
+        if page_info:
+            current_page_text = page_info.find("span")
+            page_links = page_info.find_all("a")
+            if current_page_text:
+                current_page = int(current_page_text.text)
+                pages = int(page_number_regex.search(page_links[-1]["href"]).group(1))
+
         for thread_row in thread_rows[1:]:
             columns = thread_row.find_all("td")
             if len(columns) != 7:
@@ -102,10 +212,14 @@ class ForumBoard(abc.Serializable):
             entry = cls._parse_thread_row(columns)
             if isinstance(entry, ListedThread):
                 entries.append(entry)
+                cip_border = thread_row.find("div", attrs={"class": "CipBorder"})
+                if cip_border:
+                    entry.framed = True
             elif isinstance(entry, ListedAnnouncement):
                 announcements.append(entry)
 
-        board = cls(name=name, section=section, threads=entries, announcements=announcements)
+        board = cls(name=name, section=section, threads=entries, announcements=announcements, age=age, pages=pages,
+                    current_page=current_page, board_id=board_id)
         return board
 
     @classmethod
@@ -210,18 +324,24 @@ class ForumPost(abc.Serializable):
         The date when the post was made.
     edited_date: :class:`datetime.datetime`, optional
         The date when the post was last edited, if applicable.
+    edited_by: :class:`str`, optional
+        The character that edited the post.
+
+        This is usually the same author, but in some occasions staff members edit the posts of others.
     """
 
     __slots__ = (
         "author",
         "emoticon",
         "title",
-        "content",
         "signature",
         "emoticon",
         "post_id",
         "posted_date",
         "edited_date",
+        "edited_by",
+        "framed",
+        "content",
     )
 
     def __init__(self, **kwargs):
@@ -232,8 +352,10 @@ class ForumPost(abc.Serializable):
         self.signature = kwargs.get("signature")
         self.emoticon = kwargs.get("emoticon")
         self.post_id = kwargs.get("post_id")
+        self.framed = kwargs.get("framed")
         self.posted_date = kwargs.get("posted_date")
         self.edited_date = kwargs.get("edited_date")
+        self.edited_by = kwargs.get("edited_by")
 
 
 class ForumThread(abc.Serializable):
@@ -259,6 +381,10 @@ class ForumThread(abc.Serializable):
         The page being viewed.
     posts: list of :class:`ForumPost`
         The list of posts the thread has.
+    framed: :class:`bool`
+        Whether the thread has a golden framed or not.
+
+        In the Proposals board,a golden frame means the thread has a reply by a staff member.
     """
     __slots__ = (
         "title",
@@ -269,6 +395,7 @@ class ForumThread(abc.Serializable):
         "next_topic_number",
         "pages",
         "current_page",
+        "framed",
         "posts",
     )
 
@@ -282,6 +409,7 @@ class ForumThread(abc.Serializable):
         self.pages = kwargs.get("pages")
         self.current_page = kwargs.get("current_page")
         self.posts = kwargs.get("posts")
+        self.framed = kwargs.get("framed")
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} board={0.board!r} section={0.section!r}>".format(self)
@@ -301,6 +429,7 @@ class ForumThread(abc.Serializable):
         section, board, *_ = split_list(header_text, "|", "|")
 
         thread_title = title_table.text.strip()
+        golden_frame = title_table.find("div", attrs={"class": "CipPost"})
         entries = []
         thread_info_table, *post_tables = posts_table.find_all("div", attrs={"class": "ForumPost"})
         inner_info_table = thread_info_table.find("table")
@@ -339,49 +468,14 @@ class ForumThread(abc.Serializable):
 
         thread = cls(title=thread_title, section=section, board=board, posts=entries, thread_id=thread_number,
                      current_page=current_page, pages=pages, previous_topic_number=previous_id,
-                     next_topic_number=next_id)
+                     next_topic_number=next_id, framed=golden_frame is not None)
         return thread
 
     @classmethod
     def _parse_post_table(cls, post_table, offset=1):
+        golden_frame = post_table.find("div", attrs={"class": "CipBorderTop"})
         character_info_container = post_table.find("div", attrs={"class": "PostCharacterText"})
-        # First link belongs to character
-        char_link = character_info_container.find("a")
-        author_name = char_link.text
-        position = title = None
-        position_info = character_info_container.find("font", attrs={"class": "ff_smallinfo"})
-        if position_info and position_info.parent == character_info_container:
-            for br in position_info.find_all("br"):
-                br.replace_with("\n")
-            titles = [title for title in position_info.text.splitlines() if title]
-            positions = ["Tutor", "Community Manager", "Customer Support"]
-            for _title in titles:
-                if _title in positions:
-                    position = _title
-                else:
-                    title = _title
-        char_info = character_info_container.find("font", attrs={"class": "ff_infotext"})
-        guild_info = char_info.find("font", attrs={"class": "ff_smallinfo"})
-        for br in char_info.find_all("br"):
-            br.replace_with("\n")
-        char_info_text = char_info.text
-        info_match = author_info_regex.search(char_info_text)
-        world = info_match.group(1)
-        vocation = try_enum(Vocation, info_match.group(2))
-        level = int(info_match.group(3))
-        guild = None
-        if guild_info:
-            guild_match = guild_regexp.search(guild_info.text)
-            guild_name = guild_match.group(2)
-            title_match = guild_title_regexp.search(guild_name)
-            title = None
-            if title_match:
-                guild_name = title_match.group(1)
-                title = title_match.group(2)
-            guild = GuildMembership(name=guild_name, rank=guild_match.group(1), title=title)
-        posts = int(author_posts_regex.search(char_info_text).group(1))
-        author = PostAuthor(name=author_name, title=title, position=position, world=world, vocation=vocation,
-                            level=level, posts=posts, guild=guild)
+        post_author = PostAuthor._parse_author_table(character_info_container)
         content_container = post_table.find("div", attrs={"class": "PostText"})
         content = content_container.encode_contents().decode()
         title = None
@@ -404,14 +498,17 @@ class ForumThread(abc.Serializable):
         post_details = post_table.find('div', attrs={"class": "PostDetails"})
         dates = post_dates_regex.findall(post_details.text)
         edited_date = None
+        edited_by = None
         posted_date = parse_tibia_forum_datetime(dates[0], offset)
         if len(dates) > 1:
             edited_date = parse_tibia_forum_datetime(dates[1], offset)
+            edited_by = edited_by_regex.search(post_details.text).group(1)
         post_details = post_table.find('div', attrs={"class": "AdditionalBox"})
         post_number = post_details.text.replace("Post #", "")
         post_id = int(post_number)
-        post = ForumPost(author=author, content=content, signature=signature, posted_date=posted_date,
-                         edited_date=edited_date, post_id=post_id, title=title, emoticon=emoticon)
+        post = ForumPost(author=post_author, content=content, signature=signature, posted_date=posted_date,
+                         edited_date=edited_date, edited_by=edited_by, post_id=post_id, title=title, emoticon=emoticon,
+                         framed=golden_frame is not None)
         return post
 
 
@@ -606,6 +703,10 @@ class ListedThread(abc.Serializable):
         The emoticon used for the thread.
     pages: :class:`int`
         The number of pages the thread has.
+    framed: :class:`bool`
+        Whether the thread has a gold frame or not.
+
+        In the Proposals board, the gold frame indicates that a staff member has replied in the thread.
     """
     def __init__(self, **kwargs):
         self.title = kwargs.get("title")
@@ -619,6 +720,7 @@ class ListedThread(abc.Serializable):
         self.icon = kwargs.get("icon")
         self.emoticon = kwargs.get("emoticon")
         self.pages = kwargs.get("pages", 1)
+        self.framed = kwargs.get("framed", False)
 
     __slots__ = (
         "title",
@@ -631,6 +733,7 @@ class ListedThread(abc.Serializable):
         "status_icon",
         "emoticon",
         "pages",
+        "framed",
     )
 
     def __repr__(self):
@@ -682,3 +785,43 @@ class PostAuthor(abc.BaseCharacter):
         self.position = kwargs.get("position")
         self.guild = kwargs.get("guild")
         self.posts = kwargs.get("posts")
+
+    @classmethod
+    def _parse_author_table(cls, character_info_container):
+        # First link belongs to character
+        char_link = character_info_container.find("a")
+        author_name = char_link.text
+        position = title = None
+        position_info = character_info_container.find("font", attrs={"class": "ff_smallinfo"})
+        if position_info and position_info.parent == character_info_container:
+            for br in position_info.find_all("br"):
+                br.replace_with("\n")
+            titles = [title for title in position_info.text.splitlines() if title]
+            positions = ["Tutor", "Community Manager", "Customer Support"]
+            for _title in titles:
+                if _title in positions:
+                    position = _title
+                else:
+                    title = _title
+        char_info = character_info_container.find("font", attrs={"class": "ff_infotext"})
+        guild_info = char_info.find("font", attrs={"class": "ff_smallinfo"})
+        for br in char_info.find_all("br"):
+            br.replace_with("\n")
+        char_info_text = char_info.text
+        info_match = author_info_regex.search(char_info_text)
+        world = info_match.group(1)
+        vocation = try_enum(Vocation, info_match.group(2))
+        level = int(info_match.group(3))
+        guild = None
+        if guild_info:
+            guild_match = guild_regexp.search(guild_info.text)
+            guild_name = guild_match.group(2)
+            title_match = guild_title_regexp.search(guild_name)
+            title = None
+            if title_match:
+                guild_name = title_match.group(1)
+                title = title_match.group(2)
+            guild = GuildMembership(name=guild_name, rank=guild_match.group(1), title=title)
+        posts = int(author_posts_regex.search(char_info_text).group(1))
+        return PostAuthor(name=author_name, title=title, position=position, world=world, vocation=vocation,
+                          level=level, posts=posts, guild=guild)

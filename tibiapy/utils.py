@@ -50,6 +50,8 @@ def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
         for key, value in kwargs.items():
             if isinstance(value, str):
                 value = value.encode('iso-8859-1')
+            if value is None:
+                continue
             params[key] = value
     url += urllib.parse.urlencode(params)
     if anchor:

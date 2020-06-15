@@ -56,10 +56,19 @@ async def get_forum_thread(request):
     return web.Response(text=thread.to_json())
 
 
+@routes.get('/forums/announcement/{announcement_id}')
+async def get_forum_announcement(request):
+    announcement_id = request.match_info['announcement_id']
+    announcement = await app["tibiapy"].fetch_forum_announcement(int(announcement_id))
+    return web.Response(text=announcement.to_json())
+
+
 @routes.get('/forums/board/{board_id}')
 async def get_board_threads(request):
     board_id = request.match_info['board_id']
-    board = await app["tibiapy"].fetch_forum_board_threads(int(board_id))
+    page = int(request.query.get("page", 1))
+    age = int(request.query.get("age", 30))
+    board = await app["tibiapy"].fetch_forum_board_threads(int(board_id), page, age)
     return web.Response(text=board.to_json())
 
 

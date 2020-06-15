@@ -7,7 +7,8 @@ import aiohttp_socks
 import typing
 
 import tibiapy
-from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, ForumBoard, ForumThread, Guild, GuildWars, \
+from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, ForumAnnouncement, ForumBoard, ForumThread, \
+    Guild, GuildWars, \
     Highscores, \
     House, \
     HouseOrder, \
@@ -125,7 +126,7 @@ class Client:
     async def _initialize_session(self, proxy_url=None):
         headers = {
             'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py)" % tibiapy.__version__,
-            'Accept-Encoding': "deflate, gzip"
+            # 'Accept-Encoding': "deflate, gzip"
         }
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
         self.session = aiohttp.ClientSession(loop=self.loop, headers=headers,
@@ -210,8 +211,8 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
-    async def fetch_forum_board_threads(self, board_id):
-        response = await self._request("get", ForumBoard.get_url(board_id))
+    async def fetch_forum_board_threads(self, board_id, page=1, age=30):
+        response = await self._request("get", ForumBoard.get_url(board_id, page, age))
         start_time = time.perf_counter()
         board = ForumBoard.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -223,6 +224,13 @@ class Client:
         thread = ForumThread.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, thread, parsing_time)
+
+    async def fetch_forum_announcement(self, announcement_id):
+        response = await self._request("get", ForumAnnouncement.get_url(announcement_id))
+        start_time = time.perf_counter()
+        announcement = ForumAnnouncement.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, announcement, parsing_time)
 
     async def fetch_boosted_creature(self):
         """Fetches today's boosted creature.
