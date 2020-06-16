@@ -104,7 +104,6 @@ class TestForum(TestCommons, unittest.TestCase):
         board = ForumBoard.from_content(content)
 
         self.assertEqual("Antica", board.name)
-        self.assertEqual("World Boards", board.name)
+        self.assertEqual("World Boards", board.section)
         self.assertEqual([], board.threads)
         self.assertEqual(0, board.board_id)
-        pass

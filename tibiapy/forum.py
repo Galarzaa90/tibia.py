@@ -555,7 +555,7 @@ class ForumPost(abc.Serializable):
         "posted_date",
         "edited_date",
         "edited_by",
-        "framed",
+        "golden_frame",
         "content",
     )
 
@@ -567,7 +567,7 @@ class ForumPost(abc.Serializable):
         self.signature = kwargs.get("signature")
         self.emoticon = kwargs.get("emoticon")
         self.post_id = kwargs.get("post_id")
-        self.framed = kwargs.get("framed")
+        self.golden_frame = kwargs.get("golden_frame")
         self.posted_date = kwargs.get("posted_date")
         self.edited_date = kwargs.get("edited_date")
         self.edited_by = kwargs.get("edited_by")
@@ -621,7 +621,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
     posts: list of :class:`ForumPost`
         The list of posts the thread has.
     framed: :class:`bool`
-        Whether the thread has a golden framed or not.
+        Whether the thread has a golden golden_frame or not.
 
         In the Proposals board,a golden frame means the thread has a reply by a staff member.
     """
@@ -634,7 +634,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         "next_topic_number",
         "pages",
         "current_page",
-        "framed",
+        "golden_frame",
         "posts",
     )
 
@@ -648,7 +648,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         self.pages = kwargs.get("total_pages")
         self.current_page = kwargs.get("page")
         self.posts = kwargs.get("posts")
-        self.framed = kwargs.get("framed")
+        self.golden_frame = kwargs.get("golden_frame")
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} board={0.board!r} section={0.section!r}>".format(self)
@@ -987,7 +987,7 @@ class ListedThread(abc.BaseThread, abc.Serializable):
         self.icon = kwargs.get("icon")
         self.emoticon = kwargs.get("emoticon")
         self.pages = kwargs.get("total_pages", 1)
-        self.framed = kwargs.get("framed", False)
+        self.framed = kwargs.get("golden_frame", False)
 
     __slots__ = (
         "title",
