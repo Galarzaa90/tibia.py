@@ -64,7 +64,7 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
         'data',
     )
 
-    serializable_properties = ("time_left", )
+    _serializable_properties = ("time_left", )
 
     @property
     def time_left(self):

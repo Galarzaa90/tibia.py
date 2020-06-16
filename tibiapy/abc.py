@@ -19,12 +19,15 @@ WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 class Serializable:
     """Contains methods to make a class convertible to JSON.
 
+    Only attributes defined in ``__slots__`` will be serialized.
+
     .. note::
         | There's no way to convert JSON strings back to their original object.
         | Attempting to do so may result in data loss.
     """
 
-    serializable_properties = ()
+    _serializable_properties = ()
+    """:class:`tuple` of :class:`str`: Additional properties to serialize."""
 
     @classmethod
     def __slots_inherited__(cls):
@@ -89,6 +92,98 @@ class Serializable:
         """
         return json.dumps({k: v for k, v in dict(self).items() if v is not None}, indent=indent, sort_keys=sort_keys,
                           default=self._try_dict)
+
+
+class BaseBoard(metaclass=abc.ABCMeta):
+    """Base class for all board classes.
+
+    Implements common properties and methods for boards.
+
+    The following implement this class:
+
+    - :class:`ForumBoard`
+    - :class:`ListedBoard`
+    """
+
+    __slots__ = ("board_id",)
+
+    def __eq__(self, o: object) -> bool:
+        """Two characters are considered equal if their names are equal."""
+        if isinstance(o, self.__class__):
+            return self.board_id == o.board_id
+        return False
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r}>".format(self, )
+
+    @property
+    def url(self):
+        """:class:`str`: The URL of this board."""
+        return self.get_url(self.board_id)
+
+    @classmethod
+    def get_url(cls, board_id, page=1, age=30):
+        """Gets the Tibia.com URL to a board with a given id.
+
+        Parameters
+        ----------
+        board_id: :class:`int`
+            The ID of the board.
+        page: :class:`int`
+            The page to go to.
+        age: :class:`int`
+            The age in days of the threads to display.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the board.
+        """
+        return get_tibia_url("forum", None, action="board", boardid=board_id, pagenumber=page, threadage=age)
+
+    @classmethod
+    def get_world_boards_url(cls):
+        """Gets the URL to the World Boards section in Tibia.com
+        
+        Returns
+        -------
+        :class:`str`:
+            The URL to the World Boards.
+        """
+        return get_tibia_url("forum", "worldboards")
+
+    @classmethod
+    def get_trade_boards_url(cls):
+        """Gets the URL to the Trade Boards section in Tibia.com
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Trade Boards.
+        """
+        return get_tibia_url("forum", "tradeboards")
+
+    @classmethod
+    def get_community_boards_url(cls):
+        """Gets the URL to the Community Boards section in Tibia.com
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Community Boards.
+        """
+        return get_tibia_url("forum", "communityboards")
+
+    @classmethod
+    def get_support_boards_url(cls):
+        """Gets the URL to the Support Boards section in Tibia.com
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Support Boards.
+        """
+        return get_tibia_url("forum", "supportboards")
 
 
 class BaseCharacter(metaclass=abc.ABCMeta):

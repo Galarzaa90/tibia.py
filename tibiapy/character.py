@@ -124,10 +124,10 @@ class Achievement(abc.Serializable):
     def __init__(self, name, grade, secret=False):
         self.name: str = name
         self.grade = int(grade)
-        self.secret = secret
+        self.secret: bool = secret
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} name={self.name!r} grade={self.grade:d} secret={self.secret}>"
+        return f"<{self.__class__.__name__} name={self.name!r} grade={self.grade} secret={self.secret}>"
 
 
 class Character(abc.BaseCharacter, abc.Serializable):
@@ -218,7 +218,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
         "deletion_date",
     )
 
-    serializable_properties = (
+    _serializable_properties = (
         "deleted",
         "hidden",
     )
@@ -714,7 +714,7 @@ class Death(abc.Serializable):
         "name",
     )
 
-    serializable_properties = (
+    _serializable_properties = (
         "by_player"
     )
 
@@ -728,8 +728,6 @@ class Death(abc.Serializable):
     def __repr__(self):
         attributes = ""
         for attr in self.__slots__:
-            if attr in ["name", "level"]:
-                continue
             v = getattr(self, attr)
             if isinstance(v, int) and v == 0 and not isinstance(v, bool):
                 continue
@@ -737,9 +735,10 @@ class Death(abc.Serializable):
                 continue
             if v is None:
                 continue
-            attributes += f",{attr}={v!r}"
-        return f"{self.__class__.__name__}({self.name!r},{self.level!r}{attributes})"
+            attributes += f" {attr}={v!r}"
+        return f"<{self.__class__.__name__} {attributes})"
 
+    # region Properties
     @property
     def by_player(self):
         """:class:`bool`: Whether the kill involves other characters."""
@@ -751,6 +750,7 @@ class Death(abc.Serializable):
 
         This is usually the killer that gave the killing blow."""
         return self.killers[0] if self.killers else None
+    # endregion
 
 
 class GuildMembership(abc.BaseGuild, abc.Serializable):

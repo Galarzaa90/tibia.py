@@ -93,7 +93,7 @@ class ListedTournament(abc.BaseTournament, abc.Serializable):
         "end_date",
     )
 
-    serializable_properties = ("duration",)
+    _serializable_properties = ("duration",)
 
     def __init__(self, title, start_date, end_date, **kwargs):
         self.title = title
@@ -313,7 +313,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         "archived_tournaments",
     )
 
-    serializable_properties = (
+    _serializable_properties = (
         "duration",
         "rewards_range",
     )
@@ -640,7 +640,7 @@ class TournamentLeaderboard(abc.Serializable):
         "results_count",
     )
 
-    serializable_properties = (
+    _serializable_properties = (
         "page",
         "total_pages"
     )
@@ -672,7 +672,7 @@ class TournamentLeaderboard(abc.Serializable):
 
     @property
     def total_pages(self):
-        """:class:`int`: The total of pages of the highscores category."""
+        """:class:`int`: The total of total_pages of the highscores category."""
         return int(math.ceil(self.results_count / self.ENTRIES_PER_PAGE))
 
     @property

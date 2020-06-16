@@ -102,7 +102,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
         "invites",
     )
 
-    serializable_properties = (
+    _serializable_properties = (
         "member_count",
         "online_count",
         "ranks"

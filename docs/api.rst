@@ -382,6 +382,11 @@ The following classes are not meant to be used or instantiated, but are document
 
 They implement methods and properties that can be inherited by other classes to implement their functionality.
 
+
+.. autoclass:: tibiapy.abc.BaseBoard
+    :members:
+    :inherited-members:
+
 .. autoclass:: tibiapy.abc.BaseCharacter
     :members:
     :inherited-members:
@@ -394,11 +399,15 @@ They implement methods and properties that can be inherited by other classes to 
     :members:
     :inherited-members:
 
-.. autoclass:: tibiapy.abc.BaseHouseWithId
+.. autoclass:: tibiapy.abc.HouseWithId
     :members:
     :inherited-members:
 
 .. autoclass:: tibiapy.abc.BaseNews
+    :members:
+    :inherited-members:
+
+.. autoclass:: tibiapy.abc.BaseThread
     :members:
     :inherited-members:
 

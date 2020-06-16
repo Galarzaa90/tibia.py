@@ -1,9 +1,9 @@
 import re
-from typing import Optional
+from typing import List, Optional
 
 import bs4
 
-from tibiapy import abc, GuildMembership
+from tibiapy import abc, errors, GuildMembership
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_tibia_forum_datetime, parse_tibiacom_content, \
     split_list, try_enum
@@ -267,7 +267,7 @@ class ForumAuthor(abc.BaseCharacter):
         return author
 
 
-class ForumBoard(abc.Serializable):
+class ForumBoard(abc.BaseBoard, abc.Serializable):
     """Represents a forum's board.
 
     Attributes
@@ -279,7 +279,7 @@ class ForumBoard(abc.Serializable):
     current_page: :class:`int`
         The current page being viewed.
     pages: :class:`int`
-        The number of pages the board has for the current display range.
+        The number of total_pages the board has for the current display range.
     age: :class:ìnt`
         The maximum age of the displayed threads, in days.
 
@@ -291,43 +291,48 @@ class ForumBoard(abc.Serializable):
     """
 
     def __init__(self, **kwargs):
-        self.name = kwargs.get("name")
-        self.section = kwargs.get("section")
-        self.board_id = kwargs.get("board_id")
-        self.current_page = kwargs.get("current_page", 1)
-        self.pages = kwargs.get("pages", 1)
-        self.age = kwargs.get("age", 1)
-        self.announcements = kwargs.get("announcements", [])
-        self.threads = kwargs.get("threads", [])
+        self.name: str = kwargs.get("name")
+        self.section: str = kwargs.get("section")
+        self.board_id: int = kwargs.get("board_id", 0)
+        self.page: int = kwargs.get("page", 1)
+        self.total_pages: int = kwargs.get("total_pages", 1)
+        self.age: int = kwargs.get("age", 30)
+        self.announcements: List[ListedAnnouncement] = kwargs.get("announcements", [])
+        self.threads: List[ListedThread] = kwargs.get("threads", [])
 
     __slots__ = (
         "name",
         "section",
         "board_id",
-        "current_page",
-        "pages",
+        "page",
+        "total_pages",
         "age",
         "announcements",
         "threads",
     )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} section={0.section!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} section={self.section!r}>"
 
+    # region Properties
     @property
     def url(self):
         """:class:`str`: The URL of this board."""
-        return self.get_url(self.board_id, self.current_page, self.age)
+        return self.get_url(self.board_id, self.page, self.age)
 
     @property
     def previous_page_url(self):
         """:class:`str`: The URL to the previous page of the board, if there's any."""
-        return self.get_page_url(self.current_page - 1) if self.current_page > 1 else None
+        return self.get_page_url(self.page - 1) if self.page > 1 else None
 
     @property
     def next_page_url(self):
         """:class:`str`: The URL to the next page of the board, if there's any."""
-        return self.get_page_url(self.current_page + 1) if self.current_page < self.pages else None
+        return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
+
+    # endregion
+
+    # region Public Methods
 
     def get_page_url(self, page):
         """Gets the URL to a given page of the board.
@@ -347,26 +352,6 @@ class ForumBoard(abc.Serializable):
         return self.get_url(self.board_id, page, self.age)
 
     @classmethod
-    def get_url(cls, board_id, page=1, age=30):
-        """Gets the URL to a board with a given id.
-
-        Parameters
-        ----------
-        board_id: :class:`int`
-            The ID of the board.
-        page: :class:`int`
-            The page to go to.
-        age: :class:`int`
-            The age in days of the threads to display.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the board.
-        """
-        return get_tibia_url("forum", None, action="board", boardid=board_id, pagenumber=page, threadage=age)
-
-    @classmethod
     def from_content(cls, content):
         """Parses the board's HTML content from Tibia.com.
 
@@ -379,19 +364,23 @@ class ForumBoard(abc.Serializable):
         -------
         :class:`ForumBoard`
             The forum board contained.
+
+        Raises
+        ------
+        InvalidContent`
+            Content is not a board in Tibia.com
         """
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all("table")
-        header_table, time_selector_table, threads_table, timezone_table, boardjump_table, *_ = tables
+        try:
+            header_table, time_selector_table, threads_table, timezone_table, boardjump_table, *_ = tables
+        except ValueError as e:
+            raise errors.InvalidContent("content is not a forum board", e)
         header_text = header_table.text.strip()
         section, name = split_list(header_text, "|", "|")
 
         board = cls(name=name, section=section)
         thread_rows = threads_table.find_all("tr")
-
-        board_selector = boardjump_table.find("select")
-        selected_board = board_selector.find("option", {"selected": True})
-        board.board_id = int(selected_board["value"])
 
         age_selector = time_selector_table.find("select")
         if not age_selector:
@@ -400,13 +389,17 @@ class ForumBoard(abc.Serializable):
         if selected_age:
             board.age = int(selected_age["value"])
 
+        board_selector = boardjump_table.find("select")
+        selected_board = board_selector.find("option", {"selected": True})
+        board.board_id = int(selected_board["value"])
+
         page_info = threads_table.find("td", attrs={"class": "ff_info"})
         if page_info:
             current_page_text = page_info.find("span")
             page_links = page_info.find_all("a")
             if current_page_text:
-                board.current_page = int(current_page_text.text)
-                board.pages = int(page_number_regex.search(page_links[-1]["href"]).group(1))
+                board.page = int(current_page_text.text)
+                board.total_pages = int(page_number_regex.search(page_links[-1]["href"]).group(1))
 
         for thread_row in thread_rows[1:]:
             columns = thread_row.find_all("td")
@@ -424,13 +417,17 @@ class ForumBoard(abc.Serializable):
 
         return board
 
+    # endregion
+
+    # region Private Methods
+
     @classmethod
     def _parse_thread_row(cls, columns):
         """Parses the thread row, containing a single thread or announcement.
 
         Parameters
         ----------
-        columns: :class:`list` of :class:`bs4.Tag`
+        columns: :class:`bs4.ResultSet`
             The list of columns the thread contains.
 
         Returns
@@ -455,7 +452,7 @@ class ForumBoard(abc.Serializable):
             url = emoticon_img["src"]
             name = emoticon_img["alt"]
             emoticon = ForumEmoticon(name, url)
-        # Third Column: Thread's title and number of pages
+        # Third Column: Thread's title and number of total_pages
         pages = 1
         thread_column = columns[2]
         title = thread_column.text.strip()
@@ -491,6 +488,8 @@ class ForumBoard(abc.Serializable):
             announcement_id = int(announcement_id_regex.search(thread_link["href"]).group(1))
             entry = ListedAnnouncement(title=title, announcement_id=announcement_id, announcement_author=thread_starter)
         return entry
+
+    # endregion
 
 
 class ForumEmoticon(abc.Serializable):
@@ -616,7 +615,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
     next_topic_number: :class:`int`
         The number of the next topic.
     pages: :class:`int`
-        The number of pages this thread has.
+        The number of total_pages this thread has.
     current_page: :class:`int`
         The page being viewed.
     posts: list of :class:`ForumPost`
@@ -646,8 +645,8 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         self.section = kwargs.get("section")
         self.previous_topic_number = kwargs.get("previous_topic_number")
         self.next_topic_number = kwargs.get("next_topic_number")
-        self.pages = kwargs.get("pages")
-        self.current_page = kwargs.get("current_page")
+        self.pages = kwargs.get("total_pages")
+        self.current_page = kwargs.get("page")
         self.posts = kwargs.get("posts")
         self.framed = kwargs.get("framed")
 
@@ -823,7 +822,7 @@ class ListedAnnouncement(abc.Serializable):
                "announcement_author={0.announcement_author!r}>".format(self)
 
 
-class ListedBoard(abc.Serializable):
+class ListedBoard(abc.BaseBoard, abc.Serializable):
     """Represents a board in the list of boards.
 
     This is the board information available when viewing a section (e.g. World, Trade, Community)
@@ -844,12 +843,12 @@ class ListedBoard(abc.Serializable):
         The information of the last post made in this board.
     """
     def __init__(self, **kwargs):
-        self.name = kwargs.get("name")
-        self.board_id = kwargs.get("board_id")
-        self.description = kwargs.get("description")
-        self.posts = kwargs.get("posts")
-        self.threads = kwargs.get("threads")
-        self.last_post = kwargs.get("last_post")
+        self.name: str = kwargs.get("name")
+        self.board_id: int = kwargs.get("board_id")
+        self.description: str = kwargs.get("description")
+        self.posts: int = kwargs.get("posts")
+        self.threads: int = kwargs.get("threads")
+        self.last_post: Optional[LastPost] = kwargs.get("last_post")
 
     __slots__ = (
         "name",
@@ -861,42 +860,68 @@ class ListedBoard(abc.Serializable):
     )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} board_id={0.board_id} posts={0.posts} threads={0.threads}" \
-               " description={0.description!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} board_id={self.board_id} posts={self.posts} " \
+               f"threads={self.threads} description={self.description!r}>"
 
-    @classmethod
-    def get_world_boards_url(cls):
-        return get_tibia_url("forum", "worldboards")
-
-    @classmethod
-    def get_trade_boards_url(cls):
-        return get_tibia_url("forum", "tradeboards")
-
-    @classmethod
-    def get_community_boards_url(cls):
-        return get_tibia_url("forum", "communityboards")
-
-    @classmethod
-    def get_support_boards_url(cls):
-        return get_tibia_url("forum", "supportboards")
-
+    # region Public Methods
     @classmethod
     def list_from_content(cls, content):
-        parsed_content = parse_tibiacom_content(content)
-        tables = parsed_content.find_all("table", attrs={"width": "100%"})
-        _, board_list_table, timezone_table = tables
-        _, *board_rows = board_list_table.find_all("tr")
-        timezone_text = timezone_table.text
-        timezone = timezone_regex.search(timezone_text).group(1)
-        offset = 1 if timezone == "CES" else 2
-        boards = []
-        for board_row in board_rows[:-3]:
-            board = cls._parse_board_row(board_row, offset)
-            boards.append(board)
-        return boards
+        """Parses the content of a board list Tibia.com into a list of boards.
 
+        Parameters
+        ----------
+        content: :class:`str`
+            The raw HTML response from the board list.
+
+        Returns
+        -------
+        :class:`list` of :class:`ListedBoard`
+
+        Raises
+        ------
+        InvalidContent`
+            Content is not a board list in Tibia.com
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            tables = parsed_content.find_all("table", attrs={"width": "100%"})
+            _, board_list_table, timezone_table = tables
+            _, *board_rows = board_list_table.find_all("tr")
+            timezone_text = timezone_table.text
+            timezone = timezone_regex.search(timezone_text).group(1)
+            offset = 1 if timezone == "CES" else 2
+            boards = []
+            for board_row in board_rows[:-3]:
+                try:
+                    board = cls._parse_board_row(board_row, offset)
+                except IndexError:
+                    continue
+                else:
+                    boards.append(board)
+            return boards
+        except ValueError as e:
+            raise errors.InvalidContent("content does not belong to a forum section.", e)
+
+    # endregion
+
+    # region Private Methods
     @classmethod
-    def _parse_board_row(cls, board_row, offset):
+    def _parse_board_row(cls, board_row, offset=1):
+        """Parses a row containing a board and extracts its information.
+
+        Parameters
+        ----------
+        board_row: :class:`bs4.Tag`
+            The row's parsed content.
+        offset: :class:`int`
+            Since the displayed dates do not contain information, it is neccessary to extract the used timezone from
+            somewhere else and pass it to this method to adjust them accordingly.
+
+        Returns
+        -------
+        :class:`ListedBoard`
+            The board contained in this row.
+        """
         columns = board_row.find_all("td")
         # Second Column: Name and description
         name_column = columns[1]
@@ -917,6 +942,7 @@ class ListedBoard(abc.Serializable):
         last_post = LastPost._parse_column(last_post_column, offset)
         return cls(name=name, board_id=board_id, description=description, posts=posts, threads=threads,
                    last_post=last_post)
+    # endregion
 
 
 class ListedThread(abc.BaseThread, abc.Serializable):
@@ -943,7 +969,7 @@ class ListedThread(abc.BaseThread, abc.Serializable):
     emoticon: :class:`ForumEmoticon`
         The emoticon used for the thread.
     pages: :class:`int`
-        The number of pages the thread has.
+        The number of total_pages the thread has.
     framed: :class:`bool`
         Whether the thread has a gold frame or not.
 
@@ -960,7 +986,7 @@ class ListedThread(abc.BaseThread, abc.Serializable):
         self.status_icon = kwargs.get("status_icon")
         self.icon = kwargs.get("icon")
         self.emoticon = kwargs.get("emoticon")
-        self.pages = kwargs.get("pages", 1)
+        self.pages = kwargs.get("total_pages", 1)
         self.framed = kwargs.get("framed", False)
 
     __slots__ = (

@@ -90,7 +90,7 @@ pygments_style = 'friendly'
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
+# The theme to use for HTML and HTML Help total_pages.  See the documentation for
 # a list of builtin themes.
 #
 html_theme = 'alabaster'

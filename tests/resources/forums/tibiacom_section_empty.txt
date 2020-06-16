@@ -1,0 +1,16 @@
+<div class="BoxContent" style="background-image:url(https://static.tibia.com/images/global/content/scroll.gif);">
+<br><table border=0 cellpadding=2 cellspacing=0 width=100%><tr>
+<td class="ff_std" align="left">You are <b>not</b> logged in. <a href="https://www.tibia.com/account/index.php?subtopic=redirectlogin&amp;redirect=https%3A%2F%2Fwww.tibia.com%2Fforum%2Findex.php%3Fsectionid%3D1">Log in</a> to post on the forum.</td><td class="ff_info" align="right" valign="bottom">&nbsp;<br>Current Time: <i>00:40 CEST </i></td></tr>
+</table><table border=0 cellpadding=3 cellspacing=1 width=100%><tr>
+<td bgcolor="#505050" class="ff_white" colspan=1 align="center" width=32 height="16"><b><img src="https://static.tibia.com/images/global/general/blank.gif" width=32 height=16 border=0></b></td><td bgcolor="#505050" class="ff_white" colspan=1><b>Board</b></td><td bgcolor="#505050" class="ff_white" colspan=1 align="center"><b>Posts</b></td><td bgcolor="#505050" class="ff_white" colspan=1 align="center"><b>Threads</b></td><td bgcolor="#505050" class="ff_white" colspan=1 align="center"><b>Last Post</b></td></tr>
+<tr>
+<td bgcolor="#D4C0A1" class="ff_std" colspan=5>(You can not see any boards in this section.)</td></tr>
+<tr>
+<table border=0 cellpadding=6 cellspacing=0 width=100%><tr>
+<td bgcolor="#505050" class="ff_white" colspan=1 align="left" NOWRAP><b>All times are CEST.</b></td><td bgcolor="#505050" class="ff_white" colspan=1 align="right" NOWRAP>&nbsp;</td></tr>
+</td></tr>
+</table><center><table border=0 cellpadding=3 cellspacing=0><tr>
+<td class="ff_info" colspan=1 align="center" valign="middle" NOWRAP><img src="https://static.tibia.com/images/forum/logo_newposts.gif" border=0 width=31 height=31></td><td class="ff_info" colspan=1 align="center" valign="middle" NOWRAP><b>New Posts</b></td><td class="ff_info" colspan=1 align="center" valign="middle" NOWRAP><img src="https://static.tibia.com/images/global/general/blank.gif" width=12 height=1 border=0></td><td class="ff_info" colspan=1 align="center" valign="middle" NOWRAP><img src="https://static.tibia.com/images/forum/logo_closed.gif" border=0 width=22 height=22></td><td class="ff_info" colspan=1 align="center" valign="middle" NOWRAP><b>Closed Board</b></td></tr>
+</table></center> </div>
+</div>
+</div>

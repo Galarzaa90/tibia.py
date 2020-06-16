@@ -16,7 +16,7 @@ Changelog
     - Added class ``GuildWars``
     - Added class ``GuildWarsEntry``
     - Added ``url_wars`` property and ``get_url_wars`` class method to all Guild classes.
-    - Added ``active_war```attribute to ``Guild``.
+    - Added ``active_war`` attribute to ``Guild``.
 - Added parsing for the Tibia forums: Boards, Threads, Posts, Announcements
     - Added classes ``ForumBoard`` and ``ListedBoard``
     - Added classes ``ForumThread`` and ``ListedThread``
@@ -27,7 +27,8 @@ Changelog
 - Removed deprecated property ``house`` from ``Character``, use ``houses`` instead.
 - Removed support for Python 3.5.
 - Changed the hierarchy of base classes. Base classes no longer implement ``Serializable``, ``Serializable`` is now
- directly implemented by most classes.
+  directly implemented by most classes.
+
 
 .. _v2.5.0:
 

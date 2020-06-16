@@ -55,7 +55,7 @@ class Highscores(abc.Serializable):
         'results_count',
     )
 
-    serializable_properties = (
+    _serializable_properties = (
         "page",
         "total_pages",
     )
@@ -80,7 +80,7 @@ class Highscores(abc.Serializable):
 
     @property
     def total_pages(self):
-        """:class:`int`: The total of pages of the highscores category."""
+        """:class:`int`: The total of total_pages of the highscores category."""
         return int(math.ceil(self.results_count/25))
 
     @property
@@ -99,7 +99,7 @@ class Highscores(abc.Serializable):
 
         Notes
         -----
-        Tibia.com only shows up to 25 entries per page, so in order to obtain the full highscores, all 12 pages must
+        Tibia.com only shows up to 25 entries per page, so in order to obtain the full highscores, all 12 total_pages must
         be parsed and merged into one.
 
         Parameters
