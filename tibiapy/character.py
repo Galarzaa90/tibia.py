@@ -55,7 +55,7 @@ class AccountBadge(abc.Serializable):
     name: :class:`str`
         The name of the badge.
     icon_url: :class:`str`
-        The URL to the badge's icon URL.
+        The URL to the badge's icon.
     description: :class:`str`
         The description of the badge.
     """
@@ -71,11 +71,13 @@ class AccountBadge(abc.Serializable):
         self.description = description  # type: str
 
     def __repr__(self):
-        return "<%s name=%r description=%r>" % (self.__class__.__name__, self.name, self.description)
+        return f"<{self.__class__.__name__} name={self.name!r} description={self.description!r}>"
 
 
 class AccountInformation(abc.Serializable):
     """Represents the account information of a character.
+
+    This is only visible if the character is not marked as hidden.
 
     Attributes
     ----------
@@ -98,7 +100,7 @@ class AccountInformation(abc.Serializable):
         self.position = position  # type: Optional[str]
 
     def __repr__(self):
-        return "<%s created=%r>" % (self.__class__.__name__, self.created)
+        return f"<{self.__class__.__name__} created={self.created!r} loyalty_title={self.loyalty_title!r}>"
 
 
 class Achievement(abc.Serializable):
@@ -119,13 +121,13 @@ class Achievement(abc.Serializable):
         "secret",
     )
 
-    def __init__(self, name, grade, secret = False):
+    def __init__(self, name, grade, secret=False):
         self.name = name   # type: str
         self.grade = int(grade)
         self.secret = secret
 
     def __repr__(self):
-        return "<%s name=%r grade=%d secret=%s>" % (self.__class__.__name__, self.name, self.grade, self.secret)
+        return f"<{self.__class__.__name__} name={self.name!r} grade={self.grade:d} secret={self.secret}>"
 
 
 class Character(abc.BaseCharacter):
@@ -243,8 +245,8 @@ class Character(abc.BaseCharacter):
         self.deletion_date = try_datetime(kwargs.get("deletion_date"))
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r} vocation={0.vocation!r} level={0.level}" \
-               " sex={0.sex!r}>".format(self,)
+        return f"<{self.__class__.__name__} name={self.name!r} world={self.world!r} vocation={self.vocation!r} " \
+               f"level={self.level} sex={self.sex!r}>"
 
     # region Properties
     @property
@@ -276,18 +278,6 @@ class Character(abc.BaseCharacter):
     def married_to_url(self):
         """:class:`str`: The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return self.get_url(self.married_to) if self.married_to else None
-
-    @property
-    @deprecated("houses")
-    def house(self):
-        """:class:`CharacterHouse`: The house currently owned by the character.
-
-        .. deprecated:: 2.4.0
-            Characters may have more than one house. This will only return the first if any. Use :attr:`houses` instead.
-
-            Only kept for backwards compatibility and may be removed in the next major update.
-        """
-        return self.houses[0] if self.houses else None
     # endregion
 
     # region Public methods
@@ -821,8 +811,8 @@ class Killer(abc.Serializable):
                 continue
             if v is None:
                 continue
-            attributes += ",%s=%r" % (attr, v)
-        return "{0.__class__.__name__}({0.name!r}{1})".format(self, attributes)
+            attributes += f",{attr}={v!r}"
+        return f"{self.__class__.__name__}({self.name!r}{attributes})"
 
     @property
     def url(self):
@@ -896,5 +886,5 @@ class OtherCharacter(abc.BaseCharacter):
         self.position = position  # type: Optional[str]
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r} online={0.online!r} main={0.main}" \
-               " position={0.position!r}>".format(self,)
+        return f"<{self.__class__.__name__} name={self.name!r} world={self.world!r} online={self.online!r} " \
+               f"main={self.main} position={self.position!r}>"

@@ -1,10 +1,12 @@
 import re
+from typing import Optional
 
 import bs4
 
 from tibiapy import abc, GuildMembership
 from tibiapy.enums import ThreadStatus, Vocation
-from tibiapy.utils import get_tibia_url, parse_tibia_forum_datetime, parse_tibiacom_content, split_list, try_enum
+from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_tibia_forum_datetime, parse_tibiacom_content, \
+    split_list, try_enum
 
 
 __all__ = (
@@ -14,11 +16,13 @@ __all__ = (
     'ForumPost',
     'ForumThread',
     'LastPost',
+    'ListedAnnouncement',
     'ListedBoard',
     'ListedThread',
-    'PostAuthor',
+    'ForumAuthor',
 )
 
+section_id_regex = re.compile(r'sectionid=(\d+)')
 board_id_regex = re.compile(r'boardid=(\d+)')
 post_id_regex = re.compile(r'postid=(\d+)')
 thread_id_regex = re.compile(r'threadid=(\d+)')
@@ -41,6 +45,9 @@ signature_separator = "________________"
 class ForumAnnouncement(abc.Serializable):
     """Represent's a forum announcement.
 
+    These are a special kind of thread that are shown at the top of boards.
+    They cannot be replied to and they show no view counts.
+
     Attributes
     ----------
     announcement_id: :class:`int`
@@ -49,12 +56,16 @@ class ForumAnnouncement(abc.Serializable):
         The board this thread belongs to.
     section: :class:`str`
         The board section this thread belongs to.
-    author: :class:`PostAuthor`
+    board_id: :class:`int`
+        The internal id of the board the post is in.
+    section_id: :class:`int`
+        The internal id of the section the post is in.
+    author: :class:`ForumAuthor`
         The author of the announcement.
     title: :class:`str`
         The title of the announcement.
     content: :class:`str`
-        The content of the announcement.
+        The HTML content of the announcement.
     start_date: :class:`datetime.datetime`
         The starting date of the announcement.
     end_date: :class:`datetime.datetime`
@@ -64,7 +75,9 @@ class ForumAnnouncement(abc.Serializable):
     __slots__ = (
         "announcement_id",
         "board",
+        "board_id",
         "section",
+        "section_id",
         "author",
         "title",
         "content",
@@ -73,50 +86,185 @@ class ForumAnnouncement(abc.Serializable):
     )
 
     def __init__(self, **kwargs):
-        self.announcement_id = kwargs.get("announcement_id")
-        self.board = kwargs.get("board")
-        self.section = kwargs.get("section")
+        self.title: str = kwargs.get("title")
+        self.announcement_id: int = kwargs.get("announcement_id", 0)
+        self.board: str = kwargs.get("board")
+        self.board_id: int = kwargs.get("board_id", 0)
+        self.section: str = kwargs.get("section")
+        self.section_id: int = kwargs.get("section_id", 0)
         self.author = kwargs.get("author")
-        self.title = kwargs.get("title")
         self.content = kwargs.get("content")
         self.start_date = kwargs.get("start_date")
         self.end_date = kwargs.get("end_date")
 
+    @property
+    def url(self):
+        """:class:`str` Gets the URL to this announcement."""
+        return self.get_url(self.announcement_id)
+
     @classmethod
-    def get_url(cls, thread_id):
-        return get_tibia_url("forum", None, action="announcement", announcementid=thread_id)
+    def get_url(cls, announcement_id):
+        """Gets the URL to an announcement with a given ID.
+
+        Parameters
+        ----------
+        announcement_id: :class:`int`
+            The ID of the announcement
+
+        Returns
+        -------
+        :class:`str`
+            The URL of the announcement.
+        """
+        return get_tibia_url("forum", None, action="announcement", announcementid=announcement_id)
 
     @classmethod
     def from_content(cls, content):
+        """Parses the content of an announcement's page from Tibia.com
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of an announcement in Tibia.com
+
+        Returns
+        -------
+        :class:`ForumAnnouncement`
+            The announcement contained in the page or ```None`` if not found.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML content of an announcement page in Tibia.com
+        """
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all("table", attrs={"width": "100%"})
         root_tables = [t for t in tables if "BoxContent" in t.parent.attrs.get("class", [])]
         forum_info_table, posts_table, footer_table = root_tables
 
-        header_text = forum_info_table.text
-        section, board, *_ = split_list(header_text, "|", "|")
+        section_link, board_link, *_ = forum_info_table.find_all("a")
+        section = section_link.text
+        section_id = int(section_id_regex.search(section_link["href"]).group(1))
+        board = board_link.text
+        board_id = int(board_id_regex.search(board_link["href"]).group(1))
 
+        announcement = cls(section=section, section_id=section_id, board=board, board_id=board_id)
 
         timezone = timezone_regex.search(footer_table.text).group(1)
         offset = 1 if timezone == "CES" else 2
 
         announcement_container = posts_table.find("td", attrs={"class": "CipPost"})
         character_info_container = announcement_container.find("div", attrs={"class": "PostCharacterText"})
-        author = PostAuthor._parse_author_table(character_info_container)
+        announcement.author = ForumAuthor._parse_author_table(character_info_container)
 
         post_container = posts_table.find("div", attrs={"class":"PostText"})
         title_tag = post_container.find("b")
-        title = title_tag.text
+        announcement.title = title_tag.text
         dates_container = post_container.find("font")
         dates = post_dates_regex.findall(dates_container.text)
         announcement_content = post_container.encode_contents().decode()
         _, announcement_content = announcement_content.split("<hr/>", 1)
+        announcement.content = announcement_content
 
-        start_date, end_date = (parse_tibia_forum_datetime(date, offset) for date in dates)
+        announcement.start_date, announcement.end_date = (parse_tibia_forum_datetime(date, offset) for date in dates)
 
-        announcement = cls(title=title, author=author, start_date=start_date, end_date=end_date,
-                           content=announcement_content)
         return announcement
+
+
+class ForumAuthor(abc.BaseCharacter):
+    """Represents a post's author.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the character, author of the post.
+    level: :class:`int`
+        The level of the character.
+    world: :class:`str`
+        The world the character belongs to.
+    position: :class:`str`
+        The character's position, if any.
+    title: :class:`str`
+        The character's selected title, if any.
+    vocation: :class:`Vocation`
+        The vocation of the character.
+    guild: :class:`GuildMembership`
+        The guild the author belongs to, if any.
+    posts: :class:`int`
+        The number of posts this character has made.
+    """
+
+    __slots__ = (
+        "name",
+        "level",
+        "world",
+        "vocation",
+        "title",
+        "position",
+        "guild",
+        "posts",
+    )
+
+    def __init__(self, name, **kwargs):
+        self.name: str = name
+        self.level: int = kwargs.get("level", 2)
+        self.world: str = kwargs.get("world")
+        self.vocation: Vocation = try_enum(Vocation, kwargs.get("vocation"))
+        self.title: Optional[str] = kwargs.get("title")
+        self.position: Optional[str] = kwargs.get("position")
+        self.guild: Optional[GuildMembership] = kwargs.get("guild")
+        self.posts: int = kwargs.get("posts", 0)
+
+    @classmethod
+    def _parse_author_table(cls, character_info_container):
+        """Parses the table containing the author's information.
+
+        Parameters
+        ----------
+        character_info_container: :class:`bs4.Tag`
+            The cotnainer with the character's information.
+
+        Returns
+        -------
+        :class:`ForumAuthor`
+            The author's information.
+        """
+        # First link belongs to character
+        char_link = character_info_container.find("a")
+        author = cls(char_link.text)
+
+        position_info = character_info_container.find("font", attrs={"class": "ff_smallinfo"})
+        # Position and titles are shown the same way. If we have two, the title is first and then the position.
+        # However, if the character only has one of them, there's no way to know which is it unless we validate against
+        # possible types
+        if position_info and position_info.parent == character_info_container:
+            convert_line_breaks(position_info)
+            titles = [title for title in position_info.text.splitlines() if title]
+            positions = ["Tutor", "Community Manager", "Customer Support"]
+            for _title in titles:
+                if _title in positions:
+                    author.position = _title
+                else:
+                    author.title = _title
+        char_info = character_info_container.find("font", attrs={"class": "ff_infotext"})
+        guild_info = char_info.find("font", attrs={"class": "ff_smallinfo"})
+        convert_line_breaks(char_info)
+        char_info_text = char_info.text
+        info_match = author_info_regex.search(char_info_text)
+        author.world = info_match.group(1)
+        author.vocation = try_enum(Vocation, info_match.group(2))
+        author.level = int(info_match.group(3))
+        if guild_info:
+            guild_match = guild_regexp.search(guild_info.text)
+            guild_name = guild_match.group(2)
+            title_match = guild_title_regexp.search(guild_name)
+            title = None
+            if title_match:
+                guild_name = title_match.group(1)
+                title = title_match.group(2)
+            author.guild = GuildMembership(name=guild_name, rank=guild_match.group(1), title=title)
+        author.posts = int(author_posts_regex.search(char_info_text).group(1))
+        return author
 
 
 class ForumBoard(abc.Serializable):
@@ -306,7 +454,7 @@ class ForumPost(abc.Serializable):
 
     Attributes
     ----------
-    author: :class:`PostAuthor`
+    author: :class:`ForumAuthor`
         The author of the post.
     emoticon: :class:`ForumEmoticon`
         The emoticon selected for the post.
@@ -475,7 +623,7 @@ class ForumThread(abc.Serializable):
     def _parse_post_table(cls, post_table, offset=1):
         golden_frame = post_table.find("div", attrs={"class": "CipBorderTop"})
         character_info_container = post_table.find("div", attrs={"class": "PostCharacterText"})
-        post_author = PostAuthor._parse_author_table(character_info_container)
+        post_author = ForumAuthor._parse_author_table(character_info_container)
         content_container = post_table.find("div", attrs={"class": "PostText"})
         content = content_container.encode_contents().decode()
         title = None
@@ -555,7 +703,6 @@ class LastPost(abc.Serializable):
 
         return cls(author, post_id, last_post_date)
 
-
 class ListedAnnouncement(abc.Serializable):
     """Represents an announcement in the forum boards.
 
@@ -583,6 +730,7 @@ class ListedAnnouncement(abc.Serializable):
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} announcement_id={0.announcement_id} " \
                "announcement_author={0.announcement_author!r}>".format(self)
+
 
 class ListedBoard(abc.Serializable):
     """Represents a board in the list of boards.
@@ -739,89 +887,3 @@ class ListedThread(abc.Serializable):
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} thread_id={0.thread_id} " \
                "thread_starter={0.thread_starter!r} replies={0.replies} views={0.views}>".format(self)
-
-
-class PostAuthor(abc.BaseCharacter):
-    """Represents a post's author.
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The name of the character, author of the post.
-    level: :class:`int`
-        The level of the character.
-    world: :class:`str`
-        The world the character belongs to.
-    position: :class:`str`
-        The character's position, if any.
-    title: :class:`str`
-        The character's title, if any.
-    vocation: :class:`Vocation`
-        The vocation of the character.
-    guild: :class:`GuildMembership`
-        The guild the author belongs to, if any.
-    posts: :class:`int`
-        The number of posts this character has made.
-
-    """
-
-    __slots__ = (
-        "name",
-        "level",
-        "world",
-        "vocation",
-        "title",
-        "position",
-        "guild",
-        "posts",
-    )
-
-    def __init__(self, **kwargs):
-        self.name = kwargs.get("name")
-        self.level = kwargs.get("level")
-        self.world = kwargs.get("world")
-        self.vocation = kwargs.get("vocation")
-        self.title = kwargs.get("title")
-        self.position = kwargs.get("position")
-        self.guild = kwargs.get("guild")
-        self.posts = kwargs.get("posts")
-
-    @classmethod
-    def _parse_author_table(cls, character_info_container):
-        # First link belongs to character
-        char_link = character_info_container.find("a")
-        author_name = char_link.text
-        position = title = None
-        position_info = character_info_container.find("font", attrs={"class": "ff_smallinfo"})
-        if position_info and position_info.parent == character_info_container:
-            for br in position_info.find_all("br"):
-                br.replace_with("\n")
-            titles = [title for title in position_info.text.splitlines() if title]
-            positions = ["Tutor", "Community Manager", "Customer Support"]
-            for _title in titles:
-                if _title in positions:
-                    position = _title
-                else:
-                    title = _title
-        char_info = character_info_container.find("font", attrs={"class": "ff_infotext"})
-        guild_info = char_info.find("font", attrs={"class": "ff_smallinfo"})
-        for br in char_info.find_all("br"):
-            br.replace_with("\n")
-        char_info_text = char_info.text
-        info_match = author_info_regex.search(char_info_text)
-        world = info_match.group(1)
-        vocation = try_enum(Vocation, info_match.group(2))
-        level = int(info_match.group(3))
-        guild = None
-        if guild_info:
-            guild_match = guild_regexp.search(guild_info.text)
-            guild_name = guild_match.group(2)
-            title_match = guild_title_regexp.search(guild_name)
-            title = None
-            if title_match:
-                guild_name = title_match.group(1)
-                title = title_match.group(2)
-            guild = GuildMembership(name=guild_name, rank=guild_match.group(1), title=title)
-        posts = int(author_posts_regex.search(char_info_text).group(1))
-        return PostAuthor(name=author_name, title=title, position=position, world=world, vocation=vocation,
-                          level=level, posts=posts, guild=guild)

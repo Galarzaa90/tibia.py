@@ -14,8 +14,20 @@ from tibiapy.errors import InvalidContent
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
 
-def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
+def convert_line_breaks(element):
+    """Converts the <br> tags in a HTML elements to actual line breaks.
+
+    Parameters
+    ----------
+    element: :class:`bs4.BeautifulSoup`
+        A BeautifulSoup object.
     """
+    for br in element.find_all("br"):
+        br.replace_with("\n")
+
+
+def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
+    """Builds a URL to Tibia.com with the given parameters.
 
     Parameters
     ----------
@@ -26,7 +38,7 @@ def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
     anchor: :class:`str`
         A link anchor to add to the link.
     kwargs:
-        Additional parameters to pass to the url (e.g name, world, houseid, etc)
+        Additional parameters to pass to the url as query parameters (e.g name, world, houseid, etc)
 
     Returns
     -------
@@ -440,6 +452,7 @@ def parse_tibia_money(argument):
         k_count = argument.count("k")
         num *= pow(1000, k_count)
         return int(num)
+
 
 def split_list(items, separator=",", last_separator=" and "):
     """

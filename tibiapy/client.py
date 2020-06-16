@@ -226,10 +226,32 @@ class Client:
         return TibiaResponse(response, thread, parsing_time)
 
     async def fetch_forum_announcement(self, announcement_id):
+        """Fetches a forum announcement.
+
+        Parameters
+        ----------
+        announcement_id: :class:`int`
+            The id of the desired announcement.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`ForumAnnouncement`
+            The forum announcement, if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
         response = await self._request("get", ForumAnnouncement.get_url(announcement_id))
         start_time = time.perf_counter()
         announcement = ForumAnnouncement.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
+        # This cannot be obtained from the page's content, so must be assigned
+        announcement.announcement_id = announcement_id
         return TibiaResponse(response, announcement, parsing_time)
 
     async def fetch_boosted_creature(self):

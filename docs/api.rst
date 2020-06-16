@@ -101,6 +101,24 @@ Character
    :members:
    :inherited-members:
 
+ForumAnnouncement
+-----------------
+.. autoclass:: ForumAnnouncement
+    :members:
+    :inherited-members:
+
+ForumBoard
+----------
+.. autoclass:: ForumBoard
+    :members:
+    :inherited-members:
+
+ForumThread
+-----------
+.. autoclass:: ForumThread
+    :members:
+    :inherited-members:
+
 Guild
 -----
 .. autoclass:: Guild
@@ -131,6 +149,18 @@ KillStatistics
    :members:
    :inherited-members:
 
+ListedAnnouncement
+------------------
+.. autoclass:: ListedAnnouncement
+    :members:
+    :inherited-members:
+
+ListedBoard
+-----------
+.. autoclass:: ListedBoard
+    :members:
+    :inherited-members:
+
 ListedGuild
 -----------
 .. autoclass:: ListedGuild
@@ -148,6 +178,12 @@ ListedNews
 .. autoclass:: ListedNews
    :members:
    :inherited-members:
+
+ListedThread
+------------
+.. autoclass:: ListedThread
+    :members:
+    :inherited-members:
 
 ListedTournament
 -----------------------
@@ -221,10 +257,22 @@ CharacterHouse
    :inherited-members:
 
 ExpHighscoresEntry
--------------------------
+------------------
 .. autoclass:: ExpHighscoresEntry
    :members:
    :inherited-members:
+
+ForumAuthor
+-----------
+.. autoclass:: ForumAuthor
+    :members:
+    :inherited-members:
+
+ForumEmoticon
+-------------
+.. autoclass:: ForumEmoticon
+    :members:
+    :inherited-members:
 
 Death
 -----
@@ -273,6 +321,12 @@ Killer
 .. autoclass:: Killer
    :members:
    :inherited-members:
+
+LastPost
+--------
+.. autoclass:: LastPost
+    :members:
+    :inherited-members:
 
 LeaderboardEntry
 ----------------

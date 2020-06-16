@@ -39,7 +39,6 @@ class BoostedCreature(abc.Serializable):
         """
         Gets the boosted creature from any Tibia.com page.
 
-
         Parameters
         ----------
         content: :class:`str`
@@ -47,8 +46,8 @@ class BoostedCreature(abc.Serializable):
 
         Returns
         -------
-        :class:`News`
-            The boosted article shown.
+        :class:`BoostedCreature`
+            The boosted creature of the day.
 
         Raises
         ------
