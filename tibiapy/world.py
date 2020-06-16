@@ -21,7 +21,7 @@ record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
 
 
-class ListedWorld(abc.BaseWorld):
+class ListedWorld(abc.BaseWorld, abc.Serializable):
     """Represents a game server listed in the World Overview section.
 
     Attributes
@@ -32,7 +32,6 @@ class ListedWorld(abc.BaseWorld):
         The current status of the world.
     online_count: :class:`int`
         The number of currently online players in the world.
-
     location: :class:`WorldLocation`
         The physical location of the game servers.
     pvp_type: :class:`PvpType`
@@ -51,17 +50,31 @@ class ListedWorld(abc.BaseWorld):
     tournament_world_type: :class:`TournamentWorldType`
         The type of tournament world. ``None`` if this is not a tournament world.
     """
+    __slots__ = (
+        "name",
+        "status",
+        "location",
+        "online_count",
+        "pvp_type",
+        "battleye_protected",
+        "battleye_date",
+        "experimental",
+        "premium_only",
+        "tournament_world_type",
+        "transfer_type"
+    )
+
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
-        self.name = name  # type: str
+        self.name: str = name
         self.location = try_enum(WorldLocation, location)
         self.pvp_type = try_enum(PvpType, pvp_type)
-        self.status = kwargs.get("status")  # type: str
-        self.online_count = kwargs.get("online_count", 0)  # type: int
+        self.status: str = kwargs.get("status")
+        self.online_count: int = kwargs.get("online_count", 0)
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
-        self.battleye_protected = kwargs.get("battleye_protected", False)  # type: bool
+        self.battleye_protected: bool = kwargs.get("battleye_protected", False)
         self.battleye_date = try_date(kwargs.get("battleye_date"))
-        self.experimental = kwargs.get("experimental", False)  # type: bool
-        self.premium_only = kwargs.get("premium_only", False)  # type: bool
+        self.experimental: bool = kwargs.get("experimental", False)
+        self.premium_only: bool = kwargs.get("premium_only", False)
         self.tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
 
     # region Public methods
@@ -161,7 +174,7 @@ class ListedWorld(abc.BaseWorld):
     # endregion
 
 
-class World(abc.BaseWorld):
+class World(abc.BaseWorld, abc.Serializable):
     """Represents a Tibia game server.
 
     Attributes
@@ -201,6 +214,17 @@ class World(abc.BaseWorld):
         Whether only premium account players are allowed to play in this server.
     """
     __slots__ = (
+        "name",
+        "status",
+        "location",
+        "pvp_type",
+        "battleye_protected",
+        "battleye_date",
+        "experimental",
+        "premium_only",
+        "tournament_world_type",
+        "transfer_type",
+        "online_count",
         "record_count",
         "record_date",
         "creation_date",
@@ -209,21 +233,21 @@ class World(abc.BaseWorld):
     )
 
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
-        self.name = name  # type: str
+        self.name: str = name
         self.location = try_enum(WorldLocation, location)
         self.pvp_type = try_enum(PvpType, pvp_type)
-        self.status = kwargs.get("status")  # type: bool
-        self.online_count = kwargs.get("online_count", 0)  # type: int
-        self.record_count = kwargs.get("record_count", 0)  # type: int
+        self.status: bool = kwargs.get("status")
+        self.online_count: int = kwargs.get("online_count", 0)
+        self.record_count: int = kwargs.get("record_count", 0)
         self.record_date = try_datetime(kwargs.get("record_date"))
-        self.creation_date = kwargs.get("creation_date")  # type: str
+        self.creation_date: str = kwargs.get("creation_date")
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
-        self.world_quest_titles = kwargs.get("world_quest_titles", [])  # type: List[str]
-        self.battleye_protected = kwargs.get("battleye_protected", False)  # type: bool
+        self.world_quest_titles: List[str] = kwargs.get("world_quest_titles", [])
+        self.battleye_protected: bool = kwargs.get("battleye_protected", False)
         self.battleye_date = try_date(kwargs.get("battleye_date"))
-        self.experimental = kwargs.get("experimental", False)  # type: bool
-        self.online_players = kwargs.get("online_players", [])  # type: List[OnlineCharacter]
-        self.premium_only = kwargs.get("premium_only", False)  # type: bool
+        self.experimental: bool = kwargs.get("experimental", False)
+        self.online_players: List[OnlineCharacter] = kwargs.get("online_players", [])
+        self.premium_only: bool = kwargs.get("premium_only", False)
         self.tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
 
     # region Properties
@@ -431,15 +455,21 @@ class WorldOverview(abc.Serializable):
     worlds: :class:`list` of :class:`ListedWorld`
         List of worlds, with limited info.
     """
-    __slots__ = ("record_count", "record_date", "worlds")
+    __slots__ = (
+        "record_count",
+        "record_date",
+        "worlds",
+    )
+
+    serializable_properties = ('total_online',)
 
     def __init__(self, **kwargs):
-        self.record_count = kwargs.get("record_count", 0)  # type: int
+        self.record_count: int = kwargs.get("record_count", 0)
         self.record_date = try_datetime(kwargs.get("record_date"))
-        self.worlds = kwargs.get("worlds", [])  # type: List[ListedWorld]
+        self.worlds: List[ListedWorld] = kwargs.get("worlds", [])
 
     def __repr__(self):
-        return "<%s total_online=%d>" % (self.__class__.__name__, self.total_online)
+        return f"<{self.__class__.__name__} total_online={self.total_online:d}>"
 
     @property
     def total_online(self):

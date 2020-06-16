@@ -51,7 +51,7 @@ war_score_end_regex = re.compile(r'scored (\d+) kills against')
 war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
 
 
-class Guild(abc.BaseGuild):
+class Guild(abc.BaseGuild, abc.Serializable):
     """
     Represents a Tibia guild.
 
@@ -102,21 +102,27 @@ class Guild(abc.BaseGuild):
         "invites",
     )
 
+    serializable_properties = (
+        "member_count",
+        "online_count",
+        "ranks"
+    )
+
     def __init__(self, name=None, world=None, **kwargs):
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.logo_url = kwargs.get("logo_url")  # type: str
-        self.description = kwargs.get("description")  # type: Optional[str]
+        self.name: str = name
+        self.world: str = world
+        self.logo_url: str = kwargs.get("logo_url")
+        self.description: Optional[str] = kwargs.get("description")
         self.founded = try_date(kwargs.get("founded"))
-        self.active = kwargs.get("active", False)  # type: bool
-        self.guildhall = kwargs.get("guildhall")  # type: Optional[GuildHouse]
-        self.open_applications = kwargs.get("open_applications", False)  # type: bool
-        self.active_war = kwargs.get("active_war", False)  # type: bool
-        self.disband_condition = kwargs.get("disband_condition")  # type: Optional[str]
+        self.active: bool = kwargs.get("active", False)
+        self.guildhall: Optional[GuildHouse] = kwargs.get("guildhall")
+        self.open_applications: bool = kwargs.get("open_applications", False)
+        self.active_war: bool = kwargs.get("active_war", False)
+        self.disband_condition: Optional[str] = kwargs.get("disband_condition")
         self.disband_date = try_datetime(kwargs.get("disband_date"))
-        self.homepage = kwargs.get("homepage")  # type: Optional[str]
-        self.members = kwargs.get("members", [])  # type: List[GuildMember]
-        self.invites = kwargs.get("invites", [])  # type: List[GuildInvite]
+        self.homepage: Optional[str] = kwargs.get("homepage")
+        self.members: List[GuildMember] = kwargs.get("members", [])
+        self.invites: List[GuildInvite] = kwargs.get("invites", [])
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} world={0.world!r}>".format(self)
@@ -394,7 +400,7 @@ class Guild(abc.BaseGuild):
     # endregion
 
 
-class GuildMember(abc.BaseCharacter):
+class GuildMember(abc.BaseCharacter, abc.Serializable):
     """
     Represents a guild member.
 
@@ -418,16 +424,16 @@ class GuildMember(abc.BaseCharacter):
     __slots__ = ("name", "rank", "title", "level", "vocation", "joined", "online")
 
     def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, **kwargs):
-        self.name = name  # type: str
-        self.rank = rank  # type: str
-        self.title = title  # type: Optional[str]
+        self.name: str = name
+        self.rank: str = rank
+        self.title: Optional[str] = title
         self.vocation = try_enum(Vocation, vocation)
         self.level = int(level)
-        self.online = kwargs.get("online", False)  # type: bool
+        self.online: bool = kwargs.get("online", False)
         self.joined = try_date(kwargs.get("joined"))
 
 
-class GuildInvite(abc.BaseCharacter):
+class GuildInvite(abc.BaseCharacter, abc.Serializable):
     """Represents an invited character
 
     Attributes
@@ -438,15 +444,17 @@ class GuildInvite(abc.BaseCharacter):
     date: :class:`datetime.date`
         The day when the character was invited.
     """
-    __slots__ = ("date", )
+    __slots__ = (
+        "name",
+        "date",
+    )
 
     def __init__(self, name=None, date=None):
-        self.name = name  # type: str
+        self.name: str = name
         self.date = try_date(date)
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} " \
-               "date={0.date!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} date={self.date!r}>"
 
 
 class GuildWars(abc.Serializable):
@@ -468,12 +476,12 @@ class GuildWars(abc.Serializable):
     )
 
     def __init__(self, name, current=None, history=None):
-        self.name = name   # type: str
-        self.current = current  # type: Optional[GuildWarEntry]
-        self.history = history or []   # type: List[GuildWarEntry]
+        self.name: str = name
+        self.current: Optional[GuildWarEntry] = current
+        self.history: List[GuildWarEntry] = history or []
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r}>"
 
     @property
     def url(self):
@@ -723,7 +731,7 @@ class GuildWarEntry(abc.Serializable):
         return Guild.get_url(self.opponent_name) if self.opponent_name else None
 
 
-class ListedGuild(abc.BaseGuild):
+class ListedGuild(abc.BaseGuild, abc.Serializable):
     """
     Represents a Tibia guild in the guild list of a world.
 
@@ -740,14 +748,20 @@ class ListedGuild(abc.BaseGuild):
     active: :class:`bool`
         Whether the guild is active or still in formation.
     """
-    __slots__ = ("logo_url", "description", "world", "active")
+    __slots__ = (
+        "name",
+        "logo_url",
+        "description",
+        "world",
+        "active",
+    )
 
     def __init__(self, name, world, logo_url=None, description=None, active=False):
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.logo_url = logo_url  # type: str
-        self.description = description  # type: Optional[str]
-        self.active = active  # type: bool
+        self.name: str = name
+        self.world: str = world
+        self.logo_url: str = logo_url
+        self.description: Optional[str] = description
+        self.active: bool = active
 
     # region Public methods
     @classmethod

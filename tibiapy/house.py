@@ -2,12 +2,11 @@ import datetime
 import re
 from typing import Optional
 
-import tibiapy.character
 from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_json, parse_number_words, parse_tibia_datetime, parse_tibiacom_content, try_date, \
-    try_datetime, try_enum, parse_tibia_money
+from tibiapy.utils import parse_json, parse_number_words, parse_tibia_datetime, parse_tibia_money, \
+    parse_tibiacom_content, try_date, try_datetime, try_enum
 
 __all__ = (
     "House",
@@ -35,7 +34,7 @@ list_header_regex = re.compile(r'Available (?P<type>[\w\s]+) in (?P<town>[\w\s\'
 list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<time_unit>day|hour)s? left\)')
 
 
-class House(abc.BaseHouseWithId):
+class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     """Represents a house in a specific world.
 
     Attributes
@@ -80,6 +79,11 @@ class House(abc.BaseHouseWithId):
         The date when the auction will end.
     """
     __slots__ = (
+        "id",
+        "name",
+        "world",
+        "status",
+        "type",
         "image_url",
         "beds",
         "type",
@@ -98,41 +102,41 @@ class House(abc.BaseHouseWithId):
     )
 
     def __init__(self, name, world=None, **kwargs):
-        self.id = kwargs.get("id", 0)  # type: int
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.image_url = kwargs.get("image_url")  # type: str
-        self.beds = kwargs.get("beds", 0)  # type: int
+        self.id: int = kwargs.get("id", 0)
+        self.name: str = name
+        self.world: str = world
+        self.image_url: str = kwargs.get("image_url")
+        self.beds: int = kwargs.get("beds", 0)
         self.type = try_enum(HouseType, kwargs.get("type"), HouseType.HOUSE)
-        self.size = kwargs.get("size", 0)  # type: int
-        self.rent = kwargs.get("rent", 0)  # type: int
+        self.size: int = kwargs.get("size", 0)
+        self.rent: int = kwargs.get("rent", 0)
         self.status = try_enum(HouseStatus, kwargs.get("status"), None)
-        self.owner = kwargs.get("owner")  # type: Optional[str]
+        self.owner: Optional[str] = kwargs.get("owner")
         self.owner_sex = try_enum(Sex, kwargs.get("owner_sex"))
         self.paid_until = try_datetime(kwargs.get("paid_until"))
         self.transfer_date = try_datetime(kwargs.get("transfer_date"))
-        self.transferee = kwargs.get("transferee")  # type: Optional[str]
-        self.transfer_price = kwargs.get("transfer_price", 0)  # type: int
-        self.transfer_accepted = kwargs.get("transfer_accepted", False)  # type: bool
-        self.highest_bid = kwargs.get("highest_bid", 0)  # type: int
-        self.highest_bidder = kwargs.get("highest_bidder")  # type: Optional[str]
+        self.transferee: Optional[str] = kwargs.get("transferee")
+        self.transfer_price: int = kwargs.get("transfer_price", 0)
+        self.transfer_accepted: bool = kwargs.get("transfer_accepted", False)
+        self.highest_bid: int = kwargs.get("highest_bid", 0)
+        self.highest_bidder: Optional[str] = kwargs.get("highest_bidder")
         self.auction_end = try_datetime(kwargs.get("auction_end"))
 
     # region Properties
     @property
     def owner_url(self):
         """:class:`str`: The URL to the Tibia.com page of the house's owner, if applicable."""
-        return tibiapy.Character.get_url(self.owner) if self.owner is not None else None
+        return abc.BaseCharacter.get_url(self.owner) if self.owner is not None else None
 
     @property
     def transferee_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
-        return tibiapy.Character.get_url(self.transferee) if self.transferee is not None else None
+        return abc.BaseCharacter.get_url(self.transferee) if self.transferee is not None else None
 
     @property
     def highest_bidder_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character with the highest bid, if applicable."""
-        return tibiapy.Character.get_url(self.highest_bidder) if self.highest_bidder is not None else None
+        return abc.BaseCharacter.get_url(self.highest_bidder) if self.highest_bidder is not None else None
     # endregion
 
     # region Public methods
@@ -267,7 +271,7 @@ class House(abc.BaseHouseWithId):
             self.highest_bidder = m.group("bidder")
 
 
-class CharacterHouse(abc.BaseHouseWithId):
+class CharacterHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     """Represents a House owned by a character.
 
     Attributes
@@ -290,6 +294,11 @@ class CharacterHouse(abc.BaseHouseWithId):
         The date the last paid rent is due.
     """
     __slots__ = (
+        "id",
+        "name",
+        "world",
+        "status",
+        "type",
         "town",
         "owner",
         "paid_until_date",
@@ -297,16 +306,16 @@ class CharacterHouse(abc.BaseHouseWithId):
 
     def __init__(self, _id, name, world=None, town=None, owner=None, paid_until_date=None):
         self.id = int(_id)
-        self.name = name  # type: str
-        self.town = town  # type: str
-        self.world = world  # type: str
-        self.owner = owner  # type: str
+        self.name: str = name
+        self.town: str = town
+        self.world: str = world
+        self.owner: str = owner
         self.paid_until_date = try_date(paid_until_date)
         self.status = HouseStatus.RENTED
         self.type = HouseType.HOUSE
 
 
-class GuildHouse(abc.BaseHouse):
+class GuildHouse(abc.BaseHouse, abc.Serializable):
     """Represents a House owned by a guild.
 
     Attributes
@@ -325,14 +334,17 @@ class GuildHouse(abc.BaseHouse):
         The date the last paid rent is due."""
 
     __slots__ = (
+        "name",
+        "world",
+        "status",
         "owner",
         "paid_until_date",
     )
 
     def __init__(self, name, world=None, owner=None, paid_until_date=None):
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.owner = owner  # type: str
+        self.name: str = name
+        self.world: str = world
+        self.owner: str = owner
         self.paid_until_date = try_date(paid_until_date)
         self.status = HouseStatus.RENTED
         self.type = HouseType.GUILDHALL
@@ -341,7 +353,7 @@ class GuildHouse(abc.BaseHouse):
         return "<%s name=%r>" % (self.__class__.__name__, self.name)
 
 
-class ListedHouse(abc.BaseHouseWithId):
+class ListedHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     """Represents a house from the house list in Tibia.com.
 
     Attributes
@@ -369,6 +381,11 @@ class ListedHouse(abc.BaseHouseWithId):
         The highest bid so far, if the auction has started.
     """
     __slots__ = (
+        "id",
+        "name",
+        "world",
+        "status",
+        "type",
         "town",
         "size",
         "rent",
@@ -377,16 +394,16 @@ class ListedHouse(abc.BaseHouseWithId):
     )
 
     def __init__(self, name, world, houseid, **kwargs):
-        self.name = name  # type: str
+        self.name: str = name
         self.id = int(houseid)
-        self.world = world  # type: str
+        self.world: str = world
         self.status = try_enum(HouseStatus, kwargs.get("status"))
         self.type = try_enum(HouseType, kwargs.get("type"))
-        self.town = kwargs.get("town")  # type: str
-        self.size = kwargs.get("size", 0)  # type int
-        self.rent = kwargs.get("rent", 0)  # type: int
-        self.time_left = kwargs.get("time_left")  # type: Optional[datetime.timedelta]
-        self.highest_bid = kwargs.get("highest_bid", 0)  # type: int
+        self.town: str = kwargs.get("town")
+        self.size: int = kwargs.get("size", 0)
+        self.rent: int = kwargs.get("rent", 0)
+        self.time_left: Optional[datetime.timedelta] = kwargs.get("time_left")
+        self.highest_bid: int = kwargs.get("highest_bid", 0)
 
     # region Public methods
     @classmethod

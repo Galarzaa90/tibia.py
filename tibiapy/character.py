@@ -12,7 +12,7 @@ from tibiapy.errors import InvalidContent
 from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
-    parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum, deprecated, split_list
+    parse_tibiadata_date, parse_tibiadata_datetime, split_list, try_datetime, try_enum
 
 # Extracts the scheduled deletion date of a character."""
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
@@ -66,9 +66,9 @@ class AccountBadge(abc.Serializable):
     )
 
     def __init__(self, name, icon_url, description):
-        self.name = name  # type: str
-        self.icon_url = icon_url  # type: str
-        self.description = description  # type: str
+        self.name: str = name
+        self.icon_url: str = icon_url
+        self.description: str = description
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} description={self.description!r}>"
@@ -96,8 +96,8 @@ class AccountInformation(abc.Serializable):
 
     def __init__(self, created, loyalty_title=None, position=None):
         self.created = try_datetime(created)
-        self.loyalty_title = loyalty_title  # type: Optional[str]
-        self.position = position  # type: Optional[str]
+        self.loyalty_title: Optional[str] = loyalty_title
+        self.position: Optional[str] = position
 
     def __repr__(self):
         return f"<{self.__class__.__name__} created={self.created!r} loyalty_title={self.loyalty_title!r}>"
@@ -122,7 +122,7 @@ class Achievement(abc.Serializable):
     )
 
     def __init__(self, name, grade, secret=False):
-        self.name = name   # type: str
+        self.name: str = name
         self.grade = int(grade)
         self.secret = secret
 
@@ -130,7 +130,7 @@ class Achievement(abc.Serializable):
         return f"<{self.__class__.__name__} name={self.name!r} grade={self.grade:d} secret={self.secret}>"
 
 
-class Character(abc.BaseCharacter):
+class Character(abc.BaseCharacter, abc.Serializable):
     """Represents a Tibia character.
 
     Attributes
@@ -191,6 +191,7 @@ class Character(abc.BaseCharacter):
         It will be empty if the character is hidden, otherwise, it will contain at least the character itself.
     """
     __slots__ = (
+        "name",
         "former_names",
         "sex",
         "title",
@@ -217,31 +218,36 @@ class Character(abc.BaseCharacter):
         "deletion_date",
     )
 
+    serializable_properties = (
+        "deleted",
+        "hidden",
+    )
+
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
-        self.name = name  # type: str
-        self.former_names = kwargs.get("former_names", [])  # type: List[str]
-        self.title = kwargs.get("title")  # type: Optional[str]
+        self.name: str = name
+        self.former_names: List[str] = kwargs.get("former_names", [])
+        self.title: Optional[str] = kwargs.get("title")
         self.unlocked_titles = int(kwargs.get("unlocked_titles", 0))
         self.sex = try_enum(Sex, sex)
         self.vocation = try_enum(Vocation, vocation)
         self.level = int(level)
         self.achievement_points = int(kwargs.get("achievement_points", 0))
-        self.world = world  # type: str
-        self.former_world = kwargs.get("former_world")  # type: Optional[str]
-        self.residence = kwargs.get("residence")  # type: str
-        self.married_to = kwargs.get("married_to")  # type: Optional[str]
-        self.houses = kwargs.get("houses", [])  # type: List[CharacterHouse]
-        self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
+        self.world: str = world
+        self.former_world: Optional[str] = kwargs.get("former_world")
+        self.residence: str = kwargs.get("residence")
+        self.married_to: Optional[str] = kwargs.get("married_to")
+        self.houses: List[CharacterHouse] = kwargs.get("houses", [])
+        self.guild_membership: Optional[GuildMembership] = kwargs.get("guild_membership")
         self.last_login = try_datetime(kwargs.get("last_login"))
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
-        self.position = kwargs.get("position")  # type: Optional[str]
-        self.comment = kwargs.get("comment")  # type: Optional[str]
-        self.account_badges = kwargs.get("account_badges", [])  # type: List[AccountBadge]
-        self.achievements = kwargs.get("achievements", [])  # type: List[Achievement]
-        self.deaths = kwargs.get("deaths", [])  # type: List[Death]
-        self.deaths_truncated = kwargs.get("deaths", False)  # type: bool
-        self.account_information = kwargs.get("account_information")  # type: Optional[AccountInformation]
-        self.other_characters = kwargs.get("other_characters", [])  # type: List[OtherCharacter]
+        self.position: Optional[str] = kwargs.get("position")
+        self.comment: Optional[str] = kwargs.get("comment")
+        self.account_badges: List[AccountBadge] = kwargs.get("account_badges", [])
+        self.achievements: List[Achievement] = kwargs.get("achievements", [])
+        self.deaths: List[Death] = kwargs.get("deaths", [])
+        self.deaths_truncated: bool = kwargs.get("deaths", False)
+        self.account_information: Optional[AccountInformation] = kwargs.get("account_information")
+        self.other_characters: List[OtherCharacter] = kwargs.get("other_characters", [])
         self.deletion_date = try_datetime(kwargs.get("deletion_date"))
 
     def __repr__(self):
@@ -705,13 +711,18 @@ class Death(abc.Serializable):
         "killers",
         "time",
         "assists",
-        "name")
+        "name",
+    )
+
+    serializable_properties = (
+        "by_player"
+    )
 
     def __init__(self, name=None, level=0, **kwargs):
         self.name = name
         self.level = level
-        self.killers = kwargs.get("killers", [])  # type: List[Killer]
-        self.assists = kwargs.get("assists", [])  # type: List[Killer]
+        self.killers: List[Killer] = kwargs.get("killers", [])
+        self.assists: List[Killer] = kwargs.get("assists", [])
         self.time = try_datetime(kwargs.get("time"))
 
     def __repr__(self):
@@ -726,8 +737,8 @@ class Death(abc.Serializable):
                 continue
             if v is None:
                 continue
-            attributes += ",%s=%r" % (attr, v)
-        return "{0.__class__.__name__}({0.name!r},{0.level!r}{1})".format(self, attributes)
+            attributes += f",{attr}={v!r}"
+        return f"{self.__class__.__name__}({self.name!r},{self.level!r}{attributes})"
 
     @property
     def by_player(self):
@@ -742,7 +753,7 @@ class Death(abc.Serializable):
         return self.killers[0] if self.killers else None
 
 
-class GuildMembership(abc.BaseGuild):
+class GuildMembership(abc.BaseGuild, abc.Serializable):
     """
     Represents the guild information of a character.
 
@@ -761,12 +772,12 @@ class GuildMembership(abc.BaseGuild):
     )
 
     def __init__(self, name, rank, title=None):
-        self.name = name  # type: str
-        self.rank = rank  # type: str
-        self.title = title  # type: Optional[str]
+        self.name: str = name
+        self.rank: str = rank
+        self.title: Optional[str] = title
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} rank={0.rank!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} rank={self.rank!r}>"
 
 
 class Killer(abc.Serializable):
@@ -795,9 +806,9 @@ class Killer(abc.Serializable):
     )
 
     def __init__(self, name, player=False, summon=None):
-        self.name = name  # type: str
-        self.player = player  # type: bool
-        self.summon = summon  # type: Optional[str]
+        self.name: str = name
+        self.player: bool = player
+        self.summon: Optional[str] = summon
 
     def __repr__(self):
         attributes = ""
@@ -822,7 +833,7 @@ class Killer(abc.Serializable):
         return Character.get_url(self.name) if self.player else None
 
 
-class OnlineCharacter(abc.BaseCharacter):
+class OnlineCharacter(abc.BaseCharacter, abc.Serializable):
     """
     Represents an online character.
 
@@ -838,19 +849,20 @@ class OnlineCharacter(abc.BaseCharacter):
         The level of the character.
     """
     __slots__ = (
+        "name",
         "world",
         "vocation",
         "level",
     )
 
     def __init__(self, name, world, level, vocation):
-        self.name = name  # type: str
-        self.world = world  # type: str
+        self.name: str = name
+        self.world: str = world
         self.level = int(level)
         self.vocation = try_enum(Vocation, vocation)
 
 
-class OtherCharacter(abc.BaseCharacter):
+class OtherCharacter(abc.BaseCharacter, abc.Serializable):
     """
     Represents other characters displayed in the Character's information page.
 
@@ -870,6 +882,7 @@ class OtherCharacter(abc.BaseCharacter):
         The character's official position, if any.
     """
     __slots__ = (
+        "name",
         "world",
         "online",
         "deleted",
@@ -878,12 +891,12 @@ class OtherCharacter(abc.BaseCharacter):
     )
 
     def __init__(self, name, world, online=False, deleted=False, main=False, position=None):
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.online = online  # type: bool
-        self.deleted = deleted  # type: bool
-        self.main = main  # type: bool
-        self.position = position  # type: Optional[str]
+        self.name: str = name
+        self.world: str = world
+        self.online: bool = online
+        self.deleted: bool = deleted
+        self.main: bool = main
+        self.position: Optional[str] = position
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} world={self.world!r} online={self.online!r} " \

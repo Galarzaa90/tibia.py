@@ -23,6 +23,9 @@ class Serializable:
         | There's no way to convert JSON strings back to their original object.
         | Attempting to do so may result in data loss.
     """
+
+    serializable_properties = ()
+
     @classmethod
     def __slots_inherited__(cls):
         slots = []
@@ -33,6 +36,7 @@ class Serializable:
             except AttributeError:
                 continue
         slots.extend(getattr(cls, "__slots__", []))
+        slots.extend(getattr(cls, "serializable_properties", []))
         return tuple(OrderedDict.fromkeys(slots))
 
     def keys(self):
@@ -87,7 +91,7 @@ class Serializable:
                           default=self._try_dict)
 
 
-class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
+class BaseCharacter(metaclass=abc.ABCMeta):
     """Base class for all character classes.
 
     Implements common properties methods for characters.
@@ -97,6 +101,8 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
     - :class:`.Character`
     - :class:`.GuildInvite`
     - :class:`.GuildMember`
+    - :class:`.HighscoresEntry`
+    - :class:`.LeaderboardEntry`
     - :class:`.OnlineCharacter`
     - :class:`.OtherCharacter`
 
@@ -161,13 +167,14 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
         return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name)
 
 
-class BaseGuild(Serializable, metaclass=abc.ABCMeta):
+class BaseGuild(metaclass=abc.ABCMeta):
     """Base class for Guild classes.
 
     The following implement this class:
 
     - :class:`.Guild`
     - :class:`.GuildMembership`
+    - :class:'.ListedGuild'
 
     Attributes
     ----------
@@ -177,7 +184,12 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
     __slots__ = ("name",)
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r}>"
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.name == other.name
+        return False
 
     @property
     def url(self):
@@ -272,30 +284,27 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
 
 
-class BaseHouse(Serializable, metaclass=abc.ABCMeta):
+class BaseHouse(metaclass=abc.ABCMeta):
     """Base class for all house classes
 
     The following implement this class:
 
-    - :class:`.abc.BaseHouseWithId`
+    - :class:`.House`
     - :class:`.GuildHouse`
+    - :class:`.CharacterHouse`
+    - :class:`.ListedHouse`
 
     Attributes
     ----------
     name: :class:`str`
         The name of the house.
-    world: :class:`str`
-        The name of the world the house belongs to.
-    status: :class:`HouseStatus`
-        The current status of the house.
-    type: :class:`HouseType`
-        The type of the house.
     """
-    __slots__ = ("name", "world", "status", "type")
+    __slots__ = (
+        "name",
+    )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r} status={0.status!r} type={0.type!r}>"\
-            .format(self,)
+        return f"<{self.__class__.__name__} name={self.name!r}>"
 
     def __eq__(self, o: object) -> bool:
         """Two houses are considered equal if their names are equal."""
@@ -389,30 +398,10 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
 
 
-class BaseHouseWithId(BaseHouse):
-    """A derivative of :class:`BaseHouse`
+class HouseWithId():
+    """Implements the :py:attr:`id` attribute and dependant functions and properties.
 
-    Implements the :py:attr:`id` attribute and dependant functions and properties.
-
-    The following implement this class:
-
-    - :class:`.House`
-    - :class:`.CharacterHouse`
-
-    Attributes
-    ----------
-    id: :class:`int`
-        The internal ID of the house. This is used on the website to identify houses.
-    name: :class:`str`
-        The name of the house.
-    world: :class:`str`
-        The name of the world the house belongs to.
-    status: :class:`HouseStatus`
-        The current status of the house.
-    type: :class:`HouseType`
-        The type of the house.
-    """
-    __slots__ = ("id",)
+    Subclasses mut also implement :class:`.BaseHouse`"""
 
     def __eq__(self, o: object) -> bool:
         """Two houses are considered equal if their names or ids are equal."""
@@ -431,7 +420,7 @@ class BaseHouseWithId(BaseHouse):
         return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None
 
 
-class BaseNews(Serializable, metaclass=abc.ABCMeta):
+class BaseNews(metaclass=abc.ABCMeta):
     """Base class for all news classes
 
     Implements the :py:attr:`id` attribute and common properties.
@@ -445,21 +434,9 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
     ----------
     id: :class:`int`
         The internal ID of the news entry.
-    title: :class:`str`
-        The title of the news entry.
-    category: :class:`.NewsCategory`
-        The category this belongs to.
-    category_icon: :class:`str`
-        The URL of the icon corresponding to the category.
-    date: :class:`datetime.date`
-        The date when the news were published.
     """
     __slots__ = (
         "id",
-        "title",
-        "category",
-        "category_icon",
-        "date",
     )
 
     def __eq__(self, o: object) -> bool:
@@ -505,8 +482,58 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
         return get_tibia_url("news", "newsarchive")
 
 
-class BaseTournament(Serializable, metaclass=abc.ABCMeta):
+class BaseThread(metaclass=abc.ABCMeta):
+    """Base class for thread classes.
+
+    The following implement this class:
+
+    - :class:`.ListedThread`
+    - :class:`.ForumThread`
+
+    Attributes
+    ----------
+    thread_id: :class:`int`
+        The internal ID of the thread.
+    """
+
+    __slots__ = (
+        "thread_id",
+    )
+
+    @property
+    def url(self):
+        """:class:`str` The URL to the thread in Tibia.com."""
+        return self.get_url(self.thread_id)
+
+    @classmethod
+    def get_url(cls, thread_id):
+        """Gets the URL to a thread with a given id.
+
+        Parameters
+        ----------
+        thread_id: :class:`int`
+            The id of the desired thread.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the thread.
+        """
+        return get_tibia_url("forum", None, action="thread", threadid=thread_id)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.thread_id == other.thread_id
+        return False
+
+
+class BaseTournament(metaclass=abc.ABCMeta):
     """Base class for tournament classes.
+
+    The following implement this class:
+
+    - :class:`.ListedTournament`
+    - :class:`.Tournament`
 
     Attributes
     ----------
@@ -515,14 +542,16 @@ class BaseTournament(Serializable, metaclass=abc.ABCMeta):
     cycle: :class:`int`
         The tournament's cycle.
     """
+
     __slots__ = (
         "title",
         "cycle",
     )
 
     def __eq__(self, other):
+        """Two tournaments are considered the same when they have the same title or cycle."""
         if isinstance(other, self.__class__):
-            return self.title.lower() == other.title.lower()
+            return self.title.lower() == other.title.lower() or (self.cycle > 0 and self.cycle == other.cycle)
         return False
 
     @property
@@ -554,7 +583,7 @@ class BaseTournament(Serializable, metaclass=abc.ABCMeta):
         return get_tibia_url("community", "tournament", **params)
 
 
-class BaseWorld(Serializable, metaclass=abc.ABCMeta):
+class BaseWorld(metaclass=abc.ABCMeta):
     """Base class for all World classes.
 
     The following implement this class:
@@ -566,40 +595,9 @@ class BaseWorld(Serializable, metaclass=abc.ABCMeta):
     ----------
     name: :class:`str`
         The name of the world.
-    status: :class:`str`
-        The current status of the world.
-    online_count: :class:`int`
-        The number of currently online players in the world.
-    location: :class:`WorldLocation`
-        The physical location of the game servers.
-    pvp_type: :class:`PvpType`
-        The type of PvP in the world.
-    transfer_type: :class:`TransferType`
-        The type of transfer restrictions this world has.
-    battleye_protected: :class:`bool`
-        Whether the server is currently protected with BattlEye or not.
-    battleye_date: :class:`datetime.date`
-        The date when BattlEye was added to this world.
-        If this is ``None`` and the world is protected, it means the world was protected from the beginning.
-    experimental: :class:`bool`
-        Whether the world is experimental or not.
-    tournament_world_type: :class:`TournamentWorldType`
-        The type of tournament world. ``None`` if this is not a tournament world.
-    premium_only: :class:`bool`
-        Whether only premium account players are allowed to play in this server.
     """
     __slots__ = (
         "name",
-        "status",
-        "location",
-        "online_count",
-        "pvp_type",
-        "battleye_protected",
-        "battleye_date",
-        "experimental",
-        "premium_only",
-        "tournament_world_type",
-        "transfer_type"
     )
 
     def __repr__(self):

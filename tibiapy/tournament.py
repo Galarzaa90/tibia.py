@@ -31,7 +31,7 @@ CURRENT_TOURNAMENT_PATTERN = re.compile(r'(?:.*- (\w+))')
 TOURNAMENT_LEADERBOARDS_URL = "https://www.tibia.com/community/?subtopic=tournamentleaderboard"
 
 
-class LeaderboardEntry(abc.BaseCharacter):
+class LeaderboardEntry(abc.BaseCharacter, abc.Serializable):
     """Represents a single tournament leaderboard's entry.
 
     Attributes
@@ -68,7 +68,7 @@ class LeaderboardEntry(abc.BaseCharacter):
                "points={0.score}>".format(self)
 
 
-class ListedTournament(abc.BaseTournament):
+class ListedTournament(abc.BaseTournament, abc.Serializable):
     """Represents an tournament in the archived tournaments list.
 
     :py:attr:`start_date` and :py:attr:`end_date` might be ``None`` when a tournament that is currently running
@@ -87,9 +87,13 @@ class ListedTournament(abc.BaseTournament):
     """
 
     __slots__ = (
+        "title",
+        "cycle",
         "start_date",
         "end_date",
     )
+
+    serializable_properties = ("duration",)
 
     def __init__(self, title, start_date, end_date, **kwargs):
         self.title = title
@@ -269,7 +273,7 @@ class ScoreSet(abc.Serializable):
         return "<{0.__class__.__name__}{1}>".format(self, attributes)
 
 
-class Tournament(abc.BaseTournament):
+class Tournament(abc.BaseTournament, abc.Serializable):
     """Represents a tournament's information.
 
     Attributes
@@ -309,17 +313,23 @@ class Tournament(abc.BaseTournament):
         "archived_tournaments",
     )
 
+    serializable_properties = (
+        "duration",
+        "rewards_range",
+    )
+
+
     def __init__(self, **kwargs):
         self.title = kwargs.get("title")
         self.cycle = kwargs.get("cycle", 0)
         self.phase = try_enum(TournamentPhase, kwargs.get("phase"))
-        self.start_date = kwargs.get("start_date")  # type: datetime.datetime
-        self.end_date = kwargs.get("end_date")  # type: datetime.datetime
-        self.worlds = kwargs.get("worlds")  # type: List[str]
-        self.rule_set = kwargs.get("rule_set")  # type: RuleSet
-        self.score_set = kwargs.get("score_set")  # type: ScoreSet
-        self.reward_set = kwargs.get("reward_set", [])  # type: List[RewardEntry]
-        self.archived_tournaments = kwargs.get("archived_tournaments", [])  # type: List[ListedTournament]
+        self.start_date: datetime.datetime = kwargs.get("start_date")
+        self.end_date: datetime.datetime = kwargs.get("end_date")
+        self.worlds: List[str] = kwargs.get("worlds")
+        self.rule_set: RuleSet = kwargs.get("rule_set")
+        self.score_set: ScoreSet = kwargs.get("score_set")
+        self.reward_set: List[RewardEntry] = kwargs.get("reward_set", [])
+        self.archived_tournaments: List[ListedTournament] = kwargs.get("archived_tournaments", [])
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
@@ -630,15 +640,20 @@ class TournamentLeaderboard(abc.Serializable):
         "results_count",
     )
 
+    serializable_properties = (
+        "page",
+        "total_pages"
+    )
+
     def __init__(self, **kwargs):
-        self.world = kwargs.get("world")  # type: str
-        self.tournament = kwargs.get("tournament")  # type: ListedTournament
-        self.entries = kwargs.get("entries", [])  # type: List[LeaderboardEntry]
+        self.world: str = kwargs.get("world")
+        self.tournament: ListedTournament = kwargs.get("tournament")
+        self.entries: List[LeaderboardEntry] = kwargs.get("entries", [])
         self.results_count = kwargs.get("results_count", 0)
 
     def __repr__(self):
-        return "<{0.__class__.__name__} world={0.world!r} tournament={0.tournament} results_count={0.results_count}"\
-            .format(self)
+        return f"<{self.__class__.__name__} world={self.world!r} tournament={self.tournament} " \
+               f"results_count={self.results_count}>"
 
     @property
     def from_rank(self):

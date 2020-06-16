@@ -94,10 +94,10 @@ async def get_guild_wars(request):
 
 
 @routes.get('/worlds/{name}/guilds')
-async def get_guilds(request):
+async def get_world_guilds(request):
     name = request.match_info['name']
     guild_list = await app["tibiapy"].fetch_world_guilds(name)
-    return web.Response(text=json.dumps(guild_list, default=dict))
+    return web.Response(text=guild_list.to_json())
 
 
 @routes.get(r'/highscores/{world}/{category}/{vocations:\d+}/{page}')
@@ -168,7 +168,7 @@ async def get_news(request):
 async def get_news_html(request):
     news_id = request.match_info['news_id']
     news = await app["tibiapy"].fetch_news(int(news_id))
-    return web.Response(text=news.content, content_type='text/html')
+    return web.Response(text=news.data.content, content_type='text/html')
 
 
 @routes.get('/tournaments/{tournament_id}')

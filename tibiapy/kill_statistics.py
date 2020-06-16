@@ -24,12 +24,13 @@ class KillStatistics(abc.Serializable):
     __slots__ = (
         "world",
         "entries",
-        "total",)
+        "total",
+    )
 
     def __init__(self, world, entries=None, total=None):
-        self.world = world  # type: str
-        self.entries = entries or dict()  # type: Dict[str, RaceEntry]
-        self.total = total or RaceEntry()  # type: RaceEntry
+        self.world: str = world
+        self.entries: Dict[str, RaceEntry] = entries or dict()
+        self.total: RaceEntry = total or RaceEntry()
 
     @property
     def url(self):

@@ -48,12 +48,12 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
         The data contained in the response.
     """
     def __init__(self, raw_response, data: T, parsing_time=None):
-        self.timestamp = raw_response.timestamp  # type: datetime.datetime
-        self.cached = raw_response.cached  # type: bool
-        self.age = raw_response.age  # type: int
+        self.timestamp: datetime.datetime = raw_response.timestamp
+        self.cached: bool = raw_response.cached
+        self.age: int = raw_response.age
         self.fetching_time = raw_response.fetching_time
         self.parsing_time = parsing_time
-        self.data = data
+        self.data: T = data
 
     __slots__ = (
         'timestamp',
@@ -63,6 +63,8 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
         'parsing_time',
         'data',
     )
+
+    serializable_properties = ("time_left", )
 
     @property
     def time_left(self):
@@ -115,10 +117,10 @@ class Client:
     """
 
     def __init__(self, loop=None, session=None, *, proxy_url=None):
-        self.loop = asyncio.get_event_loop() if loop is None else loop  # type: asyncio.AbstractEventLoop
+        self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if loop is None else loop
         self._session_ready = asyncio.Event()
         if session is not None:
-            self.session = session  # type: aiohttp.ClientSession
+            self.session: aiohttp.ClientSession = session
             self._session_ready.set()
         else:
             self.loop.create_task(self._initialize_session(proxy_url))
@@ -126,11 +128,11 @@ class Client:
     async def _initialize_session(self, proxy_url=None):
         headers = {
             'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py)" % tibiapy.__version__,
-            # 'Accept-Encoding': "deflate, gzip"
+            'Accept-Encoding': "deflate, gzip"
         }
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
-        self.session = aiohttp.ClientSession(loop=self.loop, headers=headers,
-                                             connector=connector)  # type: aiohttp.ClientSession
+        self.session: aiohttp.ClientSession = aiohttp.ClientSession(loop=self.loop, headers=headers,
+                                                                    connector=connector)
         self._session_ready.set()
 
     @classmethod
@@ -677,7 +679,7 @@ class Client:
         """
         response = await self._request("get", News.get_url(news_id))
         start_time = time.perf_counter()
-        news = News.from_content(response.content)
+        news = News.from_content(response.content, news_id)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, news, parsing_time)
 

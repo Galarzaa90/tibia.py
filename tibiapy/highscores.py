@@ -41,11 +41,11 @@ class Highscores(abc.Serializable):
         The total amount of highscores entries in this category. These may be shown in another page.
     """
     def __init__(self, world, category, **kwargs):
-        self.world = world  # type: str
+        self.world: str = world
         self.category = try_enum(Category, category, Category.EXPERIENCE)
         self.vocation = try_enum(VocationFilter, kwargs.get("vocation"), VocationFilter.ALL)
-        self.entries = kwargs.get("entries", [])  # type: List[HighscoresEntry]
-        self.results_count = kwargs.get("results_count")  # type: int
+        self.entries: List[HighscoresEntry] = kwargs.get("entries", [])
+        self.results_count: int = kwargs.get("results_count")
 
     __slots__ = (
         'world',
@@ -53,6 +53,11 @@ class Highscores(abc.Serializable):
         'vocation',
         'entries',
         'results_count',
+    )
+
+    serializable_properties = (
+        "page",
+        "total_pages",
     )
 
     def __repr__(self):
@@ -281,7 +286,7 @@ class Highscores(abc.Serializable):
         self.entries.append(entry)
 
 
-class HighscoresEntry(abc.BaseCharacter):
+class HighscoresEntry(abc.BaseCharacter, abc.Serializable):
     """Represents a entry for the highscores.
 
     Attributes
@@ -295,19 +300,20 @@ class HighscoresEntry(abc.BaseCharacter):
     value: :class:`int`
         The character's value for the highscores."""
     def __init__(self, name, rank, vocation, value):
-        self.name = name  # type: str
-        self.rank = rank  # type: int
+        self.name: str = name
+        self.rank: int = rank
         self.vocation = try_enum(Vocation, vocation)
-        self.value = value  # type: int
+        self.value: int = value
 
     __slots__ = (
+        'name',
         'rank',
         'vocation',
         'value',
     )
 
     def __repr__(self) -> str:
-        return "<{0.__class__.__name__} rank={0.rank} name={0.name!r} value={0.value}>".format(self)
+        return f"<{self.__class__.__name__} rank={self.rank} name={self.name!r} value={self.value}>"
 
 
 class ExpHighscoresEntry(HighscoresEntry):
@@ -329,7 +335,7 @@ class ExpHighscoresEntry(HighscoresEntry):
         The character's level."""
     def __init__(self, name, rank, vocation, value, level):
         super().__init__(name, rank, vocation, value)
-        self.level = level  # type: int
+        self.level: int = level
 
     __slots__ = (
         'level',
@@ -355,7 +361,7 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
         The character's loyalty title."""
     def __init__(self, name, rank, vocation, value, title):
         super().__init__(name, rank, vocation, value)
-        self.title = title  # type: str
+        self.title: str = title
 
     __slots__ = (
         'title',

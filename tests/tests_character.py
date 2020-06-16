@@ -48,7 +48,6 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual(character.guild_rank, character.guild_membership.rank)
         self.assertEqual(AccountStatus.FREE_ACCOUNT, character.account_status)
         self.assertEqual(182, character.achievement_points)
-        self.assertIsNone(character.house)
         self.assertIsNone(character.deletion_date)
         self.assertIsNotNone(character.deaths)
         self.assertEqual(0, character.deaths.__len__())
@@ -71,11 +70,11 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertTrue(char.former_names)
         self.assertEqual(len(char.former_names), 2)
 
-        self.assertIsInstance(char.house, CharacterHouse)
-        self.assertEqual(char.house.owner, char.name)
-        self.assertEqual(char.house.town, "Darashia")
-        self.assertEqual(char.house.world, char.world)
-        self.assertIsInstance(char.house.paid_until_date, datetime.date)
+        self.assertIsInstance(char.houses[0], CharacterHouse)
+        self.assertEqual(char.houses[0].owner, char.name)
+        self.assertEqual(char.houses[0].town, "Darashia")
+        self.assertEqual(char.houses[0].world, char.world)
+        self.assertIsInstance(char.houses[0].paid_until_date, datetime.date)
 
     def test_character_from_content_with_position(self):
         """Testing parsing a character with a position"""
@@ -142,7 +141,6 @@ class TestCharacter(TestCommons, unittest.TestCase):
         char = Character.from_content(content)
         self.assertEqual("Sayuri Nowan", char.name)
         self.assertEqual(2, len(char.houses))
-        self.assertEqual(char.house.name, char.houses[0].name)
         first_house = char.houses[0]
         second_house = char.houses[1]
         self.assertEqual("Cormaya 10", first_house.name)
@@ -190,11 +188,11 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertIsNotNone(char.guild_name)
         self.assertIsInstance(char.last_login, datetime.datetime)
 
-        self.assertIsInstance(char.house, CharacterHouse)
-        self.assertEqual(char.house.owner, char.name)
-        self.assertEqual(char.house.town, "Ankrahmun")
-        self.assertEqual(char.house.world, char.world)
-        self.assertIsInstance(char.house.paid_until_date, datetime.date)
+        self.assertIsInstance(char.houses[0], CharacterHouse)
+        self.assertEqual(char.houses[0].owner, char.name)
+        self.assertEqual(char.houses[0].town, "Ankrahmun")
+        self.assertEqual(char.houses[0].world, char.world)
+        self.assertIsInstance(char.houses[0].paid_until_date, datetime.date)
 
         self.assertTrue(char.deaths[3].by_player)
 
@@ -207,11 +205,11 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertTrue(char.other_characters)
         self.assertFalse(char.hidden)
 
-        self.assertIsInstance(char.house, CharacterHouse)
-        self.assertEqual(char.house.owner, char.name)
-        self.assertEqual(char.house.town, "Kazordoon")
-        self.assertEqual(char.house.world, char.world)
-        self.assertIsInstance(char.house.paid_until_date, datetime.date)
+        self.assertIsInstance(char.houses[0], CharacterHouse)
+        self.assertEqual(char.houses[0].owner, char.name)
+        self.assertEqual(char.houses[0].town, "Kazordoon")
+        self.assertEqual(char.houses[0].world, char.world)
+        self.assertIsInstance(char.houses[0].paid_until_date, datetime.date)
 
     def test_character_from_tibiadata_deleted(self):
         """Testing parsing a deleted character"""

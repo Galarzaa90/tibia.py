@@ -16,7 +16,7 @@ __all__ = (
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 
 
-class News(abc.BaseNews):
+class News(abc.BaseNews, abc.Serializable):
     """Represents a news entry.
 
     Attributes
@@ -37,19 +37,29 @@ class News(abc.BaseNews):
         The thread id of the designated discussion thread for this entry.
     """
     def __init__(self, news_id, title, content, date, category, **kwargs):
-        self.id = news_id  # type: int
-        self.title = title  # type: str
-        self.content = content  # type: content
-        self.date = date  # type: datetime.date
-        self.category = category  # type: NewsCategory
-        self.thread_id = kwargs.get("thread_id", None)  # type: Optional[int]
-        self.category_icon = kwargs.get("category_icon")  # type: Optional[str]
+        self.id: int = news_id
+        self.title: str = title
+        self.content: str = content
+        self.date: datetime.date = date
+        self.category: NewsCategory = category
+        self.thread_id: Optional[int] = kwargs.get("thread_id", None)
+        self.category_icon: Optional[str] = kwargs.get("category_icon")
 
     # id, title, category and date inherited from BaseNews.
     __slots__ = (
+        "id",
+        "title",
+        "category",
+        "category_icon",
+        "date",
         "content",
         "thread_id",
     )
+
+    @property
+    def thread_url(self):
+        """:class:`str`: The URL to the thread discussing this news entry, if any."""
+        return abc.BaseThread.get_url(self.thread_id) if self.thread_id else None
 
     @classmethod
     def from_content(cls, content, news_id=0):
@@ -111,7 +121,7 @@ class News(abc.BaseNews):
             raise InvalidContent("content is not from the news archive section in Tibia.com")
 
 
-class ListedNews(abc.BaseNews):
+class ListedNews(abc.BaseNews, abc.Serializable):
     """Represents a news entry.
 
     Attributes
@@ -130,22 +140,26 @@ class ListedNews(abc.BaseNews):
     type: :class:`NewsType`
         The type of news of this list entry.
     """
-
-    def __init__(self, news_id, title, news_type, category, date, **kwargs):
-        self.id = news_id  # type: int
-        self.title = title  # type: str
-        self.type = news_type  # type: NewsType
-        self.category = category  # type: NewsCategory
-        self.date = date  # type: datetime.datetime
-        self.category_icon = kwargs.get("category_icon", None)  # type: Optional[str]
-
     __slots__ = (
+        "id",
+        "title",
+        "category",
+        "category_icon",
+        "date",
         "type",
     )
 
+    def __init__(self, news_id, title, news_type, category, date, **kwargs):
+        self.id: int = news_id
+        self.title: str = title
+        self.type: NewsType = news_type
+        self.category: NewsCategory = category
+        self.date: datetime.datetime = date
+        self.category_icon: Optional[str] = kwargs.get("category_icon", None)
+
     def __repr__(self):
-        return "<{0.__class__.__name__} id={0.id} title={0.title!r} type={0.type!r} category={0.category!r}" \
-               " date={0.date!r}>".format(self)
+        return f"<{self.__class__.__name__} id={self.id} title={self.title!r} type={self.type!r} " \
+               f"category={self.category!r} date={self.date!r}>"
 
     @classmethod
     def list_from_content(cls, content):

@@ -314,43 +314,99 @@ class ForumBoard(abc.Serializable):
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} section={0.section!r}>".format(self)
 
+    @property
+    def url(self):
+        """:class:`str`: The URL of this board."""
+        return self.get_url(self.board_id, self.current_page, self.age)
+
+    @property
+    def previous_page_url(self):
+        """:class:`str`: The URL to the previous page of the board, if there's any."""
+        return self.get_page_url(self.current_page - 1) if self.current_page > 1 else None
+
+    @property
+    def next_page_url(self):
+        """:class:`str`: The URL to the next page of the board, if there's any."""
+        return self.get_page_url(self.current_page + 1) if self.current_page < self.pages else None
+
+    def get_page_url(self, page):
+        """Gets the URL to a given page of the board.
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The desired page.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the desired page.
+        """
+        if page <= 0:
+            raise ValueError("page must be 1 or greater")
+        return self.get_url(self.board_id, page, self.age)
+
     @classmethod
     def get_url(cls, board_id, page=1, age=30):
+        """Gets the URL to a board with a given id.
+
+        Parameters
+        ----------
+        board_id: :class:`int`
+            The ID of the board.
+        page: :class:`int`
+            The page to go to.
+        age: :class:`int`
+            The age in days of the threads to display.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the board.
+        """
         return get_tibia_url("forum", None, action="board", boardid=board_id, pagenumber=page, threadage=age)
 
     @classmethod
     def from_content(cls, content):
+        """Parses the board's HTML content from Tibia.com.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the board.
+
+        Returns
+        -------
+        :class:`ForumBoard`
+            The forum board contained.
+        """
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all("table")
         header_table, time_selector_table, threads_table, timezone_table, boardjump_table, *_ = tables
         header_text = header_table.text.strip()
         section, name = split_list(header_text, "|", "|")
+
+        board = cls(name=name, section=section)
         thread_rows = threads_table.find_all("tr")
-        entries = []
-        announcements = []
 
         board_selector = boardjump_table.find("select")
         selected_board = board_selector.find("option", {"selected": True})
-        board_id = int(selected_board["value"])
+        board.board_id = int(selected_board["value"])
 
         age_selector = time_selector_table.find("select")
         if not age_selector:
             return cls(section=section, name=name)
         selected_age = age_selector.find("option", {"selected": True})
         if selected_age:
-            age = int(selected_age["value"])
-        else:
-            age = 1
+            board.age = int(selected_age["value"])
 
-        current_page = 1
-        pages = 1
         page_info = threads_table.find("td", attrs={"class": "ff_info"})
         if page_info:
             current_page_text = page_info.find("span")
             page_links = page_info.find_all("a")
             if current_page_text:
-                current_page = int(current_page_text.text)
-                pages = int(page_number_regex.search(page_links[-1]["href"]).group(1))
+                board.current_page = int(current_page_text.text)
+                board.pages = int(page_number_regex.search(page_links[-1]["href"]).group(1))
 
         for thread_row in thread_rows[1:]:
             columns = thread_row.find_all("td")
@@ -359,19 +415,28 @@ class ForumBoard(abc.Serializable):
 
             entry = cls._parse_thread_row(columns)
             if isinstance(entry, ListedThread):
-                entries.append(entry)
+                board.threads.append(entry)
                 cip_border = thread_row.find("div", attrs={"class": "CipBorder"})
                 if cip_border:
                     entry.framed = True
             elif isinstance(entry, ListedAnnouncement):
-                announcements.append(entry)
+                board.announcements.append(entry)
 
-        board = cls(name=name, section=section, threads=entries, announcements=announcements, age=age, pages=pages,
-                    current_page=current_page, board_id=board_id)
         return board
 
     @classmethod
     def _parse_thread_row(cls, columns):
+        """Parses the thread row, containing a single thread or announcement.
+
+        Parameters
+        ----------
+        columns: :class:`list` of :class:`bs4.Tag`
+            The list of columns the thread contains.
+
+        Returns
+        -------
+        :class:`ListedThread` or :class:`ListedAnnouncement`
+        """
         # First Column: Thread's status
         status = None
         status_column = columns[0]
@@ -439,14 +504,17 @@ class ForumEmoticon(abc.Serializable):
         The URL to the emoticon`s image.
     """
 
-    def __init__(self, name, url):
-        self.name = name
-        self.url = url
-
     __slots__ = (
         "name",
         "url",
     )
+
+    def __init__(self, name, url):
+        self.name = name
+        self.url = url
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} url={self.url!r}>"
 
 
 class ForumPost(abc.Serializable):
@@ -505,8 +573,32 @@ class ForumPost(abc.Serializable):
         self.edited_date = kwargs.get("edited_date")
         self.edited_by = kwargs.get("edited_by")
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} title={self.title!r} post_id={self.post_id}>"
 
-class ForumThread(abc.Serializable):
+    @property
+    def url(self):
+        """:class:`str`: Gets the URL to this specific post."""
+        return self.get_url(self.post_id)
+
+    @classmethod
+    def get_url(cls, post_id):
+        """Gets the URL to a specific post.
+
+        Parameters
+        ----------
+        post_id: :class:`int`
+            The ID of the desired post.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the post.
+        """
+        return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid={post_id})
+
+
+class ForumThread(abc.BaseThread, abc.Serializable):
     """Represents a forum thread.
 
     Attributes
@@ -562,9 +654,7 @@ class ForumThread(abc.Serializable):
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} board={0.board!r} section={0.section!r}>".format(self)
 
-    @classmethod
-    def get_url(cls, thread_id):
-        return get_tibia_url("forum", None, action="thread", threadid=thread_id)
+
 
     @classmethod
     def from_content(cls, content):
@@ -685,7 +775,7 @@ class LastPost(abc.Serializable):
     )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} author={0.author!r} post_id={0.post_id} date={0.date!r}>".format(self)
+        return f"<{self.__class__.__name__} author={self.author!r} post_id={self.post_id} date={self.date!r}>"
 
     @classmethod
     def _parse_column(cls, last_post_column, offset=1):
@@ -702,6 +792,7 @@ class LastPost(abc.Serializable):
         author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
 
         return cls(author, post_id, last_post_date)
+
 
 class ListedAnnouncement(abc.Serializable):
     """Represents an announcement in the forum boards.
@@ -734,6 +825,8 @@ class ListedAnnouncement(abc.Serializable):
 
 class ListedBoard(abc.Serializable):
     """Represents a board in the list of boards.
+
+    This is the board information available when viewing a section (e.g. World, Trade, Community)
 
     Attributes
     ----------
@@ -826,7 +919,7 @@ class ListedBoard(abc.Serializable):
                    last_post=last_post)
 
 
-class ListedThread(abc.Serializable):
+class ListedThread(abc.BaseThread, abc.Serializable):
     """Represents a thread in a forum board.
 
     Attributes
