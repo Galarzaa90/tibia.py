@@ -250,10 +250,8 @@ class Client:
         """
         response = await self._request("get", ForumAnnouncement.get_url(announcement_id))
         start_time = time.perf_counter()
-        announcement = ForumAnnouncement.from_content(response.content)
+        announcement = ForumAnnouncement.from_content(response.content, announcement_id)
         parsing_time = time.perf_counter() - start_time
-        # This cannot be obtained from the page's content, so must be assigned
-        announcement.announcement_id = announcement_id
         return TibiaResponse(response, announcement, parsing_time)
 
     async def fetch_boosted_creature(self):

@@ -63,6 +63,13 @@ async def get_forum_announcement(request):
     return web.Response(text=announcement.to_json())
 
 
+@routes.get('/forums/announcement/{announcement_id}/html')
+async def get_forum_announcement_html(request):
+    announcement_id = request.match_info['announcement_id']
+    announcement = await app["tibiapy"].fetch_forum_announcement(int(announcement_id))
+    return web.Response(text=announcement.data.content, content_type="text/html")
+
+
 @routes.get('/forums/board/{board_id}')
 async def get_board_threads(request):
     board_id = request.match_info['board_id']

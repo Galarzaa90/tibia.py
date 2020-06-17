@@ -57,7 +57,7 @@ def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
     url = "https://www.tibia.com/%s/?" % section
-    params = OrderedDict(subtopic=subtopic)
+    params = OrderedDict(subtopic=subtopic) if subtopic else OrderedDict()
     if kwargs:
         for key, value in kwargs.items():
             if isinstance(value, str):

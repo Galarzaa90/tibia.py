@@ -1,7 +1,8 @@
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import BoostedCreature, ForumAnnouncement, ForumBoard, InvalidContent, LastPost, ListedBoard, ListedThread, \
+from tibiapy import BoostedCreature, ForumAnnouncement, ForumBoard, ForumThread, InvalidContent, LastPost, ListedBoard, \
+    ListedThread, \
     ThreadStatus
 
 FILE_WORLD_BOARDS = "forums/tibiacom_section.txt"
@@ -12,6 +13,8 @@ FILE_BOARD_EMPTY_THREAD_LIST = "forums/tibiacom_board_empty.txt"
 FILE_BOARD_INVALID_PAGE = "forums/tibiacom_board_invalid_page.txt"
 FILE_BOARD_GOLDEN_FRAMES = "forums/tibiacom_board_golden_frame.txt"
 FILE_ANNOUNCEMENT = "forums/tibiacom_announcement.txt"
+FILE_ANNOUNCEMENT_NOT_FOUND = "forums/tibiacom_announcement_not_found.txt"
+FILE_THREAD = "forums/tibiacom_thread.txt"
 
 
 class TestForum(TestCommons, unittest.TestCase):
@@ -145,3 +148,41 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(159, announcement.author.posts)
         self.assertEqual("Vunira", announcement.author.world)
         self.assertEqual("Community Manager", announcement.author.position)
+
+    def test_forum_announcement_from_content_not_found(self):
+        content = self._load_resource(FILE_ANNOUNCEMENT_NOT_FOUND)
+
+        announcement = ForumAnnouncement.from_content(content, 34)
+
+        self.assertIsNone(announcement)
+
+    def test_forum_announcement_from_content_unrelated_section(self):
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+
+        with self.assertRaises(InvalidContent):
+            ForumAnnouncement.from_content(content, 34)
+
+    def test_forum_thread_from_content(self):
+        content = self._load_resource(FILE_THREAD)
+
+        thread = ForumThread.from_content(content)
+
+        self.assertEqual("News: Team Finder, Visualisation of Loot Lists", thread.title)
+        self.assertEqual(4797985,thread.thread_id)
+        self.assertEqual('Auditorium (English Only)',thread.board)
+        self.assertEqual('Community Boards', thread.section)
+        self.assertEqual(4796826, thread.previous_topic_number)
+        self.assertEqual(4797838, thread.next_topic_number)
+        self.assertEqual(1, thread.page)
+        self.assertEqual(9, thread.total_pages)
+        self.assertEqual(20, len(thread.posts))
+
+        post = thread.posts[0]
+        self.assertEqual("Skerio", post.author.name)
+        self.assertEqual("Relania", post.author.world)
+        self.assertEqual("Community Manager", post.author.position)
+        self.assertEqual(316, post.author.posts)
+        self.assertEqual("Mirade", post.edited_by)
+        self.assertTrue(post.golden_frame)
+        self.assertEqual(38969385, post.post_id)
+        self.assertIsNotNone(post.url)

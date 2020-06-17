@@ -147,6 +147,11 @@ class ForumAnnouncement(abc.Serializable):
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all("table", attrs={"width": "100%"})
         root_tables = [t for t in tables if "BoxContent" in t.parent.attrs.get("class", [])]
+        if not root_tables:
+            error_table = parsed_content.find("table", attrs={"class": "Table1"})
+            if error_table and "not be found" in error_table.text:
+                return None
+            raise errors.InvalidContent("content is not a Tibia.com forum announcement.")
         forum_info_table, posts_table, footer_table = root_tables
 
         section_link, board_link, *_ = forum_info_table.find_all("a")
@@ -179,7 +184,7 @@ class ForumAnnouncement(abc.Serializable):
         return announcement
 
 
-class ForumAuthor(abc.BaseCharacter):
+class ForumAuthor(abc.BaseCharacter, abc.Serializable):
     """Represents a post's author.
 
     Attributes
@@ -603,7 +608,7 @@ class ForumPost(abc.Serializable):
         :class:`str`
             The URL to the post.
         """
-        return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid={post_id})
+        return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid=post_id)
 
 
 class ForumThread(abc.BaseThread, abc.Serializable):
@@ -629,8 +634,8 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         The page being viewed.
     posts: list of :class:`ForumPost`
         The list of posts the thread has.
-    framed: :class:`bool`
-        Whether the thread has a golden golden_frame or not.
+    golden_frame: :class:`bool`
+        Whether the thread has a golden frame or not.
 
         In the Proposals board,a golden frame means the thread has a reply by a staff member.
     """
@@ -641,28 +646,73 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         "section",
         "previous_topic_number",
         "next_topic_number",
-        "pages",
-        "current_page",
+        "page",
+        "total_pages",
         "golden_frame",
         "posts",
     )
 
     def __init__(self, **kwargs):
-        self.title = kwargs.get("title")
-        self.thread_id = kwargs.get("thread_id")
-        self.board = kwargs.get("board")
-        self.section = kwargs.get("section")
-        self.previous_topic_number = kwargs.get("previous_topic_number")
-        self.next_topic_number = kwargs.get("next_topic_number")
-        self.pages = kwargs.get("total_pages")
-        self.current_page = kwargs.get("page")
-        self.posts = kwargs.get("posts")
-        self.golden_frame = kwargs.get("golden_frame")
+        self.title: str = kwargs.get("title")
+        self.thread_id: int = kwargs.get("thread_id")
+        self.board: str = kwargs.get("board")
+        self.section: str = kwargs.get("section")
+        self.previous_topic_number: int = kwargs.get("previous_topic_number", 0)
+        self.next_topic_number: int = kwargs.get("next_topic_number", 0)
+        self.page: int = kwargs.get("page", 1)
+        self.total_pages: int = kwargs.get("total_pages", 1)
+        self.posts: List[ForumPost] = kwargs.get("posts", [])
+        self.golden_frame: bool = kwargs.get("golden_frame", False)
 
     def __repr__(self):
-        return "<{0.__class__.__name__} title={0.title!r} board={0.board!r} section={0.section!r}>".format(self)
+        return f"<{self.__class__.__name__} title={self.title!r} board={self.board!r} section={self.section!r}>"
 
+    # region Properties
+    @property
+    def url(self):
+        """:class:`str`: The URL of this thread and current page."""
+        return self.get_url(self.thread_id, self.page)
 
+    @property
+    def previous_page_url(self):
+        """:class:`str`: The URL to the previous page of the thread, if there's any."""
+        return self.get_page_url(self.page - 1) if self.page > 1 else None
+
+    @property
+    def next_page_url(self):
+        """:class:`str`: The URL to the next page of the thread, if there's any."""
+        return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
+
+    @property
+    def previous_thread_url(self):
+        """:class:`str`: The URL to the previous topic of the board, if there's any."""
+        return self.get_url(self.previous_topic_number) if self.previous_topic_number else None
+
+    @property
+    def next_thread_url(self):
+        """:class:`str`: The URL to the next topic of the board, if there's any."""
+        return self.get_url(self.next_topic_number) if self.next_topic_number else None
+
+    # endregion
+
+    # region Public Methods
+
+    def get_page_url(self, page):
+        """Gets the URL to a given page of the board.
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The desired page.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the desired page.
+        """
+        if page <= 0:
+            raise ValueError("page must be 1 or greater")
+        return self.get_url(self.thread_id, page)
 
     @classmethod
     def from_content(cls, content):
@@ -713,9 +763,13 @@ class ForumThread(abc.BaseThread, abc.Serializable):
             entries.append(post)
 
         thread = cls(title=thread_title, section=section, board=board, posts=entries, thread_id=thread_number,
-                     current_page=current_page, pages=pages, previous_topic_number=previous_id,
-                     next_topic_number=next_id, framed=golden_frame is not None)
+                     page=current_page, total_pages=pages, previous_topic_number=previous_id,
+                     next_topic_number=next_id, golden_frame=golden_frame is not None)
         return thread
+
+    # endregion
+
+    # region Private Methods
 
     @classmethod
     def _parse_post_table(cls, post_table, offset=1):
@@ -754,8 +808,10 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         post_id = int(post_number)
         post = ForumPost(author=post_author, content=content, signature=signature, posted_date=posted_date,
                          edited_date=edited_date, edited_by=edited_by, post_id=post_id, title=title, emoticon=emoticon,
-                         framed=golden_frame is not None)
+                         golden_frame=golden_frame is not None)
         return post
+
+    # endregion
 
 
 class LastPost(abc.Serializable):
@@ -979,7 +1035,7 @@ class ListedThread(abc.BaseThread, abc.Serializable):
         The emoticon used for the thread.
     pages: :class:`int`
         The number of total_pages the thread has.
-    framed: :class:`bool`
+    golden_frame: :class:`bool`
         Whether the thread has a gold frame or not.
 
         In the Proposals board, the gold frame indicates that a staff member has replied in the thread.

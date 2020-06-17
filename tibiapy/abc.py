@@ -601,20 +601,22 @@ class BaseThread(metaclass=abc.ABCMeta):
         return self.get_url(self.thread_id)
 
     @classmethod
-    def get_url(cls, thread_id):
+    def get_url(cls, thread_id, page=1):
         """Gets the URL to a thread with a given id.
 
         Parameters
         ----------
         thread_id: :class:`int`
             The id of the desired thread.
+        page: :class:`int`
+            The desired page, by default 1.
 
         Returns
         -------
         :class:`str`
             The URL to the thread.
         """
-        return get_tibia_url("forum", None, action="thread", threadid=thread_id)
+        return get_tibia_url("forum", None, action="thread", threadid=thread_id, pagenumber=page)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
