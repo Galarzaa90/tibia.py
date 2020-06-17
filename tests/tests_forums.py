@@ -15,6 +15,8 @@ FILE_BOARD_GOLDEN_FRAMES = "forums/tibiacom_board_golden_frame.txt"
 FILE_ANNOUNCEMENT = "forums/tibiacom_announcement.txt"
 FILE_ANNOUNCEMENT_NOT_FOUND = "forums/tibiacom_announcement_not_found.txt"
 FILE_THREAD = "forums/tibiacom_thread.txt"
+FILE_THREAD_NOT_FOUND = "forums/tibiacom_thread_not_found.txt"
+FILE_THREAD_INVALID_PAGE = "forums/tibiacom_thread_invalid_page.txt"
 
 
 class TestForum(TestCommons, unittest.TestCase):
@@ -186,3 +188,32 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertTrue(post.golden_frame)
         self.assertEqual(38969385, post.post_id)
         self.assertIsNotNone(post.url)
+
+    def test_forum_thread_from_content_invalid_page(self):
+        content = self._load_resource(FILE_THREAD_INVALID_PAGE)
+
+        thread = ForumThread.from_content(content)
+
+        self.assertEqual("News: Team Finder, Visualisation of Loot Lists", thread.title)
+        self.assertEqual(0, thread.thread_id)
+        self.assertEqual('Auditorium (English Only)', thread.board)
+        self.assertEqual('Community Boards', thread.section)
+        self.assertEqual(4796826, thread.previous_topic_number)
+        self.assertEqual(4797838, thread.next_topic_number)
+        self.assertEqual(9, thread.page)
+        self.assertEqual(9, thread.total_pages)
+        self.assertEqual(0, len(thread.posts))
+
+    def test_forum_thread_from_content_not_found(self):
+        content = self._load_resource(FILE_THREAD_NOT_FOUND)
+
+        thread = ForumThread.from_content(content)
+
+        self.assertIsNone(thread)
+
+    def test_forum_thread_from_content_unrelated_section(self):
+        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+
+        with self.assertRaises(InvalidContent):
+            ForumThread.from_content(content)
+

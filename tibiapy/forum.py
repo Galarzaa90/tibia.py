@@ -654,7 +654,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
 
     def __init__(self, **kwargs):
         self.title: str = kwargs.get("title")
-        self.thread_id: int = kwargs.get("thread_id")
+        self.thread_id: int = kwargs.get("thread_id", 0)
         self.board: str = kwargs.get("board")
         self.section: str = kwargs.get("section")
         self.previous_topic_number: int = kwargs.get("previous_topic_number", 0)
@@ -716,55 +716,80 @@ class ForumThread(abc.BaseThread, abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
+        """Creates an instance of the class from the html content of the thread's page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`Thread`
+            The thread contained in the page, or None if the thread doesn't exist
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a thread's page.
+        """
         parsed_content = parse_tibiacom_content(content)
-        tables = parsed_content.find_all("table", attrs={"width": "100%"})
+        tables = parsed_content.find_all("table")
         root_tables = [t for t in tables if "BoxContent" in t.parent.attrs.get("class", [])]
-        forum_info_table, title_table, posts_table, footer_table = root_tables
+        if not root_tables:
+            error_table = parsed_content.find("table", attrs={"class": "Table1"})
+            if error_table and "not found" in error_table.text:
+                return None
+            raise errors.InvalidContent("content is not a Tibia.com forum thread.")
+        try:
+            if len(root_tables) == 4:
+                forum_info_table, title_table, posts_table, footer_table = root_tables
+            else:
+                forum_info_table, title_table, footer_table = root_tables
+                posts_table = None
+        except ValueError as e:
+            raise errors.InvalidContent("content is not a Tibia.com forum thread.", e)
 
         header_text = forum_info_table.text
         section, board, *_ = split_list(header_text, "|", "|")
 
-        thread_title = title_table.text.strip()
+        thread = cls(section=section, board=board)
+
+        thread.title = title_table.text.strip()
         golden_frame = title_table.find("div", attrs={"class": "CipPost"})
-        entries = []
-        thread_info_table, *post_tables = posts_table.find_all("div", attrs={"class": "ForumPost"})
-        inner_info_table = thread_info_table.find("table")
-        thread_num_col, thread_pages_col, thread_navigation_col = inner_info_table.find_all("td")
-        thread_number = int(thread_num_col.text.replace("Thread #", ""))
-
-        page_links = thread_pages_col.find_all("a")
-        current_page = pages = 1
-        if page_links:
-            last_link = page_links[-1]["href"]
-            pages = int(page_number_regex.search(last_link).group(1))
-            current_page = int(thread_pages_col.find("span").text)
-
-        navigation_links = thread_navigation_col.find_all("a")
-        previous_id = next_id = None
-        if navigation_links:
-            if len(navigation_links) == 2:
-                prev_link, next_link = navigation_links
-                prev_link_url = prev_link["href"]
-                previous_id = int(thread_id_regex.search(prev_link_url).group(1))
-                next_link_url = next_link["href"]
-                next_id = int(thread_id_regex.search(next_link_url).group(1))
-            elif "Previous" in navigation_links[0].text:
-                prev_link_url = navigation_links[0]["href"]
-                previous_id = int(thread_id_regex.search(prev_link_url).group(1))
-            else:
-                next_link_url = navigation_links[0]["href"]
-                next_id = int(thread_id_regex.search(next_link_url).group(1))
+        thread.golden_frame = golden_frame is not None
 
         timezone = timezone_regex.search(footer_table.text).group(1)
+        time_page_column, navigation_column = footer_table.find_all("td", attrs={"class", "ff_white"})
+        page_links = time_page_column.find_all("a")
+        if page_links:
+            last_link = page_links[-1]["href"]
+            thread.page = int(footer_table.find("span").text)
+            thread.total_pages = max(int(page_number_regex.search(last_link).group(1)), thread.page)
+
+        navigation_links = navigation_column.find_all("a")
+        if len(navigation_links) == 2:
+            prev_link, next_link = navigation_links
+            prev_link_url = prev_link["href"]
+            thread.previous_topic_number = int(thread_id_regex.search(prev_link_url).group(1))
+            next_link_url = next_link["href"]
+            thread.next_topic_number = int(thread_id_regex.search(next_link_url).group(1))
+        elif "Previous" in navigation_links[0].text:
+            prev_link_url = navigation_links[0]["href"]
+            thread.previous_topic_number = int(thread_id_regex.search(prev_link_url).group(1))
+        else:
+            next_link_url = navigation_links[0]["href"]
+            thread.next_topic_number = int(thread_id_regex.search(next_link_url).group(1))
         offset = 1 if timezone == "CES" else 2
 
-        for post_table in post_tables:
-            post = cls._parse_post_table(post_table, offset)
-            entries.append(post)
-
-        thread = cls(title=thread_title, section=section, board=board, posts=entries, thread_id=thread_number,
-                     page=current_page, total_pages=pages, previous_topic_number=previous_id,
-                     next_topic_number=next_id, golden_frame=golden_frame is not None)
+        if posts_table:
+            thread_info_table, *post_tables = posts_table.find_all("div", attrs={"class": "ForumPost"})
+            inner_info_table = thread_info_table.find("table")
+            thread_num_col, thread_pages_col, thread_navigation_col = inner_info_table.find_all("td")
+            thread.thread_id = int(thread_num_col.text.replace("Thread #", ""))
+            for post_table in post_tables:
+                post = cls._parse_post_table(post_table, offset)
+                thread.posts.append(post)
         return thread
 
     # endregion
@@ -773,6 +798,23 @@ class ForumThread(abc.BaseThread, abc.Serializable):
 
     @classmethod
     def _parse_post_table(cls, post_table, offset=1):
+        """Parses the table containing a single posts, extracting its information.
+
+        Parameters
+        ----------
+        post_table: :class:`bs4.Tag`
+            The parsed HTML content of the table.
+        offset: :class:`int`
+            The UTC offset used for the timestamps.
+
+            Since the timestamps found in the post contain no timezone information, the offset is extracted from
+            another section and passed here to adjust them accordingly.
+
+        Returns
+        -------
+        :class:`ForumPost`
+            The post contained in the table.
+        """
         golden_frame = post_table.find("div", attrs={"class": "CipBorderTop"})
         character_info_container = post_table.find("div", attrs={"class": "PostCharacterText"})
         post_author = ForumAuthor._parse_author_table(character_info_container)

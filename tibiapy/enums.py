@@ -102,7 +102,9 @@ class Sex(BaseEnum):
 
 
 class ThreadStatus(enum.Flag):
-    """The possible statuses a thread can have."""
+    """The possible status a thread can have.
+
+    Threads can have a combination of multiple status. The numeric values are arbitrary."""
     NONE = 0
     HOT = 1  #: Thread has more than 16 replies.
     NEW = 2  #: Thread has new posts since last visit.
@@ -118,6 +120,12 @@ class ThreadStatus(enum.Flag):
                 yield entry
 
     def get_icon_name(self):
+        """Generates an icon name, following the same ordering used in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The name of the icon used in Tibia.com"""
         if self.value == 0:
             return None
         joined_str = "".join(v.name.lower() for v in list(self))
@@ -125,11 +133,24 @@ class ThreadStatus(enum.Flag):
 
     @classmethod
     def from_icon(cls, icon):
+        """Gets the flag combination, based from the icon's name present in the thread status.
+
+        Parameters
+        ----------
+        icon: :class:`str`
+            The icon's filename.
+
+        Returns
+        -------
+        :class:`ThreadStatus`
+            The combination of thread status founds.
+        """
         flags = 0
         for entry in list(cls):
             if entry.name.lower() in icon:
                 flags += entry.value
         return cls(flags)
+
 
 class TournamentWorldType(BaseEnum):
     """The possible types of tournament worlds."""
@@ -165,7 +186,9 @@ class Vocation(BaseEnum):
 
 
 class VocationFilter(enum.Enum):
-    """The vocation filters available for Highscores."""
+    """The vocation filters available for Highscores.
+
+    The numeric values are what the highscores form accepts."""
     ALL = 0
     KNIGHTS = 1
     PALADINS = 2

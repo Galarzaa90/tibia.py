@@ -58,6 +58,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: ThreadStatus
+    :members:
+    :undoc-members:
+
 .. autoclass:: TournamentWorldType
     :members:
     :undoc-members:

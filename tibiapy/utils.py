@@ -19,7 +19,7 @@ def convert_line_breaks(element):
 
     Parameters
     ----------
-    element: :class:`bs4.BeautifulSoup`
+    element: :class:`bs4.Tag`
         A BeautifulSoup object.
     """
     for br in element.find_all("br"):
@@ -158,6 +158,28 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
 
 
 def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
+    """Parses a date in the format used in the Tibia.com forums.
+
+    Accepted format:
+
+    - ``DD.MM.YY HH:mm:ss``, e.g. ``23.07.2015 21:30:30``
+
+    Parameters
+    ----------
+    datetime_str: :class:`str`
+        The string containing the date and time.
+    utc_offset: :class:`str`
+        The UTC offset to apply to the parsed datetime.
+
+        Since the timestamps contain no timezone information, it can be passed as an additional parameter.
+
+        By default CET (+1) is considered.
+
+    Returns
+    -------
+    :class:`datetime`
+        The datetime represented by the text, in UTC.
+    """
     t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S")
     # Add/subtract hours to get the real time
     t = t - datetime.timedelta(hours=utc_offset)
@@ -179,7 +201,7 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
     Returns
     -----------
     :class:`datetime.date`, optional
-        The represended date.
+        The represented date.
     """
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y")
