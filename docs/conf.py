@@ -11,8 +11,8 @@ import sys
 
 
 def setup(app):
-    app.add_stylesheet('custom.css')
-    app.add_javascript('custom.js')
+    app.add_css_file('custom.css')
+    app.add_js_file('custom.js')
 
 # -- Path setup --------------------------------------------------------------
 
@@ -29,7 +29,7 @@ autodoc_member_order = 'bysource'
 # -- Project information -----------------------------------------------------
 
 project = 'Tibia.py'
-copyright = '2018, Allan Galarza'
+copyright = '2020, Allan Galarza'
 author = 'Allan Galarza'
 
 # The short X.Y version
@@ -56,8 +56,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
-    'sphinx.ext.coverage',
-    'sphinxcontrib.asyncio'
+    'sphinx.ext.coverage'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

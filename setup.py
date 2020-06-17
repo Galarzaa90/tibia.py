@@ -45,8 +45,7 @@ extras_require = {
         'colorama'
     ],
     'docs': [
-        'sphinx==1.7.9',
-        'sphinxcontrib-asyncio',
+        'sphinx',
     ],
     'test': [
         'asynctest',
