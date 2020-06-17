@@ -1,3 +1,4 @@
+import datetime
 import re
 from typing import List, Optional
 
@@ -92,10 +93,13 @@ class ForumAnnouncement(abc.Serializable):
         self.board_id: int = kwargs.get("board_id", 0)
         self.section: str = kwargs.get("section")
         self.section_id: int = kwargs.get("section_id", 0)
-        self.author = kwargs.get("author")
-        self.content = kwargs.get("content")
-        self.start_date = kwargs.get("start_date")
-        self.end_date = kwargs.get("end_date")
+        self.author: ForumAuthor = kwargs.get("author")
+        self.content: str = kwargs.get("content")
+        self.start_date: datetime.datetime = kwargs.get("start_date")
+        self.end_date: datetime.datetime = kwargs.get("end_date")
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} title={self.title!r} board={self.announcement_id!r}>"
 
     @property
     def url(self):
@@ -119,13 +123,16 @@ class ForumAnnouncement(abc.Serializable):
         return get_tibia_url("forum", None, action="announcement", announcementid=announcement_id)
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content, announcement_id=0):
         """Parses the content of an announcement's page from Tibia.com
 
         Parameters
         ----------
         content: :class:`str`
             The HTML content of an announcement in Tibia.com
+        announcement_id: :class:`int`
+            The id of the announcement. Since there is no way to obtain the id from the page,
+            the id may be passed to assing.
 
         Returns
         -------
@@ -148,7 +155,8 @@ class ForumAnnouncement(abc.Serializable):
         board = board_link.text
         board_id = int(board_id_regex.search(board_link["href"]).group(1))
 
-        announcement = cls(section=section, section_id=section_id, board=board, board_id=board_id)
+        announcement = cls(section=section, section_id=section_id, board=board, board_id=board_id,
+                           announcement_id=announcement_id)
 
         timezone = timezone_regex.search(footer_table.text).group(1)
         offset = 1 if timezone == "CES" else 2
@@ -240,7 +248,8 @@ class ForumAuthor(abc.BaseCharacter):
         if position_info and position_info.parent == character_info_container:
             convert_line_breaks(position_info)
             titles = [title for title in position_info.text.splitlines() if title]
-            positions = ["Tutor", "Community Manager", "Customer Support"]
+            positions = ["Tutor", "Community Manager", "Customer Support", "Programmer", "Game Content Designer",
+                         "Tester"]
             for _title in titles:
                 if _title in positions:
                     author.position = _title
@@ -399,7 +408,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
             page_links = page_info.find_all("a")
             if current_page_text:
                 board.page = int(current_page_text.text)
-                board.total_pages = int(page_number_regex.search(page_links[-1]["href"]).group(1))
+                board.total_pages = max(board.page, int(page_number_regex.search(page_links[-1]["href"]).group(1)))
 
         for thread_row in thread_rows[1:]:
             columns = thread_row.find_all("td")
@@ -411,7 +420,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
                 board.threads.append(entry)
                 cip_border = thread_row.find("div", attrs={"class": "CipBorder"})
                 if cip_border:
-                    entry.framed = True
+                    entry.golden_frame = True
             elif isinstance(entry, ListedAnnouncement):
                 board.announcements.append(entry)
 
@@ -987,7 +996,7 @@ class ListedThread(abc.BaseThread, abc.Serializable):
         self.icon = kwargs.get("icon")
         self.emoticon = kwargs.get("emoticon")
         self.pages = kwargs.get("total_pages", 1)
-        self.framed = kwargs.get("golden_frame", False)
+        self.golden_frame = kwargs.get("golden_frame", False)
 
     __slots__ = (
         "title",
@@ -1000,7 +1009,7 @@ class ListedThread(abc.BaseThread, abc.Serializable):
         "status_icon",
         "emoticon",
         "pages",
-        "framed",
+        "golden_frame",
     )
 
     def __repr__(self):

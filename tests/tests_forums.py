@@ -1,7 +1,8 @@
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import BoostedCreature, ForumBoard, InvalidContent, LastPost, ListedBoard, ListedThread
+from tibiapy import BoostedCreature, ForumAnnouncement, ForumBoard, InvalidContent, LastPost, ListedBoard, ListedThread, \
+    ThreadStatus
 
 FILE_WORLD_BOARDS = "forums/tibiacom_section.txt"
 FILE_SECTION_EMPTY_BOARD = "forums/tibiacom_section_empty_board.txt"
@@ -9,6 +10,8 @@ FILE_SECTION_EMPTY = "forums/tibiacom_section_empty.txt"
 FILE_BOARD_THREAD_LIST = "forums/tibiacom_board.txt"
 FILE_BOARD_EMPTY_THREAD_LIST = "forums/tibiacom_board_empty.txt"
 FILE_BOARD_INVALID_PAGE = "forums/tibiacom_board_invalid_page.txt"
+FILE_BOARD_GOLDEN_FRAMES = "forums/tibiacom_board_golden_frame.txt"
+FILE_ANNOUNCEMENT = "forums/tibiacom_announcement.txt"
 
 
 class TestForum(TestCommons, unittest.TestCase):
@@ -107,3 +110,38 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual("World Boards", board.section)
         self.assertEqual([], board.threads)
         self.assertEqual(0, board.board_id)
+
+    def test_forum_board_from_content_golden_frame(self):
+        content = self._load_resource(FILE_BOARD_GOLDEN_FRAMES)
+
+        board = ForumBoard.from_content(content)
+
+        self.assertEqual("Proposals (English Only)", board.name)
+        self.assertEqual("Community Boards", board.section)
+        self.assertEqual(30, len(board.threads))
+        self.assertEqual(5, len(board.announcements))
+        self.assertEqual(1798, board.total_pages)
+        for i, thread in enumerate(board.threads):
+            with self.subTest(i=i):
+                self.assertTrue(thread.golden_frame)
+                self.assertTrue(thread.status & ThreadStatus.HOT)
+                self.assertTrue(thread.status & ThreadStatus.CLOSED)
+
+    def test_forum_announcement_from_content(self):
+        content = self._load_resource(FILE_ANNOUNCEMENT)
+
+        announcement = ForumAnnouncement.from_content(content, 33)
+
+        self.assertIsNotNone(announcement)
+        self.assertEqual("Legal Disclaimer", announcement.title)
+        self.assertEqual(33, announcement.announcement_id)
+        self.assertEqual("Proposals (English Only)", announcement.board)
+        self.assertEqual(10, announcement.board_id)
+        self.assertEqual("Community Boards", announcement.section)
+        self.assertEqual(12, announcement.section_id)
+        self.assertIsNotNone(announcement.author)
+        self.assertEqual("CM Mirade", announcement.author.name)
+        self.assertEqual(2, announcement.author.level)
+        self.assertEqual(159, announcement.author.posts)
+        self.assertEqual("Vunira", announcement.author.world)
+        self.assertEqual("Community Manager", announcement.author.position)
