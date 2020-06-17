@@ -6,7 +6,7 @@ Introduction
 
 Prerequisites
 =============
-Tibia.py requires Python 3.5 or higher.
+Tibia.py requires Python 3.6 or higher.
 Dependencies are installed automatically when installing the package.
 
 However, since it uses ``lxml`` for parsing, on Linux you may require to install libxml on your system.
@@ -73,6 +73,19 @@ Supported Sections
 +----------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (Wars)             | :meth:`GuildWars.from_content`             | :meth:`Client.fetch_guild_wars`             |
 +----------------------------+--------------------------------------------+---------------------------------------------+
+| Forums_ (Section)          | :meth:`ListedBoard.list_from_content`      | :meth:`Client.fetch_forum_world_boards`     |
+|                            |                                            | :meth:`Client.fetch_forum_trade_boards`     |
+|                            |                                            | :meth:`Client.fetch_forum_community_boards` |
+|                            |                                            | :meth:`Client.fetch_forum_support_boards`   |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Forums_ (Board)            | :meth:`ForumBoard.from_content`            | :meth:`Client.fetch_forum_board`            |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Forums_ (Announcement)     | :meth:`ForumAnnouncement.from_content`     | :meth:`Client.fetch_forum_announcement`     |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Forums_ (Thread)           | :meth:`ForumThread.from_content`           | :meth:`Client.fetch_forum_thread`           |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Highscores_                | :meth:`Highscores.from_content`            | :meth:`Client.fetch_highscores_page`        |
++----------------------------+--------------------------------------------+---------------------------------------------+
 | Highscores_                | :meth:`Highscores.from_content`            | :meth:`Client.fetch_highscores_page`        |
 +----------------------------+--------------------------------------------+---------------------------------------------+
 | Houses_ (Individual)       | :meth:`House.from_content`                 | :meth:`Client.fetch_house`                  |
@@ -98,6 +111,7 @@ Supported Sections
 
 .. _Characters: https://www.tibia.com/community/?subtopic=characters
 .. _Guilds: https://www.tibia.com/community/?subtopic=guilds
+.. _Forums: https://www.tibia.com/community/?subtopic=worldboards
 .. _Highscores: https://www.tibia.com/community/?subtopic=highscores
 .. _Houses: https://www.tibia.com/community/?subtopic=houses
 .. _Kill Statistics: https://www.tibia.com/community/?subtopic=killstatistics

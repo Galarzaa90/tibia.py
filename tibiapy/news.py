@@ -3,9 +3,10 @@ import re
 import urllib.parse
 from typing import Optional
 
-from tibiapy import abc, InvalidContent
+from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
-from tibiapy.utils import parse_tibiacom_content, try_enum, parse_tibia_date
+from tibiapy.errors import InvalidContent
+from tibiapy.utils import parse_tibia_date, parse_tibiacom_content, try_enum
 
 __all__ = (
     "News",

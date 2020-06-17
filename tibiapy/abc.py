@@ -93,6 +93,50 @@ class Serializable:
         return json.dumps({k: v for k, v in dict(self).items() if v is not None}, indent=indent, sort_keys=sort_keys,
                           default=self._try_dict)
 
+class BaseAnnouncement(metaclass=abc.ABCMeta):
+    """Base class for all announcement classes.
+
+    Implement common properties and methods for announcements.
+
+    The following implement this class:
+
+    - :class:`ForumAnnouncement`
+    - :class:`ListedAnnouncement`
+
+    Attributes
+    ----------
+    announcement_id: :class:`int`
+        The ID of the announcement.
+    """
+
+    __slots__ = ("announcement_id",)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return other.announcement_id == self.announcement_id
+        return False
+
+    @property
+    def url(self):
+        """:class:`str` Gets the URL to this announcement."""
+        return self.get_url(self.announcement_id)
+
+    @classmethod
+    def get_url(cls, announcement_id):
+        """Gets the URL to an announcement with a given ID.
+
+        Parameters
+        ----------
+        announcement_id: :class:`int`
+            The ID of the announcement
+
+        Returns
+        -------
+        :class:`str`
+            The URL of the announcement.
+        """
+        return get_tibia_url("forum", None, action="announcement", announcementid=announcement_id)
+
 
 class BaseBoard(metaclass=abc.ABCMeta):
     """Base class for all board classes.
@@ -103,6 +147,11 @@ class BaseBoard(metaclass=abc.ABCMeta):
 
     - :class:`ForumBoard`
     - :class:`ListedBoard`
+
+    Attributes
+    ----------
+    board_id: :class:`int`
+        The ID of the board.
     """
 
     __slots__ = ("board_id",)
@@ -493,28 +542,6 @@ class BaseHouse(metaclass=abc.ABCMeta):
         return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
 
 
-class HouseWithId():
-    """Implements the :py:attr:`id` attribute and dependant functions and properties.
-
-    Subclasses mut also implement :class:`.BaseHouse`"""
-
-    def __eq__(self, o: object) -> bool:
-        """Two houses are considered equal if their names or ids are equal."""
-        if isinstance(o, self.__class__):
-            return self.name.lower() == o.name.lower() or self.id == o.id
-        return False
-
-    @property
-    def url(self):
-        """:class:`str`: The URL to the Tibia.com page of the house."""
-        return self.get_url(self.id, self.world) if self.id and self.world else None
-
-    @property
-    def url_tibiadata(self):
-        """:class:`str`: The URL to the TibiaData.com page of the house."""
-        return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None
-
-
 class BaseNews(metaclass=abc.ABCMeta):
     """Base class for all news classes
 
@@ -575,6 +602,49 @@ class BaseNews(metaclass=abc.ABCMeta):
             The URL to the news archive page on Tibia.com.
         """
         return get_tibia_url("news", "newsarchive")
+
+
+class BasePost(metaclass=abc.ABCMeta):
+    """Base classs for post classes.
+
+    The following implement this class:
+
+    - :class:`ForumPost`
+    - :class:`LastPost`
+
+    Attributes
+    ----------
+    post_id: :class:`int`
+        The internal ID of the post.
+    """
+
+    __slots__ = ("post_id",)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.post_id == other.post_id
+        return False
+
+    @property
+    def url(self):
+        """:class:`str`: Gets the URL to this specific post."""
+        return self.get_url(self.post_id)
+
+    @classmethod
+    def get_url(cls, post_id):
+        """Gets the URL to a specific post.
+
+        Parameters
+        ----------
+        post_id: :class:`int`
+            The ID of the desired post.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the post.
+        """
+        return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid=post_id)
 
 
 class BaseThread(metaclass=abc.ABCMeta):
@@ -741,3 +811,25 @@ class BaseWorld(metaclass=abc.ABCMeta):
             The URL to the world's information page on TibiaData.com.
         """
         return WORLD_URL_TIBIADATA % name.title()
+
+
+class HouseWithId():
+    """Implements the :py:attr:`id` attribute and dependant functions and properties.
+
+    Subclasses mut also implement :class:`.BaseHouse`"""
+
+    def __eq__(self, o: object) -> bool:
+        """Two houses are considered equal if their names or ids are equal."""
+        if isinstance(o, self.__class__):
+            return self.name.lower() == o.name.lower() or self.id == o.id
+        return False
+
+    @property
+    def url(self):
+        """:class:`str`: The URL to the Tibia.com page of the house."""
+        return self.get_url(self.id, self.world) if self.id and self.world else None
+
+    @property
+    def url_tibiadata(self):
+        """:class:`str`: The URL to the TibiaData.com page of the house."""
+        return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None

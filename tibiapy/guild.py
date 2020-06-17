@@ -9,7 +9,7 @@ from tibiapy import abc
 from tibiapy.enums import Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import get_tibia_url, parse_json, parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, \
+from tibiapy.utils import parse_json, parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, \
     try_date, \
     try_datetime, try_enum
 

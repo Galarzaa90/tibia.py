@@ -6,9 +6,8 @@ import bs4
 
 from tibiapy import abc, errors, GuildMembership
 from tibiapy.enums import ThreadStatus, Vocation
-from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_tibia_forum_datetime, parse_tibiacom_content, \
+from tibiapy.utils import convert_line_breaks, parse_tibia_forum_datetime, parse_tibiacom_content, \
     split_list, try_enum
-
 
 __all__ = (
     'ForumAnnouncement',
@@ -43,7 +42,7 @@ edited_by_regex = re.compile(r'Edited by (.*) on \d{2}')
 signature_separator = "________________"
 
 
-class ForumAnnouncement(abc.Serializable):
+class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
     """Represent's a forum announcement.
 
     These are a special kind of thread that are shown at the top of boards.
@@ -100,27 +99,6 @@ class ForumAnnouncement(abc.Serializable):
 
     def __repr__(self):
         return f"<{self.__class__.__name__} title={self.title!r} board={self.announcement_id!r}>"
-
-    @property
-    def url(self):
-        """:class:`str` Gets the URL to this announcement."""
-        return self.get_url(self.announcement_id)
-
-    @classmethod
-    def get_url(cls, announcement_id):
-        """Gets the URL to an announcement with a given ID.
-
-        Parameters
-        ----------
-        announcement_id: :class:`int`
-            The ID of the announcement
-
-        Returns
-        -------
-        :class:`str`
-            The URL of the announcement.
-        """
-        return get_tibia_url("forum", None, action="announcement", announcementid=announcement_id)
 
     @classmethod
     def from_content(cls, content, announcement_id=0):
@@ -530,7 +508,7 @@ class ForumEmoticon(abc.Serializable):
         return f"<{self.__class__.__name__} name={self.name!r} url={self.url!r}>"
 
 
-class ForumPost(abc.Serializable):
+class ForumPost(abc.BasePost, abc.Serializable):
     """Represent's a forum post.
 
     Attributes
@@ -588,27 +566,6 @@ class ForumPost(abc.Serializable):
 
     def __repr__(self):
         return f"<{self.__class__.__name__} title={self.title!r} post_id={self.post_id}>"
-
-    @property
-    def url(self):
-        """:class:`str`: Gets the URL to this specific post."""
-        return self.get_url(self.post_id)
-
-    @classmethod
-    def get_url(cls, post_id):
-        """Gets the URL to a specific post.
-
-        Parameters
-        ----------
-        post_id: :class:`int`
-            The ID of the desired post.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the post.
-        """
-        return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid=post_id)
 
 
 class ForumThread(abc.BaseThread, abc.Serializable):
@@ -856,7 +813,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
     # endregion
 
 
-class LastPost(abc.Serializable):
+class LastPost(abc.BasePost, abc.Serializable):
     """Represents a forum thread.
 
     Attributes
@@ -883,8 +840,27 @@ class LastPost(abc.Serializable):
     def __repr__(self):
         return f"<{self.__class__.__name__} author={self.author!r} post_id={self.post_id} date={self.date!r}>"
 
+    @property
+    def author_url(self):
+        """:class:`str`: The URL to the author's character information page."""
+        return abc.BaseCharacter.get_url(self.author)
+
     @classmethod
     def _parse_column(cls, last_post_column, offset=1):
+        """Parses the column containing the last post information and extracts its data.
+
+        Parameters
+        ----------
+        last_post_column: :class:`bs4.Tag`:
+            The column containing the last post.
+        offset: :class:`int`
+            Since the timestamps have no offset information, it may be passed to fill it out.
+
+        Returns
+        -------
+        Optional[:class:`LastPost`]:
+            The last post described in the column, if any.
+        """
         last_post_info = last_post_column.find("div", attrs={"class": "LastPostInfo"})
         if last_post_info is None:
             return None
@@ -900,7 +876,7 @@ class LastPost(abc.Serializable):
         return cls(author, post_id, last_post_date)
 
 
-class ListedAnnouncement(abc.Serializable):
+class ListedAnnouncement(abc.BaseAnnouncement, abc.Serializable):
     """Represents an announcement in the forum boards.
 
     Attributes

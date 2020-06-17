@@ -1,10 +1,11 @@
+import math
 import re
 from collections import OrderedDict
 from typing import List
 
-import math
-
-from tibiapy import Category, InvalidContent, Vocation, VocationFilter, abc
+from tibiapy import abc
+from tibiapy.enums import Category, Vocation, VocationFilter
+from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_json, parse_tibiacom_content, try_enum
 
 __all__ = (

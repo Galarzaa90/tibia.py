@@ -1,21 +1,25 @@
 import asyncio
 import datetime
 import time
+import typing
 
 import aiohttp
 import aiohttp_socks
-import typing
 
 import tibiapy
-from tibiapy import abc, BoostedCreature, Category, Character, Forbidden, ForumAnnouncement, ForumBoard, ForumThread, \
-    Guild, GuildWars, \
-    Highscores, \
-    House, \
-    HouseOrder, \
-    HouseStatus, \
-    HouseType, KillStatistics, ListedBoard, ListedGuild, ListedHouse, ListedNews, NetworkError, News, NewsCategory, \
-    NewsType, \
-    Tournament, TournamentLeaderboard, VocationFilter, World, WorldOverview
+from tibiapy import abc
+from tibiapy.character import *
+from tibiapy.creature import *
+from tibiapy.enums import *
+from tibiapy.errors import Forbidden, NetworkError
+from tibiapy.forum import *
+from tibiapy.guild import *
+from tibiapy.highscores import *
+from tibiapy.house import *
+from tibiapy.kill_statistics import *
+from tibiapy.news import *
+from tibiapy.tournament import *
+from tibiapy.world import *
 
 __all__ = (
     "TibiaResponse",
@@ -186,6 +190,21 @@ class Client:
             raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
     async def fetch_forum_community_boards(self):
+        """Fetches the forum's community boards.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of list of :class:`ListedBoard`
+            The forum boards in the community section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
         response = await self._request("get", ListedBoard.get_community_boards_url())
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
@@ -193,6 +212,20 @@ class Client:
         return TibiaResponse(response, boards, parsing_time)
 
     async def fetch_forum_support_boards(self):
+        """Fetches the forum's community boards.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of list of :class:`ListedBoard`
+            The forum boards in the community section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
         response = await self._request("get", ListedBoard.get_support_boards_url())
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
@@ -200,6 +233,20 @@ class Client:
         return TibiaResponse(response, boards, parsing_time)
 
     async def fetch_forum_world_boards(self):
+        """Fetches the forum's world boards.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of list of :class:`ListedBoard`
+            The forum boards in the world section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
         response = await self._request("get", ListedBoard.get_world_boards_url())
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
@@ -207,13 +254,52 @@ class Client:
         return TibiaResponse(response, boards, parsing_time)
 
     async def fetch_forum_trade_boards(self):
+        """Fetches the forum's trade boards.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of list of :class:`ListedBoard`
+            The forum boards in the trade section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
         response = await self._request("get", ListedBoard.get_trade_boards_url())
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
-    async def fetch_forum_board_threads(self, board_id, page=1, age=30):
+    async def fetch_forum_board(self, board_id, page=1, age=30):
+        """Fetches a forum board with a given id.
+
+        Parameters
+        ----------
+        board_id : :class:`int`
+            The id of the board.
+        page: :class:`int`
+            The page number to show.
+        age: :class:`int`
+            The maximum age in days of the threads to display.
+
+            To show threads of all ages, use -1.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`ForumBoard`
+            A response containing the forum, if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
         response = await self._request("get", ForumBoard.get_url(board_id, page, age))
         start_time = time.perf_counter()
         board = ForumBoard.from_content(response.content)
@@ -221,6 +307,25 @@ class Client:
         return TibiaResponse(response, board, parsing_time)
 
     async def fetch_forum_thread(self, thread_id):
+        """Fetches a forum thread with a given id.
+
+        Parameters
+        ----------
+        thread_id : :class:`int`
+            The id of the thread.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`ForumThread`
+            A response containing the forum, if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
         response = await self._request("get", ForumThread.get_url(thread_id))
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)

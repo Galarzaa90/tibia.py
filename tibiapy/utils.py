@@ -168,7 +168,7 @@ def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
     ----------
     datetime_str: :class:`str`
         The string containing the date and time.
-    utc_offset: :class:`str`
+    utc_offset: :class:`int`
         The UTC offset to apply to the parsed datetime.
 
         Since the timestamps contain no timezone information, it can be passed as an additional parameter.

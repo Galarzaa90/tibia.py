@@ -9,7 +9,6 @@ import bs4
 from tibiapy import abc
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
-from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
     parse_tibiadata_date, parse_tibiadata_datetime, split_list, try_datetime, try_enum
@@ -273,7 +272,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
     @property
     def guild_url(self):
         """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
-        return Guild.get_url(self.guild_membership.name) if self.guild_membership else None
+        return abc.BaseGuild.get_url(self.guild_membership.name) if self.guild_membership else None
 
     @property
     def hidden(self):

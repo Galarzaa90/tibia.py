@@ -75,7 +75,7 @@ async def get_board_threads(request):
     board_id = request.match_info['board_id']
     page = int(request.query.get("page", 1))
     age = int(request.query.get("age", 30))
-    board = await app["tibiapy"].fetch_forum_board_threads(int(board_id), page, age)
+    board = await app["tibiapy"].fetch_forum_board(int(board_id), page, age)
     return web.Response(text=board.to_json())
 
 

@@ -1,6 +1,7 @@
 from typing import Dict
 
-from tibiapy import abc, InvalidContent
+from tibiapy import abc
+from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_tibiacom_content
 
 __all__ = (

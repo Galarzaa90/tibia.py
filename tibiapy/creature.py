@@ -1,6 +1,7 @@
 import bs4
 
-from tibiapy import abc, InvalidContent
+from tibiapy import abc
+from tibiapy.errors import InvalidContent
 
 __all__ = (
     "BoostedCreature",

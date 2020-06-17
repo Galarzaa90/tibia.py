@@ -5,7 +5,9 @@ from typing import List
 
 import bs4
 
-from tibiapy import abc, InvalidContent, PvpType, TournamentPhase, Vocation
+from tibiapy import abc
+from tibiapy.enums import PvpType, TournamentPhase, Vocation
+from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
     parse_tibiacom_content, split_list, \
     try_enum
