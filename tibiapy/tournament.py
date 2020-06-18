@@ -36,6 +36,8 @@ TOURNAMENT_LEADERBOARDS_URL = "https://www.tibia.com/community/?subtopic=tournam
 class LeaderboardEntry(abc.BaseCharacter, abc.Serializable):
     """Represents a single tournament leaderboard's entry.
 
+    .. versionadded:: 2.5.0
+
     Attributes
     ----------
     name: :class:`str`
@@ -75,6 +77,8 @@ class ListedTournament(abc.BaseTournament, abc.Serializable):
 
     :py:attr:`start_date` and :py:attr:`end_date` might be ``None`` when a tournament that is currently running
     is on the list (e.g. on the leaderboards tournament selection section).
+
+    .. versionadded:: 2.5.0
 
     Attributes
     ----------
@@ -246,6 +250,8 @@ class RuleSet(abc.Serializable):
 class ScoreSet(abc.Serializable):
     """Represents the ways to earn or lose points in the tournament.
 
+    .. versionadded:: 2.5.0
+
     Attributes
     ----------
     level_gain_loss: :class:`int`
@@ -277,6 +283,8 @@ class ScoreSet(abc.Serializable):
 
 class Tournament(abc.BaseTournament, abc.Serializable):
     """Represents a tournament's information.
+
+    .. versionadded:: 2.5.0
 
     Attributes
     ----------
@@ -319,7 +327,6 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         "duration",
         "rewards_range",
     )
-
 
     def __init__(self, **kwargs):
         self.title = kwargs.get("title")
@@ -620,6 +627,8 @@ class Tournament(abc.BaseTournament, abc.Serializable):
 
 class TournamentLeaderboard(abc.Serializable):
     """Represents a tournament's leaderboards.
+
+    .. versionadded:: 2.5.0
 
     Attributes
     ----------

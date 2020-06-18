@@ -347,7 +347,9 @@ class BaseGuild(metaclass=abc.ABCMeta):
 
     @property
     def url_wars(self):
-        """:class:`str` The URL to the guild's wars page on Tibia.com."""
+        """:class:`str` The URL to the guild's wars page on Tibia.com.
+
+        .. versionadded:: 3.0.0"""
         return self.get_url_wars(self.name)
 
     @classmethod
@@ -383,6 +385,8 @@ class BaseGuild(metaclass=abc.ABCMeta):
     @classmethod
     def get_url_wars(cls, name):
         """Gets the Tibia.com URL for the guild wars of a guild with a given name.
+
+        .. versionadded:: 3.0.0
 
         Parameters
         ------------
@@ -609,6 +613,7 @@ class BasePost(metaclass=abc.ABCMeta):
 
     The following implement this class:
 
+    - :class:`CMPost`
     - :class:`ForumPost`
     - :class:`LastPost`
 

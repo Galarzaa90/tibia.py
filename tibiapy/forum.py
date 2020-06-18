@@ -7,9 +7,7 @@ import bs4
 from tibiapy import abc, errors, GuildMembership
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_tibia_datetime, parse_tibia_forum_datetime, \
-    parse_tibia_full_date, \
-    parse_tibiacom_content, \
-    split_list, try_enum
+    parse_tibiacom_content, split_list, try_enum
 
 __all__ = (
     'CMPost',
@@ -45,8 +43,11 @@ edited_by_regex = re.compile(r'Edited by (.*) on \d{2}')
 
 signature_separator = "________________"
 
+
 class CMPost(abc.BasePost, abc.Serializable):
     """Represents a CM Post entry.
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------
@@ -68,14 +69,22 @@ class CMPost(abc.BasePost, abc.Serializable):
     )
 
     def __init__(self, **kwargs):
-        self.post_id = kwargs.get("post_id")
-        self.date = kwargs.get("date")
-        self.board = kwargs.get("board")
-        self.thread_title = kwargs.get("thread_title")
+        self.post_id: int = kwargs.get("post_id")
+        self.date: datetime.datetime = kwargs.get("date")
+        self.board: str = kwargs.get("board")
+        self.thread_title: str = kwargs.get("thread_title")
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} post_id={self.post_id} date={self.date!r} " \
+               f"thread_title={self.thread_title!r} board={self.board}>"
 
 
 class CMPostArchive(abc.Serializable):
     """Represents the CM Post Archive.
+
+    The CM Post Archive is a collection of posts made in the forum by community managers.
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------
@@ -102,12 +111,54 @@ class CMPostArchive(abc.Serializable):
     )
 
     def __init__(self, **kwargs):
-        self.start_date = kwargs.get("start_date")
-        self.end_date = kwargs.get("end_date")
-        self.page = kwargs.get("page", 1)
-        self.total_pages = kwargs.get("total_pages", 1)
-        self.results_count = kwargs.get("results_count", 0)
+        self.start_date: datetime.date = kwargs.get("start_date")
+        self.end_date: datetime.date = kwargs.get("end_date")
+        self.page: int = kwargs.get("page", 1)
+        self.total_pages: int = kwargs.get("total_pages", 1)
+        self.results_count: int = kwargs.get("results_count", 0)
         self.posts: List[CMPost] = kwargs.get("posts", [])
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} start_date={self.start_date!r} end_date={self.end_date!r} " \
+               f"result_count={self.results_count} page={self.page} total_pages={self.total_pages}>"
+
+    # region Properties
+
+    @property
+    def url(self):
+        """:class:`str`: The URL of the CM Post Archive with the current parameters."""
+        return self.get_url(self.start_date, self.end_date, self.page)
+
+    @property
+    def previous_page_url(self):
+        """:class:`str`: The URL to the previous page of the current CM Post Archive results, if there's any."""
+        return self.get_page_url(self.page - 1) if self.page > 1 else None
+
+    @property
+    def next_page_url(self):
+        """:class:`str`: The URL to the next page of the current CM Post Archive results, if there's any."""
+        return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
+
+    # endregion
+
+    # region Public Methods
+
+    def get_page_url(self, page):
+        """Gets the URL of the CM Post Archive at a specific page, with the current date parameters.
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The desired page.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the desired page.
+        """
+        if page <= 0:
+            raise ValueError("page must be 1 or greater")
+        return self.get_url(self.start_date, self.end_date, page)
 
     @classmethod
     def get_url(cls, start_date, end_date, page=1):
@@ -116,9 +167,9 @@ class CMPostArchive(abc.Serializable):
         Parameters
         ----------
         start_date: :class: `datetime.date`
-            The start date of the CM Posts.
-        start_date: :class: `datetime.date`
-            The end date of the CM Posts.
+            The start date to display.
+        end_date: :class: `datetime.date`
+            The end date to display.
         page: :class:`int`
             The desired page to display.
 
@@ -126,6 +177,13 @@ class CMPostArchive(abc.Serializable):
         -------
         :class:`str`
             The URL to the CM Post Archive
+
+        Raises
+        ------
+        TypeError:
+            Either of the dates is not an instance of :class:`datetime.date`
+        ValueError:
+            If ``start_date`` is more recent than ``end_date``.
         """
         if not isinstance(start_date, datetime.date):
             raise TypeError(f"start_date: expected datetime.date instance, {type(start_date)} found.")
@@ -139,11 +197,43 @@ class CMPostArchive(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
+        """Parses the content of the CM Post Archive page from Tibia.com
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the CM Post Archive in Tibia.com
+
+        Returns
+        -------
+        :class:`CMPostArchive`
+            The CM Post archive found in the page.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML content of the CM Post Archive in Tibia.com
+        """
         parsed_content = parse_tibiacom_content(content)
+
+        form = parsed_content.find("form")
+        try:
+            start_month_selector, start_day_selector, start_year_selector, \
+             end_month_selector, end_day_selector, end_year_selector = form.find_all("select")
+            start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
+            end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
+        except ValueError as e:
+            raise errors.InvalidContent("content does not belong to the CM Post Archive in Tibia.com", e)
+
         table = parsed_content.find("table", attrs={"class", "Table3"})
-        inner_table = table.find("table", attrs={"class", "TableContent"})
-        header_row, *rows = inner_table.find_all("tr")
-        cm_archive = cls()
+        inner_table_container = table.find("div", attrs={"class", "InnerTableContainer"})
+        inner_table = inner_table_container.find("table")
+        inner_table_rows = inner_table.find_all("tr")
+        inner_table_rows = [e for e in inner_table_rows if e.parent == inner_table]
+        table_content = inner_table_container.find("table", attrs={"class", "TableContent"})
+
+        header_row, *rows = table_content.find_all("tr")
+        cm_archive = cls(start_date=start_date, end_date=end_date)
         for row in rows:
             columns = row.find_all("td")
             date_column = columns[0]
@@ -154,9 +244,52 @@ class CMPostArchive(abc.Serializable):
             link_column = columns[2]
             post_link = link_column.find("a")
             post_link_url = post_link["href"]
-            post_id = (post_id_regex.search(post_link_url).group(1))
+            post_id = int(post_id_regex.search(post_link_url).group(1))
             cm_archive.posts.append(CMPost(date=date, board=board, thread_title=thread, post_id=post_id))
+        if not cm_archive.posts:
+            return cm_archive
+        pages_column, results_column = inner_table_rows[-1].find_all("div")
+        page_links = pages_column.find_all("a")
+        listed_pages = [int(p.text) for p in page_links]
+        cm_archive.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
+        cm_archive.total_pages = max(int(page_links[-1].text), cm_archive.page)
+        if not cm_archive.page:
+            cm_archive.total_pages += 1
+            cm_archive.page = cm_archive.total_pages
+
+        cm_archive.results_count = int(results_column.text.split(":")[-1])
         return cm_archive
+
+    # endregion
+
+    # region Private Methods
+
+    @classmethod
+    def _get_selected_date(cls, month_selector, day_selector, year_selector):
+        """Gets the date made from the selected options in the selectors.
+        
+        Parameters
+        ----------
+        month_selector: :class:`bs4.Tag`
+            The month selector.
+        day_selector: :class:`bs4.Tag`
+            The day selector.
+        year_selector: :class:`bs4.Tag`
+            The year selector.
+        Returns
+        -------
+        :class:`datetime.date`
+            The selected date.
+        """
+        selected_month = month_selector.find("option", {"selected": True}) or month_selector.find("option")
+        selected_day = day_selector.find("option", {"selected": True}) or day_selector.find("option")
+        selected_year = year_selector.find("option", {"selected": True}) or year_selector.find("option")
+        try:
+            return datetime.date(year=int(selected_year["value"]), month=int(selected_month["value"]),
+                                 day=int(selected_day["value"]))
+        except ValueError:
+            return None
+    # endregion
 
 
 class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
@@ -164,6 +297,8 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
 
     These are a special kind of thread that are shown at the top of boards.
     They cannot be replied to and they show no view counts.
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------
@@ -282,6 +417,8 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
 class ForumAuthor(abc.BaseCharacter, abc.Serializable):
     """Represents a post's author.
 
+    .. versionadded:: 3.0.0
+
     Attributes
     ----------
     name: :class:`str`
@@ -378,6 +515,8 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
 
 class ForumBoard(abc.BaseBoard, abc.Serializable):
     """Represents a forum's board.
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------
@@ -604,6 +743,8 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
 class ForumEmoticon(abc.Serializable):
     """Represents a forum's emoticon.
 
+    .. versionadded:: 3.0.0
+
     Attributes
     ----------
     name: :class:`str`
@@ -627,6 +768,8 @@ class ForumEmoticon(abc.Serializable):
 
 class ForumPost(abc.BasePost, abc.Serializable):
     """Represent's a forum post.
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------
@@ -687,6 +830,8 @@ class ForumPost(abc.BasePost, abc.Serializable):
 
 class ForumThread(abc.BaseThread, abc.Serializable):
     """Represents a forum thread.
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------
@@ -933,6 +1078,8 @@ class ForumThread(abc.BaseThread, abc.Serializable):
 class LastPost(abc.BasePost, abc.Serializable):
     """Represents a forum thread.
 
+    .. versionadded:: 3.0.0
+
     Attributes
     ----------
     author: :class:`str`
@@ -996,6 +1143,8 @@ class LastPost(abc.BasePost, abc.Serializable):
 class ListedAnnouncement(abc.BaseAnnouncement, abc.Serializable):
     """Represents an announcement in the forum boards.
 
+    .. versionadded:: 3.0.0
+
     Attributes
     ----------
     title: :class:`str`
@@ -1026,6 +1175,8 @@ class ListedBoard(abc.BaseBoard, abc.Serializable):
     """Represents a board in the list of boards.
 
     This is the board information available when viewing a section (e.g. World, Trade, Community)
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------
@@ -1147,6 +1298,8 @@ class ListedBoard(abc.BaseBoard, abc.Serializable):
 
 class ListedThread(abc.BaseThread, abc.Serializable):
     """Represents a thread in a forum board.
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------

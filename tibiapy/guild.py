@@ -75,6 +75,8 @@ class Guild(abc.BaseGuild, abc.Serializable):
         Whether applications are open or not.
     active_war: :class:`bool`
         Whether the guild is currently in an active war or not.
+
+        .. versionadded:: 3.0.0
     disband_date: :class:`datetime.datetime`, optional
         The date when the guild will be disbanded if the condition hasn't been meet.
     disband_condition: :class:`str`, optional
@@ -460,6 +462,8 @@ class GuildInvite(abc.BaseCharacter, abc.Serializable):
 class GuildWars(abc.Serializable):
     """Represents a guild's wars.
 
+    .. versionadded:: 3.0.0
+
     Attributes
     ----------
     name: :class:`str`
@@ -653,6 +657,8 @@ class GuildWars(abc.Serializable):
 
 class GuildWarEntry(abc.Serializable):
     """Represents a guild war entry.
+
+    .. versionadded:: 3.0.0
 
     Attributes
     ----------

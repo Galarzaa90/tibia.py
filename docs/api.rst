@@ -103,6 +103,12 @@ Character
    :members:
    :inherited-members:
 
+CMPostArchive
+-------------
+.. autoclass:: CMPostArchive
+   :members:
+   :inherited-members:
+
 ForumAnnouncement
 -----------------
 .. autoclass:: ForumAnnouncement
@@ -255,6 +261,12 @@ Achievement
 CharacterHouse
 --------------
 .. autoclass:: CharacterHouse
+   :members:
+   :inherited-members:
+
+CMPost
+------
+.. autoclass:: CMPost
    :members:
    :inherited-members:
 

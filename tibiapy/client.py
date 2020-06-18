@@ -192,6 +192,17 @@ class Client:
     async def fetch_cm_post_archive(self, start_date, end_date, page=1):
         """Fetches the forum's community boards.
 
+        .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        start_date: :class: `datetime.date`
+            The start date to display.
+        end_date: :class: `datetime.date`
+            The end date to display.
+        page: :class:`int`
+            The desired page to display.
+
         Returns
         -------
         :class:`TibiaResponse` of :class:`CMPostArchive`
@@ -213,6 +224,8 @@ class Client:
 
     async def fetch_forum_community_boards(self):
         """Fetches the forum's community boards.
+
+        .. versionadded:: 3.0.0
 
         Returns
         -------
@@ -236,6 +249,8 @@ class Client:
     async def fetch_forum_support_boards(self):
         """Fetches the forum's community boards.
 
+        .. versionadded:: 3.0.0
+
         Returns
         -------
         :class:`TibiaResponse` of list of :class:`ListedBoard`
@@ -256,6 +271,8 @@ class Client:
 
     async def fetch_forum_world_boards(self):
         """Fetches the forum's world boards.
+
+        .. versionadded:: 3.0.0
 
         Returns
         -------
@@ -278,6 +295,8 @@ class Client:
     async def fetch_forum_trade_boards(self):
         """Fetches the forum's trade boards.
 
+        .. versionadded:: 3.0.0
+
         Returns
         -------
         :class:`TibiaResponse` of list of :class:`ListedBoard`
@@ -298,6 +317,8 @@ class Client:
 
     async def fetch_forum_board(self, board_id, page=1, age=30):
         """Fetches a forum board with a given id.
+
+        .. versionadded:: 3.0.0
 
         Parameters
         ----------
@@ -331,6 +352,8 @@ class Client:
     async def fetch_forum_thread(self, thread_id):
         """Fetches a forum thread with a given id.
 
+        .. versionadded:: 3.0.0
+
         Parameters
         ----------
         thread_id : :class:`int`
@@ -356,6 +379,8 @@ class Client:
 
     async def fetch_forum_announcement(self, announcement_id):
         """Fetches a forum announcement.
+
+        .. versionadded:: 3.0.0
 
         Parameters
         ----------
@@ -461,6 +486,8 @@ class Client:
 
     async def fetch_guild_wars(self, name):
         """Fetches a guild's wars by its name from Tibia.com
+
+        .. versionadded:: 3.0.0
 
         Parameters
         ----------
@@ -811,6 +838,8 @@ class Client:
     async def fetch_tournament(self, tournament_cycle=0):
         """Fetches a tournament from Tibia.com
 
+        .. versionadded:: 2.5.0
+
         Parameters
         ----------
         tournament_cycle: :class:`int`
@@ -837,6 +866,8 @@ class Client:
 
     async def fetch_tournament_leaderboard(self, tournament_cycle, world, page=1):
         """Fetches a tournament leaderboard from Tibia.com
+
+        .. versionadded:: 2.5.0
 
         Parameters
         ----------
