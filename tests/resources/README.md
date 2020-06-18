@@ -113,6 +113,20 @@ nonexistent world or a unselected world.
  - [tibiadata_offline.json](world/tibiadata_offline.json) - An offline world on TibiaData.
  - [tibiadata_list_online.json](world/tibiadata_list_online.json) - The world list with worlds online on TibiaData.
  - [tibiadata_list_offline.json](world/tibiadata_list_offline.json) - The world list with worlds offline on TibiaData.
+
+## Forum resources
+- [tibiacom_announcement.txt](forums/tibiacom_announcement.txt) - An announcement post on Tibia.com.
+- [tibiacom_announcement_not_found.txt](forums/tibiacom_announcement_not_found.txt) - The page for an announcement post that doesn't exist.
+- [tibiacom_board.txt](forums/tibiacom_board.txt) - A forum board.
+- [tibiacom_board_empty.txt](forums/tibiacom_board_empty.txt) - An empty forum board.
+- [tibiacom_board_golden_frame.txt](forums/tibiacom_board_golden_frame.txt) - A forum board with golden frames on some posts.
+- [tibiacom_board_invalid_page.txt](forums/tibiacom_board_invalid_page.txt) - A forum board on a page out of range.
+- [tibiacom_section.txt](forums/tibiacom_section.txt) - A forum section.
+- [tibiacom_section_empty.txt](forums/tibiacom_section_empty.txt) - An empty forum section.
+- [tibiacom_section_empty_board.txt](forums/tibiacom_section_empty_board.txt) - A forum section with an empty board. 
+- [tibiacom_thread.txt](forums/tibiacom_thread.txt) - A forum thread.
+- [tibiacom_thread_invalid_page.txt](forums/tibiacom_thread_invalid_page.txt) - A forum thread on a page out of range.
+- [tibiacom_thread_not_found.txt](forums/tibiacom_thread_not_found.txt) - The page for forum thread that doesn't exist..
  
  ## Other resources
  - [tibiacom_about.txt](tibiacom_about.txt) - The 'About Tibia' section on Tibia.com, used to provide invalid content 
