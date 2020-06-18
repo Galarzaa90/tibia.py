@@ -70,7 +70,7 @@ class Serializable:
             if isinstance(obj, enum.Flag):
                 return [str(i) for i in obj]
             if isinstance(obj, enum.Enum):
-                return obj.value
+                return str(obj)
             return {k: v for k, v in dict(obj).items() if v is not None}
         except TypeError:
             return str(obj)

@@ -19,7 +19,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
     # region Tournaments Tests
     def test_tournament_from_content(self):
         """Testing parsing a tournament's info page"""
-        content = self._load_resource(FILE_TOURNAMENT_SIGN_UP)
+        content = self.load_resource(FILE_TOURNAMENT_SIGN_UP)
         tournament = Tournament.from_content(content)
         self.assertEqual(tournament.title, "TRIUMPH")
         self.assertEqual(TournamentPhase.SIGN_UP, tournament.phase)
@@ -79,7 +79,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
 
     def test_tournament_from_content_archived(self):
         """Testing parsing a tournament archive info page"""
-        content = self._load_resource(FILE_TOURNAMENT_ARCHIVE)
+        content = self.load_resource(FILE_TOURNAMENT_ARCHIVE)
         tournament = Tournament.from_content(content)
         self.assertEqual(tournament.title, "GLORY")
         self.assertEqual(TournamentPhase.ENDED, tournament.phase)
@@ -130,19 +130,19 @@ class TestTournaments(TestCommons, unittest.TestCase):
 
     def test_tournament_from_content_not_active(self):
         """Testing parsing the tournament page when ther'es no active tournament.."""
-        content = self._load_resource(FILE_TOURNAMENT_NOT_ACTIVE)
+        content = self.load_resource(FILE_TOURNAMENT_NOT_ACTIVE)
         tournament = Tournament.from_content(content)
         self.assertIsNone(tournament)
 
     def test_tournament_from_content_not_found(self):
         """Testing parsing a tournament that doesn't exist."""
-        content = self._load_resource(FILE_TOURNAMENT_NOT_FOUND)
+        content = self.load_resource(FILE_TOURNAMENT_NOT_FOUND)
         tournament = Tournament.from_content(content)
         self.assertIsNone(tournament)
 
     def test_tournament_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
-        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             Tournament.from_content(content)
     # endregion
@@ -150,7 +150,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
 
     def test_tournament_leaderboard_from_content_running(self):
         """Testing parsing the leaderboards for a tournament that is currently running."""
-        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD_CURRENT)
+        content = self.load_resource(FILE_TOURNAMENT_LEADERBOARD_CURRENT)
         leaderboard = TournamentLeaderboard.from_content(content)
 
         self.assertIsInstance(leaderboard.tournament, ListedTournament)
@@ -169,7 +169,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
 
     def test_tournament_leaderboard_from_content_ended(self):
         """Testing parsing the leaderboards for a tournament that already ended."""
-        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD_ENDED)
+        content = self.load_resource(FILE_TOURNAMENT_LEADERBOARD_ENDED)
         leaderboard = TournamentLeaderboard.from_content(content)
 
         self.assertIsInstance(leaderboard.tournament, ListedTournament)
@@ -186,7 +186,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
 
     def test_tournament_leaderboard_from_content_no_data(self):
         """Testing parsing the leaderboards's when there's no data."""
-        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD_NO_DATA)
+        content = self.load_resource(FILE_TOURNAMENT_LEADERBOARD_NO_DATA)
         leaderboard = TournamentLeaderboard.from_content(content)
 
         self.assertIsInstance(leaderboard.tournament, ListedTournament)
@@ -205,14 +205,14 @@ class TestTournaments(TestCommons, unittest.TestCase):
 
     def test_tournament_leaderboard_from_content_selector(self):
         """Testing parsing the leaderboards's initial page."""
-        content = self._load_resource(FILE_TOURNAMENT_LEADERBOARD_SELECTOR)
+        content = self.load_resource(FILE_TOURNAMENT_LEADERBOARD_SELECTOR)
         leaderboard = TournamentLeaderboard.from_content(content)
 
         self.assertIsNone(leaderboard)
 
     def test_tournament_leaderboards_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
-        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             TournamentLeaderboard.from_content(content)
 

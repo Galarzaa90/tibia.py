@@ -195,6 +195,9 @@ class VocationFilter(enum.Enum):
     SORCERERS = 3
     DRUIDS = 4
 
+    def __str__(self):
+        return self.name.lower()
+
     @classmethod
     def from_name(cls, name, all_fallback=True):
         """Gets a vocation filter from a vocation's name.

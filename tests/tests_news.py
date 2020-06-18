@@ -16,7 +16,7 @@ class TestNews(TestCommons, unittest.TestCase):
     # region Tibia.com Tests
     def test_listed_news_from_content(self):
         """Testing parsing news"""
-        content = self._load_resource(FILE_NEWS_LIST)
+        content = self.load_resource(FILE_NEWS_LIST)
         news_list = ListedNews.list_from_content(content)
         self.assertGreater(len(news_list), 0)
         latest_news = news_list[0]
@@ -31,31 +31,31 @@ class TestNews(TestCommons, unittest.TestCase):
 
     def test_listed_news_from_content_empty(self):
         """Testing parsing a news article that doesn't exist"""
-        content = self._load_resource(FILE_NEWS_LIST_EMPTY)
+        content = self.load_resource(FILE_NEWS_LIST_EMPTY)
         news_list = ListedNews.list_from_content(content)
         self.assertEqual(len(news_list), 0)
 
     def test_listed_news_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
-        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             ListedNews.list_from_content(content)
 
     def test_news_from_content_empty(self):
         """Testing parsing an empty news article"""
-        content = self._load_resource(FILE_NEWS_EMPTY)
+        content = self.load_resource(FILE_NEWS_EMPTY)
         news = News.from_content(content)
         self.assertIsNone(news)
 
     def test_news_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
-        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             News.from_content(content)
 
     def test_news_from_content_ticker(self):
         """Testing parsing a news ticker"""
-        content = self._load_resource(FILE_NEWS_TICKER)
+        content = self.load_resource(FILE_NEWS_TICKER)
         news = News.from_content(content)
 
         self.assertIsInstance(news, News)
@@ -66,7 +66,7 @@ class TestNews(TestCommons, unittest.TestCase):
 
     def test_news_from_content_article(self):
         """Testing parsing an article"""
-        content = self._load_resource(FILE_NEWS_ARTICLE)
+        content = self.load_resource(FILE_NEWS_ARTICLE)
         news = News.from_content(content)
 
         self.assertIsInstance(news, News)

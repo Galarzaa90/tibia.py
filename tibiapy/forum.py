@@ -190,7 +190,9 @@ class CMPostArchive(abc.Serializable):
         if not isinstance(end_date, datetime.date):
             raise TypeError(f"start_date: expected datetime.date instance, {type(start_date)} found.")
         if end_date < start_date:
-            raise ValueError("start_date can't be more recent than end_date")
+            raise ValueError("start_date can't be more recent than end_date.")
+        if page < 1:
+            raise ValueError("page must be 1 or greater.")
         return get_tibia_url("forum", "forum", action="cm_post_archive", startday=start_date.day,
                              startmonth=start_date.month, startyear=start_date.year, endday=end_date.day,
                              endmonth=end_date.month, endyear=end_date.year, currentpage=page)
@@ -222,10 +224,12 @@ class CMPostArchive(abc.Serializable):
              end_month_selector, end_day_selector, end_year_selector = form.find_all("select")
             start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
-        except ValueError as e:
+        except (AttributeError, ValueError) as e:
             raise errors.InvalidContent("content does not belong to the CM Post Archive in Tibia.com", e)
-
+        cm_archive = cls(start_date=start_date, end_date=end_date)
         table = parsed_content.find("table", attrs={"class", "Table3"})
+        if not table:
+            return cm_archive
         inner_table_container = table.find("div", attrs={"class", "InnerTableContainer"})
         inner_table = inner_table_container.find("table")
         inner_table_rows = inner_table.find_all("tr")
@@ -233,7 +237,7 @@ class CMPostArchive(abc.Serializable):
         table_content = inner_table_container.find("table", attrs={"class", "TableContent"})
 
         header_row, *rows = table_content.find_all("tr")
-        cm_archive = cls(start_date=start_date, end_date=end_date)
+
         for row in rows:
             columns = row.find_all("td")
             date_column = columns[0]
@@ -251,11 +255,12 @@ class CMPostArchive(abc.Serializable):
         pages_column, results_column = inner_table_rows[-1].find_all("div")
         page_links = pages_column.find_all("a")
         listed_pages = [int(p.text) for p in page_links]
-        cm_archive.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
-        cm_archive.total_pages = max(int(page_links[-1].text), cm_archive.page)
-        if not cm_archive.page:
-            cm_archive.total_pages += 1
-            cm_archive.page = cm_archive.total_pages
+        if listed_pages:
+            cm_archive.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
+            cm_archive.total_pages = max(int(page_links[-1].text), cm_archive.page)
+            if not cm_archive.page:
+                cm_archive.total_pages += 1
+                cm_archive.page = cm_archive.total_pages
 
         cm_archive.results_count = int(results_column.text.split(":")[-1])
         return cm_archive
@@ -459,6 +464,10 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         self.position: Optional[str] = kwargs.get("position")
         self.guild: Optional[GuildMembership] = kwargs.get("guild")
         self.posts: int = kwargs.get("posts", 0)
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} level={self.level} world={self.world!r} " \
+               f"vocation={self.vocation!r}>"
 
     @classmethod
     def _parse_author_table(cls, character_info_container):
@@ -944,7 +953,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
 
         Returns
         -------
-        :class:`Thread`
+        :class:`ForumThread`
             The thread contained in the page, or None if the thread doesn't exist
 
         Raises
@@ -1357,5 +1366,5 @@ class ListedThread(abc.BaseThread, abc.Serializable):
     )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} title={0.title!r} thread_id={0.thread_id} " \
-               "thread_starter={0.thread_starter!r} replies={0.replies} views={0.views}>".format(self)
+        return f"<{self.__class__.__name__} title={self.title!r} thread_id={self.thread_id} " \
+               f"thread_starter={self.thread_starter!r} replies={self.replies} views={self.views}>"

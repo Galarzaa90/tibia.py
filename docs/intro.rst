@@ -67,6 +67,8 @@ Supported Sections
 +============================+============================================+=============================================+
 | Characters_                | :meth:`Character.from_content`             | :meth:`Client.fetch_character`              |
 +----------------------------+--------------------------------------------+---------------------------------------------+
+| `CM Post Archive`_         | :meth:`CMPostArchive.from_content`         | :meth:`CMPostArchive.fetch_cm_post_archive` |
++----------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (Individual)       | :meth:`Guild.from_content`                 | :meth:`Client.fetch_guild`                  |
 +----------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (List)             | :meth:`ListedGuild.list_from_content`      | :meth:`Client.fetch_world_guilds`           |
@@ -110,8 +112,9 @@ Supported Sections
 
 
 .. _Characters: https://www.tibia.com/community/?subtopic=characters
+.. _CM Post Archive: https://www.tibia.com/forum/?subtopic=forum&action=cm_post_archive
 .. _Guilds: https://www.tibia.com/community/?subtopic=guilds
-.. _Forums: https://www.tibia.com/community/?subtopic=worldboards
+.. _Forums: https://www.tibia.com/community/?subtopic=forum
 .. _Highscores: https://www.tibia.com/community/?subtopic=highscores
 .. _Houses: https://www.tibia.com/community/?subtopic=houses
 .. _Kill Statistics: https://www.tibia.com/community/?subtopic=killstatistics

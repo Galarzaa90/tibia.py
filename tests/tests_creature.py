@@ -8,7 +8,7 @@ class TestCreature(TestCommons, unittest.TestCase):
     # region Tibia.com Tests
     def test_creature_from_content(self):
         """Testing parsing a boosted creature"""
-        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
         creature = BoostedCreature.from_content(content)
 
         self.assertIsInstance(creature, BoostedCreature)
