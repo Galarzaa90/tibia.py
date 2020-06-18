@@ -6,10 +6,14 @@ import bs4
 
 from tibiapy import abc, errors, GuildMembership
 from tibiapy.enums import ThreadStatus, Vocation
-from tibiapy.utils import convert_line_breaks, parse_tibia_forum_datetime, parse_tibiacom_content, \
+from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_tibia_datetime, parse_tibia_forum_datetime, \
+    parse_tibia_full_date, \
+    parse_tibiacom_content, \
     split_list, try_enum
 
 __all__ = (
+    'CMPost',
+    'CMPostArchive',
     'ForumAnnouncement',
     'ForumBoard',
     'ForumEmoticon',
@@ -40,6 +44,119 @@ post_dates_regex = re.compile(r'(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})')
 edited_by_regex = re.compile(r'Edited by (.*) on \d{2}')
 
 signature_separator = "________________"
+
+class CMPost(abc.BasePost, abc.Serializable):
+    """Represents a CM Post entry.
+
+    Attributes
+    ----------
+    post_id: :class:`int`
+        The ID of the post.
+    date: :class:`datetime.date`
+        The date when the post was made.
+    board: :class:`str`
+        The name of the board where the post was made.
+    thread_title: :class:`str`
+        The title of the thread where the post is.
+    """
+
+    __slots__ = (
+        "post_id",
+        "date",
+        "board",
+        "thread_title",
+    )
+
+    def __init__(self, **kwargs):
+        self.post_id = kwargs.get("post_id")
+        self.date = kwargs.get("date")
+        self.board = kwargs.get("board")
+        self.thread_title = kwargs.get("thread_title")
+
+
+class CMPostArchive(abc.Serializable):
+    """Represents the CM Post Archive.
+
+    Attributes
+    ----------
+    start_date: :class:`datetime.date`
+        The start date of the displayed posts.
+    end_date: :class:`datetime.date`
+        The end date of the displayed posts.
+    page: :class:`int`
+        The currently displayed page.
+    total_pages: :class:`int`
+        The number of pages available.
+    results_count: :class:`int`
+        The total number of results available in the selected date range.
+    posts: :class:`list` of :class:`CMPost`
+        The list of posts for the selected range."""
+
+    __slots__ = (
+        "start_date",
+        "end_date",
+        "page",
+        "total_pages",
+        "results_count",
+        "posts",
+    )
+
+    def __init__(self, **kwargs):
+        self.start_date = kwargs.get("start_date")
+        self.end_date = kwargs.get("end_date")
+        self.page = kwargs.get("page", 1)
+        self.total_pages = kwargs.get("total_pages", 1)
+        self.results_count = kwargs.get("results_count", 0)
+        self.posts: List[CMPost] = kwargs.get("posts", [])
+
+    @classmethod
+    def get_url(cls, start_date, end_date, page=1):
+        """Gets the URL to the CM Post Archive for the given date range.
+
+        Parameters
+        ----------
+        start_date: :class: `datetime.date`
+            The start date of the CM Posts.
+        start_date: :class: `datetime.date`
+            The end date of the CM Posts.
+        page: :class:`int`
+            The desired page to display.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the CM Post Archive
+        """
+        if not isinstance(start_date, datetime.date):
+            raise TypeError(f"start_date: expected datetime.date instance, {type(start_date)} found.")
+        if not isinstance(end_date, datetime.date):
+            raise TypeError(f"start_date: expected datetime.date instance, {type(start_date)} found.")
+        if end_date < start_date:
+            raise ValueError("start_date can't be more recent than end_date")
+        return get_tibia_url("forum", "forum", action="cm_post_archive", startday=start_date.day,
+                             startmonth=start_date.month, startyear=start_date.year, endday=end_date.day,
+                             endmonth=end_date.month, endyear=end_date.year, currentpage=page)
+
+    @classmethod
+    def from_content(cls, content):
+        parsed_content = parse_tibiacom_content(content)
+        table = parsed_content.find("table", attrs={"class", "Table3"})
+        inner_table = table.find("table", attrs={"class", "TableContent"})
+        header_row, *rows = inner_table.find_all("tr")
+        cm_archive = cls()
+        for row in rows:
+            columns = row.find_all("td")
+            date_column = columns[0]
+            date = parse_tibia_datetime(date_column.text.replace("\xa0", " "))
+            board_thread_column = columns[1]
+            convert_line_breaks(board_thread_column)
+            board, thread = board_thread_column.text.splitlines()
+            link_column = columns[2]
+            post_link = link_column.find("a")
+            post_link_url = post_link["href"]
+            post_id = (post_id_regex.search(post_link_url).group(1))
+            cm_archive.posts.append(CMPost(date=date, board=board, thread_title=thread, post_id=post_id))
+        return cm_archive
 
 
 class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):

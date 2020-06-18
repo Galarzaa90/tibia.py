@@ -189,6 +189,28 @@ class Client:
         except UnicodeDecodeError as e:
             raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
+    async def fetch_cm_post_archive(self, start_date, end_date, page=1):
+        """Fetches the forum's community boards.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`CMPostArchive`
+            The CM Post Archive.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("get", CMPostArchive.get_url(start_date, end_date, page))
+        start_time = time.perf_counter()
+        cm_post_archive = CMPostArchive.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, cm_post_archive, parsing_time)
+
     async def fetch_forum_community_boards(self):
         """Fetches the forum's community boards.
 

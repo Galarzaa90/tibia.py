@@ -1,5 +1,6 @@
 import json
 import traceback
+import datetime
 
 from aiohttp import web
 from aiohttp.web_routedef import RouteDef
@@ -24,6 +25,20 @@ async def home(request):
 async def get_boosted_creature(request):
     boosted = await app["tibiapy"].fetch_boosted_creature()
     return web.Response(text=boosted.to_json())
+
+
+@routes.get('/cmposts/{start_date}/{end_date}/{page}')
+async def get_cm_post_archive(request):
+    start_date_str = request.match_info['start_date']
+    end_date_str = request.match_info['end_date']
+    page = 1
+    if "page" in request.match_info:
+        page = int(request.match_info['page'])
+    start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d")
+    end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d")
+    cm_post_archive = await app["tibiapy"].fetch_cm_post_archive(start_date, end_date, page)
+    return web.Response(text=cm_post_archive.to_json())
+
 
 @routes.get('/forums/community/')
 async def get_community_boards(request):
