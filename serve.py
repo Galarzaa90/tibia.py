@@ -27,6 +27,12 @@ async def get_boosted_creature(request):
     return web.Response(text=boosted.to_json())
 
 
+@routes.get('/events/')
+async def get_event_schedule(request):
+    calendar = await app["tibiapy"].fetch_event_schedule()
+    return web.Response(text=calendar.to_json())
+
+
 @routes.get('/cmposts/{start_date}/{end_date}/{page}')
 async def get_cm_post_archive(request):
     start_date_str = request.match_info['start_date']

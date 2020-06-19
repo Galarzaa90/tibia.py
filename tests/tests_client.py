@@ -54,9 +54,6 @@ class TestClient(asynctest.TestCase, TestCommons):
         with self.assertRaises(NetworkError):
             await self.client.fetch_recent_news(30)
 
-        mock.post(ListedNews.get_list_url(), exception=UnicodeDecodeError)
-        with self.assertRaises(NetworkError):
-            await self.client.fetch_recent_news(30)
 
     @aioresponses()
     async def test_client_fetch_character(self, mock):

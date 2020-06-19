@@ -109,6 +109,12 @@ CMPostArchive
    :members:
    :inherited-members:
 
+EventSchedule
+-------------
+.. autoclass:: EventSchedule
+   :members:
+   :inherited-members:
+
 ForumAnnouncement
 -----------------
 .. autoclass:: ForumAnnouncement
@@ -267,6 +273,12 @@ CharacterHouse
 CMPost
 ------
 .. autoclass:: CMPost
+   :members:
+   :inherited-members:
+
+EventEntry
+-------------
+.. autoclass:: EventEntry
    :members:
    :inherited-members:
 

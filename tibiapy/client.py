@@ -12,6 +12,7 @@ from tibiapy.character import *
 from tibiapy.creature import *
 from tibiapy.enums import *
 from tibiapy.errors import Forbidden, NetworkError
+from tibiapy.event import *
 from tibiapy.forum import *
 from tibiapy.guild import *
 from tibiapy.highscores import *
@@ -190,7 +191,7 @@ class Client:
             raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
     async def fetch_cm_post_archive(self, start_date, end_date, page=1):
-        """Fetches the forum's community boards.
+        """Fetches the CM post archive.
 
         .. versionadded:: 3.0.0
 
@@ -221,6 +222,30 @@ class Client:
         cm_post_archive = CMPostArchive.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, cm_post_archive, parsing_time)
+
+    async def fetch_event_schedule(self):
+        """Fetches the event calendar.
+
+        .. versionadded:: 3.0.0
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`EventSchedule`
+            The event calendar.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("get", EventSchedule.get_url())
+        start_time = time.perf_counter()
+        calendar = EventSchedule.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, calendar, parsing_time)
 
     async def fetch_forum_community_boards(self):
         """Fetches the forum's community boards.

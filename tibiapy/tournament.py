@@ -8,7 +8,7 @@ import bs4
 from tibiapy import abc
 from tibiapy.enums import PvpType, TournamentPhase, Vocation
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
+from tibiapy.utils import parse_popup, get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
     parse_tibiacom_content, split_list, \
     try_enum
 
@@ -549,32 +549,9 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         if img and "reward" in img["src"]:
             span = column.find('span', attrs={"class": "HelperDivIndicator"})
             mouse_over = span["onmouseover"]
-            title, popup = self._parse_popup(mouse_over)
+            title, popup = parse_popup(mouse_over)
             label = popup.find('div', attrs={'class': 'ItemOverLabel'})
             entry.other_rewards = label.text.strip()
-
-    # TODO: It might be worth implementing a private class for this and using it in other parts (e.g. badges and worlds)
-    @staticmethod
-    def _parse_popup(popup_content):
-        """Parses the information popups used through Tibia.com.
-
-        Parameters
-        ----------
-        popup_content: :class:`str`
-            The raw content of the javascript function that creates the popup.
-
-        Returns
-        -------
-        :class:`str`
-            The popup's title.
-        :class:`bs4.BeautifulSoup`
-            The parsed HTML content of the popup.
-        """
-        parts = popup_content.split(",", 2)
-        title = parts[1].replace(r"'", "").strip()
-        html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").strip()
-        parsed_html = bs4.BeautifulSoup(html, 'lxml')
-        return title, parsed_html
 
     @staticmethod
     def _parse_rank_range(rank_text):

@@ -39,7 +39,7 @@ class Serializable:
             except AttributeError:
                 continue
         slots.extend(getattr(cls, "__slots__", []))
-        slots.extend(getattr(cls, "serializable_properties", []))
+        slots.extend(getattr(cls, "_serializable_properties", []))
         return tuple(OrderedDict.fromkeys(slots))
 
     def keys(self):

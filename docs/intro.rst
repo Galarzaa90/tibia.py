@@ -67,7 +67,9 @@ Supported Sections
 +============================+============================================+=============================================+
 | Characters_                | :meth:`Character.from_content`             | :meth:`Client.fetch_character`              |
 +----------------------------+--------------------------------------------+---------------------------------------------+
-| `CM Post Archive`_         | :meth:`CMPostArchive.from_content`         | :meth:`CMPostArchive.fetch_cm_post_archive` |
+| `CM Post Archive`_         | :meth:`CMPostArchive.from_content`         | :meth:`Client.fetch_cm_post_archive`        |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| `Event Schedule`_          | :meth:`EventSchedule.from_content`         | :meth:`Client.fetch_event_schedule`         |
 +----------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (Individual)       | :meth:`Guild.from_content`                 | :meth:`Client.fetch_guild`                  |
 +----------------------------+--------------------------------------------+---------------------------------------------+
@@ -113,6 +115,7 @@ Supported Sections
 
 .. _Characters: https://www.tibia.com/community/?subtopic=characters
 .. _CM Post Archive: https://www.tibia.com/forum/?subtopic=forum&action=cm_post_archive
+.. _Event Schedule: https://www.tibia.com/news/?subtopic=eventcalendar
 .. _Guilds: https://www.tibia.com/community/?subtopic=guilds
 .. _Forums: https://www.tibia.com/community/?subtopic=forum
 .. _Highscores: https://www.tibia.com/community/?subtopic=highscores

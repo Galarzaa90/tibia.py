@@ -530,3 +530,25 @@ def deprecated(instead=None):
             return func(*args, **kwargs)
         return decorated
     return actual_decorator
+
+
+def parse_popup(popup_content):
+    """Parses the information popups used through Tibia.com.
+
+    Parameters
+    ----------
+    popup_content: :class:`str`
+        The raw content of the javascript function that creates the popup.
+
+    Returns
+    -------
+    :class:`str`
+        The popup's title.
+    :class:`bs4.BeautifulSoup`
+        The parsed HTML content of the popup.
+    """
+    parts = popup_content.split(",", 2)
+    title = parts[1].replace(r"'", "").strip()
+    html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").strip()
+    parsed_html = bs4.BeautifulSoup(html, 'lxml')
+    return title, parsed_html
