@@ -128,10 +128,12 @@ async def get_world_guilds(request):
     return web.Response(text=guild_list.to_json())
 
 
-@routes.get(r'/highscores/{world}/{category}/{vocations:\d+}/{page}')
+@routes.get(r'/highscores/{world}/{category:\d+}/{vocations:\d+}/{page}')
 async def get_highscores(request):
     world = request.match_info['world']
-    category = request.match_info['category']
+    if world.lower() == "none":
+        world = None
+    category = int(request.match_info['category'])
     vocations = int(request.match_info['vocations'])
     page = request.match_info['page']
     highscores = await app["tibiapy"].fetch_highscores_page(world,

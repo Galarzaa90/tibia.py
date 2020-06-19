@@ -28,25 +28,32 @@ class BaseEnum(enum.Enum):
         return "%s.%s" % (self.__class__.__name__, self.name)
 
 
+class NumericEnum(BaseEnum):
+    def __str__(self):
+        return self.name.lower()
+
+
 class AccountStatus(BaseEnum):
     """Possible account statuses."""
     FREE_ACCOUNT = "Free Account"
     PREMIUM_ACCOUNT = "Premium Account"
 
 
-class Category(BaseEnum):
+class Category(NumericEnum):
     """The different highscores categories."""
-    ACHIEVEMENTS = "achievements"
-    AXE_FIGHTING = "axe"
-    CLUB_FIGHTING = "club"
-    DISTANCE_FIGHTING = "distance"
-    EXPERIENCE = "experience"
-    FISHING = "fishing"
-    FIST_FIGHTING = "fist"
-    LOYALTY_POINTS = "loyalty"
-    MAGIC_LEVEL = "magic"
-    SHIELDING = "shielding"
-    SWORD_FIGHTING = "sword"
+    ACHIEVEMENTS = 1
+    AXE_FIGHTING = 2
+    CHARM_POINTS = 3
+    CLUB_FIGHTING = 4
+    DISTANCE_FIGHTING = 5
+    EXPERIENCE = 6
+    FISHING = 7
+    FIST_FIGHTING = 8
+    GOSHNARS_TAINT = 9
+    LOYALTY_POINTS = 10
+    MAGIC_LEVEL = 11
+    SHIELDING = 12
+    SWORD_FIGHTING = 13
 
 
 class HouseOrder(BaseEnum):
@@ -185,18 +192,17 @@ class Vocation(BaseEnum):
     MASTER_SORCERER = "Master Sorcerer"
 
 
-class VocationFilter(enum.Enum):
+class VocationFilter(NumericEnum):
     """The vocation filters available for Highscores.
 
     The numeric values are what the highscores form accepts."""
     ALL = 0
-    KNIGHTS = 1
-    PALADINS = 2
-    SORCERERS = 3
-    DRUIDS = 4
+    NONE = 1
+    KNIGHTS = 2
+    PALADINS = 3
+    SORCERERS = 4
+    DRUIDS = 5
 
-    def __str__(self):
-        return self.name.lower()
 
     @classmethod
     def from_name(cls, name, all_fallback=True):
