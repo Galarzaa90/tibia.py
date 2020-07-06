@@ -37,6 +37,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
         guild = Guild.from_content(content)
         self.assertIsInstance(guild, Guild, "Guild should be a Guild object.")
         self.assertEqual(guild.url, Guild.get_url(guild.name))
+        self.assertEqual(guild.url_wars, Guild.get_url_wars(guild.name))
         self.assertEqual(guild.url_tibiadata, Guild.get_url_tibiadata(guild.name))
         self.assertTrue(guild.active, "Guild should be active")
         self.assertIsInstance(guild.founded, datetime.date, "Guild founded date should be an instance of datetime.date")

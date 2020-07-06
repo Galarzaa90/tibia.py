@@ -88,6 +88,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         self.assertEqual(6, len(tournament.worlds))
         self.assertIsInstance(tournament.rule_set, RuleSet)
         self.assertIsInstance(tournament.score_set, ScoreSet)
+        self.assertEqual(tournament.url, Tournament.get_url(tournament.cycle))
 
         # Rule Set
         rule_set = tournament.rule_set

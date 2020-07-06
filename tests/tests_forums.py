@@ -53,6 +53,7 @@ class TestForum(TestCommons, unittest.TestCase):
                 self.assertGreater(board.board_id, 0)
                 self.assertGreaterEqual(board.posts, 0)
                 self.assertGreaterEqual(board.threads, 0)
+                self.assertIsNotNone(board.url)
 
     def test_listed_board_list_from_content_empty_section(self):
         content = self.load_resource(FILE_SECTION_EMPTY)
@@ -94,6 +95,12 @@ class TestForum(TestCommons, unittest.TestCase):
 
         with self.assertRaises(ValueError):
             board.get_page_url(-1)
+
+    def test_board_section_urls(self):
+        self.assertIsNotNone(ListedBoard.get_community_boards_url())
+        self.assertIsNotNone(ListedBoard.get_support_boards_url())
+        self.assertIsNotNone(ListedBoard.get_world_boards_url())
+        self.assertIsNotNone(ListedBoard.get_trade_boards_url())
 
     def test_forum_board_from_content_empty_threads(self):
         content = self.load_resource(FILE_BOARD_EMPTY_THREAD_LIST)
@@ -141,6 +148,7 @@ class TestForum(TestCommons, unittest.TestCase):
                 self.assertTrue(thread.golden_frame)
                 self.assertTrue(thread.status & ThreadStatus.HOT)
                 self.assertTrue(thread.status & ThreadStatus.CLOSED)
+                self.assertIsNotNone(thread.url)
 
     def test_forum_announcement_from_content(self):
         content = self.load_resource(FILE_ANNOUNCEMENT)
@@ -160,6 +168,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(159, announcement.author.posts)
         self.assertEqual("Vunira", announcement.author.world)
         self.assertEqual("Community Manager", announcement.author.position)
+        self.assertIsNotNone(announcement.url)
 
     def test_forum_announcement_from_content_not_found(self):
         content = self.load_resource(FILE_ANNOUNCEMENT_NOT_FOUND)

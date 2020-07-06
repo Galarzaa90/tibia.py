@@ -8,19 +8,19 @@ import aiohttp_socks
 
 import tibiapy
 from tibiapy import abc
-from tibiapy.character import *
-from tibiapy.creature import *
-from tibiapy.enums import *
+from tibiapy.character import Character
+from tibiapy.creature import BoostedCreature
+from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError
-from tibiapy.event import *
-from tibiapy.forum import *
-from tibiapy.guild import *
-from tibiapy.highscores import *
-from tibiapy.house import *
-from tibiapy.kill_statistics import *
-from tibiapy.news import *
-from tibiapy.tournament import *
-from tibiapy.world import *
+from tibiapy.event import EventSchedule
+from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumThread, ListedBoard
+from tibiapy.guild import Guild, GuildWars, ListedGuild
+from tibiapy.highscores import Highscores
+from tibiapy.house import House, ListedHouse
+from tibiapy.kill_statistics import KillStatistics
+from tibiapy.news import ListedNews, News
+from tibiapy.tournament import Tournament, TournamentLeaderboard
+from tibiapy.world import World, WorldOverview
 
 __all__ = (
     "TibiaResponse",
@@ -216,7 +216,13 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+        ValueError
+            If the start_date is more recent than the end date or page number is not 1 or greater.
         """
+        if start_date > end_date:
+            raise ValueError("start_date cannot be more recent than end_date")
+        if page <= 0:
+            raise ValueError("page cannot be lower than 1.")
         response = await self._request("get", CMPostArchive.get_url(start_date, end_date, page))
         start_time = time.perf_counter()
         cm_post_archive = CMPostArchive.from_content(response.content)

@@ -61,7 +61,7 @@ class EventSchedule(abc.Serializable):
 
         Returns
         -------
-        list of :class:`EventEntry`
+        :class:`list` of :class:`EventEntry`
             The events that are active during the desired_date, if any.
 
         Notes

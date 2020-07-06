@@ -131,6 +131,9 @@ nonexistent world or a unselected world.
 - [tibiacom_thread.txt](forums/tibiacom_thread.txt) - A forum thread.
 - [tibiacom_thread_invalid_page.txt](forums/tibiacom_thread_invalid_page.txt) - A forum thread on a page out of range.
 - [tibiacom_thread_not_found.txt](forums/tibiacom_thread_not_found.txt) - The page for forum thread that doesn't exist.
+
+## Events resources
+- [tibiacom_calendar.txt](events/tibiacom_calendar.txt) - The content of the event's calendar.
  
  ## Other resources
  - [tibiacom_about.txt](tibiacom_about.txt) - The 'About Tibia' section on Tibia.com, used to provide invalid content 

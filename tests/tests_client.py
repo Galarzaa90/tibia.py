@@ -197,7 +197,7 @@ class TestClient(asynctest.TestCase, TestCommons):
 
     @aioresponses()
     async def test_client_fetch_cm_post_archive(self, mock):
-        """Testing fetching the boosted creature"""
+        """Testing fetching the CM Post Archive"""
         content = self.load_resource(FILE_CM_POST_ARCHIVE_PAGES)
         start_date = datetime.date.today()-datetime.timedelta(days=40)
         end_date = datetime.date.today()
@@ -205,6 +205,20 @@ class TestClient(asynctest.TestCase, TestCommons):
         cm_post_archive = await self.client.fetch_cm_post_archive(start_date, end_date)
 
         self.assertIsInstance(cm_post_archive.data, CMPostArchive)
+
+    async def test_client_fetch_cm_post_archive_invalid_dates(self):
+        """Testing fetching the CM Post Archive with invalid dates"""
+        end_date = datetime.date.today()-datetime.timedelta(days=40)
+        start_date = datetime.date.today()
+        with self.assertRaises(ValueError):
+            await self.client.fetch_cm_post_archive(start_date, end_date)
+
+    async def test_client_fetch_cm_post_archive_invalid_page(self):
+        """Testing fetching the CM Post Archive with invalid page number"""
+        start_date = datetime.date.today()-datetime.timedelta(days=40)
+        end_date = datetime.date.today()
+        with self.assertRaises(ValueError):
+            await self.client.fetch_cm_post_archive(start_date, end_date, -1)
 
 
 
