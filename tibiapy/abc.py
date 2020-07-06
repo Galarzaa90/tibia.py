@@ -520,7 +520,7 @@ class BaseHouse(metaclass=abc.ABCMeta):
         """
         house_type = "%ss" % house_type.value
         status = "" if status is None else status.value
-        return get_tibia_url("community", "houses", world=world, town=town, type=house_type, status=status,
+        return get_tibia_url("community", "houses", world=world, town=town, type=house_type, state=status,
                              order=order.value)
 
     @classmethod

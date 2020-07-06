@@ -442,6 +442,8 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         The guild the author belongs to, if any.
     posts: :class:`int`
         The number of posts this character has made.
+    deleted: :class:`bool`
+        Whether the author is deleted or not.
     """
 
     __slots__ = (
@@ -453,6 +455,7 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         "position",
         "guild",
         "posts",
+        "deleted",
     )
 
     def __init__(self, name, **kwargs):
@@ -464,6 +467,7 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         self.position: Optional[str] = kwargs.get("position")
         self.guild: Optional[GuildMembership] = kwargs.get("guild")
         self.posts: int = kwargs.get("posts", 0)
+        self.deleted: bool = kwargs.get("deleted", False)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} level={self.level} world={self.world!r} " \
@@ -485,6 +489,8 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         """
         # First link belongs to character
         char_link = character_info_container.find("a")
+        if not char_link:
+            return ForumAuthor(name=character_info_container.text, deleted=True)
         author = cls(char_link.text)
 
         position_info = character_info_container.find("font", attrs={"class": "ff_smallinfo"})
@@ -1095,19 +1101,23 @@ class LastPost(abc.BasePost, abc.Serializable):
         The name of the character that made the last post.
     post_id: :class:`int`
         The internal id of the post.
-    date: :class:`str`
+    date: :class:`datetime`
         The date when the last post was made.
+    deleted: :class:`bool`
+        Whether the last post's author is a character that is already deleted.
     """
 
-    def __init__(self, author, post_id, date):
-        self.author = author
-        self.post_id = post_id
-        self.date = date
+    def __init__(self, author, post_id, date, *, deleted=False):
+        self.author: str = author
+        self.post_id: int = post_id
+        self.date: datetime.datetime = date
+        self.deleted: bool = deleted
 
     __slots__ = (
         "author",
         "post_id",
         "date",
+        "deleted",
     )
 
     def __repr__(self):
@@ -1144,9 +1154,11 @@ class LastPost(abc.BasePost, abc.Serializable):
         last_post_date = parse_tibia_forum_datetime(date_text, offset)
 
         last_post_author_tag = last_post_column.find("font")
+        author_link = last_post_author_tag.find("a")
+        deleted = author_link is None
         author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
 
-        return cls(author, post_id, last_post_date)
+        return cls(author, post_id, last_post_date, deleted=deleted)
 
 
 class ListedAnnouncement(abc.BaseAnnouncement, abc.Serializable):

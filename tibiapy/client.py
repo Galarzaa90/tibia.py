@@ -223,10 +223,17 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, cm_post_archive, parsing_time)
 
-    async def fetch_event_schedule(self):
+    async def fetch_event_schedule(self, month=None, year=None):
         """Fetches the event calendar.
 
         .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        month: :class:`int`
+            The month of the events to display.
+        year: :class:`int`
+            The year of the events to display.
 
         Returns
         -------
@@ -241,7 +248,9 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", EventSchedule.get_url())
+        if (year is None and month is not None) or (year is not None and month is None):
+            raise ValueError("both year and month must be defined or neither must be defined.")
+        response = await self._request("get", EventSchedule.get_url(month, year))
         start_time = time.perf_counter()
         calendar = EventSchedule.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -374,7 +383,7 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, board, parsing_time)
 
-    async def fetch_forum_thread(self, thread_id):
+    async def fetch_forum_thread(self, thread_id, page=1):
         """Fetches a forum thread with a given id.
 
         .. versionadded:: 3.0.0
@@ -383,6 +392,8 @@ class Client:
         ----------
         thread_id : :class:`int`
             The id of the thread.
+        page: :class:`int`
+            The desired page to display, by default 1.
 
         Returns
         -------
@@ -396,7 +407,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("get", ForumThread.get_url(thread_id))
+        response = await self._request("get", ForumThread.get_url(thread_id, page))
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)
         parsing_time = time.perf_counter() - start_time

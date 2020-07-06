@@ -3,6 +3,7 @@ import traceback
 import datetime
 
 from aiohttp import web
+from aiohttp.web_middlewares import normalize_path_middleware
 from aiohttp.web_routedef import RouteDef
 
 import tibiapy
@@ -11,8 +12,22 @@ from tibiapy.utils import try_enum
 routes = web.RouteTableDef()
 
 
+class CustomJson:
+    """Custom json implementation that handles tibia.py object serialization correctly."""
+
+    @staticmethod
+    def dumps(obj, **kwargs):
+        """Dumps an object into a JSON string representing it."""
+        return json.dumps(obj, default=tibiapy.abc.Serializable._try_dict)
+
+    @staticmethod
+    def loads(s, **kwargs):
+        """Loads a JSON string into a python object"""
+        return json.loads(s, **kwargs)
+
+
 @routes.get('/')
-async def home(request):
+async def home(request: web.Request):
     content = "<h1>Routes</hº><ul>"
     for route in routes:  # type: RouteDef
         if route.path == "/":
@@ -21,198 +36,209 @@ async def home(request):
     content += "</ul>"
     return web.Response(text=content, content_type='text/html')
 
+
 @routes.get('/boostedcreature/')
-async def get_boosted_creature(request):
+async def get_boosted_creature(request: web.Request):
     boosted = await app["tibiapy"].fetch_boosted_creature()
-    return web.Response(text=boosted.to_json())
+    return web.json_response(boosted, dumps=CustomJson.dumps)
 
 
 @routes.get('/events/')
-async def get_event_schedule(request):
-    calendar = await app["tibiapy"].fetch_event_schedule()
-    return web.Response(text=calendar.to_json())
+@routes.get('/events/{year}/{month}')
+async def get_event_schedule(request: web.Request):
+    year = request.match_info.get('year')
+    month = request.match_info.get('month')
+    if year:
+        year = int(year)
+    if month:
+        month = int(month)
+    calendar = await app["tibiapy"].fetch_event_schedule(month, year)
+    return web.json_response(calendar, dumps=CustomJson.dumps)
 
 
-@routes.get('/cmposts/{start_date}/{end_date}/{page}')
-async def get_cm_post_archive(request):
+@routes.get('/cmposts/{start_date}/{end_date}/')
+async def get_cm_post_archive(request: web.Request):
     start_date_str = request.match_info['start_date']
     end_date_str = request.match_info['end_date']
-    page = 1
-    if "page" in request.match_info:
-        page = int(request.match_info['page'])
+    page = int(request.query.get("page", 1))
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d")
     cm_post_archive = await app["tibiapy"].fetch_cm_post_archive(start_date, end_date, page)
-    return web.Response(text=cm_post_archive.to_json())
+    return web.json_response(cm_post_archive, dumps=CustomJson.dumps)
 
 
 @routes.get('/forums/community/')
-async def get_community_boards(request):
+async def get_community_boards(request: web.Request):
     boards = await app["tibiapy"].fetch_forum_community_boards()
-    return web.Response(text=boards.to_json())
+    return web.json_response(boards, dumps=CustomJson.dumps)
 
 
 @routes.get('/forums/support/')
-async def get_support_boards(request):
+async def get_support_boards(request: web.Request):
     boards = await app["tibiapy"].fetch_forum_support_boards()
-    return web.Response(text=boards.to_json())
+    return web.json_response(boards, dumps=CustomJson.dumps)
 
 
 @routes.get('/forums/world/')
-async def get_world_boards(request):
+async def get_world_boards(request: web.Request):
     boards = await app["tibiapy"].fetch_forum_world_boards()
-    return web.Response(text=boards.to_json())
+    return web.json_response(boards, dumps=CustomJson.dumps)
 
 
 @routes.get('/forums/trade/')
-async def get_trade_boards(request):
+async def get_trade_boards(request: web.Request):
     boards = await app["tibiapy"].fetch_forum_trade_boards()
-    return web.Response(text=boards.to_json())
+    return web.json_response(boards, dumps=CustomJson.dumps)
 
 
 @routes.get('/forums/thread/{thread_id}')
-async def get_forum_thread(request):
+async def get_forum_thread(request: web.Request):
     thread_id = request.match_info['thread_id']
-    thread = await app["tibiapy"].fetch_forum_thread(int(thread_id))
-    return web.Response(text=thread.to_json())
+    page = int(request.query.get("page", 1))
+    thread = await app["tibiapy"].fetch_forum_thread(int(thread_id), page)
+    return web.json_response(thread, dumps=CustomJson.dumps)
 
 
-@routes.get('/forums/announcement/{announcement_id}')
-async def get_forum_announcement(request):
+@routes.get('/forums/announcement/{announcement_id}/')
+async def get_forum_announcement(request: web.Request):
     announcement_id = request.match_info['announcement_id']
     announcement = await app["tibiapy"].fetch_forum_announcement(int(announcement_id))
-    return web.Response(text=announcement.to_json())
+    return web.json_response(announcement, dumps=CustomJson.dumps)
 
 
-@routes.get('/forums/announcement/{announcement_id}/html')
-async def get_forum_announcement_html(request):
+@routes.get('/forums/announcement/{announcement_id}/html/')
+async def get_forum_announcement_html(request: web.Request):
     announcement_id = request.match_info['announcement_id']
     announcement = await app["tibiapy"].fetch_forum_announcement(int(announcement_id))
     return web.Response(text=announcement.data.content, content_type="text/html")
 
 
-@routes.get('/forums/board/{board_id}')
-async def get_board_threads(request):
+@routes.get('/forums/board/{board_id}/')
+async def get_board_threads(request: web.Request):
     board_id = request.match_info['board_id']
     page = int(request.query.get("page", 1))
     age = int(request.query.get("age", 30))
     board = await app["tibiapy"].fetch_forum_board(int(board_id), page, age)
-    return web.Response(text=board.to_json())
+    return web.json_response(board, dumps=CustomJson.dumps)
 
 
-@routes.get('/characters/{name}')
-async def get_character(request):
+@routes.get('/characters/{name}/')
+async def get_character(request: web.Request):
     name = request.match_info['name']
     char = await app["tibiapy"].fetch_character(name)
-    return web.Response(text=char.to_json())
+    return web.json_response(char, dumps=CustomJson.dumps)
 
 
-@routes.get('/guilds/{name}')
-async def get_guild(request):
+@routes.get('/guilds/{name}/')
+async def get_guild(request: web.Request):
     name = request.match_info['name']
-    char = await app["tibiapy"].fetch_guild(name)
-    return web.Response(text=char.to_json())
+    guild = await app["tibiapy"].fetch_guild(name)
+    return web.json_response(guild, dumps=CustomJson.dumps)
 
 
-@routes.get('/guilds/{name}/wars')
-async def get_guild_wars(request):
+@routes.get('/guilds/{name}/wars/')
+async def get_guild_wars(request: web.Request):
     name = request.match_info['name']
-    char = await app["tibiapy"].fetch_guild_wars(name)
-    return web.Response(text=char.to_json())
+    guild_wars = await app["tibiapy"].fetch_guild_wars(name)
+    return web.json_response(guild_wars, dumps=CustomJson.dumps)
 
 
-@routes.get('/worlds/{name}/guilds')
-async def get_world_guilds(request):
+@routes.get('/worlds/{name}/guilds/')
+async def get_world_guilds(request: web.Request):
     name = request.match_info['name']
     guild_list = await app["tibiapy"].fetch_world_guilds(name)
-    return web.Response(text=guild_list.to_json())
+    return web.json_response(guild_list, dumps=CustomJson.dumps)
 
 
-@routes.get(r'/highscores/{world}/{category}/{vocations:\d+}/{page}')
-async def get_highscores(request):
+@routes.get(r'/highscores/{world}/')
+async def get_highscores(request: web.Request):
     world = request.match_info['world']
-    category = request.match_info['category']
-    vocations = int(request.match_info['vocations'])
-    page = request.match_info['page']
-    highscores = await app["tibiapy"].fetch_highscores_page(world,
-                                                            try_enum(tibiapy.Category, category,
-                                                                     tibiapy.Category.EXPERIENCE),
-                                                            try_enum(tibiapy.VocationFilter, vocations,
-                                                                     tibiapy.VocationFilter.ALL),
-                                                            int(page))
-    return web.Response(text=highscores.to_json())
+    category = try_enum(tibiapy.Category, request.query.get("category"), tibiapy.Category.EXPERIENCE)
+    vocations = try_enum(tibiapy.VocationFilter, int(request.query.get("vocation", 1)), tibiapy.VocationFilter.ALL)
+    page = int(request.query.get("page", 1))
+    highscores = await app["tibiapy"].fetch_highscores_page(world, category, vocations, page)
+    return web.json_response(highscores, dumps=CustomJson.dumps)
 
 
-@routes.get('/houses/{world}/{town}')
-async def get_houses(request):
+@routes.get('/houses/{world}/{town}/')
+async def get_houses(request: web.Request):
     world = request.match_info['world']
     town = request.match_info['town']
-    house_list = await app["tibiapy"].fetch_world_houses(world, town)
-    return web.Response(text=json.dumps(house_list, default=tibiapy.ListedHouse._try_dict))
+    order = try_enum(tibiapy.HouseOrder, request.query.get("order"), tibiapy.HouseOrder.NAME)
+    status = try_enum(tibiapy.HouseStatus, request.query.get("status"))
+    house_type = try_enum(tibiapy.HouseType, request.query.get("type"), tibiapy.HouseType.HOUSE)
+    house_list = await app["tibiapy"].fetch_world_houses(world, town, house_type, status, order)
+    return web.json_response(house_list, dumps=CustomJson.dumps)
 
 
-@routes.get('/house/{world}/{house_id}')
-async def get_house(request):
+@routes.get('/house/{world}/{house_id}/')
+async def get_house(request: web.Request):
     world = request.match_info['world']
     house_id = request.match_info['house_id']
     house = await app["tibiapy"].fetch_house(int(house_id), world)
-    return web.Response(text=house.to_json())
+    return web.json_response(house, dumps=CustomJson.dumps)
 
 
-@routes.get('/killstatistics/{world}')
-async def get_kill_statistics(request):
+@routes.get('/killstatistics/{world}/')
+async def get_kill_statistics(request: web.Request):
     world = request.match_info['world']
     kill_statistics = await app["tibiapy"].fetch_kill_statistics(world)
-    return web.Response(text=kill_statistics.to_json())
+    return web.json_response(kill_statistics, dumps=CustomJson.dumps)
 
 
-@routes.get('/worlds')
-async def get_worlds(request):
+@routes.get('/worlds/')
+async def get_worlds(request: web.Request):
     worlds = await app["tibiapy"].fetch_world_list()
-    return web.Response(text=worlds.to_json())
+    return web.json_response(worlds, dumps=CustomJson.dumps)
 
 
-@routes.get('/worlds/{name}')
-async def get_world(request):
+@routes.get('/worlds/{name}/')
+async def get_world(request: web.Request):
     name = request.match_info['name']
     world = await app["tibiapy"].fetch_world(name)
-    return web.Response(text=world.to_json())
+    return web.json_response(world, dumps=CustomJson.dumps)
 
 
-@routes.get('/news/recent')
-async def get_recent_news(request):
-    news = await app["tibiapy"].fetch_recent_news()
-    return web.Response(text=json.dumps(news, default=tibiapy.ListedNews._try_dict))
+@routes.get('/news/recent/')
+@routes.get('/news/recent/{days}')
+async def get_recent_news(request: web.Request):
+    days = request.match_info.get("days")
+    if days:
+        days = int(days)
+    else:
+        days = 30
+    news = await app["tibiapy"].fetch_recent_news(days)
+    return web.json_response(news, dumps=CustomJson.dumps)
 
 
-@routes.get('/news/{news_id}')
-async def get_news(request):
+@routes.get('/news/{news_id}/')
+async def get_news(request: web.Request):
     news_id = request.match_info['news_id']
     news = await app["tibiapy"].fetch_news(int(news_id))
-    return web.Response(text=news.to_json())
+    return web.json_response(news, dumps=CustomJson.dumps)
 
 
-@routes.get('/news/{news_id}/html')
-async def get_news_html(request):
+@routes.get('/news/{news_id}/html/')
+async def get_news_html(request: web.Request):
     news_id = request.match_info['news_id']
     news = await app["tibiapy"].fetch_news(int(news_id))
     return web.Response(text=news.data.content, content_type='text/html')
 
 
-@routes.get('/tournaments/{tournament_id}')
-async def get_tournaments(request):
+@routes.get('/tournaments/{tournament_id}/')
+async def get_tournaments(request: web.Request):
     tournament_id = request.match_info['tournament_id']
     tournament = await app["tibiapy"].fetch_tournament(int(tournament_id))
-    return web.Response(text=tournament.to_json())
+    return web.json_response(tournament, dumps=CustomJson.dumps)
 
 
-@routes.get('/tournaments/{tournament_id}/leaderboards/{world}/{page}')
-async def get_tournaments_leaderboard(request):
+@routes.get('/tournaments/{tournament_id}/leaderboards/{world}/{page}/')
+async def get_tournaments_leaderboard(request: web.Request):
     tournament_id = request.match_info['tournament_id']
     world = request.match_info['world']
     page = request.match_info['page']
     tournament = await app["tibiapy"].fetch_tournament_leaderboard(int(tournament_id), world, int(page))
-    return web.Response(text=tournament.to_json())
+    return web.json_response(tournament, dumps=CustomJson.dumps)
 
 
 def json_error(status_code: int, exception: Exception, tb=None) -> web.Response:
@@ -227,7 +253,7 @@ def json_error(status_code: int, exception: Exception, tb=None) -> web.Response:
 
 
 async def error_middleware(app, handler):
-    async def middleware_handler(request):
+    async def middleware_handler(request: web.Request):
         try:
             response = await handler(request)
             if response.status == 404:
@@ -249,7 +275,8 @@ async def init_client(app):
     app["tibiapy"] = tibiapy.Client()
 
 if __name__ == "__main__":
-    app = web.Application(middlewares=[error_middleware])
+    normalize_paths = normalize_path_middleware()
+    app = web.Application(middlewares=[error_middleware, normalize_paths])
     app.add_routes(routes)
     app.on_startup.append(init_client)
     print("Registered routes:")
