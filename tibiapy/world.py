@@ -610,9 +610,8 @@ class WorldOverview(abc.Serializable):
                 continue
             elif name == "World":
                 continue
-            try:
-                online = parse_integer(cols[1].text.strip())
-            except ValueError:
+            online = parse_integer(cols[1].text.strip(), None)
+            if online is None:
                 online = 0
                 status = "Offline"
             location = cols[2].text.replace("\u00a0", " ").strip()

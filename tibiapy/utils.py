@@ -72,7 +72,7 @@ def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
     return url
 
 
-def parse_integer(number: str, default=0):
+def parse_integer(number: str, default: Optional[int] = 0):
     """Parses a string representing an integer, ignoring commas or periods.
 
     Parameters
