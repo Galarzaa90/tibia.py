@@ -660,7 +660,7 @@ class TournamentLeaderboard(abc.Serializable):
 
     @property
     def total_pages(self):
-        """:class:`int`: The total of total_pages of the highscores category."""
+        """:class:`int`: The total of pages in the leaderboard."""
         return int(math.ceil(self.results_count / self.ENTRIES_PER_PAGE))
 
     @property

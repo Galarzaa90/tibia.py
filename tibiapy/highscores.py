@@ -104,8 +104,8 @@ class Highscores(abc.Serializable):
 
         Notes
         -----
-        Tibia.com only shows up to 25 entries per page, so in order to obtain the full highscores, all 12 total_pages must
-        be parsed and merged into one.
+        Tibia.com only shows up to 50 entries per page, so in order to obtain the full highscores, all pages must be
+        obtained individually and merged into one.
 
         Parameters
         ----------
