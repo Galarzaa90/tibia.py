@@ -1,19 +1,11 @@
 import abc
 import datetime
-import json
-import urllib.parse
-from collections import OrderedDict
 import enum
+import json
+from collections import OrderedDict
 
-from tibiapy.enums import HouseType, HouseStatus, HouseOrder
+from tibiapy.enums import HouseOrder, HouseStatus, HouseType
 from tibiapy.utils import get_tibia_url
-
-CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
-HOUSE_URL_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
-HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
-GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
-GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
-WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
 
 class Serializable:
@@ -273,13 +265,6 @@ class BaseCharacter(metaclass=abc.ABCMeta):
         """
         return self.get_url(self.name)
 
-    @property
-    def url_tibiadata(self):
-        """
-        :class:`str`: The URL of the character's information on TibiaData.com.
-        """
-        return self.get_url_tibiadata(self.name)
-
     @classmethod
     def get_url(cls, name):
         """Gets the Tibia.com URL for a given character name.
@@ -294,21 +279,6 @@ class BaseCharacter(metaclass=abc.ABCMeta):
         :class:`str`
             The URL to the character's page."""
         return get_tibia_url("community", "characters", name=name)
-
-    @classmethod
-    def get_url_tibiadata(cls, name):
-        """Gets the TibiaData.com URL for a given character name.
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the character.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the character's page on TibiaData.com."""
-        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name)
 
 
 class BaseGuild(metaclass=abc.ABCMeta):
@@ -341,11 +311,6 @@ class BaseGuild(metaclass=abc.ABCMeta):
         return self.get_url(self.name)
 
     @property
-    def url_tibiadata(self):
-        """:class:`str`: The URL to the guild on TibiaData.com."""
-        return self.get_url_tibiadata(self.name)
-
-    @property
     def url_wars(self):
         """:class:`str` The URL to the guild's wars page on Tibia.com.
 
@@ -367,20 +332,6 @@ class BaseGuild(metaclass=abc.ABCMeta):
             The URL to the guild's page"""
         return get_tibia_url("community", "guilds", page="view", GuildName=name)
 
-    @classmethod
-    def get_url_tibiadata(cls, name):
-        """Gets the TibiaData.com URL for a given guild name.
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the guild.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the guild's page on TibiaData.com."""
-        return GUILD_URL_TIBIADATA % urllib.parse.quote(name)
 
     @classmethod
     def get_url_wars(cls, name):
@@ -414,22 +365,6 @@ class BaseGuild(metaclass=abc.ABCMeta):
             The URL to the guild's page
         """
         return get_tibia_url("community", "guilds", world=world)
-
-    @classmethod
-    def get_world_list_url_tibiadata(cls, world):
-        """Gets the TibiaData.com URL for the guild list of a specific world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's page.
-        """
-        return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
 
 
 class BaseHouse(metaclass=abc.ABCMeta):
@@ -477,22 +412,6 @@ class BaseHouse(metaclass=abc.ABCMeta):
         """
         return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
 
-    @classmethod
-    def get_url_tibiadata(cls, house_id, world):
-        """ Gets the TibiaData.com URL for a house with the given id and world.
-
-        Parameters
-        ----------
-        house_id: :class:`int`
-            The internal id of the house.
-        world: :class:`str`
-            The world of the house.
-
-        Returns
-        -------
-        The URL to the house in TibiaData.com
-        """
-        return HOUSE_URL_TIBIADATA % (world, house_id)
 
     @classmethod
     def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE, status: HouseStatus = None,
@@ -522,28 +441,6 @@ class BaseHouse(metaclass=abc.ABCMeta):
         status = "" if status is None else status.value
         return get_tibia_url("community", "houses", world=world, town=town, type=house_type, state=status,
                              order=order.value)
-
-    @classmethod
-    def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):
-        """
-        Gets the URL to the house list on Tibia.com with the specified parameters.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-        town: :class:`str`
-            The name of the town.
-        house_type: :class:`HouseType`
-            Whether to search for houses or guildhalls.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the list matching the parameters.
-        """
-        house_type = "%ss" % house_type.value
-        return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
 
 
 class BaseNews(metaclass=abc.ABCMeta):
@@ -780,11 +677,6 @@ class BaseWorld(metaclass=abc.ABCMeta):
         """:class:`str`: URL to the world's information page on Tibia.com."""
         return self.get_url(self.name)
 
-    @property
-    def url_tibiadata(self):
-        """:class:`str`: URL to the world's information page on TibiaData.com."""
-        return self.get_url_tibiadata(self.name)
-
     @classmethod
     def get_url(cls, name):
         """Gets the URL to the World's information page on Tibia.com.
@@ -800,22 +692,6 @@ class BaseWorld(metaclass=abc.ABCMeta):
             The URL to the world's information page.
         """
         return get_tibia_url("community", "worlds", world=name.title())
-
-    @classmethod
-    def get_url_tibiadata(cls, name):
-        """Gets the URL to the World's information page on TibiaData.com.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the world's information page on TibiaData.com.
-        """
-        return WORLD_URL_TIBIADATA % name.title()
 
 
 class HouseWithId():
@@ -833,8 +709,3 @@ class HouseWithId():
     def url(self):
         """:class:`str`: The URL to the Tibia.com page of the house."""
         return self.get_url(self.id, self.world) if self.id and self.world else None
-
-    @property
-    def url_tibiadata(self):
-        """:class:`str`: The URL to the TibiaData.com page of the house."""
-        return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None

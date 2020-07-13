@@ -1,12 +1,11 @@
 import datetime
-import enum
 import functools
 import json
 import re
 import urllib.parse
 import warnings
 from collections import OrderedDict
-from typing import NewType, Optional, Type, TypeVar, Union
+from typing import Optional, Type, TypeVar, Union
 
 import bs4
 
@@ -211,60 +210,6 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
         return None
 
 
-def parse_tibiadata_datetime(date_dict) -> Optional[datetime.datetime]:
-    """Parses time objects from the TibiaData API.
-
-    Time objects are made of a dictionary with three keys:
-        date: contains a string representation of the time
-        timezone: a string representation of the timezone the date time is based on
-        timezone_type: the type of representation used in the timezone key
-
-
-    Parameters
-    ----------
-    date_dict: :class:`dict`
-        Dictionary representing the time object.
-
-    Returns
-    -------
-    :class:`datetime.date`, optional
-        The represented datetime, in UTC.
-    """
-    try:
-        t = datetime.datetime.strptime(date_dict["date"], "%Y-%m-%d %H:%M:%S.%f")
-    except (KeyError, ValueError, TypeError):
-        return None
-
-    if date_dict["timezone"] == "CET":
-        timezone_offset = 1
-    elif date_dict["timezone"] == "CEST":
-        timezone_offset = 2
-    else:
-        return None
-    # We subtract the offset to convert the time to UTC
-    t = t - datetime.timedelta(hours=timezone_offset)
-    return t.replace(tzinfo=datetime.timezone.utc)
-
-
-def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
-    """Parses a date from the format used in TibiaData.
-
-    Parameters
-    ----------
-    date_str: :class:`str`
-        The date as represented in Tibia.com
-
-    Returns
-    -------
-    :class:`datetime.date`, optional
-        The represended date."""
-    try:
-        t = datetime.datetime.strptime(date_str.strip(), "%Y-%m-%d")
-        return t.date()
-    except (ValueError, AttributeError):
-        return None
-
-
 def parse_number_words(text_num):
     """Parses the word representation of a number to a integer.
 
@@ -333,9 +278,6 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
     if isinstance(obj, datetime.datetime):
         return obj
     res = parse_tibia_datetime(obj)
-    if res is not None:
-        return res
-    res = parse_tibiadata_datetime(obj)
     return res
 
 
@@ -365,9 +307,6 @@ def try_date(obj) -> Optional[datetime.date]:
     if res is not None:
         return res
     res = parse_tibia_full_date(obj)
-    if res is not None:
-        return res
-    res = parse_tibiadata_date(obj)
     return res
 
 
@@ -424,33 +363,6 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
             return cls._member_map_[val]
         except KeyError:
             return default
-
-
-def parse_json(content):
-    """Tries to parse a string into a json object.
-
-    This also performs a trim of all values, recursively removing leading and trailing whitespace.
-
-    Parameters
-    ----------
-    content: :class:`str`
-        A JSON format string.
-
-    Returns
-    -------
-    obj
-        The object represented by the json string.
-
-    Raises
-    ------
-    InvalidContent
-        If the content is not a valid json string.
-    """
-    try:
-        json_content = json.loads(content)
-        return _recursive_strip(json_content)
-    except json.JSONDecodeError:
-        raise InvalidContent("content is not a json string.")
 
 
 def parse_tibia_money(argument):

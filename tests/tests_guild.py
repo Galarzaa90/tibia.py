@@ -15,13 +15,6 @@ FILE_GUILD_LIST = "guild/tibiacom_list.txt"
 FILE_GUILD_LIST_NOT_FOUND = "guild/tibiacom_list_not_found.txt"
 FILE_GUILD_IN_WAR = "guild/tibiacom_war.txt"
 
-FILE_GUILD_TIBIADATA = "guild/tibiadata.json"
-FILE_GUILD_TIBIADATA_NOT_FOUND = "guild/tibiadata_not_found.json"
-FILE_GUILD_TIBIADATA_DISBANDING = "guild/tibiadata_disbanding.json"
-FILE_GUILD_TIBIADATA_INVITED = "guild/tibiadata_invited.json"
-FILE_GUILD_TIBIADATA_LIST = "guild/tibiadata_list.json"
-FILE_GUILD_TIBIADATA_LIST_NOT_FOUND = "guild/tibiadata_list_not_found.json"
-
 FILE_GUILD_WAR_ACTIVE_HISTORY = "guild/wars/tibiacom_active_history.txt"
 FILE_GUILD_WAR_EMPTY = "guild/wars/tibiacom_empty.txt"
 FILE_GUILD_WAR_UNACTIVE_HISTORY = "guild/wars/tibiacom_unactive_history.txt"
@@ -38,7 +31,6 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertIsInstance(guild, Guild, "Guild should be a Guild object.")
         self.assertEqual(guild.url, Guild.get_url(guild.name))
         self.assertEqual(guild.url_wars, Guild.get_url_wars(guild.name))
-        self.assertEqual(guild.url_tibiadata, Guild.get_url_tibiadata(guild.name))
         self.assertTrue(guild.active, "Guild should be active")
         self.assertIsInstance(guild.founded, datetime.date, "Guild founded date should be an instance of datetime.date")
         self.assertTrue(guild.open_applications, "Guild applications should be open")
@@ -211,78 +203,6 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertIsNone(Guild(founded=None).founded)
         self.assertIsNone(Guild(founded="Jul 20").founded)
 
-    def test_guild_from_tibiadata(self):
-        """Testing parsing a guild from TibiaData"""
-        content = self.load_resource(FILE_GUILD_TIBIADATA)
-        guild = Guild.from_tibiadata(content)
-
-        self.assertIsInstance(guild, Guild)
-        self.assertTrue(guild.open_applications)
-        self.assertIsNotNone(guild.guildhall)
-        self.assertEqual(guild.founded, datetime.date(2002, 2, 18))
-        self.assertIsInstance(guild.guildhall, GuildHouse)
-        self.assertEqual(guild.guildhall.world, guild.world)
-        self.assertIsNotNone(guild.logo_url)
-
-    def test_guild_from_tibiadata_not_found(self):
-        """Testing parsing a non existent guild"""
-        content = self.load_resource(FILE_GUILD_TIBIADATA_NOT_FOUND)
-        guild = Guild.from_tibiadata(content)
-        self.assertIsNone(guild)
-
-    def test_guild_from_tibiadata_disbanding(self):
-        """Testing parsing a disbanding guild from TibiaData"""
-        content = self.load_resource(FILE_GUILD_TIBIADATA_DISBANDING)
-        guild = Guild.from_tibiadata(content)
-        self.assertIsNotNone(guild.disband_condition)
-        self.assertEqual(guild.disband_date, datetime.date(2018, 12, 26))
-
-    def test_guild_from_tibiadata_with_invites(self):
-        """Testing parsing a guild with invites"""
-        content = self.load_resource(FILE_GUILD_TIBIADATA_INVITED)
-        guild = Guild.from_tibiadata(content)
-        self.assertTrue(len(guild.invites) > 0)
-        self.assertIsInstance(guild.invites[0], GuildInvite)
-
-    def test_guild_from_tibiadata_invalid_json(self):
-        """Testing parsing an invalid json"""
-        with self.assertRaises(InvalidContent):
-            Guild.from_tibiadata("<html><p>definitely not a json string</p></html>")
-
-    def test_guild_from_tibiadata_unrelated_section(self):
-        """Testing parsing a different TibiaData json"""
-        content = self.load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA)
-        with self.assertRaises(InvalidContent):
-            Guild.from_tibiadata(content)
-
-    def test_listed_guild_from_tibiadata(self):
-        """Testing parsing a guild list from TibiaData"""
-        content = self.load_resource(FILE_GUILD_TIBIADATA_LIST)
-        guilds = ListedGuild.list_from_tibiadata(content)
-        self.assertTrue(guilds)
-        self.assertIsNotNone(ListedGuild.get_world_list_url_tibiadata(guilds[0].world))
-        self.assertEqual("Zunera", guilds[0].world)
-        self.assertIsInstance(guilds[0], ListedGuild)
-        self.assertTrue(guilds[0].active)
-        self.assertFalse(guilds[-1].active)
-
-    def test_listed_guild_from_tibiadata_not_found(self):
-        """Testing parsing a non existent guild"""
-        content = self.load_resource(FILE_GUILD_TIBIADATA_LIST_NOT_FOUND)
-        guilds = ListedGuild.list_from_tibiadata(content)
-        # There's no way to tell if the searched world doesn't exist or has no guilds
-        self.assertEqual(guilds, [])
-
-    def test_listed_guild_from_tibiadata_unrelated_section(self):
-        """Testing parsing an unrelated section"""
-        content = self.load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA)
-        with self.assertRaises(InvalidContent):
-            ListedGuild.list_from_tibiadata(content)
-
-    def test_listed_guild_from_tibiadata_invalid_json(self):
-        """Testing parsing an invalid json"""
-        with self.assertRaises(InvalidContent):
-            ListedGuild.list_from_tibiadata("<b>Not JSON</b>")
 
     # region Guild War Tests
     def test_guild_wars_from_content_active_history(self):

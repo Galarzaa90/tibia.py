@@ -5,7 +5,7 @@ from typing import Optional
 from tibiapy import abc
 from tibiapy.enums import HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_json, parse_number_words, parse_tibia_datetime, parse_tibia_money, \
+from tibiapy.utils import parse_tibia_datetime, parse_tibia_money, \
     parse_tibiacom_content, try_date, try_datetime, try_enum
 
 __all__ = (
@@ -191,47 +191,6 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
             house.size = int(m.group("size"))
 
         house._parse_status(state)
-        return house
-
-    @classmethod
-    def from_tibiadata(cls, content):
-        """
-        Parses a TibiaData response into a House object.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The JSON content of the TibiaData response.
-
-        Returns
-        -------
-        :class:`House`
-            The house contained in the response, if found.
-
-        Raises
-        ------
-        InvalidContent
-            If the content is not a house JSON response from TibiaData
-        """
-        json_content = parse_json(content)
-        try:
-            house_json = json_content["house"]
-            if not house_json["name"]:
-                return None
-            house = cls(house_json["name"], house_json["world"])
-
-            house.type = try_enum(HouseType, house_json["type"])
-            house.id = house_json["houseid"]
-            house.beds = house_json["beds"]
-            house.size = house_json["size"]
-            house.size = house_json["size"]
-            house.rent = house_json["rent"]
-            house.image_url = house_json["img"]
-
-            # Parsing the original status string is easier than dealing with TibiaData fields
-            house._parse_status(house_json["status"]["original"])
-        except KeyError:
-            raise InvalidContent("content is not a TibiaData house response.")
         return house
     # endregion
 
@@ -454,38 +413,6 @@ class ListedHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
             houses.append(house)
         return houses
 
-    @classmethod
-    def list_from_tibiadata(cls, content):
-        """Parses the content of a house list from TibiaData.com into a list of houses
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The raw JSON response from TibiaData
-
-        Returns
-        -------
-        :class:`list` of :class:`ListedHouse`
-
-        Raises
-        ------
-        InvalidContent`
-            Content is not the house list from TibiaData.com
-        """
-        json_data = parse_json(content)
-        try:
-            house_data = json_data["houses"]
-            houses = []
-            house_type = HouseType.HOUSE if house_data["type"] == "houses" else HouseType.GUILDHALL
-            for house_json in house_data["houses"]:
-                house = ListedHouse(house_json["name"], house_data["world"], house_json["houseid"],
-                                    size=house_json["size"], rent=house_json["rent"], town=house_data["town"],
-                                    type=house_type)
-                house._parse_status(house_json["status"])
-                houses.append(house)
-            return houses
-        except KeyError:
-            raise InvalidContent("content is not a house list json response from TibiaData.com")
     # endregion
 
     # region Private methods

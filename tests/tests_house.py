@@ -17,11 +17,6 @@ FILE_HOUSE_LIST = "house/tibiacom_list.txt"
 FILE_HOUSE_LIST_NOT_FOUND = "house/tibiacom_list_not_found.txt"
 FILE_HOUSE_LIST_EMPTY = "house/tibiacom_list_empty.txt"
 
-FILE_HOUSE_TIBIADATA = "house/tibiadata.json"
-FILE_HOUSE_TIBIADATA_NOT_FOUND = "house/tibiadata_not_found.json"
-FILE_HOUSE_TIBIADATA_LIST = "house/tibiadata_list.json"
-FILE_HOUSE_TIBIADATA_LIST_NOT_FOUND = "house/tibiadata_list_not_found.json"
-
 
 class TestsHouse(TestCommons, unittest.TestCase):
     def setUp(self):
@@ -38,7 +33,6 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertTrue(house.rent, 715)
         self.assertEqual(house.status, HouseStatus.AUCTIONED)
         self.assertEqual(house.url, House.get_url(house.id, house.world))
-        self.assertEqual(house.url_tibiadata, House.get_url_tibiadata(house.id, house.world))
         self.assertIsNone(house.owner)
         self.assertIsNone(house.owner_url)
         self.assertIsNotNone(house.highest_bidder)
@@ -138,65 +132,3 @@ class TestsHouse(TestCommons, unittest.TestCase):
         with self.assertRaises(InvalidContent):
             ListedHouse.list_from_content(content)
 
-    def test_house_from_tibiadata(self):
-        """Testing parsing a house from TibiaData"""
-        content = self.load_resource(FILE_HOUSE_TIBIADATA)
-        house = House.from_tibiadata(content)
-
-        self.assertIsInstance(house, House)
-        self.assertEqual(house.id, 32012)
-        self.assertEqual(house.world, "Gladera")
-        self.assertEqual(house.type, HouseType.GUILDHALL)
-        self.assertEqual(house.size, 7)
-        self.assertEqual(house.status, HouseStatus.AUCTIONED)
-        self.assertIsNone(house.owner)
-
-    def test_house_from_tibiadata_not_found(self):
-        """Testing parsing a house that doesn't exist"""
-        content = self.load_resource(FILE_HOUSE_TIBIADATA_NOT_FOUND)
-        house = House.from_tibiadata(content)
-
-        self.assertIsNone(house)
-
-    def test_house_from_tibiadata_invalid_json(self):
-        """Testing parsing an invalid json"""
-        with self.assertRaises(InvalidContent):
-            House.from_tibiadata("<p>Not json</p>")
-
-    def test_house_from_tibiadata_unrelated(self):
-        """Testing parsing an unrelated section"""
-        content = self.load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA)
-        with self.assertRaises(InvalidContent):
-            House.from_tibiadata(content)
-
-    def test_listed_house_list_from_tibiadata(self):
-        """Testing parsing a house list from TibiaData"""
-        content = self.load_resource(FILE_HOUSE_TIBIADATA_LIST)
-        houses = ListedHouse.list_from_tibiadata(content)
-
-        self.assertIsInstance(houses, list)
-        self.assertGreater(len(houses), 0)
-        self.assertIsInstance(houses[0], ListedHouse)
-        self.assertEqual(houses[0].town, "Edron")
-        self.assertEqual(houses[0].type, HouseType.GUILDHALL)
-        self.assertEqual(houses[0].status, HouseStatus.RENTED)
-        self.assertIsInstance(houses[0].id, int)
-        self.assertIsNotNone(ListedHouse.get_list_url_tibiadata(houses[0].world, houses[0].town))
-
-    def test_listed_house_list_from_tibiadata_not_found(self):
-        """Testing parsing a list of a world that doesn't exist"""
-        content = self.load_resource(FILE_HOUSE_TIBIADATA_LIST_NOT_FOUND)
-        houses = ListedHouse.list_from_tibiadata(content)
-
-        self.assertIsInstance(houses, list)
-        self.assertEqual(len(houses), 0)
-
-    def test_listed_house_list_from_tibiadata_invalid_json(self):
-        """Testing parsing an invalid json"""
-        with self.assertRaises(InvalidContent):
-            ListedHouse.list_from_tibiadata("nope")
-
-    def test_listed_house_list_from_tibiadata_unrelated_section(self):
-        """Testing parsing an unrelated section"""
-        with self.assertRaises(InvalidContent):
-            ListedHouse.list_from_tibiadata(self.load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))

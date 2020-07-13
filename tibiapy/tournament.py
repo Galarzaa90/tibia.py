@@ -8,9 +8,8 @@ import bs4
 from tibiapy import abc
 from tibiapy.enums import PvpType, TournamentPhase, Vocation
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_popup, get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
-    parse_tibiacom_content, split_list, \
-    try_enum
+from tibiapy.utils import get_tibia_url, parse_integer, parse_popup, parse_tibia_datetime, parse_tibia_full_date, \
+    parse_tibiacom_content, split_list, try_enum
 
 __all__ = (
     "LeaderboardEntry",
@@ -168,7 +167,7 @@ class RewardEntry(abc.Serializable):
         for attr in self.__slots__:
             v = getattr(self, attr)
             attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+        return f"<{self.__class__.__name__}{attributes}>"
 
 
 class RuleSet(abc.Serializable):

@@ -9,7 +9,6 @@ Tibia.py
 
 
 Tibia.py is a library for parsing HTML content from Tibia.com_. into Python objects.
-It can also parse json content from TibiaData_.
 
 **Features:**
 
@@ -22,7 +21,6 @@ It can also parse json content from TibiaData_.
 
 
 .. _Tibia.com: https://www.tibia.com/news/?subtopic=latestnews
-.. _TibiaData: https://www.tibiadata.com/
 .. _aiohttp: https://aiohttp.readthedocs.io/en/stable/
 
 

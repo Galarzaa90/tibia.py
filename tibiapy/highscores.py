@@ -1,5 +1,4 @@
 import datetime
-import math
 import re
 from collections import OrderedDict
 from typing import List
@@ -7,7 +6,7 @@ from typing import List
 from tibiapy import abc
 from tibiapy.enums import Category, Vocation, VocationFilter
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_json, parse_tibiacom_content, try_enum
+from tibiapy.utils import get_tibia_url, parse_tibiacom_content, try_enum
 
 __all__ = (
     "ExpHighscoresEntry",
@@ -19,14 +18,9 @@ __all__ = (
 results_pattern = re.compile(r'Results: (\d+)')
 numeric_pattern = re.compile(r'(\d+)')
 
-HIGHSCORES_URL_TIBIADATA = "https://api.tibiadata.com/v2/highscores/%s/%s/%s.json"
-
 
 class Highscores(abc.Serializable):
     """Represents the highscores of a world.
-
-    Tibia.com only shows 25 entries per page.
-    TibiaData.com shows all results at once.
 
     .. versionadded:: 1.1.0
 
@@ -93,11 +87,6 @@ class Highscores(abc.Serializable):
         """:class:`str`: The URL to the highscores page on Tibia.com containing the results."""
         return self.get_url(self.world, self.category, self.vocation, self.page)
 
-    @property
-    def url_tibiadata(self):
-        """:class:`str`: The URL to the highscores page on TibiaData.com containing the results."""
-        return self.get_url_tibiadata(self.world, self.category, self.vocation)
-
     @classmethod
     def from_content(cls, content):
         """Creates an instance of the class from the html content of a highscores page.
@@ -158,60 +147,6 @@ class Highscores(abc.Serializable):
         return highscores
 
     @classmethod
-    def from_tibiadata(cls, content, vocation=None):
-        """Builds a highscores object from a TibiaData highscores response.
-
-        Notes
-        -----
-        Since TibiaData.com's response doesn't contain any indication of the vocation filter applied,
-        :py:attr:`vocation` can't be determined from the response, so the attribute must be assigned manually.
-
-        If the attribute is known, it can be passed for it to be assigned in this method.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The JSON content of the response.
-        vocation: :class:`VocationFilter`, optional
-            The vocation filter to assign to the results. Note that this won't affect the parsing.
-
-        Returns
-        -------
-        :class:`Highscores`
-            The highscores contained in the page, or None if the content is for the highscores of a nonexistent world.
-
-        Raises
-        ------
-        InvalidContent
-            If content is not a JSON string of the highscores response."""
-        json_content = parse_json(content)
-        try:
-            highscores_json = json_content["highscores"]
-            if "error" in highscores_json["data"]:
-                return None
-            world = highscores_json["world"]
-            category = highscores_json["type"]
-            highscores = cls(world, category)
-            for entry in highscores_json["data"]:
-                value_key = "level"
-                if highscores.category in [Category.ACHIEVEMENTS, Category.LOYALTY_POINTS, Category.EXPERIENCE]:
-                    value_key = "points"
-                if highscores.category == Category.EXPERIENCE:
-                    highscores.entries.append(ExpHighscoresEntry(entry["name"], entry["rank"], entry["voc"],
-                                                                 entry[value_key], world, entry["level"]))
-                elif highscores.category == Category.LOYALTY_POINTS:
-                    highscores.entries.append(LoyaltyHighscoresEntry(entry["name"], entry["rank"], entry["voc"],
-                                                                     entry[value_key], world, entry["title"]))
-                else:
-                    highscores.entries.append(HighscoresEntry(entry["name"], entry["rank"], entry["voc"],
-                                                              entry[value_key], world))
-            highscores.results_count = len(highscores.entries)
-        except KeyError:
-            raise InvalidContent("content is not a TibiaData highscores response.")
-        highscores.vocation = vocation or VocationFilter.ALL
-        return highscores
-
-    @classmethod
     def get_url(cls, world, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1):
         """Gets the Tibia.com URL of the highscores for the given parameters.
 
@@ -232,25 +167,6 @@ class Highscores(abc.Serializable):
         """
         return get_tibia_url("community", "highscores", world=world, category=category.value, profession=vocation.value,
                              currentpage=page)
-
-    @classmethod
-    def get_url_tibiadata(cls, world, category=Category.EXPERIENCE, vocation=VocationFilter.ALL):
-        """Gets the TibiaData.com URL of the highscores for the given parameters.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The game world of the desired highscores.
-        category: :class:`Category`
-            The desired highscores category.
-        vocation: :class:`VocationFiler`
-            The vocation filter to apply. By default all vocations will be shown.
-
-        Returns
-        -------
-        The URL to the TibiaData.com highscores.
-        """
-        return HIGHSCORES_URL_TIBIADATA % (world, category.value.lower(), vocation.name.lower())
 
     @classmethod
     def _parse_tables(cls, parsed_content):

@@ -33,7 +33,7 @@ Changelog
 - Removed support for Python 3.5.
 - Changed the hierarchy of base classes. Base classes no longer implement ``Serializable``, ``Serializable`` is now
   directly implemented by most classes.
-
+- Removed TibiaData functionality.
 
 .. _v2.5.1:
 

@@ -12,11 +12,6 @@ FILE_HIGHSCORES_LOYALTY = "highscores/tibiacom_loyalty.txt"
 FILE_HIGHSCORES_EMPTY = "highscores/tibiacom_empty.txt"
 FILE_HIGHSCORES_NO_RESULTS = "highscores/tibiacom_no_results.txt"
 
-FILE_HIGHSCORES_TIBIADATA_FULL = "highscores/tibiadata_full.json"
-FILE_HIGHSCORES_TIBIADATA_EXPERIENCE = "highscores/tibiadata_experience.json"
-FILE_HIGHSCORES_TIBIADATA_LOYALTY = "highscores/tibiadata_loyalty.json"
-FILE_HIGHSCORES_TIBIADATA_EMPTY = "highscores/tibiadata_empty.json"
-
 
 class TestHighscores(unittest.TestCase, TestCommons):
     # region Tibia.com Tests
@@ -108,76 +103,5 @@ class TestHighscores(unittest.TestCase, TestCommons):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             Highscores.from_content(content)
-
-    # endregion
-
-    # region TibiaData.com Tests
-    def _test_highscores_from_tibiadata(self):
-        """Testing parsing highscores from TibiaData"""
-        content = self.load_resource(FILE_HIGHSCORES_TIBIADATA_FULL)
-        highscores = Highscores.from_tibiadata(content)
-
-        self.assertEqual(highscores.world, "Antica")
-        self.assertEqual(highscores.vocation, VocationFilter.ALL)
-        self.assertEqual(highscores.category, Category.AXE_FIGHTING)
-        self.assertEqual(highscores.results_count, 300)
-
-        self.assertEqual(highscores.url_tibiadata,
-                         Highscores.get_url_tibiadata(highscores.world, highscores.category, highscores.vocation))
-
-        for entry in highscores.entries:
-            self.assertIsInstance(entry, HighscoresEntry)
-            self.assertIsInstance(entry.name, str)
-            self.assertIsInstance(entry.vocation, Vocation)
-            self.assertIsInstance(entry.rank, int)
-            self.assertIsInstance(entry.value, int)
-
-    def test_highscores_from_tibiadata_experience(self):
-        """Testing parsing experience highscores"""
-        content = self.load_resource(FILE_HIGHSCORES_TIBIADATA_EXPERIENCE)
-        highscores = Highscores.from_tibiadata(content)
-
-        self.assertEqual(highscores.world, "Luminera")
-        self.assertEqual(highscores.vocation, VocationFilter.ALL)
-        self.assertEqual(highscores.category, Category.EXPERIENCE)
-        self.assertEqual(highscores.results_count, 300)
-
-        for entry in highscores.entries:
-            self.assertIsInstance(entry, ExpHighscoresEntry)
-            self.assertIsInstance(entry.name, str)
-            self.assertIsInstance(entry.vocation, Vocation)
-            self.assertIsInstance(entry.rank, int)
-            self.assertIsInstance(entry.value, int)
-            self.assertIsInstance(entry.level, int)
-
-    def _test_highscores_from_tibiadata_loyalty(self):
-        """Testing parsing loyalty highscores"""
-        content = self.load_resource(FILE_HIGHSCORES_TIBIADATA_LOYALTY)
-        highscores = Highscores.from_tibiadata(content)
-
-        self.assertEqual(highscores.world, "Zunera")
-        self.assertEqual(highscores.vocation, VocationFilter.ALL)
-        self.assertEqual(highscores.category, Category.LOYALTY_POINTS)
-        self.assertEqual(highscores.results_count, 57)
-
-        for entry in highscores.entries:
-            self.assertIsInstance(entry, LoyaltyHighscoresEntry)
-            self.assertIsInstance(entry.name, str)
-            self.assertIsInstance(entry.vocation, Vocation)
-            self.assertIsInstance(entry.rank, int)
-            self.assertIsInstance(entry.value, int)
-            self.assertIsInstance(entry.title, str)
-
-    def test_highscores_from_tibiadata_empty(self):
-        """Testing parsing empty highscores"""
-        content = self.load_resource(FILE_HIGHSCORES_TIBIADATA_EMPTY)
-        highscores = Highscores.from_tibiadata(content)
-
-        self.assertIsNone(highscores)
-
-    def test_highscores_from_tibiadata_unrelated_section(self):
-        """Testing parsing an unrelated section"""
-        with self.assertRaises(InvalidContent):
-            Highscores.from_tibiadata(self.load_resource(tests.tests_character.FILE_CHARACTER_TIBIADATA))
 
     # endregion

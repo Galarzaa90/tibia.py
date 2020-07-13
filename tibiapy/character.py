@@ -10,8 +10,8 @@ from tibiapy import abc
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import CharacterHouse
-from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
-    parse_tibiadata_date, parse_tibiadata_datetime, split_list, try_datetime, try_enum
+from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list, try_datetime, \
+    try_enum
 
 # Extracts the scheduled deletion date of a character."""
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
@@ -24,8 +24,6 @@ death_summon = re.compile(r'(?P<summon>.+) of <a[^>]+>(?P<name>[^<]+)</a>')
 link_search = re.compile(r'<a[^>]+>[^<]+</a>')
 # Extracts the contents of a tag
 link_content = re.compile(r'>([^<]+)<')
-# Extracts reason from TibiaData death
-death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists>.+))?', re.DOTALL)
 
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w()]+)\sof the\s(.+)')
@@ -321,77 +319,6 @@ class Character(abc.BaseCharacter, abc.Serializable):
         char._parse_account_information(tables.get("Account Information", []))
         char._parse_other_characters(tables.get("Characters", []))
         return char
-
-    @classmethod
-    def from_tibiadata(cls, content):
-        """Builds a character object from a TibiaData character response.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The JSON content of the response.
-
-        Returns
-        -------
-        :class:`Character`
-            The character contained in the page, or None if the character doesn't exist
-
-        Raises
-        ------
-        InvalidContent
-            If content is not a JSON string of the Character response."""
-        json_content = parse_json(content)
-        char = cls()
-        try:
-            character = json_content["characters"]
-            if "error" in character:
-                return None
-            character_data = character["data"]
-            char.name = character_data["name"]
-            char.world = character_data["world"]
-            char.level = character_data["level"]
-            char.achievement_points = character_data["achievement_points"]
-            char.sex = try_enum(Sex, character_data["sex"])
-            char.vocation = try_enum(Vocation, character_data["vocation"])
-            char.residence = character_data["residence"]
-            char.account_status = try_enum(AccountStatus, character_data["account_status"])
-        except KeyError:
-            raise InvalidContent("content does not match a character json from TibiaData.")
-        char.former_names = character_data.get("former_names", [])
-        if "deleted" in character_data:
-            char.deletion_date = parse_tibiadata_datetime(character_data["deleted"])
-        char.married_to = character_data.get("married_to")
-        char.former_world = character_data.get("former_world")
-        char.position = character_data.get("Position:")
-        if "guild" in character_data:
-            char.guild_membership = GuildMembership(character_data["guild"]["name"], character_data["guild"]["rank"])
-        if "house" in character_data:
-            house = character_data["house"]
-            paid_until_date = parse_tibiadata_date(house["paid"])
-            char.houses.append(CharacterHouse(house["houseid"], house["name"], char.world, house["town"], char.name,
-                                              paid_until_date))
-        char.comment = character_data.get("comment")
-        if len(character_data["last_login"]) > 0:
-            char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])
-        for achievement in character["achievements"]:
-            char.achievements.append(Achievement(achievement["name"], achievement["stars"]))
-
-        char._parse_deaths_tibiadata(character.get("deaths", []))
-
-        for other_char in character["other_characters"]:
-            char.other_characters.append(OtherCharacter(other_char["name"], other_char["world"],
-                                                        other_char["status"] == "online",
-                                                        other_char["status"] == "deleted"))
-
-        if character["account_information"]:
-            acc_info = character["account_information"]
-            created = parse_tibiadata_datetime(acc_info.get("created"))
-            loyalty_title = None if acc_info["loyalty_title"] == "(no title)" else acc_info["loyalty_title"]
-            position = acc_info.get("position")
-
-            char.account_information = AccountInformation(created, loyalty_title, position)
-
-        return char
     # endregion
 
     # region Private methods
@@ -588,30 +515,6 @@ class Character(abc.BaseCharacter, abc.Serializable):
             except ValueError:
                 # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                 continue
-
-    def _parse_deaths_tibiadata(self, deaths):
-        for death in deaths:
-            level = death["level"]
-            death_time = parse_tibiadata_datetime(death["date"])
-            m = death_reason.search(death["reason"])
-            _death = Death(self.name, level, time=death_time)
-            killers_str = []
-            assists_str = []
-            involved = [i["name"] for i in death["involved"]]
-            if m and m.group("killers"):
-                killers_str = [k.strip() for k in split_list(m.group("killers").strip())]
-            if m and m.group("assists"):
-                assists_str = [a.strip() for a in split_list(m.group("assists").strip())]
-            for killer in killers_str:
-                summoner = next((i for i in involved if "of %s" % i in killer), None)
-                summon = None
-                if summoner:
-                    summon = killer.replace(" of %s" % summoner, "")
-                    killer = summoner
-                _death.killers.append(Killer(killer, killer in involved, summon=summon))
-            for assist in assists_str:
-                _death.assists.append(Killer(assist, assist in involved))
-            self.deaths.append(_death)
 
     @classmethod
     def _parse_killer(cls, killer):
