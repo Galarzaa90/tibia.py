@@ -1,3 +1,4 @@
+import datetime
 import math
 import re
 from collections import OrderedDict
@@ -16,6 +17,7 @@ __all__ = (
 )
 
 results_pattern = re.compile(r'Results: (\d+)')
+numeric_pattern = re.compile(r'(\d+)')
 
 HIGHSCORES_URL_TIBIADATA = "https://api.tibiadata.com/v2/highscores/%s/%s/%s.json"
 
@@ -36,29 +38,41 @@ class Highscores(abc.Serializable):
         The selected category to displays the highscores of.
     vocation: :class:`VocationFilter`
         The selected vocation to filter out values.
-    entries: :class:`list` of :class:`HighscoresEntry`
-        The highscores entries found.
+    page: :class:`int`
+        The page number being displayed.
+    total_pages: :class:`int`
+        The total number of pages.
     results_count: :class:`int`
         The total amount of highscores entries in this category. These may be shown in another page.
+    last_updated: :class:`datetime.timedelta`
+        How long ago were this results updated. The resolution is 1 minute.
+    entries: :class:`list` of :class:`HighscoresEntry`
+        The highscores entries found.
     """
+    _ENTRIES_PER_PAGE = 50
+
     def __init__(self, world, category, **kwargs):
         self.world: str = world
         self.category = try_enum(Category, category, Category.EXPERIENCE)
         self.vocation = try_enum(VocationFilter, kwargs.get("vocation"), VocationFilter.ALL)
         self.entries: List[HighscoresEntry] = kwargs.get("entries", [])
-        self.results_count: int = kwargs.get("results_count")
+        self.results_count: int = kwargs.get("results_count", 0)
+        self.page: int = kwargs.get("page", 1)
+        self.total_pages: int = kwargs.get("total_pages", 1)
 
     __slots__ = (
         'world',
         'category',
         'vocation',
-        'entries',
+        'page',
+        'total_pages',
         'results_count',
+        'last_updated',
+        'entries',
     )
 
     _serializable_properties = (
-        "page",
-        "total_pages",
+
     )
 
     def __repr__(self):
@@ -73,16 +87,6 @@ class Highscores(abc.Serializable):
     def to_rank(self):
         """:class:`int`: The last rank of the provided entries."""
         return self.entries[-1].rank if self.entries else 0
-
-    @property
-    def page(self):
-        """:class:`int`: The page number the shown results correspond to on Tibia.com"""
-        return int(math.floor(self.from_rank/25))+1 if self.from_rank else 0
-
-    @property
-    def total_pages(self):
-        """:class:`int`: The total of total_pages of the highscores category."""
-        return int(math.ceil(self.results_count/25))
 
     @property
     def url(self):
@@ -131,11 +135,21 @@ class Highscores(abc.Serializable):
         vocation = int(vocation_selected["value"]) if vocation_selected else 0
         highscores = cls(world, category, vocation=vocation)
         entries = tables.get("Highscores")
+        last_update_container = parsed_content.find("span", attrs={"class": "RightArea"})
+        if last_update_container:
+            m = numeric_pattern.search(last_update_container.text)
+            highscores.last_updated = datetime.timedelta(minutes=int(m.group(1))) if m else datetime.timedelta()
         if entries is None:
             return None
         _, header, *rows = entries
         info_row = rows.pop()
-        highscores.results_count = int(results_pattern.search(info_row.text).group(1))
+        pages_div, results_div = info_row.find_all("div")
+        page_links = pages_div.find_all("a")
+        listed_pages = [int(p.text) for p in page_links]
+        if listed_pages:
+            highscores.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
+            highscores.total_pages = max(int(page_links[-1].text), highscores.page)
+        highscores.results_count = int(results_pattern.search(results_div.text).group(1))
         for row in rows:
             cols_raw = row.find_all('td')
             if "There is currently no data" in cols_raw[0].text:
@@ -184,13 +198,13 @@ class Highscores(abc.Serializable):
                     value_key = "points"
                 if highscores.category == Category.EXPERIENCE:
                     highscores.entries.append(ExpHighscoresEntry(entry["name"], entry["rank"], entry["voc"],
-                                                                 entry[value_key], entry["level"]))
+                                                                 entry[value_key], world, entry["level"]))
                 elif highscores.category == Category.LOYALTY_POINTS:
                     highscores.entries.append(LoyaltyHighscoresEntry(entry["name"], entry["rank"], entry["voc"],
-                                                                     entry[value_key], entry["title"]))
+                                                                     entry[value_key], world, entry["title"]))
                 else:
                     highscores.entries.append(HighscoresEntry(entry["name"], entry["rank"], entry["voc"],
-                                                              entry[value_key]))
+                                                              entry[value_key], world))
             highscores.results_count = len(highscores.entries)
         except KeyError:
             raise InvalidContent("content is not a TibiaData highscores response.")
@@ -272,17 +286,19 @@ class Highscores(abc.Serializable):
         cols: :class:`bs4.ResultSet`
             The list of columns for that entry.
         """
-        rank, name, vocation, *values = [c.text.replace('\xa0', ' ').strip() for c in cols]
+        rank, name, *values = [c.text.replace('\xa0', ' ').strip() for c in cols]
         rank = int(rank)
-        if self.category == Category.EXPERIENCE or self.category == Category.LOYALTY_POINTS:
-            world, extra, value = values
+        if self.category == Category.EXPERIENCE:
+            vocation, world, extra, value = values
+        elif self.category == Category.LOYALTY_POINTS:
+            extra, vocation, world, level, value = values
         else:
-            world, value, *extra = values
+            vocation, world, value, *extra = values
         value = int(value.replace(',', ''))
         if self.category == Category.EXPERIENCE:
             entry = ExpHighscoresEntry(name, rank, vocation, value, world, int(extra))
         elif self.category == Category.LOYALTY_POINTS:
-            entry = LoyaltyHighscoresEntry(name, rank, vocation, value, world, extra)
+            entry = LoyaltyHighscoresEntry(name, rank, vocation, value, world, extra, int(level))
         else:
             entry = HighscoresEntry(name, rank, vocation, value, world)
         self.entries.append(entry)
@@ -369,13 +385,17 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
         The character's loyalty points.
     title: :class:`str`
         The character's loyalty title.
+    level: :class:`int`
+        The character's level.
     world: :class:`str`
         The character's world.
     """
-    def __init__(self, name, rank, vocation, value, world, title):
+    def __init__(self, name, rank, vocation, value, world, title, level=0):
         super().__init__(name, rank, vocation, value, world)
         self.title: str = title
+        self.level: int = level
 
     __slots__ = (
         'title',
+        'level',
     )

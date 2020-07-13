@@ -1,11 +1,12 @@
 import datetime
+import enum
 import functools
 import json
 import re
 import urllib.parse
 import warnings
 from collections import OrderedDict
-from typing import Optional, Type, TypeVar, Union
+from typing import NewType, Optional, Type, TypeVar, Union
 
 import bs4
 
@@ -56,7 +57,7 @@ def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
     >>> get_tibia_url("community", "worlds", **params)
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
-    url = "https://www.test.tibia.com/%s/?" % section
+    url = "https://www.tibia.com/%s/?" % section
     params = OrderedDict(subtopic=subtopic) if subtopic else OrderedDict()
     if kwargs:
         for key, value in kwargs.items():
@@ -419,7 +420,10 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
     try:
         return cls(val)
     except ValueError:
-        return default
+        try:
+            return cls._member_map_[val]
+        except KeyError:
+            return default
 
 
 def parse_json(content):

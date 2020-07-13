@@ -24,6 +24,10 @@ Changelog
     - Added classes ``ForumPost``
     - Added auxiliary classes ``LastPost``,  ``ForumAuthor`` and ``ThreadStatus``.
     - Added property ``thread_url`` to ``News``.
+- Updated highscores for Summer Update 2020:
+    - ``page`` and ``total_pages`` are now fields instead of properties.
+    - Added ``last_updated`` field.
+    - Added ``Category.GOSHNARS_TAINT`` and ``Category.CHARM_POINTS``.
 - Removed deprecated property ``house`` from ``Character``, use ``houses`` instead.
 - Removed support for Python 3.5.
 - Changed the hierarchy of base classes. Base classes no longer implement ``Serializable``, ``Serializable`` is now
