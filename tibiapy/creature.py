@@ -1,6 +1,7 @@
 import bs4
 
-from tibiapy import abc, InvalidContent
+from tibiapy import abc
+from tibiapy.errors import InvalidContent
 
 __all__ = (
     "BoostedCreature",
@@ -28,17 +29,16 @@ class BoostedCreature(abc.Serializable):
     )
 
     def __init__(self, name, image_url):
-        self.name = name
-        self.image_url = image_url
+        self.name: str = name
+        self.image_url: str = image_url
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} image_url={0.image_url!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} image_url={self.image_url!r}>"
 
     @classmethod
     def from_content(cls, content):
         """
         Gets the boosted creature from any Tibia.com page.
-
 
         Parameters
         ----------
@@ -47,8 +47,8 @@ class BoostedCreature(abc.Serializable):
 
         Returns
         -------
-        :class:`News`
-            The boosted article shown.
+        :class:`BoostedCreature`
+            The boosted creature of the day.
 
         Raises
         ------

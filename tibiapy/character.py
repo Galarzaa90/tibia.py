@@ -9,10 +9,9 @@ import bs4
 from tibiapy import abc
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
-from tibiapy.guild import Guild
 from tibiapy.house import CharacterHouse
-from tibiapy.utils import parse_json, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, \
-    parse_tibiadata_date, parse_tibiadata_datetime, try_datetime, try_enum, deprecated, split_list
+from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list, try_datetime, \
+    try_enum
 
 # Extracts the scheduled deletion date of a character."""
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
@@ -25,8 +24,6 @@ death_summon = re.compile(r'(?P<summon>.+) of <a[^>]+>(?P<name>[^<]+)</a>')
 link_search = re.compile(r'<a[^>]+>[^<]+</a>')
 # Extracts the contents of a tag
 link_content = re.compile(r'>([^<]+)<')
-# Extracts reason from TibiaData death
-death_reason = re.compile(r'by (?P<killers>[^.]+)(?:\.\s+Assisted by (?P<assists>.+))?', re.DOTALL)
 
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w()]+)\sof the\s(.+)')
@@ -55,7 +52,7 @@ class AccountBadge(abc.Serializable):
     name: :class:`str`
         The name of the badge.
     icon_url: :class:`str`
-        The URL to the badge's icon URL.
+        The URL to the badge's icon.
     description: :class:`str`
         The description of the badge.
     """
@@ -66,16 +63,18 @@ class AccountBadge(abc.Serializable):
     )
 
     def __init__(self, name, icon_url, description):
-        self.name = name  # type: str
-        self.icon_url = icon_url  # type: str
-        self.description = description  # type: str
+        self.name: str = name
+        self.icon_url: str = icon_url
+        self.description: str = description
 
     def __repr__(self):
-        return "<%s name=%r description=%r>" % (self.__class__.__name__, self.name, self.description)
+        return f"<{self.__class__.__name__} name={self.name!r} description={self.description!r}>"
 
 
 class AccountInformation(abc.Serializable):
     """Represents the account information of a character.
+
+    This is only visible if the character is not marked as hidden.
 
     Attributes
     ----------
@@ -94,11 +93,11 @@ class AccountInformation(abc.Serializable):
 
     def __init__(self, created, loyalty_title=None, position=None):
         self.created = try_datetime(created)
-        self.loyalty_title = loyalty_title  # type: Optional[str]
-        self.position = position  # type: Optional[str]
+        self.loyalty_title: Optional[str] = loyalty_title
+        self.position: Optional[str] = position
 
     def __repr__(self):
-        return "<%s created=%r>" % (self.__class__.__name__, self.created)
+        return f"<{self.__class__.__name__} created={self.created!r} loyalty_title={self.loyalty_title!r}>"
 
 
 class Achievement(abc.Serializable):
@@ -119,16 +118,16 @@ class Achievement(abc.Serializable):
         "secret",
     )
 
-    def __init__(self, name, grade, secret = False):
-        self.name = name   # type: str
+    def __init__(self, name, grade, secret=False):
+        self.name: str = name
         self.grade = int(grade)
-        self.secret = secret
+        self.secret: bool = secret
 
     def __repr__(self):
-        return "<%s name=%r grade=%d secret=%s>" % (self.__class__.__name__, self.name, self.grade, self.secret)
+        return f"<{self.__class__.__name__} name={self.name!r} grade={self.grade} secret={self.secret}>"
 
 
-class Character(abc.BaseCharacter):
+class Character(abc.BaseCharacter, abc.Serializable):
     """Represents a Tibia character.
 
     Attributes
@@ -189,6 +188,7 @@ class Character(abc.BaseCharacter):
         It will be empty if the character is hidden, otherwise, it will contain at least the character itself.
     """
     __slots__ = (
+        "name",
         "former_names",
         "sex",
         "title",
@@ -215,32 +215,41 @@ class Character(abc.BaseCharacter):
         "deletion_date",
     )
 
+    _serializable_properties = (
+        "deleted",
+        "hidden",
+    )
+
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
-        self.name = name  # type: str
-        self.former_names = kwargs.get("former_names", [])  # type: List[str]
-        self.title = kwargs.get("title")  # type: Optional[str]
+        self.name: str = name
+        self.former_names: List[str] = kwargs.get("former_names", [])
+        self.title: Optional[str] = kwargs.get("title")
         self.unlocked_titles = int(kwargs.get("unlocked_titles", 0))
         self.sex = try_enum(Sex, sex)
         self.vocation = try_enum(Vocation, vocation)
         self.level = int(level)
         self.achievement_points = int(kwargs.get("achievement_points", 0))
-        self.world = world  # type: str
-        self.former_world = kwargs.get("former_world")  # type: Optional[str]
-        self.residence = kwargs.get("residence")  # type: str
-        self.married_to = kwargs.get("married_to")  # type: Optional[str]
-        self.houses = kwargs.get("houses", [])  # type: List[CharacterHouse]
-        self.guild_membership = kwargs.get("guild_membership")  # type: Optional[GuildMembership]
+        self.world: str = world
+        self.former_world: Optional[str] = kwargs.get("former_world")
+        self.residence: str = kwargs.get("residence")
+        self.married_to: Optional[str] = kwargs.get("married_to")
+        self.houses: List[CharacterHouse] = kwargs.get("houses", [])
+        self.guild_membership: Optional[GuildMembership] = kwargs.get("guild_membership")
         self.last_login = try_datetime(kwargs.get("last_login"))
         self.account_status = try_enum(AccountStatus, kwargs.get("account_status"))
-        self.position = kwargs.get("position")  # type: Optional[str]
-        self.comment = kwargs.get("comment")  # type: Optional[str]
-        self.account_badges = kwargs.get("account_badges", [])  # type: List[AccountBadge]
-        self.achievements = kwargs.get("achievements", [])  # type: List[Achievement]
-        self.deaths = kwargs.get("deaths", [])  # type: List[Death]
-        self.deaths_truncated = kwargs.get("deaths", False)  # type: bool
-        self.account_information = kwargs.get("account_information")  # type: Optional[AccountInformation]
-        self.other_characters = kwargs.get("other_characters", [])  # type: List[OtherCharacter]
+        self.position: Optional[str] = kwargs.get("position")
+        self.comment: Optional[str] = kwargs.get("comment")
+        self.account_badges: List[AccountBadge] = kwargs.get("account_badges", [])
+        self.achievements: List[Achievement] = kwargs.get("achievements", [])
+        self.deaths: List[Death] = kwargs.get("deaths", [])
+        self.deaths_truncated: bool = kwargs.get("deaths", False)
+        self.account_information: Optional[AccountInformation] = kwargs.get("account_information")
+        self.other_characters: List[OtherCharacter] = kwargs.get("other_characters", [])
         self.deletion_date = try_datetime(kwargs.get("deletion_date"))
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} world={self.world!r} vocation={self.vocation!r} " \
+               f"level={self.level} sex={self.sex!r}>"
 
     # region Properties
     @property
@@ -261,7 +270,7 @@ class Character(abc.BaseCharacter):
     @property
     def guild_url(self):
         """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
-        return Guild.get_url(self.guild_membership.name) if self.guild_membership else None
+        return abc.BaseGuild.get_url(self.guild_membership.name) if self.guild_membership else None
 
     @property
     def hidden(self):
@@ -272,18 +281,6 @@ class Character(abc.BaseCharacter):
     def married_to_url(self):
         """:class:`str`: The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return self.get_url(self.married_to) if self.married_to else None
-
-    @property
-    @deprecated("houses")
-    def house(self):
-        """:class:`CharacterHouse`: The house currently owned by the character.
-
-        .. deprecated:: 2.4.0
-            Characters may have more than one house. This will only return the first if any. Use :attr:`houses` instead.
-
-            Only kept for backwards compatibility and may be removed in the next major update.
-        """
-        return self.houses[0] if self.houses else None
     # endregion
 
     # region Public methods
@@ -321,77 +318,6 @@ class Character(abc.BaseCharacter):
         char._parse_deaths(tables.get("Character Deaths", []))
         char._parse_account_information(tables.get("Account Information", []))
         char._parse_other_characters(tables.get("Characters", []))
-        return char
-
-    @classmethod
-    def from_tibiadata(cls, content):
-        """Builds a character object from a TibiaData character response.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The JSON content of the response.
-
-        Returns
-        -------
-        :class:`Character`
-            The character contained in the page, or None if the character doesn't exist
-
-        Raises
-        ------
-        InvalidContent
-            If content is not a JSON string of the Character response."""
-        json_content = parse_json(content)
-        char = cls()
-        try:
-            character = json_content["characters"]
-            if "error" in character:
-                return None
-            character_data = character["data"]
-            char.name = character_data["name"]
-            char.world = character_data["world"]
-            char.level = character_data["level"]
-            char.achievement_points = character_data["achievement_points"]
-            char.sex = try_enum(Sex, character_data["sex"])
-            char.vocation = try_enum(Vocation, character_data["vocation"])
-            char.residence = character_data["residence"]
-            char.account_status = try_enum(AccountStatus, character_data["account_status"])
-        except KeyError:
-            raise InvalidContent("content does not match a character json from TibiaData.")
-        char.former_names = character_data.get("former_names", [])
-        if "deleted" in character_data:
-            char.deletion_date = parse_tibiadata_datetime(character_data["deleted"])
-        char.married_to = character_data.get("married_to")
-        char.former_world = character_data.get("former_world")
-        char.position = character_data.get("Position:")
-        if "guild" in character_data:
-            char.guild_membership = GuildMembership(character_data["guild"]["name"], character_data["guild"]["rank"])
-        if "house" in character_data:
-            house = character_data["house"]
-            paid_until_date = parse_tibiadata_date(house["paid"])
-            char.houses.append(CharacterHouse(house["houseid"], house["name"], char.world, house["town"], char.name,
-                                              paid_until_date))
-        char.comment = character_data.get("comment")
-        if len(character_data["last_login"]) > 0:
-            char.last_login = parse_tibiadata_datetime(character_data["last_login"][0])
-        for achievement in character["achievements"]:
-            char.achievements.append(Achievement(achievement["name"], achievement["stars"]))
-
-        char._parse_deaths_tibiadata(character.get("deaths", []))
-
-        for other_char in character["other_characters"]:
-            char.other_characters.append(OtherCharacter(other_char["name"], other_char["world"],
-                                                        other_char["status"] == "online",
-                                                        other_char["status"] == "deleted"))
-
-        if character["account_information"]:
-            acc_info = character["account_information"]
-            created = parse_tibiadata_datetime(acc_info.get("created"))
-            loyalty_title = None if acc_info["loyalty_title"] == "(no title)" else acc_info["loyalty_title"]
-            position = acc_info.get("position")
-
-            char.account_information = AccountInformation(created, loyalty_title, position)
-
         return char
     # endregion
 
@@ -590,30 +516,6 @@ class Character(abc.BaseCharacter):
                 # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
                 continue
 
-    def _parse_deaths_tibiadata(self, deaths):
-        for death in deaths:
-            level = death["level"]
-            death_time = parse_tibiadata_datetime(death["date"])
-            m = death_reason.search(death["reason"])
-            _death = Death(self.name, level, time=death_time)
-            killers_str = []
-            assists_str = []
-            involved = [i["name"] for i in death["involved"]]
-            if m and m.group("killers"):
-                killers_str = [k.strip() for k in split_list(m.group("killers").strip())]
-            if m and m.group("assists"):
-                assists_str = [a.strip() for a in split_list(m.group("assists").strip())]
-            for killer in killers_str:
-                summoner = next((i for i in involved if "of %s" % i in killer), None)
-                summon = None
-                if summoner:
-                    summon = killer.replace(" of %s" % summoner, "")
-                    killer = summoner
-                _death.killers.append(Killer(killer, killer in involved, summon=summon))
-            for assist in assists_str:
-                _death.assists.append(Killer(assist, assist in involved))
-            self.deaths.append(_death)
-
     @classmethod
     def _parse_killer(cls, killer):
         """Parses a killer into a dictionary.
@@ -659,7 +561,11 @@ class Character(abc.BaseCharacter):
             main = False
             if main_img and main_img['title'] == "Main Character":
                 main = True
-            self.other_characters.append(OtherCharacter(name, world, status == "online", status == "deleted", main))
+            position = None
+            if "CipSoft Member" in status:
+                position = "CipSoft Member"
+            self.other_characters.append(OtherCharacter(name, world, "online" in status, "deleted" in status, main,
+                                                        position))
 
     @classmethod
     def _parse_tables(cls, parsed_content):
@@ -707,20 +613,23 @@ class Death(abc.Serializable):
         "killers",
         "time",
         "assists",
-        "name")
+        "name",
+    )
+
+    _serializable_properties = (
+        "by_player"
+    )
 
     def __init__(self, name=None, level=0, **kwargs):
         self.name = name
         self.level = level
-        self.killers = kwargs.get("killers", [])  # type: List[Killer]
-        self.assists = kwargs.get("assists", [])  # type: List[Killer]
+        self.killers: List[Killer] = kwargs.get("killers", [])
+        self.assists: List[Killer] = kwargs.get("assists", [])
         self.time = try_datetime(kwargs.get("time"))
 
     def __repr__(self):
         attributes = ""
         for attr in self.__slots__:
-            if attr in ["name", "level"]:
-                continue
             v = getattr(self, attr)
             if isinstance(v, int) and v == 0 and not isinstance(v, bool):
                 continue
@@ -728,9 +637,10 @@ class Death(abc.Serializable):
                 continue
             if v is None:
                 continue
-            attributes += ",%s=%r" % (attr, v)
-        return "{0.__class__.__name__}({0.name!r},{0.level!r}{1})".format(self, attributes)
+            attributes += f" {attr}={v!r}"
+        return f"<{self.__class__.__name__} {attributes})"
 
+    # region Properties
     @property
     def by_player(self):
         """:class:`bool`: Whether the kill involves other characters."""
@@ -742,9 +652,10 @@ class Death(abc.Serializable):
 
         This is usually the killer that gave the killing blow."""
         return self.killers[0] if self.killers else None
+    # endregion
 
 
-class GuildMembership(abc.BaseGuild):
+class GuildMembership(abc.BaseGuild, abc.Serializable):
     """
     Represents the guild information of a character.
 
@@ -754,17 +665,21 @@ class GuildMembership(abc.BaseGuild):
         The name of the guild.
     rank: :class:`str`
         The name of the rank the member has.
+    title: :class:`str`
+        The title of the member in the guild.
     """
     __slots__ = (
         "rank",
+        "title",
     )
 
-    def __init__(self, name, rank):
-        self.name = name  # type: str
-        self.rank = rank  # type: str
+    def __init__(self, name, rank, title=None):
+        self.name: str = name
+        self.rank: str = rank
+        self.title: Optional[str] = title
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} rank={0.rank!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} rank={self.rank!r}>"
 
 
 class Killer(abc.Serializable):
@@ -793,9 +708,9 @@ class Killer(abc.Serializable):
     )
 
     def __init__(self, name, player=False, summon=None):
-        self.name = name  # type: str
-        self.player = player  # type: bool
-        self.summon = summon  # type: Optional[str]
+        self.name: str = name
+        self.player: bool = player
+        self.summon: Optional[str] = summon
 
     def __repr__(self):
         attributes = ""
@@ -809,8 +724,8 @@ class Killer(abc.Serializable):
                 continue
             if v is None:
                 continue
-            attributes += ",%s=%r" % (attr, v)
-        return "{0.__class__.__name__}({0.name!r}{1})".format(self, attributes)
+            attributes += f",{attr}={v!r}"
+        return f"{self.__class__.__name__}({self.name!r}{attributes})"
 
     @property
     def url(self):
@@ -820,7 +735,7 @@ class Killer(abc.Serializable):
         return Character.get_url(self.name) if self.player else None
 
 
-class OnlineCharacter(abc.BaseCharacter):
+class OnlineCharacter(abc.BaseCharacter, abc.Serializable):
     """
     Represents an online character.
 
@@ -836,19 +751,20 @@ class OnlineCharacter(abc.BaseCharacter):
         The level of the character.
     """
     __slots__ = (
+        "name",
         "world",
         "vocation",
         "level",
     )
 
     def __init__(self, name, world, level, vocation):
-        self.name = name  # type: str
-        self.world = world  # type: str
+        self.name: str = name
+        self.world: str = world
         self.level = int(level)
         self.vocation = try_enum(Vocation, vocation)
 
 
-class OtherCharacter(abc.BaseCharacter):
+class OtherCharacter(abc.BaseCharacter, abc.Serializable):
     """
     Represents other characters displayed in the Character's information page.
 
@@ -864,18 +780,26 @@ class OtherCharacter(abc.BaseCharacter):
         Whether the character is scheduled for deletion or not.
     main: :class:`bool`
         Whether this is the main character or not.
+    position: :class:`str`
+        The character's official position, if any.
     """
     __slots__ = (
+        "name",
         "world",
         "online",
         "deleted",
         "main",
+        "position",
     )
 
-    def __init__(self, name, world, online=False, deleted=False, main=False):
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.online = online  # type: bool
-        self.deleted = deleted  # type: bool
-        self.main = main  # type: bool
+    def __init__(self, name, world, online=False, deleted=False, main=False, position=None):
+        self.name: str = name
+        self.world: str = world
+        self.online: bool = online
+        self.deleted: bool = deleted
+        self.main: bool = main
+        self.position: Optional[str] = position
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} world={self.world!r} online={self.online!r} " \
+               f"main={self.main} position={self.position!r}>"

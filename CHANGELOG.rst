@@ -6,6 +6,35 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.0.0:
+
+3.0.0 (2020-07-13)
+==================
+- The ``Client`` class' methods now return their responses wrapped in a ``TibiaResponse`` object.
+  This contains information about Tibia.com's cache.
+- Added parsing for Guild wars.
+    - Added class ``GuildWars``
+    - Added class ``GuildWarsEntry``
+    - Added ``url_wars`` property and ``get_url_wars`` class method to all Guild classes.
+    - Added ``active_war`` attribute to ``Guild``.
+- Added parsing for the Tibia forums: Boards, Threads, Posts, Announcements
+    - Added classes ``ForumBoard`` and ``ListedBoard``
+    - Added classes ``ForumThread`` and ``ListedThread``
+    - Added classes ``ForumAnnouncement`` and ``ListedAnnouncement``
+    - Added classes ``ForumPost``
+    - Added auxiliary classes ``LastPost``,  ``ForumAuthor`` and ``ThreadStatus``.
+    - Added property ``thread_url`` to ``News``.
+- Updated highscores for Summer Update 2020:
+    - ``page`` and ``total_pages`` are now fields instead of properties.
+    - Added ``last_updated`` field.
+    - Added ``Category.GOSHNARS_TAINT`` and ``Category.CHARM_POINTS``.
+    - Added ``VocationFilter.NONE``.
+- Removed deprecated property ``house`` from ``Character``, use ``houses`` instead.
+- Removed support for Python 3.5.
+- Changed the hierarchy of base classes. Base classes no longer implement ``Serializable``, ``Serializable`` is now
+  directly implemented by most classes.
+- Removed TibiaData functionality.
+
 .. _v2.5.1:
 
 2.5.1 (2020-05-27)

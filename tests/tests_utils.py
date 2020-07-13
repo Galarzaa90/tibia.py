@@ -15,23 +15,6 @@ TIBIA_DATE = "Jun 20 2018"
 TIBIA_FULL_DATE = "July 23, 2015"
 TIBIA_DATE_INVALID = "8 Nov 2018"
 
-TIBIADATA_DATETIME_CET = {
-    "date": "2017-11-03 18:34:13.000000",
-    "timezone_type": 2,
-    "timezone": "CET"
-}
-TIBIADATA_DATETIME_CEST = {
-    "date": "2010-10-05 10:24:18.000000",
-    "timezone_type": 2,
-    "timezone": "CEST"
-}
-TIBIADATA_DATETIME_PST = {
-    "date": "2015-01-03 20:04:01.000000",
-    "timezone_type": 2,
-    "timezone": "PST"
-}
-TIBIADATA_DATE = "2018-12-20"
-
 
 class TestUtils(TestCommons, unittest.TestCase):
     def test_serializable_get_item(self):
@@ -102,21 +85,6 @@ class TestUtils(TestCommons, unittest.TestCase):
         date = utils.parse_tibia_date(TIBIA_DATETIME_INVALID)
         self.assertIsNone(date)
 
-    def test_parse_tibia_datetime_from_datetime(self):
-        date = utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_CET)
-        self.assertIsInstance(date, datetime.datetime)
-
-        date = utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_CEST)
-        self.assertIsInstance(date, datetime.datetime)
-
-        date = utils.parse_tibiadata_datetime(TIBIADATA_DATETIME_PST)
-        self.assertIsNone(date)
-
-        # noinspection PyTypeChecker
-        # Purposely providing wrong type.
-        date = utils.parse_tibiadata_datetime(TIBIA_DATE)
-        self.assertIsNone(date)
-
     def test_try_date(self):
         date = utils.try_date(datetime.datetime.now())
         self.assertIsInstance(date, datetime.date)
@@ -131,17 +99,11 @@ class TestUtils(TestCommons, unittest.TestCase):
         date = utils.try_date(TIBIA_FULL_DATE)
         self.assertIsInstance(date, datetime.date)
 
-        date = utils.try_date(TIBIADATA_DATE)
-        self.assertIsInstance(date, datetime.date)
-
     def test_try_date_time(self):
         date_time = utils.try_datetime(datetime.datetime.now())
         self.assertIsInstance(date_time, datetime.datetime)
 
         date_time = utils.try_datetime(TIBIA_DATETIME_CEST)
-        self.assertIsInstance(date_time, datetime.datetime)
-
-        date_time = utils.try_datetime(TIBIADATA_DATETIME_CET)
         self.assertIsInstance(date_time, datetime.datetime)
 
     def test_parse_number_words(self):
@@ -156,7 +118,8 @@ class TestUtils(TestCommons, unittest.TestCase):
         self.assertEqual(utils.try_enum(enums.Sex, "male"), enums.Sex.MALE)
         self.assertEqual(utils.try_enum(enums.TransferType, "", enums.TransferType.REGULAR), enums.TransferType.REGULAR)
         self.assertEqual(utils.try_enum(enums.WorldLocation, enums.WorldLocation.EUROPE), enums.WorldLocation.EUROPE)
-        self.assertEqual(utils.try_enum(enums.VocationFilter, 4), enums.VocationFilter.DRUIDS)
+        self.assertEqual(utils.try_enum(enums.VocationFilter, 4), enums.VocationFilter.SORCERERS)
+        self.assertEqual(utils.try_enum(enums.Category, "FISHING"), enums.Category.FISHING)
 
     def test_enum_str(self):
         self.assertEqual(str(enums.Sex.MALE), enums.Sex.MALE.value)

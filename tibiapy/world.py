@@ -4,12 +4,12 @@ from typing import List
 
 import bs4
 
-from tibiapy import InvalidContent, abc, TournamentWorldType
+from tibiapy import abc
 from tibiapy.character import OnlineCharacter
-from tibiapy.enums import PvpType, TransferType, WorldLocation
-from tibiapy.utils import get_tibia_url, parse_json, parse_tibia_datetime, parse_tibia_full_date, \
-    parse_tibiacom_content, \
-    parse_tibiadata_datetime, try_date, try_datetime, try_enum, parse_integer
+from tibiapy.enums import PvpType, TournamentWorldType, TransferType, WorldLocation
+from tibiapy.errors import InvalidContent
+from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
+    parse_tibiacom_content, try_date, try_datetime, try_enum
 
 __all__ = (
     "ListedWorld",
@@ -21,7 +21,7 @@ record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
 
 
-class ListedWorld(abc.BaseWorld):
+class ListedWorld(abc.BaseWorld, abc.Serializable):
     """Represents a game server listed in the World Overview section.
 
     Attributes
@@ -32,7 +32,6 @@ class ListedWorld(abc.BaseWorld):
         The current status of the world.
     online_count: :class:`int`
         The number of currently online players in the world.
-
     location: :class:`WorldLocation`
         The physical location of the game servers.
     pvp_type: :class:`PvpType`
@@ -51,17 +50,31 @@ class ListedWorld(abc.BaseWorld):
     tournament_world_type: :class:`TournamentWorldType`
         The type of tournament world. ``None`` if this is not a tournament world.
     """
+    __slots__ = (
+        "name",
+        "status",
+        "location",
+        "online_count",
+        "pvp_type",
+        "battleye_protected",
+        "battleye_date",
+        "experimental",
+        "premium_only",
+        "tournament_world_type",
+        "transfer_type"
+    )
+
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
-        self.name = name  # type: str
+        self.name: str = name
         self.location = try_enum(WorldLocation, location)
         self.pvp_type = try_enum(PvpType, pvp_type)
-        self.status = kwargs.get("status")  # type: str
-        self.online_count = kwargs.get("online_count", 0)  # type: int
+        self.status: str = kwargs.get("status")
+        self.online_count: int = kwargs.get("online_count", 0)
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
-        self.battleye_protected = kwargs.get("battleye_protected", False)  # type: bool
+        self.battleye_protected: bool = kwargs.get("battleye_protected", False)
         self.battleye_date = try_date(kwargs.get("battleye_date"))
-        self.experimental = kwargs.get("experimental", False)  # type: bool
-        self.premium_only = kwargs.get("premium_only", False)  # type: bool
+        self.experimental: bool = kwargs.get("experimental", False)
+        self.premium_only: bool = kwargs.get("premium_only", False)
         self.tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
 
     # region Public methods
@@ -76,18 +89,6 @@ class ListedWorld(abc.BaseWorld):
             The URL to the World Overview's page.
         """
         return WorldOverview.get_url()
-
-    @classmethod
-    def get_list_url_tibiadata(cls):
-        """
-        Gets the URL to the World Overview page in Tibia.com
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the World Overview's page.
-        """
-        return WorldOverview.get_url_tibiadata()
 
     @classmethod
     def list_from_content(cls, content):
@@ -111,36 +112,6 @@ class ListedWorld(abc.BaseWorld):
         world_overview = WorldOverview.from_content(content)
         return world_overview.worlds
 
-    @classmethod
-    def list_from_tibiadata(cls, content):
-        """Parses the content of the World Overview section from TibiaData.com.
-
-        Notes
-        -----
-        Due to TibiaData limitations, the listed worlds lack some information.
-        The following attributes are unavailable:
-
-        - :py:attr:`status` is always ``Online``.
-        - :py:attr:`battleye_protected` is always ``False``
-        - :py:attr:`battleye_date` is always ``None``.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The JSON response of the worlds section in TibiaData.com
-
-        Returns
-        -------
-        :class:`list` of :class:`ListedWorld`
-            A list of the worlds and their current information.
-
-        Raises
-        ------
-        InvalidContent
-            If the provided content is the json content of the world section in TibiaData.com
-        """
-        world_overview = WorldOverview.from_tibiadata(content)
-        return world_overview.worlds
     # endregion
 
     # region Private methods
@@ -161,7 +132,7 @@ class ListedWorld(abc.BaseWorld):
     # endregion
 
 
-class World(abc.BaseWorld):
+class World(abc.BaseWorld, abc.Serializable):
     """Represents a Tibia game server.
 
     Attributes
@@ -201,6 +172,17 @@ class World(abc.BaseWorld):
         Whether only premium account players are allowed to play in this server.
     """
     __slots__ = (
+        "name",
+        "status",
+        "location",
+        "pvp_type",
+        "battleye_protected",
+        "battleye_date",
+        "experimental",
+        "premium_only",
+        "tournament_world_type",
+        "transfer_type",
+        "online_count",
         "record_count",
         "record_date",
         "creation_date",
@@ -209,21 +191,21 @@ class World(abc.BaseWorld):
     )
 
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
-        self.name = name  # type: str
+        self.name: str = name
         self.location = try_enum(WorldLocation, location)
         self.pvp_type = try_enum(PvpType, pvp_type)
-        self.status = kwargs.get("status")  # type: bool
-        self.online_count = kwargs.get("online_count", 0)  # type: int
-        self.record_count = kwargs.get("record_count", 0)  # type: int
+        self.status: bool = kwargs.get("status")
+        self.online_count: int = kwargs.get("online_count", 0)
+        self.record_count: int = kwargs.get("record_count", 0)
         self.record_date = try_datetime(kwargs.get("record_date"))
-        self.creation_date = kwargs.get("creation_date")  # type: str
+        self.creation_date: str = kwargs.get("creation_date")
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
-        self.world_quest_titles = kwargs.get("world_quest_titles", [])  # type: List[str]
-        self.battleye_protected = kwargs.get("battleye_protected", False)  # type: bool
+        self.world_quest_titles: List[str] = kwargs.get("world_quest_titles", [])
+        self.battleye_protected: bool = kwargs.get("battleye_protected", False)
         self.battleye_date = try_date(kwargs.get("battleye_date"))
-        self.experimental = kwargs.get("experimental", False)  # type: bool
-        self.online_players = kwargs.get("online_players", [])  # type: List[OnlineCharacter]
-        self.premium_only = kwargs.get("premium_only", False)  # type: bool
+        self.experimental: bool = kwargs.get("experimental", False)
+        self.online_players: List[OnlineCharacter] = kwargs.get("online_players", [])
+        self.premium_only: bool = kwargs.get("premium_only", False)
         self.tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
 
     # region Properties
@@ -278,51 +260,6 @@ class World(abc.BaseWorld):
             raise InvalidContent("content is not from the world section in Tibia.com")
 
         return world
-
-    @classmethod
-    def from_tibiadata(cls, content):
-        """Parses a TibiaData.com response into a :class:`World`
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The raw JSON content from TibiaData
-
-        Returns
-        -------
-        :class:`World`
-            The World described in the page, or ``None``.
-
-        Raises
-        ------
-        InvalidContent
-            If the provided content is not a TibiaData world response.
-        """
-        json_data = parse_json(content)
-        try:
-            world_data = json_data["world"]
-            world_info = world_data["world_information"]
-            world = cls(world_info["name"])
-            if "location" not in world_info:
-                return None
-            world.online_count = world_info["players_online"]
-            world.status = "Online" if world.online_count > 0 else "Offline"
-            world.record_count = world_info["online_record"]["players"]
-            world.record_date = parse_tibiadata_datetime(world_info["online_record"]["date"])
-            world.creation_date = world_info["creation_date"]
-            world.location = try_enum(WorldLocation, world_info["location"])
-            world.pvp_type = try_enum(PvpType, world_info["pvp_type"])
-            world.transfer_type = try_enum(TransferType, world_info.get("transfer_type"), TransferType.REGULAR)
-            world.premium_only = "premium_type" in world_info
-            world.world_quest_titles = world_info.get("world_quest_titles", [])
-            world._parse_battleye_status(world_info.get("battleye_status", ""))
-            world.experimental = world_info.get("Game World Type:", "Regular") != "Regular"
-            for player in world_data.get("players_online", []):
-                world.online_players.append(OnlineCharacter(player["name"], world.name, player["level"],
-                                                            player["vocation"]))
-            return world
-        except KeyError:
-            raise InvalidContent("content is not a world json response from TibiaData")
     # endregion
 
     # region Private methods
@@ -431,15 +368,21 @@ class WorldOverview(abc.Serializable):
     worlds: :class:`list` of :class:`ListedWorld`
         List of worlds, with limited info.
     """
-    __slots__ = ("record_count", "record_date", "worlds")
+    __slots__ = (
+        "record_count",
+        "record_date",
+        "worlds",
+    )
+
+    serializable_properties = ('total_online',)
 
     def __init__(self, **kwargs):
-        self.record_count = kwargs.get("record_count", 0)  # type: int
+        self.record_count: int = kwargs.get("record_count", 0)
         self.record_date = try_datetime(kwargs.get("record_date"))
-        self.worlds = kwargs.get("worlds", [])  # type: List[ListedWorld]
+        self.worlds: List[ListedWorld] = kwargs.get("worlds", [])
 
     def __repr__(self):
-        return "<%s total_online=%d>" % (self.__class__.__name__, self.total_online)
+        return f"<{self.__class__.__name__} total_online={self.total_online:d}>"
 
     @property
     def total_online(self):
@@ -469,18 +412,6 @@ class WorldOverview(abc.Serializable):
             The URL to the World Overview's page.
         """
         return get_tibia_url("community", "worlds")
-
-    @classmethod
-    def get_url_tibiadata(cls):
-        """
-        Gets the URL to the World Overview page in Tibia.com
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the World Overview's page.
-        """
-        return "https://api.tibiadata.com/v2/worlds.json"
 
     @classmethod
     def from_content(cls, content):
@@ -514,51 +445,6 @@ class WorldOverview(abc.Serializable):
         except (AttributeError, KeyError, ValueError):
             raise InvalidContent("content does not belong to the World Overview section in Tibia.com")
 
-    @classmethod
-    def from_tibiadata(cls, content):
-        """Parses the content of the World Overview section from TibiaData.com into an object of this class.
-
-        Notes
-        -----
-        Due to TibiaData limitations, :py:attr:`record_count` and :py:attr:`record_date` are unavailable
-        object.
-
-        Additionally, the listed worlds in :py:attr:`worlds` lack some information when obtained from TibiaData.
-        The following attributes are unavailable:
-
-        - :py:attr:`ListedWorld.status` is always ``Online``.
-        - :py:attr:`ListedWorld.battleye_protected` is always ``False``
-        - :py:attr:`ListedWorld.battleye_date` is always ``None``.
-
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The JSON response of the worlds section in TibiaData.com
-
-        Returns
-        -------
-        :class:`WorldOverview`
-            An instance of this class containing only the available worlds.
-
-        Raises
-        ------
-        InvalidContent
-            If the provided content is the json content of the world section in TibiaData.com
-        """
-        json_data = parse_json(content)
-        try:
-            worlds_json = json_data["worlds"]["allworlds"]
-            world_overview = cls()
-            for world_json in worlds_json:
-                world = ListedWorld(world_json["name"], world_json["location"], world_json["worldtype"])
-                world._parse_additional_info(world_json["additional"])
-                world.online_count = world_json["online"]
-                world_overview.worlds.append(world)
-            return world_overview
-        except KeyError:
-            raise InvalidContent("content is not a worlds json response from TibiaData.com.")
-
     def _parse_worlds(self, world_rows):
         """Parses the world columns and adds the results to :py:attr:`worlds`.
 
@@ -580,9 +466,8 @@ class WorldOverview(abc.Serializable):
                 continue
             elif name == "World":
                 continue
-            try:
-                online = parse_integer(cols[1].text.strip())
-            except ValueError:
+            online = parse_integer(cols[1].text.strip(), None)
+            if online is None:
                 online = 0
                 status = "Offline"
             location = cols[2].text.replace("\u00a0", " ").strip()

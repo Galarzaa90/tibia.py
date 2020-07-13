@@ -1,4 +1,4 @@
-from enum import Enum
+import enum
 
 __all__ = (
     'AccountStatus',
@@ -10,6 +10,7 @@ __all__ = (
     'NewsType',
     'PvpType',
     'Sex',
+    'ThreadStatus',
     'TournamentWorldType',
     'TournamentPhase',
     'TransferType',
@@ -19,12 +20,17 @@ __all__ = (
 )
 
 
-class BaseEnum(Enum):
+class BaseEnum(enum.Enum):
     def __str__(self):
         return self.value
 
     def __repr__(self):
         return "%s.%s" % (self.__class__.__name__, self.name)
+
+
+class NumericEnum(BaseEnum):
+    def __str__(self):
+        return self.name.lower()
 
 
 class AccountStatus(BaseEnum):
@@ -33,19 +39,21 @@ class AccountStatus(BaseEnum):
     PREMIUM_ACCOUNT = "Premium Account"
 
 
-class Category(BaseEnum):
+class Category(NumericEnum):
     """The different highscores categories."""
-    ACHIEVEMENTS = "achievements"
-    AXE_FIGHTING = "axe"
-    CLUB_FIGHTING = "club"
-    DISTANCE_FIGHTING = "distance"
-    EXPERIENCE = "experience"
-    FISHING = "fishing"
-    FIST_FIGHTING = "fist"
-    LOYALTY_POINTS = "loyalty"
-    MAGIC_LEVEL = "magic"
-    SHIELDING = "shielding"
-    SWORD_FIGHTING = "sword"
+    ACHIEVEMENTS = 1
+    AXE_FIGHTING = 2
+    CHARM_POINTS = 3
+    CLUB_FIGHTING = 4
+    DISTANCE_FIGHTING = 5
+    EXPERIENCE = 6
+    FISHING = 7
+    FIST_FIGHTING = 8
+    GOSHNARS_TAINT = 9
+    LOYALTY_POINTS = 10
+    MAGIC_LEVEL = 11
+    SHIELDING = 12
+    SWORD_FIGHTING = 13
 
 
 class HouseOrder(BaseEnum):
@@ -100,6 +108,57 @@ class Sex(BaseEnum):
     FEMALE = "female"
 
 
+class ThreadStatus(enum.Flag):
+    """The possible status a thread can have.
+
+    Threads can have a combination of multiple status. The numeric values are arbitrary."""
+    NONE = 0
+    HOT = 1  #: Thread has more than 16 replies.
+    NEW = 2  #: Thread has new posts since last visit.
+    CLOSED = 4  #: Thread is closed.
+    STICKY = 8  #: Thread is stickied.
+
+    def __str__(self):
+        return ", ".join(v.name.title() for v in list(self))
+
+    def __iter__(self):
+        for entry in list(self.__class__):
+            if entry in self and entry is not self.NONE:
+                yield entry
+
+    def get_icon_name(self):
+        """Generates an icon name, following the same ordering used in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The name of the icon used in Tibia.com"""
+        if self.value == 0:
+            return None
+        joined_str = "".join(v.name.lower() for v in list(self))
+        return "logo_%s.gif" % joined_str
+
+    @classmethod
+    def from_icon(cls, icon):
+        """Gets the flag combination, based from the icon's name present in the thread status.
+
+        Parameters
+        ----------
+        icon: :class:`str`
+            The icon's filename.
+
+        Returns
+        -------
+        :class:`ThreadStatus`
+            The combination of thread status founds.
+        """
+        flags = 0
+        for entry in list(cls):
+            if entry.name.lower() in icon:
+                flags += entry.value
+        return cls(flags)
+
+
 class TournamentWorldType(BaseEnum):
     """The possible types of tournament worlds."""
     REGUlAR = "Regular"
@@ -133,13 +192,16 @@ class Vocation(BaseEnum):
     MASTER_SORCERER = "Master Sorcerer"
 
 
-class VocationFilter(Enum):
-    """The vocation filters available for Highscores."""
+class VocationFilter(NumericEnum):
+    """The vocation filters available for Highscores.
+
+    The numeric values are what the highscores form accepts."""
     ALL = 0
-    KNIGHTS = 1
-    PALADINS = 2
-    SORCERERS = 3
-    DRUIDS = 4
+    NONE = 1
+    KNIGHTS = 2
+    PALADINS = 3
+    SORCERERS = 4
+    DRUIDS = 5
 
     @classmethod
     def from_name(cls, name, all_fallback=True):

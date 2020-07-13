@@ -9,13 +9,14 @@ from tibiapy import abc
 from tibiapy.enums import Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import parse_json, parse_tibia_date, parse_tibiacom_content, parse_tibiadata_date, try_date, \
-    try_datetime, try_enum
+from tibiapy.utils import parse_tibia_date, parse_tibiacom_content, try_date, try_datetime, try_enum
 
 __all__ = (
     "Guild",
     "GuildMember",
     "GuildInvite",
+    "GuildWars",
+    "GuildWarEntry",
     "ListedGuild",
 )
 
@@ -31,8 +32,24 @@ disband_regex = re.compile(r'It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).')
 disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
 title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
 
+war_guilds_regegx = re.compile(r'The guild ([\w\s]+) is at war with the guild ([^.]+).')
+war_score_regex = re.compile(r'scored ([\d,]+) kills? against')
+war_fee_regex = re.compile(r'the guild [\w\s]+ wins the war, they will receive ([\d,]+) gold.')
+war_score_limit_regex = re.compile(r'guild scores ([\d,]+) kills against')
+war_end_regex = re.compile(r'war will end on (\w{3}\s\d{2}\s\d{4})')
 
-class Guild(abc.BaseGuild):
+war_history_header_regex = re.compile(r'guild ([\w\s]+) fought against ([\w\s]+).')
+war_start_duration_regex = re.compile(r'started on (\w{3}\s\d{2}\s\d{4}) and had been set for a duration of (\w+) days')
+kills_needed_regex = re.compile(r'(\w+) kills were needed')
+war_history_fee_regex = re.compile(r'agreed on a fee of (\w+) gold for the guild [\w\s]+ and a fee of (\d+) gold')
+surrender_regex = re.compile(r'(?:The guild ([\w\s]+)|A disbanded guild) surrendered on (\w{3}\s\d{2}\s\d{4})')
+war_ended_regex = re.compile(r'war ended on (\w{3}\s\d{2}\s\d{4}) when the guild ([\w\s]+) had reached the')
+war_score_end_regex = re.compile(r'scored (\d+) kills against')
+
+war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
+
+
+class Guild(abc.BaseGuild, abc.Serializable):
     """
     Represents a Tibia guild.
 
@@ -54,6 +71,10 @@ class Guild(abc.BaseGuild):
         The guild's guildhall if any.
     open_applications: :class:`bool`
         Whether applications are open or not.
+    active_war: :class:`bool`
+        Whether the guild is currently in an active war or not.
+
+        .. versionadded:: 3.0.0
     disband_date: :class:`datetime.datetime`, optional
         The date when the guild will be disbanded if the condition hasn't been meet.
     disband_condition: :class:`str`, optional
@@ -65,23 +86,43 @@ class Guild(abc.BaseGuild):
     invites: :class:`list` of :class:`GuildInvite`
         List of invited characters.
     """
-    __slots__ = ("world", "logo_url", "description", "founded", "active", "guildhall", "open_applications",
-                 "disband_condition", "disband_date", "homepage", "members", "invites")
+    __slots__ = (
+        "world",
+        "logo_url",
+        "description",
+        "founded",
+        "active",
+        "guildhall",
+        "open_applications",
+        "active_war",
+        "disband_condition",
+        "disband_date",
+        "homepage",
+        "members",
+        "invites",
+    )
+
+    _serializable_properties = (
+        "member_count",
+        "online_count",
+        "ranks"
+    )
 
     def __init__(self, name=None, world=None, **kwargs):
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.logo_url = kwargs.get("logo_url")  # type: str
-        self.description = kwargs.get("description")  # type: Optional[str]
+        self.name: str = name
+        self.world: str = world
+        self.logo_url: str = kwargs.get("logo_url")
+        self.description: Optional[str] = kwargs.get("description")
         self.founded = try_date(kwargs.get("founded"))
-        self.active = kwargs.get("active", False)  # type: bool
-        self.guildhall = kwargs.get("guildhall")  # type: Optional[GuildHouse]
-        self.open_applications = kwargs.get("open_applications", False)  # type: bool
-        self.disband_condition = kwargs.get("disband_condition")  # type: Optional[str]
+        self.active: bool = kwargs.get("active", False)
+        self.guildhall: Optional[GuildHouse] = kwargs.get("guildhall")
+        self.open_applications: bool = kwargs.get("open_applications", False)
+        self.active_war: bool = kwargs.get("active_war", False)
+        self.disband_condition: Optional[str] = kwargs.get("disband_condition")
         self.disband_date = try_datetime(kwargs.get("disband_date"))
-        self.homepage = kwargs.get("homepage")  # type: Optional[str]
-        self.members = kwargs.get("members", [])  # type: List[GuildMember]
-        self.invites = kwargs.get("invites", [])  # type: List[GuildInvite]
+        self.homepage: Optional[str] = kwargs.get("homepage")
+        self.members: List[GuildMember] = kwargs.get("members", [])
+        self.invites: List[GuildInvite] = kwargs.get("invites", [])
 
     def __repr__(self):
         return "<{0.__class__.__name__} name={0.name!r} world={0.world!r}>".format(self)
@@ -154,59 +195,6 @@ class Guild(abc.BaseGuild):
 
         return guild
 
-    @classmethod
-    def from_tibiadata(cls, content):
-        """Builds a guild object from a TibiaData character response.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The json string from the TibiaData response.
-
-        Returns
-        -------
-        :class:`Guild`
-            The guild contained in the description or ``None``.
-
-        Raises
-        ------
-        InvalidContent
-            If content is not a JSON response of a guild's page.
-        """
-        json_content = parse_json(content)
-        guild = cls()
-        try:
-            guild_obj = json_content["guild"]
-            if "error" in guild_obj:
-                return None
-            guild_data = guild_obj["data"]
-            guild.name = guild_data["name"]
-            guild.world = guild_data["world"]
-            guild.logo_url = guild_data["guildlogo"]
-            guild.description = guild_data["description"]
-            guild.founded = parse_tibiadata_date(guild_data["founded"])
-            guild.open_applications = guild_data["application"]
-        except KeyError:
-            raise InvalidContent("content does not match a guild json from TibiaData.")
-        guild.homepage = guild_data.get("homepage")
-        guild.active = not guild_data.get("formation", False)
-        if isinstance(guild_data["disbanded"], dict):
-            guild.disband_date = parse_tibiadata_date(guild_data["disbanded"]["date"])
-            guild.disband_condition = disband_tibadata_regex.search(guild_data["disbanded"]["notification"]).group(1)
-        for rank in guild_obj["members"]:
-            rank_name = rank["rank_title"]
-            for member in rank["characters"]:
-                guild.members.append(GuildMember(member["name"], rank_name, member["nick"] or None,
-                                                 member["level"], member["vocation"],
-                                                 joined=parse_tibiadata_date(member["joined"]),
-                                                 online=member["status"] == "online"))
-        for invited in guild_obj["invited"]:
-            guild.invites.append(GuildInvite(invited["name"], parse_tibiadata_date(invited["invited"])))
-        if isinstance(guild_data["guildhall"], dict):
-            gh = guild_data["guildhall"]
-            guild.guildhall = GuildHouse(gh["name"], gh["world"], guild.members[0].name,
-                                         parse_tibiadata_date(gh["paid"]))
-        return guild
     # endregion
 
     # region Private methods
@@ -244,6 +232,7 @@ class Guild(abc.BaseGuild):
         m = applications_regex.search(info_container.text)
         if m:
             self.open_applications = m.group(1) == "opened"
+        self.active_war = "during war" in info_container.text
 
     def _parse_guild_disband_info(self, info_container):
         """
@@ -358,7 +347,7 @@ class Guild(abc.BaseGuild):
     # endregion
 
 
-class GuildMember(abc.BaseCharacter):
+class GuildMember(abc.BaseCharacter, abc.Serializable):
     """
     Represents a guild member.
 
@@ -382,16 +371,16 @@ class GuildMember(abc.BaseCharacter):
     __slots__ = ("name", "rank", "title", "level", "vocation", "joined", "online")
 
     def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, **kwargs):
-        self.name = name  # type: str
-        self.rank = rank  # type: str
-        self.title = title  # type: Optional[str]
+        self.name: str = name
+        self.rank: str = rank
+        self.title: Optional[str] = title
         self.vocation = try_enum(Vocation, vocation)
         self.level = int(level)
-        self.online = kwargs.get("online", False)  # type: bool
+        self.online: bool = kwargs.get("online", False)
         self.joined = try_date(kwargs.get("joined"))
 
 
-class GuildInvite(abc.BaseCharacter):
+class GuildInvite(abc.BaseCharacter, abc.Serializable):
     """Represents an invited character
 
     Attributes
@@ -402,18 +391,298 @@ class GuildInvite(abc.BaseCharacter):
     date: :class:`datetime.date`
         The day when the character was invited.
     """
-    __slots__ = ("date", )
+    __slots__ = (
+        "name",
+        "date",
+    )
 
     def __init__(self, name=None, date=None):
-        self.name = name  # type: str
+        self.name: str = name
         self.date = try_date(date)
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} " \
-               "date={0.date!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} date={self.date!r}>"
 
 
-class ListedGuild(abc.BaseGuild):
+class GuildWars(abc.Serializable):
+    """Represents a guild's wars.
+
+    .. versionadded:: 3.0.0
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the guild.
+    current: :class:`GuildWarEntry`
+        The current war the guild is involved in.
+    history: :class:`list` of :class:`GuildWarEntry`
+        The previous wars the guild has been involved in."""
+
+    __slots__ = (
+        'name',
+        'current',
+        'history',
+    )
+
+    def __init__(self, name, current=None, history=None):
+        self.name: str = name
+        self.current: Optional[GuildWarEntry] = current
+        self.history: List[GuildWarEntry] = history or []
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r}>"
+
+    @property
+    def url(self):
+        """:class:`str`: The URL of this guild's war page on Tibia.com."""
+        return self.get_url(self.name)
+
+    @classmethod
+    def get_url(cls, name):
+        """
+        Gets the URL to the guild's war page of a guild with the given name.
+
+        Parameters
+        ----------
+        name: class:`str`
+            The name of the guild.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's war page.
+        """
+        return Guild.get_url_wars(name)
+
+    @classmethod
+    def from_content(cls, content):
+        """Gets a guild's war information from Tibia.com's content
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of a guild's war section in Tibia.com
+
+        Returns
+        -------
+        :class:`GuildWars`
+            The guild's war information.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            table_current, table_history = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+            current_table_content = table_current.find("table", attrs={"class": "TableContent"})
+            current_war = None
+            guild_name = None
+            if current_table_content is not None:
+                for br in current_table_content.find_all("br"):
+                    br.replace_with("\n")
+                current_war = cls._parse_current_war_information(current_table_content.text)
+            else:
+                current_war_text = table_current.text
+                current_war_match = war_current_empty.search(current_war_text)
+                guild_name = current_war_match.group(1)
+
+            history_entries = []
+            history_contents = table_history.find_all("table", attrs={"class": "TableContent"})
+            for history_content in history_contents:
+                for br in history_content.find_all("br"):
+                    br.replace_with("\n")
+                entry = cls._parse_war_history_entry(history_content.text)
+                history_entries.append(entry)
+
+            if current_war:
+                guild_name = current_war.guild_name
+            elif history_entries:
+                guild_name = history_entries[0].guild_name
+
+            return cls(guild_name, current=current_war, history=history_entries)
+        except ValueError as e:
+            raise InvalidContent("content does not belong to the guild wars section", e)
+
+    @classmethod
+    def _parse_current_war_information(cls, text):
+        """Parses the guild's current war information.
+
+        Parameters
+        ----------
+        text: :class:`str`
+            The text describing the current war's information.
+
+        Returns
+        -------
+        :class:`GuildWarEntry`
+            The guild's war entry for the current war.
+        """
+        text = text.replace('\xa0', ' ').strip()
+        names_match = war_guilds_regegx.search(text)
+        guild_name, opposing_name = names_match.groups()
+        scores_match = war_score_regex.findall(text)
+        guild_score, opposing_score = scores_match
+        fee_match = war_fee_regex.findall(text)
+        guild_fee, opposing_fee = fee_match
+
+        score_limit_match = war_score_limit_regex.search(text)
+        score_limit = score_limit_match.group(1)
+
+        end_date_match = war_end_regex.search(text)
+        end_date_str = end_date_match.group(1)
+        end_date = parse_tibia_date(end_date_str)
+
+        entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, guild_score=int(guild_score),
+                              opponent_score=int(opposing_score), guild_fee=int(guild_fee),
+                              opponent_fee=int(opposing_fee), score_limit=int(score_limit), end_date=end_date)
+        return entry
+
+    @classmethod
+    def _parse_war_history_entry(cls, text):
+        """Parses a guild's war information.
+
+        Parameters
+        ----------
+        text: :class:`str`
+            The text describing the war's information.
+
+        Returns
+        -------
+        :class:`GuildWarEntry`
+            The guild's war entry described in the text..
+        """
+        text = text.replace('\xa0', ' ').strip()
+        header_match = war_history_header_regex.search(text)
+        guild_name, opposing_name = header_match.groups()
+        if "disbanded guild" in opposing_name:
+            opposing_name = None
+        start_duration_match = war_start_duration_regex.search(text)
+        start_str, duration_str = start_duration_match.groups()
+        start_date = parse_tibia_date(start_str)
+        duration = datetime.timedelta(days=int(duration_str))
+        kills_match = kills_needed_regex.search(text)
+        kills_needed = int(kills_match.group(1))
+        fee_match = war_history_fee_regex.search(text)
+        guild_fee, opponent_fee = fee_match.groups()
+        winner = None
+        surrender = False
+        end_date = None
+        guild_score = opponent_score = 0
+        surrender_match = surrender_regex.search(text)
+        if surrender_match:
+            surrending_guild = surrender_match.group(1)
+            end_date = parse_tibia_date(surrender_match.group(2))
+            winner = guild_name if surrending_guild != guild_name else opposing_name
+            surrender = True
+
+        war_score_match = war_score_regex.findall(text)
+        if war_score_match and len(war_score_match) == 2:
+            guild_score, opponent_score = war_score_match
+            guild_score = int(guild_score)
+            opponent_score = int(guild_score)
+
+        war_end_match = war_ended_regex.search(text)
+        if war_end_match:
+            end_date = parse_tibia_date(war_end_match.group(1))
+            winning_guild = war_end_match.group(2)
+            if "disbanded guild" in winning_guild:
+                winning_guild = None
+            winner = guild_name if winning_guild == guild_name else opposing_name
+            loser_score_match = war_score_end_regex.search(text)
+            loser_score = int(loser_score_match.group(1)) if loser_score_match else 0
+            guild_score = kills_needed if guild_name == winner else loser_score
+            opponent_score = kills_needed if guild_name != winner else loser_score
+
+        if "no guild had reached the needed kills" in text:
+            winner = guild_name if guild_score > opponent_score else opposing_name
+
+        entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, start_date=start_date,
+                              duration=duration, score_limit=kills_needed, guild_fee=int(guild_fee),
+                              opponent_fee=int(opponent_fee), surrender=surrender, winner=winner, end_date=end_date,
+                              opponent_score=opponent_score, guild_score=guild_score)
+        return entry
+
+
+class GuildWarEntry(abc.Serializable):
+    """Represents a guild war entry.
+
+    .. versionadded:: 3.0.0
+
+    Attributes
+    ----------
+    guild_name: :class:`str`
+        The name of the guild.
+    guild_score: :class:`int`
+        The number of kills the guild has scored.
+    guild_fee: :class:`int`
+        The number of gold coins the guild will pay if they lose the war.
+    opponent_name: :class:`str`
+        The name of the opposing guild. If the guild no longer exist, this will be ``None``.
+    opponent_score: :class:`int`
+        The number of kills the opposing guild has scored.
+    opponent_fee: :class:`int`
+        The number of gold coins the opposing guild will pay if they lose the war.
+    start_date: :class:`datetime.date`
+        The date when the war started.
+
+        When a war is in progress, the start date is not visible.
+    score_limit: :class:`int`
+        The number of kills needed to win the war.
+    duration: :class:`datetime.timedelta`
+        The set duration of the war.
+
+        When a war is in progress, the duration is not visible.
+    end_date: :class:`datetime.date`
+        The deadline for the war to finish if the score is not reached for wars in progress, or the date when the
+        war ended.
+    winner: :class:`str`
+        The name of the guild that won.
+
+        Note that if the winning guild is disbanded, this may be ``None``.
+    surrender: :class:`bool`
+        Whether the losing guild surrendered or not.
+    """
+    __slots__ = (
+        "guild_name",
+        "guild_score",
+        "guild_fee",
+        "opponent_name",
+        "opponent_score",
+        "opponent_fee",
+        "start_date",
+        "score_limit",
+        "duration",
+        "end_date",
+        "winner",
+        "surrender",
+    )
+
+    def __init__(self, **kwargs):
+        self.guild_name = kwargs.get("guild_name")
+        self.guild_score = kwargs.get("guild_score", 0)
+        self.guild_fee = kwargs.get("guild_fee", 0)
+        self.opponent_name = kwargs.get("opponent_name")
+        self.opponent_score = kwargs.get("opponent_score", 0)
+        self.opponent_fee = kwargs.get("opponent_fee", 0)
+        self.start_date = kwargs.get("start_date")
+        self.score_limit = kwargs.get("score_limit", 0)
+        self.duration = kwargs.get("duration")
+        self.end_date = kwargs.get("end_date")
+        self.winner = kwargs.get("winner")
+        self.surrender = kwargs.get("surrender", False)
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} guild_name={0.guild_name!r} opponent_name={0.opponent_name!r}>".format(self)
+
+    @property
+    def guild_url(self):
+        """:class:`str`: The URL to the guild's information page on Tibia.com."""
+        return Guild.get_url(self.guild_name)
+
+    @property
+    def opponent_guild_url(self):
+        """:class:`str`: The URL to the opposing guild's information page on Tibia.com."""
+        return Guild.get_url(self.opponent_name) if self.opponent_name else None
+
+
+class ListedGuild(abc.BaseGuild, abc.Serializable):
     """
     Represents a Tibia guild in the guild list of a world.
 
@@ -430,14 +699,20 @@ class ListedGuild(abc.BaseGuild):
     active: :class:`bool`
         Whether the guild is active or still in formation.
     """
-    __slots__ = ("logo_url", "description", "world", "active")
+    __slots__ = (
+        "name",
+        "logo_url",
+        "description",
+        "world",
+        "active",
+    )
 
     def __init__(self, name, world, logo_url=None, description=None, active=False):
-        self.name = name  # type: str
-        self.world = world  # type: str
-        self.logo_url = logo_url  # type: str
-        self.description = description  # type: Optional[str]
-        self.active = active  # type: bool
+        self.name: str = name
+        self.world: str = world
+        self.logo_url: str = logo_url
+        self.description: Optional[str] = description
+        self.active: bool = active
 
     # region Public methods
     @classmethod
@@ -488,36 +763,4 @@ class ListedGuild(abc.BaseGuild):
                 guilds.append(guild)
         return guilds
 
-    @classmethod
-    def list_from_tibiadata(cls, content):
-        """Builds a character object from a TibiaData character response.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            A string containing the JSON response from TibiaData.
-
-        Returns
-        -------
-        :class:`list` of :class:`ListedGuild`
-            The list of guilds contained.
-
-        Raises
-        ------
-        InvalidContent
-            If content is not a JSON response of TibiaData's guild list.
-        """
-        json_content = parse_json(content)
-        try:
-            guilds_obj = json_content["guilds"]
-            guilds = []
-            for guild in guilds_obj["active"]:
-                guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
-                                  description=guild["desc"], active=True))
-            for guild in guilds_obj["formation"]:
-                guilds.append(cls(guild["name"], guilds_obj["world"], logo_url=guild["guildlogo"],
-                                  description=guild["desc"], active=False))
-        except KeyError:
-            raise InvalidContent("content doest not belong to a guilds response.")
-        return guilds
     # endregion

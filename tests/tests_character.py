@@ -18,13 +18,6 @@ FILE_CHARACTER_NO_BADGES_SELECTED = "character/tibiacom_no_badges_selected.txt"
 FILE_CHARACTER_MULTIPLE_HOUSES = "character/tibiacom_multiple_houses.txt"
 FILE_CHARACTER_TRUNCATED_DEATHS = "character/tibiacom_truncated_deaths.txt"
 
-FILE_CHARACTER_TIBIADATA = "character/tibiadata.json"
-FILE_CHARACTER_TIBIADATA_UNHIDDEN = "character/tibiadata_unhidden.json"
-FILE_CHARACTER_TIBIADATA_DELETED = "character/tibiadata_deleted.json"
-FILE_CHARACTER_TIBIADATA_SPECIAL_POSITION = "character/tibiadata_special_position.json"
-FILE_CHARACTER_TIBIADATA_NOT_FOUND = "character/tibiadata_not_found.json"
-FILE_CHARACTER_TIBIADATA_DEATHS_SUMMON = "character/tibiadata_deaths_summon.json"
-
 
 class TestCharacter(TestCommons, unittest.TestCase):
     def _compare_character(self, mock_character, character):
@@ -37,7 +30,7 @@ class TestCharacter(TestCommons, unittest.TestCase):
     # region Tibia.com Character Tests
     def test_character_from_content(self):
         """Testing parsing a character's HTML content"""
-        character = Character.from_content(self._load_resource(FILE_CHARACTER_RESOURCE))
+        character = Character.from_content(self.load_resource(FILE_CHARACTER_RESOURCE))
         self._compare_character(Character("Tschas", "Gladera", Vocation.DRUID, 260, Sex.FEMALE), character)
         self.assertIsNotNone(character.guild_membership)
         self.assertEqual("Atlantis", character.guild_membership.name)
@@ -48,7 +41,6 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual(character.guild_rank, character.guild_membership.rank)
         self.assertEqual(AccountStatus.FREE_ACCOUNT, character.account_status)
         self.assertEqual(182, character.achievement_points)
-        self.assertIsNone(character.house)
         self.assertIsNone(character.deletion_date)
         self.assertIsNotNone(character.deaths)
         self.assertEqual(0, character.deaths.__len__())
@@ -59,35 +51,41 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
     def test_character_from_content_not_found(self):
         """Testing parsing a character not found page"""
-        content = self._load_resource(FILE_CHARACTER_NOT_FOUND)
+        content = self.load_resource(FILE_CHARACTER_NOT_FOUND)
         char = Character.from_content(content)
         self.assertIsNone(char)
 
     def test_character_from_content_with_former_names(self):
         """Testing parsing a character that has former names"""
-        content = self._load_resource(FILE_CHARACTER_FORMER_NAMES)
+        content = self.load_resource(FILE_CHARACTER_FORMER_NAMES)
         char = Character.from_content(content)
         self.assertIsInstance(char.former_names, list)
         self.assertTrue(char.former_names)
         self.assertEqual(len(char.former_names), 2)
 
-        self.assertIsInstance(char.house, CharacterHouse)
-        self.assertEqual(char.house.owner, char.name)
-        self.assertEqual(char.house.town, "Darashia")
-        self.assertEqual(char.house.world, char.world)
-        self.assertIsInstance(char.house.paid_until_date, datetime.date)
+        self.assertIsInstance(char.houses[0], CharacterHouse)
+        self.assertEqual(char.houses[0].owner, char.name)
+        self.assertEqual(char.houses[0].town, "Darashia")
+        self.assertEqual(char.houses[0].world, char.world)
+        self.assertIsInstance(char.houses[0].paid_until_date, datetime.date)
 
     def test_character_from_content_with_position(self):
         """Testing parsing a character with a position"""
-        content = self._load_resource(FILE_CHARACTER_SPECIAL_POSITION)
+        content = self.load_resource(FILE_CHARACTER_SPECIAL_POSITION)
+
+        position = "CipSoft Member"
+
         char = Character.from_content(content)
-        self.assertEqual(char.name, "Steve")
-        self.assertEqual(char.position, "CipSoft Member")
-        self.assertEqual(char.account_information.position, "CipSoft Member")
+        self.assertEqual("Steve", char.name)
+        self.assertEqual(position, char.position)
+        self.assertEqual(position, char.account_information.position)
+        steve_other = char.other_characters[2]
+        self.assertEqual("Steve", steve_other.name)
+        self.assertEqual("CipSoft Member", steve_other.position)
 
     def test_character_from_content_deleted_character(self):
         """Testing parsing a character scheduled for deletion"""
-        content = self._load_resource(FILE_CHARACTER_DELETION)
+        content = self.load_resource(FILE_CHARACTER_DELETION)
         char = Character.from_content(content)
         self.assertEqual("Expendable Dummy", char.name)
         self.assertIsNotNone(char.deletion_date)
@@ -96,7 +94,7 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
     def test_character_from_content_complex_deaths(self):
         """Testing parsing a character with complex deaths (summons, assists, etc)"""
-        content = self._load_resource(FILE_CHARACTER_DEATHS_COMPLEX)
+        content = self.load_resource(FILE_CHARACTER_DEATHS_COMPLEX)
         char = Character.from_content(content)
         self.assertTrue(char.deaths)
         self.assertIsInstance(char.deaths[0], Death)
@@ -106,7 +104,7 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
     def test_character_from_content_badges_and_title(self):
         """Testing parsing a character with account badges and a title"""
-        content = self._load_resource(FILE_CHARACTER_TITLE_BADGES)
+        content = self.load_resource(FILE_CHARACTER_TITLE_BADGES)
         char = Character.from_content(content)
         self.assertEqual("Galarzaa Fidera", char.name)
         self.assertEqual(406, char.achievement_points)
@@ -121,7 +119,7 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
     def test_character_from_content_no_selected_badges(self):
         """Testing parsing a character with visible badges but none selected."""
-        content = self._load_resource(FILE_CHARACTER_NO_BADGES_SELECTED)
+        content = self.load_resource(FILE_CHARACTER_NO_BADGES_SELECTED)
         char = Character.from_content(content)
         self.assertEqual("Cozzackirycerz", char.name)
         self.assertEqual(25, char.achievement_points)
@@ -132,11 +130,10 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
     def test_character_from_content_multiple_houses(self):
         """Testing parsing a character with multiple houses."""
-        content = self._load_resource(FILE_CHARACTER_MULTIPLE_HOUSES)
+        content = self.load_resource(FILE_CHARACTER_MULTIPLE_HOUSES)
         char = Character.from_content(content)
         self.assertEqual("Sayuri Nowan", char.name)
         self.assertEqual(2, len(char.houses))
-        self.assertEqual(char.house.name, char.houses[0].name)
         first_house = char.houses[0]
         second_house = char.houses[1]
         self.assertEqual("Cormaya 10", first_house.name)
@@ -146,7 +143,7 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
     def test_character_from_content_truncated_deaths(self):
         """Testing parsing a character with truncated daths"""
-        content = self._load_resource(FILE_CHARACTER_TRUNCATED_DEATHS)
+        content = self.load_resource(FILE_CHARACTER_TRUNCATED_DEATHS)
         char = Character.from_content(content)
         self.assertEqual("Godlike Terror", char.name)
         self.assertEqual(51, len(char.deaths))
@@ -154,7 +151,7 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
     def test_character_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
-        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             Character.from_content(content)
 
@@ -171,84 +168,3 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual(spawn_invasion.killer, spawn_invasion.killers[0])
         self.assertIsNone(spawn_invasion.killer.url)
         self.assertTrue(spawn_invasion.by_player)
-
-    # region TibiaData Character tests
-
-    def test_character_from_tibiadata(self):
-        """Testing parsing TibiaData content"""
-        content = self._load_resource(FILE_CHARACTER_TIBIADATA)
-        char = Character.from_tibiadata(content)
-
-        self.assertEqual(char.url_tibiadata, Character.get_url_tibiadata(char.name))
-        self.assertIsInstance(char, Character)
-        self.assertIsNotNone(char.guild_name)
-        self.assertIsInstance(char.last_login, datetime.datetime)
-
-        self.assertIsInstance(char.house, CharacterHouse)
-        self.assertEqual(char.house.owner, char.name)
-        self.assertEqual(char.house.town, "Ankrahmun")
-        self.assertEqual(char.house.world, char.world)
-        self.assertIsInstance(char.house.paid_until_date, datetime.date)
-
-        self.assertTrue(char.deaths[3].by_player)
-
-    def test_character_from_tibiadata_unhidden(self):
-        """Testing parsing an unhidden character"""
-        content = self._load_resource(FILE_CHARACTER_TIBIADATA_UNHIDDEN)
-        char = Character.from_tibiadata(content)
-
-        self.assertIsNotNone(char.account_information)
-        self.assertTrue(char.other_characters)
-        self.assertFalse(char.hidden)
-
-        self.assertIsInstance(char.house, CharacterHouse)
-        self.assertEqual(char.house.owner, char.name)
-        self.assertEqual(char.house.town, "Kazordoon")
-        self.assertEqual(char.house.world, char.world)
-        self.assertIsInstance(char.house.paid_until_date, datetime.date)
-
-    def test_character_from_tibiadata_deleted(self):
-        """Testing parsing a deleted character"""
-        content = self._load_resource(FILE_CHARACTER_TIBIADATA_DELETED)
-        char = Character.from_tibiadata(content)
-
-        self.assertEqual(char.url_tibiadata, Character.get_url_tibiadata(char.name))
-        self.assertIsInstance(char, Character)
-        self.assertTrue(char.deleted)
-        self.assertIsInstance(char.deletion_date, datetime.datetime)
-        self.assertIsNone(char.guild_name)
-        self.assertIsNone(char.last_login)
-
-    def test_character_from_tibiadata_position(self):
-        """Testing parsing a character with position"""
-        content = self._load_resource(FILE_CHARACTER_TIBIADATA_SPECIAL_POSITION)
-        char = Character.from_tibiadata(content)
-        self.assertEqual(char.name, "Steve")
-        self.assertEqual(char.position, "CipSoft Member")
-        self.assertEqual(char.account_information.position, "CipSoft Member")
-
-    def test_character_from_tibiadata_summon_deaths(self):
-        """Testing parsing a character with summon deaths"""
-        content = self._load_resource(FILE_CHARACTER_TIBIADATA_DEATHS_SUMMON)
-        char = Character.from_tibiadata(content)
-        self.assertTrue(char.deaths)
-
-        summon_death = char.deaths[2]
-        self.assertTrue(summon_death.killers[2].summon, "a fire elemental")
-        self.assertTrue(summon_death.killers[2].name, "Hasi Pupsi")
-
-    def test_character_from_tibiadata_not_found(self):
-        """Testing parsing a not found character"""
-        content = self._load_resource(FILE_CHARACTER_TIBIADATA_NOT_FOUND)
-        char = Character.from_tibiadata(content)
-        self.assertIsNone(char)
-
-    def test_character_from_tibiadata_invalid_json(self):
-        """Testing parsing an invalid JSON string"""
-        with self.assertRaises(InvalidContent):
-            Character.from_tibiadata("<html><b>Not a json string</b></html>")
-
-    def test_character_from_tibiadata_unrelated_json(self):
-        """Testing parsing an unrelated TibiaData section"""
-        with self.assertRaises(InvalidContent):
-            Character.from_tibiadata(self._load_resource(tests.tests_guild.FILE_GUILD_TIBIADATA))

@@ -1,15 +1,29 @@
 import asyncio
 import datetime
+import time
+import typing
 
 import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy import BoostedCreature, Category, Character, Forbidden, Guild, Highscores, House, HouseOrder, HouseStatus, \
-    HouseType, KillStatistics, ListedGuild, ListedHouse, ListedNews, NetworkError, News, NewsCategory, NewsType, \
-    Tournament, TournamentLeaderboard, VocationFilter, World, WorldOverview
+from tibiapy import abc
+from tibiapy.character import Character
+from tibiapy.creature import BoostedCreature
+from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
+from tibiapy.errors import Forbidden, NetworkError
+from tibiapy.event import EventSchedule
+from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumThread, ListedBoard
+from tibiapy.guild import Guild, GuildWars, ListedGuild
+from tibiapy.highscores import Highscores
+from tibiapy.house import House, ListedHouse
+from tibiapy.kill_statistics import KillStatistics
+from tibiapy.news import ListedNews, News
+from tibiapy.tournament import Tournament, TournamentLeaderboard
+from tibiapy.world import World, WorldOverview
 
 __all__ = (
+    "TibiaResponse",
     "Client",
 )
 
@@ -17,17 +31,70 @@ __all__ = (
 # This limit is not sent anywhere, so there's no way to automate it.
 CACHE_LIMIT = 300
 
+T = typing.TypeVar('T')
 
-# This class is not used in this release.
-class _TibiaResponse:  # pragma: no cover
-    def __init__(self, data=None, cache_limit=CACHE_LIMIT, **kwargs):
-        self.data = None
-        self.cached = kwargs.get("cached")
-        self.cache_age = kwargs.get("cache_age")
-        self.response_timestamp = None
-        self.data_timestamp = None
-        self.parsing_time = None
-        self.response_time = None
+
+class TibiaResponse(typing.Generic[T], abc.Serializable):
+    """Represents a response from Tibia.com
+
+    Attributes
+    ----------
+    timestamp: :class:`datetime.datetime`
+        The date and time when the page was fetched, in UTC.
+    cached: :class:`bool`
+        Whether the response is cached or it is a fresh response.
+    age: :class:`int`
+        The age of the cache in seconds.
+    fetching_time: :class:`float`
+        The time in seconds it took for Tibia.com to respond.
+    parsing_time: :class:`float`
+        The time in seconds it took for the response to be parsed into data.
+    data: :class:`T`
+        The data contained in the response.
+    """
+    def __init__(self, raw_response, data: T, parsing_time=None):
+        self.timestamp: datetime.datetime = raw_response.timestamp
+        self.cached: bool = raw_response.cached
+        self.age: int = raw_response.age
+        self.fetching_time = raw_response.fetching_time
+        self.parsing_time = parsing_time
+        self.data: T = data
+
+    __slots__ = (
+        'timestamp',
+        'cached',
+        'age',
+        'fetching_time',
+        'parsing_time',
+        'data',
+    )
+
+    _serializable_properties = ("time_left", )
+
+    @property
+    def time_left(self):
+        """:class:`datetime.timedelta`: The time left for the cache of this response to expire."""
+        if not self.age:
+            return datetime.timedelta()
+        return datetime.timedelta(seconds=CACHE_LIMIT-self.age)-(datetime.datetime.utcnow()-self.timestamp)
+
+    @property
+    def seconds_left(self):
+        """:class:`int`: The time left in seconds for this response's cache to expire."""
+        return self.time_left.seconds
+
+
+class RawResponse:
+    def __init__(self, response: aiohttp.ClientResponse, fetching_time: float):
+        self.timestamp = datetime.datetime.utcnow()
+        self.fetching_time = fetching_time
+        self.cached = response.headers.get("CF-Cache-Status") == "HIT"
+        age = response.headers.get("Age")
+        if age is not None and age.isnumeric():
+            self.age = int(age)
+        else:
+            self.age = 0
+        self.content = None
 
 
 class Client:
@@ -39,6 +106,9 @@ class Client:
     If desired, a custom ClientSession instance may be passed, instead of creating a new one.
 
     .. versionadded:: 2.0.0
+
+    .. versionchanged:: 3.0.0
+        All methods return a :class:`TibiaResponse` instance, containing additional information such as cache age.
 
     Attributes
     ----------
@@ -52,9 +122,11 @@ class Client:
     """
 
     def __init__(self, loop=None, session=None, *, proxy_url=None):
-        self.loop = asyncio.get_event_loop() if loop is None else loop  # type: asyncio.AbstractEventLoop
+        self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if loop is None else loop
+        self._session_ready = asyncio.Event()
         if session is not None:
-            self.session = session  # type: aiohttp.ClientSession
+            self.session: aiohttp.ClientSession = session
+            self._session_ready.set()
         else:
             self.loop.create_task(self._initialize_session(proxy_url))
 
@@ -64,8 +136,9 @@ class Client:
             'Accept-Encoding': "deflate, gzip"
         }
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
-        self.session = aiohttp.ClientSession(loop=self.loop, headers=headers,
-                                             connector=connector)  # type: aiohttp.ClientSession
+        self.session: aiohttp.ClientSession = aiohttp.ClientSession(loop=self.loop, headers=headers,
+                                                                    connector=connector)
+        self._session_ready.set()
 
     @classmethod
     def _handle_status(cls, status_code):
@@ -77,18 +150,22 @@ class Client:
         else:
             raise NetworkError("Request error, status code: %d" % status_code)
 
-    async def _get(self, url):
+    async def _request(self, method, url, data=None):
         """Base GET request, handling possible error statuses.
-        
+
         Parameters
         ----------
+        method: :class:`str`
+            The HTTP method to use for the request.
         url: :class:`str`
             The URL that will be requested.
+        data: :class:`dict`
+            A mapping representing the form-data to send as part of the request.
 
         Returns
         -------
-        :class:`str`
-            The text content of the response.
+        :class:`RawResponse`
+            The raw response obtained from the server.
 
         Raises
         ------
@@ -98,10 +175,14 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
+        await self._session_ready.wait()
         try:
-            async with self.session.get(url, compress=True) as resp:
+            init_time = time.perf_counter()
+            async with self.session.request(method, url, data=data) as resp:
                 self._handle_status(resp.status)
-                return await resp.text()
+                response = RawResponse(resp, time.perf_counter()-init_time)
+                response.content = await resp.text()
+                return response
         except aiohttp.ClientError as e:
             raise NetworkError("aiohttp.ClientError: %s" % e, e)
         except aiohttp_socks.SocksConnectionError as e:
@@ -109,31 +190,263 @@ class Client:
         except UnicodeDecodeError as e:
             raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
-    async def _post(self, url, data):
-        """Base POST request, handling possible error statuses.
+    async def fetch_cm_post_archive(self, start_date, end_date, page=1):
+        """Fetches the CM post archive.
+
+        .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        url: :class:`str`
-            The URL that will be requested.
-        data: :class:`dict`
-            A mapping representing the form-data to send as part of the request.
+        start_date: :class: `datetime.date`
+            The start date to display.
+        end_date: :class: `datetime.date`
+            The end date to display.
+        page: :class:`int`
+            The desired page to display.
 
         Returns
         -------
-        :class:`str`
-            The text content of the response.
+        :class:`TibiaResponse` of :class:`CMPostArchive`
+            The CM Post Archive.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        ValueError
+            If the start_date is more recent than the end date or page number is not 1 or greater.
         """
-        try:
-            async with self.session.post(url, data=data) as resp:
-                self._handle_status(resp.status)
-                return await resp.text()
-        except aiohttp.ClientError as e:
-            raise NetworkError("aiohttp.ClientError: %s" % e, e)
-        except aiohttp_socks.SocksConnectionError as e:
-            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
-        except UnicodeDecodeError as e:
-            raise NetworkError('UnicodeDecodeError: %s' % e, e)
+        if start_date > end_date:
+            raise ValueError("start_date cannot be more recent than end_date")
+        if page <= 0:
+            raise ValueError("page cannot be lower than 1.")
+        response = await self._request("get", CMPostArchive.get_url(start_date, end_date, page))
+        start_time = time.perf_counter()
+        cm_post_archive = CMPostArchive.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, cm_post_archive, parsing_time)
+
+    async def fetch_event_schedule(self, month=None, year=None):
+        """Fetches the event calendar.
+
+        .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        month: :class:`int`
+            The month of the events to display.
+        year: :class:`int`
+            The year of the events to display.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`EventSchedule`
+            The event calendar.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        if (year is None and month is not None) or (year is not None and month is None):
+            raise ValueError("both year and month must be defined or neither must be defined.")
+        response = await self._request("get", EventSchedule.get_url(month, year))
+        start_time = time.perf_counter()
+        calendar = EventSchedule.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, calendar, parsing_time)
+
+    async def fetch_forum_community_boards(self):
+        """Fetches the forum's community boards.
+
+        .. versionadded:: 3.0.0
+
+        Returns
+        -------
+        :class:`TibiaResponse` of list of :class:`ListedBoard`
+            The forum boards in the community section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("get", ListedBoard.get_community_boards_url())
+        start_time = time.perf_counter()
+        boards = ListedBoard.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boards, parsing_time)
+
+    async def fetch_forum_support_boards(self):
+        """Fetches the forum's community boards.
+
+        .. versionadded:: 3.0.0
+
+        Returns
+        -------
+        :class:`TibiaResponse` of list of :class:`ListedBoard`
+            The forum boards in the community section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
+        response = await self._request("get", ListedBoard.get_support_boards_url())
+        start_time = time.perf_counter()
+        boards = ListedBoard.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boards, parsing_time)
+
+    async def fetch_forum_world_boards(self):
+        """Fetches the forum's world boards.
+
+        .. versionadded:: 3.0.0
+
+        Returns
+        -------
+        :class:`TibiaResponse` of list of :class:`ListedBoard`
+            The forum boards in the world section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
+        response = await self._request("get", ListedBoard.get_world_boards_url())
+        start_time = time.perf_counter()
+        boards = ListedBoard.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boards, parsing_time)
+
+    async def fetch_forum_trade_boards(self):
+        """Fetches the forum's trade boards.
+
+        .. versionadded:: 3.0.0
+
+        Returns
+        -------
+        :class:`TibiaResponse` of list of :class:`ListedBoard`
+            The forum boards in the trade section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
+        response = await self._request("get", ListedBoard.get_trade_boards_url())
+        start_time = time.perf_counter()
+        boards = ListedBoard.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boards, parsing_time)
+
+    async def fetch_forum_board(self, board_id, page=1, age=30):
+        """Fetches a forum board with a given id.
+
+        .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        board_id : :class:`int`
+            The id of the board.
+        page: :class:`int`
+            The page number to show.
+        age: :class:`int`
+            The maximum age in days of the threads to display.
+
+            To show threads of all ages, use -1.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`ForumBoard`
+            A response containing the forum, if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
+        response = await self._request("get", ForumBoard.get_url(board_id, page, age))
+        start_time = time.perf_counter()
+        board = ForumBoard.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, board, parsing_time)
+
+    async def fetch_forum_thread(self, thread_id, page=1):
+        """Fetches a forum thread with a given id.
+
+        .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        thread_id : :class:`int`
+            The id of the thread.
+        page: :class:`int`
+            The desired page to display, by default 1.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`ForumThread`
+            A response containing the forum, if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
+        response = await self._request("get", ForumThread.get_url(thread_id, page))
+        start_time = time.perf_counter()
+        thread = ForumThread.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, thread, parsing_time)
+
+    async def fetch_forum_announcement(self, announcement_id):
+        """Fetches a forum announcement.
+
+        .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        announcement_id: :class:`int`
+            The id of the desired announcement.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`ForumAnnouncement`
+            The forum announcement, if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("get", ForumAnnouncement.get_url(announcement_id))
+        start_time = time.perf_counter()
+        announcement = ForumAnnouncement.from_content(response.content, announcement_id)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, announcement, parsing_time)
 
     async def fetch_boosted_creature(self):
         """Fetches today's boosted creature.
@@ -142,7 +455,7 @@ class Client:
 
         Returns
         -------
-        :class:`BoostedCreature`
+        :class:`TibiaResponse` of :class:`BoostedCreature`
             The boosted creature of the day.
 
         Raises
@@ -153,9 +466,11 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(News.get_list_url())
-        boosted_creature = BoostedCreature.from_content(content)
-        return boosted_creature
+        response = await self._request("get", News.get_list_url())
+        start_time = time.perf_counter()
+        boosted_creature = BoostedCreature.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boosted_creature, parsing_time)
 
     async def fetch_character(self, name):
         """Fetches a character by its name from Tibia.com
@@ -167,8 +482,8 @@ class Client:
 
         Returns
         -------
-        :class:`Character`
-            The character if found, else ``None``.
+        :class:`TibiaResponse` of :class:`Character`
+            A response containig the character, if found.
 
         Raises
         ------
@@ -178,9 +493,11 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(Character.get_url(name.strip()))
-        char = Character.from_content(content)
-        return char
+        response = await self._request("get", Character.get_url(name.strip()))
+        start_time = time.perf_counter()
+        char = Character.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, char, parsing_time)
 
     async def fetch_guild(self, name):
         """Fetches a guild by its name from Tibia.com
@@ -192,8 +509,8 @@ class Client:
 
         Returns
         -------
-        :class:`Guild`
-            The guild if found, else ``None``.
+        :class:`TibiaResponse` of :class:`Guild`
+            A response containing the found guild, if any.
 
         Raises
         ------
@@ -203,9 +520,43 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(Guild.get_url(name))
-        guild = Guild.from_content(content)
-        return guild
+        response = await self._request("get", Guild.get_url(name))
+        start_time = time.perf_counter()
+        guild = Guild.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, guild, parsing_time)
+
+    async def fetch_guild_wars(self, name):
+        """Fetches a guild's wars by its name from Tibia.com
+
+        .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the guild. The case must match exactly.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`GuildWars`
+            A response containing the found guild's wars.
+
+            If the guild doesn't exist, the displayed data will show a guild with no wars instead of indicating the
+            guild doesn't exist.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("get", GuildWars.get_url(name))
+        start_time = time.perf_counter()
+        guild_wars = GuildWars.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, guild_wars, parsing_time)
 
     async def fetch_house(self, house_id, world):
         """Fetches a house in a specific world by its id.
@@ -219,7 +570,7 @@ class Client:
 
         Returns
         -------
-        :class:`House`
+        :class:`TibiaResponse` of :class:`House`
             The house if found, ``None`` otherwise.
 
         Raises
@@ -230,9 +581,11 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(House.get_url(house_id, world))
-        house = House.from_content(content)
-        return house
+        response = await self._request("get", House.get_url(house_id, world))
+        start_time = time.perf_counter()
+        house = House.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, house, parsing_time)
 
     async def fetch_highscores_page(self, world, category=Category.EXPERIENCE,
                                     vocation=VocationFilter.ALL, page=1):
@@ -251,7 +604,7 @@ class Client:
 
         Returns
         -------
-        :class:`Highscores`
+        :class:`TibiaResponse` of :class:`Highscores`
             The highscores information or ``None`` if not found.
 
         Raises
@@ -262,9 +615,11 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(Highscores.get_url(world, category, vocation, page))
-        highscores = Highscores.from_content(content)
-        return highscores
+        response = await self._request("get", Highscores.get_url(world, category, vocation, page))
+        start_time = time.perf_counter()
+        highscores = Highscores.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, highscores, parsing_time)
 
     async def fetch_kill_statistics(self, world):
         """Fetches the kill statistics of a world from Tibia.com.
@@ -276,7 +631,7 @@ class Client:
 
         Returns
         -------
-        :class:`KillStatistics`
+        :class:`TibiaResponse` of :class:`KillStatistics`
             The kill statistics of the world if found.
 
         Raises
@@ -287,9 +642,11 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(KillStatistics.get_url(world))
-        kill_statistics = KillStatistics.from_content(content)
-        return kill_statistics
+        response = await self._request("get", KillStatistics.get_url(world))
+        start_time = time.perf_counter()
+        kill_statistics = KillStatistics.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, kill_statistics, parsing_time)
 
     async def fetch_world(self, name):
         """Fetches a world from Tibia.com
@@ -301,8 +658,8 @@ class Client:
 
         Returns
         -------
-        :class:`World`
-            The world's information if found, ```None`` otherwise.
+        :class:`TibiaResponse` of :class:`World`
+            A response containig the he world's information if found, ```None`` otherwise.
 
         Raises
         ------
@@ -312,9 +669,11 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(World.get_url(name))
-        world = World.from_content(content)
-        return world
+        response = await self._request("get", World.get_url(name))
+        start_time = time.perf_counter()
+        world = World.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, world, parsing_time)
 
     async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status: HouseStatus = None,
                                  order=HouseOrder.NAME):
@@ -335,8 +694,8 @@ class Client:
 
         Returns
         -------
-        list of :class:`ListedHouse`
-            The lists of houses meeting the criteria if found.
+        :class:`TibiaResponse` of list of :class:`ListedHouse`
+            A response containing the lists of houses meeting the criteria if found.
 
         Raises
         ------
@@ -346,9 +705,11 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(ListedHouse.get_list_url(world, town, house_type, status, order))
-        houses = ListedHouse.list_from_content(content)
-        return houses
+        response = await self._request("get", ListedHouse.get_list_url(world, town, house_type, status, order))
+        start_time = time.perf_counter()
+        world_houses = ListedHouse.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, world_houses, parsing_time)
 
     async def fetch_world_guilds(self, world: str):
         """Fetches the list of guilds in a world from Tibia.com
@@ -360,8 +721,8 @@ class Client:
 
         Returns
         -------
-        list of :class:`ListedGuild`
-            The lists of guilds in the world.
+        :class:`TibiaResponse` of list of :class:`ListedGuild`
+            A response containing the lists of guilds in the world.
 
         Raises
         ------
@@ -371,17 +732,19 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(ListedGuild.get_world_list_url(world))
-        guilds = ListedGuild.list_from_content(content)
-        return guilds
+        response = await self._request("get", ListedGuild.get_world_list_url(world))
+        start_time = time.perf_counter()
+        guilds = ListedGuild.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, guilds, parsing_time)
 
     async def fetch_world_list(self):
         """Fetches the world overview information from Tibia.com.
 
         Returns
         -------
-        :class:`WorldOverview`
-            The world overview information.
+        :class:`TibiaResponse` of :class:`WorldOverview`
+            A response containing the world overview information.
 
         Raises
         ------
@@ -391,9 +754,11 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(WorldOverview.get_url())
-        world_overview = WorldOverview.from_content(content)
-        return world_overview
+        response = await self._request("get", WorldOverview.get_url())
+        start_time = time.perf_counter()
+        world_overview = WorldOverview.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, world_overview, parsing_time)
 
     async def fetch_news_archive(self, begin_date, end_date, categories=None, types=None):
         """Fetches news from the archive meeting the search criteria.
@@ -411,7 +776,7 @@ class Client:
 
         Returns
         -------
-        list of :class:`ListedNews`
+        :class:`TibiaResponse` of list of :class:`ListedNews`
             The news meeting the search criteria.
 
         Raises
@@ -448,9 +813,11 @@ class Client:
         if NewsType.NEWS_TICKER in types:
             data["filter_ticker"] = "ticker"
 
-        content = await self._post(News.get_list_url(), data)
-        news = ListedNews.list_from_content(content)
-        return news
+        response = await self._request("post", News.get_list_url(), data)
+        start_time = time.perf_counter()
+        news = ListedNews.list_from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, news, parsing_time)
 
     async def fetch_recent_news(self, days=30, categories=None, types=None):
         """Fetches all the published news in the last specified days.
@@ -468,7 +835,7 @@ class Client:
 
         Returns
         -------
-        list of :class:`ListedNews`
+        :class:`TibiaResponse` of list of :class:`ListedNews`
             The news posted in the last specified days.
 
         Raises
@@ -493,7 +860,7 @@ class Client:
 
         Returns
         -------
-        :class:`News`
+        :class:`TibiaResponse` of :class:`News`
             The news entry if found, ``None`` otherwise.
 
         Raises
@@ -504,12 +871,16 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(News.get_url(news_id))
-        news = News.from_content(content, news_id)
-        return news
+        response = await self._request("get", News.get_url(news_id))
+        start_time = time.perf_counter()
+        news = News.from_content(response.content, news_id)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, news, parsing_time)
 
     async def fetch_tournament(self, tournament_cycle=0):
         """Fetches a tournament from Tibia.com
+
+        .. versionadded:: 2.5.0
 
         Parameters
         ----------
@@ -518,7 +889,7 @@ class Client:
 
         Returns
         -------
-        :class:`Tournament`
+        :class:`TibiaResponse` of :class:`Tournament`
             The tournament if found, ``None`` otherwise.
 
         Raises
@@ -529,12 +900,16 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(Tournament.get_url(tournament_cycle))
-        tournament = Tournament.from_content(content)
-        return tournament
+        response = await self._request("get", Tournament.get_url(tournament_cycle))
+        start_time = time.perf_counter()
+        tournament = Tournament.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, tournament, parsing_time)
 
     async def fetch_tournament_leaderboard(self, tournament_cycle, world, page=1):
         """Fetches a tournament leaderboard from Tibia.com
+
+        .. versionadded:: 2.5.0
 
         Parameters
         ----------
@@ -547,7 +922,7 @@ class Client:
 
         Returns
         -------
-        :class:`TournamentLeaderboard`
+        :class:`TibiaResponse` of :class:`TournamentLeaderboard`
             The tournament's leaderboard if found, ``None`` otherwise.
 
         Raises
@@ -558,7 +933,8 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        content = await self._get(TournamentLeaderboard.get_url(world, tournament_cycle, page))
-        tournament_leaderboard = TournamentLeaderboard.from_content(content)
-        return tournament_leaderboard
-
+        response = await self._request("get", TournamentLeaderboard.get_url(world, tournament_cycle, page))
+        start_time = time.perf_counter()
+        tournament_leaderboard = TournamentLeaderboard.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, tournament_leaderboard, parsing_time)

@@ -4,8 +4,8 @@ import sys
 
 from setuptools import find_packages, setup
 
-if sys.version_info < (3, 5):
-    sys.exit('Sorry, Python < 3.5 is not supported')
+if sys.version_info < (3, 6):
+    sys.exit('Sorry, Python < 3.6 is not supported')
 
 
 def get_version(package):
@@ -45,8 +45,7 @@ extras_require = {
         'colorama'
     ],
     'docs': [
-        'sphinx==1.7.9',
-        'sphinxcontrib-asyncio',
+        'sphinx',
     ],
     'test': [
         'asynctest',
@@ -76,9 +75,9 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Games/Entertainment :: Role-Playing',
         'Topic :: Internet',
         'Topic :: Software Development',

@@ -6,7 +6,7 @@ Introduction
 
 Prerequisites
 =============
-Tibia.py requires Python 3.5 or higher.
+Tibia.py requires Python 3.6 or higher.
 Dependencies are installed automatically when installing the package.
 
 However, since it uses ``lxml`` for parsing, on Linux you may require to install libxml on your system.
@@ -39,8 +39,8 @@ The asynchronous client (:class:`tibiapy.Client`) contains methods to obtain inf
 
 The parsing methods allow you to get Python objects given the html content of a page.
 
-The main models have a ``get_url``/``get_url_tibiadata`` method that can be used to get their Tibia.com/TibiaData.com page.
-With the url, the html/json content can be fetched and then passed to their ``from_content``/``from_tibiadata`` methods.
+The main models have a ``get_url`` method that can be used to get their Tibia.com page.
+With the url, the html/json content can be fetched and then passed to their ``from_content`` methods.
 
 This allows you to use any networking module to obtain the data, and use the library to parse it.
 
@@ -67,9 +67,28 @@ Supported Sections
 +============================+============================================+=============================================+
 | Characters_                | :meth:`Character.from_content`             | :meth:`Client.fetch_character`              |
 +----------------------------+--------------------------------------------+---------------------------------------------+
+| `CM Post Archive`_         | :meth:`CMPostArchive.from_content`         | :meth:`Client.fetch_cm_post_archive`        |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| `Event Schedule`_          | :meth:`EventSchedule.from_content`         | :meth:`Client.fetch_event_schedule`         |
++----------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (Individual)       | :meth:`Guild.from_content`                 | :meth:`Client.fetch_guild`                  |
 +----------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (List)             | :meth:`ListedGuild.list_from_content`      | :meth:`Client.fetch_world_guilds`           |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Guilds_ (Wars)             | :meth:`GuildWars.from_content`             | :meth:`Client.fetch_guild_wars`             |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Forums_ (Section)          | :meth:`ListedBoard.list_from_content`      | :meth:`Client.fetch_forum_world_boards`     |
+|                            |                                            | :meth:`Client.fetch_forum_trade_boards`     |
+|                            |                                            | :meth:`Client.fetch_forum_community_boards` |
+|                            |                                            | :meth:`Client.fetch_forum_support_boards`   |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Forums_ (Board)            | :meth:`ForumBoard.from_content`            | :meth:`Client.fetch_forum_board`            |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Forums_ (Announcement)     | :meth:`ForumAnnouncement.from_content`     | :meth:`Client.fetch_forum_announcement`     |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Forums_ (Thread)           | :meth:`ForumThread.from_content`           | :meth:`Client.fetch_forum_thread`           |
++----------------------------+--------------------------------------------+---------------------------------------------+
+| Highscores_                | :meth:`Highscores.from_content`            | :meth:`Client.fetch_highscores_page`        |
 +----------------------------+--------------------------------------------+---------------------------------------------+
 | Highscores_                | :meth:`Highscores.from_content`            | :meth:`Client.fetch_highscores_page`        |
 +----------------------------+--------------------------------------------+---------------------------------------------+
@@ -95,7 +114,10 @@ Supported Sections
 
 
 .. _Characters: https://www.tibia.com/community/?subtopic=characters
+.. _CM Post Archive: https://www.tibia.com/forum/?subtopic=forum&action=cm_post_archive
+.. _Event Schedule: https://www.tibia.com/news/?subtopic=eventcalendar
 .. _Guilds: https://www.tibia.com/community/?subtopic=guilds
+.. _Forums: https://www.tibia.com/community/?subtopic=forum
 .. _Highscores: https://www.tibia.com/community/?subtopic=highscores
 .. _Houses: https://www.tibia.com/community/?subtopic=houses
 .. _Kill Statistics: https://www.tibia.com/community/?subtopic=killstatistics

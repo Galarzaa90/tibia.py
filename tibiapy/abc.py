@@ -1,28 +1,26 @@
 import abc
 import datetime
+import enum
 import json
-import urllib.parse
 from collections import OrderedDict
-from enum import Enum
 
-from tibiapy.enums import HouseType, HouseStatus, HouseOrder
+from tibiapy.enums import HouseOrder, HouseStatus, HouseType
 from tibiapy.utils import get_tibia_url
-
-CHARACTER_URL_TIBIADATA = "https://api.tibiadata.com/v2/characters/%s.json"
-HOUSE_URL_TIBIADATA = "https://api.tibiadata.com/v2/house/%s/%d.json"
-HOUSE_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/houses/%s/%s/%s.json"
-GUILD_URL_TIBIADATA = "https://api.tibiadata.com/v2/guild/%s.json"
-GUILD_LIST_URL_TIBIADATA = "https://api.tibiadata.com/v2/guilds/%s.json"
-WORLD_URL_TIBIADATA = "https://api.tibiadata.com/v2/world/%s.json"
 
 
 class Serializable:
     """Contains methods to make a class convertible to JSON.
 
+    Only attributes defined in ``__slots__`` will be serialized.
+
     .. note::
         | There's no way to convert JSON strings back to their original object.
         | Attempting to do so may result in data loss.
     """
+
+    _serializable_properties = ()
+    """:class:`tuple` of :class:`str`: Additional properties to serialize."""
+
     @classmethod
     def __slots_inherited__(cls):
         slots = []
@@ -33,6 +31,7 @@ class Serializable:
             except AttributeError:
                 continue
         slots.extend(getattr(cls, "__slots__", []))
+        slots.extend(getattr(cls, "_serializable_properties", []))
         return tuple(OrderedDict.fromkeys(slots))
 
     def keys(self):
@@ -58,8 +57,12 @@ class Serializable:
         try:
             if isinstance(obj, datetime.datetime):
                 return obj.isoformat()
-            if isinstance(obj, Enum):
-                return obj.value
+            if isinstance(obj, datetime.timedelta):
+                return obj.total_seconds()
+            if isinstance(obj, enum.Flag):
+                return [str(i) for i in obj]
+            if isinstance(obj, enum.Enum):
+                return str(obj)
             return {k: v for k, v in dict(obj).items() if v is not None}
         except TypeError:
             return str(obj)
@@ -82,8 +85,149 @@ class Serializable:
         return json.dumps({k: v for k, v in dict(self).items() if v is not None}, indent=indent, sort_keys=sort_keys,
                           default=self._try_dict)
 
+class BaseAnnouncement(metaclass=abc.ABCMeta):
+    """Base class for all announcement classes.
 
-class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
+    Implement common properties and methods for announcements.
+
+    The following implement this class:
+
+    - :class:`ForumAnnouncement`
+    - :class:`ListedAnnouncement`
+
+    Attributes
+    ----------
+    announcement_id: :class:`int`
+        The ID of the announcement.
+    """
+
+    __slots__ = ("announcement_id",)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return other.announcement_id == self.announcement_id
+        return False
+
+    @property
+    def url(self):
+        """:class:`str` Gets the URL to this announcement."""
+        return self.get_url(self.announcement_id)
+
+    @classmethod
+    def get_url(cls, announcement_id):
+        """Gets the URL to an announcement with a given ID.
+
+        Parameters
+        ----------
+        announcement_id: :class:`int`
+            The ID of the announcement
+
+        Returns
+        -------
+        :class:`str`
+            The URL of the announcement.
+        """
+        return get_tibia_url("forum", None, action="announcement", announcementid=announcement_id)
+
+
+class BaseBoard(metaclass=abc.ABCMeta):
+    """Base class for all board classes.
+
+    Implements common properties and methods for boards.
+
+    The following implement this class:
+
+    - :class:`ForumBoard`
+    - :class:`ListedBoard`
+
+    Attributes
+    ----------
+    board_id: :class:`int`
+        The ID of the board.
+    """
+
+    __slots__ = ("board_id",)
+
+    def __eq__(self, o: object) -> bool:
+        """Two characters are considered equal if their names are equal."""
+        if isinstance(o, self.__class__):
+            return self.board_id == o.board_id
+        return False
+
+    def __repr__(self):
+        return "<{0.__class__.__name__} name={0.name!r}>".format(self, )
+
+    @property
+    def url(self):
+        """:class:`str`: The URL of this board."""
+        return self.get_url(self.board_id)
+
+    @classmethod
+    def get_url(cls, board_id, page=1, age=30):
+        """Gets the Tibia.com URL to a board with a given id.
+
+        Parameters
+        ----------
+        board_id: :class:`int`
+            The ID of the board.
+        page: :class:`int`
+            The page to go to.
+        age: :class:`int`
+            The age in days of the threads to display.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the board.
+        """
+        return get_tibia_url("forum", None, action="board", boardid=board_id, pagenumber=page, threadage=age)
+
+    @classmethod
+    def get_world_boards_url(cls):
+        """Gets the URL to the World Boards section in Tibia.com
+        
+        Returns
+        -------
+        :class:`str`:
+            The URL to the World Boards.
+        """
+        return get_tibia_url("forum", "worldboards")
+
+    @classmethod
+    def get_trade_boards_url(cls):
+        """Gets the URL to the Trade Boards section in Tibia.com
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Trade Boards.
+        """
+        return get_tibia_url("forum", "tradeboards")
+
+    @classmethod
+    def get_community_boards_url(cls):
+        """Gets the URL to the Community Boards section in Tibia.com
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Community Boards.
+        """
+        return get_tibia_url("forum", "communityboards")
+
+    @classmethod
+    def get_support_boards_url(cls):
+        """Gets the URL to the Support Boards section in Tibia.com
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Support Boards.
+        """
+        return get_tibia_url("forum", "supportboards")
+
+
+class BaseCharacter(metaclass=abc.ABCMeta):
     """Base class for all character classes.
 
     Implements common properties methods for characters.
@@ -93,6 +237,8 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
     - :class:`.Character`
     - :class:`.GuildInvite`
     - :class:`.GuildMember`
+    - :class:`.HighscoresEntry`
+    - :class:`.LeaderboardEntry`
     - :class:`.OnlineCharacter`
     - :class:`.OtherCharacter`
 
@@ -119,13 +265,6 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
         """
         return self.get_url(self.name)
 
-    @property
-    def url_tibiadata(self):
-        """
-        :class:`str`: The URL of the character's information on TibiaData.com.
-        """
-        return self.get_url_tibiadata(self.name)
-
     @classmethod
     def get_url(cls, name):
         """Gets the Tibia.com URL for a given character name.
@@ -141,29 +280,15 @@ class BaseCharacter(Serializable, metaclass=abc.ABCMeta):
             The URL to the character's page."""
         return get_tibia_url("community", "characters", name=name)
 
-    @classmethod
-    def get_url_tibiadata(cls, name):
-        """Gets the TibiaData.com URL for a given character name.
 
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the character.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the character's page on TibiaData.com."""
-        return CHARACTER_URL_TIBIADATA % urllib.parse.quote(name)
-
-
-class BaseGuild(Serializable, metaclass=abc.ABCMeta):
+class BaseGuild(metaclass=abc.ABCMeta):
     """Base class for Guild classes.
 
     The following implement this class:
 
     - :class:`.Guild`
     - :class:`.GuildMembership`
+    - :class:'.ListedGuild'
 
     Attributes
     ----------
@@ -173,7 +298,12 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
     __slots__ = ("name",)
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r}>"
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.name == other.name
+        return False
 
     @property
     def url(self):
@@ -181,9 +311,11 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         return self.get_url(self.name)
 
     @property
-    def url_tibiadata(self):
-        """:class:`str`: The URL to the guild on TibiaData.com."""
-        return self.get_url_tibiadata(self.name)
+    def url_wars(self):
+        """:class:`str` The URL to the guild's wars page on Tibia.com.
+
+        .. versionadded:: 3.0.0"""
+        return self.get_url_wars(self.name)
 
     @classmethod
     def get_url(cls, name):
@@ -200,9 +332,12 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
             The URL to the guild's page"""
         return get_tibia_url("community", "guilds", page="view", GuildName=name)
 
+
     @classmethod
-    def get_url_tibiadata(cls, name):
-        """Gets the TibiaData.com URL for a given guild name.
+    def get_url_wars(cls, name):
+        """Gets the Tibia.com URL for the guild wars of a guild with a given name.
+
+        .. versionadded:: 3.0.0
 
         Parameters
         ------------
@@ -212,8 +347,8 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         Returns
         --------
         :class:`str`
-            The URL to the guild's page on TibiaData.com."""
-        return GUILD_URL_TIBIADATA % urllib.parse.quote(name)
+            The URL to the guild's wars page."""
+        return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
 
     @classmethod
     def get_world_list_url(cls, world):
@@ -231,47 +366,28 @@ class BaseGuild(Serializable, metaclass=abc.ABCMeta):
         """
         return get_tibia_url("community", "guilds", world=world)
 
-    @classmethod
-    def get_world_list_url_tibiadata(cls, world):
-        """Gets the TibiaData.com URL for the guild list of a specific world.
 
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's page.
-        """
-        return GUILD_LIST_URL_TIBIADATA % urllib.parse.quote(world.title().encode('iso-8859-1'))
-
-
-class BaseHouse(Serializable, metaclass=abc.ABCMeta):
+class BaseHouse(metaclass=abc.ABCMeta):
     """Base class for all house classes
 
     The following implement this class:
 
-    - :class:`.abc.BaseHouseWithId`
+    - :class:`.House`
     - :class:`.GuildHouse`
+    - :class:`.CharacterHouse`
+    - :class:`.ListedHouse`
 
     Attributes
     ----------
     name: :class:`str`
         The name of the house.
-    world: :class:`str`
-        The name of the world the house belongs to.
-    status: :class:`HouseStatus`
-        The current status of the house.
-    type: :class:`HouseType`
-        The type of the house.
     """
-    __slots__ = ("name", "world", "status", "type")
+    __slots__ = (
+        "name",
+    )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r} status={0.status!r} type={0.type!r}>"\
-            .format(self,)
+        return f"<{self.__class__.__name__} name={self.name!r}>"
 
     def __eq__(self, o: object) -> bool:
         """Two houses are considered equal if their names are equal."""
@@ -296,22 +412,6 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         """
         return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
 
-    @classmethod
-    def get_url_tibiadata(cls, house_id, world):
-        """ Gets the TibiaData.com URL for a house with the given id and world.
-
-        Parameters
-        ----------
-        house_id: :class:`int`
-            The internal id of the house.
-        world: :class:`str`
-            The world of the house.
-
-        Returns
-        -------
-        The URL to the house in TibiaData.com
-        """
-        return HOUSE_URL_TIBIADATA % (world, house_id)
 
     @classmethod
     def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE, status: HouseStatus = None,
@@ -339,75 +439,11 @@ class BaseHouse(Serializable, metaclass=abc.ABCMeta):
         """
         house_type = "%ss" % house_type.value
         status = "" if status is None else status.value
-        return get_tibia_url("community", "houses", world=world, town=town, type=house_type, status=status,
+        return get_tibia_url("community", "houses", world=world, town=town, type=house_type, state=status,
                              order=order.value)
 
-    @classmethod
-    def get_list_url_tibiadata(cls, world, town, house_type: HouseType = HouseType.HOUSE):
-        """
-        Gets the URL to the house list on Tibia.com with the specified parameters.
 
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-        town: :class:`str`
-            The name of the town.
-        house_type: :class:`HouseType`
-            Whether to search for houses or guildhalls.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the list matching the parameters.
-        """
-        house_type = "%ss" % house_type.value
-        return HOUSE_LIST_URL_TIBIADATA % (urllib.parse.quote(world), urllib.parse.quote(town), house_type)
-
-
-class BaseHouseWithId(BaseHouse):
-    """A derivative of :class:`BaseHouse`
-
-    Implements the :py:attr:`id` attribute and dependant functions and properties.
-
-    The following implement this class:
-
-    - :class:`.House`
-    - :class:`.CharacterHouse`
-
-    Attributes
-    ----------
-    id: :class:`int`
-        The internal ID of the house. This is used on the website to identify houses.
-    name: :class:`str`
-        The name of the house.
-    world: :class:`str`
-        The name of the world the house belongs to.
-    status: :class:`HouseStatus`
-        The current status of the house.
-    type: :class:`HouseType`
-        The type of the house.
-    """
-    __slots__ = ("id",)
-
-    def __eq__(self, o: object) -> bool:
-        """Two houses are considered equal if their names or ids are equal."""
-        if isinstance(o, self.__class__):
-            return self.name.lower() == o.name.lower() or self.id == o.id
-        return False
-
-    @property
-    def url(self):
-        """:class:`str`: The URL to the Tibia.com page of the house."""
-        return self.get_url(self.id, self.world) if self.id and self.world else None
-
-    @property
-    def url_tibiadata(self):
-        """:class:`str`: The URL to the TibiaData.com page of the house."""
-        return self.get_url_tibiadata(self.id, self.world) if self.id and self.world else None
-
-
-class BaseNews(Serializable, metaclass=abc.ABCMeta):
+class BaseNews(metaclass=abc.ABCMeta):
     """Base class for all news classes
 
     Implements the :py:attr:`id` attribute and common properties.
@@ -421,21 +457,9 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
     ----------
     id: :class:`int`
         The internal ID of the news entry.
-    title: :class:`str`
-        The title of the news entry.
-    category: :class:`.NewsCategory`
-        The category this belongs to.
-    category_icon: :class:`str`
-        The URL of the icon corresponding to the category.
-    date: :class:`datetime.date`
-        The date when the news were published.
     """
     __slots__ = (
         "id",
-        "title",
-        "category",
-        "category_icon",
-        "date",
     )
 
     def __eq__(self, o: object) -> bool:
@@ -481,8 +505,104 @@ class BaseNews(Serializable, metaclass=abc.ABCMeta):
         return get_tibia_url("news", "newsarchive")
 
 
-class BaseTournament(Serializable, metaclass=abc.ABCMeta):
+class BasePost(metaclass=abc.ABCMeta):
+    """Base classs for post classes.
+
+    The following implement this class:
+
+    - :class:`CMPost`
+    - :class:`ForumPost`
+    - :class:`LastPost`
+
+    Attributes
+    ----------
+    post_id: :class:`int`
+        The internal ID of the post.
+    """
+
+    __slots__ = ("post_id",)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.post_id == other.post_id
+        return False
+
+    @property
+    def url(self):
+        """:class:`str`: Gets the URL to this specific post."""
+        return self.get_url(self.post_id)
+
+    @classmethod
+    def get_url(cls, post_id):
+        """Gets the URL to a specific post.
+
+        Parameters
+        ----------
+        post_id: :class:`int`
+            The ID of the desired post.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the post.
+        """
+        return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid=post_id)
+
+
+class BaseThread(metaclass=abc.ABCMeta):
+    """Base class for thread classes.
+
+    The following implement this class:
+
+    - :class:`.ListedThread`
+    - :class:`.ForumThread`
+
+    Attributes
+    ----------
+    thread_id: :class:`int`
+        The internal ID of the thread.
+    """
+
+    __slots__ = (
+        "thread_id",
+    )
+
+    @property
+    def url(self):
+        """:class:`str` The URL to the thread in Tibia.com."""
+        return self.get_url(self.thread_id)
+
+    @classmethod
+    def get_url(cls, thread_id, page=1):
+        """Gets the URL to a thread with a given id.
+
+        Parameters
+        ----------
+        thread_id: :class:`int`
+            The id of the desired thread.
+        page: :class:`int`
+            The desired page, by default 1.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the thread.
+        """
+        return get_tibia_url("forum", None, action="thread", threadid=thread_id, pagenumber=page)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.thread_id == other.thread_id
+        return False
+
+
+class BaseTournament(metaclass=abc.ABCMeta):
     """Base class for tournament classes.
+
+    The following implement this class:
+
+    - :class:`.ListedTournament`
+    - :class:`.Tournament`
 
     Attributes
     ----------
@@ -491,14 +611,16 @@ class BaseTournament(Serializable, metaclass=abc.ABCMeta):
     cycle: :class:`int`
         The tournament's cycle.
     """
+
     __slots__ = (
         "title",
         "cycle",
     )
 
     def __eq__(self, other):
+        """Two tournaments are considered the same when they have the same title or cycle."""
         if isinstance(other, self.__class__):
-            return self.title.lower() == other.title.lower()
+            return self.title.lower() == other.title.lower() or (self.cycle > 0 and self.cycle == other.cycle)
         return False
 
     @property
@@ -530,7 +652,7 @@ class BaseTournament(Serializable, metaclass=abc.ABCMeta):
         return get_tibia_url("community", "tournament", **params)
 
 
-class BaseWorld(Serializable, metaclass=abc.ABCMeta):
+class BaseWorld(metaclass=abc.ABCMeta):
     """Base class for all World classes.
 
     The following implement this class:
@@ -542,40 +664,9 @@ class BaseWorld(Serializable, metaclass=abc.ABCMeta):
     ----------
     name: :class:`str`
         The name of the world.
-    status: :class:`str`
-        The current status of the world.
-    online_count: :class:`int`
-        The number of currently online players in the world.
-    location: :class:`WorldLocation`
-        The physical location of the game servers.
-    pvp_type: :class:`PvpType`
-        The type of PvP in the world.
-    transfer_type: :class:`TransferType`
-        The type of transfer restrictions this world has.
-    battleye_protected: :class:`bool`
-        Whether the server is currently protected with BattlEye or not.
-    battleye_date: :class:`datetime.date`
-        The date when BattlEye was added to this world.
-        If this is ``None`` and the world is protected, it means the world was protected from the beginning.
-    experimental: :class:`bool`
-        Whether the world is experimental or not.
-    tournament_world_type: :class:`TournamentWorldType`
-        The type of tournament world. ``None`` if this is not a tournament world.
-    premium_only: :class:`bool`
-        Whether only premium account players are allowed to play in this server.
     """
     __slots__ = (
         "name",
-        "status",
-        "location",
-        "online_count",
-        "pvp_type",
-        "battleye_protected",
-        "battleye_date",
-        "experimental",
-        "premium_only",
-        "tournament_world_type",
-        "transfer_type"
     )
 
     def __repr__(self):
@@ -585,11 +676,6 @@ class BaseWorld(Serializable, metaclass=abc.ABCMeta):
     def url(self):
         """:class:`str`: URL to the world's information page on Tibia.com."""
         return self.get_url(self.name)
-
-    @property
-    def url_tibiadata(self):
-        """:class:`str`: URL to the world's information page on TibiaData.com."""
-        return self.get_url_tibiadata(self.name)
 
     @classmethod
     def get_url(cls, name):
@@ -607,18 +693,19 @@ class BaseWorld(Serializable, metaclass=abc.ABCMeta):
         """
         return get_tibia_url("community", "worlds", world=name.title())
 
-    @classmethod
-    def get_url_tibiadata(cls, name):
-        """Gets the URL to the World's information page on TibiaData.com.
 
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the world.
+class HouseWithId():
+    """Implements the :py:attr:`id` attribute and dependant functions and properties.
 
-        Returns
-        -------
-        :class:`str`
-            The URL to the world's information page on TibiaData.com.
-        """
-        return WORLD_URL_TIBIADATA % name.title()
+    Subclasses mut also implement :class:`.BaseHouse`"""
+
+    def __eq__(self, o: object) -> bool:
+        """Two houses are considered equal if their names or ids are equal."""
+        if isinstance(o, self.__class__):
+            return self.name.lower() == o.name.lower() or self.id == o.id
+        return False
+
+    @property
+    def url(self):
+        """:class:`str`: The URL to the Tibia.com page of the house."""
+        return self.get_url(self.id, self.world) if self.id and self.world else None

@@ -11,7 +11,7 @@ class TestHighscores(TestCommons, unittest.TestCase):
     # region Tibia.com Tests
     def test_kill_statistics_from_content(self):
         """Testing parsing kill statistics"""
-        content = self._load_resource(FILE_KILL_STATISTICS_FULL)
+        content = self.load_resource(FILE_KILL_STATISTICS_FULL)
         kill_statistics = KillStatistics.from_content(content)
 
         self.assertEqual(kill_statistics.world, "Gladera")
@@ -35,14 +35,14 @@ class TestHighscores(TestCommons, unittest.TestCase):
 
     def test_kill_statistics_from_content_empty(self):
         """Testing parsing empty kill statistics"""
-        content = self._load_resource(FILE_KILL_STATISTICS_EMPTY)
+        content = self.load_resource(FILE_KILL_STATISTICS_EMPTY)
         kill_statistics = KillStatistics.from_content(content)
 
         self.assertIsNone(kill_statistics)
 
     def test_kill_statistics_from_content_unrelated_section(self):
         """Testing parsing an unrelated section"""
-        content = self._load_resource(self.FILE_UNRELATED_SECTION)
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             KillStatistics.from_content(content)
 

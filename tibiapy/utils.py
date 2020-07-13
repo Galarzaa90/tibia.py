@@ -14,17 +14,31 @@ from tibiapy.errors import InvalidContent
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
 
-def get_tibia_url(section, subtopic, **kwargs):
+def convert_line_breaks(element):
+    """Converts the <br> tags in a HTML elements to actual line breaks.
+
+    Parameters
+    ----------
+    element: :class:`bs4.Tag`
+        A BeautifulSoup object.
     """
+    for br in element.find_all("br"):
+        br.replace_with("\n")
+
+
+def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
+    """Builds a URL to Tibia.com with the given parameters.
 
     Parameters
     ----------
     section: :class:`str`
         The desired section (e.g. community, abouttibia, manual, library)
-    subtopic: :class:`str`
+    subtopic: :class:`str`, optional
         The desired subtopic (e.g. characters, guilds, houses, etc)
+    anchor: :class:`str`
+        A link anchor to add to the link.
     kwargs:
-        Additional parameters to pass to the url (e.g name, world, houseid, etc)
+        Additional parameters to pass to the url as query parameters (e.g name, world, houseid, etc)
 
     Returns
     -------
@@ -43,16 +57,21 @@ def get_tibia_url(section, subtopic, **kwargs):
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
     url = "https://www.tibia.com/%s/?" % section
-    params = OrderedDict(subtopic=subtopic)
+    params = OrderedDict(subtopic=subtopic) if subtopic else OrderedDict()
     if kwargs:
         for key, value in kwargs.items():
             if isinstance(value, str):
                 value = value.encode('iso-8859-1')
+            if value is None:
+                continue
             params[key] = value
-    return url + urllib.parse.urlencode(params)
+    url += urllib.parse.urlencode(params)
+    if anchor:
+        url += "#%s" % anchor
+    return url
 
 
-def parse_integer(number: str, default=0):
+def parse_integer(number: str, default: Optional[int] = 0):
     """Parses a string representing an integer, ignoring commas or periods.
 
     Parameters
@@ -138,6 +157,35 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
         return None
 
 
+def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
+    """Parses a date in the format used in the Tibia.com forums.
+
+    Accepted format:
+
+    - ``DD.MM.YY HH:mm:ss``, e.g. ``23.07.2015 21:30:30``
+
+    Parameters
+    ----------
+    datetime_str: :class:`str`
+        The string containing the date and time.
+    utc_offset: :class:`int`
+        The UTC offset to apply to the parsed datetime.
+
+        Since the timestamps contain no timezone information, it can be passed as an additional parameter.
+
+        By default CET (+1) is considered.
+
+    Returns
+    -------
+    :class:`datetime`
+        The datetime represented by the text, in UTC.
+    """
+    t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S")
+    # Add/subtract hours to get the real time
+    t = t - datetime.timedelta(hours=utc_offset)
+    return t.replace(tzinfo=datetime.timezone.utc)
+
+
 def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
     """Parses a date in the fuller format used in Tibia.com
 
@@ -153,64 +201,10 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
     Returns
     -----------
     :class:`datetime.date`, optional
-        The represended date.
+        The represented date.
     """
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y")
-        return t.date()
-    except (ValueError, AttributeError):
-        return None
-
-
-def parse_tibiadata_datetime(date_dict) -> Optional[datetime.datetime]:
-    """Parses time objects from the TibiaData API.
-
-    Time objects are made of a dictionary with three keys:
-        date: contains a string representation of the time
-        timezone: a string representation of the timezone the date time is based on
-        timezone_type: the type of representation used in the timezone key
-
-
-    Parameters
-    ----------
-    date_dict: :class:`dict`
-        Dictionary representing the time object.
-
-    Returns
-    -------
-    :class:`datetime.date`, optional
-        The represented datetime, in UTC.
-    """
-    try:
-        t = datetime.datetime.strptime(date_dict["date"], "%Y-%m-%d %H:%M:%S.%f")
-    except (KeyError, ValueError, TypeError):
-        return None
-
-    if date_dict["timezone"] == "CET":
-        timezone_offset = 1
-    elif date_dict["timezone"] == "CEST":
-        timezone_offset = 2
-    else:
-        return None
-    # We subtract the offset to convert the time to UTC
-    t = t - datetime.timedelta(hours=timezone_offset)
-    return t.replace(tzinfo=datetime.timezone.utc)
-
-
-def parse_tibiadata_date(date_str) -> Optional[datetime.date]:
-    """Parses a date from the format used in TibiaData.
-
-    Parameters
-    ----------
-    date_str: :class:`str`
-        The date as represented in Tibia.com
-
-    Returns
-    -------
-    :class:`datetime.date`, optional
-        The represended date."""
-    try:
-        t = datetime.datetime.strptime(date_str.strip(), "%Y-%m-%d")
         return t.date()
     except (ValueError, AttributeError):
         return None
@@ -284,9 +278,6 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
     if isinstance(obj, datetime.datetime):
         return obj
     res = parse_tibia_datetime(obj)
-    if res is not None:
-        return res
-    res = parse_tibiadata_datetime(obj)
     return res
 
 
@@ -316,9 +307,6 @@ def try_date(obj) -> Optional[datetime.date]:
     if res is not None:
         return res
     res = parse_tibia_full_date(obj)
-    if res is not None:
-        return res
-    res = parse_tibiadata_date(obj)
     return res
 
 
@@ -371,34 +359,10 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
     try:
         return cls(val)
     except ValueError:
-        return default
-
-
-def parse_json(content):
-    """Tries to parse a string into a json object.
-
-    This also performs a trim of all values, recursively removing leading and trailing whitespace.
-
-    Parameters
-    ----------
-    content: :class:`str`
-        A JSON format string.
-
-    Returns
-    -------
-    obj
-        The object represented by the json string.
-
-    Raises
-    ------
-    InvalidContent
-        If the content is not a valid json string.
-    """
-    try:
-        json_content = json.loads(content)
-        return _recursive_strip(json_content)
-    except json.JSONDecodeError:
-        raise InvalidContent("content is not a json string.")
+        try:
+            return cls._member_map_[val]
+        except KeyError:
+            return default
 
 
 def parse_tibia_money(argument):
@@ -426,6 +390,7 @@ def parse_tibia_money(argument):
         k_count = argument.count("k")
         num *= pow(1000, k_count)
         return int(num)
+
 
 def split_list(items, separator=",", last_separator=" and "):
     """
@@ -481,3 +446,25 @@ def deprecated(instead=None):
             return func(*args, **kwargs)
         return decorated
     return actual_decorator
+
+
+def parse_popup(popup_content):
+    """Parses the information popups used through Tibia.com.
+
+    Parameters
+    ----------
+    popup_content: :class:`str`
+        The raw content of the javascript function that creates the popup.
+
+    Returns
+    -------
+    :class:`str`
+        The popup's title.
+    :class:`bs4.BeautifulSoup`
+        The parsed HTML content of the popup.
+    """
+    parts = popup_content.split(",", 2)
+    title = parts[1].replace(r"'", "").strip()
+    html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").strip()
+    parsed_html = bs4.BeautifulSoup(html, 'lxml')
+    return title, parsed_html

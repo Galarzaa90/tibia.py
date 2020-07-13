@@ -14,6 +14,9 @@ Client
 .. autoclass:: Client
     :members:
 
+.. autoclass:: TibiaResponse
+    :members:
+
 Enumerations
 ============
 Enumerations are provided for various values in order to avoid depending on strings.
@@ -55,6 +58,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: ThreadStatus
+    :members:
+    :undoc-members:
+
 .. autoclass:: TournamentWorldType
     :members:
     :undoc-members:
@@ -74,8 +81,6 @@ Enumerations are provided for various values in order to avoid depending on stri
 .. autoclass:: VocationFilter
     :members:
     :undoc-members:
-
-    .. automethod:: VocationFilter.from_name
 
 .. autoclass:: WorldLocation
     :members:
@@ -98,9 +103,45 @@ Character
    :members:
    :inherited-members:
 
+CMPostArchive
+-------------
+.. autoclass:: CMPostArchive
+   :members:
+   :inherited-members:
+
+EventSchedule
+-------------
+.. autoclass:: EventSchedule
+   :members:
+   :inherited-members:
+
+ForumAnnouncement
+-----------------
+.. autoclass:: ForumAnnouncement
+    :members:
+    :inherited-members:
+
+ForumBoard
+----------
+.. autoclass:: ForumBoard
+    :members:
+    :inherited-members:
+
+ForumThread
+-----------
+.. autoclass:: ForumThread
+    :members:
+    :inherited-members:
+
 Guild
 -----
 .. autoclass:: Guild
+   :members:
+   :inherited-members:
+
+GuildWars
+---------
+.. autoclass:: GuildWars
    :members:
    :inherited-members:
 
@@ -122,6 +163,18 @@ KillStatistics
    :members:
    :inherited-members:
 
+ListedAnnouncement
+------------------
+.. autoclass:: ListedAnnouncement
+    :members:
+    :inherited-members:
+
+ListedBoard
+-----------
+.. autoclass:: ListedBoard
+    :members:
+    :inherited-members:
+
 ListedGuild
 -----------
 .. autoclass:: ListedGuild
@@ -139,6 +192,12 @@ ListedNews
 .. autoclass:: ListedNews
    :members:
    :inherited-members:
+
+ListedThread
+------------
+.. autoclass:: ListedThread
+    :members:
+    :inherited-members:
 
 ListedTournament
 -----------------------
@@ -211,11 +270,35 @@ CharacterHouse
    :members:
    :inherited-members:
 
+CMPost
+------
+.. autoclass:: CMPost
+   :members:
+   :inherited-members:
+
+EventEntry
+-------------
+.. autoclass:: EventEntry
+   :members:
+   :inherited-members:
+
 ExpHighscoresEntry
--------------------------
+------------------
 .. autoclass:: ExpHighscoresEntry
    :members:
    :inherited-members:
+
+ForumAuthor
+-----------
+.. autoclass:: ForumAuthor
+    :members:
+    :inherited-members:
+
+ForumEmoticon
+-------------
+.. autoclass:: ForumEmoticon
+    :members:
+    :inherited-members:
 
 Death
 -----
@@ -247,6 +330,11 @@ GuildMembership
    :members:
    :inherited-members:
 
+GuildWarEntry
+-------------
+.. autoclass:: GuildWarEntry
+   :members:
+   :inherited-members:
 
 HighscoresEntry
 ---------------
@@ -259,6 +347,12 @@ Killer
 .. autoclass:: Killer
    :members:
    :inherited-members:
+
+LastPost
+--------
+.. autoclass:: LastPost
+    :members:
+    :inherited-members:
 
 LeaderboardEntry
 ----------------
@@ -314,6 +408,15 @@ The following classes are not meant to be used or instantiated, but are document
 
 They implement methods and properties that can be inherited by other classes to implement their functionality.
 
+
+.. autoclass:: tibiapy.abc.BaseAnnouncement
+    :members:
+    :inherited-members:
+
+.. autoclass:: tibiapy.abc.BaseBoard
+    :members:
+    :inherited-members:
+
 .. autoclass:: tibiapy.abc.BaseCharacter
     :members:
     :inherited-members:
@@ -326,11 +429,19 @@ They implement methods and properties that can be inherited by other classes to 
     :members:
     :inherited-members:
 
-.. autoclass:: tibiapy.abc.BaseHouseWithId
+.. autoclass:: tibiapy.abc.HouseWithId
     :members:
     :inherited-members:
 
 .. autoclass:: tibiapy.abc.BaseNews
+    :members:
+    :inherited-members:
+
+.. autoclass:: tibiapy.abc.BasePost
+    :members:
+    :inherited-members:
+
+.. autoclass:: tibiapy.abc.BaseThread
     :members:
     :inherited-members:
 
