@@ -2,9 +2,8 @@ import datetime
 import json
 import unittest
 
-import tests.tests_character
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, World, WorldOverview, TournamentWorldType
+from tibiapy import InvalidContent, TournamentWorldType, World, WorldOverview
 from tibiapy.enums import PvpType, TransferType, WorldLocation
 from tibiapy.world import ListedWorld
 
@@ -135,5 +134,4 @@ class TestWorld(TestCommons, unittest.TestCase):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             ListedWorld.list_from_content(content)
-
     # endregion

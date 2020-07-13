@@ -35,7 +35,6 @@ async def main():
         log.info("Fetching world...")
         world = await client.fetch_world(selected.name)
 
-
     finally:
         await client.session.close()
 

@@ -2,7 +2,6 @@ import datetime
 import json
 import unittest
 
-import tests.tests_character
 from tests.tests_tibiapy import TestCommons
 from tibiapy import House, InvalidContent, ListedHouse
 from tibiapy.enums import HouseStatus, HouseType

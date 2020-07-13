@@ -156,6 +156,7 @@ class ThreadStatus(enum.Flag):
         for entry in list(cls):
             if entry.name.lower() in icon:
                 flags += entry.value
+        # noinspection PyArgumentList
         return cls(flags)
 
 

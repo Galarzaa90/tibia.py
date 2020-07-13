@@ -405,7 +405,7 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
         character_info_container = announcement_container.find("div", attrs={"class": "PostCharacterText"})
         announcement.author = ForumAuthor._parse_author_table(character_info_container)
 
-        post_container = posts_table.find("div", attrs={"class":"PostText"})
+        post_container = posts_table.find("div", attrs={"class": "PostText"})
         title_tag = post_container.find("b")
         announcement.title = title_tag.text
         dates_container = post_container.find("font")

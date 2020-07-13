@@ -132,7 +132,6 @@ class EventSchedule(abc.Serializable):
         # Keep track of events that are ongoing
         ongoing_events = []
         # Keep track of all events present in that day
-        today_events = []
         ongoing_day = 1
         first_day = True
         for day_cell in day_cells:

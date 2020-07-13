@@ -1,9 +1,8 @@
 import datetime
 import unittest
 
-import tests.tests_guild
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Character, CharacterHouse, Death, InvalidContent, Killer, AccountBadge
+from tibiapy import AccountBadge, Character, CharacterHouse, Death, InvalidContent, Killer
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.utils import parse_tibia_datetime
 

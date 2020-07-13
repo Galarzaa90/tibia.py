@@ -1,7 +1,6 @@
 import datetime
 import unittest
 
-import tests.tests_character
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Guild, GuildHouse, GuildInvite, GuildMember, GuildWars, InvalidContent, ListedGuild
 
@@ -203,10 +202,9 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertIsNone(Guild(founded=None).founded)
         self.assertIsNone(Guild(founded="Jul 20").founded)
 
-
     # region Guild War Tests
     def test_guild_wars_from_content_active_history(self):
-        "Testing parsing the guild wars of a guild currently in war and with war history."
+        """Testing parsing the guild wars of a guild currently in war and with war history."""
         content = self.load_resource(FILE_GUILD_WAR_ACTIVE_HISTORY)
         guild_wars = GuildWars.from_content(content)
 
@@ -261,6 +259,5 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertEqual(0, guild_wars.history[0].opponent_score)
         self.assertEqual(1000, guild_wars.history[0].score_limit)
         self.assertTrue(guild_wars.history[0].surrender)
-
 
     # endregion

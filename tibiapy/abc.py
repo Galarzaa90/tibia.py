@@ -85,6 +85,7 @@ class Serializable:
         return json.dumps({k: v for k, v in dict(self).items() if v is not None}, indent=indent, sort_keys=sort_keys,
                           default=self._try_dict)
 
+
 class BaseAnnouncement(metaclass=abc.ABCMeta):
     """Base class for all announcement classes.
 
@@ -332,7 +333,6 @@ class BaseGuild(metaclass=abc.ABCMeta):
             The URL to the guild's page"""
         return get_tibia_url("community", "guilds", page="view", GuildName=name)
 
-
     @classmethod
     def get_url_wars(cls, name):
         """Gets the Tibia.com URL for the guild wars of a guild with a given name.
@@ -411,7 +411,6 @@ class BaseHouse(metaclass=abc.ABCMeta):
         The URL to the house in Tibia.com
         """
         return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
-
 
     @classmethod
     def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE, status: HouseStatus = None,
@@ -694,7 +693,7 @@ class BaseWorld(metaclass=abc.ABCMeta):
         return get_tibia_url("community", "worlds", world=name.title())
 
 
-class HouseWithId():
+class HouseWithId:
     """Implements the :py:attr:`id` attribute and dependant functions and properties.
 
     Subclasses mut also implement :class:`.BaseHouse`"""

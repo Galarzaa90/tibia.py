@@ -1,7 +1,6 @@
-import unittest
 import datetime
+import unittest
 
-import tests.tests_character
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Category, ExpHighscoresEntry, Highscores, HighscoresEntry, InvalidContent, LoyaltyHighscoresEntry, \
     Vocation, VocationFilter

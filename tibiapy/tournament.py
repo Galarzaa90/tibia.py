@@ -520,7 +520,8 @@ class Tournament(abc.BaseTournament, abc.Serializable):
             rewards.append(entry)
         self.reward_set = rewards
 
-    def _parse_rewards_column(self, column, entry):
+    @classmethod
+    def _parse_rewards_column(cls, column, entry):
         """Parses a column from the tournament's reward section.
 
         Parameters

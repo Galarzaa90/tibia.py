@@ -22,6 +22,4 @@ class TestEvents(TestCommons, unittest.TestCase):
         events_on_day = calendar.get_events_on(datetime.date(2020, 9, 15))
         self.assertEqual(2, len(events_on_day))
         self.assertEqual(4, events_on_day[0].duration)
-
-
     # endregion

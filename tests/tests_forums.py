@@ -189,7 +189,7 @@ class TestForum(TestCommons, unittest.TestCase):
         thread = ForumThread.from_content(content)
 
         self.assertEqual("News: Team Finder, Visualisation of Loot Lists", thread.title)
-        self.assertEqual(4797985,thread.thread_id)
+        self.assertEqual(4797985, thread.thread_id)
         self.assertEqual('Auditorium (English Only)', thread.board)
         self.assertEqual('Community Boards', thread.section)
         self.assertEqual(4796826, thread.previous_topic_number)
@@ -296,7 +296,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(168, cm_post_archive.total_pages)
         self.assertEqual(20, len(cm_post_archive.posts))
 
-    def test_cm_post_archive_from_content_unrelated_section (self):
+    def test_cm_post_archive_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             CMPostArchive.from_content(content)

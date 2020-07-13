@@ -216,5 +216,4 @@ class TestTournaments(TestCommons, unittest.TestCase):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             TournamentLeaderboard.from_content(content)
-
     # endregion

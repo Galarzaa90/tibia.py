@@ -1,6 +1,5 @@
 import datetime
 import functools
-import json
 import re
 import urllib.parse
 import warnings
@@ -8,8 +7,6 @@ from collections import OrderedDict
 from typing import Optional, Type, TypeVar, Union
 
 import bs4
-
-from tibiapy.errors import InvalidContent
 
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
 
