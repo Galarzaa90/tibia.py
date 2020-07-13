@@ -203,7 +203,6 @@ class VocationFilter(NumericEnum):
     SORCERERS = 4
     DRUIDS = 5
 
-
     @classmethod
     def from_name(cls, name, all_fallback=True):
         """Gets a vocation filter from a vocation's name.
