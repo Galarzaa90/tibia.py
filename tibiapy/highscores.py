@@ -124,9 +124,9 @@ class Highscores(abc.Serializable):
             raise InvalidContent("content does is not from the highscores section of Tibia.com")
         world_filter, vocation_filter, category_filter = filters
         world = world_filter.find("option", {"selected": True})["value"]
-        if world == "":
-            return None
-        category = category_filter.find("option", {"selected": True})["value"]
+        if world == "ALL WORLDS":
+            world = None
+        category = int(category_filter.find("option", {"selected": True})["value"])
         vocation_selected = vocation_filter.find("option", {"selected": True})
         vocation = int(vocation_selected["value"]) if vocation_selected else 0
         highscores = cls(world, category, vocation=vocation)
@@ -204,7 +204,7 @@ class Highscores(abc.Serializable):
         Parameters
         ----------
         world: :class:`str`
-            The game world of the desired highscores.
+            The game world of the desired highscores. If no world is passed, ALL worlds are shown.
         category: :class:`Category`
             The desired highscores category.
         vocation: :class:`VocationFiler`
@@ -216,7 +216,7 @@ class Highscores(abc.Serializable):
         -------
         The URL to the Tibia.com highscores.
         """
-        return get_tibia_url("community", "highscores", world=world, list=category.value, profession=vocation.value,
+        return get_tibia_url("community", "highscores", world=world, category=category.value, profession=vocation.value,
                              currentpage=page)
 
     @classmethod
@@ -258,6 +258,7 @@ class Highscores(abc.Serializable):
         for table in tables:
             title = table.find("div", attrs={'class': 'Text'}).text
             title = title.split("[")[0].strip()
+            title = re.sub(r'Last Update.*', '', title)
             inner_table = table.find("div", attrs={'class': 'InnerTableContainer'})
             output[title] = inner_table.find_all("tr")
         return output
@@ -274,16 +275,16 @@ class Highscores(abc.Serializable):
         rank, name, vocation, *values = [c.text.replace('\xa0', ' ').strip() for c in cols]
         rank = int(rank)
         if self.category == Category.EXPERIENCE or self.category == Category.LOYALTY_POINTS:
-            extra, value = values
+            world, extra, value = values
         else:
-            value, *extra = values
+            world, value, *extra = values
         value = int(value.replace(',', ''))
         if self.category == Category.EXPERIENCE:
-            entry = ExpHighscoresEntry(name, rank, vocation, value, int(extra))
+            entry = ExpHighscoresEntry(name, rank, vocation, value, world, int(extra))
         elif self.category == Category.LOYALTY_POINTS:
-            entry = LoyaltyHighscoresEntry(name, rank, vocation, value, extra)
+            entry = LoyaltyHighscoresEntry(name, rank, vocation, value, world, extra)
         else:
-            entry = HighscoresEntry(name, rank, vocation, value)
+            entry = HighscoresEntry(name, rank, vocation, value, world)
         self.entries.append(entry)
 
 
@@ -299,18 +300,23 @@ class HighscoresEntry(abc.BaseCharacter, abc.Serializable):
     vocation: :class:`Vocation`
         The character's vocation.
     value: :class:`int`
-        The character's value for the highscores."""
-    def __init__(self, name, rank, vocation, value):
+        The character's value for the highscores.
+    world: :class:`str`
+        The character's world.
+    """
+    def __init__(self, name, rank, vocation, value, world):
         self.name: str = name
         self.rank: int = rank
         self.vocation = try_enum(Vocation, vocation)
         self.value: int = value
+        self.world: str = world
 
     __slots__ = (
         'name',
         'rank',
         'vocation',
         'value',
+        'world',
     )
 
     def __repr__(self) -> str:
@@ -333,9 +339,12 @@ class ExpHighscoresEntry(HighscoresEntry):
     value: :class:`int`
         The character's experience points.
     level: :class:`int`
-        The character's level."""
-    def __init__(self, name, rank, vocation, value, level):
-        super().__init__(name, rank, vocation, value)
+        The character's level.
+    world: :class:`str`
+        The character's world.
+    """
+    def __init__(self, name, rank, vocation, value, world, level):
+        super().__init__(name, rank, vocation, value, world)
         self.level: int = level
 
     __slots__ = (
@@ -359,9 +368,12 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
     value: :class:`int`
         The character's loyalty points.
     title: :class:`str`
-        The character's loyalty title."""
-    def __init__(self, name, rank, vocation, value, title):
-        super().__init__(name, rank, vocation, value)
+        The character's loyalty title.
+    world: :class:`str`
+        The character's world.
+    """
+    def __init__(self, name, rank, vocation, value, world, title):
+        super().__init__(name, rank, vocation, value, world)
         self.title: str = title
 
     __slots__ = (
