@@ -35,6 +35,12 @@ Changelog
   directly implemented by most classes.
 
 
+.. _v2.5.1:
+
+2.5.1 (2020-05-27)
+==================
+- Fixed bed count not being parsed on houses.
+
 .. _v2.5.0:
 
 2.5.0 (2020-05-22)
