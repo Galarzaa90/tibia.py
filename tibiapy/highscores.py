@@ -27,7 +27,7 @@ class Highscores(abc.Serializable):
     Attributes
     ----------
     world: :class:`str`
-        The world the highscores belong to.
+        The world the highscores belong to. If this is ```None``, the highscores shown are for all worlds.
     category: :class:`Category`
         The selected category to displays the highscores of.
     vocation: :class:`VocationFilter`
@@ -117,7 +117,7 @@ class Highscores(abc.Serializable):
             raise InvalidContent("content does is not from the highscores section of Tibia.com")
         world_filter, vocation_filter, category_filter = filters
         world = world_filter.find("option", {"selected": True})["value"]
-        if world == "ALL WORLDS":
+        if world == "ALL":
             world = None
         category = int(category_filter.find("option", {"selected": True})["value"])
         vocation_selected = vocation_filter.find("option", {"selected": True})
@@ -147,7 +147,7 @@ class Highscores(abc.Serializable):
         return highscores
 
     @classmethod
-    def get_url(cls, world, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1):
+    def get_url(cls, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1):
         """Gets the Tibia.com URL of the highscores for the given parameters.
 
         Parameters
@@ -165,6 +165,8 @@ class Highscores(abc.Serializable):
         -------
         The URL to the Tibia.com highscores.
         """
+        if world is None:
+            world = "ALL"
         return get_tibia_url("community", "highscores", world=world, category=category.value, profession=vocation.value,
                              currentpage=page)
 

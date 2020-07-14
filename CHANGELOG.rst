@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.0.1:
+
+3.0.1 (2020-07-134)
+==================
+
+- ``Highscores.world`` is now ``None`` when the highscores are for all worlds.
+
 .. v3.0.0:
 
 3.0.0 (2020-07-13)
