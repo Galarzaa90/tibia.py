@@ -9,7 +9,6 @@ from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_tibiacom_content, try_enum
 
 __all__ = (
-    "ExpHighscoresEntry",
     "Highscores",
     "HighscoresEntry",
     "LoyaltyHighscoresEntry",
@@ -206,19 +205,17 @@ class Highscores(abc.Serializable):
         """
         rank, name, *values = [c.text.replace('\xa0', ' ').strip() for c in cols]
         rank = int(rank)
-        if self.category == Category.EXPERIENCE:
-            vocation, world, extra, value = values
-        elif self.category == Category.LOYALTY_POINTS:
+        extra = None
+        if self.category == Category.LOYALTY_POINTS:
             extra, vocation, world, level, value = values
         else:
-            vocation, world, value, *extra = values
+            vocation, world, level, value = values
         value = int(value.replace(',', ''))
-        if self.category == Category.EXPERIENCE:
-            entry = ExpHighscoresEntry(name, rank, vocation, value, world, int(extra))
-        elif self.category == Category.LOYALTY_POINTS:
-            entry = LoyaltyHighscoresEntry(name, rank, vocation, value, world, extra, int(level))
+        level = int(level)
+        if self.category == Category.LOYALTY_POINTS:
+            entry = LoyaltyHighscoresEntry(rank, name, vocation, world, level, value, extra)
         else:
-            entry = HighscoresEntry(name, rank, vocation, value, world)
+            entry = HighscoresEntry(rank, name, vocation, world, level, value)
         self.entries.append(entry)
 
 
@@ -233,57 +230,32 @@ class HighscoresEntry(abc.BaseCharacter, abc.Serializable):
         The character's rank in the respective highscores.
     vocation: :class:`Vocation`
         The character's vocation.
-    value: :class:`int`
-        The character's value for the highscores.
     world: :class:`str`
         The character's world.
+    level: :class:`int`
+        The character's level.
+    value: :class:`int`
+        The character's value for the highscores.
     """
-    def __init__(self, name, rank, vocation, value, world):
+    def __init__(self, rank, name, vocation, world, level, value):
         self.name: str = name
         self.rank: int = rank
         self.vocation = try_enum(Vocation, vocation)
         self.value: int = value
         self.world: str = world
+        self.level: int = level
 
     __slots__ = (
-        'name',
         'rank',
+        'name',
         'vocation',
-        'value',
         'world',
+        'level',
+        'value',
     )
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} rank={self.rank} name={self.name!r} value={self.value}>"
-
-
-class ExpHighscoresEntry(HighscoresEntry):
-    """Represents an entry for the highscores's experience category.
-
-    This is a subclass of :class:`HighscoresEntry`, adding an extra field for level.
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The name of the character.
-    rank: :class:`int`
-        The character's rank in the respective highscores.
-    vocation: :class:`Vocation`
-        The character's vocation.
-    value: :class:`int`
-        The character's experience points.
-    level: :class:`int`
-        The character's level.
-    world: :class:`str`
-        The character's world.
-    """
-    def __init__(self, name, rank, vocation, value, world, level):
-        super().__init__(name, rank, vocation, value, world)
-        self.level: int = level
-
-    __slots__ = (
-        'level',
-    )
 
 
 class LoyaltyHighscoresEntry(HighscoresEntry):
@@ -299,21 +271,19 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
         The character's rank in the respective highscores.
     vocation: :class:`Vocation`
         The character's vocation.
+    world: :class:`str`
+        The character's world.
+    level: :class:`int`
+        The character's level.
     value: :class:`int`
         The character's loyalty points.
     title: :class:`str`
         The character's loyalty title.
-    level: :class:`int`
-        The character's level.
-    world: :class:`str`
-        The character's world.
     """
-    def __init__(self, name, rank, vocation, value, world, title, level=0):
-        super().__init__(name, rank, vocation, value, world)
+    def __init__(self, rank, name, vocation, world, level, value, title):
+        super().__init__(rank, name, vocation, world, level, value)
         self.title: str = title
-        self.level: int = level
 
     __slots__ = (
         'title',
-        'level',
     )

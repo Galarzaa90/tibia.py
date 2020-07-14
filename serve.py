@@ -154,7 +154,7 @@ async def get_world_guilds(request: web.Request):
 async def get_highscores(request: web.Request):
     world = request.match_info['world']
     category = try_enum(tibiapy.Category, request.query.get("category", "EXPERIENCE").upper(), tibiapy.Category.EXPERIENCE)
-    vocations = try_enum(tibiapy.VocationFilter, int(request.query.get("vocation", 1)), tibiapy.VocationFilter.ALL)
+    vocations = try_enum(tibiapy.VocationFilter, int(request.query.get("vocation", 0)), tibiapy.VocationFilter.ALL)
     page = int(request.query.get("page", 1))
     highscores = await app["tibiapy"].fetch_highscores_page(world, category, vocations, page)
     return web.json_response(highscores, dumps=CustomJson.dumps)

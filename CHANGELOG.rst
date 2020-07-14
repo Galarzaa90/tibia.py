@@ -6,6 +6,14 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.0.2:
+
+3.0.2 (2020-07-134)
+==================
+
+- Fixed values being mapped incorrectly for highscores.
+- ``ExpHighscoresEntry`` is now removed.
+
 .. v3.0.1:
 
 3.0.1 (2020-07-134)

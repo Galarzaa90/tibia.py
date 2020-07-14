@@ -2,7 +2,7 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Category, ExpHighscoresEntry, Highscores, HighscoresEntry, InvalidContent, LoyaltyHighscoresEntry, \
+from tibiapy import Category, Highscores, HighscoresEntry, InvalidContent, LoyaltyHighscoresEntry, \
     Vocation, VocationFilter
 
 FILE_HIGHSCORES_FULL = "highscores/tibiacom_full.txt"
@@ -50,7 +50,7 @@ class TestHighscores(unittest.TestCase, TestCommons):
         self.assertEqual(highscores.total_pages, 20)
 
         for entry in highscores.entries:
-            self.assertIsInstance(entry, ExpHighscoresEntry)
+            self.assertIsInstance(entry, HighscoresEntry)
             self.assertIsInstance(entry.name, str)
             self.assertIsInstance(entry.vocation, Vocation)
             self.assertIsInstance(entry.rank, int)

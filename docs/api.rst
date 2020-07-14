@@ -282,12 +282,6 @@ EventEntry
    :members:
    :inherited-members:
 
-ExpHighscoresEntry
-------------------
-.. autoclass:: ExpHighscoresEntry
-   :members:
-   :inherited-members:
-
 ForumAuthor
 -----------
 .. autoclass:: ForumAuthor
