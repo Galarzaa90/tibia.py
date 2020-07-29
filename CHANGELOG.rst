@@ -6,9 +6,16 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.0.3:
+
+3.0.3 (2020-07-28)
+==================
+
+- Fixed bug with character title being parsed incorrectly when the character has no title selected and a single unlocked title.
+
 .. v3.0.2:
 
-3.0.2 (2020-07-134)
+3.0.2 (2020-07-14)
 ==================
 
 - Fixed values being mapped incorrectly for highscores.
@@ -16,7 +23,7 @@ Changelog
 
 .. v3.0.1:
 
-3.0.1 (2020-07-134)
+3.0.1 (2020-07-14)
 ==================
 
 - ``Highscores.world`` is now ``None`` when the highscores are for all worlds.

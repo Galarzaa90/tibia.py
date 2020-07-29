@@ -28,7 +28,7 @@ link_content = re.compile(r'>([^<]+)<')
 house_regexp = re.compile(r'paid until (.*)')
 guild_regexp = re.compile(r'([\s\w()]+)\sof the\s(.+)')
 
-title_regexp = re.compile(r'(.*)\((\d+) titles unlocked\)')
+title_regexp = re.compile(r'(.*)\((\d+) titles? unlocked\)')
 badge_popup_regexp = re.compile(r"\$\(this\),\s+'([^']+)',\s+'([^']+)',")
 
 __all__ = (
