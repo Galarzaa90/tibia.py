@@ -6,6 +6,14 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.1.0:
+
+3.1.0 (2020-07-29)
+==================
+
+- Added ``fetch_forum_post`` method to fetch a forum post directly.
+- Fixed bug with forum posts made by tournament characters.
+
 .. v3.0.3:
 
 3.0.3 (2020-07-28)

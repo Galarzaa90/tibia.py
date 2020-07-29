@@ -16,7 +16,7 @@ from tibiapy.tournament import *
 from tibiapy.world import *
 from tibiapy.client import *
 
-__version__ = '3.0.3'
+__version__ = '3.1.0'
 
 from logging import NullHandler
 

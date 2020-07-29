@@ -99,6 +99,13 @@ async def get_forum_thread(request: web.Request):
     return web.json_response(thread, dumps=CustomJson.dumps)
 
 
+@routes.get('/forums/post/{post_id}')
+async def get_forum_post(request: web.Request):
+    post_id = request.match_info['post_id']
+    post = await app["tibiapy"].fetch_forum_post(int(post_id))
+    return web.json_response(post, dumps=CustomJson.dumps)
+
+
 @routes.get('/forums/announcement/{announcement_id}/')
 async def get_forum_announcement(request: web.Request):
     announcement_id = request.match_info['announcement_id']

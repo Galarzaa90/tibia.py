@@ -127,6 +127,12 @@ ForumBoard
     :members:
     :inherited-members:
 
+ForumPost
+---------
+.. autoclass:: ForumPost
+    :members:
+    :inherited-members:
+
 ForumThread
 -----------
 .. autoclass:: ForumThread

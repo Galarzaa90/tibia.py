@@ -512,9 +512,10 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         convert_line_breaks(char_info)
         char_info_text = char_info.text
         info_match = author_info_regex.search(char_info_text)
-        author.world = info_match.group(1)
-        author.vocation = try_enum(Vocation, info_match.group(2))
-        author.level = int(info_match.group(3))
+        if info_match:
+            author.world = info_match.group(1)
+            author.vocation = try_enum(Vocation, info_match.group(2))
+            author.level = int(info_match.group(3))
         if guild_info:
             guild_match = guild_regexp.search(guild_info.text)
             guild_name = guild_match.group(2)
@@ -782,7 +783,7 @@ class ForumEmoticon(abc.Serializable):
 
 
 class ForumPost(abc.BasePost, abc.Serializable):
-    """Represent's a forum post.
+    """Represents a forum post.
 
     .. versionadded:: 3.0.0
 
@@ -872,6 +873,10 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         Whether the thread has a golden frame or not.
 
         In the Proposals board,a golden frame means the thread has a reply by a staff member.
+    anchored_post: :class:`ForumPost`
+        The post where the page is anchored to, if any.
+
+        When a post is fetched directly, the thread that contains it is displayed, anchored to the specific post.
     """
     __slots__ = (
         "title",
@@ -883,6 +888,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         "page",
         "total_pages",
         "golden_frame",
+        "anchored_post",
         "posts",
     )
 
@@ -897,6 +903,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         self.total_pages: int = kwargs.get("total_pages", 1)
         self.posts: List[ForumPost] = kwargs.get("posts", [])
         self.golden_frame: bool = kwargs.get("golden_frame", False)
+        self.anchored_post: Optional[ForumPost] = None
 
     def __repr__(self):
         return f"<{self.__class__.__name__} title={self.title!r} board={self.board!r} section={self.section!r}>"

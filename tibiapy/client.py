@@ -13,7 +13,7 @@ from tibiapy.creature import BoostedCreature
 from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError
 from tibiapy.event import EventSchedule
-from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumThread, ListedBoard
+from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, ListedBoard
 from tibiapy.guild import Guild, GuildWars, ListedGuild
 from tibiapy.highscores import Highscores
 from tibiapy.house import House, ListedHouse
@@ -416,6 +416,41 @@ class Client:
         response = await self._request("get", ForumThread.get_url(thread_id, page))
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, thread, parsing_time)
+
+    async def fetch_forum_post(self, post_id):
+        """Fetches a forum post with a given id.
+
+        The thread that contains the post will be returned, containing the desired post in
+        :py:attr:`ForumThread.anchored_post`.
+
+        The displayed page will be the page where the post is located.
+
+        .. versionadded:: 3.1.0
+
+        Parameters
+        ----------
+        post_id : :class:`int`
+            The id of the post.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`ForumThread`
+            A response containing the forum, if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request."""
+        response = await self._request("get", ForumPost.get_url(post_id))
+        start_time = time.perf_counter()
+        thread = ForumThread.from_content(response.content)
+        if thread:
+            thread.anchored_post = next((p for p in thread.posts if p.post_id == post_id), None)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, thread, parsing_time)
 
