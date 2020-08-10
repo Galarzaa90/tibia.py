@@ -197,6 +197,8 @@ class RuleSet(abc.Serializable):
         The percentage of rent prices relative to the regular price.
     house_auction_durations: :class:`int`
         The duration of house auctions.
+    shared_xp_bonus: :class:`bool`
+        Whether there is a bonus for sharing experience or not.
     """
 
     __slots__ = (
@@ -211,6 +213,7 @@ class RuleSet(abc.Serializable):
         "loot_probability",
         "rent_percentage",
         "house_auction_durations",
+        "shared_xp_bonus",
     )
 
     def __init__(self, **kwargs):
@@ -225,6 +228,7 @@ class RuleSet(abc.Serializable):
         self.loot_probability = kwargs.get("loot_probability")
         self.rent_percentage = kwargs.get("rent_percentage")
         self.house_auction_durations = kwargs.get("house_auction_durations")
+        self.shared_xp_bonus = kwargs.get("shared_xp_bonus")
 
     def __repr__(self):
         attributes = ""
@@ -253,24 +257,36 @@ class ScoreSet(abc.Serializable):
 
     Attributes
     ----------
+    creature_kills: :class:`dict`
+        Points received for participating in creature kills.
     level_gain_loss: :class:`int`
         The points gained for leveling up or lost for losing a level.
+    skill_gain_loss: :class:`int`
+        The points gained for leveling up or lost for losing a skill level.
     charm_point_multiplier: :class:`int`
         The multiplier for every charm point.
     character_death: :class:`int`
         The points lost for dying.
+    area_discovery: :class:`int`
+        Points that will be added to the score for discovering an area entirely.
     """
 
     __slots__ = (
+        "creature_kills",
         "level_gain_loss",
+        "skill_gain_loss",
         "charm_point_multiplier",
         "character_death",
+        "area_discovery",
     )
 
     def __init__(self, **kwargs):
+        self.creature_kills = kwargs.get("creature_kills", {})
         self.level_gain_loss = kwargs.get("level_gain_loss", 0)
+        self.skill_gain_loss = kwargs.get("skill_gain_loss", 0)
         self.charm_point_multiplier = kwargs.get("charm_point_multiplier", 0)
         self.character_death = kwargs.get("character_death", 0)
+        self.area_discovery = kwargs.get("area_discovery", 0)
 
     def __repr__(self):
         attributes = ""
@@ -453,7 +469,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
             The table containing the tournament rule set.
         """
         rows = table.find_all('tr')
-        bool_fields = ("playtime_reduced_only_in_combat",)
+        bool_fields = ("playtime_reduced_only_in_combat", "shared_xp_bonus")
         float_fields = (
             "death_penalty_modifier",
             "xp_multiplier",
@@ -486,15 +502,22 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         table: :class:`bs4.BeautifulSoup`
             The parsed table containing the tournament score set.
         """
+        creatures = {}
         rows = table.find_all('tr')
         rules = {}
         for row in rows[1:]:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
             field, value, *_ = cols
+            icon = cols_raw[2].find("span")
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").replace("/", "_").lower()
             value = re.sub(r'[^-0-9]', '', value.replace("+/-", ""))
-            rules[field] = parse_integer(value)
+            if not icon:
+                creatures[field.replace("_", " ")] = int(value)
+            else:
+                rules[field] = parse_integer(value)
+        if "creature_kills" in rules:
+            rules["creature_kills"] = creatures
         self.score_set = ScoreSet(**rules)
 
     def _parse_tournament_rewards(self, table):
@@ -583,7 +606,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
 
         Parameters
         ----------
-        archive_table: :class:`bs4.BeautifulSoup`
+        archive_table: :class:`bs4.Tag`
             The parsed element containing the table.
         """
         _, *options = archive_table.find_all("option")

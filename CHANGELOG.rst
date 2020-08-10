@@ -6,6 +6,17 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.2.0:
+
+3.2.0 (2020-08-10)
+==================
+
+- Added support for the new rules and score set added for the most recent Tournament.
+    - Added ``ScoreSet.creature_kills``
+    - Added ``ScoreSet.area_discovery``
+    - Added ``ScoreSet.skill_gain_loss``
+    - Added ``RuleSet.shared_xp_bonus``
+
 .. v3.1.0:
 
 3.1.0 (2020-07-29)

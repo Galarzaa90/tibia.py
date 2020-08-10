@@ -15,7 +15,7 @@ No fetching is done by this module, you must provide the html content.
 - Type consistent attributes.
 - All objects can be converted to JSON strings.
 - Can be used with any networking library.
-- Support for characters, guilds, houses and worlds.
+- Support for characters, guilds, houses and worlds, tournaments, forums, etc.
 
 ## Installing
 Install and update using pip
