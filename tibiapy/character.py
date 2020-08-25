@@ -555,8 +555,9 @@ class Character(abc.BaseCharacter, abc.Serializable):
             cols = [ele.text.strip() for ele in cols_raw]
             if len(cols) != 5:
                 continue
-            name, world, status, __, __ = cols
-            name = name.replace("\xa0", " ").split(". ")[1]
+            name, world, status, *__ = cols
+            _, *name = name.replace("\xa0", " ").split(" ")
+            name = " ".join(name)
             main_img = cols_raw[0].find('img')
             main = False
             if main_img and main_img['title'] == "Main Character":

@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.2.1:
+
+3.2.1 (2020-08-25)
+==================
+
+- Fixed bug when parsing "other characters" from Tibia.com due to an unannounced change in the website.
+
 .. v3.2.0:
 
 3.2.0 (2020-08-10)
