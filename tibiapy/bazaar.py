@@ -1,9 +1,13 @@
-import urllib.parse
+import datetime
 import re
+import urllib.parse
+
+from typing import List
 
 from tibiapy import abc, Sex, Vocation
 from tibiapy.abc import BaseCharacter
-from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibiacom_content, try_enum
+from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_money, parse_tibiacom_content, \
+    try_enum
 
 __all__ = (
     "CurrentAuctions",
@@ -40,58 +44,31 @@ class CurrentAuctions(abc.Serializable):
         auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
         entries = []
         for auction_row in auction_rows:
-            header_container = auction_row.find("div", attrs={"class": "AuctionHeader"})
-            char_name_container = header_container.find("div", attrs={"class": "AuctionCharacterName"})
-            char_link = char_name_container.find("a")
-            url = urllib.parse.urlparse(char_link["href"])
-            query = urllib.parse.parse_qs(url.query)
-            auction_id = int(query["auctionid"][0])
-            name = char_link.text
-            auction = ListedAuction(name=name, auction_id=auction_id)
-            char_name_container.replaceWith('')
-            m = char_info_regex.search(header_container.text)
-            if m:
-                auction.level = int(m.group(1))
-                auction.vocation = try_enum(Vocation, m.group(2).strip())
-                auction.sex = try_enum(Sex, m.group(3).strip().lower())
-                auction.world = m.group(4)
-            outfit_img = auction_row.find("img", {"class": "AuctionOutfitImage"})
-            auction.outfit = outfit_img["src"]
-
-            item_boxes = auction_row.find_all("div", attrs={"class": "CVIcon"})
-            for item_box in item_boxes:
-                description = item_box["title"]
-                img_tag = item_box.find("img")
-                if not img_tag:
-                    continue
-                amount_text = item_box.find("div", attrs={"class": "ObjectAmount"})
-                amount = int(amount_text.text) if amount_text else 1
-                auction.items.append(DisplayItem(image_url=img_tag["src"], description=description, count=amount))
-
-            dates_containers = auction_row.find("div", {"class": "ShortAuctionData"})
-            start_date_tag, end_date_tag, *_ = dates_containers.find_all("div", {"class": "ShortAuctionDataValue"})
-            auction.auction_start = parse_tibia_datetime(start_date_tag.text.replace('\xa0', ' '))
-            auction.auction_end = parse_tibia_datetime(end_date_tag.text.replace('\xa0', ' '))
-
-            bids_container = auction_row.find("div", {"class": "ShortAuctionDataBidRow"})
-            current_bid_tag = bids_container.find("div", {"class", "ShortAuctionDataValue"})
-            auction.current_bid = parse_integer(current_bid_tag.text)
-
-            argument_entries = auction_row.find_all("div", {"class": "Entry"})
-            for entry in argument_entries:
-                img = entry.find("img")
-                auction.sales_arguments.append(SalesArgument(content=entry.text, category_image=img["src"]))
+            auction = ListedAuction._parse_auction(auction_row)
 
             entries.append(auction)
         return cls(entries=entries)
 
 
 class DisplayItem(abc.Serializable):
+    """Represents an item displayed on an auction, or the character's items in the auction detail.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL to the item's image.
+    description: :class:`str`
+        The item's description.
+    count: :class:`int`
+        The item's count.
+    item_id: :class:`int`
+        The item's client id.
+    """
     def __init__(self, **kwargs):
-        self.image_url = kwargs.get("image_url")
-        self.description = kwargs.get("description")
-        self.count = kwargs.get("count")
-        self.item_id = kwargs.get("item_id")
+        self.image_url: str = kwargs.get("image_url")
+        self.description: str = kwargs.get("description")
+        self.count: int = kwargs.get("count", 1)
+        self.item_id: int = kwargs.get("item_id", 0)
 
     __slots__ = (
         "image_url",
@@ -100,21 +77,60 @@ class DisplayItem(abc.Serializable):
         "item_id",
     )
 
+    @classmethod
+    def _parse_item_box(cls, item_box):
+        description = item_box["title"]
+        img_tag = item_box.find("img")
+        if not img_tag:
+            return None
+        amount_text = item_box.find("div", attrs={"class": "ObjectAmount"})
+        amount = parse_tibia_money(amount_text.text) if amount_text else 1
+        return DisplayItem(image_url=img_tag["src"], description=description, count=amount)
+
 
 class ListedAuction(BaseCharacter, abc.Serializable):
+    """Represents an auction in the list, containing the summary.
+
+    Attributes
+    ----------
+    auction_id: :class:`int`
+        The internal id of the auction.
+    name: :class:`str`
+        The name of the character.
+    level: :class:`int`
+        The level of the character.
+    world: :class:`str`
+        The world the character is in.
+    vocation: :class:`Vocation`
+        The vocation of the character.
+    sex: :class:`Sex`
+        The sex of the character.
+    outfit: :class:`str`
+        The URL to the character's current outfit.
+    displayed_items: :class:`list` of :class:`DisplayItem`
+        The items selected to be displayed.
+    sales_arguments: :class:`list` of :class:`SalesArgument`
+        The sale arguments selected for the auction.
+    auction_start: :class:`datetime.datetime`
+        The date when the auction started.
+    auction_end: :class:`datetime.datetime`
+        The date when the auction ends.
+    current_bid: :class:`int`
+        The current bid in Tibia Coins.
+    """
     def __init__(self, **kwargs):
-        self.auction_id = kwargs.get("auction_id")
-        self.name = kwargs.get("name")
-        self.level = kwargs.get("level")
-        self.world = kwargs.get("world")
-        self.vocation = kwargs.get("vocation")
-        self.sex = kwargs.get("sex")
-        self.outfit = kwargs.get("outfit")
-        self.items = kwargs.get("items", [])
-        self.sales_arguments = kwargs.get("sales_arguments", [])
-        self.auction_start = kwargs.get("auction_start")
-        self.auction_end = kwargs.get("auction_end")
-        self.current_bid = kwargs.get("current_bid")
+        self.auction_id: int = kwargs.get("auction_id", 0)
+        self.name: str = kwargs.get("name")
+        self.level: int = kwargs.get("level", 0)
+        self.world: str = kwargs.get("world")
+        self.vocation: Vocation = kwargs.get("vocation")
+        self.sex: Sex = kwargs.get("sex")
+        self.outfit: str = kwargs.get("outfit")
+        self.displayed_items: List[DisplayItem] = kwargs.get("displayed_items", [])
+        self.sales_arguments: List[SalesArgument] = kwargs.get("sales_arguments", [])
+        self.auction_start: datetime.datetime = kwargs.get("auction_start")
+        self.auction_end: datetime.datetime = kwargs.get("auction_end")
+        self.current_bid: int = kwargs.get("current_bid", 0)
 
     __slots__ = (
         "auction_id",
@@ -124,7 +140,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         "vocation",
         "sex",
         "outfit",
-        "items",
+        "displayed_items",
         "sales_arguments",
         "auction_start",
         "auction_end",
@@ -133,18 +149,118 @@ class ListedAuction(BaseCharacter, abc.Serializable):
 
     @property
     def character_url(self):
+        """
+        :class:`str`: The URL of the character's information page on Tibia.com
+        """
         return BaseCharacter.get_url(self.name)
 
     @property
     def url(self):
+        """
+        :class:`str`: The URL to this auction's detail page on Tibia.com
+        """
         return self.get_url(self.auction_id)
 
     @classmethod
     def get_url(cls, auction_id):
-        return get_tibia_url("character_trade", "currentcharactertrades", page="details", auctionid=auction_id)
+        """Gets the URL to the Tibia.com detail page of an auction with a given id.
+
+        Parameters
+        ----------
+        auction_id: :class:`int`
+            The ID of the auction.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the auction's detail page.
+        """
+        return get_tibia_url("charactertrade", "currentcharactertrades", page="details", auctionid=auction_id)
+
+    @classmethod
+    def _parse_auction(cls, auction_row, auction_id=0):
+        header_container = auction_row.find("div", attrs={"class": "AuctionHeader"})
+        char_name_container = header_container.find("div", attrs={"class": "AuctionCharacterName"})
+        char_link = char_name_container.find("a")
+        if char_link:
+            url = urllib.parse.urlparse(char_link["href"])
+            query = urllib.parse.parse_qs(url.query)
+            auction_id = int(query["auctionid"][0])
+            name = char_link.text
+        else:
+            name = char_name_container.text
+
+        auction = cls(name=name, auction_id=auction_id)
+        char_name_container.replaceWith('')
+        m = char_info_regex.search(header_container.text)
+        if m:
+            auction.level = int(m.group(1))
+            auction.vocation = try_enum(Vocation, m.group(2).strip())
+            auction.sex = try_enum(Sex, m.group(3).strip().lower())
+            auction.world = m.group(4)
+        outfit_img = auction_row.find("img", {"class": "AuctionOutfitImage"})
+        auction.outfit = outfit_img["src"]
+        item_boxes = auction_row.find_all("div", attrs={"class": "CVIcon"})
+        for item_box in item_boxes:
+            item = DisplayItem._parse_item_box(item_box)
+            if item:
+                auction.displayed_items.append(item)
+        dates_containers = auction_row.find("div", {"class": "ShortAuctionData"})
+        start_date_tag, end_date_tag, *_ = dates_containers.find_all("div", {"class": "ShortAuctionDataValue"})
+        auction.auction_start = parse_tibia_datetime(start_date_tag.text.replace('\xa0', ' '))
+        auction.auction_end = parse_tibia_datetime(end_date_tag.text.replace('\xa0', ' '))
+        bids_container = auction_row.find("div", {"class": "ShortAuctionDataBidRow"})
+        current_bid_tag = bids_container.find("div", {"class", "ShortAuctionDataValue"})
+        auction.current_bid = parse_integer(current_bid_tag.text)
+        argument_entries = auction_row.find_all("div", {"class": "Entry"})
+        for entry in argument_entries:
+            img = entry.find("img")
+            auction.sales_arguments.append(SalesArgument(content=entry.text, category_image=img["src"]))
+        return auction
 
 
 class AuctionDetails(ListedAuction):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.hit_points = kwargs.get("hit_points")
+        self.mana = kwargs.get("mana")
+        self.capacity = kwargs.get("capacity")
+        self.speed = kwargs.get("speed")
+        self.blessings_count = kwargs.get("blessings_count")
+        self.mounts_count = kwargs.get("mounts_count")
+        self.outfits_count = kwargs.get("outfits_count")
+        self.titles_count = kwargs.get("titles_count")
+        self.skills = kwargs.get("skills")
+        self.creation_date = kwargs.get("creation_date")
+        self.experience = kwargs.get("experience")
+        self.gold = kwargs.get("gold")
+        self.achievement_points = kwargs.get("achievement_points")
+        self.regular_world_transfer_available = kwargs.get("regular_world_transfer_available")
+        self.charm_expansion = kwargs.get("charm_expansion")
+        self.available_charm_points = kwargs.get("available_charm_points")
+        self.spent_charm_points = kwargs.get("spent_charm_points")
+        self.daily_reward_streak = kwargs.get("daily_reward_streak")
+        self.hunting_task_points = kwargs.get("hunting_task_points")
+        self.permanent_hunting_task_slots = kwargs.get("permanent_hunting_task_slots")
+        self.permanent_prey_slots = kwargs.get("permanent_prey_slots")
+        self.hirelings = kwargs.get("hirelings")
+        self.hireling_jobs = kwargs.get("hireling_jobs")
+        self.hireling_outfits = kwargs.get("hireling_outfits")
+        self.items = kwargs.get("items")
+        self.store_items = kwargs.get("store_items")
+        self.mounts = kwargs.get("mounts")
+        self.store_mounts = kwargs.get("store_mounts")
+        self.outfits = kwargs.get("outfits")
+        self.store_outfits = kwargs.get("store_outfits")
+        self.blessings = kwargs.get("blessings", [])
+        self.imbuements = kwargs.get("imbuements", [])
+        self.charms = kwargs.get("charms", [])
+        self.completed_cyclopedia_map_areas = kwargs.get("completed_cyclopedia_map_areas", [])
+        self.completed_quest_lines = kwargs.get("completed_quest_lines", [])
+        self.titles = kwargs.get("titles", [])
+        self.achievements = kwargs.get("achievements", [])
+        self.bestiary_progress = kwargs.get("bestiary_progress", [])
+
     __slots__ = (
         "hit_points",
         "mana",
@@ -153,7 +269,7 @@ class AuctionDetails(ListedAuction):
         "blessings_count",
         "mounts_count",
         "outfits_count",
-        "titles",
+        "titles_count",
         "skills",
         "creation_date",
         "experience",
@@ -161,6 +277,8 @@ class AuctionDetails(ListedAuction):
         "achievement_points",
         "regular_world_transfer_available",
         "charm_expansion",
+        "available_charm_points",
+        "spent_charm_points",
         "daily_reward_streak",
         "hunting_task_points",
         "permanent_hunting_task_slots",
@@ -181,10 +299,188 @@ class AuctionDetails(ListedAuction):
         "completed_quest_lines",
         "titles",
         "achievements",
-        "bestiary_progress"
+        "bestiary_progress",
     )
 
+    @classmethod
+    def from_content(cls, content):
+        parsed_content = parse_tibiacom_content(content, builder='html5lib')
+        auction_row = parsed_content.find("div", attrs={"class": "Auction"})
+        auction = cls._parse_auction(auction_row)
+
+        details_tables = cls._parse_tables(parsed_content)
+        if "General" in details_tables:
+            auction._parse_general_table(details_tables["General"])
+        if "ItemSummary" in details_tables:
+            auction._parse_items_table(details_tables["ItemSummary"])
+        if "StoreItemSummary" in details_tables:
+            auction._parse_store_items_table(details_tables["StoreItemSummary"])
+        if "Blessings" in details_tables:
+            auction._parse_blessings_table(details_tables["Blessings"])
+        if "Imbuements" in details_tables:
+            auction.imbuements = cls._parse_single_row_table(details_tables["Imbuements"])
+        if "Charms" in details_tables:
+            auction._parse_charms_table(details_tables["Charms"])
+        if "CompletedCyclopediaMapAreas" in details_tables:
+            auction.completed_cyclopedia_map_areas = cls._parse_single_row_table(
+                details_tables["CompletedCyclopediaMapAreas"])
+        if "CompletedQuestLines" in details_tables:
+            auction.completed_quest_lines = cls._parse_single_row_table(details_tables["CompletedQuestLines"])
+        if "Titles" in details_tables:
+            auction.titles = cls._parse_single_row_table(details_tables["Titles"])
+        if "Achievements" in details_tables:
+            auction._parse_achievements_table(details_tables["Achievements"])
+        if "BestiaryProgress" in details_tables:
+            auction._parse_bestiary_table(details_tables["BestiaryProgress"])
+        return auction
+
+    @classmethod
+    def _parse_tables(cls, parsed_content):
+        details_tables = parsed_content.find_all("div", {"class": "CharacterDetailsBlock"})
+        return {table["id"]: table for table in details_tables}
+
+    def _parse_data_table(self, table):
+        rows = table.find_all("tr")
+        data = {}
+        for row in rows:
+            name = row.find("span").text
+            value = row.find("div").text
+            name = name.lower().strip().replace(" ", "_").replace(":", "")
+            data[name] = value
+        return data
+
+    def parse_skills_table(self, table):
+        rows = table.find_all("tr")
+        skills = []
+        for row in rows:
+            cols = row.find_all("td")
+            name_c, level_c, progress_c = [c.text for c in cols]
+            level = int(level_c)
+            progress = float(progress_c.replace("%", ""))
+            skills.append(SkillEntry(name=name_c, level=level, progress=progress))
+        self.skills = skills
+
+    def _parse_blessings_table(self, table):
+        table_content = table.find("table", attrs={"class": "TableContent"})
+        _, *rows = table_content.find_all("tr")
+        for row in rows:
+            cols = row.find_all("td")
+            amount_c, name_c = [c.text for c in cols]
+            amount = int(amount_c.replace("x", ""))
+            self.blessings.append(BlessingEntry(name_c, amount))
+
+    @classmethod
+    def _parse_single_row_table(cls, table):
+        table_content = table.find_all("table", attrs={"class": "TableContent"})[-1]
+        _, *rows = table_content.find_all("tr")
+        ret = []
+        for row in rows:
+            col = row.find("td")
+            text = col.text
+            if "more entries" in text:
+                continue
+            ret.append(text)
+        return ret
+
+    def _parse_charms_table(self, table):
+        table_content = table.find("table", attrs={"class": "TableContent"})
+        _, *rows = table_content.find_all("tr")
+        for row in rows:
+            cols = row.find_all("td")
+            cost_c, name_c = [c.text for c in cols]
+            cost = int(cost_c.replace("x", ""))
+            self.charms.append(CharmEntry(name_c, cost))
+
+    def _parse_achievements_table(self, table):
+        table_content = table.find("table", attrs={"class": "TableContent"})
+        _, *rows = table_content.find_all("tr")
+        for row in rows:
+            col = row.find("td")
+            text = col.text.strip()
+            if "more entries" in text:
+                continue
+            secret = col.find("img") is not None
+            self.achievements.append(AchievementEntry(text, secret))
+
+    def _parse_bestiary_table(self, table):
+        table_content = table.find("table", attrs={"class": "TableContent"})
+        _, *rows = table_content.find_all("tr")
+        for row in rows:
+            cols = row.find_all("td")
+            if "more entries" in row.text:
+                continue
+            step_c, kills_c, name_c = [c.text for c in cols]
+            kills = parse_integer(kills_c.replace("x", ""))
+            step = int(step_c)
+            self.bestiary_progress.append(BestiaryEntry(name_c, kills, step))
+
+    def _parse_items_table(self, table):
+        self.items = ItemSummary()
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for item_box in item_boxes:
+            item = DisplayItem._parse_item_box(item_box)
+            if item:
+                self.items.entries.append(item)
+
+    def _parse_store_items_table(self, table):
+        self.store_items = StoreSummary()
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for item_box in item_boxes:
+            item = DisplayItem._parse_item_box(item_box)
+            if item:
+                self.store_items.entries.append(item)
+
+    def _parse_general_table(self, table):
+        content_containers = table.find_all("table", {"class": "TableContent"})
+        general_stats = self._parse_data_table(content_containers[0])
+        self.hit_points = parse_integer(general_stats.get("hit_points", "0"))
+        self.mana = parse_integer(general_stats.get("mana", "0"))
+        self.capacity = parse_integer(general_stats.get("capacity", "0"))
+        self.speed = parse_integer(general_stats.get("speed", "0"))
+        self.mounts_count = parse_integer(general_stats.get("mounts", "0"))
+        self.outfits_count = parse_integer(general_stats.get("outfits", "0"))
+        self.titles_count = parse_integer(general_stats.get("titles", "0"))
+        self.blessings_count = parse_integer(re.sub(r"/d+", "", general_stats.get("blessings", "0")))
+
+        self.parse_skills_table(content_containers[1])
+
+        additional_stats = self._parse_data_table(content_containers[2])
+        self.creation_date = parse_tibia_datetime(additional_stats.get("creation_date", "").replace("\xa0", " "))
+        self.experience = parse_integer(additional_stats.get("experience", "0"))
+        self.gold = parse_integer(additional_stats.get("gold", "0"))
+        self.achievement_points = parse_integer(additional_stats.get("achievement_points", "0"))
+
+        charms_data = self._parse_data_table(content_containers[4])
+        self.charm_expansion = "yes" in charms_data.get("charms_expansion", "")
+        self.available_charm_points = parse_integer(charms_data.get("available_charm_points"))
+        self.spent_charm_points = parse_integer(charms_data.get("spent_charm_points"))
+
+        daily_rewards_data = self._parse_data_table(content_containers[5])
+        self.daily_reward_streak = parse_integer(daily_rewards_data.popitem()[1])
+
+        hunting_data = self._parse_data_table(content_containers[6])
+        self.hunting_task_points = parse_integer(hunting_data.get("hunting_task_points", ""))
+        self.permanent_hunting_task_slots = parse_integer(hunting_data.get("permanent_hunting_task_slots", ""))
+        self.permanent_prey_slots = parse_integer(hunting_data.get("permanent_prey_slots", ""))
+
+        hirelings_data = self._parse_data_table(content_containers[7])
+        self.hirelings = parse_integer(hirelings_data.get("hirelings", ""))
+        self.hireling_jobs = parse_integer(hirelings_data.get("hireling_jobs", ""))
+        self.hireling_outfits = parse_integer(hirelings_data.get("hireling_outfits", ""))
+
+
 class SalesArgument(abc.Serializable):
+    """Represents a sales argument.
+
+    Sales arguments can be selected when creating an auction, and allow the user to highlight certain
+    character features in the auction listing.
+
+    Attributes
+    ----------
+    category_image: :class:`str`
+        The URL to the category icon.
+    content: :class:`str`
+        The content of the sales argument."""
     def __init__(self, **kwargs):
         self.category_image = kwargs.get("category_image")
         self.content = kwargs.get("content")
@@ -192,4 +488,122 @@ class SalesArgument(abc.Serializable):
     __slots__ = (
         "category_image",
         "content",
+    )
+
+
+class SkillEntry(abc.Serializable):
+    def __init__(self, **kwargs):
+        self.name = kwargs.get("name")
+        self.level = kwargs.get("level")
+        self.progress = kwargs.get("progress")
+
+    __slots__ = (
+        "name",
+        "level",
+        "progress",
+    )
+
+
+class PaginatedSummary(abc.Serializable):
+    def __init__(self, **kwargs):
+        self.page = kwargs.get("page", 1)
+        self.total_pages = kwargs.get("total_pages", 1)
+        self.results = kwargs.get("results", 0)
+        self.entries = kwargs.get("entries", [])
+
+    __slots__ = (
+        "page",
+        "total_pages",
+        "results",
+        "entries",
+    )
+
+
+class ItemSummary(PaginatedSummary):
+    entries: List[DisplayItem]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class StoreSummary(PaginatedSummary):
+    entries: List[DisplayItem]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class Mounts(PaginatedSummary):
+    entries: List[DisplayItem]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class StoreMounts(PaginatedSummary):
+    entries: List[DisplayItem]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class Outfits(PaginatedSummary):
+    entries: List[DisplayItem]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class StoreOutfits(PaginatedSummary):
+    entries: List[DisplayItem]
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class BlessingEntry(abc.Serializable):
+
+    def __init__(self, name, amount=0):
+        self.name: str = name
+        self.amount: int = amount
+
+    __slots__ = (
+        "name",
+        "amount",
+    )
+
+
+class CharmEntry(abc.Serializable):
+
+    def __init__(self, name, cost=0):
+        self.name: str = name
+        self.cost: int = cost
+
+    __slots__ = (
+        "name",
+        "cost",
+    )
+
+
+class AchievementEntry(abc.Serializable):
+    def __init__(self, name, secret=False):
+        self.name: str = name
+        self.secret: int = secret
+
+    __slots__ = (
+        "name",
+        "secret",
+    )
+
+
+class BestiaryEntry(abc.Serializable):
+    def __init__(self, name, kills, step):
+        self.name: str = name
+        self.kills: int = kills
+        self.step: int = step
+
+    __slots__ = (
+        "name",
+        "kills",
+        "step",
     )
