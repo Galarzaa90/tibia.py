@@ -97,6 +97,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
     Accepted format:
 
     - ``MMM DD YYYY, HH:mm:ss ZZZ``, e.g. ``Dec 10 2018, 21:53:37 CET``.
+    - ``MMM DD YYYY, HH:mm ZZZ``, e.g. ``Dec 10 2018, 21:53 CET``.
 
     Parameters
     -------------
@@ -115,7 +116,10 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
 
         # Convert time string to time object
         # Removing timezone cause CEST and CET are not supported
-        t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M:%S")
+        try:
+            t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M:%S")
+        except ValueError:
+            t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M")
 
         # Getting the offset
         if tz == "CET":
@@ -127,7 +131,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
         # Add/subtract hours to get the real time
         t = t - datetime.timedelta(hours=utc_offset)
         return t.replace(tzinfo=datetime.timezone.utc)
-    except (ValueError, AttributeError):
+    except (ValueError, AttributeError) as e:
         return None
 
 
