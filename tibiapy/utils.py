@@ -8,7 +8,7 @@ from typing import Optional, Type, TypeVar, Union
 
 import bs4
 
-TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)k*$')
+TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)\s?k*$')
 
 
 def convert_line_breaks(element):

@@ -175,6 +175,12 @@ ListedAnnouncement
     :members:
     :inherited-members:
 
+ListedAuction
+-------------
+.. autoclass:: ListedAuction
+    :members:
+    :inherited-members:
+
 ListedBoard
 -----------
 .. autoclass:: ListedBoard
@@ -306,6 +312,12 @@ Death
    :members:
    :inherited-members:
 
+DisplayItem
+-----------
+.. autoclass:: DisplayItem
+   :members:
+   :inherited-members:
+
 GuildHouse
 ----------
 .. autoclass:: GuildHouse
@@ -393,6 +405,12 @@ RewardEntry
 RuleSet
 -------
 .. autoclass:: RuleSet
+   :members:
+   :inherited-members:
+
+SalesArgument
+-------------
+.. autoclass:: SalesArgument
    :members:
    :inherited-members:
 

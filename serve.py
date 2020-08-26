@@ -43,6 +43,13 @@ async def get_current_auctions(request: web.Request):
     return web.json_response(boosted, dumps=CustomJson.dumps)
 
 
+@routes.get('/auctions/{auction_id}')
+async def get_auction(request: web.Request):
+    auction_id = request.match_info['auction_id']
+    boosted = await app["tibiapy"].fetch_auction(int(auction_id))
+    return web.json_response(boosted, dumps=CustomJson.dumps)
+
+
 @routes.get('/boostedcreature/')
 async def get_boosted_creature(request: web.Request):
     boosted = await app["tibiapy"].fetch_boosted_creature()
