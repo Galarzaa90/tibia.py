@@ -37,6 +37,12 @@ async def home(request: web.Request):
     return web.Response(text=content, content_type='text/html')
 
 
+@routes.get('/auctions/')
+async def get_current_auctions(request: web.Request):
+    boosted = await app["tibiapy"].fetch_current_auctions()
+    return web.json_response(boosted, dumps=CustomJson.dumps)
+
+
 @routes.get('/boostedcreature/')
 async def get_boosted_creature(request: web.Request):
     boosted = await app["tibiapy"].fetch_boosted_creature()
