@@ -11,7 +11,7 @@ from tibiapy import abc
 from tibiapy.character import Character
 from tibiapy.creature import BoostedCreature
 from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
-from tibiapy.errors import Forbidden, NetworkError
+from tibiapy.errors import Forbidden, NetworkError, SiteMaintenance
 from tibiapy.event import EventSchedule
 from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, ListedBoard
 from tibiapy.guild import Guild, GuildWars, ListedGuild
@@ -179,6 +179,8 @@ class Client:
         try:
             init_time = time.perf_counter()
             async with self.session.request(method, url, data=data) as resp:
+                if "maintenance.tibia.com" in str(resp.url):
+                    raise SiteMaintenance("Tibia.com is down for maintenance.")
                 self._handle_status(resp.status)
                 response = RawResponse(resp, time.perf_counter()-init_time)
                 response.content = await resp.text()
