@@ -39,6 +39,17 @@ class AccountStatus(BaseEnum):
     PREMIUM_ACCOUNT = "Premium Account"
 
 
+class BidType(BaseEnum):
+    """The possible bid types for an auction."""
+    MINIMUM = "Minimum Bid"
+    """The minimum bid set by the auction author, meaning the auction hasn't received any bids or it finished
+     without bids."""
+    CURRENT = "Current Bid"
+    """The current maximum bid, meaning the auction has received at least one bid."""
+    WINNING = "Winning Bid"
+    """The bid that won the auction."""
+
+
 class Category(NumericEnum):
     """The different highscores categories."""
     ACHIEVEMENTS = 1
