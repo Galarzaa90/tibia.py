@@ -6,11 +6,13 @@ from typing import List
 
 from tibiapy import abc, Sex, Vocation
 from tibiapy.abc import BaseCharacter
-from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_money, parse_tibiacom_content, \
+from tibiapy.enums import BidType
+from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_money, \
+    parse_tibiacom_content, \
     try_enum
 
 __all__ = (
-    "CurrentAuctions",
+    "CharBazaar",
     "DisplayItem",
     "ListedAuction",
     "AuctionDetails",
@@ -20,7 +22,7 @@ __all__ = (
 char_info_regex = re.compile(r'Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| World: (\w+)')
 
 
-class CurrentAuctions(abc.Serializable):
+class CharBazaar(abc.Serializable):
     def __init__(self, **kwargs):
         self.entries = kwargs.get("entries")
 
@@ -32,14 +34,22 @@ class CurrentAuctions(abc.Serializable):
     )
 
     @classmethod
-    def get_url(cls):
+    def get_current_auctions_url(cls):
         return get_tibia_url("charactertrade", "currentcharactertrades")
+
+    @classmethod
+    def get_auctions_history_url(cls):
+        return get_tibia_url("charactertrade", "pastcharactertrades")
 
     @classmethod
     def from_content(cls, content):
         parsed_content = parse_tibiacom_content(content, builder='html5lib')
         tables = parsed_content.find_all("div", attrs={"class": "TableContainer"})
-        filter_table, auctions_table = tables
+        filter_table = None
+        if len(tables) == 1:
+            auctions_table = tables[0]
+        else:
+            filter_table, auctions_table, *_ = tables
 
         auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
         entries = []
@@ -130,7 +140,9 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         self.sales_arguments: List[SalesArgument] = kwargs.get("sales_arguments", [])
         self.auction_start: datetime.datetime = kwargs.get("auction_start")
         self.auction_end: datetime.datetime = kwargs.get("auction_end")
-        self.current_bid: int = kwargs.get("current_bid", 0)
+        self.bid: int = kwargs.get("bid", 0)
+        self.bid_type: BidType = kwargs.get("bid_type")
+        self.status: str = kwargs.get("status")
 
     __slots__ = (
         "auction_id",
@@ -144,7 +156,9 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         "sales_arguments",
         "auction_start",
         "auction_end",
-        "current_bid",
+        "bid",
+        "bid_type",
+        "status",
     )
 
     @property
@@ -210,8 +224,18 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         auction.auction_start = parse_tibia_datetime(start_date_tag.text.replace('\xa0', ' '))
         auction.auction_end = parse_tibia_datetime(end_date_tag.text.replace('\xa0', ' '))
         bids_container = auction_row.find("div", {"class": "ShortAuctionDataBidRow"})
-        current_bid_tag = bids_container.find("div", {"class", "ShortAuctionDataValue"})
-        auction.current_bid = parse_integer(current_bid_tag.text)
+        bid_tag = bids_container.find("div", {"class", "ShortAuctionDataValue"})
+        bid_type_tag = bids_container.find_all("div", {"class", "ShortAuctionDataLabel"})[-1]
+        bid_type_str = bid_type_tag.text.replace(":", "").strip()
+        auction.bid_type = try_enum(BidType, bid_type_str)
+        auction.bid = parse_integer(bid_tag.text)
+        status = "in progress"
+        auction_body_block = auction_row.find("div", {"class", "CurrentBid"})
+        auction_info_tag = auction_body_block.find("div", {"class": "AuctionInfo"})
+        if auction_info_tag:
+            convert_line_breaks(auction_info_tag)
+            status = auction_info_tag.text.replace("\n", " ").replace("  ", " ")
+        auction.status = status
         argument_entries = auction_row.find_all("div", {"class": "Entry"})
         for entry in argument_entries:
             img = entry.find("img")
@@ -504,6 +528,19 @@ class SkillEntry(abc.Serializable):
     )
 
 
+class OutfitImage(abc.Serializable):
+    def __init__(self, **kwargs):
+        self.image_url = kwargs.get("image_url")
+        self.outfit_id = kwargs.get("outfit_id")
+        self.addons = kwargs.get("addons")
+
+    __slots__ = (
+        "image_url",
+        "outfit_id",
+        "addons",
+    )
+
+
 class PaginatedSummary(abc.Serializable):
     def __init__(self, **kwargs):
         self.page = kwargs.get("page", 1)
@@ -517,7 +554,6 @@ class PaginatedSummary(abc.Serializable):
         "results",
         "entries",
     )
-
 
 class ItemSummary(PaginatedSummary):
     entries: List[DisplayItem]

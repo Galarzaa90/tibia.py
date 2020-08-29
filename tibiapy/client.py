@@ -7,7 +7,7 @@ import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy import abc, AuctionDetails, CurrentAuctions
+from tibiapy import abc, AuctionDetails, CharBazaar
 from tibiapy.character import Character
 from tibiapy.creature import BoostedCreature
 from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
@@ -222,9 +222,45 @@ class Client:
             If the start_date is more recent than the end date or page number is not 1 or greater.
         """
 
-        response = await self._request("get", CurrentAuctions.get_url())
+        response = await self._request("get", CharBazaar.get_current_auctions_url())
         start_time = time.perf_counter()
-        cm_post_archive = CurrentAuctions.from_content(response.content)
+        cm_post_archive = CharBazaar.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, cm_post_archive, parsing_time)
+
+    async def fetch_auction_history(self):
+        """Fetches the CM post archive.
+
+        .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        start_date: :class: `datetime.date`
+            The start date to display.
+        end_date: :class: `datetime.date`
+            The end date to display.
+        page: :class:`int`
+            The desired page to display.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`CMPostArchive`
+            The CM Post Archive.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        ValueError
+            If the start_date is more recent than the end date or page number is not 1 or greater.
+        """
+
+        response = await self._request("get", CharBazaar.get_auctions_history_url())
+        start_time = time.perf_counter()
+        cm_post_archive = CharBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, cm_post_archive, parsing_time)
 
