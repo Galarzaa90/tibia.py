@@ -42,3 +42,10 @@ class Forbidden(NetworkError):
     Tibia.com returns a 403 status code when it detects that too many requests are being done.
     This has its own subclass to let the user decide to treat this differently than other network errors.
     """
+
+
+class SiteMaintenance(NetworkError):
+    """A subclass of network error thrown when Tibia.com is down for maintenance.
+
+    When Tibia.com is under maintance, all sections of the website redirect to maintenance.tibia.com.
+    """
