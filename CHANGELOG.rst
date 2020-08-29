@@ -6,6 +6,14 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.2.2:
+
+3.2.2 (2020-08-27)
+==================
+
+- Properly parse the name of recently traded characters.
+    - Added ``traded`` attribute to ``Character`` and ``OtherCharacter``.
+
 .. v3.2.1:
 
 3.2.1 (2020-08-25)

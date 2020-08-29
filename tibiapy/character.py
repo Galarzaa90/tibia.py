@@ -134,6 +134,8 @@ class Character(abc.BaseCharacter, abc.Serializable):
     ----------
     name: :class:`str`
         The name of the character.
+    traded: :class:`bool`
+        If the character was traded in the last 6 months.
     deletion_date: :class:`datetime.datetime`, optional
         The date when the character will be deleted if it is scheduled for deletion.
     former_names: :class:`list` of :class:`str`
@@ -190,6 +192,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
     __slots__ = (
         "name",
         "former_names",
+        "traded",
         "sex",
         "title",
         "unlocked_titles",
@@ -222,6 +225,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
 
     def __init__(self, name=None, world=None, vocation=None, level=0, sex=None, **kwargs):
         self.name: str = name
+        self.traded: bool = kwargs.get("traded", False)
         self.former_names: List[str] = kwargs.get("former_names", [])
         self.title: Optional[str] = kwargs.get("title")
         self.unlocked_titles = int(kwargs.get("unlocked_titles", 0))
@@ -436,6 +440,10 @@ class Character(abc.BaseCharacter, abc.Serializable):
             m = guild_regexp.match(char["guild_membership"])
             char["guild_membership"] = GuildMembership(m.group(2), m.group(1))
 
+        if "(traded)" in char["name"]:
+            char["name"] = char["name"].replace("(traded)","").strip()
+            char["traded"] = True
+
         if "former_names" in char:
             former_names = [fn.strip() for fn in char["former_names"].split(",")]
             char["former_names"] = former_names
@@ -558,6 +566,10 @@ class Character(abc.BaseCharacter, abc.Serializable):
             name, world, status, *__ = cols
             _, *name = name.replace("\xa0", " ").split(" ")
             name = " ".join(name)
+            traded = False
+            if "(recently traded)" in name:
+                name = name.replace("(recently traded)", "").strip()
+                traded = True
             main_img = cols_raw[0].find('img')
             main = False
             if main_img and main_img['title'] == "Main Character":
@@ -566,7 +578,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             if "CipSoft Member" in status:
                 position = "CipSoft Member"
             self.other_characters.append(OtherCharacter(name, world, "online" in status, "deleted" in status, main,
-                                                        position))
+                                                        position, traded))
 
     @classmethod
     def _parse_tables(cls, parsed_content):
@@ -779,6 +791,8 @@ class OtherCharacter(abc.BaseCharacter, abc.Serializable):
         Whether the character is online or not.
     deleted: :class:`bool`
         Whether the character is scheduled for deletion or not.
+    traded: :class:`bool`
+        Whether the character has been traded recently or not.
     main: :class:`bool`
         Whether this is the main character or not.
     position: :class:`str`
@@ -789,16 +803,18 @@ class OtherCharacter(abc.BaseCharacter, abc.Serializable):
         "world",
         "online",
         "deleted",
+        "traded",
         "main",
         "position",
     )
 
-    def __init__(self, name, world, online=False, deleted=False, main=False, position=None):
+    def __init__(self, name, world, online=False, deleted=False, main=False, position=None, traded=False):
         self.name: str = name
         self.world: str = world
         self.online: bool = online
         self.deleted: bool = deleted
         self.main: bool = main
+        self.traded: bool = traded
         self.position: Optional[str] = position
 
     def __repr__(self):
