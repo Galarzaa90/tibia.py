@@ -3,6 +3,7 @@ import enum
 __all__ = (
     'AccountStatus',
     'Category',
+    'BidType',
     'HouseOrder',
     'HouseStatus',
     'HouseType',
