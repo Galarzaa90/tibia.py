@@ -90,205 +90,21 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
-Main Models
+
+Characters
 ===========
-The following models all contain their respective ``from_content`` methods.
-They all have their respective section in Tibia.com
+The `Character section`_ consists of the :class:`Character` class and its auxiliary classes used to hold its data.
 
-AuctionDetails
----------------
-.. autoclass:: AuctionDetails
-   :members:
-   :inherited-members:
+The entry points for this are:
 
-BoostedCreature
----------------
-.. autoclass:: BoostedCreature
-   :members:
-   :inherited-members:
+- :meth:`Character.from_content` - Parsing a character's content.
+- :meth:`Client.fetch_character` - Fetching and parsing a character's content.
+
+.. _Character section: https://www.tibia.com/community/?subtopic=characters
 
 Character
 ---------
 .. autoclass:: Character
-   :members:
-   :inherited-members:
-
-CharacterBazaar
----------------
-.. autoclass:: CharacterBazaar
-   :members:
-   :inherited-members:
-
-CMPostArchive
--------------
-.. autoclass:: CMPostArchive
-   :members:
-   :inherited-members:
-
-EventSchedule
--------------
-.. autoclass:: EventSchedule
-   :members:
-   :inherited-members:
-
-ForumAnnouncement
------------------
-.. autoclass:: ForumAnnouncement
-    :members:
-    :inherited-members:
-
-ForumBoard
-----------
-.. autoclass:: ForumBoard
-    :members:
-    :inherited-members:
-
-ForumPost
----------
-.. autoclass:: ForumPost
-    :members:
-    :inherited-members:
-
-ForumThread
------------
-.. autoclass:: ForumThread
-    :members:
-    :inherited-members:
-
-Guild
------
-.. autoclass:: Guild
-   :members:
-   :inherited-members:
-
-GuildWars
----------
-.. autoclass:: GuildWars
-   :members:
-   :inherited-members:
-
-Highscores
-----------
-.. autoclass:: Highscores
-   :members:
-   :inherited-members:
-
-House
------
-.. autoclass:: House
-   :members:
-   :inherited-members:
-
-KillStatistics
---------------
-.. autoclass:: KillStatistics
-   :members:
-   :inherited-members:
-
-ListedAnnouncement
-------------------
-.. autoclass:: ListedAnnouncement
-    :members:
-    :inherited-members:
-
-ListedAuction
--------------
-.. autoclass:: ListedAuction
-    :members:
-    :inherited-members:
-
-ListedBoard
------------
-.. autoclass:: ListedBoard
-    :members:
-    :inherited-members:
-
-ListedGuild
------------
-.. autoclass:: ListedGuild
-   :members:
-   :inherited-members:
-
-ListedHouse
------------
-.. autoclass:: ListedHouse
-   :members:
-   :inherited-members:
-
-ListedNews
------------
-.. autoclass:: ListedNews
-   :members:
-   :inherited-members:
-
-ListedThread
-------------
-.. autoclass:: ListedThread
-    :members:
-    :inherited-members:
-
-ListedTournament
------------------------
-.. autoclass:: ListedTournament
-   :members:
-   :inherited-members:
-
-ListedWorld
------------
-.. autoclass:: ListedWorld
-   :members:
-   :inherited-members:
-
-News
----------
-.. autoclass:: News
-   :members:
-   :inherited-members:
-
-Tournament
-----------
-.. autoclass:: Tournament
-   :members:
-   :inherited-members:
-
-TournamentLeaderboard
----------------------
-.. autoclass:: TournamentLeaderboard
-   :members:
-   :inherited-members:
-
-World
------
-.. autoclass:: World
-   :members:
-   :inherited-members:
-
-WorldOverview
--------------
-.. autoclass:: WorldOverview
-   :members:
-   :inherited-members:
-
-Auxiliary Classes
-=================
-Auxiliary classes are used to hold certain data in a standardized way, in some cases, introducing additional methods
-and properties for their use.
-
-AccountBadge
-------------------
-.. autoclass:: AccountBadge
-   :members:
-   :inherited-members:
-
-AccountInformation
-------------------
-.. autoclass:: AccountInformation
-   :members:
-   :inherited-members:
-
-Achievement
---------------
-.. autoclass:: Achievement
    :members:
    :inherited-members:
 
@@ -298,17 +114,266 @@ CharacterHouse
    :members:
    :inherited-members:
 
-CMPost
-------
-.. autoclass:: CMPost
+GuildMembership
+---------------
+.. autoclass:: GuildMembership
    :members:
    :inherited-members:
 
-EventEntry
--------------
-.. autoclass:: EventEntry
+AccountBadge
+------------------
+.. autoclass:: AccountBadge
    :members:
    :inherited-members:
+
+Achievement
+--------------
+.. autoclass:: Achievement
+   :members:
+   :inherited-members:
+
+AccountInformation
+------------------
+.. autoclass:: AccountInformation
+   :members:
+   :inherited-members:
+
+Death
+-----
+.. autoclass:: Death
+   :members:
+   :inherited-members:
+
+Killer
+------
+.. autoclass:: Killer
+   :members:
+   :inherited-members:
+
+OtherCharacter
+--------------
+.. autoclass:: OtherCharacter
+   :members:
+   :inherited-members:
+
+
+Worlds
+======
+Models related to `Tibia.com's World section`_. The :class:`WorldOverview` class contains the list of all worlds, while
+the :class:`World` class contains the details of a single world.
+
+.. _Tibia.com's World section: https://www.tibia.com/community/?subtopic=worlds
+
+WorldOverview
+-------------
+.. autoclass:: WorldOverview
+   :members:
+   :inherited-members:
+
+ListedWorld
+-----------
+.. autoclass:: ListedWorld
+   :members:
+   :inherited-members:
+
+World
+-----
+.. autoclass:: World
+   :members:
+   :inherited-members:
+
+OnlineCharacter
+---------------
+.. autoclass:: OnlineCharacter
+   :members:
+   :inherited-members:
+
+Guilds
+======
+Models related to `Tibia.com's Guilds section`_. The main model is :class:`Guild`, while :class:`ListedGuild` is the
+previewed information in the guild list.
+
+.. _Tibia.com's Guilds section: https://www.tibia.com/community/?subtopic=guilds
+
+Guild
+-----
+.. autoclass:: Guild
+   :members:
+   :inherited-members:
+
+GuildHouse
+----------
+.. autoclass:: GuildHouse
+   :members:
+   :inherited-members:
+
+GuildMember
+-----------
+.. autoclass:: GuildMember
+   :members:
+   :inherited-members:
+
+GuildInvite
+-----------
+.. autoclass:: GuildInvite
+   :members:
+   :inherited-members:
+
+GuildWars
+---------
+.. autoclass:: GuildWars
+   :members:
+   :inherited-members:
+
+GuildWarEntry
+-------------
+.. autoclass:: GuildWarEntry
+   :members:
+   :inherited-members:
+
+ListedGuild
+-----------
+.. autoclass:: ListedGuild
+   :members:
+   :inherited-members:
+
+Highscores
+==========
+Models related to `Tibia.com's Highscores section`_.
+
+.. _Tibia.com's Highscores section: https://www.tibia.com/community/?subtopic=highscores
+
+Highscores
+----------
+.. autoclass:: Highscores
+   :members:
+   :inherited-members:
+
+HighscoresEntry
+---------------
+.. autoclass:: HighscoresEntry
+   :members:
+   :inherited-members:
+
+LoyaltyHighscoresEntry
+----------------------
+.. autoclass:: LoyaltyHighscoresEntry
+   :members:
+   :inherited-members:
+
+Houses
+======
+Models related to `Tibia.com's Houses section`_.
+
+.. _Tibia.com's Houses section: https://www.tibia.com/community/?subtopic=houses
+
+House
+-----
+.. autoclass:: House
+   :members:
+   :inherited-members:
+
+ListedHouse
+-----------
+.. autoclass:: ListedHouse
+   :members:
+   :inherited-members:
+
+Tournaments
+===========
+Models related to `Tibia.com's Tournaments section`_.
+
+.. _Tibia.com's Tournaments section: https://www.tibia.com/community/?subtopic=tournament
+
+Tournament
+----------
+.. autoclass:: Tournament
+   :members:
+   :inherited-members:
+
+RuleSet
+-------
+.. autoclass:: RuleSet
+   :members:
+   :inherited-members:
+
+ScoreSet
+--------
+.. autoclass:: ScoreSet
+   :members:
+   :inherited-members:
+
+RewardEntry
+-----------
+.. autoclass:: RewardEntry
+   :members:
+   :inherited-members:
+
+ListedTournament
+-----------------------
+.. autoclass:: ListedTournament
+   :members:
+   :inherited-members:
+
+TournamentLeaderboard
+---------------------
+.. autoclass:: TournamentLeaderboard
+   :members:
+   :inherited-members:
+
+LeaderboardEntry
+----------------
+.. autoclass:: LeaderboardEntry
+   :members:
+   :inherited-members:
+
+Forums
+======
+Models related to `Tibia.com's Forum section`_.
+
+.. _Tibia.com's Forum section: https://www.tibia.com/community/?subtopic=worldboards
+
+ListedBoard
+-----------
+.. autoclass:: ListedBoard
+    :members:
+    :inherited-members:
+
+ForumBoard
+----------
+.. autoclass:: ForumBoard
+    :members:
+    :inherited-members:
+
+ListedAnnouncement
+------------------
+.. autoclass:: ListedAnnouncement
+    :members:
+    :inherited-members:
+
+ListedThread
+------------
+.. autoclass:: ListedThread
+    :members:
+    :inherited-members:
+
+ForumAnnouncement
+-----------------
+.. autoclass:: ForumAnnouncement
+    :members:
+    :inherited-members:
+
+ForumThread
+-----------
+.. autoclass:: ForumThread
+    :members:
+    :inherited-members:
+
+ForumPost
+---------
+.. autoclass:: ForumPost
+    :members:
+    :inherited-members:
 
 ForumAuthor
 -----------
@@ -322,105 +387,76 @@ ForumEmoticon
     :members:
     :inherited-members:
 
-Death
------
-.. autoclass:: Death
-   :members:
-   :inherited-members:
-
-DisplayItem
------------
-.. autoclass:: DisplayItem
-   :members:
-   :inherited-members:
-
-GuildHouse
-----------
-.. autoclass:: GuildHouse
-   :members:
-   :inherited-members:
-
-GuildInvite
------------
-.. autoclass:: GuildInvite
-   :members:
-   :inherited-members:
-
-GuildMember
------------
-.. autoclass:: GuildMember
-   :members:
-   :inherited-members:
-
-GuildMembership
----------------
-.. autoclass:: GuildMembership
-   :members:
-   :inherited-members:
-
-GuildWarEntry
--------------
-.. autoclass:: GuildWarEntry
-   :members:
-   :inherited-members:
-
-HighscoresEntry
----------------
-.. autoclass:: HighscoresEntry
-   :members:
-   :inherited-members:
-
-Killer
-------
-.. autoclass:: Killer
-   :members:
-   :inherited-members:
-
 LastPost
 --------
 .. autoclass:: LastPost
     :members:
     :inherited-members:
 
-LeaderboardEntry
-----------------
-.. autoclass:: LeaderboardEntry
+CMPostArchive
+-------------
+.. autoclass:: CMPostArchive
    :members:
    :inherited-members:
 
-LoyaltyHighscoresEntry
-----------------------
-.. autoclass:: LoyaltyHighscoresEntry
+CMPost
+------
+.. autoclass:: CMPost
    :members:
    :inherited-members:
 
-OnlineCharacter
----------------
-.. autoclass:: OnlineCharacter
-   :members:
-   :inherited-members:
+News
+=======
+Models related to `Tibia.com's News section`_.
 
-OtherCharacter
---------------
-.. autoclass:: OtherCharacter
-   :members:
-   :inherited-members:
+.. _Tibia.com's News section: https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades
 
-RaceEntry
+News
 ---------
-.. autoclass:: RaceEntry
+.. autoclass:: News
    :members:
    :inherited-members:
 
-RewardEntry
+
+ListedNews
 -----------
-.. autoclass:: RewardEntry
+.. autoclass:: ListedNews
    :members:
    :inherited-members:
 
-RuleSet
--------
-.. autoclass:: RuleSet
+EventSchedule
+-------------
+.. autoclass:: EventSchedule
+   :members:
+   :inherited-members:
+
+EventEntry
+-------------
+.. autoclass:: EventEntry
+   :members:
+   :inherited-members:
+
+Bazaar
+======
+Models related to `Tibia.com's Bazaar section`_.
+
+.. _Tibia.com's Bazaar section: https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades
+
+CharacterBazaar
+---------------
+.. autoclass:: CharacterBazaar
+   :members:
+   :inherited-members:
+
+ListedAuction
+-------------
+.. autoclass:: ListedAuction
+    :members:
+    :inherited-members:
+
+AuctionDetails
+---------------
+.. autoclass:: AuctionDetails
    :members:
    :inherited-members:
 
@@ -430,17 +466,43 @@ SalesArgument
    :members:
    :inherited-members:
 
-ScoreSet
---------
-.. autoclass:: ScoreSet
-   :members:
-   :inherited-members:
-
 SkillsEntry
 -----------
 .. autoclass:: SkillsEntry
    :members:
    :inherited-members:
+
+DisplayItem
+-----------
+.. autoclass:: DisplayItem
+   :members:
+   :inherited-members:
+
+
+Kill Statistics
+===============
+
+KillStatistics
+--------------
+.. autoclass:: KillStatistics
+   :members:
+   :inherited-members:
+
+RaceEntry
+---------
+.. autoclass:: RaceEntry
+   :members:
+   :inherited-members:
+
+Other
+=====
+
+BoostedCreature
+---------------
+.. autoclass:: BoostedCreature
+   :members:
+   :inherited-members:
+
 
 Base Classes
 ============
