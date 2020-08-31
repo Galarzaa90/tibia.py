@@ -296,7 +296,7 @@ class Client:
 
         response = await self._request("get", AuctionDetails.get_url(auction_id))
         start_time = time.perf_counter()
-        cm_post_archive = AuctionDetails.from_content(response.content)
+        cm_post_archive = AuctionDetails.from_content(response.content, auction_id)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, cm_post_archive, parsing_time)
 

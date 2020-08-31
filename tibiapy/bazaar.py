@@ -7,7 +7,8 @@ from typing import List
 from tibiapy import abc, Sex, Vocation
 from tibiapy.abc import BaseCharacter
 from tibiapy.enums import BidType
-from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_money, \
+from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_integer, parse_pagination, parse_tibia_datetime, \
+    parse_tibia_money, \
     parse_tibiacom_content, \
     try_enum
 
@@ -93,13 +94,7 @@ class CharacterBazaar(abc.Serializable):
         bazaar = cls()
 
         page_navigation_row = parsed_content.find("td", attrs={"class": "PageNavigation"})
-        pages_div, results_div = page_navigation_row.find_all("div")
-        page_links = pages_div.find_all("a")
-        listed_pages = [int(p.text) for p in page_links]
-        if listed_pages:
-            bazaar.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
-            bazaar.total_pages = max(int(page_links[-1].text), bazaar.page)
-        bazaar.results_count = int(results_pattern.search(results_div.text).group(1))
+        bazaar.page, bazaar.total_pages, bazaar.results_count = parse_pagination(page_navigation_row)
 
         auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
         for auction_row in auction_rows:
@@ -220,6 +215,9 @@ class DisplayImage(abc.Serializable):
         "name",
     )
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} image_url={self.image_url!r}>"
+
     @classmethod
     def _parse_image_box(cls, item_box):
         description = item_box["title"]
@@ -235,11 +233,14 @@ class DisplayImage(abc.Serializable):
 class DisplayMount(DisplayImage):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        mount_id = kwargs.get("mount_id", 0)
+        self.mount_id = kwargs.get("mount_id", 0)
 
     __slots__ = (
-        "mount_id"
+        "mount_id",
     )
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} mount_id={self.mount_id} image_url={self.image_url!r}>"
 
     @classmethod
     def _parse_image_box(cls, item_box):
@@ -253,13 +254,17 @@ class DisplayMount(DisplayImage):
 class DisplayOutfit(DisplayImage):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        outfit_id = kwargs.get("outfit_id", 0)
-        addons = kwargs.get("addons", 0)
+        self.outfit_id = kwargs.get("outfit_id", 0)
+        self.addons = kwargs.get("addons", 0)
 
     __slots__ = (
-        "outfit_id"
-        "addons"
+        "outfit_id",
+        "addons",
     )
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} outfit_id={self.outfit_id} addons={self.addons} " \
+               f"image_url={self.image_url!r}>"
 
     @classmethod
     def _parse_image_box(cls, item_box):
@@ -471,6 +476,62 @@ class AuctionDetails(ListedAuction):
         The number of titles the character has.
     skills: :class:`list` of :class:`SkillEntry`
         The current skills of the character.
+    creation_date: :class:`datetime.datetime`
+        The date when the character was created.
+    experience: :class:`int`
+        The total experience of the character.
+    gold: :class:`int`
+        The total amount of gold the character has.
+    achievement_points: :class:`int`
+        The number of achievement points of the character.
+    regular_world_transfer: :class:`bool`
+        Whether the character can use a regular transfer.
+    charm_expansion: :class:`bool`
+        Whether the character has a charm expansion or not.
+    available_charm_points: :class:`int`
+        The amount of charm points the character has available to spend.
+    spent_charm_points: :class:`int`
+        The total charm points the character has spent.
+    daly_reward_streak: :class:`int`
+        The current daily reward streak.
+    permanent_hunting_task_slots: :class:`int`
+        The number of hunting task slots.
+    permanent_prey_slots: :class:`int`
+        The number of prey slots.
+    hirelings: :class:`int`
+        The number of hirelings the character has.
+    hireling_jobs: :class:`int`
+        The number of hireling jobs the character has.
+    hireling_outfits: :class:`int`
+        The number of hireling outfits the character has.
+    items: :class:`ItemSummary`
+        The items the character has across inventory, depot and item stash.
+    store_items: :class:`ItemSummary`
+        The store items the character has.
+    mounts: :class:`Mounts`
+        The mounts the character has unlocked.
+    store_mounts: :class:`Mounts`
+        The mounts the character has purchased from the store.
+    outfits: :class:`Outfits`
+        The outfits the character has unlocked.
+    store_outfits: :class:`Outfits`
+        The outfits the character has purchased from the store.
+    blessings: :class:`list` of :class:`BlessingEntry`
+        The blessings the character has.
+    imbuements: :class:`list` of :class:`str`
+        The imbuements the character has unlocked access to.
+    charms: :class:`list` of :class:`CharmEntry`
+        The charms the character has unlocked.
+    completed_cyclopedia_map_areas: :class:`list` of :class:`str`
+        The cyclopedia map areas that the character has fully discovered.
+    completed_quest_lines: :class:`list` of :class:`str`
+        The quest lines the character has fully completed.
+    titles: :class:`list` of :class:`str`
+        The titles the character has unlocked.
+    achievements: :class:`list` of :class:`AchievementEntry`
+        The achievements the character has unlocked.
+    bestiary_progress: :class:`list` of :class:`BestiaryEntry`
+        The bestiary progress of the character.
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -555,26 +616,27 @@ class AuctionDetails(ListedAuction):
     )
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content, auction_id=0):
         parsed_content = parse_tibiacom_content(content, builder='html5lib')
         auction_row = parsed_content.find("div", attrs={"class": "Auction"})
         auction = cls._parse_auction(auction_row)
+        auction.auction_id = auction_id
 
         details_tables = cls._parse_tables(parsed_content)
         if "General" in details_tables:
             auction._parse_general_table(details_tables["General"])
         if "ItemSummary" in details_tables:
-            auction._parse_items_table(details_tables["ItemSummary"])
+            auction.items = ItemSummary._parse_table(details_tables["ItemSummary"])
         if "StoreItemSummary" in details_tables:
-            auction._parse_store_items_table(details_tables["StoreItemSummary"])
+            auction.store_items = ItemSummary._parse_table(details_tables["StoreItemSummary"])
         if "Mounts" in details_tables:
-            auction._parse_mounts_table(details_tables["Mounts"])
+            auction.mounts = Mounts._parse_table(details_tables["Mounts"])
         if "StoreMounts" in details_tables:
-            auction._parse_store_mounts_table(details_tables["StoreMounts"])
+            auction.store_mounts = Mounts._parse_table(details_tables["StoreMounts"])
         if "Outfits" in details_tables:
-            auction._parse_outfits_table(details_tables["Outfits"])
+            auction.outfits = Outfits._parse_table(details_tables["Outfits"])
         if "StoreOutfits" in details_tables:
-            auction._parse_store_outfits_table(details_tables["StoreOutfits"])
+            auction.store_outfits = Outfits._parse_table(details_tables["StoreOutfits"])
         if "Blessings" in details_tables:
             auction._parse_blessings_table(details_tables["Blessings"])
         if "Imbuements" in details_tables:
@@ -648,7 +710,7 @@ class AuctionDetails(ListedAuction):
         for row in rows:
             cols = row.find_all("td")
             cost_c, name_c = [c.text for c in cols]
-            cost = int(cost_c.replace("x", ""))
+            cost = parse_integer(cost_c.replace("x", ""))
             self.charms.append(CharmEntry(name_c, cost))
 
     def _parse_achievements_table(self, table):
@@ -673,55 +735,6 @@ class AuctionDetails(ListedAuction):
             kills = parse_integer(kills_c.replace("x", ""))
             step = int(step_c)
             self.bestiary_progress.append(BestiaryEntry(name_c, kills, step))
-
-    def _parse_items_table(self, table):
-        self.items = ItemSummary()
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
-        for item_box in item_boxes:
-            item = DisplayItem._parse_item_box(item_box)
-            if item:
-                self.items.entries.append(item)
-
-    def _parse_store_items_table(self, table):
-        self.store_items = StoreSummary()
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
-        for item_box in item_boxes:
-            item = DisplayItem._parse_item_box(item_box)
-            if item:
-                self.store_items.entries.append(item)
-
-    def _parse_mounts_table(self, table):
-        self.mounts = Mounts()
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
-        for image_box in item_boxes:
-            mount = DisplayMount._parse_image_box(image_box)
-            if mount:
-                self.mounts.entries.append(mount)
-
-    def _parse_store_mounts_table(self, table):
-        self.store_mounts = Mounts()
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
-        for image_box in item_boxes:
-            mount = DisplayMount._parse_image_box(image_box)
-            if mount:
-                self.store_mounts.entries.append(mount)
-
-    def _parse_outfits_table(cls, table):
-        entries = []
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
-        for image_box in item_boxes:
-            outfit = DisplayOutfit._parse_image_box(image_box)
-            if outfit:
-                entries.append(outfit)
-        return entries
-
-    def _parse_store_outfits_table(self, table):
-        self.store_outfits = Outfits()
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
-        for image_box in item_boxes:
-            outfit = DisplayOutfit._parse_image_box(image_box)
-            if outfit:
-                self.store_outfits.entries.append(outfit)
 
     def _parse_general_table(self, table):
         content_containers = table.find_all("table", {"class": "TableContent"})
@@ -834,46 +847,63 @@ class PaginatedSummary(abc.Serializable):
         "entries",
     )
 
+    def _parse_pagination(self, parsed_content):
+        pagination_block = parsed_content.find("div", attrs={"class": "BlockPageNavigationRow"})
+        self.page, self.total_pages, self.results = parse_pagination(pagination_block)
+
+
 class ItemSummary(PaginatedSummary):
     entries: List[DisplayItem]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-
-class StoreSummary(PaginatedSummary):
-    entries: List[DisplayItem]
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    @classmethod
+    def _parse_table(cls, table):
+        summary = cls()
+        summary._parse_pagination(table)
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for item_box in item_boxes:
+            item = DisplayItem._parse_item_box(item_box)
+            if item:
+                summary.entries.append(item)
+        return summary
 
 
 class Mounts(PaginatedSummary):
-    entries: List[DisplayItem]
+    entries: List[DisplayMount]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-
-class StoreMounts(PaginatedSummary):
-    entries: List[DisplayItem]
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    @classmethod
+    def _parse_table(cls, table):
+        summary = cls()
+        summary._parse_pagination(table)
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for item_box in item_boxes:
+            item = DisplayMount._parse_image_box(item_box)
+            if item:
+                summary.entries.append(item)
+        return summary
 
 
 class Outfits(PaginatedSummary):
-    entries: List[DisplayItem]
+    entries: List[DisplayOutfit]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-
-class StoreOutfits(PaginatedSummary):
-    entries: List[DisplayItem]
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    @classmethod
+    def _parse_table(cls, table):
+        summary = cls()
+        summary._parse_pagination(table)
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for item_box in item_boxes:
+            item = DisplayOutfit._parse_image_box(item_box)
+            if item:
+                summary.entries.append(item)
+        return summary
 
 
 class BlessingEntry(abc.Serializable):

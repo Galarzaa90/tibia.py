@@ -4,7 +4,7 @@ import re
 import urllib.parse
 import warnings
 from collections import OrderedDict
-from typing import Optional, Type, TypeVar, Union
+from typing import Optional, Tuple, Type, TypeVar, Union
 
 import bs4
 
@@ -469,3 +469,34 @@ def parse_popup(popup_content):
     html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").strip()
     parsed_html = bs4.BeautifulSoup(html, 'lxml')
     return title, parsed_html
+
+results_pattern = re.compile(r'Results: (\d+)')
+
+
+def parse_pagination(pagination_block) -> Tuple[int, int, int]:
+    """Parses a pagination section in Tibia.com and extracts its information.
+
+    Parameters
+    ----------
+    pagination_block: :class:`bs4.Tag`
+        The HTML containing the pagination information.
+
+    Returns
+    -------
+    page : :class:`int`
+        The current page.
+    total_pages : :class:`int`
+        The total number of pages.
+    results_count : :class:`int`
+        The total number of results.
+    """
+    pages_div, results_div = pagination_block.find_all("div")
+    page_links = pages_div.find_all("a")
+    listed_pages = [int(p.text) for p in page_links]
+    page = 1
+    total_pages = 1
+    if listed_pages:
+        page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
+        total_pages = max(int(page_links[-1].text), page)
+    results_count = int(results_pattern.search(results_div.text).group(1))
+    return page, total_pages, results_count
