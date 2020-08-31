@@ -12,33 +12,72 @@ from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_integer, par
     try_enum
 
 __all__ = (
-    "CharBazaar",
+    "CharacterBazaar",
     "DisplayItem",
     "ListedAuction",
     "AuctionDetails",
-    "SalesArgument"
+    "SalesArgument",
+    "SkillEntry",
 )
 
+results_pattern = re.compile(r'Results: (\d+)')
 char_info_regex = re.compile(r'Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| World: (\w+)')
+id_addon_regex = re.compile(r'(\d+)_(\d)\.gif')
+id_regex = re.compile(r'(\d+).gif')
+description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
+quotes = re.compile(r'"([^"]+)"')
 
 
-class CharBazaar(abc.Serializable):
+class CharacterBazaar(abc.Serializable):
+    """Represents the char bazaar.
+
+    Attributes
+    ----------
+    page: :class:`int`
+        The page being currently viewed.
+    total_pages: :class:`int`
+        The total number of pages available.
+    results_count: :class:`int`
+        The number of auctions listed.
+    entries: :class:`list` of :class:`ListedAuction`
+        The auctions displayed."""
     def __init__(self, **kwargs):
-        self.entries = kwargs.get("entries")
+        self.page = kwargs.get("page", 1)
+        self.total_pages = kwargs.get("total_pages", 1)
+        self.results_count = kwargs.get("results_count", 0)
+        self.entries = kwargs.get("entries", [])
 
     __slots__ = (
         "page",
         "total_pages",
-        "results_coount",
+        "results_count",
         "entries",
     )
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages}" \
+               f"results_count={self.results_count}>"
+
     @classmethod
     def get_current_auctions_url(cls):
+        """Gets the URL to the list of current auctions in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the current auctions section in Tibia.com
+        """
         return get_tibia_url("charactertrade", "currentcharactertrades")
 
     @classmethod
     def get_auctions_history_url(cls):
+        """Gets the URL to the auction history in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the auction history section in Tibia.com
+        """
         return get_tibia_url("charactertrade", "pastcharactertrades")
 
     @classmethod
@@ -51,13 +90,23 @@ class CharBazaar(abc.Serializable):
         else:
             filter_table, auctions_table, *_ = tables
 
+        bazaar = cls()
+
+        page_navigation_row = parsed_content.find("td", attrs={"class": "PageNavigation"})
+        pages_div, results_div = page_navigation_row.find_all("div")
+        page_links = pages_div.find_all("a")
+        listed_pages = [int(p.text) for p in page_links]
+        if listed_pages:
+            bazaar.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
+            bazaar.total_pages = max(int(page_links[-1].text), bazaar.page)
+        bazaar.results_count = int(results_pattern.search(results_div.text).group(1))
+
         auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
-        entries = []
         for auction_row in auction_rows:
             auction = ListedAuction._parse_auction(auction_row)
 
-            entries.append(auction)
-        return cls(entries=entries)
+            bazaar.entries.append(auction)
+        return bazaar
 
 
 class DisplayItem(abc.Serializable):
@@ -67,8 +116,8 @@ class DisplayItem(abc.Serializable):
     ----------
     image_url: :class:`str`
         The URL to the item's image.
-    description: :class:`str`
-        The item's description.
+    name: :class:`str`
+        The item's name.
     count: :class:`int`
         The item's count.
     item_id: :class:`int`
@@ -76,13 +125,13 @@ class DisplayItem(abc.Serializable):
     """
     def __init__(self, **kwargs):
         self.image_url: str = kwargs.get("image_url")
-        self.description: str = kwargs.get("description")
+        self.name: str = kwargs.get("name")
         self.count: int = kwargs.get("count", 1)
         self.item_id: int = kwargs.get("item_id", 0)
 
     __slots__ = (
         "image_url",
-        "description",
+        "name",
         "count",
         "item_id",
     )
@@ -95,7 +144,131 @@ class DisplayItem(abc.Serializable):
             return None
         amount_text = item_box.find("div", attrs={"class": "ObjectAmount"})
         amount = parse_tibia_money(amount_text.text) if amount_text else 1
-        return DisplayItem(image_url=img_tag["src"], description=description, count=amount)
+        item_id = 0
+        name = None
+        m = id_regex.search(img_tag["src"])
+        if m:
+            item_id = int(m.group(1))
+        m = description_regex.search(description)
+        if m:
+            name = m.group(1)
+        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id)
+
+
+class DisplayItem(abc.Serializable):
+    """Represents an item displayed on an auction, or the character's items in the auction detail.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL to the item's image.
+    name: :class:`str`
+        The item's name.
+    count: :class:`int`
+        The item's count.
+    item_id: :class:`int`
+        The item's client id.
+    """
+    def __init__(self, **kwargs):
+        self.image_url: str = kwargs.get("image_url")
+        self.name: str = kwargs.get("name")
+        self.count: int = kwargs.get("count", 1)
+        self.item_id: int = kwargs.get("item_id", 0)
+
+    __slots__ = (
+        "image_url",
+        "name",
+        "count",
+        "item_id",
+    )
+
+    @classmethod
+    def _parse_item_box(cls, item_box):
+        description = item_box["title"]
+        img_tag = item_box.find("img")
+        if not img_tag:
+            return None
+        amount_text = item_box.find("div", attrs={"class": "ObjectAmount"})
+        amount = parse_tibia_money(amount_text.text) if amount_text else 1
+        item_id = 0
+        name = None
+        m = id_regex.search(img_tag["src"])
+        if m:
+            item_id = int(m.group(1))
+        m = description_regex.search(description)
+        if m:
+            name = m.group(1)
+        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id)
+
+
+class DisplayImage(abc.Serializable):
+    """Represents an item displayed on an auction, or the character's items in the auction detail.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL to the image.
+    name: :class:`str`
+        The element's name.
+    """
+    def __init__(self, **kwargs):
+        self.image_url: str = kwargs.get("image_url")
+        self.name: str = kwargs.get("name")
+
+    __slots__ = (
+        "image_url",
+        "name",
+    )
+
+    @classmethod
+    def _parse_image_box(cls, item_box):
+        description = item_box["title"]
+        img_tag = item_box.find("img")
+        if not img_tag:
+            return None
+        m = quotes.search(description)
+        if m:
+            description = m.group(1)
+        return cls(image_url=img_tag["src"], name=description)
+
+
+class DisplayMount(DisplayImage):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        mount_id = kwargs.get("mount_id", 0)
+
+    __slots__ = (
+        "mount_id"
+    )
+
+    @classmethod
+    def _parse_image_box(cls, item_box):
+        mount = super()._parse_image_box(item_box)
+        m = id_regex.search(mount.image_url)
+        if m:
+            mount.mount_id = int(m.group(1))
+        return mount
+
+
+class DisplayOutfit(DisplayImage):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        outfit_id = kwargs.get("outfit_id", 0)
+        addons = kwargs.get("addons", 0)
+
+    __slots__ = (
+        "outfit_id"
+        "addons"
+    )
+
+    @classmethod
+    def _parse_image_box(cls, item_box):
+        outfit = super()._parse_image_box(item_box)
+        m = id_addon_regex.search(outfit.image_url)
+        if m:
+            outfit.outfit_id = int(m.group(1))
+            outfit.addons = int(m.group(2))
+        return outfit
 
 
 class ListedAuction(BaseCharacter, abc.Serializable):
@@ -115,8 +288,8 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         The vocation of the character.
     sex: :class:`Sex`
         The sex of the character.
-    outfit: :class:`str`
-        The URL to the character's current outfit.
+    outfit: :class:`OutfitImage`
+        The current outfit selected by the user.
     displayed_items: :class:`list` of :class:`DisplayItem`
         The items selected to be displayed.
     sales_arguments: :class:`list` of :class:`SalesArgument`
@@ -125,8 +298,12 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         The date when the auction started.
     auction_end: :class:`datetime.datetime`
         The date when the auction ends.
-    current_bid: :class:`int`
+    bid: :class:`int`
         The current bid in Tibia Coins.
+    bid_type: :class:`BidType`
+        The type of the auction's bid.
+    status: :class:`str`
+        The current status of the auction.
     """
     def __init__(self, **kwargs):
         self.auction_id: int = kwargs.get("auction_id", 0)
@@ -213,7 +390,9 @@ class ListedAuction(BaseCharacter, abc.Serializable):
             auction.sex = try_enum(Sex, m.group(3).strip().lower())
             auction.world = m.group(4)
         outfit_img = auction_row.find("img", {"class": "AuctionOutfitImage"})
-        auction.outfit = outfit_img["src"]
+        m = id_addon_regex.search(outfit_img["src"])
+        if m:
+            auction.outfit = OutfitImage(image_url=outfit_img["src"], outfit_id=int(m.group(1)), addons=int(m.group(2)))
         item_boxes = auction_row.find_all("div", attrs={"class": "CVIcon"})
         for item_box in item_boxes:
             item = DisplayItem._parse_item_box(item_box)
@@ -244,6 +423,55 @@ class ListedAuction(BaseCharacter, abc.Serializable):
 
 
 class AuctionDetails(ListedAuction):
+    """Represents the details of an auction.
+
+    Attributes
+    ----------
+    auction_id: :class:`int`
+        The internal id of the auction.
+    name: :class:`str`
+        The name of the character.
+    level: :class:`int`
+        The level of the character.
+    world: :class:`str`
+        The world the character is in.
+    vocation: :class:`Vocation`
+        The vocation of the character.
+    sex: :class:`Sex`
+        The sex of the character.
+    outfit: :class:`OutfitImage`
+        The current outfit selected by the user.
+    displayed_items: :class:`list` of :class:`DisplayItem`
+        The items selected to be displayed.
+    sales_arguments: :class:`list` of :class:`SalesArgument`
+        The sale arguments selected for the auction.
+    auction_start: :class:`datetime.datetime`
+        The date when the auction started.
+    auction_end: :class:`datetime.datetime`
+        The date when the auction ends.
+    bid: :class:`int`
+        The current bid in Tibia Coins.
+    bid_type: :class:`BidType`
+        The type of the auction's bid.
+    status: :class:`str`
+        The current status of the auction.
+    hit_points: :class:`int`
+        The hit points of the character.
+    mana: :class:`int`
+        The mana points of the character.
+    capacity: :class:`int`
+        The character's capacity in ounces.
+    speed: :class:`int`
+        The character's speed.
+    blessings_count: :class:`int`
+        The number of blessings the character has.
+    outfits_count: :class:`int`
+        The number of outfits the character has.
+    titles_count: :class:`int`
+        The number of titles the character has.
+    skills: :class:`list` of :class:`SkillEntry`
+        The current skills of the character.
+    """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.hit_points = kwargs.get("hit_points")
@@ -339,6 +567,14 @@ class AuctionDetails(ListedAuction):
             auction._parse_items_table(details_tables["ItemSummary"])
         if "StoreItemSummary" in details_tables:
             auction._parse_store_items_table(details_tables["StoreItemSummary"])
+        if "Mounts" in details_tables:
+            auction._parse_mounts_table(details_tables["Mounts"])
+        if "StoreMounts" in details_tables:
+            auction._parse_store_mounts_table(details_tables["StoreMounts"])
+        if "Outfits" in details_tables:
+            auction._parse_outfits_table(details_tables["Outfits"])
+        if "StoreOutfits" in details_tables:
+            auction._parse_store_outfits_table(details_tables["StoreOutfits"])
         if "Blessings" in details_tables:
             auction._parse_blessings_table(details_tables["Blessings"])
         if "Imbuements" in details_tables:
@@ -454,6 +690,39 @@ class AuctionDetails(ListedAuction):
             if item:
                 self.store_items.entries.append(item)
 
+    def _parse_mounts_table(self, table):
+        self.mounts = Mounts()
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for image_box in item_boxes:
+            mount = DisplayMount._parse_image_box(image_box)
+            if mount:
+                self.mounts.entries.append(mount)
+
+    def _parse_store_mounts_table(self, table):
+        self.store_mounts = Mounts()
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for image_box in item_boxes:
+            mount = DisplayMount._parse_image_box(image_box)
+            if mount:
+                self.store_mounts.entries.append(mount)
+
+    def _parse_outfits_table(cls, table):
+        entries = []
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for image_box in item_boxes:
+            outfit = DisplayOutfit._parse_image_box(image_box)
+            if outfit:
+                entries.append(outfit)
+        return entries
+
+    def _parse_store_outfits_table(self, table):
+        self.store_outfits = Outfits()
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for image_box in item_boxes:
+            outfit = DisplayOutfit._parse_image_box(image_box)
+            if outfit:
+                self.store_outfits.entries.append(outfit)
+
     def _parse_general_table(self, table):
         content_containers = table.find_all("table", {"class": "TableContent"})
         general_stats = self._parse_data_table(content_containers[0])
@@ -516,6 +785,16 @@ class SalesArgument(abc.Serializable):
 
 
 class SkillEntry(abc.Serializable):
+    """Represents the character's skills.
+
+    Attributes
+    ----------
+    name: :class:`name`
+        The name of the skill.
+    level: :class:`int`
+        The current level.
+    progress: :class:`float`
+        The percentage of progress for the next level."""
     def __init__(self, **kwargs):
         self.name = kwargs.get("name")
         self.level = kwargs.get("level")

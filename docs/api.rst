@@ -30,6 +30,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: BidType
+    :members:
+    :undoc-members:
+
 .. autoclass:: HouseOrder
     :members:
     :undoc-members:
@@ -91,6 +95,12 @@ Main Models
 The following models all contain their respective ``from_content`` methods.
 They all have their respective section in Tibia.com
 
+AuctionDetails
+---------------
+.. autoclass:: AuctionDetails
+   :members:
+   :inherited-members:
+
 BoostedCreature
 ---------------
 .. autoclass:: BoostedCreature
@@ -100,6 +110,12 @@ BoostedCreature
 Character
 ---------
 .. autoclass:: Character
+   :members:
+   :inherited-members:
+
+CharacterBazaar
+---------------
+.. autoclass:: CharacterBazaar
    :members:
    :inherited-members:
 
@@ -417,6 +433,12 @@ SalesArgument
 ScoreSet
 --------
 .. autoclass:: ScoreSet
+   :members:
+   :inherited-members:
+
+SkillsEntry
+-----------
+.. autoclass:: SkillsEntry
    :members:
    :inherited-members:
 
