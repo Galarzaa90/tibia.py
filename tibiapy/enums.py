@@ -119,6 +119,10 @@ class Sex(BaseEnum):
     MALE = "male"
     FEMALE = "female"
 
+class Addon(enum.Flag):
+    NONE = 0,
+    ADDON_1 = 1
+    ADDON_2 = 2
 
 class ThreadStatus(enum.Flag):
     """The possible status a thread can have.

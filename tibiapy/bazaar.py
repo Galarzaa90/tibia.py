@@ -150,54 +150,8 @@ class DisplayItem(abc.Serializable):
         return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id)
 
 
-class DisplayItem(abc.Serializable):
-    """Represents an item displayed on an auction, or the character's items in the auction detail.
-
-    Attributes
-    ----------
-    image_url: :class:`str`
-        The URL to the item's image.
-    name: :class:`str`
-        The item's name.
-    count: :class:`int`
-        The item's count.
-    item_id: :class:`int`
-        The item's client id.
-    """
-    def __init__(self, **kwargs):
-        self.image_url: str = kwargs.get("image_url")
-        self.name: str = kwargs.get("name")
-        self.count: int = kwargs.get("count", 1)
-        self.item_id: int = kwargs.get("item_id", 0)
-
-    __slots__ = (
-        "image_url",
-        "name",
-        "count",
-        "item_id",
-    )
-
-    @classmethod
-    def _parse_item_box(cls, item_box):
-        description = item_box["title"]
-        img_tag = item_box.find("img")
-        if not img_tag:
-            return None
-        amount_text = item_box.find("div", attrs={"class": "ObjectAmount"})
-        amount = parse_tibia_money(amount_text.text) if amount_text else 1
-        item_id = 0
-        name = None
-        m = id_regex.search(img_tag["src"])
-        if m:
-            item_id = int(m.group(1))
-        m = description_regex.search(description)
-        if m:
-            name = m.group(1)
-        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id)
-
-
 class DisplayImage(abc.Serializable):
-    """Represents an item displayed on an auction, or the character's items in the auction detail.
+    """Represents an image displayed in an auction.
 
     Attributes
     ----------
@@ -231,6 +185,17 @@ class DisplayImage(abc.Serializable):
 
 
 class DisplayMount(DisplayImage):
+    """Represents a mount owned or unlocked by the character.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL to the image.
+    name: :class:`str`
+        The mount's name.
+    mount_id: :class:`int`
+        The internal ID of the mount.
+    """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.mount_id = kwargs.get("mount_id", 0)
@@ -252,6 +217,19 @@ class DisplayMount(DisplayImage):
 
 
 class DisplayOutfit(DisplayImage):
+    """Represents an outfit owned or unlocked by the character.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL to the image.
+    name: :class:`str`
+        The outfit's name.
+    outfit_id: :class:`int`
+        The internal ID of the outfit.
+    addons: :class:`int`
+        The unlocked or owned addons for this outfit.
+    """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.outfit_id = kwargs.get("outfit_id", 0)
@@ -807,7 +785,8 @@ class SkillEntry(abc.Serializable):
     level: :class:`int`
         The current level.
     progress: :class:`float`
-        The percentage of progress for the next level."""
+        The percentage of progress for the next level.
+    """
     def __init__(self, **kwargs):
         self.name = kwargs.get("name")
         self.level = kwargs.get("level")
@@ -819,12 +798,26 @@ class SkillEntry(abc.Serializable):
         "progress",
     )
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} level={self.level} progress={self.progress}>"
+
 
 class OutfitImage(abc.Serializable):
+    """The image of the outfit currently being worn by the character.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL of the image.
+    outfit_id: :class:`int`
+        The ID of the outfit.
+    addons: :class:`int`
+        The addons displayed in the outfit.
+    """
     def __init__(self, **kwargs):
-        self.image_url = kwargs.get("image_url")
-        self.outfit_id = kwargs.get("outfit_id")
-        self.addons = kwargs.get("addons")
+        self.image_url: str = kwargs.get("image_url")
+        self.outfit_id: int = kwargs.get("outfit_id", 0)
+        self.addons: int = kwargs.get("addons", 0)
 
     __slots__ = (
         "image_url",
@@ -832,8 +825,25 @@ class OutfitImage(abc.Serializable):
         "addons",
     )
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} outfit_id={self.outfit_id} addons={self.addons} " \
+               f"image_url={self.image_url!r}>"
+
 
 class PaginatedSummary(abc.Serializable):
+    """Represents a paginated summary in the character auction section.
+
+    Attributes
+    ----------
+    page: :class:`int`
+        The current page being displayed.
+    total_pages: :class:`int`
+        The total number of pages.
+    results: :class:`int`
+        The total number of results.
+    entries: :class:`list`
+        The entries.
+    """
     def __init__(self, **kwargs):
         self.page = kwargs.get("page", 1)
         self.total_pages = kwargs.get("total_pages", 1)
@@ -853,6 +863,19 @@ class PaginatedSummary(abc.Serializable):
 
 
 class ItemSummary(PaginatedSummary):
+    """Items in a character's inventory and depot.
+
+    Attributes
+    ----------
+    page: :class:`int`
+        The current page being displayed.
+    total_pages: :class:`int`
+        The total number of pages.
+    results: :class:`int`
+        The total number of results.
+    entries: :class:`list` of :class:`DisplayItem`
+        The character's items.
+    """
     entries: List[DisplayItem]
 
     def __init__(self, **kwargs):
@@ -871,6 +894,19 @@ class ItemSummary(PaginatedSummary):
 
 
 class Mounts(PaginatedSummary):
+    """The mounts a character has unlocked or purchased.
+
+    Attributes
+    ----------
+    page: :class:`int`
+        The current page being displayed.
+    total_pages: :class:`int`
+        The total number of pages.
+    results: :class:`int`
+        The total number of results.
+    entries: :class:`list` of :class:`DisplayMount`
+        The character's mounts.
+    """
     entries: List[DisplayMount]
 
     def __init__(self, **kwargs):
@@ -889,6 +925,19 @@ class Mounts(PaginatedSummary):
 
 
 class Outfits(PaginatedSummary):
+    """The outfits the character has unlocked or purchased.
+
+    Attributes
+    ----------
+    page: :class:`int`
+        The current page being displayed.
+    total_pages: :class:`int`
+        The total number of pages.
+    results: :class:`int`
+        The total number of results.
+    entries: :class:`list` of :class:`DisplayOutfit`
+        The outfits the character has unlocked or purchased.
+    """
     entries: List[DisplayOutfit]
 
     def __init__(self, **kwargs):
@@ -907,7 +956,14 @@ class Outfits(PaginatedSummary):
 
 
 class BlessingEntry(abc.Serializable):
+    """Represents a blessing.
 
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the blessing.
+    amount: :class:`int`
+        The amount of blessing charges the character has."""
     def __init__(self, name, amount=0):
         self.name: str = name
         self.amount: int = amount
@@ -919,7 +975,15 @@ class BlessingEntry(abc.Serializable):
 
 
 class CharmEntry(abc.Serializable):
+    """An unlocked charm by the character.
 
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the charm.
+    cost: :class:`int`
+        The cost of the charm in charm points.
+    """
     def __init__(self, name, cost=0):
         self.name: str = name
         self.cost: int = cost
@@ -929,8 +993,19 @@ class CharmEntry(abc.Serializable):
         "cost",
     )
 
+    def __repr__(self):
+        return f"<{self.__class__.name} name={self.name!r} cost={self.cost}>"
+
 
 class AchievementEntry(abc.Serializable):
+    """An unlocked achievement by the character.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the achievement.
+    secret: :class:`bool`
+        Whether the achievement is secret or not."""
     def __init__(self, name, secret=False):
         self.name: str = name
         self.secret: int = secret
@@ -940,8 +1015,21 @@ class AchievementEntry(abc.Serializable):
         "secret",
     )
 
+    def __repr__(self):
+        return f"<{self.__class__.name} name={self.name!r} secret={self.secret}>"
+
 
 class BestiaryEntry(abc.Serializable):
+    """The bestiary progress for a specific creature.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the creature.
+    kills: :class:`int`
+        The number of kills of this creature the player has done.
+    step: :class:`int`
+        The current step to unlock this creature the character is in, where 4 is fully unlocked."""
     def __init__(self, name, kills, step):
         self.name: str = name
         self.kills: int = kills
@@ -952,3 +1040,11 @@ class BestiaryEntry(abc.Serializable):
         "kills",
         "step",
     )
+
+    def __repr__(self):
+        return f"<{self.__class__.name} name={self.name!r} kills={self.kills} step={self.step}>"
+
+    @property
+    def completed(self):
+        """:class:`bool`: Whether the entry is completed or not."""
+        return self.step == 4

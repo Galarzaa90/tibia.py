@@ -108,54 +108,56 @@ Character
    :members:
    :inherited-members:
 
-CharacterHouse
---------------
-.. autoclass:: CharacterHouse
-   :members:
-   :inherited-members:
-
-GuildMembership
----------------
-.. autoclass:: GuildMembership
-   :members:
-   :inherited-members:
+Auxiliary Classes
+-----------------
 
 AccountBadge
-------------------
+~~~~~~~~~~~~
 .. autoclass:: AccountBadge
    :members:
    :inherited-members:
 
-Achievement
---------------
-.. autoclass:: Achievement
-   :members:
-   :inherited-members:
-
 AccountInformation
-------------------
+~~~~~~~~~~~~~~~~~~
 .. autoclass:: AccountInformation
    :members:
    :inherited-members:
 
+Achievement
+~~~~~~~~~~~
+.. autoclass:: Achievement
+   :members:
+   :inherited-members:
+
+CharacterHouse
+~~~~~~~~~~~~~~
+.. autoclass:: CharacterHouse
+   :members:
+   :inherited-members:
+
 Death
------
+~~~~~
 .. autoclass:: Death
    :members:
    :inherited-members:
 
+GuildMembership
+~~~~~~~~~~~~~~~
+.. autoclass:: GuildMembership
+   :members:
+   :inherited-members:
+
 Killer
-------
+~~~~~~
 .. autoclass:: Killer
    :members:
    :inherited-members:
 
 OtherCharacter
---------------
+~~~~~~~~~~~~~~
 .. autoclass:: OtherCharacter
    :members:
    :inherited-members:
-
 
 Worlds
 ======
@@ -201,39 +203,41 @@ Guild
    :members:
    :inherited-members:
 
+ListedGuild
+-----------
+.. autoclass:: ListedGuild
+   :members:
+   :inherited-members:
+
+Auxiliary Classes
+-----------------
+GuildInvite
+~~~~~~~~~~~
+.. autoclass:: GuildInvite
+   :members:
+   :inherited-members:
+
 GuildHouse
-----------
+~~~~~~~~~~
 .. autoclass:: GuildHouse
    :members:
    :inherited-members:
 
 GuildMember
------------
+~~~~~~~~~~~
 .. autoclass:: GuildMember
    :members:
    :inherited-members:
 
-GuildInvite
------------
-.. autoclass:: GuildInvite
-   :members:
-   :inherited-members:
-
 GuildWars
----------
+~~~~~~~~~
 .. autoclass:: GuildWars
    :members:
    :inherited-members:
 
 GuildWarEntry
--------------
+~~~~~~~~~~~~~
 .. autoclass:: GuildWarEntry
-   :members:
-   :inherited-members:
-
-ListedGuild
------------
-.. autoclass:: ListedGuild
    :members:
    :inherited-members:
 
@@ -291,39 +295,43 @@ Tournament
    :members:
    :inherited-members:
 
-RuleSet
--------
-.. autoclass:: RuleSet
-   :members:
-   :inherited-members:
-
-ScoreSet
---------
-.. autoclass:: ScoreSet
-   :members:
-   :inherited-members:
-
-RewardEntry
------------
-.. autoclass:: RewardEntry
-   :members:
-   :inherited-members:
-
-ListedTournament
------------------------
-.. autoclass:: ListedTournament
-   :members:
-   :inherited-members:
-
 TournamentLeaderboard
 ---------------------
 .. autoclass:: TournamentLeaderboard
    :members:
    :inherited-members:
 
+Auxiliary Classes
+-----------------
+
+ListedTournament
+~~~~~~~~~~~~~~~~
+.. autoclass:: ListedTournament
+   :members:
+   :inherited-members:
+
 LeaderboardEntry
-----------------
+~~~~~~~~~~~~~~~~
 .. autoclass:: LeaderboardEntry
+   :members:
+   :inherited-members:
+
+RewardEntry
+~~~~~~~~~~~
+.. autoclass:: RewardEntry
+   :members:
+   :inherited-members:
+
+
+RuleSet
+~~~~~~~
+.. autoclass:: RuleSet
+   :members:
+   :inherited-members:
+
+ScoreSet
+~~~~~~~~
+.. autoclass:: ScoreSet
    :members:
    :inherited-members:
 
@@ -333,9 +341,15 @@ Models related to `Tibia.com's Forum section`_.
 
 .. _Tibia.com's Forum section: https://www.tibia.com/community/?subtopic=worldboards
 
-ListedBoard
------------
-.. autoclass:: ListedBoard
+CMPostArchive
+-------------
+.. autoclass:: CMPostArchive
+   :members:
+   :inherited-members:
+
+ForumAnnouncement
+-----------------
+.. autoclass:: ForumAnnouncement
     :members:
     :inherited-members:
 
@@ -345,21 +359,9 @@ ForumBoard
     :members:
     :inherited-members:
 
-ListedAnnouncement
-------------------
-.. autoclass:: ListedAnnouncement
-    :members:
-    :inherited-members:
-
-ListedThread
-------------
-.. autoclass:: ListedThread
-    :members:
-    :inherited-members:
-
-ForumAnnouncement
------------------
-.. autoclass:: ForumAnnouncement
+ForumPost
+---------
+.. autoclass:: ForumPost
     :members:
     :inherited-members:
 
@@ -369,41 +371,50 @@ ForumThread
     :members:
     :inherited-members:
 
-ForumPost
----------
-.. autoclass:: ForumPost
+ListedAnnouncement
+------------------
+.. autoclass:: ListedAnnouncement
     :members:
     :inherited-members:
 
-ForumAuthor
+ListedBoard
 -----------
+.. autoclass:: ListedBoard
+    :members:
+    :inherited-members:
+
+ListedThread
+------------
+.. autoclass:: ListedThread
+    :members:
+    :inherited-members:
+
+Auxiliary Classes
+-----------------
+CMPost
+~~~~~~
+.. autoclass:: CMPost
+   :members:
+   :inherited-members:
+
+ForumAuthor
+~~~~~~~~~~~
 .. autoclass:: ForumAuthor
     :members:
     :inherited-members:
 
 ForumEmoticon
--------------
+~~~~~~~~~~~~~
 .. autoclass:: ForumEmoticon
     :members:
     :inherited-members:
 
 LastPost
---------
+~~~~~~~~
 .. autoclass:: LastPost
     :members:
     :inherited-members:
 
-CMPostArchive
--------------
-.. autoclass:: CMPostArchive
-   :members:
-   :inherited-members:
-
-CMPost
-------
-.. autoclass:: CMPost
-   :members:
-   :inherited-members:
 
 News
 =======
@@ -454,15 +465,15 @@ ListedAuction
     :members:
     :inherited-members:
 
-AuctionDetails
----------------
-.. autoclass:: AuctionDetails
-   :members:
-   :inherited-members:
-
 SalesArgument
 -------------
 .. autoclass:: SalesArgument
+   :members:
+   :inherited-members:
+
+AuctionDetails
+---------------
+.. autoclass:: AuctionDetails
    :members:
    :inherited-members:
 
