@@ -470,7 +470,9 @@ def parse_popup(popup_content):
     parsed_html = bs4.BeautifulSoup(html, 'lxml')
     return title, parsed_html
 
+
 results_pattern = re.compile(r'Results: (\d+)')
+page_pattern = re.compile(r'page=(\d+)')
 
 
 def parse_pagination(pagination_block) -> Tuple[int, int, int]:
@@ -492,11 +494,18 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
     """
     pages_div, results_div = pagination_block.find_all("div")
     page_links = pages_div.find_all("a")
-    listed_pages = [int(p.text) for p in page_links]
+    listed_pages = []
+    for p in page_links:
+        try:
+            listed_pages.append(int(p.text))
+        except ValueError:
+            m = page_pattern.search(p["href"])
+            if m:
+                listed_pages.append(int(m.group(1)))
     page = 1
     total_pages = 1
     if listed_pages:
         page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
-        total_pages = max(int(page_links[-1].text), page)
+        total_pages = max(listed_pages[-1], page)
     results_count = int(results_pattern.search(results_div.text).group(1))
     return page, total_pages, results_count
