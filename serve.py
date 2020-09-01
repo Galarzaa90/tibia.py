@@ -1,4 +1,5 @@
 import json
+import logging
 import traceback
 import datetime
 
@@ -10,6 +11,13 @@ import tibiapy
 from tibiapy.utils import try_enum
 
 routes = web.RouteTableDef()
+
+logging_formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging_formatter)
+log = logging.getLogger("tibiapy")
+log.addHandler(console_handler)
+log.setLevel(logging.DEBUG)
 
 
 class CustomJson:
@@ -52,7 +60,11 @@ async def get_auction_history(request: web.Request):
 @routes.get('/auctions/{auction_id}')
 async def get_auction(request: web.Request):
     auction_id = request.match_info['auction_id']
-    boosted = await app["tibiapy"].fetch_auction(int(auction_id))
+    fetch_items = int(request.query.get("fetch_items", 1))
+    fetch_mounts = int(request.query.get("fetch_mounts", 1))
+    fetch_outfits = int(request.query.get("fetch_outfits", 1))
+    boosted = await app["tibiapy"].fetch_auction(int(auction_id), fetch_items=fetch_items, fetch_mounts=fetch_mounts,
+                                                 fetch_outfits=fetch_outfits)
     return web.json_response(boosted, dumps=CustomJson.dumps)
 
 

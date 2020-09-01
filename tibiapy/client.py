@@ -1,5 +1,7 @@
 import asyncio
 import datetime
+import json
+import logging
 import time
 import typing
 
@@ -33,6 +35,7 @@ CACHE_LIMIT = 300
 
 T = typing.TypeVar('T')
 
+log = logging.getLogger("tibiapy")
 
 class TibiaResponse(typing.Generic[T], abc.Serializable):
     """Represents a response from Tibia.com
@@ -150,7 +153,7 @@ class Client:
         else:
             raise NetworkError("Request error, status code: %d" % status_code)
 
-    async def _request(self, method, url, data=None):
+    async def _request(self, method, url, data=None, headers=None):
         """Base GET request, handling possible error statuses.
 
         Parameters
@@ -178,7 +181,9 @@ class Client:
         await self._session_ready.wait()
         try:
             init_time = time.perf_counter()
-            async with self.session.request(method, url, data=data) as resp:
+            log.info(f"{url} | {method} | Fetching...")
+            async with self.session.request(method, url, data=data, headers=headers) as resp:
+                log.info(f"{url} | {method} | {resp.status} {resp.reason}")
                 if "maintenance.tibia.com" in str(resp.url):
                     raise SiteMaintenance("Tibia.com is down for maintenance.")
                 self._handle_status(resp.status)
@@ -222,7 +227,7 @@ class Client:
             If the start_date is more recent than the end date or page number is not 1 or greater.
         """
 
-        response = await self._request("get", CharacterBazaar.get_current_auctions_url())
+        response = await self._request("GET", CharacterBazaar.get_current_auctions_url())
         start_time = time.perf_counter()
         cm_post_archive = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -258,30 +263,32 @@ class Client:
             If the start_date is more recent than the end date or page number is not 1 or greater.
         """
 
-        response = await self._request("get", CharacterBazaar.get_auctions_history_url())
+        response = await self._request("GET", CharacterBazaar.get_auctions_history_url())
         start_time = time.perf_counter()
         cm_post_archive = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, cm_post_archive, parsing_time)
 
-    async def fetch_auction(self, auction_id):
-        """Fetches the CM post archive.
+    async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False):
+        """Fetches an auction by its ID.
 
-        .. versionadded:: 3.0.0
+        .. versionadded:: 3.3.0
 
         Parameters
         ----------
-        start_date: :class: `datetime.date`
-            The start date to display.
-        end_date: :class: `datetime.date`
-            The end date to display.
-        page: :class:`int`
-            The desired page to display.
+        auction_id: :class:`int`
+            The ID of the auction.
+        fetch_items: :class:`bool`
+            Whether to fetch all of the character's items. By default only the first page is fetched.
+        fetch_mounts: :class:`bool`
+            Whether to fetch all of the character's mounts. By default only the first page is fetched.
+        fetch_outfits: :class:`bool`
+            Whether to fetch all of the character's outfits. By default only the first page is fetched.
 
         Returns
         -------
         :class:`TibiaResponse` of :class:`CMPostArchive`
-            The CM Post Archive.
+            The auction matching the ID if found.
 
         Raises
         ------
@@ -290,15 +297,46 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
-        ValueError
-            If the start_date is more recent than the end date or page number is not 1 or greater.
         """
-
-        response = await self._request("get", AuctionDetails.get_url(auction_id))
+        response = await self._request("GET", AuctionDetails.get_url(auction_id))
         start_time = time.perf_counter()
-        cm_post_archive = AuctionDetails.from_content(response.content, auction_id)
+        auction = AuctionDetails.from_content(response.content, auction_id)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, cm_post_archive, parsing_time)
+        if auction:
+            if fetch_items:
+                await self._fetch_all_pages(auction_id, auction.items, 0)
+                await self._fetch_all_pages(auction_id, auction.store_items, 1)
+            if fetch_mounts:
+                await self._fetch_all_pages(auction_id, auction.mounts, 2)
+                await self._fetch_all_pages(auction_id, auction.store_mounts, 3)
+            if fetch_outfits:
+                await self._fetch_all_pages(auction_id, auction.outfits, 4)
+                await self._fetch_all_pages(auction_id, auction.store_outfits, 5)
+        return TibiaResponse(response, auction, parsing_time)
+
+    async def _fetch_all_pages(self, auction_id, paginator, item_type):
+        if paginator is None or paginator.entry_class is None:
+            return
+        current_page = 2
+        while current_page <= paginator.total_pages:
+            content = await self._fetch_ajax_page(auction_id, item_type, current_page)
+            entries = AuctionDetails.parse_page_items(content, paginator.entry_class)
+            paginator.entries.extend(entries)
+            current_page += 1
+        paginator.fully_fetched = True
+
+    async def _fetch_ajax_page(self, auction_id, type_id, page):
+        headers = {"x-requested-with": "XMLHttpRequest"}
+        page_response = await self._request("GET", f"https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?"
+                                                   f"auctionid={auction_id}&"
+                                                   f"type={type_id}&"
+                                                   f"currentpage={page}",
+                                            headers=headers)
+        data = json.loads(page_response.content)
+        try:
+            return data['AjaxObjects'][0]['Data']
+        except KeyError:
+            return None
 
     async def fetch_cm_post_archive(self, start_date, end_date, page=1):
         """Fetches the CM post archive.
@@ -333,7 +371,7 @@ class Client:
             raise ValueError("start_date cannot be more recent than end_date")
         if page <= 0:
             raise ValueError("page cannot be lower than 1.")
-        response = await self._request("get", CMPostArchive.get_url(start_date, end_date, page))
+        response = await self._request("GET", CMPostArchive.get_url(start_date, end_date, page))
         start_time = time.perf_counter()
         cm_post_archive = CMPostArchive.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -366,7 +404,7 @@ class Client:
         """
         if (year is None and month is not None) or (year is not None and month is None):
             raise ValueError("both year and month must be defined or neither must be defined.")
-        response = await self._request("get", EventSchedule.get_url(month, year))
+        response = await self._request("GET", EventSchedule.get_url(month, year))
         start_time = time.perf_counter()
         calendar = EventSchedule.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -390,7 +428,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", ListedBoard.get_community_boards_url())
+        response = await self._request("GET", ListedBoard.get_community_boards_url())
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -413,7 +451,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("get", ListedBoard.get_support_boards_url())
+        response = await self._request("GET", ListedBoard.get_support_boards_url())
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -436,7 +474,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("get", ListedBoard.get_world_boards_url())
+        response = await self._request("GET", ListedBoard.get_world_boards_url())
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -459,7 +497,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("get", ListedBoard.get_trade_boards_url())
+        response = await self._request("GET", ListedBoard.get_trade_boards_url())
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -493,7 +531,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("get", ForumBoard.get_url(board_id, page, age))
+        response = await self._request("GET", ForumBoard.get_url(board_id, page, age))
         start_time = time.perf_counter()
         board = ForumBoard.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -523,7 +561,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("get", ForumThread.get_url(thread_id, page))
+        response = await self._request("GET", ForumThread.get_url(thread_id, page))
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -556,7 +594,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("get", ForumPost.get_url(post_id))
+        response = await self._request("GET", ForumPost.get_url(post_id))
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)
         if thread:
@@ -587,7 +625,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", ForumAnnouncement.get_url(announcement_id))
+        response = await self._request("GET", ForumAnnouncement.get_url(announcement_id))
         start_time = time.perf_counter()
         announcement = ForumAnnouncement.from_content(response.content, announcement_id)
         parsing_time = time.perf_counter() - start_time
@@ -611,7 +649,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", News.get_list_url())
+        response = await self._request("GET", News.get_list_url())
         start_time = time.perf_counter()
         boosted_creature = BoostedCreature.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -638,7 +676,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", Character.get_url(name.strip()))
+        response = await self._request("GET", Character.get_url(name.strip()))
         start_time = time.perf_counter()
         char = Character.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -665,7 +703,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", Guild.get_url(name))
+        response = await self._request("GET", Guild.get_url(name))
         start_time = time.perf_counter()
         guild = Guild.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -697,7 +735,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", GuildWars.get_url(name))
+        response = await self._request("GET", GuildWars.get_url(name))
         start_time = time.perf_counter()
         guild_wars = GuildWars.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -726,7 +764,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", House.get_url(house_id, world))
+        response = await self._request("GET", House.get_url(house_id, world))
         start_time = time.perf_counter()
         house = House.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -760,7 +798,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", Highscores.get_url(world, category, vocation, page))
+        response = await self._request("GET", Highscores.get_url(world, category, vocation, page))
         start_time = time.perf_counter()
         highscores = Highscores.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -787,7 +825,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", KillStatistics.get_url(world))
+        response = await self._request("GET", KillStatistics.get_url(world))
         start_time = time.perf_counter()
         kill_statistics = KillStatistics.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -814,7 +852,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", World.get_url(name))
+        response = await self._request("GET", World.get_url(name))
         start_time = time.perf_counter()
         world = World.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -850,7 +888,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", ListedHouse.get_list_url(world, town, house_type, status, order))
+        response = await self._request("GET", ListedHouse.get_list_url(world, town, house_type, status, order))
         start_time = time.perf_counter()
         world_houses = ListedHouse.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -877,7 +915,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", ListedGuild.get_world_list_url(world))
+        response = await self._request("GET", ListedGuild.get_world_list_url(world))
         start_time = time.perf_counter()
         guilds = ListedGuild.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -899,7 +937,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", WorldOverview.get_url())
+        response = await self._request("GET", WorldOverview.get_url())
         start_time = time.perf_counter()
         world_overview = WorldOverview.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -1016,7 +1054,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", News.get_url(news_id))
+        response = await self._request("GET", News.get_url(news_id))
         start_time = time.perf_counter()
         news = News.from_content(response.content, news_id)
         parsing_time = time.perf_counter() - start_time
@@ -1045,7 +1083,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", Tournament.get_url(tournament_cycle))
+        response = await self._request("GET", Tournament.get_url(tournament_cycle))
         start_time = time.perf_counter()
         tournament = Tournament.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -1078,7 +1116,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("get", TournamentLeaderboard.get_url(world, tournament_cycle, page))
+        response = await self._request("GET", TournamentLeaderboard.get_url(world, tournament_cycle, page))
         start_time = time.perf_counter()
         tournament_leaderboard = TournamentLeaderboard.from_content(response.content)
         parsing_time = time.perf_counter() - start_time

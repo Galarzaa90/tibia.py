@@ -132,7 +132,7 @@ class DisplayItem(abc.Serializable):
     )
 
     @classmethod
-    def _parse_item_box(cls, item_box):
+    def _parse_image_box(cls, item_box):
         description = item_box["title"]
         img_tag = item_box.find("img")
         if not img_tag:
@@ -378,7 +378,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
             auction.outfit = OutfitImage(image_url=outfit_img["src"], outfit_id=int(m.group(1)), addons=int(m.group(2)))
         item_boxes = auction_row.find_all("div", attrs={"class": "CVIcon"})
         for item_box in item_boxes:
-            item = DisplayItem._parse_item_box(item_box)
+            item = DisplayItem._parse_image_box(item_box)
             if item:
                 auction.displayed_items.append(item)
         dates_containers = auction_row.find("div", {"class": "ShortAuctionData"})
@@ -537,7 +537,7 @@ class AuctionDetails(ListedAuction):
         self.hirelings = kwargs.get("hirelings")
         self.hireling_jobs = kwargs.get("hireling_jobs")
         self.hireling_outfits = kwargs.get("hireling_outfits")
-        self.items = kwargs.get("items")
+        self.items: ItemSummary = kwargs.get("items")
         self.store_items = kwargs.get("store_items")
         self.mounts = kwargs.get("mounts")
         self.store_mounts = kwargs.get("store_mounts")
@@ -714,6 +714,17 @@ class AuctionDetails(ListedAuction):
             step = int(step_c)
             self.bestiary_progress.append(BestiaryEntry(name_c, kills, step))
 
+    @classmethod
+    def parse_page_items(cls, content, entry_class):
+        parsed_content = parse_tibiacom_content(content, builder='html5lib')
+        item_boxes = parsed_content.find_all("div", attrs={"class": "CVIcon"})
+        entries = []
+        for item_box in item_boxes:
+            item = entry_class._parse_image_box(item_box)
+            if item:
+                entries.append(item)
+        return entries
+
     def _parse_general_table(self, table):
         content_containers = table.find_all("table", {"class": "TableContent"})
         general_stats = self._parse_data_table(content_containers[0])
@@ -843,23 +854,34 @@ class PaginatedSummary(abc.Serializable):
         The total number of results.
     entries: :class:`list`
         The entries.
+    fully_fetched: :class:`bool`
+        Whether the summary was fetched completely, including all other pages.
     """
+    entry_class = None
+
     def __init__(self, **kwargs):
-        self.page = kwargs.get("page", 1)
-        self.total_pages = kwargs.get("total_pages", 1)
-        self.results = kwargs.get("results", 0)
+        self.page: int = kwargs.get("page", 1)
+        self.total_pages: int = kwargs.get("total_pages", 1)
+        self.results: int = kwargs.get("results", 0)
+        self.fully_fetched: bool = kwargs.get("fully_fetched", False)
         self.entries = kwargs.get("entries", [])
 
     __slots__ = (
         "page",
         "total_pages",
         "results",
+        "fully_fetched",
         "entries",
     )
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} results={self.results} " \
+               f"fully_fetched={self.fully_fetched} len(entries)={len(self.entries)}>"
+
     def _parse_pagination(self, parsed_content):
         pagination_block = parsed_content.find("div", attrs={"class": "BlockPageNavigationRow"})
-        self.page, self.total_pages, self.results = parse_pagination(pagination_block)
+        if pagination_block is not None:
+            self.page, self.total_pages, self.results = parse_pagination(pagination_block)
 
 
 class ItemSummary(PaginatedSummary):
@@ -875,8 +897,11 @@ class ItemSummary(PaginatedSummary):
         The total number of results.
     entries: :class:`list` of :class:`DisplayItem`
         The character's items.
+    fully_fetched: :class:`bool`
+        Whether the summary was fetched completely, including all other pages.
     """
     entries: List[DisplayItem]
+    entry_class = DisplayItem
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -887,7 +912,7 @@ class ItemSummary(PaginatedSummary):
         summary._parse_pagination(table)
         item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
         for item_box in item_boxes:
-            item = DisplayItem._parse_item_box(item_box)
+            item = DisplayItem._parse_image_box(item_box)
             if item:
                 summary.entries.append(item)
         return summary
@@ -906,8 +931,11 @@ class Mounts(PaginatedSummary):
         The total number of results.
     entries: :class:`list` of :class:`DisplayMount`
         The character's mounts.
+    fully_fetched: :class:`bool`
+        Whether the summary was fetched completely, including all other pages.
     """
     entries: List[DisplayMount]
+    entry_class = DisplayMount
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -937,8 +965,11 @@ class Outfits(PaginatedSummary):
         The total number of results.
     entries: :class:`list` of :class:`DisplayOutfit`
         The outfits the character has unlocked or purchased.
+    fully_fetched: :class:`bool`
+        Whether the summary was fetched completely, including all other pages.
     """
     entries: List[DisplayOutfit]
+    entry_class = DisplayOutfit
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
