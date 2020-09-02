@@ -47,8 +47,22 @@ async def home(request: web.Request):
 
 @routes.get('/auctions/')
 async def get_current_auctions(request: web.Request):
-    boosted = await app["tibiapy"].fetch_current_auctions()
-    return web.json_response(boosted, dumps=CustomJson.dumps)
+    page = int(request.query.get("page", 1))
+    filters = tibiapy.AuctionFilters()
+    filters.world = request.query.get("world")
+    filters.battleye = try_enum(tibiapy.BattlEyeTypeFilter, request.query.get("battleye"))
+    filters.pvp_type = try_enum(tibiapy.PvpTypeFilter, request.query.get("pvp_type"))
+    filters.min_level = tibiapy.utils.parse_integer(request.query.get("min_level"))
+    filters.max_level = tibiapy.utils.parse_integer(request.query.get("max_level"))
+    filters.vocation = try_enum(tibiapy.VocationAuctionFilter, request.query.get("vocation"))
+    filters.skill = try_enum(tibiapy.SkillFilter, request.query.get("skill"))
+    filters.min_skill_level = tibiapy.utils.parse_integer(request.query.get("min_skill_level"))
+    filters.max_skill_level = tibiapy.utils.parse_integer(request.query.get("max_skill_level"))
+    filters.order_by = try_enum(tibiapy.AuctionOrderBy, request.query.get("order_by"))
+    filters.order = try_enum(tibiapy.AuctionOrder, request.query.get("order"))
+    filters.item = request.query.get("item")
+    auctions = await app["tibiapy"].fetch_current_auctions(page, filters)
+    return web.json_response(auctions, dumps=CustomJson.dumps)
 
 
 @routes.get('/auctions/history')

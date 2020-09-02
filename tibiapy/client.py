@@ -197,24 +197,22 @@ class Client:
         except UnicodeDecodeError as e:
             raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
-    async def fetch_current_auctions(self):
+    async def fetch_current_auctions(self, page=1, filters=None):
         """Fetches the CM post archive.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        start_date: :class: `datetime.date`
-            The start date to display.
-        end_date: :class: `datetime.date`
-            The end date to display.
         page: :class:`int`
             The desired page to display.
+        filters: :class:`AuctionFilter`
+            The filtering criteria to use.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`CMPostArchive`
-            The CM Post Archive.
+        :class:`TibiaResponse` of :class:`CharacterBazaar`
+            The current auctions.
 
         Raises
         ------
@@ -227,11 +225,11 @@ class Client:
             If the start_date is more recent than the end date or page number is not 1 or greater.
         """
 
-        response = await self._request("GET", CharacterBazaar.get_current_auctions_url())
+        response = await self._request("GET", CharacterBazaar.get_current_auctions_url(page, filters))
         start_time = time.perf_counter()
-        cm_post_archive = CharacterBazaar.from_content(response.content)
+        current_auctions = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, cm_post_archive, parsing_time)
+        return TibiaResponse(response, current_auctions, parsing_time)
 
     async def fetch_auction_history(self):
         """Fetches the CM post archive.

@@ -84,6 +84,8 @@ def parse_integer(number: str, default: Optional[int] = 0):
     :class:`int`
         The represented integer, or the default value if invalid.
     """
+    if number is None:
+        return default
     try:
         number = re.sub(r'[,.]', '', number.strip())
         return int(number)
@@ -361,6 +363,8 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
         return cls(val)
     except ValueError:
         try:
+            if isinstance(val, str):
+                val = val.upper()
             return cls._member_map_[val]
         except KeyError:
             return default

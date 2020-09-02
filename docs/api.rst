@@ -21,16 +21,32 @@ Enumerations
 ============
 Enumerations are provided for various values in order to avoid depending on strings.
 
-
 .. autoclass:: AccountStatus
     :members:
     :undoc-members:
 
-.. autoclass:: Category
+.. autoclass:: AuctionOrder
     :members:
     :undoc-members:
 
+.. autoclass:: AuctionOrderBy
+    :members:
+    :undoc-members:
+
+.. autoclass:: BattlEyeTypeFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: BazaarType
+    :members:
+    :undoc-members:
+
+
 .. autoclass:: BidType
+    :members:
+    :undoc-members:
+
+.. autoclass:: Category
     :members:
     :undoc-members:
 
@@ -54,11 +70,19 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: PvpTypeFilter
+    :members:
+    :undoc-members:
+
 .. autoclass:: PvpType
     :members:
     :undoc-members:
 
 .. autoclass:: Sex
+    :members:
+    :undoc-members:
+
+.. autoclass:: SkillFilter
     :members:
     :undoc-members:
 
@@ -79,6 +103,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :undoc-members:
 
 .. autoclass:: Vocation
+    :members:
+    :undoc-members:
+
+.. autoclass:: VocationAuctionFilter
     :members:
     :undoc-members:
 
@@ -465,30 +493,99 @@ ListedAuction
     :members:
     :inherited-members:
 
-SalesArgument
--------------
-.. autoclass:: SalesArgument
-   :members:
-   :inherited-members:
-
 AuctionDetails
 ---------------
 .. autoclass:: AuctionDetails
    :members:
    :inherited-members:
 
-SkillsEntry
------------
-.. autoclass:: SkillsEntry
+Auxiliary Classes
+-----------------
+
+AchievementEntry
+~~~~~~~~~~~~~~~~
+.. autoclass:: AchievementEntry
+   :members:
+   :inherited-members:
+
+AuctionFilters
+~~~~~~~~~~~~~~
+.. autoclass:: AuctionFilters
+   :members:
+   :inherited-members:
+
+
+BestiaryEntry
+~~~~~~~~~~~~~
+.. autoclass:: BestiaryEntry
+   :members:
+   :inherited-members:
+
+BlessingEntry
+~~~~~~~~~~~~~
+.. autoclass:: BlessingEntry
+   :members:
+   :inherited-members:
+
+CharmsEntry
+~~~~~~~~~~~
+.. autoclass:: CharmEntry
    :members:
    :inherited-members:
 
 DisplayItem
------------
+~~~~~~~~~~~
 .. autoclass:: DisplayItem
    :members:
    :inherited-members:
 
+DisplayMount
+~~~~~~~~~~~~
+.. autoclass:: DisplayMount
+   :members:
+   :inherited-members:
+
+DisplayOutfit
+~~~~~~~~~~~~~
+.. autoclass:: DisplayOutfit
+   :members:
+   :inherited-members:
+
+ItemSummary
+~~~~~~~~~~~
+.. autoclass:: ItemSummary
+   :members:
+   :inherited-members:
+
+Mounts
+~~~~~~~~~~~
+.. autoclass:: Mounts
+   :members:
+   :inherited-members:
+
+OutfitImage
+~~~~~~~~~~~
+.. autoclass:: OutfitImage
+   :members:
+   :inherited-members:
+
+Outfits
+~~~~~~~
+.. autoclass:: Outfits
+   :members:
+   :inherited-members:
+
+SalesArgument
+~~~~~~~~~~~~~~
+.. autoclass:: SalesArgument
+   :members:
+   :inherited-members:
+
+SkillEntry
+~~~~~~~~~~
+.. autoclass:: SkillEntry
+   :members:
+   :inherited-members:
 
 Kill Statistics
 ===============

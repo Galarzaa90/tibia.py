@@ -2,7 +2,11 @@ import enum
 
 __all__ = (
     'AccountStatus',
+    'AuctionOrder',
+    'AuctionOrderBy',
     'Category',
+    'BattlEyeTypeFilter',
+    'BazaarType',
     'BidType',
     'HouseOrder',
     'HouseStatus',
@@ -10,12 +14,15 @@ __all__ = (
     'NewsCategory',
     'NewsType',
     'PvpType',
+    'PvpTypeFilter',
     'Sex',
+    'SkillFilter',
     'ThreadStatus',
     'TournamentWorldType',
     'TournamentPhase',
     'TransferType',
     'Vocation',
+    'VocationAuctionFilter',
     'VocationFilter',
     'WorldLocation',
 )
@@ -38,6 +45,44 @@ class AccountStatus(BaseEnum):
     """Possible account statuses."""
     FREE_ACCOUNT = "Free Account"
     PREMIUM_ACCOUNT = "Premium Account"
+
+
+class AuctionOrder(NumericEnum):
+    """The possible ordering directions for auctions.
+
+    The field or value used for the ordering is defined by :class:`AuctionOrderBy`."""
+    HIGHEST_LATEST = 0
+    """Order by the highest or latest value."""
+    LOWEST_EARLIEST = 1
+    """Order by the lowest or earliest value."""
+
+
+class AuctionOrderBy(NumericEnum):
+    """The possible values to order the auctions by."""
+    BID = 0
+    """The currently displayed bid for the auction."""
+    END_DATE = 1
+    """The end date of the auction."""
+    LEVEL = 2
+    """The experience level of the auctioned character."""
+    START_DATE = 3
+    """The start date of the auction."""
+
+
+class BattlEyeTypeFilter(NumericEnum):
+    """The possible BattlEye filters that can be used for auctions."""
+    INITIALLY_PROTECTED = 1
+    """Worlds protected from the beginning, represented by a green symbol."""
+    PROTECTED = 2
+    """Worlds protected after the world was created, represented by a yellow symbol."""
+    NOT_PROTECTED = 3
+    """Worlds without any BattlEye protection."""
+
+
+class BazaarType(BaseEnum):
+    """The possible bazaar types."""
+    CURRENT = "Current Auctions"
+    HISTORY = "Auction History"
 
 
 class BidType(BaseEnum):
@@ -114,15 +159,32 @@ class PvpType(BaseEnum):
     HARDCORE_PVP = "Hardcore PvP"
 
 
+class PvpTypeFilter(NumericEnum):
+    """The possible PVP filters that can be used for auctions."""
+    OPEN_PVP = 0
+    OPTIONAL_PVP = 1
+    HARDCORE_PVP = 2
+    RETRO_OPEN_PVP = 3
+    RETRO_HARDCORE_PVP = 4
+
+
 class Sex(BaseEnum):
     """Possible character sexes."""
     MALE = "male"
     FEMALE = "female"
 
-class Addon(enum.Flag):
-    NONE = 0,
-    ADDON_1 = 1
-    ADDON_2 = 2
+
+class SkillFilter(NumericEnum):
+    """The different skill filters for auctions."""
+    AXE_FIGHTING = 10
+    CLUB_FIGHTING = 9
+    DISTANCE_FIGHTING = 7
+    FISHING = 13
+    FIST_FIGHTING = 11
+    MAGIC_LEVEL = 1
+    SHIELDING = 6
+    SWORD_FIGHTING = 8
+
 
 class ThreadStatus(enum.Flag):
     """The possible status a thread can have.
@@ -207,6 +269,15 @@ class Vocation(BaseEnum):
     ELITE_KNIGHT = "Elite Knight"
     ROYAL_PALADIN = "Royal Paladin"
     MASTER_SORCERER = "Master Sorcerer"
+
+
+class VocationAuctionFilter(NumericEnum):
+    """The possible vocation filters for auctions."""
+    NONE = 1
+    DRUID = 2
+    KNIGHT = 3
+    PALADIN = 4
+    SORCERER = 5
 
 
 class VocationFilter(NumericEnum):
