@@ -4,7 +4,7 @@ import urllib.parse
 
 from typing import List, Optional
 
-from tibiapy import abc, Sex, Vocation
+from tibiapy import abc, InvalidContent, Sex, Vocation
 from tibiapy.abc import BaseCharacter
 from tibiapy.enums import AuctionOrder, AuctionOrderBy, BattlEyeTypeFilter, BazaarType, BidType, PvpTypeFilter, \
     SkillFilter, \
@@ -37,7 +37,7 @@ __all__ = (
 results_pattern = re.compile(r'Results: (\d+)')
 char_info_regex = re.compile(r'Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| World: (\w+)')
 id_addon_regex = re.compile(r'(\d+)_(\d)\.gif')
-id_regex = re.compile(r'(\d+).gif')
+id_regex = re.compile(r'(\d+).(?:gif|png)')
 description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
 quotes = re.compile(r'"([^"]+)"')
 
@@ -119,31 +119,46 @@ class CharacterBazaar(abc.Serializable):
         return get_tibia_url("charactertrade", "pastcharactertrades", currentpage=page)
 
     @classmethod
-    def from_content(cls, content, bazaar_type=None):
-        parsed_content = parse_tibiacom_content(content, builder='html5lib')
-        tables = parsed_content.find_all("div", attrs={"class": "TableContainer"})
-        filter_table = None
-        if len(tables) == 1:
-            auctions_table = tables[0]
-        else:
-            filter_table, auctions_table, *_ = tables
+    def from_content(cls, content):
+        """Gets the bazaar's information and list of auctions from Tibia.com
 
-        bazaar = cls()
-        if bazaar_type is None:
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the bazaar section at Tibia.com.
+
+        Returns
+        -------
+        :class:`CharacterBazaar`
+            The character bazaar with the entries found.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content, builder='html5lib')
+            tables = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+            filter_table = None
+            if len(tables) == 1:
+                auctions_table = tables[0]
+            else:
+                filter_table, auctions_table, *_ = tables
+
+            bazaar = cls()
             bazaar.type = BazaarType.CURRENT if filter_table else BazaarType.HISTORY
 
-        if filter_table:
-            bazaar._parse_filter_table(filter_table)
+            if filter_table:
+                bazaar._parse_filter_table(filter_table)
 
-        page_navigation_row = parsed_content.find("td", attrs={"class": "PageNavigation"})
-        bazaar.page, bazaar.total_pages, bazaar.results_count = parse_pagination(page_navigation_row)
+            page_navigation_row = parsed_content.find("td", attrs={"class": "PageNavigation"})
+            if page_navigation_row:
+                bazaar.page, bazaar.total_pages, bazaar.results_count = parse_pagination(page_navigation_row)
 
-        auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
-        for auction_row in auction_rows:
-            auction = ListedAuction._parse_auction(auction_row)
+            auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
+            for auction_row in auction_rows:
+                auction = ListedAuction._parse_auction(auction_row)
 
-            bazaar.entries.append(auction)
-        return bazaar
+                bazaar.entries.append(auction)
+            return bazaar
+        except ValueError as e:
+            raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e)
 
     def _parse_filter_table(self, table):
         self.filters = filters = AuctionFilters()
@@ -503,7 +518,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         self.world: str = kwargs.get("world")
         self.vocation: Vocation = kwargs.get("vocation")
         self.sex: Sex = kwargs.get("sex")
-        self.outfit: str = kwargs.get("outfit")
+        self.outfit: OutfitImage = kwargs.get("outfit")
         self.displayed_items: List[DisplayItem] = kwargs.get("displayed_items", [])
         self.sales_arguments: List[SalesArgument] = kwargs.get("sales_arguments", [])
         self.auction_start: datetime.datetime = kwargs.get("auction_start")
@@ -595,7 +610,13 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         argument_entries = auction_row.find_all("div", {"class": "Entry"})
         for entry in argument_entries:
             img = entry.find("img")
-            auction.sales_arguments.append(SalesArgument(content=entry.text, category_image=img["src"]))
+            img_url = img["src"]
+            category_id = 0
+            m = id_regex.search(img_url)
+            if m:
+                category_id = parse_integer(m.group(1))
+            auction.sales_arguments.append(SalesArgument(content=entry.text, category_image=img_url,
+                                                         category_id=category_id))
         return auction
 
 
@@ -970,17 +991,21 @@ class SalesArgument(abc.Serializable):
         The URL to the category icon.
     content: :class:`str`
         The content of the sales argument."""
+
     __slots__ = (
+        "category_id",
         "category_image",
         "content",
     )
 
     def __init__(self, **kwargs):
-        self.category_image = kwargs.get("category_image")
-        self.content = kwargs.get("content")
+        self.category_id: int = kwargs.get("category_id")
+        self.category_image: str = kwargs.get("category_image")
+        self.content: str = kwargs.get("content")
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} content={self.content!r} category_image={self.category_image}>"
+        return f"<{self.__class__.__name__} category_id={self.category_id} content={self.content!r} " \
+               f"category_image={self.category_image}>"
 
 
 class SkillEntry(abc.Serializable):

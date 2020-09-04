@@ -497,19 +497,30 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
         The total number of results.
     """
     pages_div, results_div = pagination_block.find_all("div")
-    page_links = pages_div.find_all("a")
-    listed_pages = []
-    for p in page_links:
-        try:
-            listed_pages.append(int(p.text))
-        except ValueError:
-            m = page_pattern.search(p["href"])
+    current_page_link = pages_div.find("span", {"class": "CurrentPageLink"})
+    page_links = pages_div.find_all("span", {"class": "PageLink"})
+    # pages_with_links = pages_div.select(#)
+    first_or_last_pages = pages_div.find_all("span", {"class": "FirstOrLastElement"})
+    page = -1
+    total_pages = -1
+    if first_or_last_pages:
+        last_page_link = first_or_last_pages[-1].find("a")
+        if last_page_link:
+            m = page_pattern.search(last_page_link["href"])
             if m:
-                listed_pages.append(int(m.group(1)))
-    page = 1
-    total_pages = 1
-    if listed_pages:
-        page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
-        total_pages = max(listed_pages[-1], page)
+                total_pages = int(m.group(1))
+        else:
+            last_page_link = page_links[-2].find("a")
+            total_pages = int(last_page_link.text)+1
+    else:
+        last_page_link = page_links[-1]
+        total_pages = int(last_page_link.text)
+    try:
+        page = int(current_page_link.text)
+    except ValueError:
+        if "First" in current_page_link.text:
+            page = 1
+        else:
+            page = total_pages
     results_count = int(results_pattern.search(results_div.text).group(1))
     return page, total_pages, results_count

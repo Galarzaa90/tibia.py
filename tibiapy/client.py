@@ -154,7 +154,7 @@ class Client:
             raise NetworkError("Request error, status code: %d" % status_code)
 
     async def _request(self, method, url, data=None, headers=None):
-        """Base GET request, handling possible error statuses.
+        """Base request, handling possible error statuses.
 
         Parameters
         ----------
@@ -198,9 +198,9 @@ class Client:
             raise NetworkError('UnicodeDecodeError: %s' % e, e)
 
     async def fetch_current_auctions(self, page=1, filters=None):
-        """Fetches the CM post archive.
+        """Fetches the current auctions in the bazaar
 
-        .. versionadded:: 3.0.0
+        .. versionadded:: 3.3.0
 
         Parameters
         ----------
@@ -231,24 +231,20 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, current_auctions, parsing_time)
 
-    async def fetch_auction_history(self):
-        """Fetches the CM post archive.
+    async def fetch_auction_history(self, page=1):
+        """Fetches the auction history of the bazaar.
 
-        .. versionadded:: 3.0.0
+        .. versionadded:: 3.3.0
 
         Parameters
         ----------
-        start_date: :class: `datetime.date`
-            The start date to display.
-        end_date: :class: `datetime.date`
-            The end date to display.
         page: :class:`int`
-            The desired page to display.
+            The page to display.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`CMPostArchive`
-            The CM Post Archive.
+        :class:`TibiaResponse` of :class:`CharacterBazaar`
+            The character bazaar containing the auction history.
 
         Raises
         ------
@@ -261,11 +257,11 @@ class Client:
             If the start_date is more recent than the end date or page number is not 1 or greater.
         """
 
-        response = await self._request("GET", CharacterBazaar.get_auctions_history_url())
+        response = await self._request("GET", CharacterBazaar.get_auctions_history_url(page))
         start_time = time.perf_counter()
-        cm_post_archive = CharacterBazaar.from_content(response.content)
+        auction_history = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, cm_post_archive, parsing_time)
+        return TibiaResponse(response, auction_history, parsing_time)
 
     async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False):
         """Fetches an auction by its ID.
@@ -285,7 +281,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`CMPostArchive`
+        :class:`TibiaResponse` of :class:`AuctionDetails`
             The auction matching the ID if found.
 
         Raises
@@ -313,6 +309,17 @@ class Client:
         return TibiaResponse(response, auction, parsing_time)
 
     async def _fetch_all_pages(self, auction_id, paginator, item_type):
+        """Fetches all the pages of a auction paginator.
+
+        Parameters
+        ----------
+        auction_id: :class:`int`
+            The id of the auction.
+        paginator:
+            The paginator object
+        item_type: :class:`int`
+            The item type.
+        """
         if paginator is None or paginator.entry_class is None:
             return
         current_page = 2
@@ -324,6 +331,22 @@ class Client:
         paginator.fully_fetched = True
 
     async def _fetch_ajax_page(self, auction_id, type_id, page):
+        """Fetches an ajax page from the paginated summaries in the auction section.
+
+        Parameters
+        ----------
+        auction_id: :class:`int`
+            The id of the auction.
+        type_id: :class:`int`
+            The ID of the type of the catalog to check.
+        page: :class:`int`
+            The page number to fetch.
+
+        Returns
+        -------
+        :class:`str`:
+            The HTML content of the obtained page.
+        """
         headers = {"x-requested-with": "XMLHttpRequest"}
         page_response = await self._request("GET", f"https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?"
                                                    f"auctionid={auction_id}&"

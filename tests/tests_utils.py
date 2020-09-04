@@ -147,3 +147,136 @@ class TestUtils(TestCommons, unittest.TestCase):
                          get_tibia_url("community", "character", name="Galarzaa Fidera"))
         self.assertEqual("https://www.tibia.com/community/?subtopic=character&name=Fn%F6",
                          get_tibia_url("community", "character", name="Fnö"))
+
+    def test_parse_pagination_collapsed_first_page(self):
+        """Parsing with current page 1 out of 915"""
+        content = """<td class="PageNavigation"><small><div style="float: left;"><b>» <span class="PageLink 
+        FirstOrLastElement"><span class="CurrentPageLink">First Page</span></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=2">2</a></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=3">3</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=4">4</a></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=5">5</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=6">6</a></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=7">7</a></span> ... <span class="PageLink FirstOrLastElement"><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=915">Last 
+        Page</a></span></b></div><div style="float: right;"><b>» Results: 22874</b></div></small></td>"""
+        parsed_content = utils.parse_tibiacom_content(content, builder="html5lib")
+        page, total_pages, results_count = utils.parse_pagination(parsed_content)
+        self.assertEqual(1, page)
+        self.assertEqual(915, total_pages)
+        self.assertEqual(22874, results_count)
+
+    def test_parse_pagination_collapse_second_page(self):
+        """Parsing with current page 2 out of 928"""
+        content = """<td class="PageNavigation"><small><div style="float: left;"><b>» <span class="PageLink 
+        FirstOrLastElement"><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=1">First Page</a></span> <span class="PageLink "><span class="CurrentPageLink">2</span></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=3">3</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=4">4</a></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=5">5</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=6">6</a></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=7">7</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=8">8</a></span> ... 
+        <span class="PageLink FirstOrLastElement"><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=928">Last 
+        Page</a></span></b></div><div style="float: right;"><b>» Results: 23197</b></div></small></td> """
+        parsed_content = utils.parse_tibiacom_content(content, builder="html5lib")
+        page, total_pages, results_count = utils.parse_pagination(parsed_content)
+        self.assertEqual(2, page)
+        self.assertEqual(928, total_pages)
+        self.assertEqual(23197, results_count)
+
+    def test_parse_pagination_collapse_last_page(self):
+        """Parsing the last page out of 928"""
+        content = """<td class="PageNavigation"><small><div style="float: left;"><b>» <span class="PageLink 
+        FirstOrLastElement"><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=1">First Page</a></span> ... <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=925">925</a></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp
+        ;currentpage=926">926</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades&amp;currentpage=927">927</a></span> 
+        <span class="PageLink FirstOrLastElement"><span class="CurrentPageLink">Last Page</span></span></b></div><div 
+        style="float: right;"><b>» Results: 23197</b></div></small></td> """
+        parsed_content = utils.parse_tibiacom_content(content, builder="html5lib")
+        page, total_pages, results_count = utils.parse_pagination(parsed_content)
+        self.assertEqual(928, page)
+        self.assertEqual(928, total_pages)
+        self.assertEqual(23197, results_count)
+
+    def test_parse_pagination_collapsed_middle(self):
+        """Parsing page 300 out of 503"""
+        content = """<td class="PageNavigation"><small><div style="float: left;"><b>» <span class="PageLink 
+        FirstOrLastElement"><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
+        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
+        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
+        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=1">First Page</a></span> ... 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
+        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
+        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
+        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=297">297</a></span> <span 
+        class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
+        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
+        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
+        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=298">298</a></span> <span 
+        class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
+        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
+        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
+        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=299">299</a></span> <span 
+        class="PageLink "><span class="CurrentPageLink">300</span></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp;filter_profession=0&amp
+        ;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp;filter_worldpvptype=9&amp
+        ;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp;filter_skillrangeto=0&amp
+        ;order_column=1&amp;order_direction=1&amp;currentpage=301">301</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp;filter_profession=0&amp
+        ;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp;filter_worldpvptype=9&amp
+        ;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp;filter_skillrangeto=0&amp
+        ;order_column=1&amp;order_direction=1&amp;currentpage=302">302</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp;filter_profession=0&amp
+        ;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp;filter_worldpvptype=9&amp
+        ;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp;filter_skillrangeto=0&amp
+        ;order_column=1&amp;order_direction=1&amp;currentpage=303">303</a></span> ... <span class="PageLink 
+        FirstOrLastElement"><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
+        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
+        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
+        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=503">Last 
+        Page</a></span></b></div><div style="float: right;"><b>» Results: 12568</b></div></small></td> """
+        parsed_content = utils.parse_tibiacom_content(content, builder="html5lib")
+        page, total_pages, results_count = utils.parse_pagination(parsed_content)
+        self.assertEqual(300, page)
+        self.assertEqual(503, total_pages)
+        self.assertEqual(12568, results_count)
+
+    def parse_parse_pagination_not_collapsed_first_page(self):
+        """Parsing first page with page numbers not collapsed"""
+        content = """<small><div style="float: left;"><b>» Pages: <span 
+        class="PageLink "><span class="CurrentPageLink">1</span></span> <span class="PageLink "><a 
+        class="CipAjaxLink" ajaxcip="true" ajaxcip_datatype="Container" 
+        href="https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?auctionid=29122&amp;type=0&amp
+        ;currentpage=2">2</a></span> <span class="PageLink "><a class="CipAjaxLink" ajaxcip="true" 
+        ajaxcip_datatype="Container" href="https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?auctionid
+        =29122&amp;type=0&amp;currentpage=3">3</a></span> <span class="PageLink "><a class="CipAjaxLink" 
+        ajaxcip="true" ajaxcip_datatype="Container" 
+        href="https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?auctionid=29122&amp;type=0&amp
+        ;currentpage=4">4</a></span> <span class="PageLink "><a class="CipAjaxLink" ajaxcip="true" 
+        ajaxcip_datatype="Container" href="https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?auctionid
+        =29122&amp;type=0&amp;currentpage=5">5</a></span> <span class="PageLink "><a class="CipAjaxLink" 
+        ajaxcip="true" ajaxcip_datatype="Container" 
+        href="https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?auctionid=29122&amp;type=0&amp
+        ;currentpage=6">6</a></span> <span class="PageLink "><a class="CipAjaxLink" ajaxcip="true" 
+        ajaxcip_datatype="Container" href="https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?auctionid
+        =29122&amp;type=0&amp;currentpage=7">7</a></span> <span class="PageLink "><a class="CipAjaxLink" 
+        ajaxcip="true" ajaxcip_datatype="Container" 
+        href="https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?auctionid=29122&amp;type=0&amp
+        ;currentpage=8">8</a></span></b></div><div style="float: right;"><b>» Results: 567</b></div></small>"""
+        parsed_content = utils.parse_tibiacom_content(content, builder="html5lib")
+        page, total_pages, results_count = utils.parse_pagination(parsed_content)
+        self.assertEqual(1, page)
+        self.assertEqual(8, total_pages)
+        self.assertEqual(567, results_count)
+

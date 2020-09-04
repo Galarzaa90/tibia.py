@@ -74,9 +74,9 @@ async def get_auction_history(request: web.Request):
 @routes.get('/auctions/{auction_id}')
 async def get_auction(request: web.Request):
     auction_id = request.match_info['auction_id']
-    fetch_items = int(request.query.get("fetch_items", 1))
-    fetch_mounts = int(request.query.get("fetch_mounts", 1))
-    fetch_outfits = int(request.query.get("fetch_outfits", 1))
+    fetch_items = int(request.query.get("fetch_items", 0))
+    fetch_mounts = int(request.query.get("fetch_mounts", 0))
+    fetch_outfits = int(request.query.get("fetch_outfits", 0))
     boosted = await app["tibiapy"].fetch_auction(int(auction_id), fetch_items=fetch_items, fetch_mounts=fetch_mounts,
                                                  fetch_outfits=fetch_outfits)
     return web.json_response(boosted, dumps=CustomJson.dumps)
