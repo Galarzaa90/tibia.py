@@ -1,8 +1,9 @@
 import datetime
 import re
 import urllib.parse
+from abc import abstractmethod
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from tibiapy import abc, InvalidContent, Sex, Vocation
 from tibiapy.abc import BaseCharacter
@@ -42,186 +43,26 @@ description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
 quotes = re.compile(r'"([^"]+)"')
 
 
-class CharacterBazaar(abc.Serializable):
-    """Represents the char bazaar.
+class AchievementEntry(abc.Serializable):
+    """An unlocked achievement by the character.
 
     Attributes
     ----------
-    page: :class:`int`
-        The page being currently viewed.
-    total_pages: :class:`int`
-        The total number of pages available.
-    results_count: :class:`int`
-        The number of auctions listed.
-    entries: :class:`list` of :class:`ListedAuction`
-        The auctions displayed.
-    type: :class:`BazaarType`
-        The type of auctions being displayed, either current or auction history.
-    filters: :class:`AuctionFilters`
-        The currently set filtering options.
-    """
+    name: :class:`str`
+        The name of the achievement.
+    secret: :class:`bool`
+        Whether the achievement is secret or not."""
+    def __init__(self, name, secret=False):
+        self.name: str = name
+        self.secret: int = secret
+
     __slots__ = (
-        "type",
-        "filters",
-        "page",
-        "total_pages",
-        "results_count",
-        "entries",
+        "name",
+        "secret",
     )
 
-    def __init__(self, **kwargs):
-        self.type: BazaarType = kwargs.get("type")
-        self.filters: Optional[AuctionFilters] = kwargs.get("filters")
-        self.page: int = kwargs.get("page", 1)
-        self.total_pages: int = kwargs.get("total_pages", 1)
-        self.results_count: int = kwargs.get("results_count", 0)
-        self.entries: List[ListedAuction] = kwargs.get("entries", [])
-
     def __repr__(self):
-        return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages}" \
-               f"results_count={self.results_count}>"
-
-    @property
-    def url(self):
-        """:class:`st`: Gets the URL to the bazaar."""
-        return self.get_auctions_history_url(self.page) if self.type == BazaarType.HISTORY else \
-            self.get_current_auctions_url(self.page, self.filters)
-
-    @classmethod
-    def get_current_auctions_url(cls, page=1, filters=None):
-        """Gets the URL to the list of current auctions in Tibia.com
-
-        Parameters
-        ----------
-        page: :class:`int`
-            The page to show the URL for.
-        filters: :class:`AuctionFilters`
-            The filtering criteria to use.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the current auctions section in Tibia.com
-        """
-        if filters is None:
-            filters = AuctionFilters()
-        return get_tibia_url("charactertrade", "currentcharactertrades", currentpage=page, **filters.query_params)
-
-    @classmethod
-    def get_auctions_history_url(cls, page=1):
-        """Gets the URL to the auction history in Tibia.com
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the auction history section in Tibia.com
-        """
-        return get_tibia_url("charactertrade", "pastcharactertrades", currentpage=page)
-
-    @classmethod
-    def from_content(cls, content):
-        """Gets the bazaar's information and list of auctions from Tibia.com
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the bazaar section at Tibia.com.
-
-        Returns
-        -------
-        :class:`CharacterBazaar`
-            The character bazaar with the entries found.
-        """
-        try:
-            parsed_content = parse_tibiacom_content(content, builder='html5lib')
-            tables = parsed_content.find_all("div", attrs={"class": "TableContainer"})
-            filter_table = None
-            if len(tables) == 1:
-                auctions_table = tables[0]
-            else:
-                filter_table, auctions_table, *_ = tables
-
-            bazaar = cls()
-            bazaar.type = BazaarType.CURRENT if filter_table else BazaarType.HISTORY
-
-            if filter_table:
-                bazaar._parse_filter_table(filter_table)
-
-            page_navigation_row = parsed_content.find("td", attrs={"class": "PageNavigation"})
-            if page_navigation_row:
-                bazaar.page, bazaar.total_pages, bazaar.results_count = parse_pagination(page_navigation_row)
-
-            auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
-            for auction_row in auction_rows:
-                auction = ListedAuction._parse_auction(auction_row)
-
-                bazaar.entries.append(auction)
-            return bazaar
-        except ValueError as e:
-            raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e)
-
-    def _parse_filter_table(self, table):
-        self.filters = filters = AuctionFilters()
-        world_select = table.find("select", {"name": "filter_world"})
-        selected_world_option = world_select.find("option", {"selected": True})
-        if selected_world_option is None or not selected_world_option["value"]:
-            filters.world = None
-        else:
-            filters.world = selected_world_option["value"]
-
-        pvp_select = table.find("select", {"name": "filter_worldpvptype"})
-        selected_pvp_option = pvp_select.find("option", {"selected": True})
-        if selected_pvp_option is None or not selected_pvp_option["value"]:
-            filters.pvp_type = None
-        else:
-            filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(selected_pvp_option["value"], None))
-
-        battleye_select = table.find("select", {"name": "filter_worldbattleyestate"})
-        selected_battleye_option = battleye_select.find("option", {"selected": True})
-        if selected_battleye_option is None or not selected_battleye_option["value"]:
-            filters.battleye = None
-        else:
-            filters.battleye = try_enum(BattlEyeTypeFilter, parse_integer(selected_battleye_option["value"], None))
-
-        vocation_select = table.find("select", {"name": "filter_profession"})
-        selected_vocation_option = vocation_select.find("option", {"selected": True})
-        if selected_vocation_option is None or not selected_vocation_option["value"]:
-            filters.vocation = None
-        else:
-            filters.vocation = try_enum(VocationAuctionFilter, parse_integer(selected_vocation_option["value"], None))
-
-        minlevel_input = table.find("input", {"name": "filter_levelrangefrom"})
-        maxlevel_input = table.find("input", {"name": "filter_levelrangeto"})
-        filters.min_level = parse_integer(minlevel_input["value"], None)
-        filters.max_level = parse_integer(maxlevel_input["value"], None)
-
-        skill_select = table.find("select", {"name": "filter_skillid"})
-        selected_skill_option = skill_select.find("option", {"selected": True})
-        if selected_skill_option is None or not selected_skill_option["value"]:
-            filters.skill = None
-        else:
-            filters.skill = try_enum(SkillFilter, parse_integer(selected_skill_option["value"], None))
-        min_skill_level_input = table.find("input", {"name": "filter_skillrangefrom"})
-        max_skill_level_input = table.find("input", {"name": "filter_skillrangeto"})
-        filters.min_skill_level = parse_integer(min_skill_level_input["value"], None)
-        filters.max_skill_level = parse_integer(max_skill_level_input["value"], None)
-
-        order_by_select = table.find("select", {"name": "order_column"})
-        selected_order_by_option = order_by_select.find("option", {"selected": True})
-        if selected_order_by_option is None or not selected_order_by_option["value"]:
-            filters.order_by = None
-        else:
-            filters.order_by = try_enum(AuctionOrderBy, parse_integer(selected_order_by_option["value"], None))
-
-        order_select = table.find("select", {"name": "order_direction"})
-        selected_order_option = order_select.find("option", {"selected": True})
-        if selected_order_option is None or not selected_order_option["value"]:
-            filters.order = None
-        else:
-            filters.order = try_enum(AuctionOrder, parse_integer(selected_order_option["value"], None))
-
-        name_input = table.find("input", {"name": "itemname"})
-        filters.item = name_input["value"] or None
+        return f"<{self.__class__.name} name={self.name!r} secret={self.secret}>"
 
 
 class AuctionFilters(abc.Serializable):
@@ -306,6 +147,308 @@ class AuctionFilters(abc.Serializable):
         }
         return {k: v for k, v in params.items() if v}
 
+    @classmethod
+    def _parse_filter_table(cls, table):
+        """Parses the filters table to extract its values.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the filters.
+
+        Returns
+        -------
+
+        """
+        filters = AuctionFilters()
+        world_select = table.find("select", {"name": "filter_world"})
+        selected_world_option = world_select.find("option", {"selected": True})
+        if selected_world_option is None or not selected_world_option["value"]:
+            filters.world = None
+        else:
+            filters.world = selected_world_option["value"]
+
+        pvp_select = table.find("select", {"name": "filter_worldpvptype"})
+        selected_pvp_option = pvp_select.find("option", {"selected": True})
+        if selected_pvp_option is None or not selected_pvp_option["value"]:
+            filters.pvp_type = None
+        else:
+            filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(selected_pvp_option["value"], None))
+
+        battleye_select = table.find("select", {"name": "filter_worldbattleyestate"})
+        selected_battleye_option = battleye_select.find("option", {"selected": True})
+        if selected_battleye_option is None or not selected_battleye_option["value"]:
+            filters.battleye = None
+        else:
+            filters.battleye = try_enum(BattlEyeTypeFilter, parse_integer(selected_battleye_option["value"], None))
+
+        vocation_select = table.find("select", {"name": "filter_profession"})
+        selected_vocation_option = vocation_select.find("option", {"selected": True})
+        if selected_vocation_option is None or not selected_vocation_option["value"]:
+            filters.vocation = None
+        else:
+            filters.vocation = try_enum(VocationAuctionFilter, parse_integer(selected_vocation_option["value"], None))
+
+        minlevel_input = table.find("input", {"name": "filter_levelrangefrom"})
+        maxlevel_input = table.find("input", {"name": "filter_levelrangeto"})
+        filters.min_level = parse_integer(minlevel_input["value"], None)
+        filters.max_level = parse_integer(maxlevel_input["value"], None)
+
+        skill_select = table.find("select", {"name": "filter_skillid"})
+        selected_skill_option = skill_select.find("option", {"selected": True})
+        if selected_skill_option is None or not selected_skill_option["value"]:
+            filters.skill = None
+        else:
+            filters.skill = try_enum(SkillFilter, parse_integer(selected_skill_option["value"], None))
+        min_skill_level_input = table.find("input", {"name": "filter_skillrangefrom"})
+        max_skill_level_input = table.find("input", {"name": "filter_skillrangeto"})
+        filters.min_skill_level = parse_integer(min_skill_level_input["value"], None)
+        filters.max_skill_level = parse_integer(max_skill_level_input["value"], None)
+
+        order_by_select = table.find("select", {"name": "order_column"})
+        selected_order_by_option = order_by_select.find("option", {"selected": True})
+        if selected_order_by_option is None or not selected_order_by_option["value"]:
+            filters.order_by = None
+        else:
+            filters.order_by = try_enum(AuctionOrderBy, parse_integer(selected_order_by_option["value"], None))
+
+        order_select = table.find("select", {"name": "order_direction"})
+        selected_order_option = order_select.find("option", {"selected": True})
+        if selected_order_option is None or not selected_order_option["value"]:
+            filters.order = None
+        else:
+            filters.order = try_enum(AuctionOrder, parse_integer(selected_order_option["value"], None))
+
+        name_input = table.find("input", {"name": "itemname"})
+        filters.item = name_input["value"] or None
+        return filters
+
+
+class BestiaryEntry(abc.Serializable):
+    """The bestiary progress for a specific creature.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the creature.
+    kills: :class:`int`
+        The number of kills of this creature the player has done.
+    step: :class:`int`
+        The current step to unlock this creature the character is in, where 4 is fully unlocked."""
+    def __init__(self, name, kills, step):
+        self.name: str = name
+        self.kills: int = kills
+        self.step: int = step
+
+    __slots__ = (
+        "name",
+        "kills",
+        "step",
+    )
+
+    def __repr__(self):
+        return f"<{self.__class__.name} name={self.name!r} kills={self.kills} step={self.step}>"
+
+    @property
+    def completed(self):
+        """:class:`bool`: Whether the entry is completed or not."""
+        return self.step == 4
+
+
+class BlessingEntry(abc.Serializable):
+    """Represents a blessing.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the blessing.
+    amount: :class:`int`
+        The amount of blessing charges the character has."""
+    def __init__(self, name, amount=0):
+        self.name: str = name
+        self.amount: int = amount
+
+    __slots__ = (
+        "name",
+        "amount",
+    )
+
+
+class CharacterBazaar(abc.Serializable):
+    """Represents the char bazaar.
+
+    Attributes
+    ----------
+    page: :class:`int`
+        The page being currently viewed.
+    total_pages: :class:`int`
+        The total number of pages available.
+    results_count: :class:`int`
+        The number of auctions listed.
+    entries: :class:`list` of :class:`ListedAuction`
+        The auctions displayed.
+    type: :class:`BazaarType`
+        The type of auctions being displayed, either current or auction history.
+    filters: :class:`AuctionFilters`
+        The currently set filtering options.
+    """
+
+    __slots__ = (
+        "type",
+        "filters",
+        "page",
+        "total_pages",
+        "results_count",
+        "entries",
+    )
+
+    def __init__(self, **kwargs):
+        self.type: BazaarType = kwargs.get("type")
+        self.filters: Optional[AuctionFilters] = kwargs.get("filters")
+        self.page: int = kwargs.get("page", 1)
+        self.total_pages: int = kwargs.get("total_pages", 1)
+        self.results_count: int = kwargs.get("results_count", 0)
+        self.entries: List[ListedAuction] = kwargs.get("entries", [])
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages}" \
+               f"results_count={self.results_count}>"
+
+    @property
+    def url(self):
+        """:class:`st`: Gets the URL to the bazaar."""
+        return self.get_auctions_history_url(self.page) if self.type == BazaarType.HISTORY else \
+            self.get_current_auctions_url(self.page, self.filters)
+
+    @classmethod
+    def get_current_auctions_url(cls, page=1, filters=None):
+        """Gets the URL to the list of current auctions in Tibia.com
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The page to show the URL for.
+        filters: :class:`AuctionFilters`
+            The filtering criteria to use.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the current auctions section in Tibia.com
+        """
+        filters = filters or AuctionFilters()
+        return get_tibia_url("charactertrade", "currentcharactertrades", currentpage=page, **filters.query_params)
+
+    @classmethod
+    def get_auctions_history_url(cls, page=1):
+        """Gets the URL to the auction history in Tibia.com
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the auction history section in Tibia.com
+        """
+        return get_tibia_url("charactertrade", "pastcharactertrades", currentpage=page)
+
+    @classmethod
+    def from_content(cls, content):
+        """Gets the bazaar's information and list of auctions from Tibia.com
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the bazaar section at Tibia.com.
+
+        Returns
+        -------
+        :class:`CharacterBazaar`
+            The character bazaar with the entries found.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content, builder='html5lib')
+            tables = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+            filter_table = None
+            if len(tables) == 1:
+                auctions_table = tables[0]
+            else:
+                filter_table, auctions_table, *_ = tables
+
+            bazaar = cls()
+            bazaar.type = BazaarType.CURRENT if filter_table else BazaarType.HISTORY
+
+            if filter_table:
+                bazaar.filters = AuctionFilters._parse_filter_table(filter_table)
+
+            page_navigation_row = parsed_content.find("td", attrs={"class": "PageNavigation"})
+            if page_navigation_row:
+                bazaar.page, bazaar.total_pages, bazaar.results_count = parse_pagination(page_navigation_row)
+
+            auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
+            for auction_row in auction_rows:
+                auction = ListedAuction._parse_auction(auction_row)
+
+                bazaar.entries.append(auction)
+            return bazaar
+        except ValueError as e:
+            raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e)
+
+
+class CharmEntry(abc.Serializable):
+    """An unlocked charm by the character.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the charm.
+    cost: :class:`int`
+        The cost of the charm in charm points.
+    """
+    def __init__(self, name, cost=0):
+        self.name: str = name
+        self.cost: int = cost
+
+    __slots__ = (
+        "name",
+        "cost",
+    )
+
+    def __repr__(self):
+        return f"<{self.__class__.name} name={self.name!r} cost={self.cost}>"
+
+
+class DisplayImage(abc.Serializable):
+    """Represents an image displayed in an auction.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL to the image.
+    name: :class:`str`
+        The element's name.
+    """
+    def __init__(self, **kwargs):
+        self.image_url: str = kwargs.get("image_url")
+        self.name: str = kwargs.get("name")
+
+    __slots__ = (
+        "image_url",
+        "name",
+    )
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} image_url={self.image_url!r}>"
+
+    @classmethod
+    def _parse_image_box(cls, item_box):
+        description = item_box["title"]
+        img_tag = item_box.find("img")
+        if not img_tag:
+            return None
+        m = quotes.search(description)
+        if m:
+            description = m.group(1)
+        return cls(image_url=img_tag["src"], name=description)
+
 
 class DisplayItem(abc.Serializable):
     """Represents an item displayed on an auction, or the character's items in the auction detail.
@@ -356,40 +499,6 @@ class DisplayItem(abc.Serializable):
         return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id)
 
 
-class DisplayImage(abc.Serializable):
-    """Represents an image displayed in an auction.
-
-    Attributes
-    ----------
-    image_url: :class:`str`
-        The URL to the image.
-    name: :class:`str`
-        The element's name.
-    """
-    def __init__(self, **kwargs):
-        self.image_url: str = kwargs.get("image_url")
-        self.name: str = kwargs.get("name")
-
-    __slots__ = (
-        "image_url",
-        "name",
-    )
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} name={self.name!r} image_url={self.image_url!r}>"
-
-    @classmethod
-    def _parse_image_box(cls, item_box):
-        description = item_box["title"]
-        img_tag = item_box.find("img")
-        if not img_tag:
-            return None
-        m = quotes.search(description)
-        if m:
-            description = m.group(1)
-        return cls(image_url=img_tag["src"], name=description)
-
-
 class DisplayMount(DisplayImage):
     """Represents a mount owned or unlocked by the character.
 
@@ -404,7 +513,7 @@ class DisplayMount(DisplayImage):
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.mount_id = kwargs.get("mount_id", 0)
+        self.mount_id: int = kwargs.get("mount_id", 0)
 
     __slots__ = (
         "mount_id",
@@ -438,8 +547,8 @@ class DisplayOutfit(DisplayImage):
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.outfit_id = kwargs.get("outfit_id", 0)
-        self.addons = kwargs.get("addons", 0)
+        self.outfit_id: int = kwargs.get("outfit_id", 0)
+        self.addons: int = kwargs.get("addons", 0)
 
     __slots__ = (
         "outfit_id",
@@ -728,44 +837,44 @@ class AuctionDetails(ListedAuction):
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.hit_points = kwargs.get("hit_points")
-        self.mana = kwargs.get("mana")
-        self.capacity = kwargs.get("capacity")
-        self.speed = kwargs.get("speed")
-        self.blessings_count = kwargs.get("blessings_count")
-        self.mounts_count = kwargs.get("mounts_count")
-        self.outfits_count = kwargs.get("outfits_count")
-        self.titles_count = kwargs.get("titles_count")
-        self.skills = kwargs.get("skills")
-        self.creation_date = kwargs.get("creation_date")
-        self.experience = kwargs.get("experience")
-        self.gold = kwargs.get("gold")
-        self.achievement_points = kwargs.get("achievement_points")
-        self.regular_world_transfer_available = kwargs.get("regular_world_transfer_available")
-        self.charm_expansion = kwargs.get("charm_expansion")
-        self.available_charm_points = kwargs.get("available_charm_points")
-        self.spent_charm_points = kwargs.get("spent_charm_points")
-        self.daily_reward_streak = kwargs.get("daily_reward_streak")
-        self.hunting_task_points = kwargs.get("hunting_task_points")
-        self.permanent_hunting_task_slots = kwargs.get("permanent_hunting_task_slots")
-        self.permanent_prey_slots = kwargs.get("permanent_prey_slots")
-        self.hirelings = kwargs.get("hirelings")
-        self.hireling_jobs = kwargs.get("hireling_jobs")
-        self.hireling_outfits = kwargs.get("hireling_outfits")
+        self.hit_points: int = kwargs.get("hit_points", 0)
+        self.mana: int = kwargs.get("mana", 0)
+        self.capacity: int = kwargs.get("capacity", 0)
+        self.speed: int = kwargs.get("speed", 0)
+        self.blessings_count: int = kwargs.get("blessings_count", 0)
+        self.mounts_count: int = kwargs.get("mounts_count", 0)
+        self.outfits_count: int = kwargs.get("outfits_count", 0)
+        self.titles_count: int = kwargs.get("titles_count", 0)
+        self.skills: List[SkillEntry] = kwargs.get("skills", [])
+        self.creation_date: datetime.datetime = kwargs.get("creation_date")
+        self.experience: int = kwargs.get("experience", 0)
+        self.gold: int = kwargs.get("gold", 0)
+        self.achievement_points: int = kwargs.get("achievement_points", 0)
+        self.regular_world_transfer_available: bool = kwargs.get("regular_world_transfer_available", False)
+        self.charm_expansion: bool = kwargs.get("charm_expansion", False)
+        self.available_charm_points: int = kwargs.get("available_charm_points", 0)
+        self.spent_charm_points: int = kwargs.get("spent_charm_points", 0)
+        self.daily_reward_streak: int = kwargs.get("daily_reward_streak", 0)
+        self.hunting_task_points: int = kwargs.get("hunting_task_points", 0)
+        self.permanent_hunting_task_slots: int = kwargs.get("permanent_hunting_task_slots", 0)
+        self.permanent_prey_slots: int = kwargs.get("permanent_prey_slots", 0)
+        self.hirelings: int = kwargs.get("hirelings", 0)
+        self.hireling_jobs: int = kwargs.get("hireling_jobs", 0)
+        self.hireling_outfits: int = kwargs.get("hireling_outfits", 0)
         self.items: ItemSummary = kwargs.get("items")
-        self.store_items = kwargs.get("store_items")
-        self.mounts = kwargs.get("mounts")
-        self.store_mounts = kwargs.get("store_mounts")
-        self.outfits = kwargs.get("outfits")
-        self.store_outfits = kwargs.get("store_outfits")
-        self.blessings = kwargs.get("blessings", [])
-        self.imbuements = kwargs.get("imbuements", [])
-        self.charms = kwargs.get("charms", [])
-        self.completed_cyclopedia_map_areas = kwargs.get("completed_cyclopedia_map_areas", [])
-        self.completed_quest_lines = kwargs.get("completed_quest_lines", [])
-        self.titles = kwargs.get("titles", [])
-        self.achievements = kwargs.get("achievements", [])
-        self.bestiary_progress = kwargs.get("bestiary_progress", [])
+        self.store_items: ItemSummary = kwargs.get("store_items")
+        self.mounts: Mounts = kwargs.get("mounts")
+        self.store_mounts: Mounts = kwargs.get("store_mounts")
+        self.outfits: Outfits = kwargs.get("outfits")
+        self.store_outfits: Outfits = kwargs.get("store_outfits")
+        self.blessings: List[BlessingEntry] = kwargs.get("blessings", [])
+        self.imbuements: List[str] = kwargs.get("imbuements", [])
+        self.charms: List[CharmEntry] = kwargs.get("charms", [])
+        self.completed_cyclopedia_map_areas: List[str] = kwargs.get("completed_cyclopedia_map_areas", [])
+        self.completed_quest_lines: List[str] = kwargs.get("completed_quest_lines", [])
+        self.titles: List[str] = kwargs.get("titles", [])
+        self.achievements: List[AchievementEntry] = kwargs.get("achievements", [])
+        self.bestiary_progress: List[BestiaryEntry] = kwargs.get("bestiary_progress", [])
 
     __slots__ = (
         "hit_points",
@@ -808,10 +917,44 @@ class AuctionDetails(ListedAuction):
         "bestiary_progress",
     )
 
+    @property
+    def skills_map(self) -> Dict[str, 'SkillEntry']:
+        """:class:`dict` of :class:`str`, :class:`SkillsEntry`: A mapping of skills by their name."""
+        return {skill.name: skill for skill in self.skills}
+    
+    @property
+    def completed_bestiary_entries(self):
+        return [e for e in self.bestiary_progress if e.completed]
+
     @classmethod
     def from_content(cls, content, auction_id=0):
+        """Parses an auction detail page from Tibia.com and extracts its data.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the auction detail page in Tibia.com
+        auction_id: :class:`int`, optional
+            The ID of the auction.
+
+            It is not possible to extract the ID from the page's content, so it may be passed to assign it manually.
+
+        Returns
+        -------
+        :class:`AuctionDetails`
+            The auction detaiils if found, :obj:`None` otherwise.
+
+        Raises
+        ------
+        InvalidContent
+            If the content does not belong to a auction detail's page.
+        """
         parsed_content = parse_tibiacom_content(content, builder='html5lib')
         auction_row = parsed_content.find("div", attrs={"class": "Auction"})
+        if not auction_row:
+            if "internal error" in content:
+                return None
+            raise InvalidContent("content does not belong to a auction details page in Tibia.com")
         auction = cls._parse_auction(auction_row)
         auction.auction_id = auction_id
 
@@ -854,7 +997,8 @@ class AuctionDetails(ListedAuction):
         details_tables = parsed_content.find_all("div", {"class": "CharacterDetailsBlock"})
         return {table["id"]: table for table in details_tables}
 
-    def _parse_data_table(self, table):
+    @classmethod
+    def _parse_data_table(cls, table):
         rows = table.find_all("tr")
         data = {}
         for row in rows:
@@ -979,62 +1123,6 @@ class AuctionDetails(ListedAuction):
         self.hireling_outfits = parse_integer(hirelings_data.get("hireling_outfits", ""))
 
 
-class SalesArgument(abc.Serializable):
-    """Represents a sales argument.
-
-    Sales arguments can be selected when creating an auction, and allow the user to highlight certain
-    character features in the auction listing.
-
-    Attributes
-    ----------
-    category_image: :class:`str`
-        The URL to the category icon.
-    content: :class:`str`
-        The content of the sales argument."""
-
-    __slots__ = (
-        "category_id",
-        "category_image",
-        "content",
-    )
-
-    def __init__(self, **kwargs):
-        self.category_id: int = kwargs.get("category_id")
-        self.category_image: str = kwargs.get("category_image")
-        self.content: str = kwargs.get("content")
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} category_id={self.category_id} content={self.content!r} " \
-               f"category_image={self.category_image}>"
-
-
-class SkillEntry(abc.Serializable):
-    """Represents the character's skills.
-
-    Attributes
-    ----------
-    name: :class:`name`
-        The name of the skill.
-    level: :class:`int`
-        The current level.
-    progress: :class:`float`
-        The percentage of progress for the next level.
-    """
-    def __init__(self, **kwargs):
-        self.name = kwargs.get("name")
-        self.level = kwargs.get("level")
-        self.progress = kwargs.get("progress")
-
-    __slots__ = (
-        "name",
-        "level",
-        "progress",
-    )
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} name={self.name!r} level={self.level} progress={self.progress}>"
-
-
 class OutfitImage(abc.Serializable):
     """The image of the outfit currently being worn by the character.
 
@@ -1086,7 +1174,7 @@ class PaginatedSummary(abc.Serializable):
         self.total_pages: int = kwargs.get("total_pages", 1)
         self.results: int = kwargs.get("results", 0)
         self.fully_fetched: bool = kwargs.get("fully_fetched", False)
-        self.entries = kwargs.get("entries", [])
+        self.entries: List[DisplayImage] = kwargs.get("entries", [])
 
     __slots__ = (
         "page",
@@ -1099,6 +1187,51 @@ class PaginatedSummary(abc.Serializable):
     def __repr__(self):
         return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} results={self.results} " \
                f"fully_fetched={self.fully_fetched} len(entries)={len(self.entries)}>"
+
+    def get_by_name(self, name):
+        """Gets an entry by its name.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the entry, case insensitive.
+
+        Returns
+        -------
+        :class:`list`
+            The entry matching the name.
+        """
+        return next((e for e in self.entries if e.name.lower() == name.lower()), None)
+
+    def search(self, value):
+        """Searches an entry by its name
+
+        Parameters
+        ----------
+        value: :class:`str`
+            The value to look for.
+
+        Returns
+        -------
+        :class:`list`
+            A list of entries with names containing the search term.
+        """
+        return [e for e in self.entries if value.lower() in e.name.lower()]
+
+    def get_by_id(self, name):
+        """Gets an entry by its id.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the entry, case insensitive.
+
+        Returns
+        -------
+        :class:`list`
+            The entry matching the name.
+        """
+        return NotImplemented
 
     def _parse_pagination(self, parsed_content):
         pagination_block = parsed_content.find("div", attrs={"class": "BlockPageNavigationRow"})
@@ -1127,6 +1260,9 @@ class ItemSummary(PaginatedSummary):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    def get_by_id(self, entry_id):
+        return next((e for e in self.entries if e.item_id == entry_id), None)
 
     @classmethod
     def _parse_table(cls, table):
@@ -1162,6 +1298,9 @@ class Mounts(PaginatedSummary):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+    def get_by_id(self, entry_id):
+        return next((e for e in self.entries if e.mount_id == entry_id), None)
+
     @classmethod
     def _parse_table(cls, table):
         summary = cls()
@@ -1196,6 +1335,9 @@ class Outfits(PaginatedSummary):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+    def get_by_id(self, entry_id):
+        return next((e for e in self.entries if e.outfit_id == entry_id), None)
+
     @classmethod
     def _parse_table(cls, table):
         summary = cls()
@@ -1208,96 +1350,57 @@ class Outfits(PaginatedSummary):
         return summary
 
 
-class BlessingEntry(abc.Serializable):
-    """Represents a blessing.
+class SalesArgument(abc.Serializable):
+    """Represents a sales argument.
+
+    Sales arguments can be selected when creating an auction, and allow the user to highlight certain
+    character features in the auction listing.
 
     Attributes
     ----------
-    name: :class:`str`
-        The name of the blessing.
-    amount: :class:`int`
-        The amount of blessing charges the character has."""
-    def __init__(self, name, amount=0):
-        self.name: str = name
-        self.amount: int = amount
+    category_image: :class:`str`
+        The URL to the category icon.
+    content: :class:`str`
+        The content of the sales argument."""
 
     __slots__ = (
-        "name",
-        "amount",
+        "category_id",
+        "category_image",
+        "content",
     )
 
+    def __init__(self, **kwargs):
+        self.category_id: int = kwargs.get("category_id", 0)
+        self.category_image: str = kwargs.get("category_image")
+        self.content: str = kwargs.get("content")
 
-class CharmEntry(abc.Serializable):
-    """An unlocked charm by the character.
+    def __repr__(self):
+        return f"<{self.__class__.__name__} category_id={self.category_id} content={self.content!r} " \
+               f"category_image={self.category_image}>"
+
+
+class SkillEntry(abc.Serializable):
+    """Represents the character's skills.
 
     Attributes
     ----------
-    name: :class:`str`
-        The name of the charm.
-    cost: :class:`int`
-        The cost of the charm in charm points.
+    name: :class:`name`
+        The name of the skill.
+    level: :class:`int`
+        The current level.
+    progress: :class:`float`
+        The percentage of progress for the next level.
     """
-    def __init__(self, name, cost=0):
-        self.name: str = name
-        self.cost: int = cost
+    def __init__(self, **kwargs):
+        self.name: str = kwargs.get("name")
+        self.level: int = kwargs.get("level", 0)
+        self.progress: float = kwargs.get("progress", 0.0)
 
     __slots__ = (
         "name",
-        "cost",
+        "level",
+        "progress",
     )
 
     def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} cost={self.cost}>"
-
-
-class AchievementEntry(abc.Serializable):
-    """An unlocked achievement by the character.
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The name of the achievement.
-    secret: :class:`bool`
-        Whether the achievement is secret or not."""
-    def __init__(self, name, secret=False):
-        self.name: str = name
-        self.secret: int = secret
-
-    __slots__ = (
-        "name",
-        "secret",
-    )
-
-    def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} secret={self.secret}>"
-
-
-class BestiaryEntry(abc.Serializable):
-    """The bestiary progress for a specific creature.
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The name of the creature.
-    kills: :class:`int`
-        The number of kills of this creature the player has done.
-    step: :class:`int`
-        The current step to unlock this creature the character is in, where 4 is fully unlocked."""
-    def __init__(self, name, kills, step):
-        self.name: str = name
-        self.kills: int = kills
-        self.step: int = step
-
-    __slots__ = (
-        "name",
-        "kills",
-        "step",
-    )
-
-    def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} kills={self.kills} step={self.step}>"
-
-    @property
-    def completed(self):
-        """:class:`bool`: Whether the entry is completed or not."""
-        return self.step == 4
+        return f"<{self.__class__.__name__} name={self.name!r} level={self.level} progress={self.progress}>"

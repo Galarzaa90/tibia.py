@@ -213,38 +213,18 @@ class TestUtils(TestCommons, unittest.TestCase):
         """Parsing page 300 out of 503"""
         content = """<td class="PageNavigation"><small><div style="float: left;"><b>» <span class="PageLink 
         FirstOrLastElement"><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
-        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
-        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
-        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=1">First Page</a></span> ... 
-        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
-        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
-        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
-        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=297">297</a></span> <span 
-        class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
-        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
-        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
-        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=298">298</a></span> <span 
-        class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
-        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
-        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
-        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=299">299</a></span> <span 
-        class="PageLink "><span class="CurrentPageLink">300</span></span> <span class="PageLink "><a 
-        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp;filter_profession=0&amp
-        ;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp;filter_worldpvptype=9&amp
-        ;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp;filter_skillrangeto=0&amp
-        ;order_column=1&amp;order_direction=1&amp;currentpage=301">301</a></span> <span class="PageLink "><a 
-        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp;filter_profession=0&amp
-        ;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp;filter_worldpvptype=9&amp
-        ;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp;filter_skillrangeto=0&amp
-        ;order_column=1&amp;order_direction=1&amp;currentpage=302">302</a></span> <span class="PageLink "><a 
-        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp;filter_profession=0&amp
-        ;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp;filter_worldpvptype=9&amp
-        ;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp;filter_skillrangeto=0&amp
-        ;order_column=1&amp;order_direction=1&amp;currentpage=303">303</a></span> ... <span class="PageLink 
-        FirstOrLastElement"><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&amp
-        ;filter_profession=0&amp;filter_levelrangefrom=0&amp;filter_levelrangeto=0&amp;filter_world=&amp
-        ;filter_worldpvptype=9&amp;filter_worldbattleyestate=0&amp;filter_skillid=&amp;filter_skillrangefrom=0&amp
-        ;filter_skillrangeto=0&amp;order_column=1&amp;order_direction=1&amp;currentpage=503">Last 
+        ;currentpage=1">First Page</a></span> ... <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=297">297</a></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades
+        &currentpage=298">298</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=299">299</a></span> 
+        <span class="PageLink "><span class="CurrentPageLink">300</span></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=301">301</a></span> 
+        <span class="PageLink "><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades
+        &currentpage=302">302</a></span> <span class="PageLink "><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=303">303</a></span> 
+        ... <span class="PageLink FirstOrLastElement"><a 
+        href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades&currentpage=503">Last 
         Page</a></span></b></div><div style="float: right;"><b>» Results: 12568</b></div></small></td> """
         parsed_content = utils.parse_tibiacom_content(content, builder="html5lib")
         page, total_pages, results_count = utils.parse_pagination(parsed_content)

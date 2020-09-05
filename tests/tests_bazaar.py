@@ -1,3 +1,4 @@
+import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
@@ -11,6 +12,7 @@ FILE_BAZAAR_CURRENT = "bazaar/tibiacom_current.txt"
 FILE_BAZAAR_CURRENT_ALL_FILTERS = "bazaar/tibiacom_current_all_filters.txt"
 FILE_BAZAAR_HISTORY = "bazaar/tibiacom_history.txt"
 FILE_AUCTION_FINISHED = "bazaar/tibiacom_auction_finished.txt"
+FILE_AUCTION_NOT_FOUND = "bazaar/tibiacom_auction_not_found.txt"
 
 
 class TestBazaar(TestCommons, unittest.TestCase):
@@ -116,7 +118,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
 
         self.assertIsNone(bazaar.filters)
 
-    def test_character_from_content_unrelated(self):
+    def test_character_bazaar_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
@@ -129,6 +131,8 @@ class TestBazaar(TestCommons, unittest.TestCase):
 
         # Listing box
         self.assertEqual("Vireloz", auction.name)
+        self.assertIn(auction.name, auction.character_url)
+        self.assertIn(str(auction.auction_id), auction.url)
         self.assertEqual(1161, auction.level)
         self.assertEqual(Vocation.ROYAL_PALADIN, auction.vocation)
         self.assertEqual(Sex.MALE, auction.sex)
@@ -144,3 +148,100 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(330000, auction.bid)
         self.assertEqual(BidType.MINIMUM, auction.bid_type)
         self.assertEqual("finished", auction.status)
+
+        self.assertEqual(11715, auction.hit_points)
+        self.assertEqual(17385, auction.mana)
+        self.assertEqual(23530, auction.capacity)
+        self.assertEqual(1270, auction.speed)
+        self.assertEqual(0, auction.blessings_count)
+        self.assertEqual(23, auction.mounts_count)
+        self.assertEqual(35, auction.outfits_count)
+        self.assertEqual(16, auction.titles_count)
+
+        self.assertEqual(8, len(auction.skills))
+        self.assertEqual(128, auction.skills_map["Distance Fighting"].level)
+        self.assertEqual(11.43, auction.skills_map["Distance Fighting"].progress)
+
+        self.assertIsInstance(auction.creation_date, datetime.datetime)
+        self.assertEqual(26006721711, auction.experience)
+        self.assertEqual(41893, auction.gold)
+        self.assertEqual(540, auction.achievement_points)
+        self.assertFalse(auction.regular_world_transfer_available)
+        self.assertEqual(110, auction.available_charm_points)
+        self.assertEqual(5800, auction.spent_charm_points)
+
+        self.assertEqual(2, auction.daily_reward_streak)
+        self.assertEqual(1494, auction.hunting_task_points)
+        self.assertEqual(0, auction.permanent_hunting_task_slots)
+        self.assertEqual(1, auction.permanent_prey_slots)
+        self.assertEqual(1, auction.hirelings)
+        self.assertEqual(3, auction.hireling_jobs)
+        self.assertEqual(0, auction.hireling_outfits)
+
+        self.assertIsNotNone(auction.items)
+        self.assertEqual(76, len(auction.items.entries))
+        self.assertEqual(8, auction.items.total_pages)
+        self.assertEqual(567, auction.items.results)
+        self.assertEqual(141, auction.items.get_by_name("cigar").item_id)
+        self.assertEqual("cigar", auction.items.get_by_id(141).name)
+        self.assertEqual(7, len(auction.items.search('backpack')))
+
+        self.assertIsNotNone(auction.store_items)
+        self.assertEqual(16, len(auction.store_items.entries))
+        self.assertEqual(1, auction.store_items.total_pages)
+        self.assertEqual(16, auction.store_items.results)
+        self.assertEqual(23721, auction.store_items.get_by_name("gold pouch").item_id)
+        self.assertEqual("gold pouch", auction.store_items.get_by_id(23721).name)
+        self.assertEqual(2, len(auction.store_items.search('rune')))
+
+        self.assertIsNotNone(auction.mounts)
+        self.assertEqual(22, len(auction.mounts.entries))
+        self.assertEqual(1, auction.mounts.total_pages)
+        self.assertEqual(22, auction.mounts.results)
+        self.assertEqual(387, auction.mounts.get_by_name("donkey").mount_id)
+        self.assertEqual("Donkey", auction.mounts.get_by_id(387).name)
+        self.assertEqual(1, len(auction.mounts.search('drag')))
+
+        self.assertIsNotNone(auction.store_mounts)
+        self.assertEqual(1, len(auction.store_mounts.entries))
+        self.assertEqual(1, auction.store_mounts.total_pages)
+        self.assertEqual(1, auction.store_mounts.results)
+        self.assertEqual(906, auction.store_mounts.get_by_name("Wolpertinger").mount_id)
+        self.assertEqual("Wolpertinger", auction.store_mounts.get_by_id(906).name)
+        self.assertEqual(1, len(auction.store_mounts.search('Wolpertinger')))
+
+        self.assertIsNotNone(auction.outfits)
+        self.assertEqual(30, len(auction.outfits.entries))
+        self.assertEqual(2, auction.outfits.total_pages)
+        self.assertEqual(33, auction.outfits.results)
+        self.assertEqual(151, auction.outfits.get_by_name("pirate").outfit_id)
+        self.assertEqual('Glooth Engineer', auction.outfits.get_by_id(610).name)
+        self.assertEqual(2, len(auction.outfits.search('demon')))
+
+        self.assertIsNotNone(auction.store_outfits)
+        self.assertEqual(2, len(auction.store_outfits.entries))
+        self.assertEqual(1, auction.store_outfits.total_pages)
+        self.assertEqual(2, auction.store_outfits.results)
+        self.assertEqual(962, auction.store_outfits.get_by_name("retro warrior").outfit_id)
+        self.assertEqual('Retro Warrior', auction.store_outfits.get_by_id(962).name)
+        self.assertEqual(2, len(auction.store_outfits.search('retro')))
+
+        self.assertEqual(9, len(auction.blessings))
+        self.assertEqual(18, len(auction.imbuements))
+        self.assertEqual(8, len(auction.charms))
+        self.assertEqual(0, len(auction.completed_cyclopedia_map_areas))
+        self.assertEqual(16, len(auction.titles))
+        self.assertEqual(214, len(auction.achievements))
+        self.assertEqual(509, len(auction.bestiary_progress))
+        self.assertEqual(205, len(auction.completed_bestiary_entries))
+
+    def test_auction_details_from_content_not_found(self):
+        auction = AuctionDetails.from_content(self.load_resource(FILE_AUCTION_NOT_FOUND))
+
+        self.assertIsNone(auction)
+
+    def test_auction_details_from_content_unrelated(self):
+        """Testing parsing an unrelated tibia.com section"""
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
+        with self.assertRaises(InvalidContent):
+            AuctionDetails.from_content(content)
