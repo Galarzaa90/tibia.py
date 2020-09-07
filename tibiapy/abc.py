@@ -73,7 +73,7 @@ class Serializable:
         Parameters
         ----------
         indent: :class:`int`, optional
-            Number of spaces used as indentation, ``None`` will return the shortest possible string.
+            Number of spaces used as indentation, :obj:`None` will return the shortest possible string.
         sort_keys: :class:`bool`, optional
             Whether keys should be sorted alphabetically or preserve the order defined by the object.
 
@@ -568,7 +568,7 @@ class BaseThread(metaclass=abc.ABCMeta):
 
     @property
     def url(self):
-        """:class:`str` The URL to the thread in Tibia.com."""
+        """:class:`str`: The URL to the thread in Tibia.com."""
         return self.get_url(self.thread_id)
 
     @classmethod

@@ -9,7 +9,7 @@ import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy import abc, AuctionDetails, CharacterBazaar
+from tibiapy import abc, AuctionDetails, AuctionFilters, CharacterBazaar
 from tibiapy.character import Character
 from tibiapy.creature import BoostedCreature
 from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
@@ -206,7 +206,7 @@ class Client:
         ----------
         page: :class:`int`
             The desired page to display.
-        filters: :class:`AuctionFilter`
+        filters: :class:`AuctionFilters`
             The filtering criteria to use.
 
         Returns
@@ -222,9 +222,10 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         ValueError
-            If the start_date is more recent than the end date or page number is not 1 or greater.
+            If the page number is not 1 or greater.
         """
-
+        if not page:
+            raise ValueError('page must be 1 or greater.')
         response = await self._request("GET", CharacterBazaar.get_current_auctions_url(page, filters))
         start_time = time.perf_counter()
         current_auctions = CharacterBazaar.from_content(response.content)
@@ -254,9 +255,10 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         ValueError
-            If the start_date is more recent than the end date or page number is not 1 or greater.
+            If the page number is not 1 or greater.
         """
-
+        if not page:
+            raise ValueError('page must be 1 or greater.')
         response = await self._request("GET", CharacterBazaar.get_auctions_history_url(page))
         start_time = time.perf_counter()
         auction_history = CharacterBazaar.from_content(response.content)
@@ -775,7 +777,7 @@ class Client:
         Returns
         -------
         :class:`TibiaResponse` of :class:`House`
-            The house if found, ``None`` otherwise.
+            The house if found, :obj:`None` otherwise.
 
         Raises
         ------
@@ -809,7 +811,7 @@ class Client:
         Returns
         -------
         :class:`TibiaResponse` of :class:`Highscores`
-            The highscores information or ``None`` if not found.
+            The highscores information or :obj:`None` if not found.
 
         Raises
         ------
@@ -863,7 +865,7 @@ class Client:
         Returns
         -------
         :class:`TibiaResponse` of :class:`World`
-            A response containig the he world's information if found, ```None`` otherwise.
+            A response containig the he world's information if found, :obj:`None` otherwise.
 
         Raises
         ------
@@ -1065,7 +1067,7 @@ class Client:
         Returns
         -------
         :class:`TibiaResponse` of :class:`News`
-            The news entry if found, ``None`` otherwise.
+            The news entry if found, :obj:`None` otherwise.
 
         Raises
         ------
@@ -1094,7 +1096,7 @@ class Client:
         Returns
         -------
         :class:`TibiaResponse` of :class:`Tournament`
-            The tournament if found, ``None`` otherwise.
+            The tournament if found, :obj:`None` otherwise.
 
         Raises
         ------
@@ -1127,7 +1129,7 @@ class Client:
         Returns
         -------
         :class:`TibiaResponse` of :class:`TournamentLeaderboard`
-            The tournament's leaderboard if found, ``None`` otherwise.
+            The tournament's leaderboard if found, :obj:`None` otherwise.
 
         Raises
         ------

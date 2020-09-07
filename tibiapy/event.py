@@ -189,11 +189,11 @@ class EventEntry(abc.Serializable):
     start_date: :class:`datetime.date`
         The day the event starts.
 
-        If the event is continuing from the previous month, this will be ``None``.
+        If the event is continuing from the previous month, this will be :obj:`None`.
     end_date: :class:`datetime.date`
         The day the event ends.
 
-        If the event is continuing on the next month, this will be ``None``.
+        If the event is continuing on the next month, this will be :obj:`None`.
     """
 
     __slots__ = (

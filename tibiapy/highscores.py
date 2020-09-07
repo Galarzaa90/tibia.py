@@ -26,7 +26,7 @@ class Highscores(abc.Serializable):
     Attributes
     ----------
     world: :class:`str`
-        The world the highscores belong to. If this is ```None``, the highscores shown are for all worlds.
+        The world the highscores belong to. If this is :obj:`None`, the highscores shown are for all worlds.
     category: :class:`Category`
         The selected category to displays the highscores of.
     vocation: :class:`VocationFilter`
@@ -155,7 +155,7 @@ class Highscores(abc.Serializable):
             The game world of the desired highscores. If no world is passed, ALL worlds are shown.
         category: :class:`Category`
             The desired highscores category.
-        vocation: :class:`VocationFiler`
+        vocation: :class:`VocationFilter`
             The vocation filter to apply. By default all vocations will be shown.
         page: :class:`int`
             The page of highscores to show.

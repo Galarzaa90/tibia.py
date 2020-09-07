@@ -52,7 +52,8 @@ class AchievementEntry(abc.Serializable):
     name: :class:`str`
         The name of the achievement.
     secret: :class:`bool`
-        Whether the achievement is secret or not."""
+        Whether the achievement is secret or not.
+    """
     def __init__(self, name, secret=False):
         self.name: str = name
         self.secret: int = secret
@@ -920,7 +921,7 @@ class AuctionDetails(ListedAuction):
 
     @property
     def skills_map(self) -> Dict[str, 'SkillEntry']:
-        """:class:`dict` of :class:`str`, :class:`SkillsEntry`: A mapping of skills by their name."""
+        """:class:`dict` of :class:`str`, :class:`SkillEntry`: A mapping of skills by their name."""
         return {skill.name: skill for skill in self.skills}
     
     @property

@@ -48,6 +48,8 @@ class TestsGuild(TestCommons, unittest.TestCase):
             self.assertIsNotNone(invited.name, "Invited character's name should not be None.")
             self.assertIsInstance(invited.date, datetime.date, "Invited character's date should be datetime.date.")
 
+        self.assertEqual(8, len(guild.members_by_rank['Vice Leader']))
+
         self.assertIsInstance(guild.guildhall, GuildHouse)
         self.assertEqual(guild.guildhall.owner, guild.members[0].name)
         self.assertEqual(guild.guildhall.world, guild.world)

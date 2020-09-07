@@ -109,7 +109,7 @@ class Achievement(abc.Serializable):
         The name of the achievement.
     grade: :class:`int`
         The grade of the achievement, also known as stars.
-    secret: :class:´bool´
+    secret: :class:`bool`
         Whether the achievement is secret or not.
     """
     __slots__ = (
@@ -165,7 +165,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
     guild_membership: :class:`GuildMembership`, optional
         The guild the character is a member of.
     last_login: :class:`datetime.datetime`, optional
-        The last time the character logged in. It will be ``None`` if the character has never logged in.
+        The last time the character logged in. It will be :obj:`None` if the character has never logged in.
     position: :class:`str`, optional
         The position of the character (e.g. CipSoft Member), if any.
     comment: :class:`str`, optional
@@ -263,17 +263,17 @@ class Character(abc.BaseCharacter, abc.Serializable):
 
     @property
     def guild_name(self) -> Optional[str]:
-        """:class:`str`: The name of the guild the character belongs to, or ``None``."""
+        """:class:`str`: The name of the guild the character belongs to, or :obj:`None`."""
         return self.guild_membership.name if self.guild_membership else None
 
     @property
     def guild_rank(self) -> Optional[str]:
-        """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
+        """:class:`str`: The character's rank in the guild they belong to, or :obj:`None`."""
         return self.guild_membership.rank if self.guild_membership else None
 
     @property
     def guild_url(self):
-        """:class:`str`: The character's rank in the guild they belong to, or ``None``."""
+        """:class:`str`: The character's rank in the guild they belong to, or :obj:`None`."""
         return abc.BaseGuild.get_url(self.guild_membership.name) if self.guild_membership else None
 
     @property

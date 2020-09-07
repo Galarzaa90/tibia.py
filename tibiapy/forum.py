@@ -372,7 +372,7 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
         Returns
         -------
         :class:`ForumAnnouncement`
-            The announcement contained in the page or ```None`` if not found.
+            The announcement contained in the page or :obj:`None` if not found.
 
         Raises
         ------
@@ -544,7 +544,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
         The current page being viewed.
     pages: :class:`int`
         The number of total_pages the board has for the current display range.
-    age: :class:ìnt`
+    age: :class:`ìnt`
         The maximum age of the displayed threads, in days.
 
         -1 means all threads will be shown.
@@ -1106,7 +1106,7 @@ class LastPost(abc.BasePost, abc.Serializable):
         The name of the character that made the last post.
     post_id: :class:`int`
         The internal id of the post.
-    date: :class:`datetime`
+    date: :class:`datetime.datetime`
         The date when the last post was made.
     deleted: :class:`bool`
         Whether the last post's author is a character that is already deleted.
@@ -1208,7 +1208,7 @@ class ListedBoard(abc.BaseBoard, abc.Serializable):
     ----------
     name: :class:`str`
         The name of the board.
-    board_id: :class:`inst`
+    board_id: :class:`int`
         The board's internal id.
     description: :class:`str`
         The description of the board.
@@ -1331,7 +1331,7 @@ class ListedThread(abc.BaseThread, abc.Serializable):
     ----------
     title: :class:`str`
         The title of the thread.
-    thread_id: class:`int`
+    thread_id: :class:`int`
         The internal id of the thread.
     thread_started: :class:`str`
         The character that started the thread.

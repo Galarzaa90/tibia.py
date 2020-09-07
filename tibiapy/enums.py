@@ -319,7 +319,7 @@ class VocationFilter(NumericEnum):
         name: :class:`str`
             The name of the vocation.
         all_fallback: :class:`bool`
-            Whether to return :py:attr:`ALL` if no match is found. Otherwise, ``None`` will be returned.
+            Whether to return :py:attr:`ALL` if no match is found. Otherwise, :obj:`None` will be returned.
 
         Returns
         -------

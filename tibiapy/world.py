@@ -42,13 +42,13 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
         Whether the server is currently protected with BattlEye or not.
     battleye_date: :class:`datetime.date`
         The date when BattlEye was added to this world.
-        If this is ``None`` and the world is protected, it means the world was protected from the beginning.
+        If this is :obj:`None` and the world is protected, it means the world was protected from the beginning.
     experimental: :class:`bool`
         Whether the world is experimental or not.
     premium_only: :class:`bool`
         Whether only premium account players are allowed to play in this server.
     tournament_world_type: :class:`TournamentWorldType`
-        The type of tournament world. ``None`` if this is not a tournament world.
+        The type of tournament world. :obj:`None` if this is not a tournament world.
     """
     __slots__ = (
         "name",
@@ -161,11 +161,11 @@ class World(abc.BaseWorld, abc.Serializable):
         Whether the server is currently protected with BattlEye or not.
     battleye_date: :class:`datetime.date`
         The date when BattlEye was added to this world.
-        If this is ``None`` and the world is protected, it means the world was protected from the beginning.
+        If this is :obj:`None` and the world is protected, it means the world was protected from the beginning.
     experimental: :class:`bool`
         Whether the world is experimental or not.
     tournament_world_type: :class:`TournamentWorldType`
-        The type of tournament world. ``None`` if this is not a tournament world.
+        The type of tournament world. :obj:`None` if this is not a tournament world.
     online_players: :obj:`list` of :class:`OnlineCharacter`.
         A list of characters currently online in the server.
     premium_only: :class:`bool`
@@ -216,7 +216,7 @@ class World(abc.BaseWorld, abc.Serializable):
 
     @property
     def creation_month(self):
-        """:class:`ìnt`: Returns the month when the world was created."""
+        """:class:`int`: Returns the month when the world was created."""
         return int(self.creation_date.split("-")[1])if self.creation_date else None
     # endregion
 
@@ -233,12 +233,12 @@ class World(abc.BaseWorld, abc.Serializable):
         Returns
         -------
         :class:`World`
-            The World described in the page, or ``None``.
+            The World described in the page, or :obj:`None`.
 
         Raises
         ------
         InvalidContent
-            If the provided content is not the html content of the world section in Tibia.com
+            If the provided content is not the HTML content of the world section in Tibia.com
         """
         parsed_content = parse_tibiacom_content(content)
         tables = cls._parse_tables(parsed_content)

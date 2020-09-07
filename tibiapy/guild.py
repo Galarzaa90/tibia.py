@@ -1,7 +1,7 @@
 import datetime
 import re
-from collections import OrderedDict
-from typing import List, Optional
+from collections import defaultdict, OrderedDict
+from typing import Dict, List, Optional
 
 import bs4
 
@@ -147,6 +147,13 @@ class Guild(abc.BaseGuild, abc.Serializable):
     def ranks(self) -> List[str]:
         """:class:`list` of :class:`str`: Ranks in their hierarchical order."""
         return list(OrderedDict.fromkeys((m.rank for m in self.members)))
+
+    @property
+    def members_by_rank(self) -> Dict[str, List['GuildMember']]:
+        """:class:`dict`: Gets a mapping of members, grouped by their guild rank."""
+        rank_dict = defaultdict(list)
+        [rank_dict[m.rank].append(m) for m in self.members]
+        return dict(rank_dict)
     # endregion
 
     # region Public methods
@@ -614,7 +621,7 @@ class GuildWarEntry(abc.Serializable):
     guild_fee: :class:`int`
         The number of gold coins the guild will pay if they lose the war.
     opponent_name: :class:`str`
-        The name of the opposing guild. If the guild no longer exist, this will be ``None``.
+        The name of the opposing guild. If the guild no longer exist, this will be :obj:`None`.
     opponent_score: :class:`int`
         The number of kills the opposing guild has scored.
     opponent_fee: :class:`int`
@@ -635,7 +642,7 @@ class GuildWarEntry(abc.Serializable):
     winner: :class:`str`
         The name of the guild that won.
 
-        Note that if the winning guild is disbanded, this may be ``None``.
+        Note that if the winning guild is disbanded, this may be :obj:`None`.
     surrender: :class:`bool`
         Whether the losing guild surrendered or not.
     """
@@ -728,7 +735,7 @@ class ListedGuild(abc.BaseGuild, abc.Serializable):
         Returns
         -------
         :class:`list` of :class:`ListedGuild`
-            List of guilds in the current world. ``None`` if it's the list of a world that doesn't exist.
+            List of guilds in the current world. :obj:`None` if it's the list of a world that doesn't exist.
 
         Raises
         ------

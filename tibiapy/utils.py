@@ -274,7 +274,7 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
     Returns
     -------
     :class:`datetime.datetime`, optional
-        The represented datetime, or ``None`` if conversion wasn't possible.
+        The represented datetime, or :obj:`None` if conversion wasn't possible.
     """
     if obj is None:
         return None

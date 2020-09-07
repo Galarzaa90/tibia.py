@@ -74,7 +74,7 @@ class LeaderboardEntry(abc.BaseCharacter, abc.Serializable):
 class ListedTournament(abc.BaseTournament, abc.Serializable):
     """Represents an tournament in the archived tournaments list.
 
-    :py:attr:`start_date` and :py:attr:`end_date` might be ``None`` when a tournament that is currently running
+    :py:attr:`start_date` and :py:attr:`end_date` might be :obj:`None` when a tournament that is currently running
     is on the list (e.g. on the leaderboards tournament selection section).
 
     .. versionadded:: 2.5.0
