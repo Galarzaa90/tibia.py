@@ -49,7 +49,8 @@ extras_require = {
     ],
     'test': [
         'asynctest',
-        'aioresponses'
+        'aioresponses',
+        'coverage'
     ]
 }
 
