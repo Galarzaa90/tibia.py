@@ -11,3 +11,4 @@ exclude_lines =
     def __len__
     def __lt__
     def __gt__
+    return NotImplemented

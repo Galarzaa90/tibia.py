@@ -1198,7 +1198,7 @@ class PaginatedSummary(abc.Serializable):
 
         Returns
         -------
-        :class:`list`
+        :class:`object`:
             The entry matching the name.
         """
         return next((e for e in self.entries if e.name.lower() == name.lower()), None)
@@ -1228,7 +1228,7 @@ class PaginatedSummary(abc.Serializable):
 
         Returns
         -------
-        :class:`list`
+        :class:`object`:
             The entry matching the name.
         """
         return NotImplemented
@@ -1262,6 +1262,18 @@ class ItemSummary(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
+        """Gets an item by its item id.
+
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the item.
+
+        Returns
+        -------
+        :class:`DisplayItem`
+            The item matching the id.
+        """
         return next((e for e in self.entries if e.item_id == entry_id), None)
 
     @classmethod
@@ -1299,6 +1311,18 @@ class Mounts(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
+        """Gets a mount by its mount id.
+
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the mount.
+
+        Returns
+        -------
+        :class:`DisplayMount`
+            The mount matching the id.
+        """
         return next((e for e in self.entries if e.mount_id == entry_id), None)
 
     @classmethod
@@ -1336,6 +1360,18 @@ class Outfits(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
+        """Gets an outfit by its outfit id.
+
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the outfit.
+
+        Returns
+        -------
+        :class:`DisplayOutfit`
+            The outfit matching the id.
+        """
         return next((e for e in self.entries if e.outfit_id == entry_id), None)
 
     @classmethod
