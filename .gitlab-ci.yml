@@ -43,6 +43,7 @@ sonarcloud-check:
     entrypoint: [""]
   script:
     - sonar-scanner
+  before_script: []
   dependencies:
     - coverage
   only:

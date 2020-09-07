@@ -4,6 +4,7 @@ import aiohttp
 import asynctest
 from aioresponses import aioresponses
 
+from tests.tests_bazaar import FILE_BAZAAR_CURRENT
 from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
 from tests.tests_forums import FILE_CM_POST_ARCHIVE_PAGES
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
@@ -13,7 +14,8 @@ from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
-from tibiapy import Client, Character, CMPostArchive, Guild, Highscores, VocationFilter, Category, House, ListedHouse, \
+from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, VocationFilter, Category, \
+    House, ListedHouse, \
     ListedGuild, \
     KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, BoostedCreature
 
@@ -219,5 +221,12 @@ class TestClient(asynctest.TestCase, TestCommons):
         with self.assertRaises(ValueError):
             await self.client.fetch_cm_post_archive(start_date, end_date, -1)
 
+    @aioresponses()
+    async def test_client_fetch_current_auctions(self, mock):
+        """Testing fetching the current auctions"""
+        content = self.load_resource(FILE_BAZAAR_CURRENT)
+        mock.get(CharacterBazaar.get_current_auctions_url(), status=200, body=content)
+        response = await self.client.fetch_current_auctions()
+        self.assertIsInstance(response.data, CharacterBazaar)
 
 
