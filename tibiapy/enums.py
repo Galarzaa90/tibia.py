@@ -4,6 +4,7 @@ __all__ = (
     'AccountStatus',
     'AuctionOrder',
     'AuctionOrderBy',
+    'AuctionStatus',
     'Category',
     'BattlEyeTypeFilter',
     'BazaarType',
@@ -67,6 +68,24 @@ class AuctionOrderBy(NumericEnum):
     """The experience level of the auctioned character."""
     START_DATE = 3
     """The start date of the auction."""
+
+
+class AuctionStatus(BaseEnum):
+    """The possible values an auction might have."""
+    IN_PROGRESS = 'in progress'
+    """The auction is currently active.
+    
+    Notes
+    -----
+    This status doesn't exist in Tibia.com explicitly. It is given to all ongoing auctions."""
+    CURRENTLY_PROCESSED = 'currently processed'
+    """The auction ended with a winner, but payment hasn't been received yet."""
+    PENDING_TRANSFER = 'will be transferred at the next server save'
+    """The auction was finished and was paid, but the character hasn't been transferred to the new owner yet."""
+    CANCELLED = 'cancelled'
+    """The auction was cancelled as no payment was received in time."""
+    FINISHED = 'finished'
+    """The auction either finished with no bids or the character was transferred to the new owner already."""
 
 
 class BattlEyeTypeFilter(NumericEnum):

@@ -33,6 +33,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: AuctionStatus
+    :members:
+    :undoc-members:
+
 .. autoclass:: BattlEyeTypeFilter
     :members:
     :undoc-members:
@@ -40,7 +44,6 @@ Enumerations are provided for various values in order to avoid depending on stri
 .. autoclass:: BazaarType
     :members:
     :undoc-members:
-
 
 .. autoclass:: BidType
     :members:

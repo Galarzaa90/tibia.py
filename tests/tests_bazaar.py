@@ -2,7 +2,8 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import AuctionDetails, AuctionOrder, AuctionOrderBy, BattlEyeTypeFilter, BidType, CharacterBazaar, \
+from tibiapy import AuctionDetails, AuctionOrder, AuctionOrderBy, AuctionStatus, BattlEyeTypeFilter, BidType, \
+    CharacterBazaar, \
     InvalidContent, PvpTypeFilter, \
     Sex, SkillFilter, \
     Vocation, VocationAuctionFilter
@@ -147,7 +148,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
 
         self.assertEqual(330000, auction.bid)
         self.assertEqual(BidType.MINIMUM, auction.bid_type)
-        self.assertEqual("finished", auction.status)
+        self.assertEqual(AuctionStatus.FINISHED, auction.status)
 
         self.assertEqual(11715, auction.hit_points)
         self.assertEqual(17385, auction.mana)

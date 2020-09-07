@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+3.3.0 (Unreleased)
+=================
+
+- Added support for the Character Bazaar
+    - Added classes: ``CharacterBazaar``, ``ListedAuction`` and ``AuctionDetails`` and many auxiliary classes.
+
 .. v3.2.2:
 
 3.2.2 (2020-08-27)

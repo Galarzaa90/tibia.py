@@ -799,8 +799,6 @@ class ForumPost(abc.BasePost, abc.Serializable):
         The content of the post.
     signature: :class:`str`
         The signature of the post.
-    emoticon: :Class:`str`
-        The URL to the post's emoticon.
     post_id: :class:`int`
         The id of the post.
     posted_date: :class:`datetime.datetime`

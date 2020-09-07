@@ -7,7 +7,8 @@ from typing import Dict, List, Optional
 
 from tibiapy import abc, InvalidContent, Sex, Vocation
 from tibiapy.abc import BaseCharacter
-from tibiapy.enums import AuctionOrder, AuctionOrderBy, BattlEyeTypeFilter, BazaarType, BidType, PvpTypeFilter, \
+from tibiapy.enums import AuctionOrder, AuctionOrderBy, AuctionStatus, BattlEyeTypeFilter, BazaarType, BidType, \
+    PvpTypeFilter, \
     SkillFilter, \
     VocationAuctionFilter
 from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_integer, parse_pagination, parse_tibia_datetime, \
@@ -600,7 +601,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         The current bid in Tibia Coins.
     bid_type: :class:`BidType`
         The type of the auction's bid.
-    status: :class:`str`
+    status: :class:`AuctionStatus`
         The current status of the auction.
     """
     __slots__ = (
@@ -709,13 +710,13 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         bid_type_str = bid_type_tag.text.replace(":", "").strip()
         auction.bid_type = try_enum(BidType, bid_type_str)
         auction.bid = parse_integer(bid_tag.text)
-        status = "in progress"
         auction_body_block = auction_row.find("div", {"class", "CurrentBid"})
         auction_info_tag = auction_body_block.find("div", {"class": "AuctionInfo"})
+        status = ""
         if auction_info_tag:
             convert_line_breaks(auction_info_tag)
             status = auction_info_tag.text.replace("\n", " ").replace("  ", " ")
-        auction.status = status
+        auction.status = try_enum(AuctionStatus, status, AuctionStatus.IN_PROGRESS)
         argument_entries = auction_row.find_all("div", {"class": "Entry"})
         for entry in argument_entries:
             img = entry.find("img")
@@ -760,7 +761,7 @@ class AuctionDetails(ListedAuction):
         The current bid in Tibia Coins.
     bid_type: :class:`BidType`
         The type of the auction's bid.
-    status: :class:`str`
+    status: :class:`AuctionStatus`
         The current status of the auction.
     hit_points: :class:`int`
         The hit points of the character.
