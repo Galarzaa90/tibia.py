@@ -60,14 +60,22 @@ class AuctionOrder(NumericEnum):
 
 class AuctionOrderBy(NumericEnum):
     """The possible values to order the auctions by."""
-    BID = 0
+    BID = 100
     """The currently displayed bid for the auction."""
-    END_DATE = 1
+    END_DATE = 101
     """The end date of the auction."""
-    LEVEL = 2
+    LEVEL = 102
     """The experience level of the auctioned character."""
-    START_DATE = 3
+    START_DATE = 103
     """The start date of the auction."""
+    AXE_FIGHTING = 10
+    CLUB_FIGHTING = 9
+    DISTANCE_FIGHTING = 7
+    FISHING = 13
+    FIST_FIGHTING = 11
+    MAGIC_LEVEL = 1
+    SHIELDING = 6
+    SWORD_FIGHTING = 8
 
 
 class AuctionStatus(BaseEnum):

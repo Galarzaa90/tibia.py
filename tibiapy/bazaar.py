@@ -461,6 +461,8 @@ class DisplayItem(abc.Serializable):
         The URL to the item's image.
     name: :class:`str`
         The item's name.
+    description: :class:`str`
+        The item's description, if any.
     count: :class:`int`
         The item's count.
     item_id: :class:`int`
@@ -469,6 +471,7 @@ class DisplayItem(abc.Serializable):
     __slots__ = (
         "image_url",
         "name",
+        "description",
         "count",
         "item_id",
     )
@@ -476,6 +479,7 @@ class DisplayItem(abc.Serializable):
     def __init__(self, **kwargs):
         self.image_url: str = kwargs.get("image_url")
         self.name: str = kwargs.get("name")
+        self.description: str = kwargs.get("description")
         self.count: int = kwargs.get("count", 1)
         self.item_id: int = kwargs.get("item_id", 0)
 
@@ -484,7 +488,7 @@ class DisplayItem(abc.Serializable):
 
     @classmethod
     def _parse_image_box(cls, item_box):
-        description = item_box["title"]
+        title_text = item_box["title"]
         img_tag = item_box.find("img")
         if not img_tag:
             return None
@@ -492,13 +496,16 @@ class DisplayItem(abc.Serializable):
         amount = parse_tibia_money(amount_text.text) if amount_text else 1
         item_id = 0
         name = None
+        description = None
+        if "\n" in title_text:
+            description = title_text.split("\n", 1)[1]
         m = id_regex.search(img_tag["src"])
         if m:
             item_id = int(m.group(1))
-        m = description_regex.search(description)
+        m = description_regex.search(title_text)
         if m:
             name = m.group(1)
-        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id)
+        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description)
 
 
 class DisplayMount(DisplayImage):
@@ -944,7 +951,7 @@ class AuctionDetails(ListedAuction):
         Returns
         -------
         :class:`AuctionDetails`
-            The auction detaiils if found, :obj:`None` otherwise.
+            The auction details if found, :obj:`None` otherwise.
 
         Raises
         ------
@@ -996,6 +1003,16 @@ class AuctionDetails(ListedAuction):
 
     @classmethod
     def _parse_tables(cls, parsed_content):
+        """Parses c
+
+        Parameters
+        ----------
+        parsed_content
+
+        Returns
+        -------
+
+        """
         details_tables = parsed_content.find_all("div", {"class": "CharacterDetailsBlock"})
         return {table["id"]: table for table in details_tables}
 
