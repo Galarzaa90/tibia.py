@@ -44,7 +44,6 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertIsNone(bazaar.filters.skill)
         self.assertIsNone(bazaar.filters.min_skill_level)
         self.assertIsNone(bazaar.filters.max_skill_level)
-        self.assertEqual(AuctionOrderBy.END_DATE, bazaar.filters.order_by)
         self.assertEqual(AuctionOrder.LOWEST_EARLIEST, bazaar.filters.order)
 
     def test_character_bazaar_from_content_current_all_filters_selected(self):
@@ -52,22 +51,22 @@ class TestBazaar(TestCommons, unittest.TestCase):
 
         self.assertIsNotNone(bazaar)
         self.assertEqual(1, bazaar.page)
-        self.assertEqual(2, bazaar.total_pages)
-        self.assertEqual(27, bazaar.results_count)
-        self.assertEqual(25, len(bazaar.entries))
+        self.assertEqual(1, bazaar.total_pages)
+        self.assertEqual(9, bazaar.results_count)
+        self.assertEqual(9, len(bazaar.entries))
         self.assertIsNotNone(bazaar.url)
 
         auction = bazaar.entries[0]
-        self.assertEqual(13448, auction.auction_id)
-        self.assertEqual(150, auction.bid)
+        self.assertEqual(36169, auction.auction_id)
+        self.assertEqual(2600, auction.bid)
         self.assertEqual(BidType.MINIMUM, auction.bid_type)
         self.assertIsNotNone(auction.character_url)
         self.assertEqual(4, len(auction.displayed_items))
 
         first_item = auction.displayed_items[0]
         self.assertEqual(1, first_item.count)
-        self.assertEqual(3079, first_item.item_id)
-        self.assertEqual("boots of haste", first_item.name)
+        self.assertEqual(9394, first_item.item_id)
+        self.assertEqual("claw of 'The Noxious Spawn'", first_item.name)
         self.assertIsNotNone(first_item.image_url)
 
         self.assertIsNotNone(bazaar.filters)
@@ -79,9 +78,10 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(1000, bazaar.filters.max_level)
         self.assertEqual(SkillFilter.MAGIC_LEVEL, bazaar.filters.skill)
         self.assertEqual(1, bazaar.filters.min_skill_level)
-        self.assertEqual(5, bazaar.filters.max_skill_level)
-        self.assertEqual(AuctionOrderBy.END_DATE, bazaar.filters.order_by)
-        self.assertEqual(AuctionOrder.LOWEST_EARLIEST, bazaar.filters.order)
+        self.assertEqual(10, bazaar.filters.max_skill_level)
+        self.assertEqual(AuctionOrderBy.MAGIC_LEVEL, bazaar.filters.order_by)
+        self.assertEqual(AuctionOrder.HIGHEST_LATEST, bazaar.filters.order)
+        self.assertEqual("destruction", bazaar.filters.item)
 
     def test_character_bazaar_from_content_empty(self):
         bazaar = CharacterBazaar.from_content(self.load_resource(FILE_BAZAAR_CURRENT_EMPTY))
