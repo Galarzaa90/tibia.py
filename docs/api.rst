@@ -678,6 +678,8 @@ Exceptions
 
 .. autoclass:: NetworkError
 
+.. autoclass:: SiteMaintenanceError
+
 .. autoclass:: Forbidden
 
 Utility functions

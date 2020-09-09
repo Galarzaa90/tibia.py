@@ -11,6 +11,8 @@ Changelog
 
 - Added support for the Character Bazaar
     - Added classes: ``CharacterBazaar``, ``ListedAuction`` and ``AuctionDetails`` and many auxiliary classes.
+- Client methods throw a ``SiteMaintenanceError`` when Tibia.com is under maintenance, to be able to tell apart from
+other network errors.
 
 .. v3.2.2:
 
