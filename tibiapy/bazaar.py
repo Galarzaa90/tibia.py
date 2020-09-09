@@ -811,8 +811,9 @@ class AuctionDetails(ListedAuction):
         The total amount of gold the character has.
     achievement_points: :class:`int`
         The number of achievement points of the character.
-    regular_world_transfer: :class:`bool`
-        Whether the character can use a regular transfer.
+    regular_world_transfer_available_date: :class:`datetime.datetmie`
+        The date after regular world transfers will be available to purchase and use.
+        :obj:`None` indicates it is available immediately.
     charm_expansion: :class:`bool`
         Whether the character has a charm expansion or not.
     available_charm_points: :class:`int`
@@ -875,7 +876,8 @@ class AuctionDetails(ListedAuction):
         self.experience: int = kwargs.get("experience", 0)
         self.gold: int = kwargs.get("gold", 0)
         self.achievement_points: int = kwargs.get("achievement_points", 0)
-        self.regular_world_transfer_available: bool = kwargs.get("regular_world_transfer_available", False)
+        self.regular_world_transfer_available_date: datetime.datetime = \
+            kwargs.get("regular_world_transfer_available_date")
         self.charm_expansion: bool = kwargs.get("charm_expansion", False)
         self.available_charm_points: int = kwargs.get("available_charm_points", 0)
         self.spent_charm_points: int = kwargs.get("spent_charm_points", 0)
@@ -915,7 +917,7 @@ class AuctionDetails(ListedAuction):
         "experience",
         "gold",
         "achievement_points",
-        "regular_world_transfer_available",
+        "regular_world_transfer_available_date",
         "charm_expansion",
         "available_charm_points",
         "spent_charm_points",
@@ -943,14 +945,19 @@ class AuctionDetails(ListedAuction):
     )
 
     @property
-    def skills_map(self) -> Dict[str, 'SkillEntry']:
-        """:class:`dict` of :class:`str`, :class:`SkillEntry`: A mapping of skills by their name."""
-        return {skill.name: skill for skill in self.skills}
-    
-    @property
     def completed_bestiary_entries(self):
         """:class:`list` of :class:`BestiaryEntry`: Gets a list of completed bestiary entries."""
         return [e for e in self.bestiary_progress if e.completed]
+
+    @property
+    def regular_world_transfer_available(self):
+        """:class:`bool`: Whether regular world transfers are available immediately for this character."""
+        return self.regular_world_transfer_available_date is None
+    
+    @property
+    def skills_map(self) -> Dict[str, 'SkillEntry']:
+        """:class:`dict` of :class:`str`, :class:`SkillEntry`: A mapping of skills by their name."""
+        return {skill.name: skill for skill in self.skills}
 
     @classmethod
     def from_content(cls, content, auction_id=0):
@@ -1221,6 +1228,12 @@ class AuctionDetails(ListedAuction):
         self.experience = parse_integer(additional_stats.get("experience", "0"))
         self.gold = parse_integer(additional_stats.get("gold", "0"))
         self.achievement_points = parse_integer(additional_stats.get("achievement_points", "0"))
+
+        transfer_data = self._parse_data_table(content_containers[3])
+        transfer_text = transfer_data.get("regular_world_transfer")
+        if "after" in transfer_text:
+            date_string = transfer_text.split("after ")[1]
+            self.regular_world_transfer_available_date = parse_tibia_datetime(date_string)
 
         charms_data = self._parse_data_table(content_containers[4])
         self.charm_expansion = "yes" in charms_data.get("charms_expansion", "")

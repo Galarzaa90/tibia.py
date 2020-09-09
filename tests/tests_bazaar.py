@@ -167,7 +167,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(26006721711, auction.experience)
         self.assertEqual(41893, auction.gold)
         self.assertEqual(540, auction.achievement_points)
-        self.assertFalse(auction.regular_world_transfer_available)
+        self.assertIsInstance(auction.regular_world_transfer_available_date, datetime.datetime)
         self.assertEqual(110, auction.available_charm_points)
         self.assertEqual(5800, auction.spent_charm_points)
 
