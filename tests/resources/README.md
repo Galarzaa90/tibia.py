@@ -134,6 +134,15 @@ nonexistent world or a unselected world.
 
 ## Events resources
 - [tibiacom_calendar.txt](events/tibiacom_calendar.txt) - The content of the event's calendar.
+
+## Bazaar resources
+- [tibiacom_auction_finished.txt](bazaar/tibiacom_auction_finished.txt) - The content of a finished auction.
+- [tibiacom_auction_not_found.txt](bazaar/tibiacom_auction_not_found.txt) - The content of an auction that doesn't exist.
+- [tibiacom_current.txt](bazaar/tibiacom_current.txt) - The content of the current auctions page.
+- [tibiacom_current_all_filters.txt](bazaar/tibiacom_current_all_filters.txt) - The content of the current auctions page with all filters selected.
+- [tibiacom_history.txt](bazaar/tibiacom_history.txt) - The content of the auction history page.
+- [tibiacom_history_empty.txt](bazaar/tibiacom_history_empty.txt) - The content of the auction history page with no entries.
+
  
  ## Other resources
  - [tibiacom_about.txt](tibiacom_about.txt) - The 'About Tibia' section on Tibia.com, used to provide invalid content 

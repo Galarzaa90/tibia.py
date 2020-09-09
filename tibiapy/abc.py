@@ -93,8 +93,8 @@ class BaseAnnouncement(metaclass=abc.ABCMeta):
 
     The following implement this class:
 
-    - :class:`ForumAnnouncement`
-    - :class:`ListedAnnouncement`
+    - :class:`.ForumAnnouncement`
+    - :class:`.ListedAnnouncement`
 
     Attributes
     ----------
@@ -138,8 +138,8 @@ class BaseBoard(metaclass=abc.ABCMeta):
 
     The following implement this class:
 
-    - :class:`ForumBoard`
-    - :class:`ListedBoard`
+    - :class:`.ForumBoard`
+    - :class:`.ListedBoard`
 
     Attributes
     ----------
@@ -242,6 +242,8 @@ class BaseCharacter(metaclass=abc.ABCMeta):
     - :class:`.LeaderboardEntry`
     - :class:`.OnlineCharacter`
     - :class:`.OtherCharacter`
+    - :class:`.ListedAuction`
+    - :class:`.AuctionDetails`
 
     Attributes
     ----------
@@ -509,9 +511,9 @@ class BasePost(metaclass=abc.ABCMeta):
 
     The following implement this class:
 
-    - :class:`CMPost`
-    - :class:`ForumPost`
-    - :class:`LastPost`
+    - :class:`.CMPost`
+    - :class:`.ForumPost`
+    - :class:`.LastPost`
 
     Attributes
     ----------
