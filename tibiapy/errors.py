@@ -45,7 +45,7 @@ class Forbidden(NetworkError):
 
 
 class SiteMaintenanceError(NetworkError):
-    """A subclass of network error thrown when Tibia.com is down for maintenance.
+    """A subclass of :class:`NetworkError` thrown when Tibia.com is down for maintenance.
 
-    When Tibia.com is under maintance, all sections of the website redirect to maintenance.tibia.com.
+    When Tibia.com is under maintenance, all sections of the website redirect to maintenance.tibia.com.
     """
