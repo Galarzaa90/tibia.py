@@ -164,6 +164,8 @@ class Client:
             The URL that will be requested.
         data: :class:`dict`
             A mapping representing the form-data to send as part of the request.
+        headers: :class:`dict`
+            A mapping representing the headers to send as part of the request.
 
         Returns
         -------

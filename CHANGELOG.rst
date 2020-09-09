@@ -6,7 +6,7 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
-3.3.0 (Unreleased)
+3.3.0 (2020-09-09)
 =================
 
 - Added support for the Character Bazaar
