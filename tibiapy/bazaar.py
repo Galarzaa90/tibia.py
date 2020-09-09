@@ -3,7 +3,9 @@ import re
 import urllib.parse
 from abc import abstractmethod
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Type
+
+import bs4
 
 from tibiapy import abc, InvalidContent, Sex, Vocation
 from tibiapy.abc import BaseCharacter
@@ -680,6 +682,20 @@ class ListedAuction(BaseCharacter, abc.Serializable):
 
     @classmethod
     def _parse_auction(cls, auction_row, auction_id=0):
+        """Parses an auction's table, extracting its data.
+
+        Parameters
+        ----------
+        auction_row: :class:`bs4.Tag`
+            The row containing the auction's information.
+        auction_id: :class:`int`
+            The ID of the auction.
+
+        Returns
+        -------
+        :class:`ListedAuction`
+            The auction contained in the table.
+        """
         header_container = auction_row.find("div", attrs={"class": "AuctionHeader"})
         char_name_container = header_container.find("div", attrs={"class": "AuctionCharacterName"})
         char_link = char_name_container.find("a")
@@ -933,6 +949,7 @@ class AuctionDetails(ListedAuction):
     
     @property
     def completed_bestiary_entries(self):
+        """:class:`list` of :class:`BestiaryEntry`: Gets a list of completed bestiary entries."""
         return [e for e in self.bestiary_progress if e.completed]
 
     @classmethod
@@ -985,16 +1002,16 @@ class AuctionDetails(ListedAuction):
         if "Blessings" in details_tables:
             auction._parse_blessings_table(details_tables["Blessings"])
         if "Imbuements" in details_tables:
-            auction.imbuements = cls._parse_single_row_table(details_tables["Imbuements"])
+            auction.imbuements = cls._parse_single_column_table(details_tables["Imbuements"])
         if "Charms" in details_tables:
             auction._parse_charms_table(details_tables["Charms"])
         if "CompletedCyclopediaMapAreas" in details_tables:
-            auction.completed_cyclopedia_map_areas = cls._parse_single_row_table(
+            auction.completed_cyclopedia_map_areas = cls._parse_single_column_table(
                 details_tables["CompletedCyclopediaMapAreas"])
         if "CompletedQuestLines" in details_tables:
-            auction.completed_quest_lines = cls._parse_single_row_table(details_tables["CompletedQuestLines"])
+            auction.completed_quest_lines = cls._parse_single_column_table(details_tables["CompletedQuestLines"])
         if "Titles" in details_tables:
-            auction.titles = cls._parse_single_row_table(details_tables["Titles"])
+            auction.titles = cls._parse_single_column_table(details_tables["Titles"])
         if "Achievements" in details_tables:
             auction._parse_achievements_table(details_tables["Achievements"])
         if "BestiaryProgress" in details_tables:
@@ -1002,22 +1019,36 @@ class AuctionDetails(ListedAuction):
         return auction
 
     @classmethod
-    def _parse_tables(cls, parsed_content):
-        """Parses c
+    def _parse_tables(cls, parsed_content) -> Dict[str, bs4.Tag]:
+        """Parses the character details tables.
 
         Parameters
         ----------
-        parsed_content
+        parsed_content: :class:`bs4.Tag'
+            The parsed content of the auction.
 
         Returns
         -------
-
+        :class:`dict`
+            A dictionary of the tables, grouped by their id.
         """
         details_tables = parsed_content.find_all("div", {"class": "CharacterDetailsBlock"})
         return {table["id"]: table for table in details_tables}
 
     @classmethod
-    def _parse_data_table(cls, table):
+    def _parse_data_table(cls, table) -> Dict[str, str]:
+        """Parses a simple data table into a key value mapping.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table to be parsed.
+
+        Returns
+        -------
+        :class:`dict`
+            A mapping containing the table's data.
+        """
         rows = table.find_all("tr")
         data = {}
         for row in rows:
@@ -1028,6 +1059,13 @@ class AuctionDetails(ListedAuction):
         return data
 
     def parse_skills_table(self, table):
+        """Parses the skills table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the character's skill.
+        """
         rows = table.find_all("tr")
         skills = []
         for row in rows:
@@ -1039,6 +1077,13 @@ class AuctionDetails(ListedAuction):
         self.skills = skills
 
     def _parse_blessings_table(self, table):
+        """Parses the blessings table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the character's blessings.
+        """
         table_content = table.find("table", attrs={"class": "TableContent"})
         _, *rows = table_content.find_all("tr")
         for row in rows:
@@ -1048,7 +1093,19 @@ class AuctionDetails(ListedAuction):
             self.blessings.append(BlessingEntry(name_c, amount))
 
     @classmethod
-    def _parse_single_row_table(cls, table):
+    def _parse_single_column_table(cls, table):
+        """Parses a table with a single column into an array.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            A table with a single column.
+
+        Returns
+        -------
+        :class:`list` of :class:`str`
+            A list with the contents of each row.
+        """
         table_content = table.find_all("table", attrs={"class": "TableContent"})[-1]
         _, *rows = table_content.find_all("tr")
         ret = []
@@ -1061,6 +1118,13 @@ class AuctionDetails(ListedAuction):
         return ret
 
     def _parse_charms_table(self, table):
+        """Parses the charms table and extracts its information.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the charms.
+        """
         table_content = table.find("table", attrs={"class": "TableContent"})
         _, *rows = table_content.find_all("tr")
         for row in rows:
@@ -1070,6 +1134,13 @@ class AuctionDetails(ListedAuction):
             self.charms.append(CharmEntry(name_c, cost))
 
     def _parse_achievements_table(self, table):
+        """Parses the achievements table and extracts its information.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the achievements.
+        """
         table_content = table.find("table", attrs={"class": "TableContent"})
         _, *rows = table_content.find_all("tr")
         for row in rows:
@@ -1081,6 +1152,13 @@ class AuctionDetails(ListedAuction):
             self.achievements.append(AchievementEntry(text, secret))
 
     def _parse_bestiary_table(self, table):
+        """Parses the bestiary table and extracts its information.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the bestiary information.
+        """
         table_content = table.find("table", attrs={"class": "TableContent"})
         _, *rows = table_content.find_all("tr")
         for row in rows:
@@ -1094,6 +1172,20 @@ class AuctionDetails(ListedAuction):
 
     @classmethod
     def parse_page_items(cls, content, entry_class):
+        """Parses the elements of a page in the items, mounts and outfits.
+
+        Attributes
+        ----------
+        content: :class:`str`
+            The HTML content in the page.
+        entry_class:
+            The class defining the elements.
+
+        Returns
+        -------
+        -
+            The entries contained in the page.
+        """
         parsed_content = parse_tibiacom_content(content, builder='html5lib')
         item_boxes = parsed_content.find_all("div", attrs={"class": "CVIcon"})
         entries = []
@@ -1104,6 +1196,13 @@ class AuctionDetails(ListedAuction):
         return entries
 
     def _parse_general_table(self, table):
+        """Parses the general information table and assigns its values.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table with general information.
+        """
         content_containers = table.find_all("table", {"class": "TableContent"})
         general_stats = self._parse_data_table(content_containers[0])
         self.hit_points = parse_integer(general_stats.get("hit_points", "0"))
@@ -1297,6 +1396,18 @@ class ItemSummary(PaginatedSummary):
 
     @classmethod
     def _parse_table(cls, table):
+        """Parses the item summary table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the item summary.
+
+        Returns
+        -------
+        :class:`ItemSummary`
+            The item summary contained in the table.
+        """
         summary = cls()
         summary._parse_pagination(table)
         item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
@@ -1395,6 +1506,18 @@ class Outfits(PaginatedSummary):
 
     @classmethod
     def _parse_table(cls, table):
+        """Parses the outfits table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the character outfits.
+
+        Returns
+        -------
+        :class:`Outfits`
+            The outfits contained in the table.
+        """
         summary = cls()
         summary._parse_pagination(table)
         item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
