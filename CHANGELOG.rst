@@ -9,7 +9,7 @@ Changelog
 3.4.0 (2020-09-19)
 =================
 
-- Added option to only parsed the listed information of an auction, to skip the rest of the parsing.
+- Added option to only parse the listed information of an auction, to skip the rest of the parsing.
 - Fixed wrong type hint in ``ListedAuction`` for ``status``.
 
 3.3.0 (2020-09-09)
