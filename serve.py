@@ -77,8 +77,9 @@ async def get_auction(request: web.Request):
     fetch_items = int(request.query.get("fetch_items", 0))
     fetch_mounts = int(request.query.get("fetch_mounts", 0))
     fetch_outfits = int(request.query.get("fetch_outfits", 0))
+    skip_details = int(request.query.get("skip_details", 0))
     boosted = await app["tibiapy"].fetch_auction(int(auction_id), fetch_items=fetch_items, fetch_mounts=fetch_mounts,
-                                                 fetch_outfits=fetch_outfits)
+                                                 fetch_outfits=fetch_outfits, skip_details=skip_details)
     return web.json_response(boosted, dumps=CustomJson.dumps)
 
 

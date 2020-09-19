@@ -267,7 +267,8 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, auction_history, parsing_time)
 
-    async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False):
+    async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
+                            skip_details=False):
         """Fetches an auction by its ID.
 
         .. versionadded:: 3.3.0
@@ -282,6 +283,11 @@ class Client:
             Whether to fetch all of the character's mounts. By default only the first page is fetched.
         fetch_outfits: :class:`bool`
             Whether to fetch all of the character's outfits. By default only the first page is fetched.
+        skip_details: :class:`bool`, optional
+            Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
+
+            This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
+            parsing time.
 
         Returns
         -------
@@ -298,9 +304,9 @@ class Client:
         """
         response = await self._request("GET", AuctionDetails.get_url(auction_id))
         start_time = time.perf_counter()
-        auction = AuctionDetails.from_content(response.content, auction_id)
+        auction = AuctionDetails.from_content(response.content, auction_id, skip_details)
         parsing_time = time.perf_counter() - start_time
-        if auction:
+        if auction and not skip_details:
             if fetch_items:
                 await self._fetch_all_pages(auction_id, auction.items, 0)
                 await self._fetch_all_pages(auction_id, auction.store_items, 1)

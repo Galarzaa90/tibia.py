@@ -645,7 +645,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         self.auction_end: datetime.datetime = kwargs.get("auction_end")
         self.bid: int = kwargs.get("bid", 0)
         self.bid_type: BidType = kwargs.get("bid_type")
-        self.status: str = kwargs.get("status")
+        self.status: AuctionStatus = kwargs.get("status")
 
     def __repr__(self):
         return f"<{self.__class__.__name__} auction_id={self.auction_id} name={self.name} world={self.world}>"
@@ -960,7 +960,7 @@ class AuctionDetails(ListedAuction):
         return {skill.name: skill for skill in self.skills}
 
     @classmethod
-    def from_content(cls, content, auction_id=0):
+    def from_content(cls, content, auction_id=0, skip_details=False):
         """Parses an auction detail page from Tibia.com and extracts its data.
 
         Parameters
@@ -971,6 +971,11 @@ class AuctionDetails(ListedAuction):
             The ID of the auction.
 
             It is not possible to extract the ID from the page's content, so it may be passed to assign it manually.
+        skip_details: :class:`bool`, optional
+            Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
+
+            This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
+            parsing time.
 
         Returns
         -------
@@ -990,6 +995,8 @@ class AuctionDetails(ListedAuction):
             raise InvalidContent("content does not belong to a auction details page in Tibia.com")
         auction = cls._parse_auction(auction_row)
         auction.auction_id = auction_id
+        if skip_details:
+            return auction
 
         details_tables = cls._parse_tables(parsed_content)
         if "General" in details_tables:
