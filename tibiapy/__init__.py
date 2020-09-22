@@ -1,3 +1,6 @@
+__version__ = '3.5.0'
+__author__ = 'Allan Galarza'
+
 import logging
 
 from tibiapy import abc, enums, utils
@@ -16,8 +19,6 @@ from tibiapy.tournament import *
 from tibiapy.world import *
 from tibiapy.bazaar import *
 from tibiapy.client import *
-
-__version__ = '3.4.0'
 
 from logging import NullHandler
 

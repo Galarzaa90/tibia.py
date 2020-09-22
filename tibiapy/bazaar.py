@@ -1,19 +1,20 @@
 import datetime
 import re
 import urllib.parse
-from abc import abstractmethod
-
-from typing import Dict, List, Optional, Type
+import warnings
+from typing import Dict, List, Optional
 
 import bs4
 
 from tibiapy import abc, InvalidContent, Sex, Vocation
 from tibiapy.abc import BaseCharacter
-from tibiapy.enums import AuctionOrder, AuctionOrderBy, AuctionStatus, BattlEyeTypeFilter, BazaarType, BidType, \
+from tibiapy.enums import AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
+    BazaarType, BidType, \
     PvpTypeFilter, \
     SkillFilter, \
     VocationAuctionFilter
-from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_integer, parse_pagination, parse_tibia_datetime, \
+from tibiapy.utils import convert_line_breaks, deprecated, get_tibia_url, parse_integer, parse_pagination, \
+    parse_tibia_datetime, \
     parse_tibia_money, \
     parse_tibiacom_content, \
     try_enum
@@ -95,6 +96,10 @@ class AuctionFilters(abc.Serializable):
         The minimum skill level of the selected :attr:`skill` to display.
     max_skill_level: :class:`int`
         The maximum skill level of the selected :attr:`skill` to display.
+    search_string: :class:`str`
+        The search term to filter out auctions.
+    search_type: :class:`AuctionSearchType`
+        The type of search to use. Defines the behaviour of :py:attr:`search_string`.
     """
     __slots__ = (
         "world",
@@ -108,7 +113,8 @@ class AuctionFilters(abc.Serializable):
         "max_skill_level",
         "order_by",
         "order",
-        "item",
+        "search_string",
+        "search_type",
     )
 
     def __init__(self, **kwargs):
@@ -123,7 +129,8 @@ class AuctionFilters(abc.Serializable):
         self.max_skill_level: Optional[int] = kwargs.get("max_skill_level")
         self.order_by: Optional[AuctionOrderBy] = kwargs.get("order_by")
         self.order: Optional[AuctionOrder] = kwargs.get("order")
-        self.item: Optional[str] = kwargs.get("item")
+        self.search_string: Optional[str] = kwargs.get("search_string")
+        self.search_type: Optional[AuctionSearchType] = kwargs.get("search_type")
 
     def __repr__(self):
         attributes = ""
@@ -131,6 +138,21 @@ class AuctionFilters(abc.Serializable):
             v = getattr(self, attr)
             attributes += " %s=%r" % (attr, v)
         return "<{0.__class__.__name__}{1}>".format(self, attributes)
+
+    @property
+    def item(self):
+        """:class:`str`: The name of the item to search for.
+
+        .. deprecated:: 3.5.0
+            Use :py:attr:`search_string` instead.
+        """
+        warnings.warn("Deprecated, use 'search_string'instead", DeprecationWarning)
+        return self.search_string
+
+    @item.setter
+    @deprecated(instead="search_string")
+    def item(self, value):
+        self.search_string = value
 
     @property
     def query_params(self):
@@ -147,7 +169,8 @@ class AuctionFilters(abc.Serializable):
             "filter_skillrangeto": self.max_skill_level,
             "order_column": self.order_by.value if self.order_by else None,
             "order_direction": self.order.value if self.order else None,
-            "itemname": self.item,
+            "searchstring": self.search_string,
+            "searchtype": self.search_type.value if self.search_type else None,
         }
         return {k: v for k, v in params.items() if v}
 
@@ -167,30 +190,22 @@ class AuctionFilters(abc.Serializable):
         filters = AuctionFilters()
         world_select = table.find("select", {"name": "filter_world"})
         selected_world_option = world_select.find("option", {"selected": True})
-        if selected_world_option is None or not selected_world_option["value"]:
-            filters.world = None
-        else:
+        if selected_world_option is not None and selected_world_option["value"]:
             filters.world = selected_world_option["value"]
 
         pvp_select = table.find("select", {"name": "filter_worldpvptype"})
         selected_pvp_option = pvp_select.find("option", {"selected": True})
-        if selected_pvp_option is None or not selected_pvp_option["value"]:
-            filters.pvp_type = None
-        else:
+        if selected_pvp_option is not None and selected_pvp_option["value"]:
             filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(selected_pvp_option["value"], None))
 
         battleye_select = table.find("select", {"name": "filter_worldbattleyestate"})
         selected_battleye_option = battleye_select.find("option", {"selected": True})
-        if selected_battleye_option is None or not selected_battleye_option["value"]:
-            filters.battleye = None
-        else:
+        if selected_battleye_option is not None and selected_battleye_option["value"]:
             filters.battleye = try_enum(BattlEyeTypeFilter, parse_integer(selected_battleye_option["value"], None))
 
         vocation_select = table.find("select", {"name": "filter_profession"})
         selected_vocation_option = vocation_select.find("option", {"selected": True})
-        if selected_vocation_option is None or not selected_vocation_option["value"]:
-            filters.vocation = None
-        else:
+        if selected_vocation_option is not None and selected_vocation_option["value"]:
             filters.vocation = try_enum(VocationAuctionFilter, parse_integer(selected_vocation_option["value"], None))
 
         minlevel_input = table.find("input", {"name": "filter_levelrangefrom"})
@@ -200,9 +215,7 @@ class AuctionFilters(abc.Serializable):
 
         skill_select = table.find("select", {"name": "filter_skillid"})
         selected_skill_option = skill_select.find("option", {"selected": True})
-        if selected_skill_option is None or not selected_skill_option["value"]:
-            filters.skill = None
-        else:
+        if selected_skill_option is not None and selected_skill_option["value"]:
             filters.skill = try_enum(SkillFilter, parse_integer(selected_skill_option["value"], None))
         min_skill_level_input = table.find("input", {"name": "filter_skillrangefrom"})
         max_skill_level_input = table.find("input", {"name": "filter_skillrangeto"})
@@ -211,20 +224,23 @@ class AuctionFilters(abc.Serializable):
 
         order_by_select = table.find("select", {"name": "order_column"})
         selected_order_by_option = order_by_select.find("option", {"selected": True})
-        if selected_order_by_option is None or not selected_order_by_option["value"]:
-            filters.order_by = None
-        else:
+        if selected_order_by_option is not None and selected_order_by_option["value"]:
             filters.order_by = try_enum(AuctionOrderBy, parse_integer(selected_order_by_option["value"], None))
 
         order_select = table.find("select", {"name": "order_direction"})
         selected_order_option = order_select.find("option", {"selected": True})
-        if selected_order_option is None or not selected_order_option["value"]:
-            filters.order = None
-        else:
+        if selected_order_option is not None and selected_order_option["value"]:
             filters.order = try_enum(AuctionOrder, parse_integer(selected_order_option["value"], None))
 
-        name_input = table.find("input", {"name": "itemname"})
-        filters.item = name_input["value"] or None
+        search_string_input = table.find("input", {"name": "searchstring"})
+        if search_string_input is not None and search_string_input["value"]:
+            filters.search_string = search_string_input["value"] or None
+
+        search_type_input = table.find("input", {"name": "searchtype", "checked": "checked"})
+
+        if search_type_input is not None and search_type_input["value"]:
+            filters.search_type = try_enum(AuctionSearchType, parse_integer(search_type_input["value"], None))
+
         return filters
 
 

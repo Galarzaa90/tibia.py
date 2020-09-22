@@ -6,19 +6,28 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+3.5.0 (2020-09-22)
+==================
+
+- Added support for the new filtering options added to current auctions:
+    - Added new enumeration: ``AuctionSearchType``
+    - Renamed ``AuctionFilters`` attribute ``item`` to ``search_string``.
+      Property alias kept for backwards compatibility.
+    - Added new attribute ``AuctionFilters.search_type``
+
 3.4.0 (2020-09-19)
-=================
+==================
 
 - Added option to only parse the listed information of an auction, to skip the rest of the parsing.
 - Fixed wrong type hint in ``ListedAuction`` for ``status``.
 
 3.3.0 (2020-09-09)
-=================
+==================
 
 - Added support for the Character Bazaar
     - Added classes: ``CharacterBazaar``, ``ListedAuction`` and ``AuctionDetails`` and many auxiliary classes.
 - Client methods throw a ``SiteMaintenanceError`` when Tibia.com is under maintenance, to be able to tell apart from
-other network errors.
+  other network errors.
 
 .. v3.2.2:
 

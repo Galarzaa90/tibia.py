@@ -33,6 +33,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: AuctionSearchType
+    :members:
+    :undoc-members:
+
 .. autoclass:: AuctionStatus
     :members:
     :undoc-members:

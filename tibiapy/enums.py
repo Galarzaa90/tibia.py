@@ -5,6 +5,7 @@ __all__ = (
     'AuctionOrder',
     'AuctionOrderBy',
     'AuctionStatus',
+    'AuctionSearchType',
     'Category',
     'BattlEyeTypeFilter',
     'BazaarType',
@@ -76,6 +77,16 @@ class AuctionOrderBy(NumericEnum):
     MAGIC_LEVEL = 1
     SHIELDING = 6
     SWORD_FIGHTING = 8
+
+
+class AuctionSearchType(NumericEnum):
+    """The possible search types."""
+    ITEM_DEFAULT  = 0
+    """Searches everything that includes the words on the search string."""
+    ITEM_WILDCARD = 1
+    """Searches everything that includes the search string"""
+    CHARACTER_NAME = 2
+    """Searches a character's name."""
 
 
 class AuctionStatus(BaseEnum):
