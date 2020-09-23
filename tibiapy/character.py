@@ -567,8 +567,8 @@ class Character(abc.BaseCharacter, abc.Serializable):
             _, *name = name.replace("\xa0", " ").split(" ")
             name = " ".join(name)
             traded = False
-            if "(recently traded)" in name:
-                name = name.replace("(recently traded)", "").strip()
+            if "(traded)" in name:
+                name = name.replace("(traded)", "").strip()
                 traded = True
             main_img = cols_raw[0].find('img')
             main = False
