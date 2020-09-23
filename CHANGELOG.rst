@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.5.2:
+
+3.5.2 (2020-09-22)
+==================
+
+- Fixed bug with auctions with more than 10 charms failing to parse.
+
 .. v3.5.1:
 
 3.5.1 (2020-09-22)

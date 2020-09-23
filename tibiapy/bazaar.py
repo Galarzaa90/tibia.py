@@ -1159,6 +1159,8 @@ class AuctionDetails(ListedAuction):
         _, *rows = table_content.find_all("tr")
         for row in rows:
             cols = row.find_all("td")
+            if len(cols) != 2:
+                continue
             cost_c, name_c = [c.text for c in cols]
             cost = parse_integer(cost_c.replace("x", ""))
             self.charms.append(CharmEntry(name_c, cost))
@@ -1193,7 +1195,7 @@ class AuctionDetails(ListedAuction):
         _, *rows = table_content.find_all("tr")
         for row in rows:
             cols = row.find_all("td")
-            if "more entries" in row.text:
+            if len(cols) != 3:
                 continue
             step_c, kills_c, name_c = [c.text for c in cols]
             kills = parse_integer(kills_c.replace("x", ""))
