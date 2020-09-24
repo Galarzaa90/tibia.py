@@ -6,9 +6,16 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.5.3:
+
+3.5.3 (2020-09-24)
+==================
+
+- Fixed bug with ascending ordering (lowest / earliest) not being passed to the request URL.
+
 .. v3.5.2:
 
-3.5.2 (2020-09-22)
+3.5.2 (2020-09-23)
 ==================
 
 - Fixed bug with auctions with more than 10 charms failing to parse.

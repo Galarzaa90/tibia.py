@@ -172,7 +172,7 @@ class AuctionFilters(abc.Serializable):
             "searchstring": self.search_string,
             "searchtype": self.search_type.value if self.search_type else None,
         }
-        return {k: v for k, v in params.items() if v}
+        return {k: v for k, v in params.items() if v is not None}
 
     @classmethod
     def _parse_filter_table(cls, table):
