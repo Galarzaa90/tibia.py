@@ -482,7 +482,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         for row in rows[1:]:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
-            field, value = cols
+            field, value, *_ = cols
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
             value = value.replace("\xa0", " ")
             if field in bool_fields:

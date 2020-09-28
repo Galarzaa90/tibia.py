@@ -1,4 +1,5 @@
 import datetime
+import logging
 import re
 import urllib.parse
 import warnings
@@ -45,6 +46,8 @@ id_addon_regex = re.compile(r'(\d+)_(\d)\.gif')
 id_regex = re.compile(r'(\d+).(?:gif|png)')
 description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
 quotes = re.compile(r'"([^"]+)"')
+
+log = logging.getLogger("tibiapy")
 
 
 class AchievementEntry(abc.Serializable):
@@ -1003,7 +1006,7 @@ class AuctionDetails(ListedAuction):
         InvalidContent
             If the content does not belong to a auction detail's page.
         """
-        parsed_content = parse_tibiacom_content(content, builder='html5lib')
+        parsed_content = parse_tibiacom_content(content, builder='html5lib' if not skip_details else 'lxml')
         auction_row = parsed_content.find("div", attrs={"class": "Auction"})
         if not auction_row:
             if "internal error" in content:
@@ -1218,7 +1221,7 @@ class AuctionDetails(ListedAuction):
         -
             The entries contained in the page.
         """
-        parsed_content = parse_tibiacom_content(content, builder='html5lib')
+        parsed_content = parse_tibiacom_content(content, builder='lxml')
         item_boxes = parsed_content.find_all("div", attrs={"class": "CVIcon"})
         entries = []
         for item_box in item_boxes:

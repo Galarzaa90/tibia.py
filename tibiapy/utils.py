@@ -333,7 +333,7 @@ def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", build
         The parsed content.
     """
     strainer = bs4.SoupStrainer(tag, class_=html_class) if builder != "html5lib" else None
-    return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), builder, parse_only=strainer)
+    return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8', 1), builder, parse_only=strainer)
 
 
 T = TypeVar('T')

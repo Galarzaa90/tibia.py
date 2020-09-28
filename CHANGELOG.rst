@@ -6,6 +6,14 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.5.4:
+
+3.5.4 (2020-09-24)
+==================
+
+- Fetching auctions while skipping details is now faster.
+- Fixed bug in tournaments parsing.
+
 .. v3.5.3:
 
 3.5.3 (2020-09-24)

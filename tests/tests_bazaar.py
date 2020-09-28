@@ -231,6 +231,31 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(509, len(auction.bestiary_progress))
         self.assertEqual(205, len(auction.completed_bestiary_entries))
 
+    def test_auction_details_from_content_finished_skip_details(self):
+        auction = AuctionDetails.from_content(self.load_resource(FILE_AUCTION_FINISHED), skip_details=True)
+
+        self.assertIsNotNone(auction)
+
+        # Listing box
+        self.assertEqual("Vireloz", auction.name)
+        self.assertIn(auction.name, auction.character_url)
+        self.assertIn(str(auction.auction_id), auction.url)
+        self.assertEqual(1161, auction.level)
+        self.assertEqual(Vocation.ROYAL_PALADIN, auction.vocation)
+        self.assertEqual(Sex.MALE, auction.sex)
+        self.assertEqual("Wintera", auction.world)
+        self.assertIsNotNone(auction.outfit)
+        self.assertEqual(1322, auction.outfit.outfit_id)
+        self.assertEqual(4, len(auction.displayed_items))
+        self.assertEqual("gnome armor", auction.displayed_items[0].name)
+        self.assertEqual("falcon coif", auction.displayed_items[1].name)
+        self.assertEqual("pair of soulstalkers", auction.displayed_items[2].name)
+        self.assertEqual("lion spangenhelm", auction.displayed_items[3].name)
+
+        self.assertEqual(330000, auction.bid)
+        self.assertEqual(BidType.MINIMUM, auction.bid_type)
+        self.assertEqual(AuctionStatus.FINISHED, auction.status)
+
     def test_auction_details_from_content_not_found(self):
         auction = AuctionDetails.from_content(self.load_resource(FILE_AUCTION_NOT_FOUND))
 

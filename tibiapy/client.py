@@ -183,9 +183,9 @@ class Client:
         await self._session_ready.wait()
         try:
             init_time = time.perf_counter()
-            log.info(f"{url} | {method} | Fetching...")
+            log.info(f"%s | %s | Fetching...", url, method)
             async with self.session.request(method, url, data=data, headers=headers) as resp:
-                log.info(f"{url} | {method} | {resp.status} {resp.reason}")
+                log.info(f"%s | %s | %s %s", url, method, resp.status, resp.reason)
                 if "maintenance.tibia.com" in str(resp.url):
                     raise SiteMaintenanceError("Tibia.com is down for maintenance.")
                 self._handle_status(resp.status)
