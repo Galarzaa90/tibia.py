@@ -1264,7 +1264,7 @@ class AuctionDetails(ListedAuction):
             self.regular_world_transfer_available_date = parse_tibia_datetime(date_string)
 
         charms_data = self._parse_data_table(content_containers[4])
-        self.charm_expansion = "yes" in charms_data.get("charms_expansion", "")
+        self.charm_expansion = "yes" in charms_data.get("charm_expansion", "")
         self.available_charm_points = parse_integer(charms_data.get("available_charm_points"))
         self.spent_charm_points = parse_integer(charms_data.get("spent_charm_points"))
 
