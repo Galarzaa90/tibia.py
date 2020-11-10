@@ -1221,7 +1221,7 @@ class AuctionDetails(ListedAuction):
         -
             The entries contained in the page.
         """
-        parsed_content = parse_tibiacom_content(content, builder='lxml')
+        parsed_content = parse_tibiacom_content(content, builder='html5lib')
         item_boxes = parsed_content.find_all("div", attrs={"class": "CVIcon"})
         entries = []
         for item_box in item_boxes:

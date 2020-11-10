@@ -358,7 +358,7 @@ class Client:
             The HTML content of the obtained page.
         """
         headers = {"x-requested-with": "XMLHttpRequest"}
-        page_response = await self._request("GET", f"https://www.tibia.com/charactertrade/ajax_getcharacterdata.php?"
+        page_response = await self._request("GET", f"https://www.tibia.com/websiteservices/handle_charactertrades.php?"
                                                    f"auctionid={auction_id}&"
                                                    f"type={type_id}&"
                                                    f"currentpage={page}",
