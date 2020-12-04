@@ -143,6 +143,9 @@ class EventSchedule(abc.Serializable):
             # The last cells may belong to the last month
             if day < ongoing_day:
                 month += 1
+            if month > 12:
+                month = 1
+                year += 1
             ongoing_day = day + 1
             today_events = []
             popup_spans = day_cell.find_all('span', attrs={"class": "HelperDivIndicator"})

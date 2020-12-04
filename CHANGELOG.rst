@@ -6,6 +6,14 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.5.7:
+
+3.5.7 (2020-12-04)
+==================
+
+- Fixed bug in Event Calendar parsing.
+
+
 .. v3.5.6:
 
 3.5.6 (2020-11-10)
