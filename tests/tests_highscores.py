@@ -3,11 +3,12 @@ import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Category, Highscores, HighscoresEntry, InvalidContent, LoyaltyHighscoresEntry, \
-    Vocation, VocationFilter
+    Vocation, VocationFilter, BattlEyeTypeFilter
 
 FILE_HIGHSCORES_FULL = "highscores/tibiacom_full.txt"
 FILE_HIGHSCORES_EXPERIENCE = "highscores/tibiacom_experience.txt"
 FILE_HIGHSCORES_LOYALTY = "highscores/tibiacom_loyalty.txt"
+FILE_HIGHSCORES_BATTLEYE_PVP_FILTER = "highscores/tibiacom_battleye_pvp_filters.txt"
 FILE_HIGHSCORES_EMPTY = "highscores/tibiacom_empty.txt"
 FILE_HIGHSCORES_NO_RESULTS = "highscores/tibiacom_no_results.txt"
 
@@ -22,13 +23,14 @@ class TestHighscores(unittest.TestCase, TestCommons):
         self.assertEqual("Estela", highscores.world)
         self.assertEqual(VocationFilter.KNIGHTS, highscores.vocation)
         self.assertEqual(Category.MAGIC_LEVEL, highscores.category)
-        self.assertEqual(1932, highscores.results_count)
-        self.assertEqual(31, highscores.from_rank)
-        self.assertEqual(31, highscores.to_rank)
+        self.assertIsNone(highscores.battleye_filter)
+        self.assertEqual(1983, highscores.results_count)
+        self.assertEqual(38, highscores.from_rank)
+        self.assertEqual(38, highscores.to_rank)
         self.assertEqual(4, highscores.page)
-        self.assertEqual(39, highscores.total_pages)
+        self.assertEqual(40, highscores.total_pages)
         self.assertIsNotNone(highscores.url)
-        self.assertEqual(datetime.timedelta(minutes=2), highscores.last_updated)
+        self.assertEqual(datetime.timedelta(minutes=6), highscores.last_updated)
 
         for entry in highscores.entries:
             self.assertIsInstance(entry, HighscoresEntry)
@@ -36,6 +38,7 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.vocation, Vocation)
             self.assertIsInstance(entry.rank, int)
             self.assertIsInstance(entry.value, int)
+            self.assertIsInstance(entry.level, int)
             self.assertEqual("Estela", entry.world)
 
     def test_highscores_from_content_highscores(self):
@@ -66,8 +69,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
         self.assertEqual("Calmera", highscores.world)
         self.assertEqual(VocationFilter.PALADINS, highscores.vocation)
         self.assertEqual(Category.LOYALTY_POINTS, highscores.category)
-        self.assertEqual(1000, highscores.results_count)
-        self.assertEqual(20, highscores.total_pages)
+        self.assertEqual(1007, highscores.results_count)
+        self.assertEqual(21, highscores.total_pages)
 
         for entry in highscores.entries:
             self.assertIsInstance(entry, LoyaltyHighscoresEntry)
@@ -78,7 +81,33 @@ class TestHighscores(unittest.TestCase, TestCommons):
             self.assertIsInstance(entry.level, int)
             self.assertIsInstance(entry.title, str)
 
-    def _test_highscores_from_content_empty(self):
+    def test_highscores_from_content_battleye_and_pvp_filters(self):
+        """Testing parsing Highscores"""
+        content = self.load_resource(FILE_HIGHSCORES_BATTLEYE_PVP_FILTER)
+        highscores = Highscores.from_content(content)
+
+        self.assertEqual(None, highscores.world)
+        self.assertEqual(VocationFilter.ALL, highscores.vocation)
+        self.assertEqual(Category.EXPERIENCE, highscores.category)
+        self.assertEqual(BattlEyeTypeFilter.INITIALLY_PROTECTED, highscores.battleye_filter)
+        self.assertEqual(1000, highscores.results_count)
+        self.assertEqual(1, highscores.from_rank)
+        self.assertEqual(50, highscores.to_rank)
+        self.assertEqual(1, highscores.page)
+        self.assertEqual(20, highscores.total_pages)
+        self.assertEqual(3, len(highscores.pvp_types_filter))
+        self.assertIsNotNone(highscores.url)
+        self.assertEqual(datetime.timedelta(minutes=27), highscores.last_updated)
+
+        for entry in highscores.entries:
+            self.assertIsInstance(entry, HighscoresEntry)
+            self.assertIsInstance(entry.name, str)
+            self.assertIsInstance(entry.vocation, Vocation)
+            self.assertIsInstance(entry.rank, int)
+            self.assertIsInstance(entry.value, int)
+            self.assertIsInstance(entry.level, int)
+
+    def test_highscores_from_content_empty(self):
         """Testing parsing highscores when empty (world doesn't exist)"""
         content = self.load_resource(FILE_HIGHSCORES_EMPTY)
         highscores = Highscores.from_content(content)

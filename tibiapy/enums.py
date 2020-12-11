@@ -108,7 +108,7 @@ class AuctionStatus(BaseEnum):
 
 
 class BattlEyeTypeFilter(NumericEnum):
-    """The possible BattlEye filters that can be used for auctions."""
+    """The possible BattlEye filters that can be used for auctions and highscores."""
     INITIALLY_PROTECTED = 1
     """Worlds protected from the beginning, represented by a green symbol."""
     PROTECTED = 2
