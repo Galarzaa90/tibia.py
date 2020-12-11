@@ -49,12 +49,12 @@ class Highscores(abc.Serializable):
     """
     _ENTRIES_PER_PAGE = 50
 
-    def __init__(self, world, category = Category.EXPERIENCE, **kwargs):
+    def __init__(self, world, category=Category.EXPERIENCE, **kwargs):
         self.world: Optional[str] = world
-        self.category = try_enum(Category, category, Category.EXPERIENCE)
-        self.vocation = try_enum(VocationFilter, kwargs.get("vocation"), VocationFilter.ALL)
-        self.battleye_filter = try_enum(BattlEyeTypeFilter, kwargs.get("battleye_filter"))
-        self.pvp_types_filter = kwargs.get("pvp_types_filter", [])
+        self.category: Category = try_enum(Category, category, Category.EXPERIENCE)
+        self.vocation: VocationFilter = try_enum(VocationFilter, kwargs.get("vocation"), VocationFilter.ALL)
+        self.battleye_filter: Optional[BattlEyeTypeFilter] = try_enum(BattlEyeTypeFilter, kwargs.get("battleye_filter"))
+        self.pvp_types_filter: List[PvpTypeFilter] = kwargs.get("pvp_types_filter", [])
         self.entries: List[HighscoresEntry] = kwargs.get("entries", [])
         self.results_count: int = kwargs.get("results_count", 0)
         self.page: int = kwargs.get("page", 1)
@@ -183,9 +183,9 @@ class Highscores(abc.Serializable):
             The vocation filter to apply. By default all vocations will be shown.
         page: :class:`int`
             The page of highscores to show.
-        battleye_type: :class:`BattlEyeHighscoresFilter`
+        battleye_type: :class:`BattlEyeHighscoresFilter`, optional
             The battleEye filters to use.
-        pvp_types: :class:`list` of :class:`PvpTypeFilter`
+        pvp_types: :class:`list` of :class:`PvpTypeFilter`, optional
             The list of PvP types to filter the results for.
         Returns
         -------
