@@ -208,8 +208,14 @@ async def get_highscores(request: web.Request):
     world = request.match_info['world']
     category = try_enum(tibiapy.Category, request.query.get("category", "EXPERIENCE").upper(), tibiapy.Category.EXPERIENCE)
     vocations = try_enum(tibiapy.VocationFilter, int(request.query.get("vocation", 0)), tibiapy.VocationFilter.ALL)
+    battleye_type = try_enum(tibiapy.BattleEyeHighscoresFilter, int(request.query.get("battleye")))
     page = int(request.query.get("page", 1))
-    highscores = await app["tibiapy"].fetch_highscores_page(world, category, vocations, page)
+    pvp_params = request.query.getall("pvp", [])
+    pvp_types = [try_enum(tibiapy.PvpTypeFilter, param) for param in pvp_params]
+    pvp_types = [p for p in pvp_types if p is not None]
+    if world.lower() == "all":
+        world = None
+    highscores = await app["tibiapy"].fetch_highscores_page(world, category, vocations, page, battleye_type, pvp_types)
     return web.json_response(highscores, dumps=CustomJson.dumps)
 
 

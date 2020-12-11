@@ -159,8 +159,6 @@ class Highscores(abc.Serializable):
         -------
         The URL to the Tibia.com highscores.
         """
-        if world is None:
-            world = "ALL"
         pvp_types = pvp_types or []
         pvp_params = [("worldtypes[]", p.value) for p in pvp_types]
         return get_tibia_url("community", "highscores", *pvp_params, world=world, category=category.value,

@@ -801,9 +801,13 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, house, parsing_time)
 
-    async def fetch_highscores_page(self, world, category=Category.EXPERIENCE,
-                                    vocation=VocationFilter.ALL, page=1):
+    async def fetch_highscores_page(self, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
+                                    battleye_type=None, pvp_types=None):
         """Fetches a single highscores page from Tibia.com
+
+        Notes
+        -----
+        It is not possible to use BattlEye or PvPType filters when requesting a specific world.
 
         Parameters
         ----------
@@ -815,6 +819,10 @@ class Client:
             The vocation filter to use. No filter used by default.
         page: :class:`int`
             The page to fetch, by default the first page is fetched.
+        battleye_type: :class:`BattlEyeFilter`
+            The type of BattlEye protection to display results from.
+        pvp_types: :class:`list` of :class:`PvpTypeFilter`
+            The list of PvP types to filter the results for.
 
         Returns
         -------
@@ -828,8 +836,14 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+        ValueError
+            If an invalid filter combination is passed.
         """
-        response = await self._request("GET", Highscores.get_url(world, category, vocation, page))
+        pvp_types = pvp_types or []
+        if world is not None and (battleye_type or pvp_types):
+            raise ValueError("BattleEye and PvP type filters can only be used when fetching all worlds.")
+        response = await self._request("GET", Highscores.get_url(world, category, vocation, page, battleye_type,
+                                                                 pvp_types))
         start_time = time.perf_counter()
         highscores = Highscores.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
