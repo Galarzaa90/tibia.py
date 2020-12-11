@@ -3,7 +3,7 @@ import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Category, Highscores, HighscoresEntry, InvalidContent, LoyaltyHighscoresEntry, \
-    Vocation, VocationFilter, BattlEyeTypeFilter, BattleEyeHighscoresFilter
+    Vocation, VocationFilter, BattlEyeHighscoresFilter
 
 FILE_HIGHSCORES_FULL = "highscores/tibiacom_full.txt"
 FILE_HIGHSCORES_EXPERIENCE = "highscores/tibiacom_experience.txt"
@@ -29,7 +29,10 @@ class TestHighscores(unittest.TestCase, TestCommons):
         self.assertEqual(38, highscores.to_rank)
         self.assertEqual(4, highscores.page)
         self.assertEqual(40, highscores.total_pages)
+        self.assertIsNotNone(highscores.get_page_url(1))
         self.assertIsNotNone(highscores.url)
+        self.assertIsNotNone(highscores.next_page_url)
+        self.assertIsNotNone(highscores.previous_page_url)
         self.assertEqual(datetime.timedelta(minutes=6), highscores.last_updated)
 
         for entry in highscores.entries:
@@ -89,7 +92,7 @@ class TestHighscores(unittest.TestCase, TestCommons):
         self.assertEqual(None, highscores.world)
         self.assertEqual(VocationFilter.ALL, highscores.vocation)
         self.assertEqual(Category.EXPERIENCE, highscores.category)
-        self.assertEqual(BattleEyeHighscoresFilter.INITIALLY_PROTECTED, highscores.battleye_filter)
+        self.assertEqual(BattlEyeHighscoresFilter.INITIALLY_PROTECTED, highscores.battleye_filter)
         self.assertEqual(1000, highscores.results_count)
         self.assertEqual(1, highscores.from_rank)
         self.assertEqual(50, highscores.to_rank)

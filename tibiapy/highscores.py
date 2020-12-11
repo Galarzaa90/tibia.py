@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from tibiapy import abc
 from tibiapy.enums import Category, Vocation, VocationFilter, BattlEyeTypeFilter, PvpTypeFilter, \
-    BattleEyeHighscoresFilter
+    BattlEyeHighscoresFilter
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_tibiacom_content, try_enum, parse_integer
 
@@ -32,7 +32,7 @@ class Highscores(abc.Serializable):
         The selected category to displays the highscores of.
     vocation: :class:`VocationFilter`
         The selected vocation to filter out values.
-    battleye_filter: :class:`BattleEyeHighscoresFilter`
+    battleye_filter: :class:`BattlEyeHighscoresFilter`
         The selected BattlEye filter.
     pvp_types_filter: :class:`list` of :class:`PvpTypeFilter`
         The selected PvP types filter.
@@ -96,6 +96,38 @@ class Highscores(abc.Serializable):
         return self.get_url(self.world, self.category, self.vocation, self.page, self.battleye_filter,
                             self.pvp_types_filter)
 
+    @property
+    def previous_page_url(self):
+        """:class:`str`: The URL to the previous page of the current highscores, if there's any."""
+        return self.get_page_url(self.page - 1) if self.page > 1 else None
+
+    @property
+    def next_page_url(self):
+        """:class:`str`: The URL to the next page of the current highscores, if there's any."""
+        return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
+
+    def get_page_url(self, page):
+        """Gets the URL to a specific page for the current highscores.
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The page to get the URL for.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the page of the current highscores.
+
+        Raises
+        ------
+        ValueError:
+            The provided page is less or equals than zero.
+        """
+        if page <= 0:
+            raise ValueError("page cannot be less or equals than zero")
+        return self.get_url(self.world, self.category, self.vocation, page, self.battleye_filter, self.pvp_types_filter)
+
     @classmethod
     def from_content(cls, content):
         """Creates an instance of the class from the html content of a highscores page.
@@ -143,7 +175,7 @@ class Highscores(abc.Serializable):
 
         Parameters
         ----------
-        world: :class:`str`
+        world: :class:`str`, optional
             The game world of the desired highscores. If no world is passed, ALL worlds are shown.
         category: :class:`Category`
             The desired highscores category.
@@ -165,6 +197,7 @@ class Highscores(abc.Serializable):
                              profession=vocation.value, currentpage=page,
                              beprotection=battleye_type.value if battleye_type else None)
 
+    # region Private methods
     def _parse_entries_table(self, table):
         """Parses the table containing the highscore entries
 
@@ -209,7 +242,7 @@ class Highscores(abc.Serializable):
         if selected_be:
             value = selected_be["value"]
             num_value = int(value)
-            self.battleye_filter = try_enum(BattleEyeHighscoresFilter, num_value)
+            self.battleye_filter = try_enum(BattlEyeHighscoresFilter, num_value)
         selected_profession = dropdowns["profession"].find("option", {"selected": "selected"})
         if selected_profession:
             value = selected_profession["value"]
@@ -248,7 +281,6 @@ class Highscores(abc.Serializable):
             inner_table = table.find("div", attrs={'class': 'InnerTableContainer'})
             output[title] = inner_table
         return output
-    # endregion
 
     def _parse_entry(self, cols):
         """Parses an entry's row and adds the result to py:attr:`entries`.
@@ -272,6 +304,7 @@ class Highscores(abc.Serializable):
         else:
             entry = HighscoresEntry(rank, name, vocation, world, level, value)
         self.entries.append(entry)
+    # endregion
 
 
 class HighscoresEntry(abc.BaseCharacter, abc.Serializable):

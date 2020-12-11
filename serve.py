@@ -208,7 +208,7 @@ async def get_highscores(request: web.Request):
     world = request.match_info['world']
     category = try_enum(tibiapy.Category, request.query.get("category", "EXPERIENCE").upper(), tibiapy.Category.EXPERIENCE)
     vocations = try_enum(tibiapy.VocationFilter, int(request.query.get("vocation", 0)), tibiapy.VocationFilter.ALL)
-    battleye_type = try_enum(tibiapy.BattleEyeHighscoresFilter, int(request.query.get("battleye")))
+    battleye_type = try_enum(tibiapy.BattlEyeHighscoresFilter, int(request.query.get("battleye", -1)))
     page = int(request.query.get("page", 1))
     pvp_params = request.query.getall("pvp", [])
     pvp_types = [try_enum(tibiapy.PvpTypeFilter, param) for param in pvp_params]
