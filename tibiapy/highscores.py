@@ -4,7 +4,8 @@ from collections import OrderedDict
 from typing import List, Optional
 
 from tibiapy import abc
-from tibiapy.enums import Category, Vocation, VocationFilter, BattlEyeTypeFilter, PvpTypeFilter
+from tibiapy.enums import Category, Vocation, VocationFilter, BattlEyeTypeFilter, PvpTypeFilter, \
+    BattleEyeHighscoresFilter
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_tibiacom_content, try_enum, parse_integer
 
@@ -31,7 +32,7 @@ class Highscores(abc.Serializable):
         The selected category to displays the highscores of.
     vocation: :class:`VocationFilter`
         The selected vocation to filter out values.
-    battleye_filter: :class:`BattlEyeTypeFilter`
+    battleye_filter: :class:`BattleEyeHighscoresFilter`
         The selected BattlEye filter.
     pvp_types_filter: :class:`list` of :class:`PvpTypeFilter`
         The selected PvP types filter.
@@ -92,7 +93,8 @@ class Highscores(abc.Serializable):
     @property
     def url(self):
         """:class:`str`: The URL to the highscores page on Tibia.com containing the results."""
-        return self.get_url(self.world, self.category, self.vocation, self.page)
+        return self.get_url(self.world, self.category, self.vocation, self.page, self.battleye_filter,
+                            self.pvp_types_filter)
 
     @classmethod
     def from_content(cls, content):
@@ -135,7 +137,8 @@ class Highscores(abc.Serializable):
         return highscores
 
     @classmethod
-    def get_url(cls, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1):
+    def get_url(cls, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
+                battleye_type=None, pvp_types=None):
         """Gets the Tibia.com URL of the highscores for the given parameters.
 
         Parameters
@@ -148,15 +151,20 @@ class Highscores(abc.Serializable):
             The vocation filter to apply. By default all vocations will be shown.
         page: :class:`int`
             The page of highscores to show.
-
+        battleye_type: :class:`BattlEyeHighscoresFilter`
+            The battleEye filters to use.
+        pvp_types: :class:`list` of :class:`PvpTypeFilter`
+            The list of PvP types to filter the results for.
         Returns
         -------
         The URL to the Tibia.com highscores.
         """
         if world is None:
             world = "ALL"
-        return get_tibia_url("community", "highscores", world=world, category=category.value, profession=vocation.value,
-                             currentpage=page)
+        pvp_types = pvp_types or []
+        pvp_params = [("worldtypes[]", p.value) for p in pvp_types]
+        return get_tibia_url("community", "highscores", *pvp_params, world=world, category=category.value,
+                             profession=vocation.value, currentpage=page, beprotection=battleye_type.value)
 
     def _parse_entries_table(self, table):
         """Parses the table containing the highscore entries
@@ -202,12 +210,7 @@ class Highscores(abc.Serializable):
         if selected_be:
             value = selected_be["value"]
             num_value = int(value)
-            self.battleye_filter = {
-                -1: None,
-                0: BattlEyeTypeFilter.NOT_PROTECTED,
-                1: BattlEyeTypeFilter.PROTECTED,
-                2: BattlEyeTypeFilter.INITIALLY_PROTECTED
-            }.get(num_value)
+            self.battleye_filter = try_enum(BattleEyeHighscoresFilter, num_value)
         selected_profession = dropdowns["profession"].find("option", {"selected": "selected"})
         if selected_profession:
             value = selected_profession["value"]

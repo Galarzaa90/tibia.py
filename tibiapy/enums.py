@@ -7,6 +7,7 @@ __all__ = (
     'AuctionStatus',
     'AuctionSearchType',
     'Category',
+    'BattleEyeHighscoresFilter',
     'BattlEyeTypeFilter',
     'BazaarType',
     'BidType',
@@ -107,8 +108,18 @@ class AuctionStatus(BaseEnum):
     """The auction either finished with no bids or the character was transferred to the new owner already."""
 
 
+class BattleEyeHighscoresFilter(NumericEnum):
+    """The possible BattlEye filters that can be used for highscores."""
+    INITIALLY_PROTECTED = 2
+    """Worlds protected from the beginning, represented by a green symbol."""
+    PROTECTED = 1
+    """Worlds protected after the world was created, represented by a yellow symbol."""
+    UNPROTECTED = 0
+    """Worlds without any BattlEye protection."""
+
+
 class BattlEyeTypeFilter(NumericEnum):
-    """The possible BattlEye filters that can be used for auctions and highscores."""
+    """The possible BattlEye filters that can be used for auctions."""
     INITIALLY_PROTECTED = 1
     """Worlds protected from the beginning, represented by a green symbol."""
     PROTECTED = 2

@@ -23,7 +23,7 @@ def convert_line_breaks(element):
         br.replace_with("\n")
 
 
-def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
+def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
     """Builds a URL to Tibia.com with the given parameters.
 
     Parameters
@@ -34,6 +34,9 @@ def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
         The desired subtopic (e.g. characters, guilds, houses, etc)
     anchor: :class:`str`
         A link anchor to add to the link.
+    args:
+        A list of key-value pairs to add as query parameters.
+        This allows passing multiple parameters with the same name.
     kwargs:
         Additional parameters to pass to the url as query parameters (e.g name, world, houseid, etc)
 
@@ -63,6 +66,9 @@ def get_tibia_url(section, subtopic=None, *, anchor=None, **kwargs):
                 continue
             params[key] = value
     url += urllib.parse.urlencode(params)
+    if args:
+        url += "&"
+        url += urllib.parse.urlencode(args)
     if anchor:
         url += "#%s" % anchor
     return url
