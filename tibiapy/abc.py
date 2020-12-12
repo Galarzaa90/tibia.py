@@ -291,7 +291,7 @@ class BaseGuild(metaclass=abc.ABCMeta):
 
     - :class:`.Guild`
     - :class:`.GuildMembership`
-    - :class:'.ListedGuild'
+    - :class:`.ListedGuild`
 
     Attributes
     ----------

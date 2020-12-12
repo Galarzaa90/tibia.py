@@ -6,6 +6,16 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.4.0:
+
+3.4.0 (2020-12-12)
+==================
+
+- Added support for the new filtering options in Highscores
+    - Added ``battleye_filter`` and ``pvp_types_filter`` attributes.
+- Added ``get_page_url()`` instance method to ``Highscores`` class.
+- Added ``previous_page_url`` and ``next_page_url`` properties.
+
 .. v3.5.7:
 
 3.5.7 (2020-12-04)

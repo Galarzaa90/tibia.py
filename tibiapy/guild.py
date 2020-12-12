@@ -451,7 +451,7 @@ class GuildWars(abc.Serializable):
 
         Parameters
         ----------
-        name: class:`str`
+        name: :class:`str`
             The name of the guild.
 
         Returns

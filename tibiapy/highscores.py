@@ -33,9 +33,14 @@ class Highscores(abc.Serializable):
     vocation: :class:`VocationFilter`
         The selected vocation to filter out values.
     battleye_filter: :class:`BattlEyeHighscoresFilter`
-        The selected BattlEye filter.
+        The selected BattlEye filter. If :obj:`None`, all worlds will be displayed.
+
+        Only applies for global highscores. Only characters from worlds with the matching BattlEye protection will be
+        shown.
     pvp_types_filter: :class:`list` of :class:`PvpTypeFilter`
-        The selected PvP types filter.
+        The selected PvP types filter. If :obj:`None`, all world will be displayed.
+
+        Only applies for global highscores. Only characters from worlds with the matching PvP type will be shown.
     page: :class:`int`
         The page number being displayed.
     total_pages: :class:`int`
@@ -121,7 +126,7 @@ class Highscores(abc.Serializable):
 
         Raises
         ------
-        ValueError:
+        ValueError
             The provided page is less or equals than zero.
         """
         if page <= 0:

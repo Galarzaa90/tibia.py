@@ -71,9 +71,10 @@ doesn't exist.
 ## Highscores resources
 - [tibiacom_full.txt](highscores/tibiacom_full.txt) - The content of a correct highscore's page.
 - [tibiacom_empty.txt](highscores/tibiacom_empty.txt) - The content of the highscores page of a nonexistent world.
-- [tibiacom_no_results.txt](highscores/tibiacom_no_results.txt) - The content of the highscores page of a new world (no results shown).
+- [tibiacom_no_results.txt](highscores/tibiacom_no_results.txt) - The content of the highscores page of a new world (no results shown). _OUTDATED_
 - [tibiacom_experience.txt](highscores/tibiacom_experience.txt) - The content of an experience highscores page.
 - [tibiacom_loyalty.txt](highscores/tibiacom_loyalty.txt) - The content of a loyalty highscores page.
+- [tibiacom_battleye_pvp_filters.txt](highscores/tibiacom_battleye_pvp_filters.txt) - The content of the highscores page using BattlEye and PvP filters.
 - [tibiadata_full.json](highscores/tibiadata_full.json) - A highscores response from TibiaData.
 - [tibiadata_empty.json](highscores/tibiadata_empty.json) - A highscores response from TibiaData of a nonexistent world.
 - [tibiadata_experience.json](highscores/tibiadata_experience.json) - A response containing experience highscores from

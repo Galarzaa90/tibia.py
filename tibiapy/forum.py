@@ -1175,7 +1175,7 @@ class ListedAnnouncement(abc.BaseAnnouncement, abc.Serializable):
     ----------
     title: :class:`str`
         The title of the announcement.
-    announcement_id: class:`int`
+    announcement_id: :class:`int`
         The internal id of the announcement.
     announcement_author: :class:`str`
         The character that made the announcement.
