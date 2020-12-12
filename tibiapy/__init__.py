@@ -1,4 +1,4 @@
-__version__ = '3.4.0'
+__version__ = '3.6.0'
 __author__ = 'Allan Galarza'
 
 import logging
