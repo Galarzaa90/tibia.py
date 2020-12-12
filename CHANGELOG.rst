@@ -6,9 +6,9 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
-.. v3.4.0:
+.. v3.6.0:
 
-3.4.0 (2020-12-12)
+3.6.0 (2020-12-12)
 ==================
 
 - Added support for the new filtering options in Highscores
