@@ -33,7 +33,7 @@ after_script:
   - if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then codecov; fi
 
 deploy:
-  provider: pagestotal_pages
+  provider: pages
   skip_cleanup: true
   github-token: $GITHUB_TOKEN
   local-dir: docs/_build/html
