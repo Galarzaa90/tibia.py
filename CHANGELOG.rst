@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.6.1:
+
+3.6.1 (2020-12-28)
+==================
+
+- Fixed guild information being parsed incorrectly for characters in guilds containing "of the" in their name.
+
 .. v3.6.0:
 
 3.6.0 (2020-12-12)

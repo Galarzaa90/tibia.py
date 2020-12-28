@@ -26,7 +26,6 @@ link_search = re.compile(r'<a[^>]+>[^<]+</a>')
 link_content = re.compile(r'>([^<]+)<')
 
 house_regexp = re.compile(r'paid until (.*)')
-guild_regexp = re.compile(r'([\s\w()]+)\sof the\s(.+)')
 
 title_regexp = re.compile(r'(.*)\((\d+) titles? unlocked\)')
 badge_popup_regexp = re.compile(r"\$\(this\),\s+'([^']+)',\s+'([^']+)',")
@@ -427,6 +426,12 @@ class Character(abc.BaseCharacter, abc.Serializable):
                 houses.append({"id": int(query["houseid"][0]), "name": house_link.text.strip(),
                                "town": query["town"][0], "paid_until": paid_until_date})
                 continue
+            if field == "guild_membership":
+                guild_link = cols_raw[1].find('a')
+                rank = value.split("of the")[0]
+                char["guild_membership"] = GuildMembership(guild_link.text, rank.strip())
+
+                continue
             if field in int_rows:
                 value = int(value)
             char[field] = value
@@ -436,9 +441,6 @@ class Character(abc.BaseCharacter, abc.Serializable):
         if m:
             char["name"] = m.group(1)
             char["deletion_date"] = parse_tibia_datetime(m.group(2))
-        if "guild_membership" in char:
-            m = guild_regexp.match(char["guild_membership"])
-            char["guild_membership"] = GuildMembership(m.group(2), m.group(1))
 
         if "(traded)" in char["name"]:
             char["name"] = char["name"].replace("(traded)","").strip()
@@ -682,6 +684,7 @@ class GuildMembership(abc.BaseGuild, abc.Serializable):
         The title of the member in the guild.
     """
     __slots__ = (
+        "name",
         "rank",
         "title",
     )
