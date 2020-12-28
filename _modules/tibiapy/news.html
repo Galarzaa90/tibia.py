@@ -1,20 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.news &#8212; Tibia.py 2.5.1 documentation</title>
-    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.news &#8212; Tibia.py 3.6.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/custom.js"></script>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -33,8 +32,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.5.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.news</a></li> 
       </ul>
     </div>  
 
@@ -49,9 +49,10 @@
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span><span class="p">,</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_enum</span><span class="p">,</span> <span class="n">parse_tibia_date</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_enum</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;News&quot;</span><span class="p">,</span>
@@ -62,7 +63,7 @@
 <span class="n">ICON_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;newsicon_([^_]+)_(?:small|big)&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="News"><a class="viewcode-back" href="../../api.html#tibiapy.News">[docs]</a><span class="k">class</span> <span class="nc">News</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseNews</span><span class="p">):</span>
+<div class="viewcode-block" id="News"><a class="viewcode-back" href="../../api.html#tibiapy.News">[docs]</a><span class="k">class</span> <span class="nc">News</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseNews</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a news entry.</span>
 
 <span class="sd">    Attributes</span>
@@ -83,19 +84,29 @@
 <span class="sd">        The thread id of the designated discussion thread for this entry.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">news_id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">news_id</span>  <span class="c1"># type: int</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">content</span>  <span class="c1"># type: content</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>  <span class="c1"># type: datetime.date</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">category</span>  <span class="c1"># type: NewsCategory</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thread_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: Optional[int]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">category_icon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;category_icon&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">news_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">:</span> <span class="n">NewsCategory</span> <span class="o">=</span> <span class="n">category</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thread_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">category_icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;category_icon&quot;</span><span class="p">)</span>
 
     <span class="c1"># id, title, category and date inherited from BaseNews.</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;category&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;category_icon&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;date&quot;</span><span class="p">,</span>
         <span class="s2">&quot;content&quot;</span><span class="p">,</span>
         <span class="s2">&quot;thread_id&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">thread_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the thread discussing this news entry, if any.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">abc</span><span class="o">.</span><span class="n">BaseThread</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="News.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.News.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">news_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -157,7 +168,7 @@
             <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from the news archive section in Tibia.com&quot;</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="ListedNews"><a class="viewcode-back" href="../../api.html#tibiapy.ListedNews">[docs]</a><span class="k">class</span> <span class="nc">ListedNews</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseNews</span><span class="p">):</span>
+<div class="viewcode-block" id="ListedNews"><a class="viewcode-back" href="../../api.html#tibiapy.ListedNews">[docs]</a><span class="k">class</span> <span class="nc">ListedNews</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseNews</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a news entry.</span>
 
 <span class="sd">    Attributes</span>
@@ -176,22 +187,26 @@
 <span class="sd">    type: :class:`NewsType`</span>
 <span class="sd">        The type of news of this list entry.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">news_id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">news_type</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">news_id</span>  <span class="c1"># type: int</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">news_type</span>  <span class="c1"># type: NewsType</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">category</span>  <span class="c1"># type: NewsCategory</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>  <span class="c1"># type: datetime.datetime</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">category_icon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;category_icon&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
-
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;category&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;category_icon&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;date&quot;</span><span class="p">,</span>
         <span class="s2">&quot;type&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">news_id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">news_type</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">news_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span> <span class="n">NewsType</span> <span class="o">=</span> <span class="n">news_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">:</span> <span class="n">NewsCategory</span> <span class="o">=</span> <span class="n">category</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">=</span> <span class="n">date</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">category_icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;category_icon&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> id=</span><span class="si">{0.id}</span><span class="s2"> title=</span><span class="si">{0.title!r}</span><span class="s2"> type=</span><span class="si">{0.type!r}</span><span class="s2"> category=</span><span class="si">{0.category!r}</span><span class="s2">&quot;</span> \
-               <span class="s2">&quot; date=</span><span class="si">{0.date!r}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> title=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">!r}</span><span class="s2"> type=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="si">!r}</span><span class="s2"> &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;category=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="si">!r}</span><span class="s2"> date=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
 
 <div class="viewcode-block" id="ListedNews.list_from_content"><a class="viewcode-back" href="../../api.html#tibiapy.ListedNews.list_from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">list_from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
@@ -252,6 +267,7 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">news_id</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">news_type</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">category_icon</span><span class="o">=</span><span class="n">img_url</span><span class="p">)</span></div>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -302,17 +318,15 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 <h3 class="donation">Donate/support</h3>
@@ -334,8 +348,8 @@
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2018, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &copy; Copyright 2020, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.1.
   </div>
   
   </body>

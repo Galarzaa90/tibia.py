@@ -1,20 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.highscores &#8212; Tibia.py 2.5.1 documentation</title>
-    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.highscores &#8212; Tibia.py 3.6.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/custom.js"></script>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -33,8 +32,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.5.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.highscores</a></li> 
       </ul>
     </div>  
 
@@ -44,61 +44,88 @@
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.highscores</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">math</span>
-
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">InvalidContent</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="p">,</span> <span class="n">abc</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">get_tibia_url</span><span class="p">,</span> <span class="n">parse_json</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_enum</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="p">,</span> <span class="n">BattlEyeTypeFilter</span><span class="p">,</span> <span class="n">PvpTypeFilter</span><span class="p">,</span> \
+    <span class="n">BattlEyeHighscoresFilter</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">get_tibia_url</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_enum</span><span class="p">,</span> <span class="n">parse_integer</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;ExpHighscoresEntry&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Highscores&quot;</span><span class="p">,</span>
     <span class="s2">&quot;HighscoresEntry&quot;</span><span class="p">,</span>
     <span class="s2">&quot;LoyaltyHighscoresEntry&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">results_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Results: (\d+)&#39;</span><span class="p">)</span>
-
-<span class="n">HIGHSCORES_URL_TIBIADATA</span> <span class="o">=</span> <span class="s2">&quot;https://api.tibiadata.com/v2/highscores/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">.json&quot;</span>
+<span class="n">results_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Results: ([\d,]+)&#39;</span><span class="p">)</span>
+<span class="n">numeric_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d+)&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Highscores"><a class="viewcode-back" href="../../api.html#tibiapy.Highscores">[docs]</a><span class="k">class</span> <span class="nc">Highscores</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents the highscores of a world.</span>
-
-<span class="sd">    Tibia.com only shows 25 entries per page.</span>
-<span class="sd">    TibiaData.com shows all results at once.</span>
 
 <span class="sd">    .. versionadded:: 1.1.0</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    world: :class:`str`</span>
-<span class="sd">        The world the highscores belong to.</span>
+<span class="sd">        The world the highscores belong to. If this is :obj:`None`, the highscores shown are for all worlds.</span>
 <span class="sd">    category: :class:`Category`</span>
 <span class="sd">        The selected category to displays the highscores of.</span>
 <span class="sd">    vocation: :class:`VocationFilter`</span>
 <span class="sd">        The selected vocation to filter out values.</span>
-<span class="sd">    entries: :class:`list` of :class:`HighscoresEntry`</span>
-<span class="sd">        The highscores entries found.</span>
+<span class="sd">    battleye_filter: :class:`BattlEyeHighscoresFilter`</span>
+<span class="sd">        The selected BattlEye filter. If :obj:`None`, all worlds will be displayed.</span>
+
+<span class="sd">        Only applies for global highscores. Only characters from worlds with the matching BattlEye protection will be</span>
+<span class="sd">        shown.</span>
+<span class="sd">    pvp_types_filter: :class:`list` of :class:`PvpTypeFilter`</span>
+<span class="sd">        The selected PvP types filter. If :obj:`None`, all world will be displayed.</span>
+
+<span class="sd">        Only applies for global highscores. Only characters from worlds with the matching PvP type will be shown.</span>
+<span class="sd">    page: :class:`int`</span>
+<span class="sd">        The page number being displayed.</span>
+<span class="sd">    total_pages: :class:`int`</span>
+<span class="sd">        The total number of pages.</span>
 <span class="sd">    results_count: :class:`int`</span>
 <span class="sd">        The total amount of highscores entries in this category. These may be shown in another page.</span>
+<span class="sd">    last_updated: :class:`datetime.timedelta`</span>
+<span class="sd">        How long ago were this results updated. The resolution is 1 minute.</span>
+<span class="sd">    entries: :class:`list` of :class:`HighscoresEntry`</span>
+<span class="sd">        The highscores entries found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">VocationFilter</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vocation&quot;</span><span class="p">),</span> <span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[HighscoresEntry]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">results_count</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;results_count&quot;</span><span class="p">)</span>  <span class="c1"># type: int</span>
+    <span class="n">_ENTRIES_PER_PAGE</span> <span class="o">=</span> <span class="mi">50</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">:</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">:</span> <span class="n">VocationFilter</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">VocationFilter</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;vocation&quot;</span><span class="p">),</span> <span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">battleye_filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BattlEyeTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">BattlEyeTypeFilter</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;battleye_filter&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pvp_types_filter</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pvp_types_filter&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">HighscoresEntry</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entries&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;results_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_pages</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total_pages&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s1">&#39;world&#39;</span><span class="p">,</span>
         <span class="s1">&#39;category&#39;</span><span class="p">,</span>
         <span class="s1">&#39;vocation&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;entries&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;battleye_filter&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;pvp_types_filter&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;page&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;total_pages&#39;</span><span class="p">,</span>
         <span class="s1">&#39;results_count&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;last_updated&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;entries&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_serializable_properties</span> <span class="o">=</span> <span class="p">(</span>
+
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -115,24 +142,42 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">else</span> <span class="mi">0</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`int`: The page number the shown results correspond to on Tibia.com&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">from_rank</span><span class="o">/</span><span class="mi">25</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_rank</span> <span class="k">else</span> <span class="mi">0</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">total_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`int`: The total of pages of the highscores category.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results_count</span><span class="o">/</span><span class="mi">25</span><span class="p">))</span>
-
-    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the highscores page on Tibia.com containing the results.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_filter</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">pvp_types_filter</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url_tibiadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the highscores page on TibiaData.com containing the results.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url_tibiadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">previous_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the previous page of the current highscores, if there&#39;s any.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">next_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the next page of the current highscores, if there&#39;s any.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_pages</span> <span class="k">else</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Highscores.get_page_url"><a class="viewcode-back" href="../../api.html#tibiapy.Highscores.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the URL to a specific page for the current highscores.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        page: :class:`int`</span>
+<span class="sd">            The page to get the URL for.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the page of the current highscores.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            The provided page is less or equals than zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;page cannot be less or equals than zero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_filter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pvp_types_filter</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Highscores.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.Highscores.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
@@ -140,8 +185,8 @@
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Tibia.com only shows up to 25 entries per page, so in order to obtain the full highscores, all 12 pages must</span>
-<span class="sd">        be parsed and merged into one.</span>
+<span class="sd">        Tibia.com only shows up to 50 entries per page, so in order to obtain the full highscores, all pages must be</span>
+<span class="sd">        obtained individually and merged into one.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -161,122 +206,107 @@
         <span class="n">tables</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">)</span>
         <span class="n">filters</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Highscores Filter&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">filters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does is not from the highscores section of Tibia.com&quot;</span><span class="p">)</span>
-        <span class="n">world_filter</span><span class="p">,</span> <span class="n">vocation_filter</span><span class="p">,</span> <span class="n">category_filter</span> <span class="o">=</span> <span class="n">filters</span>
-        <span class="n">world</span> <span class="o">=</span> <span class="n">world_filter</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;selected&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">world</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">category</span> <span class="o">=</span> <span class="n">category_filter</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;selected&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
-        <span class="n">vocation_selected</span> <span class="o">=</span> <span class="n">vocation_filter</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;selected&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
-        <span class="n">vocation</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">vocation_selected</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">vocation_selected</span> <span class="k">else</span> <span class="mi">0</span>
-        <span class="n">highscores</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="n">vocation</span><span class="p">)</span>
-        <span class="n">entries</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Highscores&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">entries</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">rows</span> <span class="o">=</span> <span class="n">entries</span>
-        <span class="n">info_row</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-        <span class="n">highscores</span><span class="o">.</span><span class="n">results_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">results_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_row</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-            <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s2">&quot;There is currently no data&quot;</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
-                <span class="k">break</span>
-            <span class="n">highscores</span><span class="o">.</span><span class="n">_parse_entry</span><span class="p">(</span><span class="n">cols_raw</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">highscores</span></div>
-
-<div class="viewcode-block" id="Highscores.from_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.Highscores.from_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Builds a highscores object from a TibiaData highscores response.</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        Since TibiaData.com&#39;s response doesn&#39;t contain any indication of the vocation filter applied,</span>
-<span class="sd">        :py:attr:`vocation` can&#39;t be determined from the response, so the attribute must be assigned manually.</span>
-
-<span class="sd">        If the attribute is known, it can be passed for it to be assigned in this method.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        content: :class:`str`</span>
-<span class="sd">            The JSON content of the response.</span>
-<span class="sd">        vocation: :class:`VocationFilter`, optional</span>
-<span class="sd">            The vocation filter to assign to the results. Note that this won&#39;t affect the parsing.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`Highscores`</span>
-<span class="sd">            The highscores contained in the page, or None if the content is for the highscores of a nonexistent world.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        InvalidContent</span>
-<span class="sd">            If content is not a JSON string of the highscores response.&quot;&quot;&quot;</span>
-        <span class="n">json_content</span> <span class="o">=</span> <span class="n">parse_json</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">highscores_json</span> <span class="o">=</span> <span class="n">json_content</span><span class="p">[</span><span class="s2">&quot;highscores&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">highscores_json</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;Error&quot;</span> <span class="ow">in</span> <span class="n">tables</span> <span class="ow">and</span> <span class="s2">&quot;The world doesn&#39;t exist!&quot;</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">world</span> <span class="o">=</span> <span class="n">highscores_json</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span>
-            <span class="n">category</span> <span class="o">=</span> <span class="n">highscores_json</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
-            <span class="n">highscores</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">highscores_json</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]:</span>
-                <span class="n">value_key</span> <span class="o">=</span> <span class="s2">&quot;level&quot;</span>
-                <span class="k">if</span> <span class="n">highscores</span><span class="o">.</span><span class="n">category</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Category</span><span class="o">.</span><span class="n">ACHIEVEMENTS</span><span class="p">,</span> <span class="n">Category</span><span class="o">.</span><span class="n">LOYALTY_POINTS</span><span class="p">,</span> <span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">]:</span>
-                    <span class="n">value_key</span> <span class="o">=</span> <span class="s2">&quot;points&quot;</span>
-                <span class="k">if</span> <span class="n">highscores</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">:</span>
-                    <span class="n">highscores</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ExpHighscoresEntry</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;voc&quot;</span><span class="p">],</span>
-                                                                 <span class="n">entry</span><span class="p">[</span><span class="n">value_key</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]))</span>
-                <span class="k">elif</span> <span class="n">highscores</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">Category</span><span class="o">.</span><span class="n">LOYALTY_POINTS</span><span class="p">:</span>
-                    <span class="n">highscores</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LoyaltyHighscoresEntry</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;voc&quot;</span><span class="p">],</span>
-                                                                     <span class="n">entry</span><span class="p">[</span><span class="n">value_key</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">highscores</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">HighscoresEntry</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;voc&quot;</span><span class="p">],</span>
-                                                              <span class="n">entry</span><span class="p">[</span><span class="n">value_key</span><span class="p">]))</span>
-            <span class="n">highscores</span><span class="o">.</span><span class="n">results_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">highscores</span><span class="o">.</span><span class="n">entries</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a TibiaData highscores response.&quot;</span><span class="p">)</span>
-        <span class="n">highscores</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">vocation</span> <span class="ow">or</span> <span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does is not from the highscores section of Tibia.com&quot;</span><span class="p">)</span>
+        <span class="n">highscores</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">highscores</span><span class="o">.</span><span class="n">_parse_filters_table</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+        <span class="n">last_update_container</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;RightArea&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">last_update_container</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">numeric_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">last_update_container</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">highscores</span><span class="o">.</span><span class="n">last_updated</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span> <span class="k">if</span> <span class="n">m</span> <span class="k">else</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">()</span>
+        <span class="n">entries_table</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Highscores&quot;</span><span class="p">)</span>
+        <span class="n">highscores</span><span class="o">.</span><span class="n">_parse_entries_table</span><span class="p">(</span><span class="n">entries_table</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">highscores</span></div>
 
 <div class="viewcode-block" id="Highscores.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.Highscores.get_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">battleye_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvp_types</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets the Tibia.com URL of the highscores for the given parameters.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The game world of the desired highscores.</span>
+<span class="sd">        world: :class:`str`, optional</span>
+<span class="sd">            The game world of the desired highscores. If no world is passed, ALL worlds are shown.</span>
 <span class="sd">        category: :class:`Category`</span>
 <span class="sd">            The desired highscores category.</span>
-<span class="sd">        vocation: :class:`VocationFiler`</span>
+<span class="sd">        vocation: :class:`VocationFilter`</span>
 <span class="sd">            The vocation filter to apply. By default all vocations will be shown.</span>
 <span class="sd">        page: :class:`int`</span>
 <span class="sd">            The page of highscores to show.</span>
-
+<span class="sd">        battleye_type: :class:`BattlEyeHighscoresFilter`, optional</span>
+<span class="sd">            The battleEye filters to use.</span>
+<span class="sd">        pvp_types: :class:`list` of :class:`PvpTypeFilter`, optional</span>
+<span class="sd">            The list of PvP types to filter the results for.</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        The URL to the Tibia.com highscores.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;highscores&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="nb">list</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">profession</span><span class="o">=</span><span class="n">vocation</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                             <span class="n">currentpage</span><span class="o">=</span><span class="n">page</span><span class="p">)</span></div>
+        <span class="n">pvp_types</span> <span class="o">=</span> <span class="n">pvp_types</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="n">pvp_params</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;worldtypes[]&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pvp_types</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;highscores&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">pvp_params</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                             <span class="n">profession</span><span class="o">=</span><span class="n">vocation</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">currentpage</span><span class="o">=</span><span class="n">page</span><span class="p">,</span>
+                             <span class="n">beprotection</span><span class="o">=</span><span class="n">battleye_type</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">battleye_type</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Highscores.get_url_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.Highscores.get_url_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_url_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets the TibiaData.com URL of the highscores for the given parameters.</span>
+    <span class="c1"># region Private methods</span>
+    <span class="k">def</span> <span class="nf">_parse_entries_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the table containing the highscore entries</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The game world of the desired highscores.</span>
-<span class="sd">        category: :class:`Category`</span>
-<span class="sd">            The desired highscores category.</span>
-<span class="sd">        vocation: :class:`VocationFiler`</span>
-<span class="sd">            The vocation filter to apply. By default all vocations will be shown.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        The URL to the TibiaData.com highscores.</span>
+<span class="sd">        table: :class:`bs4.Tag`</span>
+<span class="sd">            The table containing the entries.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">HIGHSCORES_URL_TIBIADATA</span> <span class="o">%</span> <span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">vocation</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+        <span class="n">entries</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">entries</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">rows</span> <span class="o">=</span> <span class="n">entries</span>
+        <span class="n">info_row</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">pages_div</span><span class="p">,</span> <span class="n">results_div</span> <span class="o">=</span> <span class="n">info_row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+        <span class="n">page_links</span> <span class="o">=</span> <span class="n">pages_div</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+        <span class="n">listed_pages</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">page_links</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">listed_pages</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">listed_pages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listed_pages</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_pages</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">page_links</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_count</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">results_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">results_div</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;There is currently no data&quot;</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_entry</span><span class="p">(</span><span class="n">cols_raw</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_filters_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the filters table found in a highscores page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        table: :class:`bs4.Tag`</span>
+<span class="sd">            The table containing the filters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dropdowns</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;select&quot;</span><span class="p">)}</span>
+        <span class="n">selected_world</span> <span class="o">=</span> <span class="n">dropdowns</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;selected&quot;</span><span class="p">:</span> <span class="s2">&quot;selected&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">selected_world</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">selected_world</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">and</span> <span class="s2">&quot;All Worlds&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">value</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">selected_be</span> <span class="o">=</span> <span class="n">dropdowns</span><span class="p">[</span><span class="s2">&quot;beprotection&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;selected&quot;</span><span class="p">:</span> <span class="s2">&quot;selected&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">selected_be</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">selected_be</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+            <span class="n">num_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">battleye_filter</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">BattlEyeHighscoresFilter</span><span class="p">,</span> <span class="n">num_value</span><span class="p">)</span>
+        <span class="n">selected_profession</span> <span class="o">=</span> <span class="n">dropdowns</span><span class="p">[</span><span class="s2">&quot;profession&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;selected&quot;</span><span class="p">:</span> <span class="s2">&quot;selected&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">selected_profession</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">selected_profession</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+            <span class="n">num_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">VocationFilter</span><span class="p">,</span> <span class="n">num_value</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">)</span>
+        <span class="n">selected_category</span> <span class="o">=</span> <span class="n">dropdowns</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;option&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;selected&quot;</span><span class="p">:</span> <span class="s2">&quot;selected&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">selected_category</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">selected_category</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+            <span class="n">num_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">num_value</span><span class="p">)</span>
+        <span class="n">checkboxes</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;checkbox&quot;</span><span class="p">,</span> <span class="s2">&quot;checked&quot;</span><span class="p">:</span> <span class="s2">&quot;checked&quot;</span><span class="p">})</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">checkboxes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pvp_types_filter</span> <span class="o">=</span> <span class="p">[</span><span class="n">try_enum</span><span class="p">(</span><span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
@@ -290,7 +320,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`OrderedDict`[:class:`str`, :class:`list`[:class:`bs4.Tag`]]</span>
+<span class="sd">        :class:`OrderedDict`[:class:`str`, :class:`bs4.Tag`]</span>
 <span class="sd">            A dictionary containing all the table rows, with the table headers as keys.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tables</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;TableContainer&#39;</span><span class="p">})</span>
@@ -298,10 +328,10 @@
         <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;Text&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">text</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Last Update.*&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
             <span class="n">inner_table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;InnerTableContainer&#39;</span><span class="p">})</span>
-            <span class="n">output</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">inner_table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">inner_table</span>
         <span class="k">return</span> <span class="n">output</span>
-    <span class="c1"># endregion</span>
 
     <span class="k">def</span> <span class="nf">_parse_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parses an entry&#39;s row and adds the result to py:attr:`entries`.</span>
@@ -311,23 +341,24 @@
 <span class="sd">        cols: :class:`bs4.ResultSet`</span>
 <span class="sd">            The list of columns for that entry.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+        <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
         <span class="n">rank</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rank</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">Category</span><span class="o">.</span><span class="n">LOYALTY_POINTS</span><span class="p">:</span>
-            <span class="n">extra</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">Category</span><span class="o">.</span><span class="n">LOYALTY_POINTS</span><span class="p">:</span>
+            <span class="n">extra</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">values</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="n">extra</span> <span class="o">=</span> <span class="n">values</span>
+            <span class="n">vocation</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">values</span>
         <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">:</span>
-            <span class="n">entry</span> <span class="o">=</span> <span class="n">ExpHighscoresEntry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">extra</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">Category</span><span class="o">.</span><span class="n">LOYALTY_POINTS</span><span class="p">:</span>
-            <span class="n">entry</span> <span class="o">=</span> <span class="n">LoyaltyHighscoresEntry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">extra</span><span class="p">)</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">==</span> <span class="n">Category</span><span class="o">.</span><span class="n">LOYALTY_POINTS</span><span class="p">:</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">LoyaltyHighscoresEntry</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">extra</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">entry</span> <span class="o">=</span> <span class="n">HighscoresEntry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">HighscoresEntry</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span></div>
+    <span class="c1"># endregion</span>
 
 
-<div class="viewcode-block" id="HighscoresEntry"><a class="viewcode-back" href="../../api.html#tibiapy.HighscoresEntry">[docs]</a><span class="k">class</span> <span class="nc">HighscoresEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<div class="viewcode-block" id="HighscoresEntry"><a class="viewcode-back" href="../../api.html#tibiapy.HighscoresEntry">[docs]</a><span class="k">class</span> <span class="nc">HighscoresEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a entry for the highscores.</span>
 
 <span class="sd">    Attributes</span>
@@ -338,48 +369,32 @@
 <span class="sd">        The character&#39;s rank in the respective highscores.</span>
 <span class="sd">    vocation: :class:`Vocation`</span>
 <span class="sd">        The character&#39;s vocation.</span>
+<span class="sd">    world: :class:`str`</span>
+<span class="sd">        The character&#39;s world.</span>
+<span class="sd">    level: :class:`int`</span>
+<span class="sd">        The character&#39;s level.</span>
 <span class="sd">    value: :class:`int`</span>
-<span class="sd">        The character&#39;s value for the highscores.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span>  <span class="c1"># type: int</span>
+<span class="sd">        The character&#39;s value for the highscores.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">rank</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Vocation</span><span class="p">,</span> <span class="n">vocation</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>  <span class="c1"># type: int</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">level</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s1">&#39;rank&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">,</span>
         <span class="s1">&#39;vocation&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;world&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;level&#39;</span><span class="p">,</span>
         <span class="s1">&#39;value&#39;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> rank=</span><span class="si">{0.rank}</span><span class="s2"> name=</span><span class="si">{0.name!r}</span><span class="s2"> value=</span><span class="si">{0.value}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ExpHighscoresEntry"><a class="viewcode-back" href="../../api.html#tibiapy.ExpHighscoresEntry">[docs]</a><span class="k">class</span> <span class="nc">ExpHighscoresEntry</span><span class="p">(</span><span class="n">HighscoresEntry</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents an entry for the highscores&#39;s experience category.</span>
-
-<span class="sd">    This is a subclass of :class:`HighscoresEntry`, adding an extra field for level.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    name: :class:`str`</span>
-<span class="sd">        The name of the character.</span>
-<span class="sd">    rank: :class:`int`</span>
-<span class="sd">        The character&#39;s rank in the respective highscores.</span>
-<span class="sd">    vocation: :class:`Vocation`</span>
-<span class="sd">        The character&#39;s vocation.</span>
-<span class="sd">    value: :class:`int`</span>
-<span class="sd">        The character&#39;s experience points.</span>
-<span class="sd">    level: :class:`int`</span>
-<span class="sd">        The character&#39;s level.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span>  <span class="c1"># type: int</span>
-
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s1">&#39;level&#39;</span><span class="p">,</span>
-    <span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> rank=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> value=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="LoyaltyHighscoresEntry"><a class="viewcode-back" href="../../api.html#tibiapy.LoyaltyHighscoresEntry">[docs]</a><span class="k">class</span> <span class="nc">LoyaltyHighscoresEntry</span><span class="p">(</span><span class="n">HighscoresEntry</span><span class="p">):</span>
@@ -395,19 +410,25 @@
 <span class="sd">        The character&#39;s rank in the respective highscores.</span>
 <span class="sd">    vocation: :class:`Vocation`</span>
 <span class="sd">        The character&#39;s vocation.</span>
+<span class="sd">    world: :class:`str`</span>
+<span class="sd">        The character&#39;s world.</span>
+<span class="sd">    level: :class:`int`</span>
+<span class="sd">        The character&#39;s level.</span>
 <span class="sd">    value: :class:`int`</span>
 <span class="sd">        The character&#39;s loyalty points.</span>
 <span class="sd">    title: :class:`str`</span>
-<span class="sd">        The character&#39;s loyalty title.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>  <span class="c1"># type: str</span>
+<span class="sd">        The character&#39;s loyalty title.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">title</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s1">&#39;title&#39;</span><span class="p">,</span>
     <span class="p">)</span></div>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -458,17 +479,15 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 <h3 class="donation">Donate/support</h3>
@@ -490,8 +509,8 @@
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2018, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &copy; Copyright 2020, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.1.
   </div>
   
   </body>

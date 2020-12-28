@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.event &#8212; Tibia.py 3.6.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/custom.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.event</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.event</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">get_tibia_url</span><span class="p">,</span> <span class="n">parse_popup</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;EventSchedule&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;EventEntry&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">month_year_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([A-z]+)\s(\d+)&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="EventSchedule"><a class="viewcode-back" href="../../api.html#tibiapy.EventSchedule">[docs]</a><span class="k">class</span> <span class="nc">EventSchedule</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents the event&#39;s calendar in Tibia.com</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    month: :class:`int`</span>
+<span class="sd">        The month being displayed.</span>
+
+<span class="sd">        Note that some days from the previous and next month may be included too.</span>
+<span class="sd">    year: :class:`int`</span>
+<span class="sd">        The year being displayed.</span>
+<span class="sd">    events: :class:`list` of :class:`EventEntry`</span>
+<span class="sd">        A list of events that happen during this month.</span>
+
+<span class="sd">        It might include some events from the previous and next months as well.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;month&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;year&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;events&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">month</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">year</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EventEntry</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> month=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="si">}</span><span class="s2"> year=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: Gets the URL to the event calendar with the current parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EventSchedule.get_events_on"><a class="viewcode-back" href="../../api.html#tibiapy.EventSchedule.get_events_on">[docs]</a>    <span class="k">def</span> <span class="nf">get_events_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets a list of events that are active during the specified desired_date.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        date: :class:`datetime.date`</span>
+<span class="sd">            The date to check.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`list` of :class:`EventEntry`</span>
+<span class="sd">            The events that are active during the desired_date, if any.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Dates outside the calendar&#39;s month and year may yield unexpected results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">is_between</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">desired_date</span><span class="p">):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="ow">or</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">min</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="ow">or</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">max</span>
+            <span class="k">return</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">desired_date</span> <span class="o">&lt;=</span> <span class="n">end</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="k">if</span> <span class="n">is_between</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="n">date</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="EventSchedule.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.EventSchedule.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the URL to the Event Schedule or Event Calendar on Tibia.com</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If no parameters are passed, it will show the calendar for the current month and year.</span>
+
+<span class="sd">        Tibia.com limits the dates that the calendar displays, passing a month and year far from the current ones may</span>
+<span class="sd">        result in the response being for the current month and year instead.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        month: :class:`int`, optional</span>
+<span class="sd">            The desired month.</span>
+<span class="sd">        year: :class:`int`, optional</span>
+<span class="sd">            The desired year.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the calendar with the given parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="s2">&quot;eventcalendar&quot;</span><span class="p">,</span> <span class="n">calendarmonth</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">calendaryear</span><span class="o">=</span><span class="n">year</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EventSchedule.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.EventSchedule.from_content">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an instance of the class from the html content of the event&#39;s calendar.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`EventSchedule`</span>
+<span class="sd">            The event calendar contained in the page</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If content is not the HTML of the event&#39;s schedule page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="n">month_year_div</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;eventscheduleheaderdateblock&quot;</span><span class="p">})</span>
+        <span class="n">month</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="n">month_year_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">month_year_div</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="n">month</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="s2">&quot;%B&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tm_mon</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+
+        <span class="n">schedule</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">year</span><span class="p">)</span>
+
+        <span class="n">events_table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;eventscheduletable&quot;</span><span class="p">})</span>
+        <span class="n">day_cells</span> <span class="o">=</span> <span class="n">events_table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+        <span class="c1"># Keep track of events that are ongoing</span>
+        <span class="n">ongoing_events</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Keep track of all events present in that day</span>
+        <span class="n">ongoing_day</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">first_day</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">day_cell</span> <span class="ow">in</span> <span class="n">day_cells</span><span class="p">:</span>
+            <span class="n">day_div</span> <span class="o">=</span> <span class="n">day_cell</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">day_div</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="c1"># The first cells may belong to the previous month</span>
+            <span class="k">if</span> <span class="n">ongoing_day</span> <span class="o">&lt;</span> <span class="n">day</span><span class="p">:</span>
+                <span class="n">month</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="c1"># The last cells may belong to the last month</span>
+            <span class="k">if</span> <span class="n">day</span> <span class="o">&lt;</span> <span class="n">ongoing_day</span><span class="p">:</span>
+                <span class="n">month</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">month</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">:</span>
+                <span class="n">month</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">year</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">ongoing_day</span> <span class="o">=</span> <span class="n">day</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">today_events</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">popup_spans</span> <span class="o">=</span> <span class="n">day_cell</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;HelperDivIndicator&quot;</span><span class="p">})</span>
+            <span class="k">for</span> <span class="n">popup</span> <span class="ow">in</span> <span class="n">popup_spans</span><span class="p">:</span>
+                <span class="n">title</span><span class="p">,</span> <span class="n">popup_content</span> <span class="o">=</span> <span class="n">parse_popup</span><span class="p">(</span><span class="n">popup</span><span class="p">[</span><span class="s2">&quot;onmouseover&quot;</span><span class="p">])</span>
+                <span class="n">divs</span> <span class="o">=</span> <span class="n">popup_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+                <span class="c1"># Multiple events can be described in the same popup, they come in pairs, title and content.</span>
+                <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">iter</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">divs</span><span class="p">)]</span><span class="o">*</span><span class="mi">2</span><span class="p">):</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;• &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="n">event</span> <span class="o">=</span> <span class="n">EventEntry</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+                    <span class="n">today_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+                    <span class="c1"># If this is not an event that was already ongoing from previous days, add to list</span>
+                    <span class="k">if</span> <span class="n">event</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ongoing_events</span><span class="p">:</span>
+                        <span class="c1"># Only add a start date if this is not the first day of the calendar</span>
+                        <span class="c1"># We do not know the actual start date of the event.</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">first_day</span><span class="p">:</span>
+                            <span class="n">event</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">)</span>
+                        <span class="n">ongoing_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="c1"># Check which of the ongoing events did not show up today, meaning it has ended now</span>
+            <span class="k">for</span> <span class="n">pending_event</span> <span class="ow">in</span> <span class="n">ongoing_events</span><span class="p">[:]:</span>
+                <span class="k">if</span> <span class="n">pending_event</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">today_events</span><span class="p">:</span>
+                    <span class="c1"># If it didn&#39;t show up today, it means it ended yesterday.</span>
+                    <span class="n">end_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">)</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">pending_event</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">end_date</span>
+                    <span class="n">schedule</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pending_event</span><span class="p">)</span>
+                    <span class="c1"># Remove from ongoing</span>
+                    <span class="n">ongoing_events</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">pending_event</span><span class="p">)</span>
+            <span class="n">first_day</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Add any leftover ongoing events without a end date, as we don&#39;t know when they end.</span>
+        <span class="n">schedule</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ongoing_events</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">schedule</span></div></div>
+
+
+<div class="viewcode-block" id="EventEntry"><a class="viewcode-back" href="../../api.html#tibiapy.EventEntry">[docs]</a><span class="k">class</span> <span class="nc">EventEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents an event&#39;s entry in the calendar.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    title: :class:`str`</span>
+<span class="sd">        The title of the event.</span>
+<span class="sd">    description: :class:`str`</span>
+<span class="sd">        The description of the event.</span>
+<span class="sd">    start_date: :class:`datetime.date`</span>
+<span class="sd">        The day the event starts.</span>
+
+<span class="sd">        If the event is continuing from the previous month, this will be :obj:`None`.</span>
+<span class="sd">    end_date: :class:`datetime.date`</span>
+<span class="sd">        The day the event ends.</span>
+
+<span class="sd">        If the event is continuing on the next month, this will be :obj:`None`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;start_date&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;end_date&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_serializable_properties</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;duration&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_date&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">title</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> title=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">!r}</span><span class="s2"> description=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="o">+</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">days</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://travis-ci.org/Galarzaa90/tibia.py">
+    <img
+        alt="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+        src="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2020, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.1.
+  </div>
+  
+  </body>
+</html>

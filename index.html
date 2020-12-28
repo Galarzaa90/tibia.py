@@ -1,20 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Tibia.py &#8212; Tibia.py 2.5.1 documentation</title>
-    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tibia.py &#8212; Tibia.py 3.6.1 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/custom.js"></script>
+    <link rel="stylesheet" href="_static/style.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/custom.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Introduction" href="intro.html" />
@@ -39,7 +38,8 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">Tibia.py 2.5.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">Tibia.py 3.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tibia.py</a></li> 
       </ul>
     </div>  
 
@@ -50,16 +50,15 @@
             
   <div class="section" id="tibia-py">
 <h1>Tibia.py<a class="headerlink" href="#tibia-py" title="Permalink to this headline">¶</a></h1>
-<p>Tibia.py is a library for parsing HTML content from <a class="reference external" href="https://www.tibia.com/news/?subtopic=latestnews">Tibia.com</a>. into Python objects.
-It can also parse json content from <a class="reference external" href="https://www.tibiadata.com/">TibiaData</a>.</p>
+<p>Tibia.py is a library for parsing HTML content from <a class="reference external" href="https://www.tibia.com/news/?subtopic=latestnews">Tibia.com</a>. into Python objects.</p>
 <p><strong>Features:</strong></p>
 <ul class="simple">
-<li>Converts data into well-structured Python objects.</li>
-<li>Type consistent attributes.</li>
-<li>All objects can be converted to JSON strings.</li>
-<li>Asynchronous requests using <a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a>.</li>
-<li>Standalone parsing methods, allowing to use any network library of your choice.</li>
-<li>Support for characters, guilds, houses and worlds.</li>
+<li><p>Converts data into well-structured Python objects.</p></li>
+<li><p>Type consistent attributes.</p></li>
+<li><p>All objects can be converted to JSON strings.</p></li>
+<li><p>Asynchronous requests using <a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a>.</p></li>
+<li><p>Standalone parsing methods, allowing to use any network library of your choice.</p></li>
+<li><p>Support for characters, guilds, houses and worlds.</p></li>
 </ul>
 <div class="section" id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
@@ -75,46 +74,74 @@ It can also parse json content from <a class="reference external" href="https://
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#client">Client</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#enumerations">Enumerations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#main-models">Main Models</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#boostedcreature">BoostedCreature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#characters">Characters</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api.html#character">Character</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#guild">Guild</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#highscores">Highscores</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#house">House</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#killstatistics">KillStatistics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#listedguild">ListedGuild</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#listedhouse">ListedHouse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#listednews">ListedNews</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#listedtournament">ListedTournament</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#listedworld">ListedWorld</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#news">News</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tournament">Tournament</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tournamentleaderboard">TournamentLeaderboard</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#world">World</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#worldoverview">WorldOverview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#auxiliary-classes">Auxiliary Classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#auxiliary-classes">Auxiliary Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#accountbadge">AccountBadge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#accountinformation">AccountInformation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#achievement">Achievement</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#characterhouse">CharacterHouse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#exphighscoresentry">ExpHighscoresEntry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#death">Death</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#guildhouse">GuildHouse</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#guildinvite">GuildInvite</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#guildmember">GuildMember</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#guildmembership">GuildMembership</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#highscoresentry">HighscoresEntry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#killer">Killer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#leaderboardentry">LeaderboardEntry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#loyaltyhighscoresentry">LoyaltyHighscoresEntry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#worlds">Worlds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#worldoverview">WorldOverview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedworld">ListedWorld</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#world">World</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#onlinecharacter">OnlineCharacter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#othercharacter">OtherCharacter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#guilds">Guilds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#guild">Guild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedguild">ListedGuild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id1">Auxiliary Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#highscores">Highscores</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id2">Highscores</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#highscoresentry">HighscoresEntry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#loyaltyhighscoresentry">LoyaltyHighscoresEntry</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#houses">Houses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#house">House</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedhouse">ListedHouse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#tournaments">Tournaments</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#tournament">Tournament</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#tournamentleaderboard">TournamentLeaderboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id3">Auxiliary Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#forums">Forums</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#cmpostarchive">CMPostArchive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#forumannouncement">ForumAnnouncement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#forumboard">ForumBoard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#forumpost">ForumPost</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#forumthread">ForumThread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedannouncement">ListedAnnouncement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedboard">ListedBoard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedthread">ListedThread</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id4">Auxiliary Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#news">News</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id5">News</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listednews">ListedNews</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#eventschedule">EventSchedule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#evententry">EventEntry</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#bazaar">Bazaar</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#characterbazaar">CharacterBazaar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#listedauction">ListedAuction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#auctiondetails">AuctionDetails</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id6">Auxiliary Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#kill-statistics">Kill Statistics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#killstatistics">KillStatistics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#raceentry">RaceEntry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#rewardentry">RewardEntry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#ruleset">RuleSet</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#scoreset">ScoreSet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#other">Other</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html#boostedcreature">BoostedCreature</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#base-classes">Base Classes</a></li>
@@ -123,6 +150,26 @@ It can also parse json content from <a class="reference external" href="https://
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">3.6.1 (2020-12-28)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">3.6.0 (2020-12-12)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">3.5.7 (2020-12-04)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">3.5.6 (2020-11-10)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">3.5.5 (2020-10-03)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">3.5.4 (2020-09-24)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">3.5.3 (2020-09-24)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">3.5.2 (2020-09-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">3.5.1 (2020-09-22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">3.5.0 (2020-09-22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">3.4.0 (2020-09-19)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">3.3.0 (2020-09-09)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">3.2.2 (2020-08-27)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">3.2.1 (2020-08-25)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">3.2.0 (2020-08-10)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">3.1.0 (2020-07-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">3.0.3 (2020-07-28)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">3.0.2 (2020-07-14)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id19">3.0.1 (2020-07-14)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">3.0.0 (2020-07-13)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-5-1">2.5.1 (2020-05-27)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-5-0">2.5.0 (2020-05-22)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-4-3">2.4.3 (2020-04-22)</a></li>
@@ -155,13 +202,14 @@ It can also parse json content from <a class="reference external" href="https://
 </ul>
 </div>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
 </div>
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -211,17 +259,15 @@ It can also parse json content from <a class="reference external" href="https://
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 <h3 class="donation">Donate/support</h3>
@@ -243,8 +289,8 @@ It can also parse json content from <a class="reference external" href="https://
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2018, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &copy; Copyright 2020, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.1.
   </div>
   
   </div>

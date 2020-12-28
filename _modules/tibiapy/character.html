@@ -1,20 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.character &#8212; Tibia.py 2.5.1 documentation</title>
-    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.character &#8212; Tibia.py 3.6.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/custom.js"></script>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -33,8 +32,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.5.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.character</a></li> 
       </ul>
     </div>  
 
@@ -55,10 +55,9 @@
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">AccountStatus</span><span class="p">,</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
-<span class="kn">from</span> <span class="nn">tibiapy.guild</span> <span class="kn">import</span> <span class="n">Guild</span>
 <span class="kn">from</span> <span class="nn">tibiapy.house</span> <span class="kn">import</span> <span class="n">CharacterHouse</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">parse_json</span><span class="p">,</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> \
-    <span class="n">parse_tibiadata_date</span><span class="p">,</span> <span class="n">parse_tibiadata_datetime</span><span class="p">,</span> <span class="n">try_datetime</span><span class="p">,</span> <span class="n">try_enum</span><span class="p">,</span> <span class="n">deprecated</span><span class="p">,</span> <span class="n">split_list</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">split_list</span><span class="p">,</span> <span class="n">try_datetime</span><span class="p">,</span> \
+    <span class="n">try_enum</span>
 
 <span class="c1"># Extracts the scheduled deletion date of a character.&quot;&quot;&quot;</span>
 <span class="n">deleted_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([^,]+), will be deleted at (.*)&#39;</span><span class="p">)</span>
@@ -71,13 +70,10 @@
 <span class="n">link_search</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;a[^&gt;]+&gt;[^&lt;]+&lt;/a&gt;&#39;</span><span class="p">)</span>
 <span class="c1"># Extracts the contents of a tag</span>
 <span class="n">link_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&gt;([^&lt;]+)&lt;&#39;</span><span class="p">)</span>
-<span class="c1"># Extracts reason from TibiaData death</span>
-<span class="n">death_reason</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;by (?P&lt;killers&gt;[^.]+)(?:\.\s+Assisted by (?P&lt;assists&gt;.+))?&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
 
 <span class="n">house_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;paid until (.*)&#39;</span><span class="p">)</span>
-<span class="n">guild_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([\s\w()]+)\sof the\s(.+)&#39;</span><span class="p">)</span>
 
-<span class="n">title_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(.*)\((\d+) titles unlocked\)&#39;</span><span class="p">)</span>
+<span class="n">title_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(.*)\((\d+) titles? unlocked\)&#39;</span><span class="p">)</span>
 <span class="n">badge_popup_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\$\(this\),\s+&#39;([^&#39;]+)&#39;,\s+&#39;([^&#39;]+)&#39;,&quot;</span><span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -101,7 +97,7 @@
 <span class="sd">    name: :class:`str`</span>
 <span class="sd">        The name of the badge.</span>
 <span class="sd">    icon_url: :class:`str`</span>
-<span class="sd">        The URL to the badge&#39;s icon URL.</span>
+<span class="sd">        The URL to the badge&#39;s icon.</span>
 <span class="sd">    description: :class:`str`</span>
 <span class="sd">        The description of the badge.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -112,16 +108,18 @@
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">icon_url</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">icon_url</span> <span class="o">=</span> <span class="n">icon_url</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>  <span class="c1"># type: str</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">icon_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">icon_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">description</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2"> name=</span><span class="si">%r</span><span class="s2"> description=</span><span class="si">%r</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> description=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="AccountInformation"><a class="viewcode-back" href="../../api.html#tibiapy.AccountInformation">[docs]</a><span class="k">class</span> <span class="nc">AccountInformation</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents the account information of a character.</span>
+
+<span class="sd">    This is only visible if the character is not marked as hidden.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -140,11 +138,11 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">created</span><span class="p">,</span> <span class="n">loyalty_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">created</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">created</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loyalty_title</span> <span class="o">=</span> <span class="n">loyalty_title</span>  <span class="c1"># type: Optional[str]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>  <span class="c1"># type: Optional[str]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loyalty_title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">loyalty_title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2"> created=</span><span class="si">%r</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> created=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">created</span><span class="si">!r}</span><span class="s2"> loyalty_title=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loyalty_title</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Achievement"><a class="viewcode-back" href="../../api.html#tibiapy.Achievement">[docs]</a><span class="k">class</span> <span class="nc">Achievement</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
@@ -156,7 +154,7 @@
 <span class="sd">        The name of the achievement.</span>
 <span class="sd">    grade: :class:`int`</span>
 <span class="sd">        The grade of the achievement, also known as stars.</span>
-<span class="sd">    secret: :class:´bool´</span>
+<span class="sd">    secret: :class:`bool`</span>
 <span class="sd">        Whether the achievement is secret or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
@@ -165,22 +163,24 @@
         <span class="s2">&quot;secret&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">secret</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>   <span class="c1"># type: str</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grade</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">grade</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">secret</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">secret</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2"> name=</span><span class="si">%r</span><span class="s2"> grade=</span><span class="si">%d</span><span class="s2"> secret=</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grade</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> grade=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">grade</span><span class="si">}</span><span class="s2"> secret=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
 
 
-<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../api.html#tibiapy.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../api.html#tibiapy.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a Tibia character.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name: :class:`str`</span>
 <span class="sd">        The name of the character.</span>
+<span class="sd">    traded: :class:`bool`</span>
+<span class="sd">        If the character was traded in the last 6 months.</span>
 <span class="sd">    deletion_date: :class:`datetime.datetime`, optional</span>
 <span class="sd">        The date when the character will be deleted if it is scheduled for deletion.</span>
 <span class="sd">    former_names: :class:`list` of :class:`str`</span>
@@ -210,7 +210,7 @@
 <span class="sd">    guild_membership: :class:`GuildMembership`, optional</span>
 <span class="sd">        The guild the character is a member of.</span>
 <span class="sd">    last_login: :class:`datetime.datetime`, optional</span>
-<span class="sd">        The last time the character logged in. It will be ``None`` if the character has never logged in.</span>
+<span class="sd">        The last time the character logged in. It will be :obj:`None` if the character has never logged in.</span>
 <span class="sd">    position: :class:`str`, optional</span>
 <span class="sd">        The position of the character (e.g. CipSoft Member), if any.</span>
 <span class="sd">    comment: :class:`str`, optional</span>
@@ -235,7 +235,9 @@
 <span class="sd">        It will be empty if the character is hidden, otherwise, it will contain at least the character itself.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;former_names&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;traded&quot;</span><span class="p">,</span>
         <span class="s2">&quot;sex&quot;</span><span class="p">,</span>
         <span class="s2">&quot;title&quot;</span><span class="p">,</span>
         <span class="s2">&quot;unlocked_titles&quot;</span><span class="p">,</span>
@@ -261,32 +263,42 @@
         <span class="s2">&quot;deletion_date&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
+    <span class="n">_serializable_properties</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;deleted&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hidden&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sex</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">former_names</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;former_names&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[str]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;traded&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">former_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;former_names&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unlocked_titles</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unlocked_titles&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sex</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Sex</span><span class="p">,</span> <span class="n">sex</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Vocation</span><span class="p">,</span> <span class="n">vocation</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">achievement_points</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;achievement_points&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">former_world</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;former_world&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">residence</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;residence&quot;</span><span class="p">)</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">married_to</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;married_to&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">houses</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;houses&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[CharacterHouse]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_membership&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[GuildMembership]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">former_world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;former_world&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">residence</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;residence&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">married_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;married_to&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">houses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CharacterHouse</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;houses&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GuildMembership</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_membership&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_login</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_login&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">account_status</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">AccountStatus</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account_status&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[str]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">account_badges</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account_badges&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[AccountBadge]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">achievements</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;achievements&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[Achievement]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deaths</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deaths&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[Death]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deaths_truncated</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deaths&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: bool</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">account_information</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account_information&quot;</span><span class="p">)</span>  <span class="c1"># type: Optional[AccountInformation]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">other_characters</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;other_characters&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[OtherCharacter]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_badges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AccountBadge</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account_badges&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">achievements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Achievement</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;achievements&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deaths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Death</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deaths&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deaths_truncated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deaths&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_information</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AccountInformation</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account_information&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">other_characters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OtherCharacter</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;other_characters&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deletion_date</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deletion_date&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> world=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="si">!r}</span><span class="s2"> vocation=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="si">!r}</span><span class="s2"> &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;level=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2"> sex=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sex</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
 
     <span class="c1"># region Properties</span>
     <span class="nd">@property</span>
@@ -296,18 +308,18 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">guild_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`: The name of the guild the character belongs to, or ``None``.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The name of the guild the character belongs to, or :obj:`None`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">guild_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`: The character&#39;s rank in the guild they belong to, or ``None``.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">rank</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">guild_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`: The character&#39;s rank in the guild they belong to, or ``None``.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Guild</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">abc</span><span class="o">.</span><span class="n">BaseGuild</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -318,18 +330,6 @@
     <span class="k">def</span> <span class="nf">married_to_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the husband/spouse information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">married_to</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">married_to</span> <span class="k">else</span> <span class="kc">None</span>
-
-    <span class="nd">@property</span>
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;houses&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">house</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`CharacterHouse`: The house currently owned by the character.</span>
-
-<span class="sd">        .. deprecated:: 2.4.0</span>
-<span class="sd">            Characters may have more than one house. This will only return the first if any. Use :attr:`houses` instead.</span>
-
-<span class="sd">            Only kept for backwards compatibility and may be removed in the next major update.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">houses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">houses</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="c1"># endregion</span>
 
     <span class="c1"># region Public methods</span>
@@ -367,77 +367,6 @@
         <span class="n">char</span><span class="o">.</span><span class="n">_parse_deaths</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Character Deaths&quot;</span><span class="p">,</span> <span class="p">[]))</span>
         <span class="n">char</span><span class="o">.</span><span class="n">_parse_account_information</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Account Information&quot;</span><span class="p">,</span> <span class="p">[]))</span>
         <span class="n">char</span><span class="o">.</span><span class="n">_parse_other_characters</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Characters&quot;</span><span class="p">,</span> <span class="p">[]))</span>
-        <span class="k">return</span> <span class="n">char</span></div>
-
-<div class="viewcode-block" id="Character.from_tibiadata"><a class="viewcode-back" href="../../api.html#tibiapy.Character.from_tibiadata">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_tibiadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Builds a character object from a TibiaData character response.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        content: :class:`str`</span>
-<span class="sd">            The JSON content of the response.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`Character`</span>
-<span class="sd">            The character contained in the page, or None if the character doesn&#39;t exist</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        InvalidContent</span>
-<span class="sd">            If content is not a JSON string of the Character response.&quot;&quot;&quot;</span>
-        <span class="n">json_content</span> <span class="o">=</span> <span class="n">parse_json</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">char</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">character</span> <span class="o">=</span> <span class="n">json_content</span><span class="p">[</span><span class="s2">&quot;characters&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">character</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">character_data</span> <span class="o">=</span> <span class="n">character</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">achievement_points</span> <span class="o">=</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;achievement_points&quot;</span><span class="p">]</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">sex</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Sex</span><span class="p">,</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">])</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Vocation</span><span class="p">,</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;vocation&quot;</span><span class="p">])</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">residence</span> <span class="o">=</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;residence&quot;</span><span class="p">]</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">account_status</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">AccountStatus</span><span class="p">,</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;account_status&quot;</span><span class="p">])</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not match a character json from TibiaData.&quot;</span><span class="p">)</span>
-        <span class="n">char</span><span class="o">.</span><span class="n">former_names</span> <span class="o">=</span> <span class="n">character_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;former_names&quot;</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="k">if</span> <span class="s2">&quot;deleted&quot;</span> <span class="ow">in</span> <span class="n">character_data</span><span class="p">:</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">deletion_date</span> <span class="o">=</span> <span class="n">parse_tibiadata_datetime</span><span class="p">(</span><span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;deleted&quot;</span><span class="p">])</span>
-        <span class="n">char</span><span class="o">.</span><span class="n">married_to</span> <span class="o">=</span> <span class="n">character_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;married_to&quot;</span><span class="p">)</span>
-        <span class="n">char</span><span class="o">.</span><span class="n">former_world</span> <span class="o">=</span> <span class="n">character_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;former_world&quot;</span><span class="p">)</span>
-        <span class="n">char</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">character_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Position:&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;guild&quot;</span> <span class="ow">in</span> <span class="n">character_data</span><span class="p">:</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">guild_membership</span> <span class="o">=</span> <span class="n">GuildMembership</span><span class="p">(</span><span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;guild&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;guild&quot;</span><span class="p">][</span><span class="s2">&quot;rank&quot;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="s2">&quot;house&quot;</span> <span class="ow">in</span> <span class="n">character_data</span><span class="p">:</span>
-            <span class="n">house</span> <span class="o">=</span> <span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;house&quot;</span><span class="p">]</span>
-            <span class="n">paid_until_date</span> <span class="o">=</span> <span class="n">parse_tibiadata_date</span><span class="p">(</span><span class="n">house</span><span class="p">[</span><span class="s2">&quot;paid&quot;</span><span class="p">])</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">houses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CharacterHouse</span><span class="p">(</span><span class="n">house</span><span class="p">[</span><span class="s2">&quot;houseid&quot;</span><span class="p">],</span> <span class="n">house</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">char</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">house</span><span class="p">[</span><span class="s2">&quot;town&quot;</span><span class="p">],</span> <span class="n">char</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                              <span class="n">paid_until_date</span><span class="p">))</span>
-        <span class="n">char</span><span class="o">.</span><span class="n">comment</span> <span class="o">=</span> <span class="n">character_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;last_login&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">last_login</span> <span class="o">=</span> <span class="n">parse_tibiadata_datetime</span><span class="p">(</span><span class="n">character_data</span><span class="p">[</span><span class="s2">&quot;last_login&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">for</span> <span class="n">achievement</span> <span class="ow">in</span> <span class="n">character</span><span class="p">[</span><span class="s2">&quot;achievements&quot;</span><span class="p">]:</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">achievements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Achievement</span><span class="p">(</span><span class="n">achievement</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">achievement</span><span class="p">[</span><span class="s2">&quot;stars&quot;</span><span class="p">]))</span>
-
-        <span class="n">char</span><span class="o">.</span><span class="n">_parse_deaths_tibiadata</span><span class="p">(</span><span class="n">character</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deaths&quot;</span><span class="p">,</span> <span class="p">[]))</span>
-
-        <span class="k">for</span> <span class="n">other_char</span> <span class="ow">in</span> <span class="n">character</span><span class="p">[</span><span class="s2">&quot;other_characters&quot;</span><span class="p">]:</span>
-            <span class="n">char</span><span class="o">.</span><span class="n">other_characters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">OtherCharacter</span><span class="p">(</span><span class="n">other_char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">other_char</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">],</span>
-                                                        <span class="n">other_char</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;online&quot;</span><span class="p">,</span>
-                                                        <span class="n">other_char</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;deleted&quot;</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">character</span><span class="p">[</span><span class="s2">&quot;account_information&quot;</span><span class="p">]:</span>
-            <span class="n">acc_info</span> <span class="o">=</span> <span class="n">character</span><span class="p">[</span><span class="s2">&quot;account_information&quot;</span><span class="p">]</span>
-            <span class="n">created</span> <span class="o">=</span> <span class="n">parse_tibiadata_datetime</span><span class="p">(</span><span class="n">acc_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;created&quot;</span><span class="p">))</span>
-            <span class="n">loyalty_title</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">acc_info</span><span class="p">[</span><span class="s2">&quot;loyalty_title&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;(no title)&quot;</span> <span class="k">else</span> <span class="n">acc_info</span><span class="p">[</span><span class="s2">&quot;loyalty_title&quot;</span><span class="p">]</span>
-            <span class="n">position</span> <span class="o">=</span> <span class="n">acc_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span>
-
-            <span class="n">char</span><span class="o">.</span><span class="n">account_information</span> <span class="o">=</span> <span class="n">AccountInformation</span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="n">loyalty_title</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">char</span></div>
     <span class="c1"># endregion</span>
 
@@ -543,6 +472,12 @@
                 <span class="n">houses</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">query</span><span class="p">[</span><span class="s2">&quot;houseid&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">house_link</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
                                <span class="s2">&quot;town&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">[</span><span class="s2">&quot;town&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;paid_until&quot;</span><span class="p">:</span> <span class="n">paid_until_date</span><span class="p">})</span>
                 <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;guild_membership&quot;</span><span class="p">:</span>
+                <span class="n">guild_link</span> <span class="o">=</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+                <span class="n">rank</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;of the&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">char</span><span class="p">[</span><span class="s2">&quot;guild_membership&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">GuildMembership</span><span class="p">(</span><span class="n">guild_link</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">rank</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+                <span class="k">continue</span>
             <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">int_rows</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="n">char</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
@@ -552,9 +487,10 @@
         <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
             <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">char</span><span class="p">[</span><span class="s2">&quot;deletion_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-        <span class="k">if</span> <span class="s2">&quot;guild_membership&quot;</span> <span class="ow">in</span> <span class="n">char</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="n">guild_regexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">char</span><span class="p">[</span><span class="s2">&quot;guild_membership&quot;</span><span class="p">])</span>
-            <span class="n">char</span><span class="p">[</span><span class="s2">&quot;guild_membership&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">GuildMembership</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="s2">&quot;(traded)&quot;</span> <span class="ow">in</span> <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+            <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(traded)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">char</span><span class="p">[</span><span class="s2">&quot;traded&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="s2">&quot;former_names&quot;</span> <span class="ow">in</span> <span class="n">char</span><span class="p">:</span>
             <span class="n">former_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">fn</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">char</span><span class="p">[</span><span class="s2">&quot;former_names&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
@@ -636,30 +572,6 @@
                 <span class="c1"># Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.</span>
                 <span class="k">continue</span>
 
-    <span class="k">def</span> <span class="nf">_parse_deaths_tibiadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deaths</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">death</span> <span class="ow">in</span> <span class="n">deaths</span><span class="p">:</span>
-            <span class="n">level</span> <span class="o">=</span> <span class="n">death</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span>
-            <span class="n">death_time</span> <span class="o">=</span> <span class="n">parse_tibiadata_datetime</span><span class="p">(</span><span class="n">death</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="n">death_reason</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">death</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">])</span>
-            <span class="n">_death</span> <span class="o">=</span> <span class="n">Death</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">death_time</span><span class="p">)</span>
-            <span class="n">killers_str</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">assists_str</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">involved</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">death</span><span class="p">[</span><span class="s2">&quot;involved&quot;</span><span class="p">]]</span>
-            <span class="k">if</span> <span class="n">m</span> <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">):</span>
-                <span class="n">killers_str</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">split_list</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())]</span>
-            <span class="k">if</span> <span class="n">m</span> <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">):</span>
-                <span class="n">assists_str</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">split_list</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())]</span>
-            <span class="k">for</span> <span class="n">killer</span> <span class="ow">in</span> <span class="n">killers_str</span><span class="p">:</span>
-                <span class="n">summoner</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">involved</span> <span class="k">if</span> <span class="s2">&quot;of </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">killer</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">summon</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="n">summoner</span><span class="p">:</span>
-                    <span class="n">summon</span> <span class="o">=</span> <span class="n">killer</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; of </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">summoner</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-                    <span class="n">killer</span> <span class="o">=</span> <span class="n">summoner</span>
-                <span class="n">_death</span><span class="o">.</span><span class="n">killers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Killer</span><span class="p">(</span><span class="n">killer</span><span class="p">,</span> <span class="n">killer</span> <span class="ow">in</span> <span class="n">involved</span><span class="p">,</span> <span class="n">summon</span><span class="o">=</span><span class="n">summon</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">assist</span> <span class="ow">in</span> <span class="n">assists_str</span><span class="p">:</span>
-                <span class="n">_death</span><span class="o">.</span><span class="n">assists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Killer</span><span class="p">(</span><span class="n">assist</span><span class="p">,</span> <span class="n">assist</span> <span class="ow">in</span> <span class="n">involved</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">deaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_death</span><span class="p">)</span>
-
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_killer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">killer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parses a killer into a dictionary.</span>
@@ -699,13 +611,22 @@
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">ele</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">__</span><span class="p">,</span> <span class="n">__</span> <span class="o">=</span> <span class="n">cols</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;. &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="o">*</span><span class="n">__</span> <span class="o">=</span> <span class="n">cols</span>
+            <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">traded</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s2">&quot;(traded)&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(traded)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">traded</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">main_img</span> <span class="o">=</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">)</span>
             <span class="n">main</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">main_img</span> <span class="ow">and</span> <span class="n">main_img</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Main Character&quot;</span><span class="p">:</span>
                 <span class="n">main</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">other_characters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">OtherCharacter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;online&quot;</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;deleted&quot;</span><span class="p">,</span> <span class="n">main</span><span class="p">))</span>
+            <span class="n">position</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="s2">&quot;CipSoft Member&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">:</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="s2">&quot;CipSoft Member&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">other_characters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">OtherCharacter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="s2">&quot;online&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;deleted&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">,</span> <span class="n">main</span><span class="p">,</span>
+                                                        <span class="n">position</span><span class="p">,</span> <span class="n">traded</span><span class="p">))</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
@@ -753,20 +674,23 @@
         <span class="s2">&quot;killers&quot;</span><span class="p">,</span>
         <span class="s2">&quot;time&quot;</span><span class="p">,</span>
         <span class="s2">&quot;assists&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">)</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_serializable_properties</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;by_player&quot;</span>
+    <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">killers</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[Killer]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assists</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">,</span> <span class="p">[])</span>  <span class="c1"># type: List[Killer]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Killer</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Killer</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">try_datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">attributes</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;level&quot;</span><span class="p">]:</span>
-                <span class="k">continue</span>
             <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
                 <span class="k">continue</span>
@@ -774,9 +698,10 @@
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">attributes</span> <span class="o">+=</span> <span class="s2">&quot;,</span><span class="si">%s</span><span class="s2">=</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0.__class__.__name__}</span><span class="s2">(</span><span class="si">{0.name!r}</span><span class="s2">,</span><span class="si">{0.level!r}{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+            <span class="n">attributes</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">attributes</span><span class="si">}</span><span class="s2">)&quot;</span>
 
+    <span class="c1"># region Properties</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">by_player</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the kill involves other characters.&quot;&quot;&quot;</span>
@@ -788,9 +713,10 @@
 
 <span class="sd">        This is usually the killer that gave the killing blow.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span> <span class="k">else</span> <span class="kc">None</span></div>
+    <span class="c1"># endregion</span>
 
 
-<div class="viewcode-block" id="GuildMembership"><a class="viewcode-back" href="../../api.html#tibiapy.GuildMembership">[docs]</a><span class="k">class</span> <span class="nc">GuildMembership</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseGuild</span><span class="p">):</span>
+<div class="viewcode-block" id="GuildMembership"><a class="viewcode-back" href="../../api.html#tibiapy.GuildMembership">[docs]</a><span class="k">class</span> <span class="nc">GuildMembership</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseGuild</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents the guild information of a character.</span>
 
@@ -800,17 +726,22 @@
 <span class="sd">        The name of the guild.</span>
 <span class="sd">    rank: :class:`str`</span>
 <span class="sd">        The name of the rank the member has.</span>
+<span class="sd">    title: :class:`str`</span>
+<span class="sd">        The title of the member in the guild.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;rank&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span>  <span class="c1"># type: str</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rank</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> name=</span><span class="si">{0.name!r}</span><span class="s2"> rank=</span><span class="si">{0.rank!r}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> rank=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Killer"><a class="viewcode-back" href="../../api.html#tibiapy.Killer">[docs]</a><span class="k">class</span> <span class="nc">Killer</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
@@ -839,9 +770,9 @@
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">player</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">summon</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">player</span>  <span class="c1"># type: bool</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">summon</span> <span class="o">=</span> <span class="n">summon</span>  <span class="c1"># type: Optional[str]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">player</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">summon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">summon</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">attributes</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -855,8 +786,8 @@
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">attributes</span> <span class="o">+=</span> <span class="s2">&quot;,</span><span class="si">%s</span><span class="s2">=</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0.__class__.__name__}</span><span class="s2">(</span><span class="si">{0.name!r}{1}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+            <span class="n">attributes</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;,</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}{</span><span class="n">attributes</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -866,7 +797,7 @@
         <span class="k">return</span> <span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="OnlineCharacter"><a class="viewcode-back" href="../../api.html#tibiapy.OnlineCharacter">[docs]</a><span class="k">class</span> <span class="nc">OnlineCharacter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<div class="viewcode-block" id="OnlineCharacter"><a class="viewcode-back" href="../../api.html#tibiapy.OnlineCharacter">[docs]</a><span class="k">class</span> <span class="nc">OnlineCharacter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents an online character.</span>
 
@@ -882,19 +813,20 @@
 <span class="sd">        The level of the character.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;world&quot;</span><span class="p">,</span>
         <span class="s2">&quot;vocation&quot;</span><span class="p">,</span>
         <span class="s2">&quot;level&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">vocation</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>  <span class="c1"># type: str</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">world</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Vocation</span><span class="p">,</span> <span class="n">vocation</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="OtherCharacter"><a class="viewcode-back" href="../../api.html#tibiapy.OtherCharacter">[docs]</a><span class="k">class</span> <span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<div class="viewcode-block" id="OtherCharacter"><a class="viewcode-back" href="../../api.html#tibiapy.OtherCharacter">[docs]</a><span class="k">class</span> <span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents other characters displayed in the Character&#39;s information page.</span>
 
@@ -908,25 +840,38 @@
 <span class="sd">        Whether the character is online or not.</span>
 <span class="sd">    deleted: :class:`bool`</span>
 <span class="sd">        Whether the character is scheduled for deletion or not.</span>
+<span class="sd">    traded: :class:`bool`</span>
+<span class="sd">        Whether the character has been traded recently or not.</span>
 <span class="sd">    main: :class:`bool`</span>
 <span class="sd">        Whether this is the main character or not.</span>
+<span class="sd">    position: :class:`str`</span>
+<span class="sd">        The character&#39;s official position, if any.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;world&quot;</span><span class="p">,</span>
         <span class="s2">&quot;online&quot;</span><span class="p">,</span>
         <span class="s2">&quot;deleted&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;traded&quot;</span><span class="p">,</span>
         <span class="s2">&quot;main&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;position&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">online</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>  <span class="c1"># type: str</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">online</span> <span class="o">=</span> <span class="n">online</span>  <span class="c1"># type: bool</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deleted</span> <span class="o">=</span> <span class="n">deleted</span>  <span class="c1"># type: bool</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main</span> <span class="o">=</span> <span class="n">main</span>  <span class="c1"># type: bool</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">online</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">traded</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">online</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">online</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deleted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">deleted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">main</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">traded</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">position</span>
 
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> world=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="si">!r}</span><span class="s2"> online=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">online</span><span class="si">!r}</span><span class="s2"> &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;main=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">main</span><span class="si">}</span><span class="s2"> position=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span></div>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -977,17 +922,15 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 <h3 class="donation">Donate/support</h3>
@@ -1009,8 +952,8 @@
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2018, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &copy; Copyright 2020, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.1.
   </div>
   
   </body>

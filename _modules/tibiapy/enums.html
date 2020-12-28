@@ -1,20 +1,19 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tibiapy.enums &#8212; Tibia.py 2.5.1 documentation</title>
-    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.enums &#8212; Tibia.py 3.6.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/custom.js"></script>
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -33,8 +32,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 2.5.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.enums</a></li> 
       </ul>
     </div>  
 
@@ -44,33 +44,50 @@
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.enums</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span></span><span class="kn">import</span> <span class="nn">enum</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s1">&#39;AccountStatus&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;AuctionOrder&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;AuctionOrderBy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;AuctionStatus&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;AuctionSearchType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Category&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BattlEyeHighscoresFilter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BattlEyeTypeFilter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BazaarType&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BidType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;HouseOrder&#39;</span><span class="p">,</span>
     <span class="s1">&#39;HouseStatus&#39;</span><span class="p">,</span>
     <span class="s1">&#39;HouseType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;NewsCategory&#39;</span><span class="p">,</span>
     <span class="s1">&#39;NewsType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;PvpType&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PvpTypeFilter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Sex&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SkillFilter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ThreadStatus&#39;</span><span class="p">,</span>
     <span class="s1">&#39;TournamentWorldType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;TournamentPhase&#39;</span><span class="p">,</span>
     <span class="s1">&#39;TransferType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Vocation&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;VocationAuctionFilter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;VocationFilter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;WorldLocation&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">BaseEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">BaseEnum</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">NumericEnum</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="AccountStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AccountStatus">[docs]</a><span class="k">class</span> <span class="nc">AccountStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
@@ -79,19 +96,116 @@
     <span class="n">PREMIUM_ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;Premium Account&quot;</span></div>
 
 
-<div class="viewcode-block" id="Category"><a class="viewcode-back" href="../../api.html#tibiapy.Category">[docs]</a><span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="AuctionOrder"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionOrder">[docs]</a><span class="k">class</span> <span class="nc">AuctionOrder</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible ordering directions for auctions.</span>
+
+<span class="sd">    The field or value used for the ordering is defined by :class:`AuctionOrderBy`.&quot;&quot;&quot;</span>
+    <span class="n">HIGHEST_LATEST</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="sd">&quot;&quot;&quot;Order by the highest or latest value.&quot;&quot;&quot;</span>
+    <span class="n">LOWEST_EARLIEST</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="sd">&quot;&quot;&quot;Order by the lowest or earliest value.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AuctionOrderBy"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionOrderBy">[docs]</a><span class="k">class</span> <span class="nc">AuctionOrderBy</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible values to order the auctions by.&quot;&quot;&quot;</span>
+    <span class="n">BID</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="sd">&quot;&quot;&quot;The currently displayed bid for the auction.&quot;&quot;&quot;</span>
+    <span class="n">END_DATE</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="sd">&quot;&quot;&quot;The end date of the auction.&quot;&quot;&quot;</span>
+    <span class="n">LEVEL</span> <span class="o">=</span> <span class="mi">102</span>
+    <span class="sd">&quot;&quot;&quot;The experience level of the auctioned character.&quot;&quot;&quot;</span>
+    <span class="n">START_DATE</span> <span class="o">=</span> <span class="mi">103</span>
+    <span class="sd">&quot;&quot;&quot;The start date of the auction.&quot;&quot;&quot;</span>
+    <span class="n">AXE_FIGHTING</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">CLUB_FIGHTING</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">DISTANCE_FIGHTING</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">FISHING</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">FIST_FIGHTING</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">MAGIC_LEVEL</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">SHIELDING</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="mi">8</span></div>
+
+
+<div class="viewcode-block" id="AuctionSearchType"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionSearchType">[docs]</a><span class="k">class</span> <span class="nc">AuctionSearchType</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible search types.&quot;&quot;&quot;</span>
+    <span class="n">ITEM_DEFAULT</span>  <span class="o">=</span> <span class="mi">0</span>
+    <span class="sd">&quot;&quot;&quot;Searches everything that includes the words on the search string.&quot;&quot;&quot;</span>
+    <span class="n">ITEM_WILDCARD</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="sd">&quot;&quot;&quot;Searches everything that includes the search string&quot;&quot;&quot;</span>
+    <span class="n">CHARACTER_NAME</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="sd">&quot;&quot;&quot;Searches a character&#39;s name.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="AuctionStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionStatus">[docs]</a><span class="k">class</span> <span class="nc">AuctionStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible values an auction might have.&quot;&quot;&quot;</span>
+    <span class="n">IN_PROGRESS</span> <span class="o">=</span> <span class="s1">&#39;in progress&#39;</span>
+    <span class="sd">&quot;&quot;&quot;The auction is currently active.</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This status doesn&#39;t exist in Tibia.com explicitly. It is given to all ongoing auctions.&quot;&quot;&quot;</span>
+    <span class="n">CURRENTLY_PROCESSED</span> <span class="o">=</span> <span class="s1">&#39;currently processed&#39;</span>
+    <span class="sd">&quot;&quot;&quot;The auction ended with a winner, but payment hasn&#39;t been received yet.&quot;&quot;&quot;</span>
+    <span class="n">PENDING_TRANSFER</span> <span class="o">=</span> <span class="s1">&#39;will be transferred at the next server save&#39;</span>
+    <span class="sd">&quot;&quot;&quot;The auction was finished and was paid, but the character hasn&#39;t been transferred to the new owner yet.&quot;&quot;&quot;</span>
+    <span class="n">CANCELLED</span> <span class="o">=</span> <span class="s1">&#39;cancelled&#39;</span>
+    <span class="sd">&quot;&quot;&quot;The auction was cancelled as no payment was received in time.&quot;&quot;&quot;</span>
+    <span class="n">FINISHED</span> <span class="o">=</span> <span class="s1">&#39;finished&#39;</span>
+    <span class="sd">&quot;&quot;&quot;The auction either finished with no bids or the character was transferred to the new owner already.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="BattlEyeHighscoresFilter"><a class="viewcode-back" href="../../api.html#tibiapy.BattlEyeHighscoresFilter">[docs]</a><span class="k">class</span> <span class="nc">BattlEyeHighscoresFilter</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible BattlEye filters that can be used for highscores.&quot;&quot;&quot;</span>
+    <span class="n">INITIALLY_PROTECTED</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="sd">&quot;&quot;&quot;Worlds protected from the beginning, represented by a green symbol.&quot;&quot;&quot;</span>
+    <span class="n">PROTECTED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="sd">&quot;&quot;&quot;Worlds protected after the world was created, represented by a yellow symbol.&quot;&quot;&quot;</span>
+    <span class="n">UNPROTECTED</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="sd">&quot;&quot;&quot;Worlds without any BattlEye protection.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="BattlEyeTypeFilter"><a class="viewcode-back" href="../../api.html#tibiapy.BattlEyeTypeFilter">[docs]</a><span class="k">class</span> <span class="nc">BattlEyeTypeFilter</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible BattlEye filters that can be used for auctions.&quot;&quot;&quot;</span>
+    <span class="n">INITIALLY_PROTECTED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="sd">&quot;&quot;&quot;Worlds protected from the beginning, represented by a green symbol.&quot;&quot;&quot;</span>
+    <span class="n">PROTECTED</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="sd">&quot;&quot;&quot;Worlds protected after the world was created, represented by a yellow symbol.&quot;&quot;&quot;</span>
+    <span class="n">NOT_PROTECTED</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="sd">&quot;&quot;&quot;Worlds without any BattlEye protection.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="BazaarType"><a class="viewcode-back" href="../../api.html#tibiapy.BazaarType">[docs]</a><span class="k">class</span> <span class="nc">BazaarType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible bazaar types.&quot;&quot;&quot;</span>
+    <span class="n">CURRENT</span> <span class="o">=</span> <span class="s2">&quot;Current Auctions&quot;</span>
+    <span class="n">HISTORY</span> <span class="o">=</span> <span class="s2">&quot;Auction History&quot;</span></div>
+
+
+<div class="viewcode-block" id="BidType"><a class="viewcode-back" href="../../api.html#tibiapy.BidType">[docs]</a><span class="k">class</span> <span class="nc">BidType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible bid types for an auction.&quot;&quot;&quot;</span>
+    <span class="n">MINIMUM</span> <span class="o">=</span> <span class="s2">&quot;Minimum Bid&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The minimum bid set by the auction author, meaning the auction hasn&#39;t received any bids or it finished</span>
+<span class="sd">     without bids.&quot;&quot;&quot;</span>
+    <span class="n">CURRENT</span> <span class="o">=</span> <span class="s2">&quot;Current Bid&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The current maximum bid, meaning the auction has received at least one bid.&quot;&quot;&quot;</span>
+    <span class="n">WINNING</span> <span class="o">=</span> <span class="s2">&quot;Winning Bid&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The bid that won the auction.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="Category"><a class="viewcode-back" href="../../api.html#tibiapy.Category">[docs]</a><span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The different highscores categories.&quot;&quot;&quot;</span>
-    <span class="n">ACHIEVEMENTS</span> <span class="o">=</span> <span class="s2">&quot;achievements&quot;</span>
-    <span class="n">AXE_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;axe&quot;</span>
-    <span class="n">CLUB_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;club&quot;</span>
-    <span class="n">DISTANCE_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;distance&quot;</span>
-    <span class="n">EXPERIENCE</span> <span class="o">=</span> <span class="s2">&quot;experience&quot;</span>
-    <span class="n">FISHING</span> <span class="o">=</span> <span class="s2">&quot;fishing&quot;</span>
-    <span class="n">FIST_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;fist&quot;</span>
-    <span class="n">LOYALTY_POINTS</span> <span class="o">=</span> <span class="s2">&quot;loyalty&quot;</span>
-    <span class="n">MAGIC_LEVEL</span> <span class="o">=</span> <span class="s2">&quot;magic&quot;</span>
-    <span class="n">SHIELDING</span> <span class="o">=</span> <span class="s2">&quot;shielding&quot;</span>
-    <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="s2">&quot;sword&quot;</span></div>
+    <span class="n">ACHIEVEMENTS</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">AXE_FIGHTING</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">CHARM_POINTS</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">CLUB_FIGHTING</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">DISTANCE_FIGHTING</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">EXPERIENCE</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">FISHING</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">FIST_FIGHTING</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">GOSHNARS_TAINT</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">LOYALTY_POINTS</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">MAGIC_LEVEL</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">SHIELDING</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="mi">13</span></div>
 
 
 <div class="viewcode-block" id="HouseOrder"><a class="viewcode-back" href="../../api.html#tibiapy.HouseOrder">[docs]</a><span class="k">class</span> <span class="nc">HouseOrder</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
@@ -140,10 +254,83 @@
     <span class="n">HARDCORE_PVP</span> <span class="o">=</span> <span class="s2">&quot;Hardcore PvP&quot;</span></div>
 
 
+<div class="viewcode-block" id="PvpTypeFilter"><a class="viewcode-back" href="../../api.html#tibiapy.PvpTypeFilter">[docs]</a><span class="k">class</span> <span class="nc">PvpTypeFilter</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible PVP filters that can be used for auctions.&quot;&quot;&quot;</span>
+    <span class="n">OPEN_PVP</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">OPTIONAL_PVP</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">HARDCORE_PVP</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">RETRO_OPEN_PVP</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">RETRO_HARDCORE_PVP</span> <span class="o">=</span> <span class="mi">4</span></div>
+
+
 <div class="viewcode-block" id="Sex"><a class="viewcode-back" href="../../api.html#tibiapy.Sex">[docs]</a><span class="k">class</span> <span class="nc">Sex</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Possible character sexes.&quot;&quot;&quot;</span>
     <span class="n">MALE</span> <span class="o">=</span> <span class="s2">&quot;male&quot;</span>
     <span class="n">FEMALE</span> <span class="o">=</span> <span class="s2">&quot;female&quot;</span></div>
+
+
+<div class="viewcode-block" id="SkillFilter"><a class="viewcode-back" href="../../api.html#tibiapy.SkillFilter">[docs]</a><span class="k">class</span> <span class="nc">SkillFilter</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The different skill filters for auctions.&quot;&quot;&quot;</span>
+    <span class="n">AXE_FIGHTING</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">CLUB_FIGHTING</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">DISTANCE_FIGHTING</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">FISHING</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">FIST_FIGHTING</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">MAGIC_LEVEL</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">SHIELDING</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="mi">8</span></div>
+
+
+<div class="viewcode-block" id="ThreadStatus"><a class="viewcode-back" href="../../api.html#tibiapy.ThreadStatus">[docs]</a><span class="k">class</span> <span class="nc">ThreadStatus</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Flag</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible status a thread can have.</span>
+
+<span class="sd">    Threads can have a combination of multiple status. The numeric values are arbitrary.&quot;&quot;&quot;</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">HOT</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: Thread has more than 16 replies.</span>
+    <span class="n">NEW</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1">#: Thread has new posts since last visit.</span>
+    <span class="n">CLOSED</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1">#: Thread is closed.</span>
+    <span class="n">STICKY</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1">#: Thread is stickied.</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span> <span class="n">entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">NONE</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">entry</span>
+
+<div class="viewcode-block" id="ThreadStatus.get_icon_name"><a class="viewcode-back" href="../../api.html#tibiapy.ThreadStatus.get_icon_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_icon_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generates an icon name, following the same ordering used in Tibia.com</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The name of the icon used in Tibia.com&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">joined_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;logo_</span><span class="si">%s</span><span class="s2">.gif&quot;</span> <span class="o">%</span> <span class="n">joined_str</span></div>
+
+<div class="viewcode-block" id="ThreadStatus.from_icon"><a class="viewcode-back" href="../../api.html#tibiapy.ThreadStatus.from_icon">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_icon</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">icon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the flag combination, based from the icon&#39;s name present in the thread status.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        icon: :class:`str`</span>
+<span class="sd">            The icon&#39;s filename.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`ThreadStatus`</span>
+<span class="sd">            The combination of thread status founds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">icon</span><span class="p">:</span>
+                <span class="n">flags</span> <span class="o">+=</span> <span class="n">entry</span><span class="o">.</span><span class="n">value</span>
+        <span class="c1"># noinspection PyArgumentList</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="TournamentWorldType"><a class="viewcode-back" href="../../api.html#tibiapy.TournamentWorldType">[docs]</a><span class="k">class</span> <span class="nc">TournamentWorldType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
@@ -179,13 +366,25 @@
     <span class="n">MASTER_SORCERER</span> <span class="o">=</span> <span class="s2">&quot;Master Sorcerer&quot;</span></div>
 
 
-<div class="viewcode-block" id="VocationFilter"><a class="viewcode-back" href="../../api.html#tibiapy.VocationFilter">[docs]</a><span class="k">class</span> <span class="nc">VocationFilter</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The vocation filters available for Highscores.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="VocationAuctionFilter"><a class="viewcode-back" href="../../api.html#tibiapy.VocationAuctionFilter">[docs]</a><span class="k">class</span> <span class="nc">VocationAuctionFilter</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible vocation filters for auctions.&quot;&quot;&quot;</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">DRUID</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">KNIGHT</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">PALADIN</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">SORCERER</span> <span class="o">=</span> <span class="mi">5</span></div>
+
+
+<div class="viewcode-block" id="VocationFilter"><a class="viewcode-back" href="../../api.html#tibiapy.VocationFilter">[docs]</a><span class="k">class</span> <span class="nc">VocationFilter</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The vocation filters available for Highscores.</span>
+
+<span class="sd">    The numeric values are what the highscores form accepts.&quot;&quot;&quot;</span>
     <span class="n">ALL</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">KNIGHTS</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">PALADINS</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">SORCERERS</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">DRUIDS</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">KNIGHTS</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">PALADINS</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">SORCERERS</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">DRUIDS</span> <span class="o">=</span> <span class="mi">5</span>
 
 <div class="viewcode-block" id="VocationFilter.from_name"><a class="viewcode-back" href="../../api.html#tibiapy.VocationFilter.from_name">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">all_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -196,7 +395,7 @@
 <span class="sd">        name: :class:`str`</span>
 <span class="sd">            The name of the vocation.</span>
 <span class="sd">        all_fallback: :class:`bool`</span>
-<span class="sd">            Whether to return :py:attr:`ALL` if no match is found. Otherwise, ``None`` will be returned.</span>
+<span class="sd">            Whether to return :py:attr:`ALL` if no match is found. Otherwise, :obj:`None` will be returned.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -219,6 +418,7 @@
     <span class="n">SOUTH_AMERICA</span> <span class="o">=</span> <span class="s2">&quot;South America&quot;</span></div>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -269,17 +469,15 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 <h3 class="donation">Donate/support</h3>
@@ -301,8 +499,8 @@
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2018, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.9.
+    &copy; Copyright 2020, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.1.
   </div>
   
   </body>
