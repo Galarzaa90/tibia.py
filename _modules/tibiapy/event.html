@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.event &#8212; Tibia.py 3.6.1 documentation</title>
+    <title>tibiapy.event &#8212; Tibia.py 3.6.2 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.event</a></li> 
       </ul>
@@ -192,6 +192,9 @@
             <span class="k">if</span> <span class="n">month</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">:</span>
                 <span class="n">month</span> <span class="o">=</span> <span class="mi">1</span>
                 <span class="n">year</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">month</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">month</span> <span class="o">=</span> <span class="mi">12</span>
+                <span class="n">year</span> <span class="o">-=</span> <span class="mi">1</span>
             <span class="n">ongoing_day</span> <span class="o">=</span> <span class="n">day</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">today_events</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">popup_spans</span> <span class="o">=</span> <span class="n">day_cell</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;HelperDivIndicator&quot;</span><span class="p">})</span>
@@ -354,7 +357,7 @@
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2020, Allan Galarza.
+    &copy; Copyright 2021, Allan Galarza.
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.1.
   </div>
   
