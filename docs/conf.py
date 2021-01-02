@@ -29,7 +29,7 @@ autodoc_member_order = 'bysource'
 # -- Project information -----------------------------------------------------
 
 project = 'Tibia.py'
-copyright = '2020, Allan Galarza'
+copyright = '2021, Allan Galarza'
 author = 'Allan Galarza'
 
 # The short X.Y version
