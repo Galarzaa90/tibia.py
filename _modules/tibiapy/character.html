@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.character &#8212; Tibia.py 3.6.2 documentation</title>
+    <title>tibiapy.character &#8212; Tibia.py 3.6.3 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.6.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.character</a></li> 
       </ul>
@@ -475,7 +475,7 @@
             <span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;guild_membership&quot;</span><span class="p">:</span>
                 <span class="n">guild_link</span> <span class="o">=</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
                 <span class="n">rank</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;of the&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">char</span><span class="p">[</span><span class="s2">&quot;guild_membership&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">GuildMembership</span><span class="p">(</span><span class="n">guild_link</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">rank</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">char</span><span class="p">[</span><span class="s2">&quot;guild_membership&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">GuildMembership</span><span class="p">(</span><span class="n">guild_link</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">rank</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">int_rows</span><span class="p">:</span>
@@ -953,7 +953,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.1.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.
   </div>
   
   </body>
