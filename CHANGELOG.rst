@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.6.3:
+
+3.6.3 (2021-01-14)
+==================
+
+- Fixed bug in guild names being parsed with Non-Breaking spaces instead of a regular space.
+
 .. v3.6.2:
 
 3.6.2 (2021-01-01)

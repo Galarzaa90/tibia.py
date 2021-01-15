@@ -429,7 +429,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             if field == "guild_membership":
                 guild_link = cols_raw[1].find('a')
                 rank = value.split("of the")[0]
-                char["guild_membership"] = GuildMembership(guild_link.text, rank.strip())
+                char["guild_membership"] = GuildMembership(guild_link.text.replace("\xa0", " "), rank.strip())
 
                 continue
             if field in int_rows:
