@@ -432,40 +432,37 @@ class WorldOverview(abc.Serializable):
         InvalidContent
             If the provided content is not the HTML content of the worlds section in Tibia.com
         """
-        parsed_content = parse_tibiacom_content(content, html_class="TableContentAndRightShadow")
+        parsed_content = parse_tibiacom_content(content)
         world_overview = WorldOverview()
         try:
-            record_row, *rows = parsed_content.find_all("tr")
-            m = record_regexp.search(record_row.text)
+            record_table, worlds_header_table, worlds_table, *tournament_tables \
+                = parsed_content.find_all("table", {"class": "TableContent"})
+            m = record_regexp.search(record_table.text)
             world_overview.record_count = parse_integer(m.group("count"))
             world_overview.record_date = parse_tibia_datetime(m.group("date"))
-            world_rows = rows
-            world_overview._parse_worlds(world_rows)
+            regular_world_rows = worlds_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
+            world_overview._parse_worlds(regular_world_rows)
+            if tournament_tables:
+                tournament_world_rows = tournament_tables[1].find_all("tr", attrs={"class": ["Odd", "Even"]})
+                world_overview._parse_worlds(tournament_world_rows, True)
             return world_overview
         except (AttributeError, KeyError, ValueError):
             raise InvalidContent("content does not belong to the World Overview section in Tibia.com")
 
-    def _parse_worlds(self, world_rows):
+    def _parse_worlds(self, world_rows, tournament=False):
         """Parses the world columns and adds the results to :py:attr:`worlds`.
 
         Parameters
         ----------
         world_rows: :class:`list` of :class:`bs4.Tag`
             A list containing the rows of each world.
+        tournament: :class:`bool`
+            Whether these are tournament worlds or not.
         """
-        tournament = False
         for world_row in world_rows:
             cols = world_row.find_all("td")
             name = cols[0].text.strip()
             status = "Online"
-            if len(cols) == 1 and name == "Tournament Worlds":
-                tournament = True
-                continue
-            elif len(cols) == 1 and name == "Regular Worlds":
-                tournament = False
-                continue
-            elif name == "World":
-                continue
             online = parse_integer(cols[1].text.strip(), None)
             if online is None:
                 online = 0
@@ -481,7 +478,6 @@ class WorldOverview(abc.Serializable):
                 m = battleye_regexp.search(battleye_icon["onmouseover"])
                 if m:
                     world.battleye_date = parse_tibia_full_date(m.group(1))
-
             additional_info = cols[5].text.strip()
             world._parse_additional_info(additional_info, tournament)
             self.worlds.append(world)

@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.6.4:
+
+3.6.4 (2021-01-26)
+==================
+
+- Fixed world list parsing breaking due to the cookie consent dialog.
+
 .. v3.6.3:
 
 3.6.3 (2021-01-14)

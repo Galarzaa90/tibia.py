@@ -109,13 +109,14 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertGreater(world_overview.total_online, 0)
         self.assertIsNotNone(world_overview.record_date)
         self.assertIsNotNone(world_overview.record_count)
-        self.assertEqual(len(world_overview.regular_worlds), 65)
-        self.assertEqual(len(world_overview.tournament_worlds), 6)
+        self.assertEqual(82, len(world_overview.regular_worlds))
+        self.assertEqual(6, len(world_overview.tournament_worlds))
 
         worlds = ListedWorld.list_from_content(content)
         self.assertEqual(len(world_overview.worlds), len(worlds))
 
-    def test_world_overview_from_content_offline(self):
+    # TODO: Enable when we have a sample again
+    def _test_world_overview_from_content_offline(self):
         """Testing parsing world overview with offline worlds"""
         content = self.load_resource(FILE_WORLD_LIST_OFFLINE)
         world_overview = WorldOverview.from_content(content)
