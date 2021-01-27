@@ -389,7 +389,8 @@ class CharacterBazaar(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content, builder='html5lib')
-            tables = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+            content_table = parsed_content.find("div", attrs={"class": "BoxContent"})
+            tables = content_table.find_all("div", attrs={"class": "TableContainer"})
             filter_table = None
             if len(tables) == 1:
                 auctions_table = tables[0]
