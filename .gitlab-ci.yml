@@ -1,9 +1,9 @@
-image: python:3.6
+image: python:3.8
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
-  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  GIT_DEPTH: 10
   DOCKER_DRIVER: overlay2
 
 before_script:
@@ -40,10 +40,11 @@ sonarcloud-check:
   stage: analyze
   image:
     name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
+    entrypoint: [ "" ]
+  before_script:
+    - git fetch --unshallow origin +refs/heads/*:refs/remotes/origin/*
   script:
     - sonar-scanner
-  before_script: []
   dependencies:
     - coverage
   only:
@@ -76,6 +77,8 @@ coverage:
 
 pages:
   stage: deploy
+  image: alpine
+  cache: { }
   dependencies:
     - docs
     - coverage
