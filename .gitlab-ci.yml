@@ -9,9 +9,6 @@ variables:
 before_script:
   - python -m venv venv
   - source venv/bin/activate
-  - pip install -U -e .
-  - pip install -U -e .[docs]
-  - pip install -U -e .[test]
 
 stages:
   - build
@@ -29,6 +26,7 @@ cache:
 build:
   stage: build
   script:
+    - pip install -U -e .
     - pip install wheel
     - python setup.py sdist bdist_wheel
   artifacts:
@@ -55,6 +53,7 @@ sonarcloud-check:
 docs:
   stage: build
   script:
+    - pip install -U -e .[docs]
     - cd docs
     - make html
   artifacts:
@@ -65,10 +64,11 @@ docs:
 coverage:
   stage: test
   script:
-      - coverage run setup.py test
-      - coverage report
-      - coverage html
-      - coverage xml
+    - pip install -U -e .[test]
+    - coverage run setup.py test
+    - coverage report
+    - coverage html
+    - coverage xml
   artifacts:
     name: Coverage_Report
     paths:
@@ -82,6 +82,7 @@ pages:
   dependencies:
     - docs
     - coverage
+  before_script: [ ]
   script:
     - mkdir public
     - mv htmlcov/ public/coverage/
