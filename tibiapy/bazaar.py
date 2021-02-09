@@ -45,7 +45,7 @@ char_info_regex = re.compile(r'Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| Wo
 id_addon_regex = re.compile(r'(\d+)_(\d)\.gif')
 id_regex = re.compile(r'(\d+).(?:gif|png)')
 description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
-quotes = re.compile(r'"([^"]+)"')
+amount_regex = re.compile(r'([\d,]+)x')
 
 log = logging.getLogger("tibiapy")
 
@@ -468,9 +468,6 @@ class DisplayImage(abc.Serializable):
         img_tag = item_box.find("img")
         if not img_tag:
             return None
-        m = quotes.search(description)
-        if m:
-            description = m.group(1)
         return cls(image_url=img_tag["src"], name=description)
 
 
@@ -514,19 +511,19 @@ class DisplayItem(abc.Serializable):
         img_tag = item_box.find("img")
         if not img_tag:
             return None
-        amount_text = item_box.find("div", attrs={"class": "ObjectAmount"})
-        amount = parse_tibia_money(amount_text.text) if amount_text else 1
+        m = amount_regex.match(title_text)
+        amount = 1
+        if m:
+            amount = parse_integer(m.group(1))
+            title_text = amount_regex.sub("", title_text, 1).strip()
         item_id = 0
-        name = None
         description = None
-        if "\n" in title_text:
-            description = title_text.split("\n", 1)[1]
+        name, *desc = title_text.split("\n")
+        if desc:
+            description = desc[0]
         m = id_regex.search(img_tag["src"])
         if m:
             item_id = int(m.group(1))
-        m = description_regex.search(title_text)
-        if m:
-            name = m.group(1)
         return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description)
 
 
@@ -593,6 +590,8 @@ class DisplayOutfit(DisplayImage):
     @classmethod
     def _parse_image_box(cls, item_box):
         outfit = super()._parse_image_box(item_box)
+        name = outfit.name.split("(")[0].strip()
+        outfit.name = name
         m = id_addon_regex.search(outfit.image_url)
         if m:
             outfit.outfit_id = int(m.group(1))
@@ -750,7 +749,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         auction.auction_end = parse_tibia_datetime(end_date_tag.text.replace('\xa0', ' '))
         bids_container = auction_row.find("div", {"class": "ShortAuctionDataBidRow"})
         bid_tag = bids_container.find("div", {"class", "ShortAuctionDataValue"})
-        bid_type_tag = bids_container.find_all("div", {"class", "ShortAuctionDataLabel"})[-1]
+        bid_type_tag = bids_container.find_all("div", {"class", "ShortAuctionDataLabel"})[0]
         bid_type_str = bid_type_tag.text.replace(":", "").strip()
         auction.bid_type = try_enum(BidType, bid_type_str)
         auction.bid = parse_integer(bid_tag.text)
