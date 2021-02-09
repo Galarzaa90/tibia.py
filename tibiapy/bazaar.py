@@ -334,7 +334,7 @@ class CharacterBazaar(abc.Serializable):
         self.entries: List[ListedAuction] = kwargs.get("entries", [])
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages}" \
+        return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} " \
                f"results_count={self.results_count}>"
 
     @property
