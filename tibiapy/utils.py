@@ -481,7 +481,7 @@ def parse_popup(popup_content):
     return title, parsed_html
 
 
-results_pattern = re.compile(r'Results: (\d+)')
+results_pattern = re.compile(r'Results: ([\d,]+)')
 page_pattern = re.compile(r'page=(\d+)')
 
 
@@ -528,5 +528,5 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
             page = 1
         else:
             page = total_pages
-    results_count = int(results_pattern.search(results_div.text).group(1))
+    results_count = parse_integer(results_pattern.search(results_div.text).group(1))
     return page, total_pages, results_count

@@ -1,17 +1,14 @@
-image: python:3.6
+image: python:3.8
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
-  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  GIT_DEPTH: 10
   DOCKER_DRIVER: overlay2
 
 before_script:
   - python -m venv venv
   - source venv/bin/activate
-  - pip install -U -e .
-  - pip install -U -e .[docs]
-  - pip install -U -e .[test]
 
 stages:
   - build
@@ -29,6 +26,7 @@ cache:
 build:
   stage: build
   script:
+    - pip install -U -e .
     - pip install wheel
     - python setup.py sdist bdist_wheel
   artifacts:
@@ -40,10 +38,11 @@ sonarcloud-check:
   stage: analyze
   image:
     name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [""]
+    entrypoint: [ "" ]
+  before_script:
+    - git fetch --unshallow origin +refs/heads/*:refs/remotes/origin/*
   script:
     - sonar-scanner
-  before_script: []
   dependencies:
     - coverage
   only:
@@ -54,6 +53,7 @@ sonarcloud-check:
 docs:
   stage: build
   script:
+    - pip install -U -e .[docs]
     - cd docs
     - make html
   artifacts:
@@ -64,10 +64,11 @@ docs:
 coverage:
   stage: test
   script:
-      - coverage run setup.py test
-      - coverage report
-      - coverage html
-      - coverage xml
+    - pip install -U -e .[test]
+    - coverage run setup.py test
+    - coverage report
+    - coverage html
+    - coverage xml
   artifacts:
     name: Coverage_Report
     paths:
@@ -76,9 +77,12 @@ coverage:
 
 pages:
   stage: deploy
+  image: alpine
+  cache: { }
   dependencies:
     - docs
     - coverage
+  before_script: [ ]
   script:
     - mkdir public
     - mv htmlcov/ public/coverage/

@@ -31,11 +31,13 @@ __all__ = (
     "DisplayItem",
     "DisplayMount",
     "DisplayOutfit",
+    "DisplayFamiliar",
     "ItemSummary",
     "ListedAuction",
     "Outfits",
     "OutfitImage",
     "Mounts",
+    "Familiars",
     "SalesArgument",
     "SkillEntry",
 )
@@ -45,7 +47,7 @@ char_info_regex = re.compile(r'Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| Wo
 id_addon_regex = re.compile(r'(\d+)_(\d)\.gif')
 id_regex = re.compile(r'(\d+).(?:gif|png)')
 description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
-quotes = re.compile(r'"([^"]+)"')
+amount_regex = re.compile(r'([\d,]+)x')
 
 log = logging.getLogger("tibiapy")
 
@@ -334,7 +336,7 @@ class CharacterBazaar(abc.Serializable):
         self.entries: List[ListedAuction] = kwargs.get("entries", [])
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages}" \
+        return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} " \
                f"results_count={self.results_count}>"
 
     @property
@@ -468,9 +470,6 @@ class DisplayImage(abc.Serializable):
         img_tag = item_box.find("img")
         if not img_tag:
             return None
-        m = quotes.search(description)
-        if m:
-            description = m.group(1)
         return cls(image_url=img_tag["src"], name=description)
 
 
@@ -514,19 +513,19 @@ class DisplayItem(abc.Serializable):
         img_tag = item_box.find("img")
         if not img_tag:
             return None
-        amount_text = item_box.find("div", attrs={"class": "ObjectAmount"})
-        amount = parse_tibia_money(amount_text.text) if amount_text else 1
+        m = amount_regex.match(title_text)
+        amount = 1
+        if m:
+            amount = parse_integer(m.group(1))
+            title_text = amount_regex.sub("", title_text, 1).strip()
         item_id = 0
-        name = None
         description = None
-        if "\n" in title_text:
-            description = title_text.split("\n", 1)[1]
+        name, *desc = title_text.split("\n")
+        if desc:
+            description = desc[0]
         m = id_regex.search(img_tag["src"])
         if m:
             item_id = int(m.group(1))
-        m = description_regex.search(title_text)
-        if m:
-            name = m.group(1)
         return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description)
 
 
@@ -593,11 +592,48 @@ class DisplayOutfit(DisplayImage):
     @classmethod
     def _parse_image_box(cls, item_box):
         outfit = super()._parse_image_box(item_box)
+        name = outfit.name.split("(")[0].strip()
+        outfit.name = name
         m = id_addon_regex.search(outfit.image_url)
         if m:
             outfit.outfit_id = int(m.group(1))
             outfit.addons = int(m.group(2))
         return outfit
+
+
+class DisplayFamiliar(DisplayImage):
+    """Represents a familiar owned or unlocked by the character.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL to the image.
+    name: :class:`str`
+        The familiar's name.
+    familiar_id: :class:`int`
+        The internal ID of the familiar.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.familiar_id: int = kwargs.get("familiar_id", 0)
+
+    __slots__ = (
+        "familiar_id",
+    )
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} familiar_id={self.familiar_id} " \
+               f"image_url={self.image_url!r}>"
+
+    @classmethod
+    def _parse_image_box(cls, item_box):
+        familiar = super()._parse_image_box(item_box)
+        name = familiar.name.split("(")[0].strip()
+        familiar.name = name
+        m = id_regex.search(familiar.image_url)
+        if m:
+            familiar.familiar_id = int(m.group(1))
+        return familiar
 
 
 class ListedAuction(BaseCharacter, abc.Serializable):
@@ -750,7 +786,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         auction.auction_end = parse_tibia_datetime(end_date_tag.text.replace('\xa0', ' '))
         bids_container = auction_row.find("div", {"class": "ShortAuctionDataBidRow"})
         bid_tag = bids_container.find("div", {"class", "ShortAuctionDataValue"})
-        bid_type_tag = bids_container.find_all("div", {"class", "ShortAuctionDataLabel"})[-1]
+        bid_type_tag = bids_container.find_all("div", {"class", "ShortAuctionDataLabel"})[0]
         bid_type_str = bid_type_tag.text.replace(":", "").strip()
         auction.bid_type = try_enum(BidType, bid_type_str)
         auction.bid = parse_integer(bid_tag.text)
@@ -864,6 +900,8 @@ class AuctionDetails(ListedAuction):
         The outfits the character has unlocked.
     store_outfits: :class:`Outfits`
         The outfits the character has purchased from the store.
+    familiars: :class:`Familiars`
+        The familiars the character has purchased or unlocked.
     blessings: :class:`list` of :class:`BlessingEntry`
         The blessings the character has.
     imbuements: :class:`list` of :class:`str`
@@ -954,6 +992,7 @@ class AuctionDetails(ListedAuction):
         "store_mounts",
         "outfits",
         "store_outfits",
+        "familiars",
         "blessings",
         "imbuements",
         "charms",
@@ -1033,6 +1072,8 @@ class AuctionDetails(ListedAuction):
             auction.outfits = Outfits._parse_table(details_tables["Outfits"])
         if "StoreOutfits" in details_tables:
             auction.store_outfits = Outfits._parse_table(details_tables["StoreOutfits"])
+        if "Familiars" in details_tables:
+            auction.familiars = Familiars._parse_table(details_tables["Familiars"])
         if "Blessings" in details_tables:
             auction._parse_blessings_table(details_tables["Blessings"])
         if "Imbuements" in details_tables:
@@ -1508,6 +1549,66 @@ class Mounts(PaginatedSummary):
                 summary.entries.append(item)
         return summary
 
+
+class Familiars(PaginatedSummary):
+    """The familiars the character has unlocked or purchased.
+
+    Attributes
+    ----------
+    page: :class:`int`
+        The current page being displayed.
+    total_pages: :class:`int`
+        The total number of pages.
+    results: :class:`int`
+        The total number of results.
+    entries: :class:`list` of :class:`DisplayFamiliar`
+        The familiars the character has unlocked or purchased.
+    fully_fetched: :class:`bool`
+        Whether the summary was fetched completely, including all other pages.
+    """
+    entries: List[DisplayFamiliar]
+    entry_class = DisplayFamiliar
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def get_by_id(self, entry_id):
+        """Gets an outfit by its familiar id.
+
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the outfit.
+
+        Returns
+        -------
+        :class:`DisplayOutfit`
+            The outfit matching the id.
+        """
+        return next((e for e in self.entries if e.familiar_id == entry_id), None)
+
+    @classmethod
+    def _parse_table(cls, table):
+        """Parses the outfits table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the character outfits.
+
+        Returns
+        -------
+        :class:`Outfits`
+            The outfits contained in the table.
+        """
+        summary = cls()
+        summary._parse_pagination(table)
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for item_box in item_boxes:
+            item = DisplayFamiliar._parse_image_box(item_box)
+            if item:
+                summary.entries.append(item)
+        return summary
 
 class Outfits(PaginatedSummary):
     """The outfits the character has unlocked or purchased.
