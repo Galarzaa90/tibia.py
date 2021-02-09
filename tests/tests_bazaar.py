@@ -222,6 +222,14 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual('Retro Warrior', auction.store_outfits.get_by_id(962).name)
         self.assertEqual(2, len(auction.store_outfits.search('retro')))
 
+        self.assertIsNotNone(auction.familiars)
+        self.assertEqual(1, len(auction.familiars.entries))
+        self.assertEqual(1, auction.familiars.total_pages)
+        self.assertEqual(1, auction.familiars.results)
+        self.assertEqual(992, auction.familiars.get_by_name("emberwing").familiar_id)
+        self.assertEqual('Emberwing', auction.familiars.get_by_id(992).name)
+        self.assertEqual(1, len(auction.familiars.search('ember')))
+
         self.assertEqual(9, len(auction.blessings))
         self.assertEqual(18, len(auction.imbuements))
         self.assertEqual(8, len(auction.charms))

@@ -544,6 +544,12 @@ CharmsEntry
    :members:
    :inherited-members:
 
+DisplayFamiliar
+~~~~~~~~~~~~~~~
+.. autoclass:: DisplayFamiliar
+   :members:
+   :inherited-members:
+
 DisplayItem
 ~~~~~~~~~~~
 .. autoclass:: DisplayItem
@@ -559,6 +565,12 @@ DisplayMount
 DisplayOutfit
 ~~~~~~~~~~~~~
 .. autoclass:: DisplayOutfit
+   :members:
+   :inherited-members:
+
+Familiars
+~~~~~~~~~
+.. autoclass:: Familiars
    :members:
    :inherited-members:
 

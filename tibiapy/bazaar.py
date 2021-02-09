@@ -31,11 +31,13 @@ __all__ = (
     "DisplayItem",
     "DisplayMount",
     "DisplayOutfit",
+    "DisplayFamiliar",
     "ItemSummary",
     "ListedAuction",
     "Outfits",
     "OutfitImage",
     "Mounts",
+    "Familiars",
     "SalesArgument",
     "SkillEntry",
 )
@@ -599,6 +601,41 @@ class DisplayOutfit(DisplayImage):
         return outfit
 
 
+class DisplayFamiliar(DisplayImage):
+    """Represents a familiar owned or unlocked by the character.
+
+    Attributes
+    ----------
+    image_url: :class:`str`
+        The URL to the image.
+    name: :class:`str`
+        The familiar's name.
+    familiar_id: :class:`int`
+        The internal ID of the familiar.
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.familiar_id: int = kwargs.get("familiar_id", 0)
+
+    __slots__ = (
+        "familiar_id",
+    )
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} familiar_id={self.familiar_id} " \
+               f"image_url={self.image_url!r}>"
+
+    @classmethod
+    def _parse_image_box(cls, item_box):
+        familiar = super()._parse_image_box(item_box)
+        name = familiar.name.split("(")[0].strip()
+        familiar.name = name
+        m = id_regex.search(familiar.image_url)
+        if m:
+            familiar.familiar_id = int(m.group(1))
+        return familiar
+
+
 class ListedAuction(BaseCharacter, abc.Serializable):
     """Represents an auction in the list, containing the summary.
 
@@ -863,6 +900,8 @@ class AuctionDetails(ListedAuction):
         The outfits the character has unlocked.
     store_outfits: :class:`Outfits`
         The outfits the character has purchased from the store.
+    familiars: :class:`Familiars`
+        The familiars the character has purchased or unlocked.
     blessings: :class:`list` of :class:`BlessingEntry`
         The blessings the character has.
     imbuements: :class:`list` of :class:`str`
@@ -953,6 +992,7 @@ class AuctionDetails(ListedAuction):
         "store_mounts",
         "outfits",
         "store_outfits",
+        "familiars",
         "blessings",
         "imbuements",
         "charms",
@@ -1032,6 +1072,8 @@ class AuctionDetails(ListedAuction):
             auction.outfits = Outfits._parse_table(details_tables["Outfits"])
         if "StoreOutfits" in details_tables:
             auction.store_outfits = Outfits._parse_table(details_tables["StoreOutfits"])
+        if "Familiars" in details_tables:
+            auction.familiars = Familiars._parse_table(details_tables["Familiars"])
         if "Blessings" in details_tables:
             auction._parse_blessings_table(details_tables["Blessings"])
         if "Imbuements" in details_tables:
@@ -1507,6 +1549,66 @@ class Mounts(PaginatedSummary):
                 summary.entries.append(item)
         return summary
 
+
+class Familiars(PaginatedSummary):
+    """The familiars the character has unlocked or purchased.
+
+    Attributes
+    ----------
+    page: :class:`int`
+        The current page being displayed.
+    total_pages: :class:`int`
+        The total number of pages.
+    results: :class:`int`
+        The total number of results.
+    entries: :class:`list` of :class:`DisplayFamiliar`
+        The familiars the character has unlocked or purchased.
+    fully_fetched: :class:`bool`
+        Whether the summary was fetched completely, including all other pages.
+    """
+    entries: List[DisplayFamiliar]
+    entry_class = DisplayFamiliar
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def get_by_id(self, entry_id):
+        """Gets an outfit by its familiar id.
+
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the outfit.
+
+        Returns
+        -------
+        :class:`DisplayOutfit`
+            The outfit matching the id.
+        """
+        return next((e for e in self.entries if e.familiar_id == entry_id), None)
+
+    @classmethod
+    def _parse_table(cls, table):
+        """Parses the outfits table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the character outfits.
+
+        Returns
+        -------
+        :class:`Outfits`
+            The outfits contained in the table.
+        """
+        summary = cls()
+        summary._parse_pagination(table)
+        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        for item_box in item_boxes:
+            item = DisplayFamiliar._parse_image_box(item_box)
+            if item:
+                summary.entries.append(item)
+        return summary
 
 class Outfits(PaginatedSummary):
     """The outfits the character has unlocked or purchased.

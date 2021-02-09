@@ -6,6 +6,17 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.7.0:
+
+3.7.0 (2021-02-09)
+==================
+
+- Parse familiars from auctions
+- Updated the way tooltips in auctions are parsed, the format changed, resulting in the previous code not working anymore.
+- Results count in bazaar pages are now properly parsed when there are comma thousand separators.
+- Item amounts are now more accurate instead of being based from their indicator (which was grouping them in thousands)
+
+
 .. v3.6.5:
 
 3.6.5 (2021-01-27)
