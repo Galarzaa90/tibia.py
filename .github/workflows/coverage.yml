@@ -13,8 +13,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Chekout
+      - name: Checkout
         uses: actions/checkout@v1
+
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
@@ -25,7 +26,7 @@ jobs:
           pip install -U -e .[test]
       - name: Test
         run: |
-          coverage run python setup.py test
+          coverage run setup.py test
       - name: Coverage Report
         run: |
           coverage report
