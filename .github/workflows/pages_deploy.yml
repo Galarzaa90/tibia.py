@@ -1,0 +1,29 @@
+name: Publish docs via GitHub Pages
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - name:
+        uses: actions/checkout@v1
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          pip install -U -e .[docs]
+      - name: Build Sphinx Documentation
+        run: |
+          cd docs
+          make html
+      - name: Deploy 🚀
+          uses: JamesIves/github-pages-deploy-action@4.0.0
+          with:
+            branch: gh-pages
+            folder: docs/_build/html
