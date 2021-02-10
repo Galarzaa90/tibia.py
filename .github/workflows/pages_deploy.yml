@@ -9,7 +9,7 @@ jobs:
     name: Deploy docs
     runs-on: ubuntu-latest
     steps:
-      - name:
+      - name: Checkout
         uses: actions/checkout@v1
 
       - name: Set up Python
