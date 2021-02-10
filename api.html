@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>API Reference &#8212; Tibia.py 3.6.5 documentation</title>
+    <title>API Reference &#8212; Tibia.py 3.7.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 3.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 3.7.0 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">API Reference</a></li> 
       </ul>
     </div>  
@@ -10532,6 +10532,17 @@ result in the response being for the current month and year instead.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt id="tibiapy.AuctionDetails.familiars">
+<code class="sig-name descname">familiars</code><a class="headerlink" href="#tibiapy.AuctionDetails.familiars" title="Permalink to this definition">¶</a></dt>
+<dd><p>The familiars the character has purchased or unlocked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.Familiars" title="tibiapy.Familiars"><code class="xref py py-class docutils literal notranslate"><span class="pre">Familiars</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt id="tibiapy.AuctionDetails.blessings">
 <code class="sig-name descname">blessings</code><a class="headerlink" href="#tibiapy.AuctionDetails.blessings" title="Permalink to this definition">¶</a></dt>
 <dd><p>The blessings the character has.</p>
@@ -11192,6 +11203,68 @@ parsing time.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="displayfamiliar">
+<h4>DisplayFamiliar<a class="headerlink" href="#displayfamiliar" title="Permalink to this headline">¶</a></h4>
+<dl class="py class">
+<dt id="tibiapy.DisplayFamiliar">
+<em class="property">class </em><code class="sig-prename descclassname">tibiapy.</code><code class="sig-name descname">DisplayFamiliar</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/bazaar.html#DisplayFamiliar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.DisplayFamiliar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a familiar owned or unlocked by the character.</p>
+<dl class="py attribute">
+<dt id="tibiapy.DisplayFamiliar.image_url">
+<code class="sig-name descname">image_url</code><a class="headerlink" href="#tibiapy.DisplayFamiliar.image_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL to the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.DisplayFamiliar.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#tibiapy.DisplayFamiliar.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The familiar’s name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.DisplayFamiliar.familiar_id">
+<code class="sig-name descname">familiar_id</code><a class="headerlink" href="#tibiapy.DisplayFamiliar.familiar_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>The internal ID of the familiar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.DisplayFamiliar.to_json">
+<code class="sig-name descname">to_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sort_keys</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.DisplayFamiliar.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> will return the shortest possible string.</p></li>
+<li><p><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>JSON representation of the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="displayitem">
 <h4>DisplayItem<a class="headerlink" href="#displayitem" title="Permalink to this headline">¶</a></h4>
 <dl class="py class">
@@ -11391,6 +11464,147 @@ parsing time.</p>
 <dl class="py method">
 <dt id="tibiapy.DisplayOutfit.to_json">
 <code class="sig-name descname">to_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sort_keys</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.DisplayOutfit.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> will return the shortest possible string.</p></li>
+<li><p><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>JSON representation of the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="familiars">
+<h4>Familiars<a class="headerlink" href="#familiars" title="Permalink to this headline">¶</a></h4>
+<dl class="py class">
+<dt id="tibiapy.Familiars">
+<em class="property">class </em><code class="sig-prename descclassname">tibiapy.</code><code class="sig-name descname">Familiars</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/bazaar.html#Familiars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Familiars" title="Permalink to this definition">¶</a></dt>
+<dd><p>The familiars the character has unlocked or purchased.</p>
+<dl class="py attribute">
+<dt id="tibiapy.Familiars.page">
+<code class="sig-name descname">page</code><a class="headerlink" href="#tibiapy.Familiars.page" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current page being displayed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.Familiars.total_pages">
+<code class="sig-name descname">total_pages</code><a class="headerlink" href="#tibiapy.Familiars.total_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of pages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.Familiars.results">
+<code class="sig-name descname">results</code><a class="headerlink" href="#tibiapy.Familiars.results" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.Familiars.entries">
+<code class="sig-name descname">entries</code><a class="headerlink" href="#tibiapy.Familiars.entries" title="Permalink to this definition">¶</a></dt>
+<dd><p>The familiars the character has unlocked or purchased.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#tibiapy.DisplayFamiliar" title="tibiapy.DisplayFamiliar"><code class="xref py py-class docutils literal notranslate"><span class="pre">DisplayFamiliar</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.Familiars.fully_fetched">
+<code class="sig-name descname">fully_fetched</code><a class="headerlink" href="#tibiapy.Familiars.fully_fetched" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the summary was fetched completely, including all other pages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.Familiars.entry_class">
+<code class="sig-name descname">entry_class</code><a class="headerlink" href="#tibiapy.Familiars.entry_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">tibiapy.bazaar.DisplayFamiliar</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Familiars.get_by_id">
+<code class="sig-name descname">get_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">entry_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/bazaar.html#Familiars.get_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tibiapy.Familiars.get_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets an outfit by its familiar id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>entry_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The ID of the outfit.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The outfit matching the id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.DisplayOutfit" title="tibiapy.DisplayOutfit"><code class="xref py py-class docutils literal notranslate"><span class="pre">DisplayOutfit</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Familiars.get_by_name">
+<code class="sig-name descname">get_by_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.Familiars.get_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets an entry by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the entry, case insensitive.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The entry matching the name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Familiars.search">
+<code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.Familiars.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searches an entry by its name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The value to look for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of entries with names containing the search term.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Familiars.to_json">
+<code class="sig-name descname">to_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sort_keys</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.Familiars.to_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the object’s JSON representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
