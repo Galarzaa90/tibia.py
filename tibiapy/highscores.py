@@ -227,6 +227,8 @@ class Highscores(abc.Serializable):
             cols_raw = row.find_all('td')
             if "There is currently no data" in cols_raw[0].text:
                 break
+            if len(cols_raw) <= 2:
+                break
             self._parse_entry(cols_raw)
 
     def _parse_filters_table(self, table):
