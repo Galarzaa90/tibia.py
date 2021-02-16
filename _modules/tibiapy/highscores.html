@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.highscores &#8212; Tibia.py 3.7.0 documentation</title>
+    <title>tibiapy.highscores &#8212; Tibia.py 3.7.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.7.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.highscores</a></li> 
       </ul>
@@ -273,6 +273,8 @@
             <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="s2">&quot;There is currently no data&quot;</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
                 <span class="k">break</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols_raw</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">break</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parse_entry</span><span class="p">(</span><span class="n">cols_raw</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_filters_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
@@ -510,7 +512,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.4.3.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.0.
   </div>
   
   </body>
