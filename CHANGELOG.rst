@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v3.7.1:
+
+3.7.1 (2021-02-15)
+==================
+
+- Adjusted highscores parsing for upcoming Tibia.com changes.
+
 .. v3.7.0:
 
 3.7.0 (2021-02-09)
