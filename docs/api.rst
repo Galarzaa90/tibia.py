@@ -41,6 +41,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: BattlEyeType
+    :members:
+    :undoc-members:
+
 .. autoclass:: BattlEyeHighscoresFilter
     :members:
     :undoc-members:

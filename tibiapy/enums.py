@@ -7,6 +7,7 @@ __all__ = (
     'AuctionStatus',
     'AuctionSearchType',
     'Category',
+    'BattlEyeType',
     'BattlEyeHighscoresFilter',
     'BattlEyeTypeFilter',
     'BazaarType',
@@ -108,6 +109,20 @@ class AuctionStatus(BaseEnum):
     """The auction either finished with no bids or the character was transferred to the new owner already."""
 
 
+class BattlEyeType(NumericEnum):
+    """The possible BattlEye statuses a world can have."""
+    UNPROTECTED = 0
+    """Worlds without any BattlEye protection."""
+    PROTECTED = 1
+    """Worlds protected after the world was created, represented by a yellow symbol."""
+    INITIALLY_PROTECTED = 2
+    """Worlds protected from the beginning, represented by a green symbol."""
+    YELLOW = PROTECTED
+    """Alias for protected worlds."""
+    GREEN = INITIALLY_PROTECTED
+    """Alias for initially protected worlds."""
+
+
 class BattlEyeHighscoresFilter(NumericEnum):
     """The possible BattlEye filters that can be used for highscores."""
     INITIALLY_PROTECTED = 2
@@ -116,6 +131,10 @@ class BattlEyeHighscoresFilter(NumericEnum):
     """Worlds protected after the world was created, represented by a yellow symbol."""
     UNPROTECTED = 0
     """Worlds without any BattlEye protection."""
+    YELLOW = PROTECTED
+    """Alias for protected worlds."""
+    GREEN = INITIALLY_PROTECTED
+    """Alias for initially protected worlds."""
 
 
 class BattlEyeTypeFilter(NumericEnum):
@@ -126,6 +145,10 @@ class BattlEyeTypeFilter(NumericEnum):
     """Worlds protected after the world was created, represented by a yellow symbol."""
     NOT_PROTECTED = 3
     """Worlds without any BattlEye protection."""
+    YELLOW = PROTECTED
+    """Alias for protected worlds."""
+    GREEN = INITIALLY_PROTECTED
+    """Alias for initially protected worlds."""
 
 
 class BazaarType(BaseEnum):

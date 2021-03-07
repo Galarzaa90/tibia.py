@@ -6,7 +6,7 @@ import bs4
 
 from tibiapy import abc
 from tibiapy.character import OnlineCharacter
-from tibiapy.enums import PvpType, TournamentWorldType, TransferType, WorldLocation
+from tibiapy.enums import PvpType, TournamentWorldType, TransferType, WorldLocation, BattlEyeType
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
     parse_tibiacom_content, try_date, try_datetime, try_enum
@@ -38,11 +38,11 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
         The type of PvP in the world.
     transfer_type: :class:`TransferType`
         The type of transfer restrictions this world has.
-    battleye_protected: :class:`bool`
-        Whether the server is currently protected with BattlEye or not.
     battleye_date: :class:`datetime.date`
         The date when BattlEye was added to this world.
         If this is :obj:`None` and the world is protected, it means the world was protected from the beginning.
+    battleye_type: :class:`BattlEyeType`
+        The type of BattlEye protection this world has.
     experimental: :class:`bool`
         Whether the world is experimental or not.
     premium_only: :class:`bool`
@@ -56,12 +56,16 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
         "location",
         "online_count",
         "pvp_type",
-        "battleye_protected",
         "battleye_date",
+        "battleye_type",
         "experimental",
         "premium_only",
         "tournament_world_type",
         "transfer_type"
+    )
+
+    _serializable_properties = (
+        "battleye_protected",
     )
 
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
@@ -71,11 +75,16 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
         self.status: str = kwargs.get("status")
         self.online_count: int = kwargs.get("online_count", 0)
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
-        self.battleye_protected: bool = kwargs.get("battleye_protected", False)
         self.battleye_date = try_date(kwargs.get("battleye_date"))
+        self.battleye_type = try_enum(BattlEyeType, kwargs.get("battleye_type"), BattlEyeType.UNPROTECTED)
         self.experimental: bool = kwargs.get("experimental", False)
         self.premium_only: bool = kwargs.get("premium_only", False)
         self.tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
+
+    @property
+    def battleye_protected(self):
+        """:class:`bool`: Whether the server is currently protected with BattlEye or not."""
+        return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
 
     # region Public methods
     @classmethod
@@ -157,11 +166,11 @@ class World(abc.BaseWorld, abc.Serializable):
         The type of transfer restrictions this world has.
     world_quest_titles: :obj:`list` of :class:`str`
         List of world quest titles the server has achieved.
-    battleye_protected: :class:`bool`
-        Whether the server is currently protected with BattlEye or not.
     battleye_date: :class:`datetime.date`
         The date when BattlEye was added to this world.
         If this is :obj:`None` and the world is protected, it means the world was protected from the beginning.
+    battleye_type: :class:`BattlEyeType`
+        The type of BattlEye protection this world has.
     experimental: :class:`bool`
         Whether the world is experimental or not.
     tournament_world_type: :class:`TournamentWorldType`
@@ -176,8 +185,8 @@ class World(abc.BaseWorld, abc.Serializable):
         "status",
         "location",
         "pvp_type",
-        "battleye_protected",
         "battleye_date",
+        "battleye_type",
         "experimental",
         "premium_only",
         "tournament_world_type",
@@ -188,6 +197,10 @@ class World(abc.BaseWorld, abc.Serializable):
         "creation_date",
         "world_quest_titles",
         "online_players"
+    )
+
+    _serializable_properties = (
+        "battleye_protected",
     )
 
     def __init__(self, name, location=None, pvp_type=None, **kwargs):
@@ -201,14 +214,19 @@ class World(abc.BaseWorld, abc.Serializable):
         self.creation_date: str = kwargs.get("creation_date")
         self.transfer_type = try_enum(TransferType, kwargs.get("transfer_type", TransferType.REGULAR))
         self.world_quest_titles: List[str] = kwargs.get("world_quest_titles", [])
-        self.battleye_protected: bool = kwargs.get("battleye_protected", False)
         self.battleye_date = try_date(kwargs.get("battleye_date"))
+        self.battleye_type = try_enum(BattlEyeType, kwargs.get("battleye_type"), BattlEyeType.UNPROTECTED)
         self.experimental: bool = kwargs.get("experimental", False)
         self.online_players: List[OnlineCharacter] = kwargs.get("online_players", [])
         self.premium_only: bool = kwargs.get("premium_only", False)
         self.tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
 
     # region Properties
+    @property
+    def battleye_protected(self):
+        """:class:`bool`: Whether the server is currently protected with BattlEye or not."""
+        return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
+
     @property
     def creation_year(self):
         """:class:`int`: Returns the year when the world was created."""
@@ -324,11 +342,11 @@ class World(abc.BaseWorld, abc.Serializable):
         """
         m = battleye_regexp.search(battleye_string)
         if m:
-            self.battleye_protected = True
             self.battleye_date = parse_tibia_full_date(m.group(1))
+            self.battleye_type = BattlEyeType.PROTECTED if self.battleye_date else BattlEyeType.INITIALLY_PROTECTED
         else:
-            self.battleye_protected = False
             self.battleye_date = None
+            self.battleye_type = BattlEyeType.UNPROTECTED
 
     @classmethod
     def _parse_tables(cls, parsed_content):
@@ -474,10 +492,10 @@ class WorldOverview(abc.Serializable):
             # Check Battleye icon to get information
             battleye_icon = cols[4].find("span", attrs={"class": "HelperDivIndicator"})
             if battleye_icon is not None:
-                world.battleye_protected = True
                 m = battleye_regexp.search(battleye_icon["onmouseover"])
                 if m:
                     world.battleye_date = parse_tibia_full_date(m.group(1))
+                    world.battleye_type = BattlEyeType.PROTECTED if world.battleye_date else BattlEyeType.INITIALLY_PROTECTED
             additional_info = cols[5].text.strip()
             world._parse_additional_info(additional_info, tournament)
             self.worlds.append(world)
