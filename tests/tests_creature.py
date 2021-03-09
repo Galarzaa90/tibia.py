@@ -1,7 +1,7 @@
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import BoostedCreature, InvalidContent, CreaturesSection, CreatureDetail
+from tibiapy import InvalidContent, CreaturesSection, CreatureDetail, Creature
 
 FILE_CREATURE_SECTION = "library/creature_list.txt"
 FILE_CREATURE = "library/creature_animatedfeather.txt"
@@ -11,15 +11,15 @@ class TestCreature(TestCommons, unittest.TestCase):
     def test_creature_from_content(self):
         """Testing parsing a boosted creature"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        creature = BoostedCreature.from_content(content)
+        creature = CreaturesSection.from_boosted_creature_header(content)
 
-        self.assertIsInstance(creature, BoostedCreature)
+        self.assertIsInstance(creature, Creature)
         self.assertEqual("Skeleton Warrior", creature.name)
 
     def test_creature_from_content_not_tibiacom(self):
         """Testing parsing a page that is not Tibia.com"""
         with self.assertRaises(InvalidContent):
-            BoostedCreature.from_content("<html><div><p>Nothing</p></div></html>")
+            CreaturesSection.from_boosted_creature_header("<html><div><p>Nothing</p></div></html>")
 
     def test_creature_section_from_content(self):
         content = self.load_resource(FILE_CREATURE_SECTION)

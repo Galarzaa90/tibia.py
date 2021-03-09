@@ -17,7 +17,7 @@ from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, VocationFilter, Category, \
     House, ListedHouse, \
     ListedGuild, \
-    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, BoostedCreature
+    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, Creature
 
 
 class TestClient(asynctest.TestCase, TestCommons):
@@ -194,7 +194,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(News.get_list_url(), status=200, body=content)
         creature = await self.client.fetch_boosted_creature()
 
-        self.assertIsInstance(creature.data, BoostedCreature)
+        self.assertIsInstance(creature.data, Creature)
 
     @aioresponses()
     async def test_client_fetch_cm_post_archive(self, mock):

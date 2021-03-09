@@ -11,7 +11,7 @@ import aiohttp_socks
 import tibiapy
 from tibiapy import abc, AuctionDetails, AuctionFilters, CharacterBazaar
 from tibiapy.character import Character
-from tibiapy.creature import BoostedCreature, CreaturesSection, Creature, CreatureDetail
+from tibiapy.creature import CreaturesSection, Creature, CreatureDetail
 from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
@@ -669,7 +669,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`BoostedCreature`
+        :class:`TibiaResponse` of :class:`Creature`
             The boosted creature of the day.
 
         Raises
@@ -682,19 +682,58 @@ class Client:
         """
         response = await self._request("GET", News.get_list_url())
         start_time = time.perf_counter()
-        boosted_creature = BoostedCreature.from_content(response.content)
+        boosted_creature = CreaturesSection.from_boosted_creature_header(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
     async def fetch_library_creatures(self):
+        """Fetches the creatures from the library section.
+
+        .. versionadded:: 4.0.0
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`CreaturesSection`
+            The creature's section in Tibia.com
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
         response = await self._request("GET", CreaturesSection.get_url())
         start_time = time.perf_counter()
         boosted_creature = CreaturesSection.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
-    async def fetch_creature(self, name):
-        response = await self._request("GET", CreatureDetail.get_url(name))
+    async def fetch_creature(self, race):
+        """Fetches a creature's information from the Tibia.com library.
+
+        .. versionadded:: 4.0.0
+
+        Parameters
+        ----------
+        race: :class:`str`
+            The internal name of the race.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`CreatureDetail`
+            The creature's section in Tibia.com
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", CreatureDetail.get_url(race))
         start_time = time.perf_counter()
         boosted_creature = CreatureDetail.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -711,7 +750,7 @@ class Client:
         Returns
         -------
         :class:`TibiaResponse` of :class:`Character`
-            A response containig the character, if found.
+            A response containing the character, if found.
 
         Raises
         ------
