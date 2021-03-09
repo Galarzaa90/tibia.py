@@ -22,6 +22,8 @@ EXP_PATTERN = re.compile(r"yield (\d+) experience")
 IMMUNE_PATTERN = re.compile(r"immune to ([^.]+)")
 WEAK_PATTERN = re.compile(r"weak against ([^.]+)")
 STRONG_PATTERN = re.compile(r"strong against ([^.]+)")
+LOOT_PATTERN = re.compile(r"They carry (.*) with them.")
+MANA_COST = re.compile(r"takes (\d+) mana")
 
 
 class BoostedCreature(abc.Serializable):
@@ -174,14 +176,23 @@ class CreatureDetail(abc.Serializable):
         "immune_to",
         "weak_against",
         "strong_against",
+        "loot",
+        "mana_cost",
+        "summonable",
+        "convinceable",
     )
 
-    def __init__(self, name, race, immnute_to=None, weak_against=None, strong_against=None):
+    def __init__(self, name, race, immnute_to=None, weak_against=None, strong_against=None, loot=None, mana_cost=None,
+                 summonable=False, convinceable=False):
         self.name = name
         self.race = race
         self.immune_to = immnute_to or []
         self.weak_against = weak_against or []
         self.strong_against = strong_against or []
+        self.loot = loot
+        self.mana_cost = mana_cost
+        self.summonable = summonable
+        self.convinceable = convinceable
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} race={self.race!r}>"
@@ -220,8 +231,8 @@ class CreatureDetail(abc.Serializable):
             for element in cls._valid_elements:
                 if element in m.group(1):
                     creature.immune_to.append(element)
-            if "paralysed" in m.group(1):
-                creature.immune_to.append("paralyze")
+        if "cannot be paralysed" in hp_text:
+            creature.immune_to.append("paralyze")
         m = WEAK_PATTERN.search(hp_text)
         if m:
             for element in cls._valid_elements:
@@ -234,4 +245,17 @@ class CreatureDetail(abc.Serializable):
                     creature.strong_against.append(element)
         if "sense invisible" in hp_text:
             creature.immune_to.append("invisible")
+        m = LOOT_PATTERN.search(exp_text)
+        if m:
+            creature.loot = m.group(1)
+        m = MANA_COST.search(hp_text)
+        if m:
+            creature.mana_cost = int(m.group(1))
+            if "summon or convince" in hp_text:
+                creature.convinceable = True
+                creature.summonable = True
+            if "cannot be summoned" in hp_text:
+                creature.convinceable = True
+            if "cannot be convinced" in hp_text:
+                creature.summonable = True
         return creature
