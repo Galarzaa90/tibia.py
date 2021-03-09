@@ -11,7 +11,7 @@ import aiohttp_socks
 import tibiapy
 from tibiapy import abc, AuctionDetails, AuctionFilters, CharacterBazaar
 from tibiapy.character import Character
-from tibiapy.creature import BoostedCreature
+from tibiapy.creature import BoostedCreature, CreaturesSection, Creature, CreatureDetail
 from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
@@ -683,6 +683,20 @@ class Client:
         response = await self._request("GET", News.get_list_url())
         start_time = time.perf_counter()
         boosted_creature = BoostedCreature.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boosted_creature, parsing_time)
+
+    async def fetch_library_creatures(self):
+        response = await self._request("GET", CreaturesSection.get_url())
+        start_time = time.perf_counter()
+        boosted_creature = CreaturesSection.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boosted_creature, parsing_time)
+
+    async def fetch_creature(self, name):
+        response = await self._request("GET", CreatureDetail.get_url(name))
+        start_time = time.perf_counter()
+        boosted_creature = CreatureDetail.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 

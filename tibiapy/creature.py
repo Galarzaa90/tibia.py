@@ -1,3 +1,5 @@
+import re
+
 import bs4
 import urllib.parse
 
@@ -14,6 +16,12 @@ __all__ = (
 from tibiapy.utils import parse_tibiacom_content, get_tibia_url
 
 BOOSTED_ALT = "Today's boosted creature: "
+
+HP_PATTERN = re.compile(r"have (\d+) hitpoints")
+EXP_PATTERN = re.compile(r"yield (\d+) experience")
+IMMUNE_PATTERN = re.compile(r"immune to ([^.]+)")
+WEAK_PATTERN = re.compile(r"weak against ([^.]+)")
+STRONG_PATTERN = re.compile(r"strong against ([^.]+)")
 
 
 class BoostedCreature(abc.Serializable):
@@ -128,6 +136,10 @@ class CreaturesSection(abc.Serializable):
         self.creatures = creatures or []
 
     @classmethod
+    def get_url(cls):
+        return get_tibia_url("library", "creature")
+
+    @classmethod
     def from_content(cls, content):
         parsed_content = parse_tibiacom_content(content)
         boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
@@ -152,17 +164,24 @@ class CreaturesSection(abc.Serializable):
 
 
 class CreatureDetail(abc.Serializable):
+    _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
     __slots__ = (
         "name",
         "race",
         "description",
         "hitpoints",
-        "experience"
+        "experience",
+        "immune_to",
+        "weak_against",
+        "strong_against",
     )
 
-    def __init__(self, name, race):
+    def __init__(self, name, race, immnute_to=None, weak_against=None, strong_against=None):
         self.name = name
         self.race = race
+        self.immune_to = immnute_to or []
+        self.weak_against = weak_against or []
+        self.strong_against = strong_against or []
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} race={self.race!r}>"
@@ -190,4 +209,29 @@ class CreatureDetail(abc.Serializable):
         creature.description = "\n".join(paragraphs[:-2])
         hp_text = paragraphs[-2]
         exp_text = paragraphs[-1]
+        m = HP_PATTERN.search(hp_text)
+        if m:
+            creature.hitpoints = int(m.group(1))
+        m = EXP_PATTERN.search(exp_text)
+        if m:
+            creature.experience = int(m.group(1))
+        m = IMMUNE_PATTERN.search(hp_text)
+        if m:
+            for element in cls._valid_elements:
+                if element in m.group(1):
+                    creature.immune_to.append(element)
+            if "paralysed" in m.group(1):
+                creature.immune_to.append("paralyze")
+        m = WEAK_PATTERN.search(hp_text)
+        if m:
+            for element in cls._valid_elements:
+                if element in m.group(1):
+                    creature.weak_against.append(element)
+        m = STRONG_PATTERN.search(hp_text)
+        if m:
+            for element in cls._valid_elements:
+                if element in m.group(1):
+                    creature.strong_against.append(element)
+        if "sense invisible" in hp_text:
+            creature.immune_to.append("invisible")
         return creature

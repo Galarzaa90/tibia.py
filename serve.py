@@ -82,6 +82,18 @@ async def get_auction(request: web.Request):
                                                  fetch_outfits=fetch_outfits, skip_details=skip_details)
     return web.json_response(boosted, dumps=CustomJson.dumps)
 
+@routes.get('/creatures/')
+async def get_library_creatures(request: web.Request):
+    creatures = await app["tibiapy"].fetch_library_creatures()
+    return web.json_response(creatures, dumps=CustomJson.dumps)
+
+
+@routes.get('/creatures/{name}')
+async def get_library_creature(request: web.Request):
+    name = request.match_info.get('name')
+    creatures = await app["tibiapy"].fetch_creature(name)
+    return web.json_response(creatures, dumps=CustomJson.dumps)
+
 
 @routes.get('/boostedcreature/')
 async def get_boosted_creature(request: web.Request):
