@@ -88,13 +88,17 @@ class Creature(abc.Serializable):
     Attributes
     ----------
     name: :class:`str`
-        The name of the creature, in plural.
+        The name of the creature, usually in plural, except for the boosted creature.
     race: :class:`str`
         The internal name of the creature's race. Used for links and images."""
 
     __slots__ = (
         "name",
         "race",
+    )
+
+    _serializable_properties = (
+        "image_url",
     )
 
     def __init__(self, name, race=None):
@@ -106,19 +110,33 @@ class Creature(abc.Serializable):
 
     @property
     def url(self):
+        """:class:`str`: The URL to this creature's details."""
         return self.get_url(self.race)
 
     @property
     def image_url(self):
+        """:class:`str`: The URL to this creature's image."""
         return f"https://static.tibia.com/images/library/{self.race}.gif"
 
     @classmethod
     def get_url(cls, race):
+        """Gets the URL to the creature's detail page on Tibia.com
+
+        Parameters
+        ----------
+        race: :class:`str`
+            The race's internal name.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the detail page.
+        """
         return get_tibia_url("library", "creatures", race=race)
 
 
 class CreaturesSection(abc.Serializable):
-    """a
+    """Represents the creature's section in the Tibia.com library.
 
     Attributes
     ----------
@@ -139,33 +157,89 @@ class CreaturesSection(abc.Serializable):
 
     @classmethod
     def get_url(cls):
+        """Gets the URL to the Tibia.com library section.
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Tibia.com library section.
+        """
         return get_tibia_url("library", "creature")
 
     @classmethod
     def from_content(cls, content):
-        parsed_content = parse_tibiacom_content(content)
-        boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
-        boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
-        if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
-            return None
-        boosted_creature_link = boosted_creature_table.find("a")
-        url = urllib.parse.urlparse(boosted_creature_link["href"])
-        query = urllib.parse.parse_qs(url.query)
-        boosted_creature = Creature(boosted_creature_link.text, query["race"][0])
+        """Creates an instance of the class from the html content of the creature library's page.
 
-        list_table = parsed_content.find("div", style=lambda v: v and 'display: table' in v)
-        entries_container = list_table.find_all("div", style=lambda v: v and 'float: left' in v)
-        entries = []
-        for entry_container in entries_container:
-            name = entry_container.text.strip()
-            link = entry_container.find("a")
-            url = urllib.parse.urlparse(link["href"])
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`Character`
+            The character contained in the page.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a creature library's page.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
+            boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
+            if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
+                return None
+            boosted_creature_link = boosted_creature_table.find("a")
+            url = urllib.parse.urlparse(boosted_creature_link["href"])
             query = urllib.parse.parse_qs(url.query)
-            entries.append(Creature(name, query["race"][0]))
-        return cls(boosted_creature, entries)
+            boosted_creature = Creature(boosted_creature_link.text, query["race"][0])
+
+            list_table = parsed_content.find("div", style=lambda v: v and 'display: table' in v)
+            entries_container = list_table.find_all("div", style=lambda v: v and 'float: left' in v)
+            entries = []
+            for entry_container in entries_container:
+                name = entry_container.text.strip()
+                link = entry_container.find("a")
+                url = urllib.parse.urlparse(link["href"])
+                query = urllib.parse.parse_qs(url.query)
+                entries.append(Creature(name, query["race"][0]))
+            return cls(boosted_creature, entries)
+        except ValueError as e:
+            raise InvalidContent("content is not the creature's library", e)
 
 
-class CreatureDetail(abc.Serializable):
+class CreatureDetail(Creature):
+    """Represents a creature's details on the Tibia.com library.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the creature, in plural form.
+    race: :class:`str`
+        The race's internal name. Used for links and images.
+    description: :class:`str`
+        A description of the creature.
+    hitpoints: :class:`int`
+        The number of hitpoints the creature has.
+    experience: :class:`int`
+        The number of experience points given for killing this creature.
+    immune_to: list of :class:`str`
+        The elements this creature is immune to.
+    weak_against: list of :class:`str`
+        The elements this creature is weak against.
+    strong_against: list of :class:`str`
+        The elements this creature is strong against.
+    loot: :class:`str`
+        Some of the items this creature drops.
+    mana_cost: :class:`int`, optional
+        The mana neccessary to summon or convince this creature.
+    summonable: :class:`bool`
+        Whether this creature can be summoned or not.
+    convinceable: :class:`bool`
+        Whether this creature can be convinced or not.
+    """
     _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
     __slots__ = (
         "name",
@@ -182,27 +256,38 @@ class CreatureDetail(abc.Serializable):
         "convinceable",
     )
 
-    def __init__(self, name, race, immnute_to=None, weak_against=None, strong_against=None, loot=None, mana_cost=None,
-                 summonable=False, convinceable=False):
-        self.name = name
-        self.race = race
-        self.immune_to = immnute_to or []
-        self.weak_against = weak_against or []
-        self.strong_against = strong_against or []
-        self.loot = loot
-        self.mana_cost = mana_cost
-        self.summonable = summonable
-        self.convinceable = convinceable
+    def __init__(self, name, race, **kwargs):
+        super().__init__(name, race)
+        self.immune_to = kwargs.get("immune_to", [])
+        self.weak_against = kwargs.get("weak_against", [])
+        self.strong_against = kwargs.get("strong_against", [])
+        self.loot = kwargs.get("loot")
+        self.mana_cost = kwargs.get("loot")
+        self.summonable = kwargs.get("summonable", False)
+        self.convinceable = kwargs.get("convinceable", False)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} race={self.race!r}>"
 
     @classmethod
-    def get_url(cls, race):
-        return get_tibia_url("library", "creatures", race=race)
-
-    @classmethod
     def from_content(cls, content):
+        """Creates an instance of the class from the html content of the creature library's page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`Character`
+            The character contained in the page.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a creature library's page.
+        """
         parsed_content = parse_tibiacom_content(content)
         pagination_container, content_container = \
             parsed_content.find_all("div", style=lambda v: v and 'position: relative' in v)
@@ -219,35 +304,37 @@ class CreatureDetail(abc.Serializable):
         paragraphs = [p.text for p in paragraph_tags]
         creature.description = "\n".join(paragraphs[:-2])
         hp_text = paragraphs[-2]
+        cls._parse_hp_text(creature, hp_text)
+
         exp_text = paragraphs[-1]
-        m = HP_PATTERN.search(hp_text)
-        if m:
-            creature.hitpoints = int(m.group(1))
+        cls._parse_exp_text(creature, exp_text)
+        return creature
+
+    @classmethod
+    def _parse_exp_text(cls, creature, exp_text):
         m = EXP_PATTERN.search(exp_text)
         if m:
             creature.experience = int(m.group(1))
+        m = LOOT_PATTERN.search(exp_text)
+        if m:
+            creature.loot = m.group(1)
+
+    @classmethod
+    def _parse_hp_text(cls, creature, hp_text):
+        m = HP_PATTERN.search(hp_text)
+        if m:
+            creature.hitpoints = int(m.group(1))
         m = IMMUNE_PATTERN.search(hp_text)
         if m:
-            for element in cls._valid_elements:
-                if element in m.group(1):
-                    creature.immune_to.append(element)
+            cls.parse_elements(creature.immune_to, m.group(1))
         if "cannot be paralysed" in hp_text:
             creature.immune_to.append("paralyze")
         m = WEAK_PATTERN.search(hp_text)
         if m:
-            for element in cls._valid_elements:
-                if element in m.group(1):
-                    creature.weak_against.append(element)
+            cls.parse_elements(creature.weak_against, m.group(1))
         m = STRONG_PATTERN.search(hp_text)
         if m:
-            for element in cls._valid_elements:
-                if element in m.group(1):
-                    creature.strong_against.append(element)
-        if "sense invisible" in hp_text:
-            creature.immune_to.append("invisible")
-        m = LOOT_PATTERN.search(exp_text)
-        if m:
-            creature.loot = m.group(1)
+            cls.parse_elements(creature.strong_against, m.group(1))
         m = MANA_COST.search(hp_text)
         if m:
             creature.mana_cost = int(m.group(1))
@@ -258,4 +345,11 @@ class CreatureDetail(abc.Serializable):
                 creature.convinceable = True
             if "cannot be convinced" in hp_text:
                 creature.summonable = True
-        return creature
+        if "sense invisible" in hp_text:
+            creature.immune_to.append("invisible")
+
+    @classmethod
+    def parse_elements(cls, collection, text):
+        for element in cls._valid_elements:
+            if element in text:
+                collection.append(element)
