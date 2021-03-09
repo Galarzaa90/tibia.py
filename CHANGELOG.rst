@@ -6,6 +6,22 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v4.0.0:
+
+4.0.0 (Unreleased)
+==================
+- Breaking change: Removed ``BoostedCreature`` class, replaced by ``Creature`` class.
+    - Attributes should be compatible, ``image_url`` is a property of ``Creature``, calculated from its ``race`` attribute.
+- Added parsing and fetching for the Creature library section.
+    - Added ``CreatureSection``, ``Creature``, and ``CreatureDetail`` classes.
+- Added ``traded`` attribute to ``ForumAuthor``. Indicates if the author was a traded character.
+    - Previously, it would mark the author as a deleted character and its name would include ``(traded)``.
+- Fixed a bug with ``ForumBoards`` not parsing due to the cookies dialog that was added.
+- Added ``battleye_type`` attribute to ``ListedWorld`` and ``World`` classes. Indicates the type of BattlEye protection the world has.
+    - ``battleye_protected`` is now a property instead of an attribute.
+- Added ``YELLOW`` and ``GREEN`` aliases to all BattlEye related enums.
+- Fixed wrong timezone being used for forum related dates.
+
 .. v3.7.1:
 
 3.7.1 (2021-02-15)

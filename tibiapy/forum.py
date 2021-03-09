@@ -30,7 +30,7 @@ post_id_regex = re.compile(r'postid=(\d+)')
 thread_id_regex = re.compile(r'threadid=(\d+)')
 announcement_id_regex = re.compile(r'announcementid=(\d+)')
 page_number_regex = re.compile(r'pagenumber=(\d+)')
-timezone_regex = re.compile(r'times are (CEST?)')
+timezone_regex = re.compile(r'times are (CES?T)')
 filename_regex = re.compile(r'([\w_]+.gif)')
 pages_regex = re.compile(r'\(Pages[^)]+\)')
 
@@ -384,7 +384,7 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
         root_tables = [t for t in tables if "BoxContent" in t.parent.attrs.get("class", [])]
         if not root_tables:
             error_table = parsed_content.find("table", attrs={"class": "Table1"})
-            if error_table and "not be found" in error_table.text:
+            if error_table and "not found" in error_table.text:
                 return None
             raise errors.InvalidContent("content is not a Tibia.com forum announcement.")
         forum_info_table, posts_table, footer_table = root_tables
@@ -444,6 +444,8 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         The number of posts this character has made.
     deleted: :class:`bool`
         Whether the author is deleted or not.
+    traded: :class:`bool`
+        Whether the author is traded or not.
     """
 
     __slots__ = (
@@ -456,6 +458,7 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         "guild",
         "posts",
         "deleted",
+        "traded",
     )
 
     def __init__(self, name, **kwargs):
@@ -468,6 +471,7 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         self.guild: Optional[GuildMembership] = kwargs.get("guild")
         self.posts: int = kwargs.get("posts", 0)
         self.deleted: bool = kwargs.get("deleted", False)
+        self.traded: bool = kwargs.get("traded", False)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} level={self.level} world={self.world!r} " \
@@ -490,7 +494,14 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         # First link belongs to character
         char_link = character_info_container.find("a")
         if not char_link:
-            return ForumAuthor(name=character_info_container.text, deleted=True)
+            name = character_info_container.text
+            deleted = True
+            traded = False
+            if "(traded)" in name:
+                name = name.replace("(traded)", "").strip()
+                deleted = False
+                traded = True
+            return ForumAuthor(name=name, deleted=deleted, traded=traded)
         author = cls(char_link.text)
 
         position_info = character_info_container.find("font", attrs={"class": "ff_smallinfo"})
@@ -1262,16 +1273,16 @@ class ListedBoard(abc.BaseBoard, abc.Serializable):
         try:
             parsed_content = parse_tibiacom_content(content)
             tables = parsed_content.find_all("table", attrs={"width": "100%"})
-            _, board_list_table, timezone_table = tables
+            _, board_list_table, timezone_table, *_ = tables
             _, *board_rows = board_list_table.find_all("tr")
             timezone_text = timezone_table.text
             timezone = timezone_regex.search(timezone_text).group(1)
-            offset = 1 if timezone == "CES" else 2
+            offset = 1 if timezone == "CET" else 2
             boards = []
             for board_row in board_rows[:-3]:
                 try:
                     board = cls._parse_board_row(board_row, offset)
-                except IndexError:
+                except (IndexError, AttributeError):
                     continue
                 else:
                     boards.append(board)
