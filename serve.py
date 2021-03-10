@@ -1,7 +1,7 @@
+import datetime
 import json
 import logging
 import traceback
-import datetime
 
 from aiohttp import web
 from aiohttp.web_middlewares import normalize_path_middleware

@@ -1,7 +1,7 @@
 import re
+import urllib.parse
 
 import bs4
-import urllib.parse
 
 from tibiapy import abc
 from tibiapy.errors import InvalidContent
@@ -256,74 +256,93 @@ class CreatureDetail(Creature):
         -------
         :class:`Character`
             The character contained in the page.
-
-        Raises
-        ------
-        InvalidContent
-            If content is not the HTML of a creature library's page.
         """
-        parsed_content = parse_tibiacom_content(content)
-        pagination_container, content_container = \
-            parsed_content.find_all("div", style=lambda v: v and 'position: relative' in v)
-        title_container, description_container = content_container.find_all("div")
-        title = title_container.find("h2")
-        name = title.text.strip()
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            pagination_container, content_container = \
+                parsed_content.find_all("div", style=lambda v: v and 'position: relative' in v)
+            title_container, description_container = content_container.find_all("div")
+            title = title_container.find("h2")
+            name = title.text.strip()
 
-        img = title_container.find("img")
-        img_url = img["src"]
-        race = img_url.split("/")[-1].replace(".gif", "")
-        creature = cls(name, race)
+            img = title_container.find("img")
+            img_url = img["src"]
+            race = img_url.split("/")[-1].replace(".gif", "")
+            creature = cls(name, race)
 
-        paragraph_tags = description_container.find_all("p")
-        paragraphs = [p.text for p in paragraph_tags]
-        creature.description = "\n".join(paragraphs[:-2])
-        hp_text = paragraphs[-2]
-        cls._parse_hp_text(creature, hp_text)
+            paragraph_tags = description_container.find_all("p")
+            paragraphs = [p.text for p in paragraph_tags]
+            creature.description = "\n".join(paragraphs[:-2])
+            hp_text = paragraphs[-2]
+            creature._parse_hp_text(hp_text)
 
-        exp_text = paragraphs[-1]
-        cls._parse_exp_text(creature, exp_text)
-        return creature
+            exp_text = paragraphs[-1]
+            creature._parse_exp_text(exp_text)
+            return creature
+        except ValueError:
+            return None
 
-    @classmethod
-    def _parse_exp_text(cls, creature, exp_text):
+    def _parse_exp_text(self, exp_text):
+        """Parses the experience text, containing dropped loot and adds it to the creature,
+
+        Parameters
+        ----------
+        exp_text: :class:`str`
+            The text containing experience.
+        """
         m = EXP_PATTERN.search(exp_text)
         if m:
-            creature.experience = int(m.group(1))
+            self.experience = int(m.group(1))
         m = LOOT_PATTERN.search(exp_text)
         if m:
-            creature.loot = m.group(1)
+            self.loot = m.group(1)
 
-    @classmethod
-    def _parse_hp_text(cls, creature, hp_text):
+    def _parse_hp_text(self, hp_text):
+        """Parses the text containing the creatures hitpoints, containing weaknesses, immunities and more and adds it.
+
+        Parameters
+        ----------
+        hp_text: :class:`str`
+            The text containing hitpoints.
+        """
         m = HP_PATTERN.search(hp_text)
         if m:
-            creature.hitpoints = int(m.group(1))
+            self.hitpoints = int(m.group(1))
         m = IMMUNE_PATTERN.search(hp_text)
         if m:
-            cls.parse_elements(creature.immune_to, m.group(1))
+            self._parse_elements(self.immune_to, m.group(1))
         if "cannot be paralysed" in hp_text:
-            creature.immune_to.append("paralyze")
+            self.immune_to.append("paralyze")
         m = WEAK_PATTERN.search(hp_text)
         if m:
-            cls.parse_elements(creature.weak_against, m.group(1))
+            self._parse_elements(self.weak_against, m.group(1))
         m = STRONG_PATTERN.search(hp_text)
         if m:
-            cls.parse_elements(creature.strong_against, m.group(1))
+            self._parse_elements(self.strong_against, m.group(1))
         m = MANA_COST.search(hp_text)
         if m:
-            creature.mana_cost = int(m.group(1))
+            self.mana_cost = int(m.group(1))
             if "summon or convince" in hp_text:
-                creature.convinceable = True
-                creature.summonable = True
+                self.convinceable = True
+                self.summonable = True
             if "cannot be summoned" in hp_text:
-                creature.convinceable = True
+                self.convinceable = True
             if "cannot be convinced" in hp_text:
-                creature.summonable = True
+                self.summonable = True
         if "sense invisible" in hp_text:
-            creature.immune_to.append("invisible")
+            self.immune_to.append("invisible")
 
     @classmethod
-    def parse_elements(cls, collection, text):
+    def _parse_elements(cls, collection, text):
+        """Parses the elements found in a string, adding them to the collection.
+
+        Parameters
+        ----------
+        collection: :class:`list`
+            The collection where found elements will be added to.
+        text: :class:`str`
+            The text containing the elements.
+        """
         for element in cls._valid_elements:
             if element in text:
                 collection.append(element)

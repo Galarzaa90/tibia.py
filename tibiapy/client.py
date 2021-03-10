@@ -37,6 +37,7 @@ T = typing.TypeVar('T')
 
 log = logging.getLogger("tibiapy")
 
+
 class TibiaResponse(typing.Generic[T], abc.Serializable):
     """Represents a response from Tibia.com
 
@@ -183,13 +184,14 @@ class Client:
         await self._session_ready.wait()
         try:
             init_time = time.perf_counter()
-            log.info(f"%s | %s | Fetching...", url, method)
             async with self.session.request(method, url, data=data, headers=headers) as resp:
-                log.info(f"%s | %s | %s %s", url, method, resp.status, resp.reason)
+                diff_time = time.perf_counter()-init_time
                 if "maintenance.tibia.com" in str(resp.url):
+                    log.info(f"%s | %s | %s %s | maintenance.tibia.com", url, method, resp.status, resp.reason)
                     raise SiteMaintenanceError("Tibia.com is down for maintenance.")
+                log.info(f"%s | %s | %s %s | %dms", url, method, resp.status, resp.reason, int(diff_time*1000))
                 self._handle_status(resp.status)
-                response = RawResponse(resp, time.perf_counter()-init_time)
+                response = RawResponse(resp, diff_time)
                 response.content = await resp.text()
                 return response
         except aiohttp.ClientError as e:
