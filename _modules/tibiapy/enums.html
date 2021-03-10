@@ -53,6 +53,7 @@
     <span class="s1">&#39;AuctionStatus&#39;</span><span class="p">,</span>
     <span class="s1">&#39;AuctionSearchType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Category&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BattlEyeType&#39;</span><span class="p">,</span>
     <span class="s1">&#39;BattlEyeHighscoresFilter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;BattlEyeTypeFilter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;BazaarType&#39;</span><span class="p">,</span>
@@ -154,6 +155,20 @@
     <span class="sd">&quot;&quot;&quot;The auction either finished with no bids or the character was transferred to the new owner already.&quot;&quot;&quot;</span></div>
 
 
+<div class="viewcode-block" id="BattlEyeType"><a class="viewcode-back" href="../../api.html#tibiapy.BattlEyeType">[docs]</a><span class="k">class</span> <span class="nc">BattlEyeType</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The possible BattlEye statuses a world can have.&quot;&quot;&quot;</span>
+    <span class="n">UNPROTECTED</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="sd">&quot;&quot;&quot;Worlds without any BattlEye protection.&quot;&quot;&quot;</span>
+    <span class="n">PROTECTED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="sd">&quot;&quot;&quot;Worlds protected after the world was created, represented by a yellow symbol.&quot;&quot;&quot;</span>
+    <span class="n">INITIALLY_PROTECTED</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="sd">&quot;&quot;&quot;Worlds protected from the beginning, represented by a green symbol.&quot;&quot;&quot;</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="n">PROTECTED</span>
+    <span class="sd">&quot;&quot;&quot;Alias for protected worlds.&quot;&quot;&quot;</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="n">INITIALLY_PROTECTED</span>
+    <span class="sd">&quot;&quot;&quot;Alias for initially protected worlds.&quot;&quot;&quot;</span></div>
+
+
 <div class="viewcode-block" id="BattlEyeHighscoresFilter"><a class="viewcode-back" href="../../api.html#tibiapy.BattlEyeHighscoresFilter">[docs]</a><span class="k">class</span> <span class="nc">BattlEyeHighscoresFilter</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The possible BattlEye filters that can be used for highscores.&quot;&quot;&quot;</span>
     <span class="n">INITIALLY_PROTECTED</span> <span class="o">=</span> <span class="mi">2</span>
@@ -161,7 +176,11 @@
     <span class="n">PROTECTED</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="sd">&quot;&quot;&quot;Worlds protected after the world was created, represented by a yellow symbol.&quot;&quot;&quot;</span>
     <span class="n">UNPROTECTED</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="sd">&quot;&quot;&quot;Worlds without any BattlEye protection.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Worlds without any BattlEye protection.&quot;&quot;&quot;</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="n">PROTECTED</span>
+    <span class="sd">&quot;&quot;&quot;Alias for protected worlds.&quot;&quot;&quot;</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="n">INITIALLY_PROTECTED</span>
+    <span class="sd">&quot;&quot;&quot;Alias for initially protected worlds.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="BattlEyeTypeFilter"><a class="viewcode-back" href="../../api.html#tibiapy.BattlEyeTypeFilter">[docs]</a><span class="k">class</span> <span class="nc">BattlEyeTypeFilter</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>
@@ -171,7 +190,11 @@
     <span class="n">PROTECTED</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="sd">&quot;&quot;&quot;Worlds protected after the world was created, represented by a yellow symbol.&quot;&quot;&quot;</span>
     <span class="n">NOT_PROTECTED</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="sd">&quot;&quot;&quot;Worlds without any BattlEye protection.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Worlds without any BattlEye protection.&quot;&quot;&quot;</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="n">PROTECTED</span>
+    <span class="sd">&quot;&quot;&quot;Alias for protected worlds.&quot;&quot;&quot;</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="n">INITIALLY_PROTECTED</span>
+    <span class="sd">&quot;&quot;&quot;Alias for initially protected worlds.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="BazaarType"><a class="viewcode-back" href="../../api.html#tibiapy.BazaarType">[docs]</a><span class="k">class</span> <span class="nc">BazaarType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
@@ -500,7 +523,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.2.
   </div>
   
   </body>

@@ -489,10 +489,61 @@ parsing time.</p>
 <dd class="field-odd"><p>The boosted creature of the day.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.BoostedCreature" title="tibiapy.BoostedCreature"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoostedCreature</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.Creature" title="tibiapy.Creature"><code class="xref py py-class docutils literal notranslate"><span class="pre">Creature</span></code></a></p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Client.fetch_library_creatures">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">fetch_library_creatures</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_library_creatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_library_creatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches the creatures from the library section.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 4.0.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The creature’s section in Tibia.com</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.CreaturesSection" title="tibiapy.CreaturesSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">CreaturesSection</span></code></a></p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Client.fetch_creature">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">fetch_creature</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">race</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_creature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_creature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches a creature’s information from the Tibia.com library.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 4.0.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>race</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The internal name of the race.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The creature’s section in Tibia.com</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.CreatureDetail" title="tibiapy.CreatureDetail"><code class="xref py py-class docutils literal notranslate"><span class="pre">CreatureDetail</span></code></a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
     This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
@@ -510,7 +561,7 @@ parsing time.</p>
 <dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A response containig the character, if found.</p>
+<dd class="field-even"><p>A response containing the character, if found.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.Character" title="tibiapy.Character"><code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></a></p>
@@ -1172,6 +1223,42 @@ guild doesn’t exist.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt id="tibiapy.BattlEyeType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">tibiapy.</span></code><code class="sig-name descname"><span class="pre">BattlEyeType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/enums.html#BattlEyeType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.BattlEyeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The possible BattlEye statuses a world can have.</p>
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeType.UNPROTECTED">
+<code class="sig-name descname"><span class="pre">UNPROTECTED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#tibiapy.BattlEyeType.UNPROTECTED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Worlds without any BattlEye protection.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeType.PROTECTED">
+<code class="sig-name descname"><span class="pre">PROTECTED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#tibiapy.BattlEyeType.PROTECTED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Worlds protected after the world was created, represented by a yellow symbol.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeType.INITIALLY_PROTECTED">
+<code class="sig-name descname"><span class="pre">INITIALLY_PROTECTED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#tibiapy.BattlEyeType.INITIALLY_PROTECTED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Worlds protected from the beginning, represented by a green symbol.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeType.YELLOW">
+<code class="sig-name descname"><span class="pre">YELLOW</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#tibiapy.BattlEyeType.YELLOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for protected worlds.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeType.GREEN">
+<code class="sig-name descname"><span class="pre">GREEN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#tibiapy.BattlEyeType.GREEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for initially protected worlds.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="tibiapy.BattlEyeHighscoresFilter">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">tibiapy.</span></code><code class="sig-name descname"><span class="pre">BattlEyeHighscoresFilter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/enums.html#BattlEyeHighscoresFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.BattlEyeHighscoresFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>The possible BattlEye filters that can be used for highscores.</p>
@@ -1191,6 +1278,18 @@ guild doesn’t exist.</p>
 <dt id="tibiapy.BattlEyeHighscoresFilter.UNPROTECTED">
 <code class="sig-name descname"><span class="pre">UNPROTECTED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#tibiapy.BattlEyeHighscoresFilter.UNPROTECTED" title="Permalink to this definition">¶</a></dt>
 <dd><p>Worlds without any BattlEye protection.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeHighscoresFilter.YELLOW">
+<code class="sig-name descname"><span class="pre">YELLOW</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#tibiapy.BattlEyeHighscoresFilter.YELLOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for protected worlds.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeHighscoresFilter.GREEN">
+<code class="sig-name descname"><span class="pre">GREEN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#tibiapy.BattlEyeHighscoresFilter.GREEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for initially protected worlds.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1215,6 +1314,18 @@ guild doesn’t exist.</p>
 <dt id="tibiapy.BattlEyeTypeFilter.NOT_PROTECTED">
 <code class="sig-name descname"><span class="pre">NOT_PROTECTED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#tibiapy.BattlEyeTypeFilter.NOT_PROTECTED" title="Permalink to this definition">¶</a></dt>
 <dd><p>Worlds without any BattlEye protection.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeTypeFilter.YELLOW">
+<code class="sig-name descname"><span class="pre">YELLOW</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#tibiapy.BattlEyeTypeFilter.YELLOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for protected worlds.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.BattlEyeTypeFilter.GREEN">
+<code class="sig-name descname"><span class="pre">GREEN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#tibiapy.BattlEyeTypeFilter.GREEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for initially protected worlds.</p>
 </dd></dl>
 
 </dd></dl>
@@ -3323,17 +3434,6 @@ the <a class="reference internal" href="#tibiapy.World" title="tibiapy.World"><c
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="tibiapy.ListedWorld.battleye_protected">
-<code class="sig-name descname"><span class="pre">battleye_protected</span></code><a class="headerlink" href="#tibiapy.ListedWorld.battleye_protected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the server is currently protected with BattlEye or not.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt id="tibiapy.ListedWorld.battleye_date">
 <code class="sig-name descname"><span class="pre">battleye_date</span></code><a class="headerlink" href="#tibiapy.ListedWorld.battleye_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>The date when BattlEye was added to this world.
@@ -3341,6 +3441,17 @@ If this is <a class="reference external" href="https://docs.python.org/3/library
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.ListedWorld.battleye_type">
+<code class="sig-name descname"><span class="pre">battleye_type</span></code><a class="headerlink" href="#tibiapy.ListedWorld.battleye_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of BattlEye protection this world has.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.BattlEyeType" title="tibiapy.BattlEyeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">BattlEyeType</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3374,6 +3485,17 @@ If this is <a class="reference external" href="https://docs.python.org/3/library
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TournamentWorldType" title="tibiapy.TournamentWorldType"><code class="xref py py-class docutils literal notranslate"><span class="pre">TournamentWorldType</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.ListedWorld.battleye_protected">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">battleye_protected</span></code><a class="headerlink" href="#tibiapy.ListedWorld.battleye_protected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the server is currently protected with BattlEye or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3580,17 +3702,6 @@ If this is <a class="reference external" href="https://docs.python.org/3/library
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="tibiapy.World.battleye_protected">
-<code class="sig-name descname"><span class="pre">battleye_protected</span></code><a class="headerlink" href="#tibiapy.World.battleye_protected" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the server is currently protected with BattlEye or not.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt id="tibiapy.World.battleye_date">
 <code class="sig-name descname"><span class="pre">battleye_date</span></code><a class="headerlink" href="#tibiapy.World.battleye_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>The date when BattlEye was added to this world.
@@ -3598,6 +3709,17 @@ If this is <a class="reference external" href="https://docs.python.org/3/library
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.World.battleye_type">
+<code class="sig-name descname"><span class="pre">battleye_type</span></code><a class="headerlink" href="#tibiapy.World.battleye_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of BattlEye protection this world has.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.BattlEyeType" title="tibiapy.BattlEyeType"><code class="xref py py-class docutils literal notranslate"><span class="pre">BattlEyeType</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3639,6 +3761,17 @@ If this is <a class="reference external" href="https://docs.python.org/3/library
 <dt id="tibiapy.World.premium_only">
 <code class="sig-name descname"><span class="pre">premium_only</span></code><a class="headerlink" href="#tibiapy.World.premium_only" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether only premium account players are allowed to play in this server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.World.battleye_protected">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">battleye_protected</span></code><a class="headerlink" href="#tibiapy.World.battleye_protected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the server is currently protected with BattlEye or not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
@@ -8892,6 +9025,17 @@ the id may be passed to assing.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt id="tibiapy.ForumAuthor.traded">
+<code class="sig-name descname"><span class="pre">traded</span></code><a class="headerlink" href="#tibiapy.ForumAuthor.traded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the author is traded or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt id="tibiapy.ForumAuthor.get_url">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">get_url</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.ForumAuthor.get_url" title="Permalink to this definition">¶</a></dt>
@@ -12424,41 +12568,53 @@ character features in the auction listing.</p>
 
 </div>
 </div>
-<div class="section" id="other">
-<h2>Other<a class="headerlink" href="#other" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="boostedcreature">
-<h3>BoostedCreature<a class="headerlink" href="#boostedcreature" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="library">
+<h2>Library<a class="headerlink" href="#library" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="creaturessection">
+<h3>CreaturesSection<a class="headerlink" href="#creaturessection" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
-<dt id="tibiapy.BoostedCreature">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">tibiapy.</span></code><code class="sig-name descname"><span class="pre">BoostedCreature</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_url</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#BoostedCreature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.BoostedCreature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a boosted creature entry.</p>
-<p>This creature changes every server save and applies to all Game Worlds.
-Boosted creatures yield twice the amount of experience points, carry more loot and respawn at a faster rate.</p>
+<dt id="tibiapy.CreaturesSection">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">tibiapy.</span></code><code class="sig-name descname"><span class="pre">CreaturesSection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boosted_creature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">creatures</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#CreaturesSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.CreaturesSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents the creature’s section in the Tibia.com library.</p>
 <dl class="py attribute">
-<dt id="tibiapy.BoostedCreature.name">
-<code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#tibiapy.BoostedCreature.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the boosted creature.</p>
+<dt id="tibiapy.CreaturesSection.boosted_creature">
+<code class="sig-name descname"><span class="pre">boosted_creature</span></code><a class="headerlink" href="#tibiapy.CreaturesSection.boosted_creature" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current boosted creature.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.Creature" title="tibiapy.Creature"><code class="xref py py-class docutils literal notranslate"><span class="pre">Creature</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="tibiapy.BoostedCreature.image_url">
-<code class="sig-name descname"><span class="pre">image_url</span></code><a class="headerlink" href="#tibiapy.BoostedCreature.image_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>An URL containing the boosted creature’s image.</p>
+<dt id="tibiapy.CreaturesSection.creatures">
+<code class="sig-name descname"><span class="pre">creatures</span></code><a class="headerlink" href="#tibiapy.CreaturesSection.creatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of creatures in the library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#tibiapy.Creature" title="tibiapy.Creature"><code class="xref py py-class docutils literal notranslate"><span class="pre">Creature</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="tibiapy.BoostedCreature.from_content">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_content</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#BoostedCreature.from_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.BoostedCreature.from_content" title="Permalink to this definition">¶</a></dt>
+<dt id="tibiapy.CreaturesSection.get_url">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">get_url</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#CreaturesSection.get_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.CreaturesSection.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the URL to the Tibia.com library section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The URL to the Tibia.com library section.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.CreaturesSection.from_boosted_creature_header">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_boosted_creature_header</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#CreaturesSection.from_boosted_creature_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.CreaturesSection.from_boosted_creature_header" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the boosted creature from any Tibia.com page.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -12468,7 +12624,7 @@ Boosted creatures yield twice the amount of experience points, carry more loot a
 <dd class="field-even"><p>The boosted creature of the day.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.BoostedCreature" title="tibiapy.BoostedCreature"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoostedCreature</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.Creature" title="tibiapy.Creature"><code class="xref py py-class docutils literal notranslate"><span class="pre">Creature</span></code></a></p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference internal" href="#tibiapy.InvalidContent" title="tibiapy.InvalidContent"><strong>InvalidContent</strong></a> – If content is not the HTML of a Tibia.com’s page.</p>
@@ -12477,8 +12633,28 @@ Boosted creatures yield twice the amount of experience points, carry more loot a
 </dd></dl>
 
 <dl class="py method">
-<dt id="tibiapy.BoostedCreature.to_json">
-<code class="sig-name descname"><span class="pre">to_json</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.BoostedCreature.to_json" title="Permalink to this definition">¶</a></dt>
+<dt id="tibiapy.CreaturesSection.from_content">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_content</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#CreaturesSection.from_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.CreaturesSection.from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of the class from the html content of the creature library’s page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The character contained in the page.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.Character" title="tibiapy.Character"><code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="#tibiapy.InvalidContent" title="tibiapy.InvalidContent"><strong>InvalidContent</strong></a> – If content is not the HTML of a creature library’s page.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.CreaturesSection.to_json">
+<code class="sig-name descname"><span class="pre">to_json</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.CreaturesSection.to_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the object’s JSON representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -12491,6 +12667,313 @@ Boosted creatures yield twice the amount of experience points, carry more loot a
 <dd class="field-even"><p>JSON representation of the object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="creature">
+<h3>Creature<a class="headerlink" href="#creature" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt id="tibiapy.Creature">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">tibiapy.</span></code><code class="sig-name descname"><span class="pre">Creature</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">race</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#Creature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Creature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a creature in the Library section.</p>
+<dl class="py attribute">
+<dt id="tibiapy.Creature.name">
+<code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#tibiapy.Creature.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the creature, usually in plural, except for the boosted creature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.Creature.race">
+<code class="sig-name descname"><span class="pre">race</span></code><a class="headerlink" href="#tibiapy.Creature.race" title="Permalink to this definition">¶</a></dt>
+<dd><p>The internal name of the creature’s race. Used for links and images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Creature.url">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">url</span></code><a class="headerlink" href="#tibiapy.Creature.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL to this creature’s details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Creature.image_url">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">image_url</span></code><a class="headerlink" href="#tibiapy.Creature.image_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL to this creature’s image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Creature.get_url">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">get_url</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">race</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#Creature.get_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Creature.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the URL to the creature’s detail page on Tibia.com</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>race</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The race’s internal name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The URL to the detail page.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.Creature.to_json">
+<code class="sig-name descname"><span class="pre">to_json</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.Creature.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> will return the shortest possible string.</p></li>
+<li><p><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>JSON representation of the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="creaturedetail">
+<h3>CreatureDetail<a class="headerlink" href="#creaturedetail" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt id="tibiapy.CreatureDetail">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">tibiapy.</span></code><code class="sig-name descname"><span class="pre">CreatureDetail</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">race</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#CreatureDetail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.CreatureDetail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a creature’s details on the Tibia.com library.</p>
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.name">
+<code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the creature, in plural form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.race">
+<code class="sig-name descname"><span class="pre">race</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.race" title="Permalink to this definition">¶</a></dt>
+<dd><p>The race’s internal name. Used for links and images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.description">
+<code class="sig-name descname"><span class="pre">description</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A description of the creature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.hitpoints">
+<code class="sig-name descname"><span class="pre">hitpoints</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.hitpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of hitpoints the creature has.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.experience">
+<code class="sig-name descname"><span class="pre">experience</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.experience" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of experience points given for killing this creature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.immune_to">
+<code class="sig-name descname"><span class="pre">immune_to</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.immune_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>The elements this creature is immune to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.weak_against">
+<code class="sig-name descname"><span class="pre">weak_against</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.weak_against" title="Permalink to this definition">¶</a></dt>
+<dd><p>The elements this creature is weak against.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.strong_against">
+<code class="sig-name descname"><span class="pre">strong_against</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.strong_against" title="Permalink to this definition">¶</a></dt>
+<dd><p>The elements this creature is strong against.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.loot">
+<code class="sig-name descname"><span class="pre">loot</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.loot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some of the items this creature drops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.mana_cost">
+<code class="sig-name descname"><span class="pre">mana_cost</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.mana_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mana neccessary to summon or convince this creature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.summonable">
+<code class="sig-name descname"><span class="pre">summonable</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.summonable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this creature can be summoned or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="tibiapy.CreatureDetail.convinceable">
+<code class="sig-name descname"><span class="pre">convinceable</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.convinceable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this creature can be convinced or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.CreatureDetail.from_content">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_content</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/creature.html#CreatureDetail.from_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.CreatureDetail.from_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an instance of the class from the html content of the creature library’s page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The HTML content of the page.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The character contained in the page.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.Character" title="tibiapy.Character"><code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.CreatureDetail.get_url">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">get_url</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">race</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.CreatureDetail.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the URL to the creature’s detail page on Tibia.com</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>race</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The race’s internal name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The URL to the detail page.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.CreatureDetail.image_url">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">image_url</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.image_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL to this creature’s image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.CreatureDetail.to_json">
+<code class="sig-name descname"><span class="pre">to_json</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tibiapy.CreatureDetail.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object’s JSON representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of spaces used as indentation, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> will return the shortest possible string.</p></li>
+<li><p><strong>sort_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – Whether keys should be sorted alphabetically or preserve the order defined by the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>JSON representation of the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tibiapy.CreatureDetail.url">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">url</span></code><a class="headerlink" href="#tibiapy.CreatureDetail.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The URL to this creature’s details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
@@ -13726,8 +14209,10 @@ This is meant to be used in constructors.</p>
 <li class="toctree-l3"><a class="reference internal" href="#raceentry">RaceEntry</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#other">Other</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#boostedcreature">BoostedCreature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#library">Library</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creaturessection">CreaturesSection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creature">Creature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creaturedetail">CreatureDetail</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
@@ -13779,7 +14264,7 @@ This is meant to be used in constructors.</p>
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.2.
   </div>
   
   </body>

@@ -57,7 +57,7 @@
 <span class="kn">import</span> <span class="nn">tibiapy</span>
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span><span class="p">,</span> <span class="n">AuctionDetails</span><span class="p">,</span> <span class="n">AuctionFilters</span><span class="p">,</span> <span class="n">CharacterBazaar</span>
 <span class="kn">from</span> <span class="nn">tibiapy.character</span> <span class="kn">import</span> <span class="n">Character</span>
-<span class="kn">from</span> <span class="nn">tibiapy.creature</span> <span class="kn">import</span> <span class="n">BoostedCreature</span>
+<span class="kn">from</span> <span class="nn">tibiapy.creature</span> <span class="kn">import</span> <span class="n">CreaturesSection</span><span class="p">,</span> <span class="n">Creature</span><span class="p">,</span> <span class="n">CreatureDetail</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span><span class="p">,</span> <span class="n">VocationFilter</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.event</span> <span class="kn">import</span> <span class="n">EventSchedule</span>
@@ -82,6 +82,7 @@
 <span class="n">T</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;tibiapy&quot;</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="TibiaResponse"><a class="viewcode-back" href="../../api.html#tibiapy.TibiaResponse">[docs]</a><span class="k">class</span> <span class="nc">TibiaResponse</span><span class="p">(</span><span class="n">typing</span><span class="o">.</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a response from Tibia.com</span>
@@ -229,13 +230,14 @@
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_ready</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | Fetching...&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+                <span class="n">diff_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">init_time</span>
                 <span class="k">if</span> <span class="s2">&quot;maintenance.tibia.com&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">):</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s | maintenance.tibia.com&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="n">SiteMaintenanceError</span><span class="p">(</span><span class="s2">&quot;Tibia.com is down for maintenance.&quot;</span><span class="p">)</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s | %dms&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">diff_time</span><span class="o">*</span><span class="mi">1000</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_handle_status</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">RawResponse</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">init_time</span><span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">RawResponse</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">diff_time</span><span class="p">)</span>
                 <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="k">return</span> <span class="n">response</span>
         <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -715,7 +717,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`BoostedCreature`</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`Creature`</span>
 <span class="sd">            The boosted creature of the day.</span>
 
 <span class="sd">        Raises</span>
@@ -728,7 +730,60 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">News</span><span class="o">.</span><span class="n">get_list_url</span><span class="p">())</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostedCreature</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">CreaturesSection</span><span class="o">.</span><span class="n">from_boosted_creature_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_library_creatures"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_library_creatures">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_library_creatures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches the creatures from the library section.</span>
+
+<span class="sd">        .. versionadded:: 4.0.0</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`CreaturesSection`</span>
+<span class="sd">            The creature&#39;s section in Tibia.com</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CreaturesSection</span><span class="o">.</span><span class="n">get_url</span><span class="p">())</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">CreaturesSection</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_creature"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_creature">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_creature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">race</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetches a creature&#39;s information from the Tibia.com library.</span>
+
+<span class="sd">        .. versionadded:: 4.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        race: :class:`str`</span>
+<span class="sd">            The internal name of the race.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`CreatureDetail`</span>
+<span class="sd">            The creature&#39;s section in Tibia.com</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CreatureDetail</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">race</span><span class="p">))</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">CreatureDetail</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -743,7 +798,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        :class:`TibiaResponse` of :class:`Character`</span>
-<span class="sd">            A response containig the character, if found.</span>
+<span class="sd">            A response containing the character, if found.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -1296,7 +1351,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.2.
   </div>
   
   </body>

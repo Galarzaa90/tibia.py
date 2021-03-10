@@ -44,45 +44,119 @@
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.creature</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">bs4</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span>
+
+<span class="kn">import</span> <span class="nn">bs4</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;BoostedCreature&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Creature&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CreaturesSection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CreatureDetail&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">get_tibia_url</span>
 
 <span class="n">BOOSTED_ALT</span> <span class="o">=</span> <span class="s2">&quot;Today&#39;s boosted creature: &quot;</span>
 
+<span class="n">HP_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;have (\d+) hitpoints&quot;</span><span class="p">)</span>
+<span class="n">EXP_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;yield (\d+) experience&quot;</span><span class="p">)</span>
+<span class="n">IMMUNE_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;immune to ([^.]+)&quot;</span><span class="p">)</span>
+<span class="n">WEAK_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;weak against ([^.]+)&quot;</span><span class="p">)</span>
+<span class="n">STRONG_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;strong against ([^.]+)&quot;</span><span class="p">)</span>
+<span class="n">LOOT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;They carry (.*) with them.&quot;</span><span class="p">)</span>
+<span class="n">MANA_COST</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;takes (\d+) mana&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BoostedCreature"><a class="viewcode-back" href="../../api.html#tibiapy.BoostedCreature">[docs]</a><span class="k">class</span> <span class="nc">BoostedCreature</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents a boosted creature entry.</span>
 
-<span class="sd">    This creature changes every server save and applies to all Game Worlds.</span>
-<span class="sd">    Boosted creatures yield twice the amount of experience points, carry more loot and respawn at a faster rate.</span>
+<div class="viewcode-block" id="Creature"><a class="viewcode-back" href="../../api.html#tibiapy.Creature">[docs]</a><span class="k">class</span> <span class="nc">Creature</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a creature in the Library section.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name: :class:`str`</span>
-<span class="sd">        The name of the boosted creature.</span>
-<span class="sd">    image_url: :class:`str`</span>
-<span class="sd">        An URL containing the boosted creature&#39;s image.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        The name of the creature, usually in plural, except for the boosted creature.</span>
+<span class="sd">    race: :class:`str`</span>
+<span class="sd">        The internal name of the creature&#39;s race. Used for links and images.&quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;race&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_serializable_properties</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;image_url&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">image_url</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">image_url</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">race</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">race</span> <span class="o">=</span> <span class="n">race</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> image_url=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image_url</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> race=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">race</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
 
-<div class="viewcode-block" id="BoostedCreature.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.BoostedCreature.from_content">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to this creature&#39;s details.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">race</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">image_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to this creature&#39;s image.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://static.tibia.com/images/library/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">race</span><span class="si">}</span><span class="s2">.gif&quot;</span>
+
+<div class="viewcode-block" id="Creature.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.Creature.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">race</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the URL to the creature&#39;s detail page on Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        race: :class:`str`</span>
+<span class="sd">            The race&#39;s internal name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the detail page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;creatures&quot;</span><span class="p">,</span> <span class="n">race</span><span class="o">=</span><span class="n">race</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CreaturesSection"><a class="viewcode-back" href="../../api.html#tibiapy.CreaturesSection">[docs]</a><span class="k">class</span> <span class="nc">CreaturesSection</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents the creature&#39;s section in the Tibia.com library.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    boosted_creature: :class:`Creature`</span>
+<span class="sd">        The current boosted creature.</span>
+<span class="sd">    creatures: list of :class:`Creature`</span>
+<span class="sd">        The list of creatures in the library.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;boosted_creature&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;creatures&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">creatures</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">boosted_creature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">creatures</span> <span class="o">=</span> <span class="n">creatures</span> <span class="ow">or</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="CreaturesSection.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.CreaturesSection.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the URL to the Tibia.com library section.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`:</span>
+<span class="sd">            The URL to the Tibia.com library section.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;creature&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CreaturesSection.from_boosted_creature_header"><a class="viewcode-back" href="../../api.html#tibiapy.CreaturesSection.from_boosted_creature_header">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_boosted_creature_header</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the boosted creature from any Tibia.com page.</span>
 
@@ -93,7 +167,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`BoostedCreature`</span>
+<span class="sd">        :class:`Creature`</span>
 <span class="sd">            The boosted creature of the day.</span>
 
 <span class="sd">        Raises</span>
@@ -107,10 +181,217 @@
             <span class="n">img</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;Monster&quot;</span><span class="p">})</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">BOOSTED_ALT</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="n">image_url</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">image_url</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from Tibia.com&quot;</span><span class="p">)</span></div></div>
+            <span class="n">race</span> <span class="o">=</span> <span class="n">image_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Creature</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">race</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="CreaturesSection.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.CreaturesSection.from_content">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an instance of the class from the html content of the creature library&#39;s page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Character`</span>
+<span class="sd">            The character contained in the page.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If content is not the HTML of a creature library&#39;s page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">boosted_creature_table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;TableContainer&quot;</span><span class="p">})</span>
+            <span class="n">boosted_creature_text</span> <span class="o">=</span> <span class="n">boosted_creature_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;Text&quot;</span><span class="p">})</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">boosted_creature_text</span> <span class="ow">or</span> <span class="s2">&quot;Boosted&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">boosted_creature_text</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">boosted_creature_link</span> <span class="o">=</span> <span class="n">boosted_creature_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">boosted_creature_link</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">])</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse_qs</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+            <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">Creature</span><span class="p">(</span><span class="n">boosted_creature_link</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">query</span><span class="p">[</span><span class="s2">&quot;race&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">list_table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="ow">and</span> <span class="s1">&#39;display: table&#39;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">entries_container</span> <span class="o">=</span> <span class="n">list_table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="ow">and</span> <span class="s1">&#39;float: left&#39;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">entry_container</span> <span class="ow">in</span> <span class="n">entries_container</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">entry_container</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">link</span> <span class="o">=</span> <span class="n">entry_container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">])</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse_qs</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+                <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Creature</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">query</span><span class="p">[</span><span class="s2">&quot;race&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">boosted_creature</span><span class="p">,</span> <span class="n">entries</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not the creature&#39;s library&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CreatureDetail"><a class="viewcode-back" href="../../api.html#tibiapy.CreatureDetail">[docs]</a><span class="k">class</span> <span class="nc">CreatureDetail</span><span class="p">(</span><span class="n">Creature</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a creature&#39;s details on the Tibia.com library.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: :class:`str`</span>
+<span class="sd">        The name of the creature, in plural form.</span>
+<span class="sd">    race: :class:`str`</span>
+<span class="sd">        The race&#39;s internal name. Used for links and images.</span>
+<span class="sd">    description: :class:`str`</span>
+<span class="sd">        A description of the creature.</span>
+<span class="sd">    hitpoints: :class:`int`</span>
+<span class="sd">        The number of hitpoints the creature has.</span>
+<span class="sd">    experience: :class:`int`</span>
+<span class="sd">        The number of experience points given for killing this creature.</span>
+<span class="sd">    immune_to: list of :class:`str`</span>
+<span class="sd">        The elements this creature is immune to.</span>
+<span class="sd">    weak_against: list of :class:`str`</span>
+<span class="sd">        The elements this creature is weak against.</span>
+<span class="sd">    strong_against: list of :class:`str`</span>
+<span class="sd">        The elements this creature is strong against.</span>
+<span class="sd">    loot: :class:`str`</span>
+<span class="sd">        Some of the items this creature drops.</span>
+<span class="sd">    mana_cost: :class:`int`, optional</span>
+<span class="sd">        The mana neccessary to summon or convince this creature.</span>
+<span class="sd">    summonable: :class:`bool`</span>
+<span class="sd">        Whether this creature can be summoned or not.</span>
+<span class="sd">    convinceable: :class:`bool`</span>
+<span class="sd">        Whether this creature can be convinced or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_valid_elements</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ice&quot;</span><span class="p">,</span> <span class="s2">&quot;fire&quot;</span><span class="p">,</span> <span class="s2">&quot;earth&quot;</span><span class="p">,</span> <span class="s2">&quot;poison&quot;</span><span class="p">,</span> <span class="s2">&quot;death&quot;</span><span class="p">,</span> <span class="s2">&quot;holy&quot;</span><span class="p">,</span> <span class="s2">&quot;physical&quot;</span><span class="p">,</span> <span class="s2">&quot;energy&quot;</span><span class="p">]</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;race&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hitpoints&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;experience&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;immune_to&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;weak_against&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;strong_against&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;loot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mana_cost&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;summonable&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;convinceable&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">race</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">race</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">immune_to</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;immune_to&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weak_against</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weak_against&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strong_against</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;strong_against&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loot</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;loot&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mana_cost</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;loot&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">summonable</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;summonable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convinceable</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;convinceable&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> race=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">race</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
+
+<div class="viewcode-block" id="CreatureDetail.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.CreatureDetail.from_content">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an instance of the class from the html content of the creature library&#39;s page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`Character`</span>
+<span class="sd">            The character contained in the page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">pagination_container</span><span class="p">,</span> <span class="n">content_container</span> <span class="o">=</span> \
+                <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="ow">and</span> <span class="s1">&#39;position: relative&#39;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">title_container</span><span class="p">,</span> <span class="n">description_container</span> <span class="o">=</span> <span class="n">content_container</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">title_container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="n">img</span> <span class="o">=</span> <span class="n">title_container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
+            <span class="n">img_url</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+            <span class="n">race</span> <span class="o">=</span> <span class="n">img_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">creature</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">race</span><span class="p">)</span>
+
+            <span class="n">paragraph_tags</span> <span class="o">=</span> <span class="n">description_container</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+            <span class="n">paragraphs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paragraph_tags</span><span class="p">]</span>
+            <span class="n">creature</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">hp_text</span> <span class="o">=</span> <span class="n">paragraphs</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">creature</span><span class="o">.</span><span class="n">_parse_hp_text</span><span class="p">(</span><span class="n">hp_text</span><span class="p">)</span>
+
+            <span class="n">exp_text</span> <span class="o">=</span> <span class="n">paragraphs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">creature</span><span class="o">.</span><span class="n">_parse_exp_text</span><span class="p">(</span><span class="n">exp_text</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">creature</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">_parse_exp_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the experience text, containing dropped loot and adds it to the creature,</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exp_text: :class:`str`</span>
+<span class="sd">            The text containing experience.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">EXP_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exp_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">experience</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">LOOT_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">exp_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loot</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_hp_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hp_text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the text containing the creatures hitpoints, containing weaknesses, immunities and more and adds it.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hp_text: :class:`str`</span>
+<span class="sd">            The text containing hitpoints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">HP_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">hp_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hitpoints</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">IMMUNE_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">hp_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_elements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">immune_to</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s2">&quot;cannot be paralysed&quot;</span> <span class="ow">in</span> <span class="n">hp_text</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">immune_to</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;paralyze&quot;</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">WEAK_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">hp_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_elements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weak_against</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">STRONG_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">hp_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_elements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">strong_against</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MANA_COST</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">hp_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mana_cost</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="s2">&quot;summon or convince&quot;</span> <span class="ow">in</span> <span class="n">hp_text</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">convinceable</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">summonable</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="s2">&quot;cannot be summoned&quot;</span> <span class="ow">in</span> <span class="n">hp_text</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">convinceable</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="s2">&quot;cannot be convinced&quot;</span> <span class="ow">in</span> <span class="n">hp_text</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">summonable</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="s2">&quot;sense invisible&quot;</span> <span class="ow">in</span> <span class="n">hp_text</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">immune_to</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;invisible&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_elements</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the elements found in a string, adding them to the collection.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        collection: :class:`list`</span>
+<span class="sd">            The collection where found elements will be added to.</span>
+<span class="sd">        text: :class:`str`</span>
+<span class="sd">            The text containing the elements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_valid_elements</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+                <span class="n">collection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -195,7 +476,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.2.
   </div>
   
   </body>

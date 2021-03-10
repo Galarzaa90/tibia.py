@@ -76,7 +76,7 @@
 <span class="n">thread_id_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;threadid=(\d+)&#39;</span><span class="p">)</span>
 <span class="n">announcement_id_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;announcementid=(\d+)&#39;</span><span class="p">)</span>
 <span class="n">page_number_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;pagenumber=(\d+)&#39;</span><span class="p">)</span>
-<span class="n">timezone_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;times are (CEST?)&#39;</span><span class="p">)</span>
+<span class="n">timezone_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;times are (CES?T)&#39;</span><span class="p">)</span>
 <span class="n">filename_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([\w_]+.gif)&#39;</span><span class="p">)</span>
 <span class="n">pages_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\(Pages[^)]+\)&#39;</span><span class="p">)</span>
 
@@ -430,7 +430,7 @@
         <span class="n">root_tables</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tables</span> <span class="k">if</span> <span class="s2">&quot;BoxContent&quot;</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="p">[])]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">root_tables</span><span class="p">:</span>
             <span class="n">error_table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;Table1&quot;</span><span class="p">})</span>
-            <span class="k">if</span> <span class="n">error_table</span> <span class="ow">and</span> <span class="s2">&quot;not be found&quot;</span> <span class="ow">in</span> <span class="n">error_table</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">error_table</span> <span class="ow">and</span> <span class="s2">&quot;not found&quot;</span> <span class="ow">in</span> <span class="n">error_table</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a Tibia.com forum announcement.&quot;</span><span class="p">)</span>
         <span class="n">forum_info_table</span><span class="p">,</span> <span class="n">posts_table</span><span class="p">,</span> <span class="n">footer_table</span> <span class="o">=</span> <span class="n">root_tables</span>
@@ -490,6 +490,8 @@
 <span class="sd">        The number of posts this character has made.</span>
 <span class="sd">    deleted: :class:`bool`</span>
 <span class="sd">        Whether the author is deleted or not.</span>
+<span class="sd">    traded: :class:`bool`</span>
+<span class="sd">        Whether the author is traded or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
@@ -502,6 +504,7 @@
         <span class="s2">&quot;guild&quot;</span><span class="p">,</span>
         <span class="s2">&quot;posts&quot;</span><span class="p">,</span>
         <span class="s2">&quot;deleted&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;traded&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -514,6 +517,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GuildMembership</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">posts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;posts&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deleted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deleted&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;traded&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> level=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2"> world=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="si">!r}</span><span class="s2"> &quot;</span> \
@@ -536,7 +540,14 @@
         <span class="c1"># First link belongs to character</span>
         <span class="n">char_link</span> <span class="o">=</span> <span class="n">character_info_container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">char_link</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ForumAuthor</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">character_info_container</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">character_info_container</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">deleted</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">traded</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s2">&quot;(traded)&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(traded)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">deleted</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">traded</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="n">ForumAuthor</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="n">deleted</span><span class="p">,</span> <span class="n">traded</span><span class="o">=</span><span class="n">traded</span><span class="p">)</span>
         <span class="n">author</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">char_link</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 
         <span class="n">position_info</span> <span class="o">=</span> <span class="n">character_info_container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;ff_smallinfo&quot;</span><span class="p">})</span>
@@ -1308,16 +1319,16 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
             <span class="n">tables</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;100%&quot;</span><span class="p">})</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">board_list_table</span><span class="p">,</span> <span class="n">timezone_table</span> <span class="o">=</span> <span class="n">tables</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">board_list_table</span><span class="p">,</span> <span class="n">timezone_table</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">tables</span>
             <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">board_rows</span> <span class="o">=</span> <span class="n">board_list_table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)</span>
             <span class="n">timezone_text</span> <span class="o">=</span> <span class="n">timezone_table</span><span class="o">.</span><span class="n">text</span>
             <span class="n">timezone</span> <span class="o">=</span> <span class="n">timezone_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">timezone_text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">timezone</span> <span class="o">==</span> <span class="s2">&quot;CES&quot;</span> <span class="k">else</span> <span class="mi">2</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">timezone</span> <span class="o">==</span> <span class="s2">&quot;CET&quot;</span> <span class="k">else</span> <span class="mi">2</span>
             <span class="n">boards</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">board_row</span> <span class="ow">in</span> <span class="n">board_rows</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">board</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_board_row</span><span class="p">(</span><span class="n">board_row</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
                     <span class="k">continue</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">boards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">board</span><span class="p">)</span>
@@ -1515,7 +1526,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.2.
   </div>
   
   </body>

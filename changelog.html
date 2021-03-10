@@ -53,6 +53,42 @@
 <p>Due to this library relying on external content, older versions are not guaranteed to work.
 Try to always use the latest version.</p>
 </div>
+<div class="section" id="unreleased">
+<h2>4.0.0 (Unreleased)<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Breaking change: Removed <code class="docutils literal notranslate"><span class="pre">BoostedCreature</span></code> class, replaced by <code class="docutils literal notranslate"><span class="pre">Creature</span></code> class.</dt><dd><ul>
+<li><p>Attributes should be compatible, <code class="docutils literal notranslate"><span class="pre">image_url</span></code> is a property of <code class="docutils literal notranslate"><span class="pre">Creature</span></code>, calculated from its <code class="docutils literal notranslate"><span class="pre">race</span></code> attribute.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Added parsing and fetching for the Creature library section.</dt><dd><ul>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">CreatureSection</span></code>, <code class="docutils literal notranslate"><span class="pre">Creature</span></code>, and <code class="docutils literal notranslate"><span class="pre">CreatureDetail</span></code> classes.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Added <code class="docutils literal notranslate"><span class="pre">traded</span></code> attribute to <code class="docutils literal notranslate"><span class="pre">ForumAuthor</span></code>. Indicates if the author was a traded character.</dt><dd><ul>
+<li><p>Previously, it would mark the author as a deleted character and its name would include <code class="docutils literal notranslate"><span class="pre">(traded)</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Fixed a bug with <code class="docutils literal notranslate"><span class="pre">ForumBoards</span></code> not parsing due to the cookies dialog that was added.</p></li>
+<li><dl class="simple">
+<dt>Added <code class="docutils literal notranslate"><span class="pre">battleye_type</span></code> attribute to <code class="docutils literal notranslate"><span class="pre">ListedWorld</span></code> and <code class="docutils literal notranslate"><span class="pre">World</span></code> classes. Indicates the type of BattlEye protection the world has.</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">battleye_protected</span></code> is now a property instead of an attribute.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">YELLOW</span></code> and <code class="docutils literal notranslate"><span class="pre">GREEN</span></code> aliases to all BattlEye related enums.</p></li>
+<li><p>Fixed wrong timezone being used for forum related dates.</p></li>
+</ul>
+</div>
 <div class="section" id="id1">
 <h2>3.7.1 (2021-02-15)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -527,6 +563,7 @@ between Tibia.com and TibiaData.</p></li>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#unreleased">4.0.0 (Unreleased)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id1">3.7.1 (2021-02-15)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id2">3.7.0 (2021-02-09)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id3">3.6.5 (2021-01-27)</a></li>
@@ -624,7 +661,7 @@ between Tibia.com and TibiaData.</p></li>
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.2.
   </div>
   
   </body>

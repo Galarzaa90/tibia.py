@@ -41,6 +41,10 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: BattlEyeType
+    :members:
+    :undoc-members:
+
 .. autoclass:: BattlEyeHighscoresFilter
     :members:
     :undoc-members:
@@ -625,15 +629,26 @@ RaceEntry
    :members:
    :inherited-members:
 
-Other
-=====
+Library
+=======
 
-BoostedCreature
----------------
-.. autoclass:: BoostedCreature
+CreaturesSection
+----------------
+.. autoclass:: CreaturesSection
    :members:
    :inherited-members:
 
+Creature
+--------
+.. autoclass:: Creature
+   :members:
+   :inherited-members:
+
+CreatureDetail
+--------------
+.. autoclass:: CreatureDetail
+   :members:
+   :inherited-members:
 
 Base Classes
 ============
