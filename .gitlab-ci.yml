@@ -54,6 +54,7 @@ docs:
   stage: build
   script:
     - pip install -U -e .[docs]
+    - apt-get update && apt-get install -y make
     - cd docs
     - make html
   artifacts:
