@@ -629,15 +629,26 @@ RaceEntry
    :members:
    :inherited-members:
 
-Other
-=====
+Library
+=======
 
-BoostedCreature
----------------
-.. autoclass:: BoostedCreature
+CreaturesSection
+----------------
+.. autoclass:: CreaturesSection
    :members:
    :inherited-members:
 
+Creature
+--------
+.. autoclass:: Creature
+   :members:
+   :inherited-members:
+
+CreatureDetail
+--------------
+.. autoclass:: CreatureDetail
+   :members:
+   :inherited-members:
 
 Base Classes
 ============
