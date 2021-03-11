@@ -187,9 +187,9 @@ class Client:
             async with self.session.request(method, url, data=data, headers=headers) as resp:
                 diff_time = time.perf_counter()-init_time
                 if "maintenance.tibia.com" in str(resp.url):
-                    log.info(f"%s | %s | %s %s | maintenance.tibia.com", url, method, resp.status, resp.reason)
+                    log.info(f"%s | %s | %s %s | maintenance.tibia.com", url, resp.method, resp.status, resp.reason)
                     raise SiteMaintenanceError("Tibia.com is down for maintenance.")
-                log.info(f"%s | %s | %s %s | %dms", url, method, resp.status, resp.reason, int(diff_time*1000))
+                log.info(f"%s | %s | %s %s | %dms", url, resp.method, resp.status, resp.reason, int(diff_time*1000))
                 self._handle_status(resp.status)
                 response = RawResponse(resp, diff_time)
                 response.content = await resp.text()
@@ -337,7 +337,7 @@ class Client:
         current_page = 2
         while current_page <= paginator.total_pages:
             content = await self._fetch_ajax_page(auction_id, item_type, current_page)
-            entries = AuctionDetails.parse_page_items(content, paginator.entry_class)
+            entries = AuctionDetails._parse_page_items(content, paginator.entry_class)
             paginator.entries.extend(entries)
             current_page += 1
         paginator.fully_fetched = True
@@ -668,6 +668,8 @@ class Client:
         """Fetches today's boosted creature.
 
         .. versionadded:: 2.1.0
+        .. versionchanged:: 4.0.0
+            The return type of the data returned was changed to :class:`Creature`, previous type was removed.
 
         Returns
         -------
@@ -1096,7 +1098,7 @@ class Client:
         if NewsType.NEWS_TICKER in types:
             data["filter_ticker"] = "ticker"
 
-        response = await self._request("post", News.get_list_url(), data)
+        response = await self._request("POST", News.get_list_url(), data)
         start_time = time.perf_counter()
         news = ListedNews.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time

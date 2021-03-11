@@ -110,7 +110,10 @@ class AuctionStatus(BaseEnum):
 
 
 class BattlEyeType(NumericEnum):
-    """The possible BattlEye statuses a world can have."""
+    """The possible BattlEye statuses a world can have.
+
+    .. versionadded:: 4.0.0
+    """
     UNPROTECTED = 0
     """Worlds without any BattlEye protection."""
     PROTECTED = 1
@@ -132,9 +135,15 @@ class BattlEyeHighscoresFilter(NumericEnum):
     UNPROTECTED = 0
     """Worlds without any BattlEye protection."""
     YELLOW = PROTECTED
-    """Alias for protected worlds."""
+    """Alias for protected worlds.
+    
+    .. versionadded:: 4.0.0
+    """
     GREEN = INITIALLY_PROTECTED
-    """Alias for initially protected worlds."""
+    """Alias for initially protected worlds.
+    
+    .. versionadded:: 4.0.0
+    """
 
 
 class BattlEyeTypeFilter(NumericEnum):
@@ -146,9 +155,15 @@ class BattlEyeTypeFilter(NumericEnum):
     NOT_PROTECTED = 3
     """Worlds without any BattlEye protection."""
     YELLOW = PROTECTED
-    """Alias for protected worlds."""
+    """Alias for protected worlds.
+    
+    .. versionadded:: 4.0.0
+    """
     GREEN = INITIALLY_PROTECTED
-    """Alias for initially protected worlds."""
+    """Alias for initially protected worlds.
+    
+    .. versionadded:: 4.0.0
+    """
 
 
 class BazaarType(BaseEnum):

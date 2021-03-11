@@ -52,7 +52,7 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
 
     You can also build a dictionary and pass it like:
 
-    >>> params = {'world': "Gladera", }
+    >>> params = {'world': "Gladera"}
     >>> get_tibia_url("community", "worlds", **params)
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
@@ -115,7 +115,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
     Returns
     -----------
     :class:`datetime.datetime`, optional
-        The represented datetime, in UTC.
+        The represented datetime, in UTC (timezone aware).
     """
     try:
         datetime_str = datetime_str.replace(",", "").replace("&#160;", " ")
@@ -158,7 +158,7 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
     Returns
     -----------
     :class:`datetime.date`, optional
-        The represented date."""
+        The represented date, in UTC (timezone aware)."""
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")
         return t.date()
@@ -187,7 +187,7 @@ def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
     Returns
     -------
     :class:`datetime`
-        The datetime represented by the text, in UTC.
+        The represented datetime, in UTC (timezone aware).
     """
     t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S")
     # Add/subtract hours to get the real time
@@ -210,7 +210,7 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
     Returns
     -----------
     :class:`datetime.date`, optional
-        The represented date.
+        The represented date, in UTC (timezone aware).
     """
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y")
@@ -280,7 +280,7 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
     Returns
     -------
     :class:`datetime.datetime`, optional
-        The represented datetime, or :obj:`None` if conversion wasn't possible.
+        The represented datetime, in UTC (timezone aware), or :obj:`None` if conversion wasn't possible.
     """
     if obj is None:
         return None
@@ -304,7 +304,7 @@ def try_date(obj) -> Optional[datetime.date]:
     Returns
     -------
     :class:`datetime.date`, optional
-        The represented date.
+        The represented date, in UTC (timezone aware).
     """
     if obj is None:
         return None
@@ -386,9 +386,8 @@ def parse_tibia_money(argument):
 
     Returns
     -------
-    int:
+    :class:`int`:
         The value represented by the string.
-
     """
     try:
         return int(argument)

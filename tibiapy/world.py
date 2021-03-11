@@ -43,6 +43,8 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
         If this is :obj:`None` and the world is protected, it means the world was protected from the beginning.
     battleye_type: :class:`BattlEyeType`
         The type of BattlEye protection this world has.
+
+        .. versionadded:: 4.0.0
     experimental: :class:`bool`
         Whether the world is experimental or not.
     premium_only: :class:`bool`
@@ -83,7 +85,11 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
 
     @property
     def battleye_protected(self):
-        """:class:`bool`: Whether the server is currently protected with BattlEye or not."""
+        """:class:`bool`: Whether the server is currently protected with BattlEye or not.
+
+        .. versionchanged:: 4.0.0
+            Now a calculated property instead of a field.
+        """
         return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
 
     # region Public methods
@@ -144,6 +150,7 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
 class World(abc.BaseWorld, abc.Serializable):
     """Represents a Tibia game server.
 
+
     Attributes
     ----------
     name: :class:`str`
@@ -171,6 +178,8 @@ class World(abc.BaseWorld, abc.Serializable):
         If this is :obj:`None` and the world is protected, it means the world was protected from the beginning.
     battleye_type: :class:`BattlEyeType`
         The type of BattlEye protection this world has.
+
+        .. versionadded:: 4.0.0
     experimental: :class:`bool`
         Whether the world is experimental or not.
     tournament_world_type: :class:`TournamentWorldType`
@@ -224,7 +233,11 @@ class World(abc.BaseWorld, abc.Serializable):
     # region Properties
     @property
     def battleye_protected(self):
-        """:class:`bool`: Whether the server is currently protected with BattlEye or not."""
+        """:class:`bool`: Whether the server is currently protected with BattlEye or not.
+
+        .. versionchanged:: 4.0.0
+            Now a calculated property instead of a field.
+        """
         return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
 
     @property

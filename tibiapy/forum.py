@@ -446,6 +446,8 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
         Whether the author is deleted or not.
     traded: :class:`bool`
         Whether the author is traded or not.
+
+        .. versionadded:: 4.0.0
     """
 
     __slots__ = (

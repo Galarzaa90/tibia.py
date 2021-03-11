@@ -359,14 +359,21 @@ async def error_middleware(app, handler):
 async def init_client(app):
     app["tibiapy"] = tibiapy.Client()
 
+
+async def cleanup_client(app):
+    await app["tibiapy"].session.close()
+
+
 if __name__ == "__main__":
     normalize_paths = normalize_path_middleware(remove_slash=True, append_slash=False)
     app = web.Application(middlewares=[
         error_middleware,
-        normalize_paths])
+        normalize_paths,
+    ])
     app.add_routes(routes)
     app.on_startup.append(init_client)
+    app.on_cleanup.append(cleanup_client)
     print("Registered routes:")
     for route in routes:  # type: RouteDef
-        print('\t[%s] %s' % (route.method, route.path))
+        print('- %s %s' % (route.method, route.path))
     web.run_app(app, port=8000)

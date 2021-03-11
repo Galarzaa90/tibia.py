@@ -1133,7 +1133,7 @@ class AuctionDetails(ListedAuction):
             data[name] = value
         return data
 
-    def parse_skills_table(self, table):
+    def _parse_skills_table(self, table):
         """Parses the skills table.
 
         Parameters
@@ -1248,7 +1248,7 @@ class AuctionDetails(ListedAuction):
             self.bestiary_progress.append(BestiaryEntry(name_c, kills, step))
 
     @classmethod
-    def parse_page_items(cls, content, entry_class):
+    def _parse_page_items(cls, content, entry_class):
         """Parses the elements of a page in the items, mounts and outfits.
 
         Attributes
@@ -1260,7 +1260,6 @@ class AuctionDetails(ListedAuction):
 
         Returns
         -------
-        -
             The entries contained in the page.
         """
         parsed_content = parse_tibiacom_content(content, builder='html5lib')
@@ -1291,7 +1290,7 @@ class AuctionDetails(ListedAuction):
         self.titles_count = parse_integer(general_stats.get("titles", "0"))
         self.blessings_count = parse_integer(re.sub(r"/d+", "", general_stats.get("blessings", "0")))
 
-        self.parse_skills_table(content_containers[1])
+        self._parse_skills_table(content_containers[1])
 
         additional_stats = self._parse_data_table(content_containers[2])
         self.creation_date = parse_tibia_datetime(additional_stats.get("creation_date", "").replace("\xa0", " "))

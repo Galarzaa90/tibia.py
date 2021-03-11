@@ -39,18 +39,13 @@ with open('README.md') as f:
     readme = f.read()
 
 extras_require = {
-    'cli': [
-        'click',
-        'requests',
-        'colorama'
-    ],
     'docs': [
         'sphinx',
     ],
     'test': [
         'asynctest',
         'aioresponses',
-        'coverage'
+        'coverage',
     ]
 }
 
@@ -68,6 +63,15 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     include_package_data=True,
+    project_urls={
+        "GitHub: Repo": "https://github.com/Galarzaa90/tibia.py",
+        "GitHub: Issues": "https://github.com/Galarzaa90/tibia.py/issues",
+        "Docs: RTD": "https://tibiapy.readthedocs.io/en/stable/",
+        "Docs: Changelog": "https://tibiapy.readthedocs.io/en/stable/changelog.html",
+        "Coverage: Codecov": "https://app.codecov.io/gh/Galarzaa90/tibia.py",
+        "Docker Hub: Repo": "https://hub.docker.com/repository/docker/galarzaa90/tibia.py",
+        "SonarCloud": "https://sonarcloud.io/dashboard?id=Galarzaa90_tibia.py",
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
@@ -86,6 +90,6 @@ setup(
         'Topic :: Software Development :: Libraries',
         'Topic :: Text Processing :: Markup :: HTML',
         'Topic :: Utilities',
-        'Typing :: Typed'
+        'Typing :: Typed',
     ]
 )
