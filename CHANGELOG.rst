@@ -8,7 +8,7 @@ Changelog
 
 .. v4.0.0:
 
-4.0.0 (Unreleased)
+4.0.0 (2021-03-10)
 ==================
 - Breaking change: Removed ``BoostedCreature`` class, replaced by ``Creature`` class.
     - Attributes should be compatible, ``image_url`` is a property of ``Creature``, calculated from its ``race`` attribute.
