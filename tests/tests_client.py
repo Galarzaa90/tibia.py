@@ -4,8 +4,9 @@ import aiohttp
 import asynctest
 from aioresponses import aioresponses
 
-from tests.tests_bazaar import FILE_BAZAAR_CURRENT
+from tests.tests_bazaar import FILE_BAZAAR_CURRENT, FILE_BAZAAR_HISTORY, FILE_AUCTION_FINISHED
 from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
+from tests.tests_events import FILE_EVENT_CALENDAR
 from tests.tests_forums import FILE_CM_POST_ARCHIVE_PAGES
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
 from tests.tests_highscores import FILE_HIGHSCORES_FULL
@@ -17,7 +18,8 @@ from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, VocationFilter, Category, \
     House, ListedHouse, \
     ListedGuild, \
-    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, Creature
+    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, Creature, AuctionDetails, \
+    EventSchedule
 
 
 class TestClient(asynctest.TestCase, TestCommons):
@@ -229,4 +231,46 @@ class TestClient(asynctest.TestCase, TestCommons):
         response = await self.client.fetch_current_auctions()
         self.assertIsInstance(response.data, CharacterBazaar)
 
+    async def test_client_fetch_current_auctions_invalid_page(self):
+        """Testing fetching the current auctions with an invalid page"""
+        with self.assertRaises(ValueError):
+            await self.client.fetch_current_auctions(-1)
 
+    @aioresponses()
+    async def test_client_fetch_auction_history(self, mock):
+        """Testing fetching the auction history"""
+        content = self.load_resource(FILE_BAZAAR_HISTORY)
+        mock.get(CharacterBazaar.get_auctions_history_url(), status=200, body=content)
+        response = await self.client.fetch_auction_history()
+        self.assertIsInstance(response.data, CharacterBazaar)
+
+    async def test_client_fetch_auction_history_invalid_page(self):
+        """Testing fetching the auction history with an incorrect page"""
+        with self.assertRaises(ValueError):
+            await self.client.fetch_auction_history(-1)
+
+    @aioresponses()
+    async def test_client_fetch_auction(self, mock):
+        """Testing fetching an auction"""
+        content = self.load_resource(FILE_AUCTION_FINISHED)
+        mock.get(AuctionDetails.get_url(134), status=200, body=content)
+        response = await self.client.fetch_auction(134)
+        self.assertIsInstance(response.data, AuctionDetails)
+
+    async def test_client_fetch_auction_invalid_id(self):
+        """Testing fetching an auction with an invalid id"""
+        with self.assertRaises(ValueError):
+            await self.client.fetch_auction(-1)
+
+    @aioresponses()
+    async def test_client_fetch_event_calendar(self, mock):
+        """Testing fetching the auction history"""
+        content = self.load_resource(FILE_EVENT_CALENDAR)
+        mock.get(EventSchedule.get_url(), status=200, body=content)
+        response = await self.client.fetch_event_schedule()
+        self.assertIsInstance(response.data, EventSchedule)
+
+    async def test_client_fetch_event_calendar_invalid_params(self):
+        """Testing fetching the auction history"""
+        with self.assertRaises(ValueError):
+            await self.client.fetch_event_schedule(3)

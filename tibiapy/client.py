@@ -228,7 +228,7 @@ class Client:
         ValueError
             If the page number is not 1 or greater.
         """
-        if not page:
+        if page <= 0:
             raise ValueError('page must be 1 or greater.')
         response = await self._request("GET", CharacterBazaar.get_current_auctions_url(page, filters))
         start_time = time.perf_counter()
@@ -261,7 +261,7 @@ class Client:
         ValueError
             If the page number is not 1 or greater.
         """
-        if not page:
+        if page <= 0:
             raise ValueError('page must be 1 or greater.')
         response = await self._request("GET", CharacterBazaar.get_auctions_history_url(page))
         start_time = time.perf_counter()
@@ -303,7 +303,11 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+        ValueError
+            If the auction id is not 1 or greater.
         """
+        if auction_id <= 0:
+            raise ValueError('auction_id must be 1 or greater.')
         response = await self._request("GET", AuctionDetails.get_url(auction_id))
         start_time = time.perf_counter()
         auction = AuctionDetails.from_content(response.content, auction_id, skip_details)
@@ -321,7 +325,7 @@ class Client:
         return TibiaResponse(response, auction, parsing_time)
 
     async def _fetch_all_pages(self, auction_id, paginator, item_type):
-        """Fetches all the pages of a auction paginator.
+        """Fetches all the pages of an auction paginator.
 
         Parameters
         ----------
@@ -411,7 +415,7 @@ class Client:
         return TibiaResponse(response, cm_post_archive, parsing_time)
 
     async def fetch_event_schedule(self, month=None, year=None):
-        """Fetches the event calendar.
+        """Fetches the event calendar. By default, it gets the events for the current month.
 
         .. versionadded:: 3.0.0
 
@@ -434,6 +438,8 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+        ValueError
+            If only one of year or month are defined.
         """
         if (year is None and month is not None) or (year is not None and month is None):
             raise ValueError("both year and month must be defined or neither must be defined.")

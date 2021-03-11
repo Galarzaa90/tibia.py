@@ -254,7 +254,7 @@ class CreatureDetail(Creature):
 
         Returns
         -------
-        :class:`Character`
+        :class:`CreatureDetail`
             The character contained in the page.
         """
         try:

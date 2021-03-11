@@ -44,5 +44,10 @@ class TestCreature(TestCommons, unittest.TestCase):
         self.assertIsNotNone(creature)
         self.assertEqual("Animated Feathers", creature.name)
         self.assertEqual("animatedfeather", creature.race)
+        self.assertEqual(13000, creature.hitpoints)
+        self.assertEqual(9860, creature.experience)
+        self.assertIsNone(creature.mana_cost)
+        self.assertFalse(creature.summonable)
+        self.assertFalse(creature.convinceable)
         self.assertIsNotNone(creature.description)
     # endregion
