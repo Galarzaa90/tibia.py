@@ -274,7 +274,7 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If the page number is not 1 or greater.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">page</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;page must be 1 or greater.&#39;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CharacterBazaar</span><span class="o">.</span><span class="n">get_current_auctions_url</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">filters</span><span class="p">))</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
@@ -307,7 +307,7 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If the page number is not 1 or greater.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">page</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;page must be 1 or greater.&#39;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CharacterBazaar</span><span class="o">.</span><span class="n">get_auctions_history_url</span><span class="p">(</span><span class="n">page</span><span class="p">))</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
@@ -349,7 +349,11 @@
 <span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
 <span class="sd">        NetworkError</span>
 <span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the auction id is not 1 or greater.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">auction_id</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;auction_id must be 1 or greater.&#39;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">AuctionDetails</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">auction_id</span><span class="p">))</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="n">auction</span> <span class="o">=</span> <span class="n">AuctionDetails</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">,</span> <span class="n">skip_details</span><span class="p">)</span>
@@ -367,7 +371,7 @@
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">auction</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_fetch_all_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">,</span> <span class="n">paginator</span><span class="p">,</span> <span class="n">item_type</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fetches all the pages of a auction paginator.</span>
+        <span class="sd">&quot;&quot;&quot;Fetches all the pages of an auction paginator.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -457,7 +461,7 @@
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">cm_post_archive</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.fetch_event_schedule"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_event_schedule">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_event_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fetches the event calendar.</span>
+        <span class="sd">&quot;&quot;&quot;Fetches the event calendar. By default, it gets the events for the current month.</span>
 
 <span class="sd">        .. versionadded:: 3.0.0</span>
 
@@ -480,6 +484,8 @@
 <span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
 <span class="sd">        NetworkError</span>
 <span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If only one of year or month are defined.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">year</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">month</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">year</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">month</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;both year and month must be defined or neither must be defined.&quot;</span><span class="p">)</span>

@@ -194,6 +194,7 @@ parsing time.</p>
 <li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
     This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If the auction id is not 1 or greater.</p></li>
 </ul>
 </dd>
 </dl>
@@ -234,7 +235,7 @@ parsing time.</p>
 <dl class="py method">
 <dt id="tibiapy.Client.fetch_event_schedule">
 <em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">fetch_event_schedule</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">month</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_event_schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_event_schedule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetches the event calendar.</p>
+<dd><p>Fetches the event calendar. By default, it gets the events for the current month.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 3.0.0.</span></p>
 </div>
@@ -256,6 +257,7 @@ parsing time.</p>
 <li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
     This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If only one of year or month are defined.</p></li>
 </ul>
 </dd>
 </dl>
@@ -12903,7 +12905,7 @@ character features in the auction listing.</p>
 <dd class="field-even"><p>The character contained in the page.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.Character" title="tibiapy.Character"><code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.CreatureDetail" title="tibiapy.CreatureDetail"><code class="xref py py-class docutils literal notranslate"><span class="pre">CreatureDetail</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
