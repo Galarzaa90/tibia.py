@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.client &#8212; Tibia.py 3.7.1 documentation</title>
+    <title>tibiapy.client &#8212; Tibia.py 4.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.7.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.client</a></li> 
       </ul>
@@ -233,9 +233,9 @@
             <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
                 <span class="n">diff_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">init_time</span>
                 <span class="k">if</span> <span class="s2">&quot;maintenance.tibia.com&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">):</span>
-                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s | maintenance.tibia.com&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s | maintenance.tibia.com&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="n">SiteMaintenanceError</span><span class="p">(</span><span class="s2">&quot;Tibia.com is down for maintenance.&quot;</span><span class="p">)</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s | %dms&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">diff_time</span><span class="o">*</span><span class="mi">1000</span><span class="p">))</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s | %dms&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">diff_time</span><span class="o">*</span><span class="mi">1000</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_handle_status</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="n">RawResponse</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">diff_time</span><span class="p">)</span>
                 <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
@@ -383,7 +383,7 @@
         <span class="n">current_page</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="k">while</span> <span class="n">current_page</span> <span class="o">&lt;=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">total_pages</span><span class="p">:</span>
             <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_ajax_page</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">item_type</span><span class="p">,</span> <span class="n">current_page</span><span class="p">)</span>
-            <span class="n">entries</span> <span class="o">=</span> <span class="n">AuctionDetails</span><span class="o">.</span><span class="n">parse_page_items</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">paginator</span><span class="o">.</span><span class="n">entry_class</span><span class="p">)</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="n">AuctionDetails</span><span class="o">.</span><span class="n">_parse_page_items</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">paginator</span><span class="o">.</span><span class="n">entry_class</span><span class="p">)</span>
             <span class="n">paginator</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span>
             <span class="n">current_page</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">paginator</span><span class="o">.</span><span class="n">fully_fetched</span> <span class="o">=</span> <span class="kc">True</span>
@@ -714,6 +714,8 @@
         <span class="sd">&quot;&quot;&quot;Fetches today&#39;s boosted creature.</span>
 
 <span class="sd">        .. versionadded:: 2.1.0</span>
+<span class="sd">        .. versionchanged:: 4.0.0</span>
+<span class="sd">            The return type of the data returned was changed to :class:`Creature`, previous type was removed.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1142,7 +1144,7 @@
         <span class="k">if</span> <span class="n">NewsType</span><span class="o">.</span><span class="n">NEWS_TICKER</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;filter_ticker&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ticker&quot;</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">News</span><span class="o">.</span><span class="n">get_list_url</span><span class="p">(),</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">News</span><span class="o">.</span><span class="n">get_list_url</span><span class="p">(),</span> <span class="n">data</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="n">news</span> <span class="o">=</span> <span class="n">ListedNews</span><span class="o">.</span><span class="n">list_from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>

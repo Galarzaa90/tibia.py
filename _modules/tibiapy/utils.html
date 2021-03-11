@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.utils &#8212; Tibia.py 3.7.1 documentation</title>
+    <title>tibiapy.utils &#8212; Tibia.py 4.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.7.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.utils</a></li> 
       </ul>
@@ -98,7 +98,7 @@
 
 <span class="sd">    You can also build a dictionary and pass it like:</span>
 
-<span class="sd">    &gt;&gt;&gt; params = {&#39;world&#39;: &quot;Gladera&quot;, }</span>
+<span class="sd">    &gt;&gt;&gt; params = {&#39;world&#39;: &quot;Gladera&quot;}</span>
 <span class="sd">    &gt;&gt;&gt; get_tibia_url(&quot;community&quot;, &quot;worlds&quot;, **params)</span>
 <span class="sd">    https://www.tibia.com/community/?subtopic=worlds&amp;world=Gladera</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -161,7 +161,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -----------</span>
 <span class="sd">    :class:`datetime.datetime`, optional</span>
-<span class="sd">        The represented datetime, in UTC.</span>
+<span class="sd">        The represented datetime, in UTC (timezone aware).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">datetime_str</span> <span class="o">=</span> <span class="n">datetime_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&amp;#160;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
@@ -204,7 +204,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -----------</span>
 <span class="sd">    :class:`datetime.date`, optional</span>
-<span class="sd">        The represented date.&quot;&quot;&quot;</span>
+<span class="sd">        The represented date, in UTC (timezone aware).&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
@@ -233,7 +233,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime`</span>
-<span class="sd">        The datetime represented by the text, in UTC.</span>
+<span class="sd">        The represented datetime, in UTC (timezone aware).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M:%S&quot;</span><span class="p">)</span>
     <span class="c1"># Add/subtract hours to get the real time</span>
@@ -256,7 +256,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -----------</span>
 <span class="sd">    :class:`datetime.date`, optional</span>
-<span class="sd">        The represented date.</span>
+<span class="sd">        The represented date, in UTC (timezone aware).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">)</span>
@@ -326,7 +326,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime.datetime`, optional</span>
-<span class="sd">        The represented datetime, or :obj:`None` if conversion wasn&#39;t possible.</span>
+<span class="sd">        The represented datetime, in UTC (timezone aware), or :obj:`None` if conversion wasn&#39;t possible.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -350,7 +350,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime.date`, optional</span>
-<span class="sd">        The represented date.</span>
+<span class="sd">        The represented date, in UTC (timezone aware).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -432,9 +432,8 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    int:</span>
+<span class="sd">    :class:`int`:</span>
 <span class="sd">        The value represented by the string.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>

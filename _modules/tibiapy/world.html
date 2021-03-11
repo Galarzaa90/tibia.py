@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.world &#8212; Tibia.py 3.7.1 documentation</title>
+    <title>tibiapy.world &#8212; Tibia.py 4.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.7.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.world</a></li> 
       </ul>
@@ -89,6 +89,8 @@
 <span class="sd">        If this is :obj:`None` and the world is protected, it means the world was protected from the beginning.</span>
 <span class="sd">    battleye_type: :class:`BattlEyeType`</span>
 <span class="sd">        The type of BattlEye protection this world has.</span>
+
+<span class="sd">        .. versionadded:: 4.0.0</span>
 <span class="sd">    experimental: :class:`bool`</span>
 <span class="sd">        Whether the world is experimental or not.</span>
 <span class="sd">    premium_only: :class:`bool`</span>
@@ -129,7 +131,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">battleye_protected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the server is currently protected with BattlEye or not.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the server is currently protected with BattlEye or not.</span>
+
+<span class="sd">        .. versionchanged:: 4.0.0</span>
+<span class="sd">            Now a calculated property instead of a field.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">UNPROTECTED</span>
 
     <span class="c1"># region Public methods</span>
@@ -190,6 +196,7 @@
 <div class="viewcode-block" id="World"><a class="viewcode-back" href="../../api.html#tibiapy.World">[docs]</a><span class="k">class</span> <span class="nc">World</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseWorld</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a Tibia game server.</span>
 
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name: :class:`str`</span>
@@ -217,6 +224,8 @@
 <span class="sd">        If this is :obj:`None` and the world is protected, it means the world was protected from the beginning.</span>
 <span class="sd">    battleye_type: :class:`BattlEyeType`</span>
 <span class="sd">        The type of BattlEye protection this world has.</span>
+
+<span class="sd">        .. versionadded:: 4.0.0</span>
 <span class="sd">    experimental: :class:`bool`</span>
 <span class="sd">        Whether the world is experimental or not.</span>
 <span class="sd">    tournament_world_type: :class:`TournamentWorldType`</span>
@@ -270,7 +279,11 @@
     <span class="c1"># region Properties</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">battleye_protected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the server is currently protected with BattlEye or not.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the server is currently protected with BattlEye or not.</span>
+
+<span class="sd">        .. versionchanged:: 4.0.0</span>
+<span class="sd">            Now a calculated property instead of a field.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">UNPROTECTED</span>
 
     <span class="nd">@property</span>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.bazaar &#8212; Tibia.py 3.7.1 documentation</title>
+    <title>tibiapy.bazaar &#8212; Tibia.py 4.0.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 3.7.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.bazaar</a></li> 
       </ul>
@@ -1179,7 +1179,7 @@
             <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="n">data</span>
 
-<div class="viewcode-block" id="AuctionDetails.parse_skills_table"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionDetails.parse_skills_table">[docs]</a>    <span class="k">def</span> <span class="nf">parse_skills_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_skills_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parses the skills table.</span>
 
 <span class="sd">        Parameters</span>
@@ -1195,7 +1195,7 @@
             <span class="n">level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">level_c</span><span class="p">)</span>
             <span class="n">progress</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">progress_c</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
             <span class="n">skills</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SkillEntry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name_c</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skills</span> <span class="o">=</span> <span class="n">skills</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skills</span> <span class="o">=</span> <span class="n">skills</span>
 
     <span class="k">def</span> <span class="nf">_parse_blessings_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parses the blessings table.</span>
@@ -1293,8 +1293,8 @@
             <span class="n">step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">step_c</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bestiary_progress</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BestiaryEntry</span><span class="p">(</span><span class="n">name_c</span><span class="p">,</span> <span class="n">kills</span><span class="p">,</span> <span class="n">step</span><span class="p">))</span>
 
-<div class="viewcode-block" id="AuctionDetails.parse_page_items"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionDetails.parse_page_items">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">parse_page_items</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">entry_class</span><span class="p">):</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_page_items</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">entry_class</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parses the elements of a page in the items, mounts and outfits.</span>
 
 <span class="sd">        Attributes</span>
@@ -1306,7 +1306,6 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        -</span>
 <span class="sd">            The entries contained in the page.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">builder</span><span class="o">=</span><span class="s1">&#39;html5lib&#39;</span><span class="p">)</span>
@@ -1316,7 +1315,7 @@
             <span class="n">item</span> <span class="o">=</span> <span class="n">entry_class</span><span class="o">.</span><span class="n">_parse_image_box</span><span class="p">(</span><span class="n">item_box</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">item</span><span class="p">:</span>
                 <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">entries</span></div>
+        <span class="k">return</span> <span class="n">entries</span>
 
     <span class="k">def</span> <span class="nf">_parse_general_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parses the general information table and assigns its values.</span>
@@ -1337,7 +1336,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">titles_count</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">general_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;titles&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">blessings_count</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;/d+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">general_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;blessings&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">parse_skills_table</span><span class="p">(</span><span class="n">content_containers</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_skills_table</span><span class="p">(</span><span class="n">content_containers</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="n">additional_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_data_table</span><span class="p">(</span><span class="n">content_containers</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">additional_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creation_date&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
