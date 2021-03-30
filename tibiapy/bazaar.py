@@ -10,15 +10,9 @@ import bs4
 from tibiapy import abc, InvalidContent, Sex, Vocation
 from tibiapy.abc import BaseCharacter
 from tibiapy.enums import AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
-    BazaarType, BidType, \
-    PvpTypeFilter, \
-    SkillFilter, \
-    VocationAuctionFilter
+    BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter
 from tibiapy.utils import convert_line_breaks, deprecated, get_tibia_url, parse_integer, parse_pagination, \
-    parse_tibia_datetime, \
-    parse_tibia_money, \
-    parse_tibiacom_content, \
-    try_enum
+    parse_tibia_datetime, parse_tibiacom_content, try_enum
 
 __all__ = (
     "AchievementEntry",
@@ -365,15 +359,23 @@ class CharacterBazaar(abc.Serializable):
         return get_tibia_url("charactertrade", "currentcharactertrades", currentpage=page, **filters.query_params)
 
     @classmethod
-    def get_auctions_history_url(cls, page=1):
+    def get_auctions_history_url(cls, page=1, filters=None):
         """Gets the URL to the auction history in Tibia.com
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The page to show the URL for.
+        filters: :class:`AuctionFilters`
+            The filtering criteria to use.
 
         Returns
         -------
         :class:`str`
             The URL to the auction history section in Tibia.com
         """
-        return get_tibia_url("charactertrade", "pastcharactertrades", currentpage=page)
+        filters = filters or AuctionFilters()
+        return get_tibia_url("charactertrade", "pastcharactertrades", currentpage=page, **filters.query_params)
 
     @classmethod
     def from_content(cls, content):
@@ -876,6 +878,8 @@ class AuctionDetails(ListedAuction):
         The amount of charm points the character has available to spend.
     spent_charm_points: :class:`int`
         The total charm points the character has spent.
+    prey_wildcards: :class:`int`
+        The number of Prey Wildcards the character has.
     daly_reward_streak: :class:`int`
         The current daily reward streak.
     permanent_hunting_task_slots: :class:`int`
@@ -941,6 +945,7 @@ class AuctionDetails(ListedAuction):
         self.spent_charm_points: int = kwargs.get("spent_charm_points", 0)
         self.daily_reward_streak: int = kwargs.get("daily_reward_streak", 0)
         self.hunting_task_points: int = kwargs.get("hunting_task_points", 0)
+        self.prey_wildcards: int = kwargs.get("prey_wildcards", 0)
         self.permanent_hunting_task_slots: int = kwargs.get("permanent_hunting_task_slots", 0)
         self.permanent_prey_slots: int = kwargs.get("permanent_prey_slots", 0)
         self.hirelings: int = kwargs.get("hirelings", 0)
@@ -983,6 +988,7 @@ class AuctionDetails(ListedAuction):
         "hunting_task_points",
         "permanent_hunting_task_slots",
         "permanent_prey_slots",
+        "prey_wildcards",
         "hirelings",
         "hireling_jobs",
         "hireling_outfits",
@@ -1316,6 +1322,7 @@ class AuctionDetails(ListedAuction):
         self.hunting_task_points = parse_integer(hunting_data.get("hunting_task_points", ""))
         self.permanent_hunting_task_slots = parse_integer(hunting_data.get("permanent_hunting_task_slots", ""))
         self.permanent_prey_slots = parse_integer(hunting_data.get("permanent_prey_slots", ""))
+        self.prey_wildcards = parse_integer(hunting_data.get("prey_wildcards", ""))
 
         hirelings_data = self._parse_data_table(content_containers[7])
         self.hirelings = parse_integer(hirelings_data.get("hirelings", ""))

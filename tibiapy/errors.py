@@ -30,10 +30,14 @@ class NetworkError(TibiapyException):
     Attributes
     ----------
     original: :class:`Exception`
-        The original exception that caused this exception."""
-    def __init__(self, message, original=None):
+        The original exception that caused this exception.
+    fetching_time: :class:`float`
+        The time between the request and the response.
+    """
+    def __init__(self, message, original=None, fetching_time=0):
         super().__init__(message)
         self.original = original
+        self.fetching_time = fetching_time
 
 
 class Forbidden(NetworkError):

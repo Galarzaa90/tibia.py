@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v4.1.0
+
+4.1.0 (2021-03-30)
+==================
+- Added ``prey_wildcards`` attribute to ``AuctionDetails``.
+- Added ``filters`` parameter to ``CharacterBazaar.get_auctions_history_url`` and ``Client.fetch_auction_history``.
+
 .. v4.0.0:
 
 4.0.0 (2021-03-10)

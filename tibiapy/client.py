@@ -145,14 +145,14 @@ class Client:
         self._session_ready.set()
 
     @classmethod
-    def _handle_status(cls, status_code):
+    def _handle_status(cls, status_code, fetching_time=0):
         """Handles error status codes, raising exceptions if necessary."""
         if status_code < 400:
             return
         if status_code == 403:
-            raise Forbidden("403 Forbidden: Might be getting rate-limited")
+            raise Forbidden("403 Forbidden: Might be getting rate-limited", fetching_time=fetching_time)
         else:
-            raise NetworkError("Request error, status code: %d" % status_code)
+            raise NetworkError("Request error, status code: %d" % status_code, fetching_time=fetching_time)
 
     async def _request(self, method, url, data=None, headers=None):
         """Base request, handling possible error statuses.
@@ -182,24 +182,24 @@ class Client:
             If there's any connection errors during the request.
         """
         await self._session_ready.wait()
+        init_time = time.perf_counter()
         try:
-            init_time = time.perf_counter()
             async with self.session.request(method, url, data=data, headers=headers) as resp:
                 diff_time = time.perf_counter()-init_time
                 if "maintenance.tibia.com" in str(resp.url):
                     log.info(f"%s | %s | %s %s | maintenance.tibia.com", url, resp.method, resp.status, resp.reason)
                     raise SiteMaintenanceError("Tibia.com is down for maintenance.")
                 log.info(f"%s | %s | %s %s | %dms", url, resp.method, resp.status, resp.reason, int(diff_time*1000))
-                self._handle_status(resp.status)
+                self._handle_status(resp.status, diff_time)
                 response = RawResponse(resp, diff_time)
                 response.content = await resp.text()
                 return response
         except aiohttp.ClientError as e:
-            raise NetworkError("aiohttp.ClientError: %s" % e, e)
+            raise NetworkError("aiohttp.ClientError: %s" % e, e, time.perf_counter()-init_time)
         except aiohttp_socks.SocksConnectionError as e:
-            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e)
+            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e, time.perf_counter()-init_time)
         except UnicodeDecodeError as e:
-            raise NetworkError('UnicodeDecodeError: %s' % e, e)
+            raise NetworkError('UnicodeDecodeError: %s' % e, e, time.perf_counter()-init_time)
 
     async def fetch_current_auctions(self, page=1, filters=None):
         """Fetches the current auctions in the bazaar
@@ -236,7 +236,7 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, current_auctions, parsing_time)
 
-    async def fetch_auction_history(self, page=1):
+    async def fetch_auction_history(self, page=1, filters=None):
         """Fetches the auction history of the bazaar.
 
         .. versionadded:: 3.3.0
@@ -245,6 +245,8 @@ class Client:
         ----------
         page: :class:`int`
             The page to display.
+        filters: :class:`AuctionFilters`
+            The filtering criteria to use.
 
         Returns
         -------
@@ -263,7 +265,7 @@ class Client:
         """
         if page <= 0:
             raise ValueError('page must be 1 or greater.')
-        response = await self._request("GET", CharacterBazaar.get_auctions_history_url(page))
+        response = await self._request("GET", CharacterBazaar.get_auctions_history_url(page, filters))
         start_time = time.perf_counter()
         auction_history = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time

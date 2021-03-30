@@ -53,6 +53,12 @@ async def home(request: web.Request):
 @routes.get('/auctions')
 async def get_current_auctions(request: web.Request):
     page = int(request.query.get("page", 1))
+    filters = await filters_from_query(request)
+    response = await app["tibiapy"].fetch_current_auctions(page, filters)
+    return json_response(response)
+
+
+async def filters_from_query(request):
     filters = tibiapy.AuctionFilters()
     filters.world = request.query.get("world")
     filters.battleye = try_enum(tibiapy.BattlEyeTypeFilter, request.query.get("battleye"))
@@ -65,14 +71,15 @@ async def get_current_auctions(request: web.Request):
     filters.max_skill_level = tibiapy.utils.parse_integer(request.query.get("max_skill_level"), None)
     filters.order_by = try_enum(tibiapy.AuctionOrderBy, request.query.get("order_by"))
     filters.order = try_enum(tibiapy.AuctionOrder, request.query.get("order"))
-    filters.item = request.query.get("item")
-    response = await app["tibiapy"].fetch_current_auctions(page, filters)
-    return json_response(response)
+    filters.search_string = request.query.get("item")
+    return filters
 
 
 @routes.get('/auctions/history')
 async def get_auction_history(request: web.Request):
-    response = await app["tibiapy"].fetch_auction_history()
+    page = int(request.query.get("page", 1))
+    filters = await filters_from_query(request)
+    response = await app["tibiapy"].fetch_auction_history(page, filters)
     return json_response(response)
 
 
@@ -350,7 +357,7 @@ async def error_middleware(app, handler):
             raise
         except Exception as e:
             tb = traceback.format_exc()
-            print(tb)
+            log.exception("%s %s", request.method, request.path)
             return json_error(500, e, tb)
 
     return middleware_handler
