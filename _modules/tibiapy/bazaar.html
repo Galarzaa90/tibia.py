@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.bazaar &#8212; Tibia.py 4.0.0 documentation</title>
+    <title>tibiapy.bazaar &#8212; Tibia.py 4.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.bazaar</a></li> 
       </ul>
@@ -56,15 +56,9 @@
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span><span class="p">,</span> <span class="n">InvalidContent</span><span class="p">,</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
 <span class="kn">from</span> <span class="nn">tibiapy.abc</span> <span class="kn">import</span> <span class="n">BaseCharacter</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">AuctionOrder</span><span class="p">,</span> <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionSearchType</span><span class="p">,</span> <span class="n">AuctionStatus</span><span class="p">,</span> <span class="n">BattlEyeTypeFilter</span><span class="p">,</span> \
-    <span class="n">BazaarType</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> \
-    <span class="n">PvpTypeFilter</span><span class="p">,</span> \
-    <span class="n">SkillFilter</span><span class="p">,</span> \
-    <span class="n">VocationAuctionFilter</span>
+    <span class="n">BazaarType</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">SkillFilter</span><span class="p">,</span> <span class="n">VocationAuctionFilter</span>
 <span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">convert_line_breaks</span><span class="p">,</span> <span class="n">deprecated</span><span class="p">,</span> <span class="n">get_tibia_url</span><span class="p">,</span> <span class="n">parse_integer</span><span class="p">,</span> <span class="n">parse_pagination</span><span class="p">,</span> \
-    <span class="n">parse_tibia_datetime</span><span class="p">,</span> \
-    <span class="n">parse_tibia_money</span><span class="p">,</span> \
-    <span class="n">parse_tibiacom_content</span><span class="p">,</span> \
-    <span class="n">try_enum</span>
+    <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_enum</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;AchievementEntry&quot;</span><span class="p">,</span>
@@ -411,15 +405,23 @@
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;charactertrade&quot;</span><span class="p">,</span> <span class="s2">&quot;currentcharactertrades&quot;</span><span class="p">,</span> <span class="n">currentpage</span><span class="o">=</span><span class="n">page</span><span class="p">,</span> <span class="o">**</span><span class="n">filters</span><span class="o">.</span><span class="n">query_params</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CharacterBazaar.get_auctions_history_url"><a class="viewcode-back" href="../../api.html#tibiapy.CharacterBazaar.get_auctions_history_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_auctions_history_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_auctions_history_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets the URL to the auction history in Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        page: :class:`int`</span>
+<span class="sd">            The page to show the URL for.</span>
+<span class="sd">        filters: :class:`AuctionFilters`</span>
+<span class="sd">            The filtering criteria to use.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the auction history section in Tibia.com</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;charactertrade&quot;</span><span class="p">,</span> <span class="s2">&quot;pastcharactertrades&quot;</span><span class="p">,</span> <span class="n">currentpage</span><span class="o">=</span><span class="n">page</span><span class="p">)</span></div>
+        <span class="n">filters</span> <span class="o">=</span> <span class="n">filters</span> <span class="ow">or</span> <span class="n">AuctionFilters</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;charactertrade&quot;</span><span class="p">,</span> <span class="s2">&quot;pastcharactertrades&quot;</span><span class="p">,</span> <span class="n">currentpage</span><span class="o">=</span><span class="n">page</span><span class="p">,</span> <span class="o">**</span><span class="n">filters</span><span class="o">.</span><span class="n">query_params</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CharacterBazaar.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.CharacterBazaar.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
@@ -922,6 +924,8 @@
 <span class="sd">        The amount of charm points the character has available to spend.</span>
 <span class="sd">    spent_charm_points: :class:`int`</span>
 <span class="sd">        The total charm points the character has spent.</span>
+<span class="sd">    prey_wildcards: :class:`int`</span>
+<span class="sd">        The number of Prey Wildcards the character has.</span>
 <span class="sd">    daly_reward_streak: :class:`int`</span>
 <span class="sd">        The current daily reward streak.</span>
 <span class="sd">    permanent_hunting_task_slots: :class:`int`</span>
@@ -987,6 +991,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">spent_charm_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;spent_charm_points&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">daily_reward_streak</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;daily_reward_streak&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hunting_task_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hunting_task_points&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prey_wildcards</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prey_wildcards&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">permanent_hunting_task_slots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;permanent_hunting_task_slots&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">permanent_prey_slots</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;permanent_prey_slots&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hirelings</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hirelings&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -1029,6 +1034,7 @@
         <span class="s2">&quot;hunting_task_points&quot;</span><span class="p">,</span>
         <span class="s2">&quot;permanent_hunting_task_slots&quot;</span><span class="p">,</span>
         <span class="s2">&quot;permanent_prey_slots&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;prey_wildcards&quot;</span><span class="p">,</span>
         <span class="s2">&quot;hirelings&quot;</span><span class="p">,</span>
         <span class="s2">&quot;hireling_jobs&quot;</span><span class="p">,</span>
         <span class="s2">&quot;hireling_outfits&quot;</span><span class="p">,</span>
@@ -1362,6 +1368,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hunting_task_points</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">hunting_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hunting_task_points&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">permanent_hunting_task_slots</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">hunting_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;permanent_hunting_task_slots&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">permanent_prey_slots</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">hunting_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;permanent_prey_slots&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prey_wildcards</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">hunting_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prey_wildcards&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
         <span class="n">hirelings_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_data_table</span><span class="p">(</span><span class="n">content_containers</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hirelings</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">hirelings_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hirelings&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
@@ -1854,7 +1861,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.2.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.
   </div>
   
   </body>

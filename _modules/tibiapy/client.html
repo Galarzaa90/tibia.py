@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.client &#8212; Tibia.py 4.0.0 documentation</title>
+    <title>tibiapy.client &#8212; Tibia.py 4.1.0 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.client</a></li> 
       </ul>
@@ -191,14 +191,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_ready</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_handle_status</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">status_code</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_handle_status</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">status_code</span><span class="p">,</span> <span class="n">fetching_time</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Handles error status codes, raising exceptions if necessary.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">400</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">Forbidden</span><span class="p">(</span><span class="s2">&quot;403 Forbidden: Might be getting rate-limited&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">Forbidden</span><span class="p">(</span><span class="s2">&quot;403 Forbidden: Might be getting rate-limited&quot;</span><span class="p">,</span> <span class="n">fetching_time</span><span class="o">=</span><span class="n">fetching_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;Request error, status code: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">status_code</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;Request error, status code: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">status_code</span><span class="p">,</span> <span class="n">fetching_time</span><span class="o">=</span><span class="n">fetching_time</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Base request, handling possible error statuses.</span>
@@ -228,24 +228,24 @@
 <span class="sd">            If there&#39;s any connection errors during the request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session_ready</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
             <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
                 <span class="n">diff_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">init_time</span>
                 <span class="k">if</span> <span class="s2">&quot;maintenance.tibia.com&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">url</span><span class="p">):</span>
                     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s | maintenance.tibia.com&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="n">SiteMaintenanceError</span><span class="p">(</span><span class="s2">&quot;Tibia.com is down for maintenance.&quot;</span><span class="p">)</span>
                 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;%s | %s | %s %s | %dms&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">resp</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">diff_time</span><span class="o">*</span><span class="mi">1000</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_handle_status</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_handle_status</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">diff_time</span><span class="p">)</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="n">RawResponse</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">diff_time</span><span class="p">)</span>
                 <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="k">return</span> <span class="n">response</span>
         <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">init_time</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">aiohttp_socks</span><span class="o">.</span><span class="n">SocksConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;aiohttp_socks.SocksConnectionError: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s2">&quot;aiohttp_socks.SocksConnectionError: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">init_time</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">UnicodeDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s1">&#39;UnicodeDecodeError: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="s1">&#39;UnicodeDecodeError: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="o">-</span><span class="n">init_time</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Client.fetch_current_auctions"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_current_auctions">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_current_auctions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fetches the current auctions in the bazaar</span>
@@ -282,7 +282,7 @@
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">current_auctions</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.fetch_auction_history"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_auction_history">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_auction_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Client.fetch_auction_history"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_auction_history">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_auction_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fetches the auction history of the bazaar.</span>
 
 <span class="sd">        .. versionadded:: 3.3.0</span>
@@ -291,6 +291,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        page: :class:`int`</span>
 <span class="sd">            The page to display.</span>
+<span class="sd">        filters: :class:`AuctionFilters`</span>
+<span class="sd">            The filtering criteria to use.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -309,7 +311,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;page must be 1 or greater.&#39;</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CharacterBazaar</span><span class="o">.</span><span class="n">get_auctions_history_url</span><span class="p">(</span><span class="n">page</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CharacterBazaar</span><span class="o">.</span><span class="n">get_auctions_history_url</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">filters</span><span class="p">))</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="n">auction_history</span> <span class="o">=</span> <span class="n">CharacterBazaar</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
@@ -1359,7 +1361,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.2.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.3.
   </div>
   
   </body>
