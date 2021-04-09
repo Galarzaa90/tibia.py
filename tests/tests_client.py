@@ -1,9 +1,11 @@
 import datetime
+import unittest.mock
 
 import aiohttp
 import asynctest
 from aioresponses import aioresponses
 
+import tibiapy
 from tests.tests_bazaar import FILE_BAZAAR_CURRENT, FILE_BAZAAR_HISTORY, FILE_AUCTION_FINISHED
 from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
 from tests.tests_events import FILE_EVENT_CALENDAR
@@ -274,3 +276,18 @@ class TestClient(asynctest.TestCase, TestCommons):
         """Testing fetching the auction history"""
         with self.assertRaises(ValueError):
             await self.client.fetch_event_schedule(3)
+
+    @unittest.mock.patch("tibiapy.bazaar.AuctionDetails._parse_page_items")
+    async def test_client__fetch_all_pages_success(self, parse_page_items):
+        """Testing internal method to fetch all pages of an auction item collection."""
+        paginator = tibiapy.ItemSummary(page=1, total_pages=5)
+        self.client._fetch_ajax_page = unittest.mock.AsyncMock()
+
+        await self.client._fetch_all_pages(1, paginator, 1)
+
+        self.assertEqual(4, self.client._fetch_ajax_page.await_count)
+        self.assertEqual(4, parse_page_items.call_count)
+
+    async def test_client__fetch_all_pages_none_input(self):
+        """Testing internal method to fetch all pages of an auction item collection."""
+        self.assertIsNone(await self.client._fetch_all_pages(1, None, 1))
