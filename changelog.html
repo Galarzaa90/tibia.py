@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
     <title>Changelog &#8212; Tibia.py 4.1.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/style.css" type="text/css" />
@@ -46,21 +47,21 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="changelog">
+  <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Due to this library relying on external content, older versions are not guaranteed to work.
 Try to always use the latest version.</p>
 </div>
-<div class="section" id="id1">
+<section id="id1">
 <h2>4.1.0 (2021-03-30)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">prey_wildcards</span></code> attribute to <code class="docutils literal notranslate"><span class="pre">AuctionDetails</span></code>.</p></li>
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">filters</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">CharacterBazaar.get_auctions_history_url</span></code> and <code class="docutils literal notranslate"><span class="pre">Client.fetch_auction_history</span></code>.</p></li>
 </ul>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h2>4.0.0 (2021-03-10)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
@@ -95,14 +96,14 @@ Try to always use the latest version.</p>
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">YELLOW</span></code> and <code class="docutils literal notranslate"><span class="pre">GREEN</span></code> aliases to all BattlEye related enums.</p></li>
 <li><p>Fixed wrong timezone being used for forum related dates.</p></li>
 </ul>
-</div>
-<div class="section" id="id3">
+</section>
+<section id="id3">
 <h2>3.7.1 (2021-02-15)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Adjusted highscores parsing for upcoming Tibia.com changes.</p></li>
 </ul>
-</div>
-<div class="section" id="id4">
+</section>
+<section id="id4">
 <h2>3.7.0 (2021-02-09)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Parse familiars from auctions</p></li>
@@ -110,38 +111,38 @@ Try to always use the latest version.</p>
 <li><p>Results count in bazaar pages are now properly parsed when there are comma thousand separators.</p></li>
 <li><p>Item amounts are now more accurate instead of being based from their indicator (which was grouping them in thousands)</p></li>
 </ul>
-</div>
-<div class="section" id="id5">
+</section>
+<section id="id5">
 <h2>3.6.5 (2021-01-27)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed auction history parsing breaking due to the cookie consent dialog.</p></li>
 </ul>
-</div>
-<div class="section" id="id6">
+</section>
+<section id="id6">
 <h2>3.6.4 (2021-01-26)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed world list parsing breaking due to the cookie consent dialog.</p></li>
 </ul>
-</div>
-<div class="section" id="id7">
+</section>
+<section id="id7">
 <h2>3.6.3 (2021-01-14)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug in guild names being parsed with Non-Breaking spaces instead of a regular space.</p></li>
 </ul>
-</div>
-<div class="section" id="id8">
+</section>
+<section id="id8">
 <h2>3.6.2 (2021-01-01)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug in Event Calendar parsing.</p></li>
 </ul>
-</div>
-<div class="section" id="id9">
+</section>
+<section id="id9">
 <h2>3.6.1 (2020-12-28)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed guild information being parsed incorrectly for characters in guilds containing “of the” in their name.</p></li>
 </ul>
-</div>
-<div class="section" id="id10">
+</section>
+<section id="id10">
 <h2>3.6.0 (2020-12-12)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
@@ -154,51 +155,51 @@ Try to always use the latest version.</p>
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">get_page_url()</span></code> instance method to <code class="docutils literal notranslate"><span class="pre">Highscores</span></code> class.</p></li>
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">previous_page_url</span></code> and <code class="docutils literal notranslate"><span class="pre">next_page_url</span></code> properties.</p></li>
 </ul>
-</div>
-<div class="section" id="id11">
+</section>
+<section id="id11">
 <h2>3.5.7 (2020-12-04)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug in Event Calendar parsing.</p></li>
 </ul>
-</div>
-<div class="section" id="id12">
+</section>
+<section id="id12">
 <h2>3.5.6 (2020-11-10)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Updated the URL used to fetch additional auction pages (items, mounts, outfits).</p></li>
 </ul>
-</div>
-<div class="section" id="id13">
+</section>
+<section id="id13">
 <h2>3.5.5 (2020-10-03)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed charm expansion not being parsed correctly in auctions.</p></li>
 </ul>
-</div>
-<div class="section" id="id14">
+</section>
+<section id="id14">
 <h2>3.5.4 (2020-09-24)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fetching auctions while skipping details is now faster.</p></li>
 <li><p>Fixed bug in tournaments parsing.</p></li>
 </ul>
-</div>
-<div class="section" id="id15">
+</section>
+<section id="id15">
 <h2>3.5.3 (2020-09-24)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug with ascending ordering (lowest / earliest) not being passed to the request URL.</p></li>
 </ul>
-</div>
-<div class="section" id="id16">
+</section>
+<section id="id16">
 <h2>3.5.2 (2020-09-23)<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug with auctions with more than 10 charms failing to parse.</p></li>
 </ul>
-</div>
-<div class="section" id="id17">
+</section>
+<section id="id17">
 <h2>3.5.1 (2020-09-22)<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug with recently traded characters in “other characters” section not being properly parsed.</p></li>
 </ul>
-</div>
-<div class="section" id="id18">
+</section>
+<section id="id18">
 <h2>3.5.0 (2020-09-22)<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
@@ -212,15 +213,15 @@ Property alias kept for backwards compatibility.</p></li>
 </dl>
 </li>
 </ul>
-</div>
-<div class="section" id="id19">
+</section>
+<section id="id19">
 <h2>3.4.0 (2020-09-19)<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added option to only parse the listed information of an auction, to skip the rest of the parsing.</p></li>
 <li><p>Fixed wrong type hint in <code class="docutils literal notranslate"><span class="pre">ListedAuction</span></code> for <code class="docutils literal notranslate"><span class="pre">status</span></code>.</p></li>
 </ul>
-</div>
-<div class="section" id="id20">
+</section>
+<section id="id20">
 <h2>3.3.0 (2020-09-09)<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
@@ -233,8 +234,8 @@ Property alias kept for backwards compatibility.</p></li>
 <li><p>Client methods throw a <code class="docutils literal notranslate"><span class="pre">SiteMaintenanceError</span></code> when Tibia.com is under maintenance, to be able to tell apart from
 other network errors.</p></li>
 </ul>
-</div>
-<div class="section" id="id21">
+</section>
+<section id="id21">
 <h2>3.2.2 (2020-08-27)<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
@@ -245,14 +246,14 @@ other network errors.</p></li>
 </dl>
 </li>
 </ul>
-</div>
-<div class="section" id="id22">
+</section>
+<section id="id22">
 <h2>3.2.1 (2020-08-25)<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug when parsing “other characters” from Tibia.com due to an unannounced change in the website.</p></li>
 </ul>
-</div>
-<div class="section" id="id23">
+</section>
+<section id="id23">
 <h2>3.2.0 (2020-08-10)<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
@@ -266,34 +267,34 @@ other network errors.</p></li>
 </dl>
 </li>
 </ul>
-</div>
-<div class="section" id="id24">
+</section>
+<section id="id24">
 <h2>3.1.0 (2020-07-29)<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">fetch_forum_post</span></code> method to fetch a forum post directly.</p></li>
 <li><p>Fixed bug with forum posts made by tournament characters.</p></li>
 </ul>
-</div>
-<div class="section" id="id25">
+</section>
+<section id="id25">
 <h2>3.0.3 (2020-07-28)<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug with character title being parsed incorrectly when the character has no title selected and a single unlocked title.</p></li>
 </ul>
-</div>
-<div class="section" id="id26">
+</section>
+<section id="id26">
 <h2>3.0.2 (2020-07-14)<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed values being mapped incorrectly for highscores.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ExpHighscoresEntry</span></code> is now removed.</p></li>
 </ul>
-</div>
-<div class="section" id="id27">
+</section>
+<section id="id27">
 <h2>3.0.1 (2020-07-14)<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Highscores.world</span></code> is now <code class="docutils literal notranslate"><span class="pre">None</span></code> when the highscores are for all worlds.</p></li>
 </ul>
-</div>
-<div class="section" id="id28">
+</section>
+<section id="id28">
 <h2>3.0.0 (2020-07-13)<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">Client</span></code> class’ methods now return their responses wrapped in a <code class="docutils literal notranslate"><span class="pre">TibiaResponse</span></code> object.
@@ -336,21 +337,21 @@ This contains information about Tibia.com’s cache.</p></li>
 directly implemented by most classes.</p></li>
 <li><p>Removed TibiaData functionality.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-5-1">
+</section>
+<section id="v2-5-1">
 <span id="id29"></span><h2>2.5.1 (2020-05-27)<a class="headerlink" href="#v2-5-1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bed count not being parsed on houses.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-5-0">
+</section>
+<section id="v2-5-0">
 <span id="id30"></span><h2>2.5.0 (2020-05-22)<a class="headerlink" href="#v2-5-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added parsing of Tournaments and Tournament Leaderboards.</p></li>
 <li><p>Fixed parsing errors with characters that had deaths by killers with “and” in their name.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-4-3">
+</section>
+<section id="v2-4-3">
 <span id="id31"></span><h2>2.4.3 (2020-04-22)<a class="headerlink" href="#v2-4-3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><dl class="simple">
@@ -361,112 +362,112 @@ directly implemented by most classes.</p></li>
 </dl>
 </li>
 </ul>
-</div>
-<div class="section" id="v2-4-2">
+</section>
+<section id="v2-4-2">
 <span id="id32"></span><h2>2.4.2 (2020-02-26)<a class="headerlink" href="#v2-4-2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed exception when attempting to parse highscores with no results (e.g. a new world on its first day).</p></li>
 </ul>
-</div>
-<div class="section" id="v2-4-1">
+</section>
+<section id="v2-4-1">
 <span id="id33"></span><h2>2.4.1 (2019-11-20)<a class="headerlink" href="#v2-4-1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed incorrect argument name (house) in <code class="docutils literal notranslate"><span class="pre">Character</span></code> constructor.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-4-0">
+</section>
+<section id="v2-4-0">
 <span id="id34"></span><h2>2.4.0 (2019-11-20)<a class="headerlink" href="#v2-4-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added support for multiple houses per character. Accessible on <code class="docutils literal notranslate"><span class="pre">Character.houses</span></code> field.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Character.house</span></code> is now deprecated. It will contain the character’s first house or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-3-4">
+</section>
+<section id="v2-3-4">
 <span id="id35"></span><h2>2.3.4 (2019-11-14)<a class="headerlink" href="#v2-3-4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug with deaths not being parsed when a killer had <code class="docutils literal notranslate"><span class="pre">and</span></code> in their name.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-3-3">
+</section>
+<section id="v2-3-3">
 <span id="id36"></span><h2>2.3.3 (2019-11-04)<a class="headerlink" href="#v2-3-3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug with world parsing when there are more than 1000 players online.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-3-2">
+</section>
+<section id="v2-3-2">
 <span id="id37"></span><h2>2.3.2 (2019-10-17)<a class="headerlink" href="#v2-3-2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed incorrect highscores URL.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-3-1">
+</section>
+<section id="v2-3-1">
 <span id="id38"></span><h2>2.3.1 (2019-10-06)<a class="headerlink" href="#v2-3-1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed a bug with deaths not being parsed when a killer in assists had <code class="docutils literal notranslate"><span class="pre">and</span></code> in their name.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-3-0">
+</section>
+<section id="v2-3-0">
 <span id="id39"></span><h2>2.3.0 (2019-09-16)<a class="headerlink" href="#v2-3-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added proxy option to client.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-2-6">
+</section>
+<section id="v2-2-6">
 <span id="id40"></span><h2>2.2.6 (2019-09-01)<a class="headerlink" href="#v2-2-6" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug with account badges parsing failing when no badges were selected.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-2-5">
+</section>
+<section id="v2-2-5">
 <span id="id41"></span><h2>2.2.5 (2019-08-22)<a class="headerlink" href="#v2-2-5" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed account badges parsing due to changes on the layout by CipSoft.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-2-4">
+</section>
+<section id="v2-2-4">
 <span id="id42"></span><h2>2.2.4 (2019-08-20)<a class="headerlink" href="#v2-2-4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Disabled client compression for POST requests.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-2-3">
+</section>
+<section id="v2-2-3">
 <span id="id43"></span><h2>2.2.3 (2019-08-17)<a class="headerlink" href="#v2-2-3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Enabled client side compression</p></li>
 </ul>
-</div>
-<div class="section" id="v2-2-2">
+</section>
+<section id="v2-2-2">
 <span id="id44"></span><h2>2.2.2 (2019-08-17)<a class="headerlink" href="#v2-2-2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed killed by players and players kill stats being inverted for <code class="docutils literal notranslate"><span class="pre">KillStatistics</span></code></p></li>
 </ul>
-</div>
-<div class="section" id="v2-2-1">
+</section>
+<section id="v2-2-1">
 <span id="id45"></span><h2>2.2.1 (2019-08-10)<a class="headerlink" href="#v2-2-1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed bug with character parsing failing when the guild rank is <code class="docutils literal notranslate"><span class="pre">(member)</span></code>.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-2-0">
+</section>
+<section id="v2-2-0">
 <span id="id46"></span><h2>2.2.0 (2019-08-08)<a class="headerlink" href="#v2-2-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added support for account badges and character titles.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-1-0">
+</section>
+<section id="v2-1-0">
 <span id="id47"></span><h2>2.1.0 (2019-06-17)<a class="headerlink" href="#v2-1-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added ways to sort and filter House list results like in Tibia.com.</p></li>
 <li><p>Added support to get the Boosted Creature of the day.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-0-1">
+</section>
+<section id="v2-0-1">
 <span id="id48"></span><h2>2.0.1 (2019-06-04)<a class="headerlink" href="#v2-0-1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Replaced references to <code class="docutils literal notranslate"><span class="pre">secure.tibia.com</span></code> with <code class="docutils literal notranslate"><span class="pre">www.tibia.com</span></code> as the former always redirects to the front page.</p></li>
 </ul>
-</div>
-<div class="section" id="v2-0-0">
+</section>
+<section id="v2-0-0">
 <span id="id49"></span><h2>2.0.0 (2019-06-03)<a class="headerlink" href="#v2-0-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added asynchronous client to fetch and parse Tibia.com sections.</p></li>
@@ -475,26 +476,26 @@ directly implemented by most classes.</p></li>
 <li><p>Added support for tournament worlds.</p></li>
 <li><p>Added support for house prices with ‘k’ suffixes.</p></li>
 </ul>
-</div>
-<div class="section" id="v1-1-3">
+</section>
+<section id="v1-1-3">
 <span id="id50"></span><h2>1.1.3 (2019-01-29)<a class="headerlink" href="#v1-1-3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed incorrect parsing of deaths with summons involved when parsing characters from TibiaData.</p></li>
 </ul>
-</div>
-<div class="section" id="v1-1-2">
+</section>
+<section id="v1-1-2">
 <span id="id51"></span><h2>1.1.2 (2019-01-22)<a class="headerlink" href="#v1-1-2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed TibiaData URLs of tibia characters with special characters in their names. (e.g Himmelhüpferin)</p></li>
 </ul>
-</div>
-<div class="section" id="v1-1-1">
+</section>
+<section id="v1-1-1">
 <span id="id52"></span><h2>1.1.1 (2019-01-09)<a class="headerlink" href="#v1-1-1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed character houses having attributes mixed up.</p></li>
 </ul>
-</div>
-<div class="section" id="v1-1-0">
+</section>
+<section id="v1-1-0">
 <span id="id53"></span><h2>1.1.0 (2019-01-09)<a class="headerlink" href="#v1-1-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Parsing Highscores from Tibia.com and TibiaData.</p></li>
@@ -502,8 +503,8 @@ directly implemented by most classes.</p></li>
 all leading and trailing whitespaces are removed.</p></li>
 <li><p>Added type hints to many variables and methods.</p></li>
 </ul>
-</div>
-<div class="section" id="v1-0-0">
+</section>
+<section id="v1-0-0">
 <span id="id54"></span><h2>1.0.0 (2018-12-23)<a class="headerlink" href="#v1-0-0" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Added support for TibiaData JSON parsing. To have interoperability
@@ -512,8 +513,8 @@ between Tibia.com and TibiaData.</p></li>
 <li><p>Added support for many missing attributes in Character and Guilds.</p></li>
 <li><p>All objects are now serializable to JSON strings.</p></li>
 </ul>
-</div>
-<div class="section" id="v0-1-0">
+</section>
+<section id="v0-1-0">
 <span id="id55"></span><h2>0.1.0 (2018-08-17)<a class="headerlink" href="#v0-1-0" title="Permalink to this headline">¶</a></h2>
 <p>Initial release:</p>
 <ul class="simple">
@@ -527,8 +528,8 @@ between Tibia.com and TibiaData.</p></li>
 <li><p>Parses content into JSON format strings.</p></li>
 <li><p>Parses content into Python objects.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
