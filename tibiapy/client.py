@@ -343,8 +343,9 @@ class Client:
         current_page = 2
         while current_page <= paginator.total_pages:
             content = await self._fetch_ajax_page(auction_id, item_type, current_page)
-            entries = AuctionDetails._parse_page_items(content, paginator.entry_class)
-            paginator.entries.extend(entries)
+            if content:
+                entries = AuctionDetails._parse_page_items(content, paginator.entry_class)
+                paginator.entries.extend(entries)
             current_page += 1
         paginator.fully_fetched = True
 
@@ -371,7 +372,10 @@ class Client:
                                                    f"type={type_id}&"
                                                    f"currentpage={page}",
                                             headers=headers)
-        data = json.loads(page_response.content)
+        try:
+            data = json.loads(page_response.content.replace("\x0a", " "))
+        except json.decoder.JSONDecodeError:
+            return None
         try:
             return data['AjaxObjects'][0]['Data']
         except KeyError:

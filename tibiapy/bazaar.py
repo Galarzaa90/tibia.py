@@ -524,7 +524,7 @@ class DisplayItem(abc.Serializable):
         description = None
         name, *desc = title_text.split("\n")
         if desc:
-            description = desc[0]
+            description = " ".join(desc)
         m = id_regex.search(img_tag["src"])
         if m:
             item_id = int(m.group(1))

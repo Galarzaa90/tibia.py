@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v4.1.1
+
+4.1.1 (2021-04-19)
+==================
+- Fixed bug with extraneous character in some item descriptions, causing auction to give a parsing error.
+
 .. v4.1.0
 
 4.1.0 (2021-03-30)
