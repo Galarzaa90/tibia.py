@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.forum &#8212; Tibia.py 4.1.1 documentation</title>
+    <title>tibiapy.forum &#8212; Tibia.py 4.1.2 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.forum</a></li> 
       </ul>
@@ -1117,13 +1117,22 @@
         <span class="n">character_info_container</span> <span class="o">=</span> <span class="n">post_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;PostCharacterText&quot;</span><span class="p">})</span>
         <span class="n">post_author</span> <span class="o">=</span> <span class="n">ForumAuthor</span><span class="o">.</span><span class="n">_parse_author_table</span><span class="p">(</span><span class="n">character_info_container</span><span class="p">)</span>
         <span class="n">content_container</span> <span class="o">=</span> <span class="n">post_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;PostText&quot;</span><span class="p">})</span>
-        <span class="n">content</span> <span class="o">=</span> <span class="n">content_container</span><span class="o">.</span><span class="n">encode_contents</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
         <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">signature</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">signature_separator</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-            <span class="n">content</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">signature_separator</span><span class="p">)</span>
-        <span class="n">title_raw</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;br/&gt;&lt;br/&gt;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">emoticon</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">signature_container</span> <span class="o">=</span> <span class="n">post_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;ff_pagetext&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">signature_container</span><span class="p">:</span>
+            <span class="c1"># Remove the signature&#39;s content from content container</span>
+            <span class="n">signature_container</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+            <span class="n">signature</span> <span class="o">=</span> <span class="n">signature_container</span><span class="o">.</span><span class="n">encode_contents</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">content_container</span><span class="o">.</span><span class="n">encode_contents</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">signature_container</span><span class="p">:</span>
+            <span class="c1"># The signature separator will still be part of the content container, so we remove it</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">signature_separator</span><span class="p">)</span>
+            <span class="c1"># This will handle the post containing another signature separator within the content</span>
+            <span class="c1"># We join back all the pieces except for the last one</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">signature_separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">title_raw</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;br/&gt;&lt;br/&gt;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">title_raw</span><span class="p">:</span>
             <span class="n">title_html</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">title_raw</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
             <span class="n">emoticon_img</span> <span class="o">=</span> <span class="n">title_html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
@@ -1132,9 +1141,6 @@
             <span class="n">title_tag</span> <span class="o">=</span> <span class="n">title_html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">title_tag</span><span class="p">:</span>
                 <span class="n">title</span> <span class="o">=</span> <span class="n">title_tag</span><span class="o">.</span><span class="n">text</span>
-        <span class="n">signature_container</span> <span class="o">=</span> <span class="n">post_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;ff_pagetext&quot;</span><span class="p">})</span>
-        <span class="k">if</span> <span class="n">signature_container</span><span class="p">:</span>
-            <span class="n">signature</span> <span class="o">=</span> <span class="n">signature_container</span><span class="o">.</span><span class="n">encode_contents</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
         <span class="n">post_details</span> <span class="o">=</span> <span class="n">post_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;PostDetails&quot;</span><span class="p">})</span>
         <span class="n">dates</span> <span class="o">=</span> <span class="n">post_dates_regex</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">post_details</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="n">edited_date</span> <span class="o">=</span> <span class="kc">None</span>
