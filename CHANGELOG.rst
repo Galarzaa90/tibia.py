@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v4.1.2
+
+4.1.2 (2021-04-27)
+==================
+- Fixed parsing errors for forum posts that contained a copy of the signature separator in the signature.
+
 .. v4.1.1
 
 4.1.1 (2021-04-19)

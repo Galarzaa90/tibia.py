@@ -1071,13 +1071,22 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         character_info_container = post_table.find("div", attrs={"class": "PostCharacterText"})
         post_author = ForumAuthor._parse_author_table(character_info_container)
         content_container = post_table.find("div", attrs={"class": "PostText"})
-        content = content_container.encode_contents().decode()
         title = None
         signature = None
-        if signature_separator in content:
-            content, _ = content.split(signature_separator)
-        title_raw, content = content.split("<br/><br/>", 1)
         emoticon = None
+        signature_container = post_table.find("td", attrs={"class": "ff_pagetext"})
+        if signature_container:
+            # Remove the signature's content from content container
+            signature_container.extract()
+            signature = signature_container.encode_contents().decode()
+        content = content_container.encode_contents().decode()
+        if signature_container:
+            # The signature separator will still be part of the content container, so we remove it
+            parts = content.split(signature_separator)
+            # This will handle the post containing another signature separator within the content
+            # We join back all the pieces except for the last one
+            content = signature_separator.join(parts[:-1])
+        title_raw, content = content.split("<br/><br/>", 1)
         if title_raw:
             title_html = bs4.BeautifulSoup(title_raw, 'lxml')
             emoticon_img = title_html.find("img")
@@ -1086,9 +1095,6 @@ class ForumThread(abc.BaseThread, abc.Serializable):
             title_tag = title_html.find("b")
             if title_tag:
                 title = title_tag.text
-        signature_container = post_table.find("td", attrs={"class": "ff_pagetext"})
-        if signature_container:
-            signature = signature_container.encode_contents().decode()
         post_details = post_table.find('div', attrs={"class": "PostDetails"})
         dates = post_dates_regex.findall(post_details.text)
         edited_date = None

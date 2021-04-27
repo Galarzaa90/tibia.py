@@ -1,4 +1,5 @@
 import datetime
+import sys
 import unittest.mock
 
 import aiohttp
@@ -278,6 +279,7 @@ class TestClient(asynctest.TestCase, TestCommons):
             await self.client.fetch_event_schedule(3)
 
     @unittest.mock.patch("tibiapy.bazaar.AuctionDetails._parse_page_items")
+    @unittest.skipIf(sys.version_info < (3, 8, 0), "AsyncMock was implemented in 3.8")
     async def test_client__fetch_all_pages_success(self, parse_page_items):
         """Testing internal method to fetch all pages of an auction item collection."""
         paginator = tibiapy.ItemSummary(page=1, total_pages=5)
