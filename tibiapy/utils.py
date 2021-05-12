@@ -118,7 +118,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
         The represented datetime, in UTC (timezone aware).
     """
     try:
-        datetime_str = datetime_str.replace(",", "").replace("&#160;", " ")
+        datetime_str = datetime_str.replace(",", "").replace("&#160;", " ").strip()
         # Extracting timezone
         tz = datetime_str[-4:].strip()
 

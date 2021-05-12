@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v4.1.3
+
+4.1.3 (2021-05-12)
+==================
+- Fixed house transfer date not being parsed properly.
+
+
 .. v4.1.2
 
 4.1.2 (2021-04-27)
