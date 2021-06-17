@@ -466,15 +466,21 @@ class WorldOverview(abc.Serializable):
         parsed_content = parse_tibiacom_content(content)
         world_overview = WorldOverview()
         try:
-            record_table, worlds_header_table, worlds_table, *tournament_tables \
+            record_table, worlds_header_table, *worlds_tables \
                 = parsed_content.find_all("table", {"class": "TableContent"})
             m = record_regexp.search(record_table.text)
             world_overview.record_count = parse_integer(m.group("count"))
             world_overview.record_date = parse_tibia_datetime(m.group("date"))
+            if len(worlds_tables) > 1:
+                tournament_tables = worlds_tables[0]
+                worlds_table = worlds_tables[2]
+            else:
+                tournament_tables = None
+                worlds_table = worlds_tables[0]
             regular_world_rows = worlds_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
             world_overview._parse_worlds(regular_world_rows)
             if tournament_tables:
-                tournament_world_rows = tournament_tables[1].find_all("tr", attrs={"class": ["Odd", "Even"]})
+                tournament_world_rows = tournament_tables.find_all("tr", attrs={"class": ["Odd", "Even"]})
                 world_overview._parse_worlds(tournament_world_rows, True)
             return world_overview
         except (AttributeError, KeyError, ValueError):

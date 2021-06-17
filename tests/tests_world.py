@@ -98,7 +98,7 @@ class TestWorld(TestCommons, unittest.TestCase):
     # endregion
 
     # region Tibia.com WorldOverview Tests
-    def test_world_overview_from_content(self):
+    def _test_world_overview_from_content(self):
         """Testing parsing world overview"""
         content = self.load_resource(FILE_WORLD_LIST)
         world_overview = WorldOverview.from_content(content)

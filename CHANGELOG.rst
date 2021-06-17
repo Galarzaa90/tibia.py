@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v4.1.4
+
+4.1.4 (2021-06-17)
+==================
+- Fixed worlds not being parsed correctly due to tournament worlds order changing.
+
 .. v4.1.3
 
 4.1.3 (2021-05-12)
