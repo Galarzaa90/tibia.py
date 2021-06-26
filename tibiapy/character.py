@@ -309,8 +309,10 @@ class Character(abc.BaseCharacter, abc.Serializable):
         parsed_content = parse_tibiacom_content(content)
         tables = cls._parse_tables(parsed_content)
         char = Character()
-        if "Could not find character" in tables.keys():
-            return None
+        if not tables:
+            messsage_table = parsed_content.find("div", {"class": "TableContainer"})
+            if messsage_table and "Could not find character" in messsage_table.text:
+                return None
         if "Character Information" in tables.keys():
             char._parse_character_information(tables["Character Information"])
         else:

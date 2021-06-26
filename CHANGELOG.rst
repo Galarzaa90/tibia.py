@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v4.1.5
+
+4.1.5 (2021-06-25)
+==================
+- Fixed parsing bug on characters, returning an incorrect exception when a character doesn't exist.
+
+
 .. v4.1.4
 
 4.1.4 (2021-06-17)
