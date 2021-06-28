@@ -466,8 +466,9 @@ class WorldOverview(abc.Serializable):
         parsed_content = parse_tibiacom_content(content)
         world_overview = WorldOverview()
         try:
-            records_table, *tables = parsed_content.find_all("table", {"class": "TableContent"})
-            m = record_regexp.search(records_table.text)
+            record_table, *tables \
+                = parsed_content.find_all("table", {"class": "TableContent"})
+            m = record_regexp.search(record_table.text)
             world_overview.record_count = parse_integer(m.group("count"))
             world_overview.record_date = parse_tibia_datetime(m.group("date"))
             world_overview._parse_worlds_tables(tables)

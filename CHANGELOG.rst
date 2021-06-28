@@ -19,7 +19,6 @@ the order should not matter anymore.
 ==================
 - Fixed parsing bug on characters, returning an incorrect exception when a character doesn't exist.
 
-
 .. v4.1.4
 
 4.1.4 (2021-06-17)
