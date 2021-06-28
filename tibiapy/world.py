@@ -466,25 +466,14 @@ class WorldOverview(abc.Serializable):
         parsed_content = parse_tibiacom_content(content)
         world_overview = WorldOverview()
         try:
-            record_table, worlds_header_table, *worlds_tables \
-                = parsed_content.find_all("table", {"class": "TableContent"})
-            m = record_regexp.search(record_table.text)
+            records_table, *tables = parsed_content.find_all("table", {"class": "TableContent"})
+            m = record_regexp.search(records_table.text)
             world_overview.record_count = parse_integer(m.group("count"))
             world_overview.record_date = parse_tibia_datetime(m.group("date"))
-            if len(worlds_tables) > 1:
-                tournament_tables = worlds_tables[0]
-                worlds_table = worlds_tables[2]
-            else:
-                tournament_tables = None
-                worlds_table = worlds_tables[0]
-            regular_world_rows = worlds_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
-            world_overview._parse_worlds(regular_world_rows)
-            if tournament_tables:
-                tournament_world_rows = tournament_tables.find_all("tr", attrs={"class": ["Odd", "Even"]})
-                world_overview._parse_worlds(tournament_world_rows, True)
+            world_overview._parse_worlds_tables(tables)
             return world_overview
-        except (AttributeError, KeyError, ValueError):
-            raise InvalidContent("content does not belong to the World Overview section in Tibia.com")
+        except (AttributeError, KeyError, ValueError) as e:
+            raise InvalidContent("content does not belong to the World Overview section in Tibia.com", e)
 
     def _parse_worlds(self, world_rows, tournament=False):
         """Parses the world columns and adds the results to :py:attr:`worlds`.
@@ -518,3 +507,21 @@ class WorldOverview(abc.Serializable):
             additional_info = cols[5].text.strip()
             world._parse_additional_info(additional_info, tournament)
             self.worlds.append(world)
+
+    def _parse_worlds_tables(self, tables):
+        """Parses the world columns and adds the results to :py:attr:`worlds`.
+
+        Parameters
+        ----------
+        world_rows: :class:`list` of :class:`bs4.Tag`
+            A list containing the rows of each world.
+        tournament: :class:`bool`
+            Whether these are tournament worlds or not.
+        """
+        for title_table, worlds_table in zip(tables, tables[1:]):
+            title = title_table.text.lower()
+            regular_world_rows = worlds_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
+            self._parse_worlds(regular_world_rows, "tournament" in title)
+
+
+
