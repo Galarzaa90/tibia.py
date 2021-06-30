@@ -8,7 +8,7 @@ Changelog
 
 .. v4.1.7
 
-4.1.7 (2021-06-28)
+4.1.7 (2021-06-30)
 ==================
 - Fixed titles being parsed as part of the name for guild members with symbols in their name.
 
