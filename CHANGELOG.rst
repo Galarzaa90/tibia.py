@@ -6,9 +6,9 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
-.. v4.1.6
+.. v4.1.7
 
-4.1.6 (2021-06-28)
+4.1.7 (2021-06-28)
 ==================
 - Fixed titles being parsed as part of the name for guild members with symbols in their name.
 
