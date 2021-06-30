@@ -10,6 +10,12 @@ Changelog
 
 4.1.6 (2021-06-28)
 ==================
+- Fixed titles being parsed as part of the name for guild members with symbols in their name.
+
+.. v4.1.6
+
+4.1.6 (2021-06-28)
+==================
 - Fixed worlds not being parsed correctly again due to tournament worlds order changing. After this fix,
 the order should not matter anymore.
 

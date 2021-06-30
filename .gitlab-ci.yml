@@ -13,7 +13,6 @@ before_script:
 stages:
   - build
   - test
-  - analyze
   - deploy
 
 cache:
@@ -33,22 +32,6 @@ build:
     name: tibia.py-dist
     paths:
       - dist/
-
-sonarcloud-check:
-  stage: analyze
-  image:
-    name: sonarsource/sonar-scanner-cli:latest
-    entrypoint: [ "" ]
-  before_script:
-    - git fetch --unshallow origin +refs/heads/*:refs/remotes/origin/*
-  script:
-    - sonar-scanner
-  dependencies:
-    - coverage
-  only:
-    - merge_requests
-    - master
-    - dev
 
 docs:
   stage: build

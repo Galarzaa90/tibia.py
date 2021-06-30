@@ -30,7 +30,7 @@ homepage_regex = re.compile(r'The official homepage is at ([\w.]+)\.')
 guildhall_regex = re.compile(r'Their home on \w+ is (?P<name>[^.]+). The rent is paid until (?P<date>[^.]+)')
 disband_regex = re.compile(r'It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).')
 disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
-title_regex = re.compile(r'([\w\s]+)\s\(([^)]+)\)')
+title_regex = re.compile(r'([^(]+)\(([^)]+)\)')
 
 war_guilds_regegx = re.compile(r'The guild ([\w\s]+) is at war with the guild ([^.]+).')
 war_score_regex = re.compile(r'scored ([\d,]+) kills? against')
