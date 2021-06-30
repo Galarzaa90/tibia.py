@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.guild &#8212; Tibia.py 4.1.6 documentation</title>
+    <title>tibiapy.guild &#8212; Tibia.py 4.1.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.1.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.1.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.guild</a></li> 
       </ul>
@@ -76,7 +76,7 @@
 <span class="n">guildhall_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Their home on \w+ is (?P&lt;name&gt;[^.]+). The rent is paid until (?P&lt;date&gt;[^.]+)&#39;</span><span class="p">)</span>
 <span class="n">disband_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).&#39;</span><span class="p">)</span>
 <span class="n">disband_tibadata_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;It will be disbanded, ([^.]+).&#39;</span><span class="p">)</span>
-<span class="n">title_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([\w\s]+)\s\(([^)]+)\)&#39;</span><span class="p">)</span>
+<span class="n">title_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([^(]+)\(([^)]+)\)&#39;</span><span class="p">)</span>
 
 <span class="n">war_guilds_regegx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;The guild ([\w\s]+) is at war with the guild ([^.]+).&#39;</span><span class="p">)</span>
 <span class="n">war_score_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;scored ([\d,]+) kills? against&#39;</span><span class="p">)</span>
