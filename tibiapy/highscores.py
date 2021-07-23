@@ -220,7 +220,7 @@ class Highscores(abc.Serializable):
         page_links = pages_div.find_all("a")
         listed_pages = [int(p.text) for p in page_links]
         if listed_pages:
-            self.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
+            self.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), listed_pages[-1] + 1)
             self.total_pages = max(int(page_links[-1].text), self.page)
         self.results_count = parse_integer(results_pattern.search(results_div.text).group(1))
         for row in rows:
