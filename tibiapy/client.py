@@ -9,9 +9,9 @@ import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy import abc, AuctionDetails, AuctionFilters, CharacterBazaar
+from tibiapy import AuctionDetails, AuctionFilters, CharacterBazaar, Leaderboard, abc
 from tibiapy.character import Character
-from tibiapy.creature import CreaturesSection, Creature, CreatureDetail
+from tibiapy.creature import Creature, CreatureDetail, CreaturesSection
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseOrder, HouseStatus, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
@@ -945,6 +945,37 @@ class Client:
         kill_statistics = KillStatistics.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, kill_statistics, parsing_time)
+
+    async def fetch_leaderboard(self, world, rotation=None, page=1):
+        """Fetches the leaderboards for a specific world and rotation.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+        rotation: :class:`int`
+            The ID of the rotation. By default it will get the current rotation.
+        page: :class:`int`
+            The page to get.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`Leaderboard`
+            The leaderboards of the world if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", Leaderboard.get_url(world, rotation, page))
+        start_time = time.perf_counter()
+        leaderboard = Leaderboard.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, leaderboard, parsing_time)
 
     async def fetch_world(self, name):
         """Fetches a world from Tibia.com

@@ -58,7 +58,7 @@ class Serializable:
             if isinstance(obj, datetime.datetime):
                 return obj.isoformat()
             if isinstance(obj, datetime.timedelta):
-                return obj.total_seconds()
+                return int(obj.total_seconds())
             if isinstance(obj, enum.Flag):
                 return [str(i) for i in obj]
             if isinstance(obj, enum.Enum):

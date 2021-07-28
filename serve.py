@@ -277,6 +277,18 @@ async def get_kill_statistics(request: web.Request):
     return json_response(response)
 
 
+@routes.get('/leaderboards/{world}')
+@routes.get('/leaderboards/{world}/{rotation}')
+async def get_leaderboard(request: web.Request):
+    world = request.match_info['world']
+    rotation = request.match_info.get('rotation')
+    page = int(request.query.get("page", 1))
+    if rotation:
+        rotation = int(rotation)
+    response = await app["tibiapy"].fetch_leaderboard(world, rotation, page)
+    return json_response(response)
+
+
 @routes.get('/worlds')
 async def get_worlds(request: web.Request):
     response = await app["tibiapy"].fetch_world_list()
