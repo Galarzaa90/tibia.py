@@ -12,7 +12,8 @@ import tibiapy
 from tibiapy import abc, AuctionDetails, AuctionFilters, CharacterBazaar
 from tibiapy.character import Character
 from tibiapy.creature import CreaturesSection, Creature, CreatureDetail
-from tibiapy.enums import Category, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, VocationFilter
+from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseOrder, HouseStatus, HouseType, NewsCategory, \
+    NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
 from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, ListedBoard
@@ -909,7 +910,7 @@ class Client:
             If an invalid filter combination is passed.
         """
         pvp_types = pvp_types or []
-        if world is not None and (battleye_type or pvp_types):
+        if world is not None and ((battleye_type and battleye_type != BattlEyeHighscoresFilter.ANY_WORLD) or pvp_types):
             raise ValueError("BattleEye and PvP type filters can only be used when fetching all worlds.")
         response = await self._request("GET", Highscores.get_url(world, category, vocation, page, battleye_type,
                                                                  pvp_types))

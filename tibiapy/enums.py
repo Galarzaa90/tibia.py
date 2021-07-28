@@ -128,6 +128,10 @@ class BattlEyeType(NumericEnum):
 
 class BattlEyeHighscoresFilter(NumericEnum):
     """The possible BattlEye filters that can be used for highscores."""
+
+    ANY_WORLD = -1
+    """Show all worlds."""
+
     INITIALLY_PROTECTED = 2
     """Worlds protected from the beginning, represented by a green symbol."""
     PROTECTED = 1
@@ -190,6 +194,7 @@ class Category(NumericEnum):
     CHARM_POINTS = 3
     CLUB_FIGHTING = 4
     DISTANCE_FIGHTING = 5
+    DROME_SCORE = 14
     EXPERIENCE = 6
     FISHING = 7
     FIST_FIGHTING = 8
