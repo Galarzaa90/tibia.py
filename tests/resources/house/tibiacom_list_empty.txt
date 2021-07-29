@@ -1,126 +1,66 @@
-<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
+<div class="BoxContent" style="background-image:url(https://static.tibia.com/images/global/content/scroll.gif);">
 Here you can see the list of all available houses, flats or guildhalls. Please select the game
 world of your choice. Click on any view button to get more information about a house or adjust
 the search criteria and start a new search. See the <A HREF="https://www.tibia.com/gameguides/?subtopic=manual&section=houses">manual</A>
 for a detailed description about renting houses.<BR><BR><BR>
-
 <TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
 <TR BGCOLOR=#505050><TD COLSPAN=6 CLASS=white>
-  <B>Available Guildhalls in Venore on Calmera</B></TD></TR>
+<B>Available Guildhalls in Edron on Antica</B></TD></TR>
 <TR BGCOLOR=#D4C0A1>
-  <TD WIDTH=40%><B>Name</B></TD>
-  <TD WIDTH=10%><B>Size</B></TD>
-  <TD WIDTH=10%><B>Rent</B></TD>
-  <TD WIDTH=40%><B>Status</B></TD>
-  <TD>&#160;</TD>
+<TD WIDTH=40%><B>Name</B></TD>
+<TD WIDTH=10%><B>Size</B></TD>
+<TD WIDTH=10%><B>Rent</B></TD>
+<TD WIDTH=40%><B>Status</B></TD>
+<TD>&#160;</TD>
 </TR>
 <TR BGCOLOR=#F1E0C6><TD COLSPAN=6>No guildhalls found.</TD></TR></TABLE><BR><BR>
 <FORM ACTION="https://www.tibia.com/community/?subtopic=houses" METHOD=post>
 <TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
 <TR BGCOLOR=#505050><TD COLSPAN=4 CLASS=white><B>House Search</B></TD></TR>
 <TR BGCOLOR=#D4C0A1><TD WIDTH=25%><B>World</B></TD><TD WIDTH=25%><B>Town</B></TD><TD WIDTH=25%><B>Status</B></TD><TD WIDTH=25%><B>Order</B></TD></TR>
-<TR BGCOLOR=#D4C0A1><TD VALIGN=top ROWSPAN=2>
-<SELECT SIZE="1" NAME="world">
-<OPTION VALUE="Antica">Antica</OPTION>
-<OPTION VALUE="Astera">Astera</OPTION>
-<OPTION VALUE="Belobra">Belobra</OPTION>
-<OPTION VALUE="Bona">Bona</OPTION>
-<OPTION VALUE="Calmera" SELECTED>Calmera</OPTION>
-<OPTION VALUE="Carnera">Carnera</OPTION>
-<OPTION VALUE="Celebra">Celebra</OPTION>
-<OPTION VALUE="Celesta">Celesta</OPTION>
-<OPTION VALUE="Damora">Damora</OPTION>
-<OPTION VALUE="Descubra">Descubra</OPTION>
-<OPTION VALUE="Duna">Duna</OPTION>
-<OPTION VALUE="Epoca">Epoca</OPTION>
-<OPTION VALUE="Estela">Estela</OPTION>
-<OPTION VALUE="Faluna">Faluna</OPTION>
-<OPTION VALUE="Ferobra">Ferobra</OPTION>
-<OPTION VALUE="Firmera">Firmera</OPTION>
-<OPTION VALUE="Garnera">Garnera</OPTION>
-<OPTION VALUE="Gentebra">Gentebra</OPTION>
-<OPTION VALUE="Gladera">Gladera</OPTION>
-<OPTION VALUE="Harmonia">Harmonia</OPTION>
-<OPTION VALUE="Helera">Helera</OPTION>
-<OPTION VALUE="Honbra">Honbra</OPTION>
-<OPTION VALUE="Impera">Impera</OPTION>
-<OPTION VALUE="Inabra">Inabra</OPTION>
-<OPTION VALUE="Jonera">Jonera</OPTION>
-<OPTION VALUE="Kalibra">Kalibra</OPTION>
-<OPTION VALUE="Kenora">Kenora</OPTION>
-<OPTION VALUE="Lobera">Lobera</OPTION>
-<OPTION VALUE="Luminera">Luminera</OPTION>
-<OPTION VALUE="Lutabra">Lutabra</OPTION>
-<OPTION VALUE="Macabra">Macabra</OPTION>
-<OPTION VALUE="Menera">Menera</OPTION>
-<OPTION VALUE="Monza">Monza</OPTION>
-<OPTION VALUE="Nefera">Nefera</OPTION>
-<OPTION VALUE="Noctera">Noctera</OPTION>
-<OPTION VALUE="Nossobra">Nossobra</OPTION>
-<OPTION VALUE="Olera">Olera</OPTION>
-<OPTION VALUE="Ombra">Ombra</OPTION>
-<OPTION VALUE="Pacera">Pacera</OPTION>
-<OPTION VALUE="Peloria">Peloria</OPTION>
-<OPTION VALUE="Premia">Premia</OPTION>
-<OPTION VALUE="Pyra">Pyra</OPTION>
-<OPTION VALUE="Quelibra">Quelibra</OPTION>
-<OPTION VALUE="Quintera">Quintera</OPTION>
-<OPTION VALUE="Refugia">Refugia</OPTION>
-<OPTION VALUE="Relembra">Relembra</OPTION>
-<OPTION VALUE="Secura">Secura</OPTION>
-<OPTION VALUE="Serdebra">Serdebra</OPTION>
-<OPTION VALUE="Solidera">Solidera</OPTION>
-<OPTION VALUE="Talera">Talera</OPTION>
-<OPTION VALUE="Tortura">Tortura</OPTION>
-<OPTION VALUE="Vita">Vita</OPTION>
-<OPTION VALUE="Vunira">Vunira</OPTION>
-<OPTION VALUE="Wintera">Wintera</OPTION>
-<OPTION VALUE="Zuna">Zuna</OPTION>
-<OPTION VALUE="Zunera">Zunera</OPTION>
-</SELECT>
-</TD><TD VALIGN=top ROWSPAN=2>
-  <INPUT TYPE=radio NAME="town" VALUE="Ab'Dendriel" > Ab'Dendriel<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Ankrahmun"   > Ankrahmun<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Carlin"      > Carlin<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Darashia"    > Darashia<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Edron"       > Edron<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Farmine"     > Farmine<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Gray Beach"  > Gray Beach<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Kazordoon"   > Kazordoon<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Liberty Bay" > Liberty Bay<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Port Hope"   > Port Hope<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Rathleton"   > Rathleton<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Svargrond"   > Svargrond<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Thais"       > Thais<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Venore"      CHECKED> Venore<BR>
-  <INPUT TYPE=radio NAME="town" VALUE="Yalahar"     > Yalahar<BR>
-</TD><TD VALIGN=top>
-  <INPUT TYPE=radio NAME="state" VALUE=""          > all states<BR>
-  <INPUT TYPE=radio NAME="state" VALUE="auctioned" CHECKED> auctioned<BR>
-  <INPUT TYPE=radio NAME="state" VALUE="rented"    > rented<BR>
-</TD><TD VALIGN=top ROWSPAN=2>
-  <INPUT TYPE=radio NAME="order" VALUE=""     CHECKED> by name<BR>
-  <INPUT TYPE=radio NAME="order" VALUE="size" > by size<BR>
-  <INPUT TYPE=radio NAME="order" VALUE="rent" > by rent<BR>
-  <INPUT TYPE=radio NAME="order" VALUE="bid"  > by bid<BR>
-  <INPUT TYPE=radio NAME="order" VALUE="end"  > by auction end<BR>
-</TD></TR>
-<TR BGCOLOR=#D4C0A1><TD VALIGN=top>
-  <INPUT TYPE=radio NAME="type" VALUE="houses"     > houses and flats<BR>
-  <INPUT TYPE=radio NAME="type" VALUE="guildhalls" CHECKED> guildhalls<BR>
-</TD></TR>
+<TR BGCOLOR=#D4C0A1>
+<TD VALIGN=top>
+<select size="1" name="world" style="width:165px;"><option value="Adra">Adra</option><option value="Alumbra">Alumbra</option><option value="Antica" selected="selected">Antica</option><option value="Astera">Astera</option><option value="Belobra">Belobra</option><option value="Bona">Bona</option><option value="Calmera">Calmera</option><option value="Carnera">Carnera</option><option value="Celebra">Celebra</option><option value="Celesta">Celesta</option><option value="Concorda">Concorda</option><option value="Damora">Damora</option><option value="Descubra">Descubra</option><option value="Dibra">Dibra</option><option value="Emera">Emera</option><option value="Epoca">Epoca</option><option value="Estela">Estela</option><option value="Famosa">Famosa</option><option value="Fera">Fera</option><option value="Ferobra">Ferobra</option><option value="Fervora">Fervora</option><option value="Firmera">Firmera</option><option value="Garnera">Garnera</option><option value="Gentebra">Gentebra</option><option value="Gladera">Gladera</option><option value="Harmonia">Harmonia</option><option value="Honbra">Honbra</option><option value="Impera">Impera</option><option value="Inabra">Inabra</option><option value="Javibra">Javibra</option><option value="Juva">Juva</option><option value="Kalibra">Kalibra</option><option value="Karna">Karna</option><option value="Kenora">Kenora</option><option value="Libertabra">Libertabra</option><option value="Lobera">Lobera</option><option value="Luminera">Luminera</option><option value="Lutabra">Lutabra</option><option value="Marcia">Marcia</option><option value="Menera">Menera</option><option value="Mercera">Mercera</option><option value="Mitigera">Mitigera</option><option value="Monza">Monza</option><option value="Mudabra">Mudabra</option><option value="Nefera">Nefera</option><option value="Nexa">Nexa</option><option value="Nossobra">Nossobra</option><option value="Ombra">Ombra</option><option value="Optera">Optera</option><option value="Pacembra">Pacembra</option><option value="Pacera">Pacera</option><option value="Peloria">Peloria</option><option value="Premia">Premia</option><option value="Quelibra">Quelibra</option><option value="Quintera">Quintera</option><option value="Ragna">Ragna</option><option value="Refugia">Refugia</option><option value="Reinobra">Reinobra</option><option value="Relania">Relania</option><option value="Relembra">Relembra</option><option value="Secura">Secura</option><option value="Serdebra">Serdebra</option><option value="Serenebra">Serenebra</option><option value="Solidera">Solidera</option><option value="Talera">Talera</option><option value="Tembra">Tembra</option><option value="Unica">Unica</option><option value="Unisera">Unisera</option><option value="Utobra">Utobra</option><option value="Venebra">Venebra</option><option value="Visabra">Visabra</option><option value="Vunira">Vunira</option><option value="Wintera">Wintera</option><option value="Wizera">Wizera</option><option value="Xandebra">Xandebra</option><option value="Xylona">Xylona</option><option value="Yonabra">Yonabra</option><option value="Ysolera">Ysolera</option><option value="Zenobra">Zenobra</option><option value="Zuna">Zuna</option><option value="Zunera">Zunera</option></select> </TD>
+<TD VALIGN=top>
+<INPUT TYPE=radio NAME="town" VALUE="Ab'Dendriel"> Ab'Dendriel<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Ankrahmun"> Ankrahmun<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Carlin"> Carlin<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Darashia"> Darashia<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Edron" CHECKED> Edron<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Farmine"> Farmine<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Gray Beach"> Gray Beach<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Issavi"> Issavi<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Kazordoon"> Kazordoon<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Liberty Bay"> Liberty Bay<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Port Hope"> Port Hope<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Rathleton"> Rathleton<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Svargrond"> Svargrond<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Thais"> Thais<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Venore"> Venore<BR>
+<INPUT TYPE=radio NAME="town" VALUE="Yalahar"> Yalahar<BR>
+</TD>
+<TD VALIGN=top>
+<INPUT TYPE=radio NAME="state" VALUE=""> all states<BR>
+<INPUT TYPE=radio NAME="state" VALUE="auctioned" CHECKED> auctioned<BR>
+<INPUT TYPE=radio NAME="state" VALUE="rented"> rented<BR>
+<div style="padding-top: 5px; margin-top: 75px; border-top: 1px solid #FFF2db;">
+<INPUT TYPE=radio NAME="type" VALUE="houses"> houses and flats<BR>
+<INPUT TYPE=radio NAME="type" VALUE="guildhalls" CHECKED> guildhalls<BR>
+</div>
+</TD>
+<TD VALIGN=top>
+<INPUT TYPE=radio NAME="order" VALUE=""> by name<BR>
+<INPUT TYPE=radio NAME="order" VALUE="size"> by size<BR>
+<INPUT TYPE=radio NAME="order" VALUE="rent" CHECKED> by rent<BR>
+<INPUT TYPE=radio NAME="order" VALUE="bid"> by bid<BR>
+<INPUT TYPE=radio NAME="order" VALUE="end"> by auction end<BR>
+</TD>
+</TR>
 </TABLE>
-<BR>
+<BR />
 <CENTER>
-<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD>
-<INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="https://ssl-static-tibia.akamaized.net/images/global/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18>
-</TD></TR></FORM></TABLE>
-</CENTER>
-
-        </div>
-      </div>
-    </div>
-    <div class="Border_1" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/border-1.gif);"></div>
-    <div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-bl.gif);"></div></div>
-    <div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/corner-br.gif);"></div></div>
-  </div>
+<div class="BigButton" style="background-image:url(https://static.tibia.com/images/global/buttons/button_blue.gif)"><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image:url(https://static.tibia.com/images/global/buttons/button_blue_over.gif);"></div><input class="BigButtonText" type="submit" value="Submit" /></div></div> </CENTER>
+</FORM>
+</div>
+</div>
+</div>

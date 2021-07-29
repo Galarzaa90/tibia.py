@@ -18,7 +18,9 @@ from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
-from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, VocationFilter, Category, \
+from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, HouseType, HousesSection, \
+    VocationFilter, \
+    Category, \
     House, ListedHouse, \
     ListedGuild, \
     KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, Creature, AuctionDetails, \
@@ -130,11 +132,11 @@ class TestClient(asynctest.TestCase, TestCommons):
         world = "Antica"
         city = "Edron"
         content = self.load_resource(FILE_HOUSE_LIST)
-        mock.get(ListedHouse.get_list_url(world, city), status=200, body=content)
+        mock.get(HousesSection.get_url(world=world, town=city, house_type=HouseType.HOUSE), status=200, body=content)
         houses = await self.client.fetch_world_houses(world, city)
 
-        self.assertIsInstance(houses.data, list)
-        self.assertIsInstance(houses.data[0], ListedHouse)
+        self.assertIsInstance(houses.data, HousesSection)
+        self.assertIsInstance(houses.data.entries[0], ListedHouse)
 
     @aioresponses()
     async def test_client_fetch_kill_statistics(self, mock):

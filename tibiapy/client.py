@@ -19,7 +19,7 @@ from tibiapy.event import EventSchedule
 from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, ListedBoard
 from tibiapy.guild import Guild, GuildWars, ListedGuild
 from tibiapy.highscores import Highscores
-from tibiapy.house import House, ListedHouse
+from tibiapy.house import House, ListedHouse, HousesSection
 from tibiapy.kill_statistics import KillStatistics
 from tibiapy.news import ListedNews, News
 from tibiapy.tournament import Tournament, TournamentLeaderboard
@@ -1023,7 +1023,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`ListedHouse`
+        :class:`TibiaResponse` of :class:`HousesSection`
             A response containing the lists of houses meeting the criteria if found.
 
         Raises
@@ -1034,9 +1034,10 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", ListedHouse.get_list_url(world, town, house_type, status, order))
+        response = await self._request("GET", HousesSection.get_url(world=world, town=town, house_type=house_type,
+                                                                    status=status, order=order))
         start_time = time.perf_counter()
-        world_houses = ListedHouse.list_from_content(response.content)
+        world_houses = HousesSection.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world_houses, parsing_time)
 

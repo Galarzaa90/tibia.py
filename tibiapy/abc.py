@@ -414,35 +414,6 @@ class BaseHouse(metaclass=abc.ABCMeta):
         """
         return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
 
-    @classmethod
-    def get_list_url(cls, world, town, house_type: HouseType = HouseType.HOUSE, status: HouseStatus = None,
-                     order=HouseOrder.NAME):
-        """
-        Gets the URL to the house list on Tibia.com with the specified parameters.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-        town: :class:`str`
-            The name of the town.
-        house_type: :class:`HouseType`
-            Whether to search for houses or guildhalls.
-        status: :class:`HouseStatus`, optional
-            The house status to filter results. By default no filters will be applied.
-        order: :class:`HouseOrder`, optional
-            The ordering to use for the results. By default they are sorted by name.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the list matching the parameters.
-        """
-        house_type = "%ss" % house_type.value
-        status = "" if status is None else status.value
-        return get_tibia_url("community", "houses", world=world, town=town, type=house_type, state=status,
-                             order=order.value)
-
 
 class BaseNews(metaclass=abc.ABCMeta):
     """Base class for all news classes
