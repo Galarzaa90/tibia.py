@@ -60,11 +60,11 @@ class TournamentLeaderboardEntry(abc.BaseCharacter, abc.Serializable):
     )
 
     def __init__(self, **kwargs):
-        self.name = kwargs.get("name")
-        self.rank = kwargs.get("rank")
-        self.change = kwargs.get("change")
-        self.vocation = kwargs.get("vocation")
-        self.score = kwargs.get("score")
+        self.name: str = kwargs.get("name")
+        self.rank: int = kwargs.get("rank")
+        self.change: int = kwargs.get("change")
+        self.vocation: Vocation = kwargs.get("vocation")
+        self.score: int = kwargs.get("score")
 
     def __repr__(self):
         return "<{0.__class__.__name__} rank={0.rank} name={0.name!r} vocation={0.vocation!r} " \
@@ -101,10 +101,10 @@ class ListedTournament(abc.BaseTournament, abc.Serializable):
     _serializable_properties = ("duration",)
 
     def __init__(self, title, start_date, end_date, **kwargs):
-        self.title = title
-        self.start_date = start_date
-        self.end_date = end_date
-        self.cycle = kwargs.get("cycle", 0)
+        self.title: str = title
+        self.start_date: datetime.date = start_date
+        self.end_date: datetime.date = end_date
+        self.cycle: int = kwargs.get("cycle", 0)
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} cycle={0.cycle} start_date={0.start_date!r} " \

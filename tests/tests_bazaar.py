@@ -75,7 +75,6 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(50, bazaar.filters.max_skill_level)
         self.assertEqual(AuctionOrderBy.SHIELDING, bazaar.filters.order_by)
         self.assertEqual(AuctionOrder.HIGHEST_LATEST, bazaar.filters.order)
-        self.assertEqual("potion", bazaar.filters.item)
         self.assertEqual(AuctionSearchType.ITEM_WILDCARD, bazaar.filters.search_type)
 
     def test_character_bazaar_from_content_empty(self):

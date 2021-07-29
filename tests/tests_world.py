@@ -90,7 +90,7 @@ class TestWorld(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(world, World)
         self.assertIsInstance(world.tournament_world_type, TournamentWorldType)
-        self.assertEqual(world.tournament_world_type, TournamentWorldType.REGUlAR)
+        self.assertEqual(world.tournament_world_type, TournamentWorldType.REGULAR)
         self.assertEqual(world.record_count, 21)
         self.assertTrue(world.premium_only)
         self.assertFalse(world.world_quest_titles)

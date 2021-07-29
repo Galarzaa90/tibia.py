@@ -4,7 +4,7 @@ from typing import List, Optional
 
 import bs4
 
-from tibiapy import abc, errors, GuildMembership
+from tibiapy import GuildMembership, abc, errors
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_tibia_datetime, parse_tibia_forum_datetime, \
     parse_tibiacom_content, split_list, try_enum
@@ -99,7 +99,8 @@ class CMPostArchive(abc.Serializable):
     results_count: :class:`int`
         The total number of results available in the selected date range.
     posts: :class:`list` of :class:`CMPost`
-        The list of posts for the selected range."""
+        The list of posts for the selected range.
+    """
 
     __slots__ = (
         "start_date",
@@ -298,7 +299,7 @@ class CMPostArchive(abc.Serializable):
 
 
 class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
-    """Represent's a forum announcement.
+    """Represents a forum announcement.
 
     These are a special kind of thread that are shown at the top of boards.
     They cannot be replied to and they show no view counts.
@@ -788,8 +789,8 @@ class ForumEmoticon(abc.Serializable):
     )
 
     def __init__(self, name, url):
-        self.name = name
-        self.url = url
+        self.name: str = name
+        self.url: str = url
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} url={self.url!r}>"
@@ -839,17 +840,17 @@ class ForumPost(abc.BasePost, abc.Serializable):
     )
 
     def __init__(self, **kwargs):
-        self.author = kwargs.get("author")
-        self.emoticon = kwargs.get("emoticon")
-        self.title = kwargs.get("title")
-        self.content = kwargs.get("content")
-        self.signature = kwargs.get("signature")
-        self.emoticon = kwargs.get("emoticon")
-        self.post_id = kwargs.get("post_id")
-        self.golden_frame = kwargs.get("golden_frame")
-        self.posted_date = kwargs.get("posted_date")
-        self.edited_date = kwargs.get("edited_date")
-        self.edited_by = kwargs.get("edited_by")
+        self.author: ForumAuthor = kwargs.get("author")
+        self.emoticon: Optional[ForumEmoticon] = kwargs.get("emoticon")
+        self.title: Optional[str] = kwargs.get("title")
+        self.content: str = kwargs.get("content")
+        self.signature: Optional[str] = kwargs.get("signature")
+        self.emoticon: Optional[ForumEmoticon] = kwargs.get("emoticon")
+        self.post_id: int = kwargs.get("post_id")
+        self.golden_frame: bool = kwargs.get("golden_frame")
+        self.posted_date: datetime.datetime = kwargs.get("posted_date")
+        self.edited_date: Optional[datetime.datetime] = kwargs.get("edited_date")
+        self.edited_by: str = kwargs.get("edited_by")
 
     def __repr__(self):
         return f"<{self.__class__.__name__} title={self.title!r} post_id={self.post_id}>"
@@ -889,6 +890,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
 
         When a post is fetched directly, the thread that contains it is displayed, anchored to the specific post.
     """
+
     __slots__ = (
         "title",
         "thread_id",
@@ -1201,9 +1203,9 @@ class ListedAnnouncement(abc.BaseAnnouncement, abc.Serializable):
     """
 
     def __init__(self, **kwargs):
-        self.title = kwargs.get("title")
-        self.announcement_id = kwargs.get("announcement_id")
-        self.announcement_author = kwargs.get("announcement_author")
+        self.title: str = kwargs.get("title")
+        self.announcement_id: int = kwargs.get("announcement_id")
+        self.announcement_author: str = kwargs.get("announcement_author")
 
     __slots__ = (
         "title",
@@ -1212,8 +1214,8 @@ class ListedAnnouncement(abc.BaseAnnouncement, abc.Serializable):
     )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} title={0.title!r} announcement_id={0.announcement_id} " \
-               "announcement_author={0.announcement_author!r}>".format(self)
+        return f"<{self.__class__.__name__} title={self.title!r} announcement_id={self.announcement_id} " \
+               f"announcement_author={self.announcement_author!r}>"
 
 
 class ListedBoard(abc.BaseBoard, abc.Serializable):
@@ -1367,25 +1369,25 @@ class ListedThread(abc.BaseThread, abc.Serializable):
     emoticon: :class:`ForumEmoticon`
         The emoticon used for the thread.
     pages: :class:`int`
-        The number of total_pages the thread has.
+        The number of pages the thread has.
     golden_frame: :class:`bool`
         Whether the thread has a gold frame or not.
 
         In the Proposals board, the gold frame indicates that a staff member has replied in the thread.
     """
+
     def __init__(self, **kwargs):
-        self.title = kwargs.get("title")
-        self.thread_id = kwargs.get("thread_id")
-        self.thread_starter = kwargs.get("thread_starter")
-        self.replies = kwargs.get("replies")
-        self.views = kwargs.get("views")
-        self.last_post = kwargs.get("last_post")
-        self.status = kwargs.get("status")
-        self.status_icon = kwargs.get("status_icon")
-        self.icon = kwargs.get("icon")
-        self.emoticon = kwargs.get("emoticon")
-        self.pages = kwargs.get("total_pages", 1)
-        self.golden_frame = kwargs.get("golden_frame", False)
+        self.title: str = kwargs.get("title")
+        self.thread_id: int = kwargs.get("thread_id")
+        self.thread_starter: str = kwargs.get("thread_starter")
+        self.replies: int = kwargs.get("replies")
+        self.views: int = kwargs.get("views")
+        self.last_post: LastPost = kwargs.get("last_post")
+        self.status: ThreadStatus = kwargs.get("status")
+        self.status_icon: Optional[str] = kwargs.get("status_icon")
+        self.emoticon: Optional[ForumEmoticon] = kwargs.get("emoticon")
+        self.pages: int = kwargs.get("pages", 1)
+        self.golden_frame: bool = kwargs.get("golden_frame", False)
 
     __slots__ = (
         "title",

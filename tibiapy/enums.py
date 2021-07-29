@@ -332,7 +332,7 @@ class ThreadStatus(enum.Flag):
 
 class TournamentWorldType(BaseEnum):
     """The possible types of tournament worlds."""
-    REGUlAR = "Regular"
+    REGULAR = "Regular"
     RESTRICTED = "Restricted Store"
 
 

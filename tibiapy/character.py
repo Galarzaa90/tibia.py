@@ -84,6 +84,7 @@ class AccountInformation(abc.Serializable):
     loyalty_title: :class:`str`, optional
         The loyalty title of the account, if any.
     """
+
     __slots__ = (
         "created",
         "loyalty_title",
@@ -91,7 +92,7 @@ class AccountInformation(abc.Serializable):
     )
 
     def __init__(self, created, loyalty_title=None, position=None):
-        self.created = try_datetime(created)
+        self.created: datetime.datetime = try_datetime(created)
         self.loyalty_title: Optional[str] = loyalty_title
         self.position: Optional[str] = position
 
@@ -445,7 +446,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             char["deletion_date"] = parse_tibia_datetime(m.group(2))
 
         if "(traded)" in char["name"]:
-            char["name"] = char["name"].replace("(traded)","").strip()
+            char["name"] = char["name"].replace("(traded)", "").strip()
             char["traded"] = True
 
         if "former_names" in char:
@@ -625,6 +626,7 @@ class Death(abc.Serializable):
     time: :class:`datetime.datetime`
         The time at which the death occurred.
     """
+
     __slots__ = (
         "level",
         "killers",
@@ -685,6 +687,7 @@ class GuildMembership(abc.BaseGuild, abc.Serializable):
     title: :class:`str`
         The title of the member in the guild.
     """
+
     __slots__ = (
         "name",
         "rank",
@@ -701,8 +704,7 @@ class GuildMembership(abc.BaseGuild, abc.Serializable):
 
 
 class Killer(abc.Serializable):
-    """
-    Represents a killer.
+    """Represents a killer.
 
     A killer can be:
 
@@ -719,6 +721,7 @@ class Killer(abc.Serializable):
     summon: :class:`str`, optional
         The name of the summoned creature, if applicable.
     """
+
     __slots__ = (
         "name",
         "player",
@@ -731,31 +734,17 @@ class Killer(abc.Serializable):
         self.summon: Optional[str] = summon
 
     def __repr__(self):
-        attributes = ""
-        for attr in self.__slots__:
-            if attr in ["name"]:
-                continue
-            v = getattr(self, attr)
-            if isinstance(v, int) and v == 0 and not isinstance(v, bool):
-                continue
-            if isinstance(v, list) and len(v) == 0:
-                continue
-            if v is None:
-                continue
-            attributes += f",{attr}={v!r}"
-        return f"{self.__class__.__name__}({self.name!r}{attributes})"
+        summon = f" summon={self.summon!r}" if self.summon else ""
+        return f"<{self.__class__.__name__} name={self.name!r} player={self.player}{summon}>"
 
     @property
     def url(self):
-        """
-        :class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable.
-        """
+        """:class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable."""
         return Character.get_url(self.name) if self.player else None
 
 
 class OnlineCharacter(abc.BaseCharacter, abc.Serializable):
-    """
-    Represents an online character.
+    """Represents an online character.
 
     Attributes
     ----------
@@ -768,6 +757,7 @@ class OnlineCharacter(abc.BaseCharacter, abc.Serializable):
     level: :class:`int`
         The level of the character.
     """
+
     __slots__ = (
         "name",
         "world",
@@ -781,10 +771,12 @@ class OnlineCharacter(abc.BaseCharacter, abc.Serializable):
         self.level = int(level)
         self.vocation = try_enum(Vocation, vocation)
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} level={self.level} vocation={self.vocation!r}>"
+
 
 class OtherCharacter(abc.BaseCharacter, abc.Serializable):
-    """
-    Represents other characters displayed in the Character's information page.
+    """Represents other characters displayed in the Character's information page.
 
     Attributes
     ----------
@@ -803,6 +795,7 @@ class OtherCharacter(abc.BaseCharacter, abc.Serializable):
     position: :class:`str`
         The character's official position, if any.
     """
+
     __slots__ = (
         "name",
         "world",

@@ -127,10 +127,10 @@ class RaceEntry(abc.Serializable):
     )
 
     def __init__(self, last_day_killed=0, last_day_players_killed=0, last_week_killed=0, last_week_players_killed=0):
-        self.last_day_killed = last_day_killed
-        self.last_day_players_killed = last_day_players_killed
-        self.last_week_killed = last_week_killed
-        self.last_week_players_killed = last_week_players_killed
+        self.last_day_killed: int = last_day_killed
+        self.last_day_players_killed: int = last_day_players_killed
+        self.last_week_killed: int = last_week_killed
+        self.last_week_players_killed: int = last_week_players_killed
 
     def __repr__(self):
         return "<{0.__class__.__name__} last_day_killed={0.last_day_killed}" \

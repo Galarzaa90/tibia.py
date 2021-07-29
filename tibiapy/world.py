@@ -143,7 +143,7 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
             if "restricted Store products" in additional_info:
                 self.tournament_world_type = TournamentWorldType.RESTRICTED
             else:
-                self.tournament_world_type = TournamentWorldType.REGUlAR
+                self.tournament_world_type = TournamentWorldType.REGULAR
     # endregion
 
 

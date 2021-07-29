@@ -382,7 +382,7 @@ def parse_tibia_money(argument):
     Parameters
     ----------
     argument: :class:`str`
-        A numeric string.
+        A numeric string using k as a prefix for thousands.
 
     Returns
     -------
@@ -458,7 +458,7 @@ def deprecated(instead=None):
     return actual_decorator
 
 
-def parse_popup(popup_content):
+def parse_popup(popup_content) -> Tuple[str, bs4.BeautifulSoup]:
     """Parses the information popups used through Tibia.com.
 
     Parameters

@@ -2,7 +2,7 @@ import re
 import time
 import datetime
 
-from typing import List
+from typing import List, Optional
 
 from tibiapy import abc
 from tibiapy.utils import get_tibia_url, parse_popup, parse_tibiacom_content
@@ -214,10 +214,10 @@ class EventEntry(abc.Serializable):
     )
 
     def __init__(self, title, description, **kwargs):
-        self.title = title
-        self.description = description
-        self.start_date = kwargs.get("start_date")
-        self.end_date = kwargs.get("end_date")
+        self.title: str = title
+        self.description: str = description
+        self.start_date: Optional[datetime.date] = kwargs.get("start_date")
+        self.end_date: Optional[datetime.date] = kwargs.get("end_date")
 
     def __eq__(self, other):
         return self.title == other.title
@@ -227,4 +227,6 @@ class EventEntry(abc.Serializable):
 
     @property
     def duration(self):
-        return (self.end_date-self.start_date+datetime.timedelta(days=1)).days if (self.end_date and self.start_date) else None
+        """:class:`int`: The number of days this event will be active for."""
+        return (self.end_date-self.start_date+datetime.timedelta(days=1)).days \
+            if (self.end_date and self.start_date) else None

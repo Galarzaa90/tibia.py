@@ -308,20 +308,20 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
         self.world: str = world
         self.image_url: str = kwargs.get("image_url")
         self.beds: int = kwargs.get("beds", 0)
-        self.type = try_enum(HouseType, kwargs.get("type"), HouseType.HOUSE)
+        self.type: HouseType = try_enum(HouseType, kwargs.get("type"), HouseType.HOUSE)
         self.size: int = kwargs.get("size", 0)
         self.rent: int = kwargs.get("rent", 0)
-        self.status = try_enum(HouseStatus, kwargs.get("status"), None)
+        self.status: HouseStatus = try_enum(HouseStatus, kwargs.get("status"), None)
         self.owner: Optional[str] = kwargs.get("owner")
-        self.owner_sex = try_enum(Sex, kwargs.get("owner_sex"))
-        self.paid_until = try_datetime(kwargs.get("paid_until"))
-        self.transfer_date = try_datetime(kwargs.get("transfer_date"))
+        self.owner_sex: Optional[str] = try_enum(Sex, kwargs.get("owner_sex"))
+        self.paid_until: datetime.datetime = try_datetime(kwargs.get("paid_until"))
+        self.transfer_date: datetime.datetime = try_datetime(kwargs.get("transfer_date"))
         self.transferee: Optional[str] = kwargs.get("transferee")
         self.transfer_price: int = kwargs.get("transfer_price", 0)
         self.transfer_accepted: bool = kwargs.get("transfer_accepted", False)
         self.highest_bid: int = kwargs.get("highest_bid", 0)
         self.highest_bidder: Optional[str] = kwargs.get("highest_bidder")
-        self.auction_end = try_datetime(kwargs.get("auction_end"))
+        self.auction_end: datetime.datetime = try_datetime(kwargs.get("auction_end"))
 
     # region Properties
     @property

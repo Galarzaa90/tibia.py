@@ -381,10 +381,10 @@ class GuildMember(abc.BaseCharacter, abc.Serializable):
         self.name: str = name
         self.rank: str = rank
         self.title: Optional[str] = title
-        self.vocation = try_enum(Vocation, vocation)
+        self.vocation: Vocation = try_enum(Vocation, vocation)
         self.level = int(level)
         self.online: bool = kwargs.get("online", False)
-        self.joined = try_date(kwargs.get("joined"))
+        self.joined: datetime.date = try_date(kwargs.get("joined"))
 
 
 class GuildInvite(abc.BaseCharacter, abc.Serializable):
@@ -405,7 +405,7 @@ class GuildInvite(abc.BaseCharacter, abc.Serializable):
 
     def __init__(self, name=None, date=None):
         self.name: str = name
-        self.date = try_date(date)
+        self.date: datetime.date = try_date(date)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} date={self.date!r}>"
@@ -662,18 +662,18 @@ class GuildWarEntry(abc.Serializable):
     )
 
     def __init__(self, **kwargs):
-        self.guild_name = kwargs.get("guild_name")
-        self.guild_score = kwargs.get("guild_score", 0)
-        self.guild_fee = kwargs.get("guild_fee", 0)
-        self.opponent_name = kwargs.get("opponent_name")
-        self.opponent_score = kwargs.get("opponent_score", 0)
-        self.opponent_fee = kwargs.get("opponent_fee", 0)
-        self.start_date = kwargs.get("start_date")
-        self.score_limit = kwargs.get("score_limit", 0)
-        self.duration = kwargs.get("duration")
-        self.end_date = kwargs.get("end_date")
-        self.winner = kwargs.get("winner")
-        self.surrender = kwargs.get("surrender", False)
+        self.guild_name: str = kwargs.get("guild_name")
+        self.guild_score: int = kwargs.get("guild_score", 0)
+        self.guild_fee: int = kwargs.get("guild_fee", 0)
+        self.opponent_name: Optional[str] = kwargs.get("opponent_name")
+        self.opponent_score: str = kwargs.get("opponent_score", 0)
+        self.opponent_fee: int = kwargs.get("opponent_fee", 0)
+        self.start_date: datetime.datetime = kwargs.get("start_date")
+        self.score_limit: int = kwargs.get("score_limit", 0)
+        self.duration: datetime.timedelta = kwargs.get("duration")
+        self.end_date: datetime.datetime = kwargs.get("end_date")
+        self.winner: Optional[str] = kwargs.get("winner")
+        self.surrender: bool = kwargs.get("surrender", False)
 
     def __repr__(self):
         return "<{0.__class__.__name__} guild_name={0.guild_name!r} opponent_name={0.opponent_name!r}>".format(self)

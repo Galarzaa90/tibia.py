@@ -1,5 +1,6 @@
 import re
 import urllib.parse
+from typing import List, Optional
 
 import bs4
 
@@ -33,7 +34,8 @@ class Creature(abc.Serializable):
     name: :class:`str`
         The name of the creature, usually in plural, except for the boosted creature.
     race: :class:`str`
-        The internal name of the creature's race. Used for links and images."""
+        The internal name of the creature's race. Used for links and images.
+    """
 
     __slots__ = (
         "name",
@@ -45,8 +47,8 @@ class Creature(abc.Serializable):
     )
 
     def __init__(self, name, race=None):
-        self.name = name
-        self.race = race
+        self.name: str = name
+        self.race: str = race
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} race={self.race!r}>"
@@ -95,8 +97,8 @@ class CreaturesSection(abc.Serializable):
     )
 
     def __init__(self, boosted_creature, creatures):
-        self.boosted_creature = boosted_creature
-        self.creatures = creatures or []
+        self.boosted_creature: Creature = boosted_creature
+        self.creatures: List[Creature] = creatures or []
 
     @classmethod
     def get_url(cls):
@@ -111,8 +113,7 @@ class CreaturesSection(abc.Serializable):
 
     @classmethod
     def from_boosted_creature_header(cls, content):
-        """
-        Gets the boosted creature from any Tibia.com page.
+        """Gets the boosted creature from any Tibia.com page.
 
         Parameters
         ----------
@@ -214,6 +215,7 @@ class CreatureDetail(Creature):
     convinceable: :class:`bool`
         Whether this creature can be convinced or not.
     """
+
     _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
     __slots__ = (
         "name",
@@ -232,13 +234,13 @@ class CreatureDetail(Creature):
 
     def __init__(self, name, race, **kwargs):
         super().__init__(name, race)
-        self.immune_to = kwargs.get("immune_to", [])
-        self.weak_against = kwargs.get("weak_against", [])
-        self.strong_against = kwargs.get("strong_against", [])
-        self.loot = kwargs.get("loot")
-        self.mana_cost = kwargs.get("loot")
-        self.summonable = kwargs.get("summonable", False)
-        self.convinceable = kwargs.get("convinceable", False)
+        self.immune_to: List[str] = kwargs.get("immune_to", [])
+        self.weak_against: List[str] = kwargs.get("weak_against", [])
+        self.strong_against: List[str] = kwargs.get("strong_against", [])
+        self.loot: str = kwargs.get("loot")
+        self.mana_cost: Optional[int] = kwargs.get("mana_cost")
+        self.summonable: bool = kwargs.get("summonable", False)
+        self.convinceable: bool = kwargs.get("convinceable", False)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} race={self.race!r}>"

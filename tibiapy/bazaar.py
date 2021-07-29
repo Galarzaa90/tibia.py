@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 
 import bs4
 
-from tibiapy import abc, InvalidContent, Sex, Vocation
+from tibiapy import InvalidContent, Sex, Vocation, abc
 from tibiapy.abc import BaseCharacter
 from tibiapy.enums import AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
     BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter
@@ -100,6 +100,7 @@ class AuctionFilters(abc.Serializable):
     search_type: :class:`AuctionSearchType`
         The type of search to use. Defines the behaviour of :py:attr:`search_string`.
     """
+
     __slots__ = (
         "world",
         "pvp_type",
@@ -136,22 +137,7 @@ class AuctionFilters(abc.Serializable):
         for attr in self.__slots__:
             v = getattr(self, attr)
             attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
-
-    @property
-    def item(self):
-        """:class:`str`: The name of the item to search for.
-
-        .. deprecated:: 3.5.0
-            Use :py:attr:`search_string` instead.
-        """
-        warnings.warn("Deprecated, use 'search_string'instead", DeprecationWarning)
-        return self.search_string
-
-    @item.setter
-    @deprecated(instead="search_string")
-    def item(self, value):
-        self.search_string = value
+        return f"<{self.__class__.__name__}{attributes}>"
 
     @property
     def query_params(self):
@@ -253,7 +239,9 @@ class BestiaryEntry(abc.Serializable):
     kills: :class:`int`
         The number of kills of this creature the player has done.
     step: :class:`int`
-        The current step to unlock this creature the character is in, where 4 is fully unlocked."""
+        The current step to unlock this creature the character is in, where 4 is fully unlocked.
+    """
+
     def __init__(self, name, kills, step):
         self.name: str = name
         self.kills: int = kills
@@ -335,7 +323,7 @@ class CharacterBazaar(abc.Serializable):
 
     @property
     def url(self):
-        """:class:`st`: Gets the URL to the bazaar."""
+        """:class:`str`: Gets the URL to the bazaar."""
         return self.get_auctions_history_url(self.page) if self.type == BazaarType.HISTORY else \
             self.get_current_auctions_url(self.page, self.filters)
 
@@ -1342,6 +1330,7 @@ class OutfitImage(abc.Serializable):
     addons: :class:`int`
         The addons displayed in the outfit.
     """
+
     def __init__(self, **kwargs):
         self.image_url: str = kwargs.get("image_url")
         self.outfit_id: int = kwargs.get("outfit_id", 0)
@@ -1374,6 +1363,7 @@ class PaginatedSummary(abc.Serializable):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entry_class = None
 
     def __init__(self, **kwargs):
@@ -1462,6 +1452,7 @@ class ItemSummary(PaginatedSummary):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entries: List[DisplayItem]
     entry_class = DisplayItem
 
@@ -1523,6 +1514,7 @@ class Mounts(PaginatedSummary):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entries: List[DisplayMount]
     entry_class = DisplayMount
 
@@ -1572,6 +1564,7 @@ class Familiars(PaginatedSummary):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entries: List[DisplayFamiliar]
     entry_class = DisplayFamiliar
 
@@ -1616,6 +1609,7 @@ class Familiars(PaginatedSummary):
                 summary.entries.append(item)
         return summary
 
+
 class Outfits(PaginatedSummary):
     """The outfits the character has unlocked or purchased.
 
@@ -1632,6 +1626,7 @@ class Outfits(PaginatedSummary):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entries: List[DisplayOutfit]
     entry_class = DisplayOutfit
 
@@ -1718,6 +1713,7 @@ class SkillEntry(abc.Serializable):
     progress: :class:`float`
         The percentage of progress for the next level.
     """
+
     def __init__(self, **kwargs):
         self.name: str = kwargs.get("name")
         self.level: int = kwargs.get("level", 0)
