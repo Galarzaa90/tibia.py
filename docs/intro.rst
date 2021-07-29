@@ -106,7 +106,7 @@ Supported Sections
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | Houses_ (Individual)             | :meth:`House.from_content`                 | :meth:`Client.fetch_house`                  |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
-| Houses_ (List)                   | :meth:`ListedHouse.list_from_content`      | :meth:`Client.fetch_world_houses`           |
+| Houses_ (List)                   | :meth:`HousesSection.from_content`         | :meth:`Client.fetch_world_houses`           |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | `Kill Statistics`_ (List)        | :meth:`KillStatistics.from_content`        | :meth:`Client.fetch_kill_statistics`        |
 +----------------------------------+--------------------------------------------+---------------------------------------------+

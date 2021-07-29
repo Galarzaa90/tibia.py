@@ -155,7 +155,7 @@ class AuctionFilters(abc.Serializable):
 
     @property
     def query_params(self):
-        """:class:`str`: The query parameters representing this filter."""
+        """:class:`dict`: The query parameters representing this filter."""
         params = {
             "filter_profession": self.vocation.value if self.vocation else None,
             "filter_levelrangefrom": self.min_level,

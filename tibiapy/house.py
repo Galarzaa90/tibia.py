@@ -11,6 +11,7 @@ from tibiapy.utils import get_tibia_url, parse_tibia_datetime, parse_tibia_money
 __all__ = (
     "HousesSection",
     "House",
+    "HouseFilters",
     "CharacterHouse",
     "GuildHouse",
     "ListedHouse",
@@ -40,7 +41,7 @@ class HousesSection(abc.Serializable):
 
     Attributes
     ----------
-    filters: :class:`HouseFilter`
+    filters: :class:`HouseFilters`
         The filters used.
     entries: :class:`list` of :class:`ListedHouse`
         The houses matching the filters.
@@ -198,7 +199,7 @@ class HouseFilters(abc.Serializable):
 
     @property
     def query_params(self):
-        """:class:`str`: The query parameters representing this filter."""
+        """:class:`dict`: The query parameters representing this filter."""
         params = {
             "world": self.world,
             "town": self.town,

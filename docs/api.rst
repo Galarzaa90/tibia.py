@@ -314,6 +314,12 @@ Models related to `Tibia.com's Houses section`_.
 
 .. _Tibia.com's Houses section: https://www.tibia.com/community/?subtopic=houses
 
+HousesSection
+-------------
+.. autoclass:: HousesSection
+   :members:
+   :inherited-members:
+
 House
 -----
 .. autoclass:: House
@@ -323,6 +329,12 @@ House
 ListedHouse
 -----------
 .. autoclass:: ListedHouse
+   :members:
+   :inherited-members:
+
+HouseFilters
+------------
+.. autoclass:: HouseFilters
    :members:
    :inherited-members:
 
