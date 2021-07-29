@@ -6,6 +6,23 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v5.0.0
+
+5.0.0 (Unreleased)
+==================
+- New ``Leaderboard`` class, for Tibia Drome leaderboards.
+    - Auxiliary classes ``LeaderboardEntry`` and ``LeaderboardRotation`` were added as well.
+    - New ``Client`` method: ``fetch_leaderboards``.
+- Fix last page of highscores having ``0`` as page value.
+
+**Breaking Changes**:
+
+- House classes no longer have ``get_list_url`` and ``list_from_content`` methods.
+- ``Client.fetch_world_houses`` now returns a ``HousesSection`` instance in its data attribute, instead of a list of ``ListedHouses``.
+- ``ListedHouse.highest_bid`` attribute now may be ``None`` if the house's auction has not yet started.
+
+
+
 .. v4.1.7
 
 4.1.7 (2021-06-30)
