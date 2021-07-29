@@ -239,7 +239,7 @@ class BaseCharacter(metaclass=abc.ABCMeta):
     - :class:`.GuildInvite`
     - :class:`.GuildMember`
     - :class:`.HighscoresEntry`
-    - :class:`.LeaderboardEntry`
+    - :class:`.TournamentLeaderboardEntry`
     - :class:`.OnlineCharacter`
     - :class:`.OtherCharacter`
     - :class:`.ListedAuction`

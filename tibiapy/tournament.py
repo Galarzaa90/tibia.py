@@ -12,7 +12,7 @@ from tibiapy.utils import get_tibia_url, parse_integer, parse_popup, parse_tibia
     parse_tibiacom_content, split_list, try_enum
 
 __all__ = (
-    "LeaderboardEntry",
+    "TournamentLeaderboardEntry",
     "ListedTournament",
     "RewardEntry",
     "RuleSet",
@@ -32,7 +32,7 @@ CURRENT_TOURNAMENT_PATTERN = re.compile(r'(?:.*- (\w+))')
 TOURNAMENT_LEADERBOARDS_URL = "https://www.tibia.com/community/?subtopic=tournamentleaderboard"
 
 
-class LeaderboardEntry(abc.BaseCharacter, abc.Serializable):
+class TournamentLeaderboardEntry(abc.BaseCharacter, abc.Serializable):
     """Represents a single tournament leaderboard's entry.
 
     .. versionadded:: 2.5.0
@@ -636,7 +636,7 @@ class TournamentLeaderboard(abc.Serializable):
         The world this leaderboard belongs to.
     tournament: :class:`ListedTournament`
         The tournament this leaderboard belongs to.
-    entries: :obj:`list` of :class:`LeaderboardEntry`
+    entries: :obj:`list` of :class:`TournamentLeaderboardEntry`
         The leaderboard entries.
     results_count: :class:`int`
         The total number of leaderboard entries. These might be in a different page.
@@ -659,7 +659,7 @@ class TournamentLeaderboard(abc.Serializable):
     def __init__(self, **kwargs):
         self.world: str = kwargs.get("world")
         self.tournament: ListedTournament = kwargs.get("tournament")
-        self.entries: List[LeaderboardEntry] = kwargs.get("entries", [])
+        self.entries: List[TournamentLeaderboardEntry] = kwargs.get("entries", [])
         self.results_count = kwargs.get("results_count", 0)
 
     def __repr__(self):
@@ -802,7 +802,7 @@ class TournamentLeaderboard(abc.Serializable):
             change = int(m.group(2))
             voc = try_enum(Vocation, vocation)
             score = parse_integer(score, 0)
-            entries.append(LeaderboardEntry(rank=rank, change=change, name=character, vocation=voc, score=score))
+            entries.append(TournamentLeaderboardEntry(rank=rank, change=change, name=character, vocation=voc, score=score))
         # Results footer
         small = ranking_table.find("small")
         if small:

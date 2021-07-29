@@ -17,7 +17,7 @@ rotation_end_pattern = re.compile(r"ends on ([^)]+)")
 class Leaderboard(abc.Serializable):
     """Represents the Tibiadrome leaderboards.
 
-    Parameters
+    Attributes
     ----------
     world: :class:`str`
         The world this leaderboards are for.
@@ -29,8 +29,8 @@ class Leaderboard(abc.Serializable):
         The available rotations for selection.
     entries: list of :class:`LeaderboardEntry`
         The list of entries in this leaderboard.
-    last_update: :class:`datetime.datetime`
-        The time when this entries were last updated. Only available for the current rotation.
+    last_update: :class:`datetime.timedelta`
+        How long ago was the currently displayed data updated. Only available for the current rotation.
     page: :class:`int`
         The page number being displayed.
     total_pages: :class:`int`
@@ -136,16 +136,26 @@ class Leaderboard(abc.Serializable):
         tables = parsed_content.find_all("table", {"class": "TableContent"})
         filter_table = tables[1]
         world_select, rotation_select = filter_table.find_all("select")
-        worlds = []
-        current_world = None
-        world_options = world_select.find_all("option")
-        for world_option in world_options:
-            world_name = world_option.text
-            if "-" in world_name:
-                continue
-            worlds.append(world_name)
-            if "selected" in world_option.attrs:
-                current_world = world_name
+        current_world, worlds = cls._parse_world(world_select)
+        current_rotation, rotations = cls._parse_rotation(rotation_select)
+        leaderboard = cls(current_world, current_rotation)
+        leaderboard.available_worlds = worlds
+        leaderboard.available_rotations = rotations
+        if leaderboard.rotation.current:
+            last_update_table = tables[2]
+            numbers = re.findall(r'(\d+)', last_update_table.text)
+            if numbers:
+                leaderboard.last_update = datetime.timedelta(minutes=int(numbers[0]))
+        leaderboard._parse_entries(tables[-1])
+        pagination_block = parsed_content.find("small")
+        pages, total, count = parse_pagination(pagination_block)
+        leaderboard.page = pages
+        leaderboard.total_pages = total
+        leaderboard.results_count = count
+        return leaderboard
+
+    @classmethod
+    def _parse_rotation(cls, rotation_select):
         rotations = []
         current_rotation = None
         rotation_options = rotation_select.find_all("option")
@@ -161,31 +171,30 @@ class Leaderboard(abc.Serializable):
             rotations.append(rotation)
             if "selected" in rotation_option.attrs:
                 current_rotation = rotation
-        self = cls(current_world, current_rotation)
-        self.available_worlds = worlds
-        self.available_rotations = rotations
-        if self.rotation.current:
-            last_update_table = tables[2]
-            numbers = re.findall(r'(\d+)', last_update_table.text)
-            if numbers:
-                self.last_update = datetime.timedelta(minutes=int(numbers[0]))
+        return current_rotation, rotations
 
-        entries_table = tables[-1]
+    @classmethod
+    def _parse_world(cls, world_select):
+        worlds = []
+        current_world = None
+        world_options = world_select.find_all("option")
+        for world_option in world_options:
+            world_name = world_option.text
+            if "-" in world_name:
+                continue
+            worlds.append(world_name)
+            if "selected" in world_option.attrs:
+                current_world = world_name
+        return current_world, worlds
+
+    def _parse_entries(self, entries_table):
         entries_rows = entries_table.find_all("tr", {'style': True})
-
         for row in entries_rows:
             columns_raw = row.find_all("td")
             cols = [c.text for c in columns_raw]
             rank, name, points = cols
             entry = LeaderboardEntry(int(rank.replace(".", "")), name, int(points))
             self.entries.append(entry)
-
-        pagination_block = parsed_content.find("small")
-        pages, total, count = parse_pagination(pagination_block)
-        self.page = pages
-        self.total_pages = total
-        self.results_count = count
-        return self
 
 
 class LeaderboardEntry(abc.BaseCharacter, abc.Serializable):

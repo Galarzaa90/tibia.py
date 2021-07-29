@@ -326,6 +326,32 @@ ListedHouse
    :members:
    :inherited-members:
 
+Leaderboard
+===========
+Models related to `Tibia.com's Leaderboard section`_.
+
+.. _Tibia.com's Leaderboard section: https://www.tibia.com/community/?subtopic=tournament
+Leaderboard
+-----------
+.. autoclass:: Leaderboard
+   :members:
+   :inherited-members:
+
+Auxiliary Classes
+-----------------
+
+LeaderboardRotation
+~~~~~~~~~~~~~~~~~~~
+.. autoclass:: LeaderboardRotation
+   :members:
+   :inherited-members:
+
+LeaderboardEntry
+~~~~~~~~~~~~~~~~
+.. autoclass:: LeaderboardEntry
+   :members:
+   :inherited-members:
+
 Tournaments
 ===========
 Models related to `Tibia.com's Tournaments section`_.
@@ -353,9 +379,9 @@ ListedTournament
    :members:
    :inherited-members:
 
-LeaderboardEntry
-~~~~~~~~~~~~~~~~
-.. autoclass:: LeaderboardEntry
+TournamentLeaderboardEntry
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: TournamentLeaderboardEntry
    :members:
    :inherited-members:
 
