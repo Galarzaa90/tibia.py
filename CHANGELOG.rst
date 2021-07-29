@@ -17,6 +17,7 @@ Changelog
 
 **Breaking Changes**:
 
+- Python 3.7 or higher is now required.
 - House classes no longer have ``get_list_url`` and ``list_from_content`` methods.
 - ``Client.fetch_world_houses`` now returns a ``HousesSection`` instance in its data attribute, instead of a list of ``ListedHouses``.
 - ``ListedHouse.highest_bid`` attribute now may be ``None`` if the house's auction has not yet started.
