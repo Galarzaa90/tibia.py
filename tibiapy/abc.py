@@ -1,11 +1,16 @@
+from __future__ import annotations
+
 import abc
 import datetime
 import enum
 import json
 from collections import OrderedDict
+from typing import Callable, TYPE_CHECKING
 
-from tibiapy.enums import HouseOrder, HouseStatus, HouseType
 from tibiapy.utils import get_tibia_url
+
+if TYPE_CHECKING:
+    from tibiapy import PvpType, WorldLocation
 
 
 class Serializable:
@@ -101,8 +106,10 @@ class BaseAnnouncement(metaclass=abc.ABCMeta):
     announcement_id: :class:`int`
         The ID of the announcement.
     """
-
-    __slots__ = ("announcement_id",)
+    announcement_id: int
+    __slots__ = (
+        "announcement_id",
+    )
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -147,16 +154,18 @@ class BaseBoard(metaclass=abc.ABCMeta):
         The ID of the board.
     """
 
-    __slots__ = ("board_id",)
+    __slots__ = (
+        "board_id",
+    )
 
     def __eq__(self, o: object) -> bool:
-        """Two characters are considered equal if their names are equal."""
+        """Two boards are considered equal if their ids are equal."""
         if isinstance(o, self.__class__):
             return self.board_id == o.board_id
         return False
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r}>".format(self, )
+        return f"<{self.__class__.__name__} board_id={self.board_id!r}>"
 
     @property
     def url(self):
@@ -250,7 +259,9 @@ class BaseCharacter(metaclass=abc.ABCMeta):
     name: :class:`str`
         The name of the character.
     """
-    __slots__ = ("name", )
+    __slots__ = (
+        "name",
+    )
 
     def __eq__(self, o: object) -> bool:
         """Two characters are considered equal if their names are equal."""
@@ -259,7 +270,7 @@ class BaseCharacter(metaclass=abc.ABCMeta):
         return False
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r}>".format(self,)
+        return f"<{self.__class__.__name__} name={self.name!r}>"
 
     @property
     def url(self):
@@ -298,7 +309,9 @@ class BaseGuild(metaclass=abc.ABCMeta):
     name: :class:`str`
         The name of the guild.
     """
-    __slots__ = ("name",)
+    __slots__ = (
+        "name",
+    )
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r}>"
@@ -317,7 +330,8 @@ class BaseGuild(metaclass=abc.ABCMeta):
     def url_wars(self):
         """:class:`str` The URL to the guild's wars page on Tibia.com.
 
-        .. versionadded:: 3.0.0"""
+        .. versionadded:: 3.0.0
+        """
         return self.get_url_wars(self.name)
 
     @classmethod
@@ -332,7 +346,8 @@ class BaseGuild(metaclass=abc.ABCMeta):
         Returns
         --------
         :class:`str`
-            The URL to the guild's page"""
+            The URL to the guild's page.
+        """
         return get_tibia_url("community", "guilds", page="view", GuildName=name)
 
     @classmethod
@@ -349,7 +364,8 @@ class BaseGuild(metaclass=abc.ABCMeta):
         Returns
         --------
         :class:`str`
-            The URL to the guild's wars page."""
+            The URL to the guild's wars page.
+        """
         return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
 
     @classmethod
@@ -492,7 +508,9 @@ class BasePost(metaclass=abc.ABCMeta):
         The internal ID of the post.
     """
 
-    __slots__ = ("post_id",)
+    __slots__ = (
+        "post_id",
+    )
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -637,12 +655,17 @@ class BaseWorld(metaclass=abc.ABCMeta):
     name: :class:`str`
         The name of the world.
     """
+
+    name: str
+    location: WorldLocation
+    pvp_type: PvpType
+
     __slots__ = (
         "name",
     )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} location={0.location!r} pvp_type={0.pvp_type!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} location={self.location!r} pvp_type={self.pvp_type!r}>"
 
     @property
     def url(self):
@@ -670,6 +693,10 @@ class HouseWithId:
     """Implements the :py:attr:`id` attribute and dependant functions and properties.
 
     Subclasses mut also implement :class:`.BaseHouse`"""
+    name: str
+    id: int
+    world: str
+    get_url: Callable[[int, str], str]
 
     def __eq__(self, o: object) -> bool:
         """Two houses are considered equal if their names or ids are equal."""
