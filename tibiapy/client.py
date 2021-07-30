@@ -155,7 +155,7 @@ class Client:
         else:
             raise NetworkError("Request error, status code: %d" % status_code, fetching_time=fetching_time)
 
-    async def _request(self, method, url, data=None, headers=None):
+    async def _request(self, method, url, data=None, headers=None, *, test=False):
         """Base request, handling possible error statuses.
 
         Parameters
@@ -168,6 +168,8 @@ class Client:
             A mapping representing the form-data to send as part of the request.
         headers: :class:`dict`
             A mapping representing the headers to send as part of the request.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -183,6 +185,8 @@ class Client:
             If there's any connection errors during the request.
         """
         await self._session_ready.wait()
+        if test:
+            url = url.replace("www.tibia.com", "www.test.tibia.com")
         init_time = time.perf_counter()
         try:
             async with self.session.request(method, url, data=data, headers=headers) as resp:
@@ -202,7 +206,7 @@ class Client:
         except UnicodeDecodeError as e:
             raise NetworkError('UnicodeDecodeError: %s' % e, e, time.perf_counter()-init_time)
 
-    async def fetch_current_auctions(self, page=1, filters=None):
+    async def fetch_current_auctions(self, page=1, filters=None, *, test=False):
         """Fetches the current auctions in the bazaar
 
         .. versionadded:: 3.3.0
@@ -231,13 +235,13 @@ class Client:
         """
         if page <= 0:
             raise ValueError('page must be 1 or greater.')
-        response = await self._request("GET", CharacterBazaar.get_current_auctions_url(page, filters))
+        response = await self._request("GET", CharacterBazaar.get_current_auctions_url(page, filters), test=test)
         start_time = time.perf_counter()
         current_auctions = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, current_auctions, parsing_time)
 
-    async def fetch_auction_history(self, page=1, filters=None):
+    async def fetch_auction_history(self, page=1, filters=None, *, test=False):
         """Fetches the auction history of the bazaar.
 
         .. versionadded:: 3.3.0
@@ -248,6 +252,8 @@ class Client:
             The page to display.
         filters: :class:`AuctionFilters`
             The filtering criteria to use.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -266,14 +272,14 @@ class Client:
         """
         if page <= 0:
             raise ValueError('page must be 1 or greater.')
-        response = await self._request("GET", CharacterBazaar.get_auctions_history_url(page, filters))
+        response = await self._request("GET", CharacterBazaar.get_auctions_history_url(page, filters), test=test)
         start_time = time.perf_counter()
         auction_history = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, auction_history, parsing_time)
 
     async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
-                            skip_details=False):
+                            skip_details=False, test=False):
         """Fetches an auction by its ID.
 
         .. versionadded:: 3.3.0
@@ -293,6 +299,8 @@ class Client:
 
             This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
             parsing time.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -311,23 +319,23 @@ class Client:
         """
         if auction_id <= 0:
             raise ValueError('auction_id must be 1 or greater.')
-        response = await self._request("GET", AuctionDetails.get_url(auction_id))
+        response = await self._request("GET", AuctionDetails.get_url(auction_id), test=test)
         start_time = time.perf_counter()
         auction = AuctionDetails.from_content(response.content, auction_id, skip_details)
         parsing_time = time.perf_counter() - start_time
         if auction and not skip_details:
             if fetch_items:
-                await self._fetch_all_pages(auction_id, auction.items, 0)
-                await self._fetch_all_pages(auction_id, auction.store_items, 1)
+                await self._fetch_all_pages(auction_id, auction.items, 0, test=test)
+                await self._fetch_all_pages(auction_id, auction.store_items, 1, test=test)
             if fetch_mounts:
-                await self._fetch_all_pages(auction_id, auction.mounts, 2)
-                await self._fetch_all_pages(auction_id, auction.store_mounts, 3)
+                await self._fetch_all_pages(auction_id, auction.mounts, 2, test=test)
+                await self._fetch_all_pages(auction_id, auction.store_mounts, 3, test=test)
             if fetch_outfits:
-                await self._fetch_all_pages(auction_id, auction.outfits, 4)
-                await self._fetch_all_pages(auction_id, auction.store_outfits, 5)
+                await self._fetch_all_pages(auction_id, auction.outfits, 4, test=test)
+                await self._fetch_all_pages(auction_id, auction.store_outfits, 5, test=test)
         return TibiaResponse(response, auction, parsing_time)
 
-    async def _fetch_all_pages(self, auction_id, paginator, item_type):
+    async def _fetch_all_pages(self, auction_id, paginator, item_type, *, test=False):
         """Fetches all the pages of an auction paginator.
 
         Parameters
@@ -338,19 +346,21 @@ class Client:
             The paginator object
         item_type: :class:`int`
             The item type.
+        test: :class:`bool`
+            Whether to request the test website instead.
         """
         if paginator is None or paginator.entry_class is None:
             return
         current_page = 2
         while current_page <= paginator.total_pages:
-            content = await self._fetch_ajax_page(auction_id, item_type, current_page)
+            content = await self._fetch_ajax_page(auction_id, item_type, current_page, test=test)
             if content:
                 entries = AuctionDetails._parse_page_items(content, paginator.entry_class)
                 paginator.entries.extend(entries)
             current_page += 1
         paginator.fully_fetched = True
 
-    async def _fetch_ajax_page(self, auction_id, type_id, page):
+    async def _fetch_ajax_page(self, auction_id, type_id, page, *, test=False):
         """Fetches an ajax page from the paginated summaries in the auction section.
 
         Parameters
@@ -361,6 +371,8 @@ class Client:
             The ID of the type of the catalog to check.
         page: :class:`int`
             The page number to fetch.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -372,7 +384,8 @@ class Client:
                                                    f"auctionid={auction_id}&"
                                                    f"type={type_id}&"
                                                    f"currentpage={page}",
-                                            headers=headers)
+                                            headers=headers,
+                                            test=test)
         try:
             data = json.loads(page_response.content.replace("\x0a", " "))
         except json.decoder.JSONDecodeError:
@@ -382,7 +395,7 @@ class Client:
         except KeyError:
             return None
 
-    async def fetch_cm_post_archive(self, start_date, end_date, page=1):
+    async def fetch_cm_post_archive(self, start_date, end_date, page=1, *, test=False):
         """Fetches the CM post archive.
 
         .. versionadded:: 3.0.0
@@ -395,6 +408,8 @@ class Client:
             The end date to display.
         page: :class:`int`
             The desired page to display.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -415,13 +430,13 @@ class Client:
             raise ValueError("start_date cannot be more recent than end_date")
         if page <= 0:
             raise ValueError("page cannot be lower than 1.")
-        response = await self._request("GET", CMPostArchive.get_url(start_date, end_date, page))
+        response = await self._request("GET", CMPostArchive.get_url(start_date, end_date, page), test=test)
         start_time = time.perf_counter()
         cm_post_archive = CMPostArchive.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, cm_post_archive, parsing_time)
 
-    async def fetch_event_schedule(self, month=None, year=None):
+    async def fetch_event_schedule(self, month=None, year=None, *, test=False):
         """Fetches the event calendar. By default, it gets the events for the current month.
 
         .. versionadded:: 3.0.0
@@ -432,6 +447,8 @@ class Client:
             The month of the events to display.
         year: :class:`int`
             The year of the events to display.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -450,16 +467,21 @@ class Client:
         """
         if (year is None and month is not None) or (year is not None and month is None):
             raise ValueError("both year and month must be defined or neither must be defined.")
-        response = await self._request("GET", EventSchedule.get_url(month, year))
+        response = await self._request("GET", EventSchedule.get_url(month, year), test=test)
         start_time = time.perf_counter()
         calendar = EventSchedule.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, calendar, parsing_time)
 
-    async def fetch_forum_community_boards(self):
+    async def fetch_forum_community_boards(self, *, test=False):
         """Fetches the forum's community boards.
 
         .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -474,16 +496,21 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", ListedBoard.get_community_boards_url())
+        response = await self._request("GET", ListedBoard.get_community_boards_url(), test=test)
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
-    async def fetch_forum_support_boards(self):
+    async def fetch_forum_support_boards(self, *, test=False):
         """Fetches the forum's community boards.
 
         .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -497,16 +524,21 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ListedBoard.get_support_boards_url())
+        response = await self._request("GET", ListedBoard.get_support_boards_url(), test=test)
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
-    async def fetch_forum_world_boards(self):
+    async def fetch_forum_world_boards(self, *, test=False):
         """Fetches the forum's world boards.
 
         .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -520,16 +552,21 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ListedBoard.get_world_boards_url())
+        response = await self._request("GET", ListedBoard.get_world_boards_url(), test=test)
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
-    async def fetch_forum_trade_boards(self):
+    async def fetch_forum_trade_boards(self, *, test=False):
         """Fetches the forum's trade boards.
 
         .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -543,14 +580,14 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ListedBoard.get_trade_boards_url())
+        response = await self._request("GET", ListedBoard.get_trade_boards_url(), test=test)
         start_time = time.perf_counter()
         boards = ListedBoard.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
-    async def fetch_forum_board(self, board_id, page=1, age=30):
-        """Fetches a forum board with a given id.
+    async def fetch_forum_board(self, board_id, page=1, age=30, *, test=False):
+        """Fetch a forum board with a given id.
 
         .. versionadded:: 3.0.0
 
@@ -564,6 +601,8 @@ class Client:
             The maximum age in days of the threads to display.
 
             To show threads of all ages, use -1.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -577,13 +616,13 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ForumBoard.get_url(board_id, page, age))
+        response = await self._request("GET", ForumBoard.get_url(board_id, page, age), test=test)
         start_time = time.perf_counter()
         board = ForumBoard.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, board, parsing_time)
 
-    async def fetch_forum_thread(self, thread_id, page=1):
+    async def fetch_forum_thread(self, thread_id, page=1, *, test=False):
         """Fetches a forum thread with a given id.
 
         .. versionadded:: 3.0.0
@@ -594,6 +633,8 @@ class Client:
             The id of the thread.
         page: :class:`int`
             The desired page to display, by default 1.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -607,13 +648,13 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ForumThread.get_url(thread_id, page))
+        response = await self._request("GET", ForumThread.get_url(thread_id, page), test=test)
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, thread, parsing_time)
 
-    async def fetch_forum_post(self, post_id):
+    async def fetch_forum_post(self, post_id, *, test=False):
         """Fetches a forum post with a given id.
 
         The thread that contains the post will be returned, containing the desired post in
@@ -627,6 +668,8 @@ class Client:
         ----------
         post_id : :class:`int`
             The id of the post.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -640,7 +683,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ForumPost.get_url(post_id))
+        response = await self._request("GET", ForumPost.get_url(post_id), test=test)
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)
         if thread:
@@ -648,7 +691,7 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, thread, parsing_time)
 
-    async def fetch_forum_announcement(self, announcement_id):
+    async def fetch_forum_announcement(self, announcement_id, *, test=False):
         """Fetches a forum announcement.
 
         .. versionadded:: 3.0.0
@@ -657,6 +700,8 @@ class Client:
         ----------
         announcement_id: :class:`int`
             The id of the desired announcement.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -671,18 +716,23 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", ForumAnnouncement.get_url(announcement_id))
+        response = await self._request("GET", ForumAnnouncement.get_url(announcement_id), test=test)
         start_time = time.perf_counter()
         announcement = ForumAnnouncement.from_content(response.content, announcement_id)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, announcement, parsing_time)
 
-    async def fetch_boosted_creature(self):
+    async def fetch_boosted_creature(self, *, test=False):
         """Fetches today's boosted creature.
 
         .. versionadded:: 2.1.0
         .. versionchanged:: 4.0.0
             The return type of the data returned was changed to :class:`Creature`, previous type was removed.
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -697,16 +747,21 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", News.get_list_url())
+        response = await self._request("GET", News.get_list_url(), test=test)
         start_time = time.perf_counter()
         boosted_creature = CreaturesSection.from_boosted_creature_header(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
-    async def fetch_library_creatures(self):
+    async def fetch_library_creatures(self, *, test=False):
         """Fetches the creatures from the library section.
 
         .. versionadded:: 4.0.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -721,13 +776,13 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", CreaturesSection.get_url())
+        response = await self._request("GET", CreaturesSection.get_url(), test=test)
         start_time = time.perf_counter()
         boosted_creature = CreaturesSection.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
-    async def fetch_creature(self, race):
+    async def fetch_creature(self, race, *, test=False):
         """Fetches a creature's information from the Tibia.com library.
 
         .. versionadded:: 4.0.0
@@ -736,6 +791,8 @@ class Client:
         ----------
         race: :class:`str`
             The internal name of the race.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -750,19 +807,21 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", CreatureDetail.get_url(race))
+        response = await self._request("GET", CreatureDetail.get_url(race), test=test)
         start_time = time.perf_counter()
         boosted_creature = CreatureDetail.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
-    async def fetch_character(self, name):
+    async def fetch_character(self, name, *, test=False):
         """Fetches a character by its name from Tibia.com
 
         Parameters
         ----------
         name: :class:`str`
             The name of the character.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -777,19 +836,21 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", Character.get_url(name.strip()))
+        response = await self._request("GET", Character.get_url(name.strip()), test=test)
         start_time = time.perf_counter()
         char = Character.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, char, parsing_time)
 
-    async def fetch_guild(self, name):
+    async def fetch_guild(self, name, *, test=False):
         """Fetches a guild by its name from Tibia.com
 
         Parameters
         ----------
         name: :class:`str`
             The name of the guild. The case must match exactly.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -804,13 +865,13 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", Guild.get_url(name))
+        response = await self._request("GET", Guild.get_url(name), test=test)
         start_time = time.perf_counter()
         guild = Guild.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guild, parsing_time)
 
-    async def fetch_guild_wars(self, name):
+    async def fetch_guild_wars(self, name, *, test=False):
         """Fetches a guild's wars by its name from Tibia.com
 
         .. versionadded:: 3.0.0
@@ -819,6 +880,8 @@ class Client:
         ----------
         name: :class:`str`
             The name of the guild. The case must match exactly.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -836,13 +899,13 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", GuildWars.get_url(name))
+        response = await self._request("GET", GuildWars.get_url(name), test=test)
         start_time = time.perf_counter()
         guild_wars = GuildWars.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guild_wars, parsing_time)
 
-    async def fetch_house(self, house_id, world):
+    async def fetch_house(self, house_id, world, *, test=False):
         """Fetches a house in a specific world by its id.
 
         Parameters
@@ -851,6 +914,8 @@ class Client:
             The house's internal id.
         world: :class:`str`
             The name of the world to look for.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -865,14 +930,14 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", House.get_url(house_id, world))
+        response = await self._request("GET", House.get_url(house_id, world), test=test)
         start_time = time.perf_counter()
         house = House.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, house, parsing_time)
 
     async def fetch_highscores_page(self, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
-                                    battleye_type=None, pvp_types=None):
+                                    battleye_type=None, pvp_types=None, *, test=False):
         """Fetches a single highscores page from Tibia.com
 
         Notes
@@ -893,6 +958,8 @@ class Client:
             The type of BattlEye protection to display results from.
         pvp_types: :class:`list` of :class:`PvpTypeFilter`
             The list of PvP types to filter the results for.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -913,19 +980,21 @@ class Client:
         if world is not None and ((battleye_type and battleye_type != BattlEyeHighscoresFilter.ANY_WORLD) or pvp_types):
             raise ValueError("BattleEye and PvP type filters can only be used when fetching all worlds.")
         response = await self._request("GET", Highscores.get_url(world, category, vocation, page, battleye_type,
-                                                                 pvp_types))
+                                                                 pvp_types), test=test)
         start_time = time.perf_counter()
         highscores = Highscores.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, highscores, parsing_time)
 
-    async def fetch_kill_statistics(self, world):
+    async def fetch_kill_statistics(self, world, *, test=False):
         """Fetches the kill statistics of a world from Tibia.com.
 
         Parameters
         ----------
         world: :class:`str`
             The name of the world.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -940,14 +1009,14 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", KillStatistics.get_url(world))
+        response = await self._request("GET", KillStatistics.get_url(world), test=test)
         start_time = time.perf_counter()
         kill_statistics = KillStatistics.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, kill_statistics, parsing_time)
 
-    async def fetch_leaderboard(self, world, rotation=None, page=1):
-        """Fetches the leaderboards for a specific world and rotation.
+    async def fetch_leaderboard(self, world, rotation=None, page=1, *, test=False):
+        """Fetch the leaderboards for a specific world and rotation.
 
         Parameters
         ----------
@@ -957,6 +1026,8 @@ class Client:
             The ID of the rotation. By default it will get the current rotation.
         page: :class:`int`
             The page to get.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -971,19 +1042,21 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", Leaderboard.get_url(world, rotation, page))
+        response = await self._request("GET", Leaderboard.get_url(world, rotation, page), test=test)
         start_time = time.perf_counter()
         leaderboard = Leaderboard.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, leaderboard, parsing_time)
 
-    async def fetch_world(self, name):
+    async def fetch_world(self, name, *, test=False):
         """Fetches a world from Tibia.com
 
         Parameters
         ----------
         name: :class:`str`
             The name of the world.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -998,14 +1071,14 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", World.get_url(name))
+        response = await self._request("GET", World.get_url(name), test=test)
         start_time = time.perf_counter()
         world = World.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world, parsing_time)
 
     async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status: HouseStatus = None,
-                                 order=HouseOrder.NAME):
+                                 order=HouseOrder.NAME, *, test=False):
         """Fetches the house list of a world and type.
 
         Parameters
@@ -1020,6 +1093,8 @@ class Client:
             The house status to filter results. By default no filters will be applied.
         order: :class:`HouseOrder`, optional
             The ordering to use for the results. By default they are sorted by name.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -1035,19 +1110,21 @@ class Client:
             If there's any connection errors during the request.
         """
         response = await self._request("GET", HousesSection.get_url(world=world, town=town, house_type=house_type,
-                                                                    status=status, order=order))
+                                                                    status=status, order=order), test=test)
         start_time = time.perf_counter()
         world_houses = HousesSection.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world_houses, parsing_time)
 
-    async def fetch_world_guilds(self, world: str):
+    async def fetch_world_guilds(self, world: str, *, test=False):
         """Fetches the list of guilds in a world from Tibia.com
 
         Parameters
         ----------
         world: :class:`str`
             The name of the world.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -1062,14 +1139,19 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", ListedGuild.get_world_list_url(world))
+        response = await self._request("GET", ListedGuild.get_world_list_url(world), test=test)
         start_time = time.perf_counter()
         guilds = ListedGuild.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guilds, parsing_time)
 
-    async def fetch_world_list(self):
+    async def fetch_world_list(self, *, test=False):
         """Fetches the world overview information from Tibia.com.
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -1084,13 +1166,13 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", WorldOverview.get_url())
+        response = await self._request("GET", WorldOverview.get_url(), test=test)
         start_time = time.perf_counter()
         world_overview = WorldOverview.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world_overview, parsing_time)
 
-    async def fetch_news_archive(self, begin_date, end_date, categories=None, types=None):
+    async def fetch_news_archive(self, begin_date, end_date, categories=None, types=None, *, test=False):
         """Fetches news from the archive meeting the search criteria.
 
         Parameters
@@ -1103,6 +1185,8 @@ class Client:
             The allowed categories to show. If left blank, all categories will be searched.
         types : `list` of :class:`ListedNews`
             The allowed news types to show. if unused, all types will be searched.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -1143,13 +1227,13 @@ class Client:
         if NewsType.NEWS_TICKER in types:
             data["filter_ticker"] = "ticker"
 
-        response = await self._request("POST", News.get_list_url(), data)
+        response = await self._request("POST", News.get_list_url(), data, test=test)
         start_time = time.perf_counter()
         news = ListedNews.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, news, parsing_time)
 
-    async def fetch_recent_news(self, days=30, categories=None, types=None):
+    async def fetch_recent_news(self, days=30, categories=None, types=None, *, test=False):
         """Fetches all the published news in the last specified days.
 
         This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.
@@ -1162,6 +1246,8 @@ class Client:
             The allowed categories to show. If left blank, all categories will be searched.
         types : `list` of :class:`ListedNews`
             The allowed news types to show. if unused, all types will be searched.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -1178,15 +1264,17 @@ class Client:
         """
         end = datetime.date.today()
         begin = end - datetime.timedelta(days=days)
-        return await self.fetch_news_archive(begin, end, categories, types)
+        return await self.fetch_news_archive(begin, end, categories, types, test=test)
 
-    async def fetch_news(self, news_id):
+    async def fetch_news(self, news_id, *, test=False):
         """Fetches a news entry by its id from Tibia.com
 
         Parameters
         ----------
         news_id: :class:`int`
             The id of the news entry.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -1201,13 +1289,13 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", News.get_url(news_id))
+        response = await self._request("GET", News.get_url(news_id), test=test)
         start_time = time.perf_counter()
         news = News.from_content(response.content, news_id)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, news, parsing_time)
 
-    async def fetch_tournament(self, tournament_cycle=0):
+    async def fetch_tournament(self, tournament_cycle=0, *, test=False):
         """Fetches a tournament from Tibia.com
 
         .. versionadded:: 2.5.0
@@ -1216,6 +1304,8 @@ class Client:
         ----------
         tournament_cycle: :class:`int`
             The cycle of the tournament. if unspecified, it will get the currently running tournament.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -1230,13 +1320,13 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", Tournament.get_url(tournament_cycle))
+        response = await self._request("GET", Tournament.get_url(tournament_cycle), test=test)
         start_time = time.perf_counter()
         tournament = Tournament.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, tournament, parsing_time)
 
-    async def fetch_tournament_leaderboard(self, tournament_cycle, world, page=1):
+    async def fetch_tournament_leaderboard(self, tournament_cycle, world, page=1, *, test=False):
         """Fetches a tournament leaderboard from Tibia.com
 
         .. versionadded:: 2.5.0
@@ -1249,6 +1339,8 @@ class Client:
             The name of the world to get the leaderboards for.
         page: :class:`int`
             The desired leaderboards page, by default 1 is used.
+        test: :class:`bool`
+            Whether to request the test website instead.
 
         Returns
         -------
@@ -1263,7 +1355,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", TournamentLeaderboard.get_url(world, tournament_cycle, page))
+        response = await self._request("GET", TournamentLeaderboard.get_url(world, tournament_cycle, page), test=test)
         start_time = time.perf_counter()
         tournament_leaderboard = TournamentLeaderboard.from_content(response.content)
         parsing_time = time.perf_counter() - start_time

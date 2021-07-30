@@ -14,6 +14,9 @@ Changelog
     - Auxiliary classes ``LeaderboardEntry`` and ``LeaderboardRotation`` were added as well.
     - New ``Client`` method: ``fetch_leaderboards``.
 - Fix last page of highscores having ``0`` as page value.
+- Using the ``Client`` class, you can now fetch and parse content from the test version of www.tibia.com when available.
+    - Note that if the test website has changes, parsing might not be possible.
+    - Internal URL attributes might still point to the regular website.
 
 **Breaking Changes**:
 

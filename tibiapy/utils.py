@@ -23,7 +23,7 @@ def convert_line_breaks(element):
         br.replace_with("\n")
 
 
-def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
+def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
     """Builds a URL to Tibia.com with the given parameters.
 
     Parameters
@@ -39,6 +39,8 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
         This allows passing multiple parameters with the same name.
     kwargs:
         Additional parameters to pass to the url as query parameters (e.g name, world, houseid, etc)
+    test: :class:`bool`
+        Whether to use the test website or not.
 
     Returns
     -------
@@ -56,7 +58,8 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
     >>> get_tibia_url("community", "worlds", **params)
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
-    url = "https://www.tibia.com/%s/?" % section
+    base_url = "www.tibia.com" if not test else "www.test.tibia.com"
+    url = "https://%s/%s/?" % (base_url, section)
     params = OrderedDict(subtopic=subtopic) if subtopic else OrderedDict()
     if kwargs:
         for key, value in kwargs.items():
@@ -139,7 +142,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
         # Add/subtract hours to get the real time
         t = t - datetime.timedelta(hours=utc_offset)
         return t.replace(tzinfo=datetime.timezone.utc)
-    except (ValueError, AttributeError) as e:
+    except (ValueError, AttributeError):
         return None
 
 
