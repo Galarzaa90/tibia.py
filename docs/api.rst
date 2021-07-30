@@ -503,16 +503,21 @@ Models related to `Tibia.com's News section`_.
 
 .. _Tibia.com's News section: https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades
 
+NewsArchive
+-----------
+.. autoclass:: NewsArchive
+   :members:
+   :inherited-members:
+
 News
 ---------
 .. autoclass:: News
    :members:
    :inherited-members:
 
-
-ListedNews
+NewsEntry
 -----------
-.. autoclass:: ListedNews
+.. autoclass:: NewsEntry
    :members:
    :inherited-members:
 

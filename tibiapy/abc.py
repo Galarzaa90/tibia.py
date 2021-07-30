@@ -439,7 +439,7 @@ class BaseNews(metaclass=abc.ABCMeta):
     The following implement this class:
 
     - :class:`.News`
-    - :class:`.ListedNews`
+    - :class:`.NewsEntry`
 
     Attributes
     ----------

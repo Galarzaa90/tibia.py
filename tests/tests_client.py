@@ -19,11 +19,11 @@ from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, HouseType, HousesSection, \
-    VocationFilter, \
+    NewsArchive, VocationFilter, \
     Category, \
     House, ListedHouse, \
     ListedGuild, \
-    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, Creature, AuctionDetails, \
+    KillStatistics, NewsEntry, News, World, WorldOverview, Forbidden, NetworkError, Creature, AuctionDetails, \
     EventSchedule
 
 
@@ -55,11 +55,11 @@ class TestClient(asynctest.TestCase, TestCommons):
         with self.assertRaises(NetworkError):
             await self.client.fetch_world_list()
 
-        mock.get(ListedNews.get_list_url(), exception=aiohttp.ClientError())
+        mock.get(NewsEntry.get_list_url(), exception=aiohttp.ClientError())
         with self.assertRaises(NetworkError):
             await self.client.fetch_world_list()
 
-        mock.post(ListedNews.get_list_url(), exception=aiohttp.ClientOSError())
+        mock.post(NewsEntry.get_list_url(), exception=aiohttp.ClientOSError())
         with self.assertRaises(NetworkError):
             await self.client.fetch_recent_news(30)
 
@@ -152,11 +152,11 @@ class TestClient(asynctest.TestCase, TestCommons):
     async def test_client_fetch_recent_news(self, mock):
         """Testing fetching recent nows"""
         content = self.load_resource(FILE_NEWS_LIST)
-        mock.post(ListedNews.get_list_url(), status=200, body=content)
+        mock.post(NewsArchive.get_url(), status=200, body=content)
         recent_news = await self.client.fetch_recent_news(30)
 
-        self.assertIsInstance(recent_news.data, list)
-        self.assertIsInstance(recent_news.data[0], ListedNews)
+        self.assertIsInstance(recent_news.data, NewsArchive)
+        self.assertIsInstance(recent_news.data.entries[0], NewsEntry)
 
     async def test_client_fetch_news_archive_invalid_dates(self):
         """Testing fetching news archive with invalid dates"""

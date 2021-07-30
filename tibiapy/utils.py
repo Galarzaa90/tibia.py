@@ -77,6 +77,20 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwar
     return url
 
 
+def parse_form_data(form: bs4.Tag):
+    data = {}
+    text_inputs = form.find_all("input", {"type": "text"})
+    data.update({field.attrs.get("name"): field.attrs.get("value") for field in text_inputs})
+    selects = form.find_all("select")
+    for select in selects:
+        name = select.attrs.get("name")
+        selected_option = select.find("option", {"selected": True})
+        data[name] = selected_option.attrs.get("value") if selected_option else None
+    checkboxes = form.find_all("input", {"type": "checkbox", "checked": True})
+    data.update({field.attrs.get("name"): field.attrs.get("value") for field in checkboxes})
+    return data
+
+
 def parse_integer(number: str, default: Optional[int] = 0):
     """Parses a string representing an integer, ignoring commas or periods.
 

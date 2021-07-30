@@ -234,12 +234,20 @@ class NewsCategory(BaseEnum):
     SUPPORT = "support"
     TECHNICAL_ISSUES = "technical"
 
+    @property
+    def filter_name(self):
+        return f"filter_{self.value}"
+
 
 class NewsType(BaseEnum):
     """The different types of new entries."""
     NEWS_TICKER = "News Ticker"
     FEATURED_ARTICLE = "Featured Article"
     NEWS = "News"
+
+    @property
+    def filter_name(self):
+        return f"filter_{self.value.split(' ')[-1].lower()}"
 
 
 class PvpType(BaseEnum):

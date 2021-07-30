@@ -17,6 +17,7 @@ Changelog
 - Using the ``Client`` class, you can now fetch and parse content from the test version of www.tibia.com when available.
     - Note that if the test website has changes, parsing might not be possible.
     - Internal URL attributes might still point to the regular website.
+- New ``NewsArchive`` class, including the news filtering attributes.
 
 **Breaking Changes**:
 
@@ -25,7 +26,9 @@ Changelog
 - ``Client.fetch_world_houses`` now returns a ``HousesSection`` instance in its data attribute, instead of a list of ``ListedHouses``.
 - ``ListedHouse.highest_bid`` attribute now may be ``None`` if the house's auction has not yet started.
 - Removed deprecated property ``AuctionFilters.item``.
-
+- ``Client.fetch_news_archive``, ``Client.fetch_recent_news`` now returns an instance of ``NewsArchive`` in the ``data`` attribute.
+- ``ListedNews`` class renamed to ``NewsEntry``.
+- ``News`` and ``NewsEntry`` no longer hava a ``get_list_url`` method.
 
 
 .. v4.1.7

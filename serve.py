@@ -127,10 +127,10 @@ async def get_event_schedule(request: web.Request):
     return json_response(response)
 
 
-@routes.get('/cmposts/{start_date}/{end_date}')
+@routes.get('/cmposts/{start_date}/{to_date}')
 async def get_cm_post_archive(request: web.Request):
     start_date_str = request.match_info['start_date']
-    end_date_str = request.match_info['end_date']
+    end_date_str = request.match_info['to_date']
     page = int(request.query.get("page", 1))
     start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d")
     end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d")

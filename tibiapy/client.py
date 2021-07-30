@@ -19,9 +19,9 @@ from tibiapy.event import EventSchedule
 from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, ListedBoard
 from tibiapy.guild import Guild, GuildWars, ListedGuild
 from tibiapy.highscores import Highscores
-from tibiapy.house import House, ListedHouse, HousesSection
+from tibiapy.house import House, HousesSection
 from tibiapy.kill_statistics import KillStatistics
-from tibiapy.news import ListedNews, News
+from tibiapy.news import News, NewsArchive
 from tibiapy.tournament import Tournament, TournamentLeaderboard
 from tibiapy.world import World, WorldOverview
 
@@ -747,7 +747,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", News.get_list_url(), test=test)
+        response = await self._request("GET", NewsArchive.get_url(), test=test)
         start_time = time.perf_counter()
         boosted_creature = CreaturesSection.from_boosted_creature_header(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -1172,64 +1172,43 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world_overview, parsing_time)
 
-    async def fetch_news_archive(self, begin_date, end_date, categories=None, types=None, *, test=False):
+    async def fetch_news_archive(self, start_date, end_date, categories=None, types=None, *, test=False):
         """Fetches news from the archive meeting the search criteria.
 
         Parameters
         ----------
-        begin_date: :class:`datetime.date`
+        start_date: :class:`datetime.date`
             The beginning date to search dates in.
         end_date: :class:`datetime.date`
             The end date to search dates in.
         categories: `list` of :class:`NewsCategory`
             The allowed categories to show. If left blank, all categories will be searched.
-        types : `list` of :class:`ListedNews`
+        types : `list` of :class:`NewsType`
             The allowed news types to show. if unused, all types will be searched.
         test: :class:`bool`
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`ListedNews`
+        :class:`TibiaResponse` of :class:`NewsArchive`
             The news meeting the search criteria.
 
         Raises
         ------
         ValueError:
-            If ``begin_date`` is more recent than ``end_date``.
+            If ``begin_date`` is more recent than ``to_date``.
         Forbidden
             If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
         """
-        if begin_date > end_date:
-            raise ValueError("begin_date can't be more recent than end_date")
-        if not categories:
-            categories = list(NewsCategory)
-        if not types:
-            types = list(NewsType)
-        data = {
-            "filter_begin_day": begin_date.day,
-            "filter_begin_month": begin_date.month,
-            "filter_begin_year": begin_date.year,
-            "filter_end_day": end_date.day,
-            "filter_end_month": end_date.month,
-            "filter_end_year": end_date.year,
-        }
-        for category in categories:
-            key = "filter_%s" % category.value
-            data[key] = category.value
-        if NewsType.FEATURED_ARTICLE in types:
-            data["filter_article"] = "article"
-        if NewsType.NEWS in types:
-            data["filter_news"] = "news"
-        if NewsType.NEWS_TICKER in types:
-            data["filter_ticker"] = "ticker"
-
-        response = await self._request("POST", News.get_list_url(), data, test=test)
+        if start_date > end_date:
+            raise ValueError("start_date can't be more recent than end_date")
+        form_data = NewsArchive.get_form_data(start_date, end_date, categories, types)
+        response = await self._request("POST", NewsArchive.get_url(), form_data, test=test)
         start_time = time.perf_counter()
-        news = ListedNews.list_from_content(response.content)
+        news = NewsArchive.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, news, parsing_time)
 
@@ -1244,14 +1223,14 @@ class Client:
             The number of days to search, by default 30.
         categories: `list` of :class:`NewsCategory`
             The allowed categories to show. If left blank, all categories will be searched.
-        types : `list` of :class:`ListedNews`
+        types : `list` of :class:`NewsType`
             The allowed news types to show. if unused, all types will be searched.
         test: :class:`bool`
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`ListedNews`
+        :class:`TibiaResponse` of :class:`NewsArchive`
             The news posted in the last specified days.
 
         Raises

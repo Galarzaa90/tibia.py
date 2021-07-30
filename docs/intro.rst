@@ -110,9 +110,11 @@ Supported Sections
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | `Kill Statistics`_ (List)        | :meth:`KillStatistics.from_content`        | :meth:`Client.fetch_kill_statistics`        |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
+| Leaderboards_                    | :meth:`Leaderboard.from_content`           | :meth:`Client.fetch_leaderboard`            |
++----------------------------------+--------------------------------------------+---------------------------------------------+
 | News_ (Individual)               | :meth:`News.from_content`                  | :meth:`Client.fetch_news`                   |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
-| News_ (List)                     | :meth:`ListedNews.list_from_content`       | :meth:`Client.fetch_news_archive`           |
+| News_ (List)                     | :meth:`NewsArchive.from_content`           | :meth:`Client.fetch_news_archive`           |
 |                                  |                                            | :meth:`Client.fetch_recent_news`            |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | Tournaments_                     | :meth:`Tournament.from_content`            | :meth:`Client.fetch_tournament`             |
@@ -135,6 +137,7 @@ Supported Sections
 .. _Highscores: https://www.tibia.com/community/?subtopic=highscores
 .. _Houses: https://www.tibia.com/community/?subtopic=houses
 .. _Kill Statistics: https://www.tibia.com/community/?subtopic=killstatistics
+.. _Leaderboards: https://www.tibia.com/community/?subtopic=leaderboards
 .. _News: https://www.tibia.com/news/?subtopic=newsarchive
 .. _Worlds: https://www.tibia.com/community/?subtopic=worlds
 .. _Tournaments: https://www.tibia.com/community/?subtopic=tournament
