@@ -17,6 +17,7 @@ Changelog
 - Using the ``Client`` class, you can now fetch and parse content from the test version of www.tibia.com when available.
     - Note that if the test website has changes, parsing might not be possible.
     - Internal URL attributes might still point to the regular website.
+- New ``HousesSection`` class, including the house filtering attributes.
 - New ``NewsArchive`` class, including the news filtering attributes.
 
 **Breaking Changes**:
@@ -25,10 +26,11 @@ Changelog
 - House classes no longer have ``get_list_url`` and ``list_from_content`` methods.
 - ``Client.fetch_world_houses`` now returns a ``HousesSection`` instance in its data attribute, instead of a list of ``ListedHouses``.
 - ``ListedHouse.highest_bid`` attribute now may be ``None`` if the house's auction has not yet started.
+- ``ListedHouse`` class renamed to ``HouseEntry``.
 - Removed deprecated property ``AuctionFilters.item``.
 - ``Client.fetch_news_archive``, ``Client.fetch_recent_news`` now returns an instance of ``NewsArchive`` in the ``data`` attribute.
 - ``ListedNews`` class renamed to ``NewsEntry``.
-- ``News`` and ``NewsEntry`` no longer hava a ``get_list_url`` method.
+- ``News`` and ``NewsEntry`` no longer have a ``get_list_url`` method.
 
 
 .. v4.1.7
@@ -42,7 +44,7 @@ Changelog
 4.1.6 (2021-06-28)
 ==================
 - Fixed worlds not being parsed correctly again due to tournament worlds order changing. After this fix,
-the order should not matter anymore.
+  the order should not matter anymore.
 
 .. v4.1.5
 

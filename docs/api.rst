@@ -326,15 +326,9 @@ House
    :members:
    :inherited-members:
 
-ListedHouse
------------
-.. autoclass:: ListedHouse
-   :members:
-   :inherited-members:
-
-HouseFilters
-------------
-.. autoclass:: HouseFilters
+HouseEntry
+----------
+.. autoclass:: HouseEntry
    :members:
    :inherited-members:
 
@@ -343,6 +337,7 @@ Leaderboard
 Models related to `Tibia.com's Leaderboard section`_.
 
 .. _Tibia.com's Leaderboard section: https://www.tibia.com/community/?subtopic=tournament
+
 Leaderboard
 -----------
 .. autoclass:: Leaderboard

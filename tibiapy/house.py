@@ -11,10 +11,9 @@ from tibiapy.utils import get_tibia_url, parse_tibia_datetime, parse_tibia_money
 __all__ = (
     "HousesSection",
     "House",
-    "HouseFilters",
     "CharacterHouse",
     "GuildHouse",
-    "ListedHouse",
+    "HouseEntry",
 )
 
 id_regex = re.compile(r'house_(\d+)\.')
@@ -41,39 +40,71 @@ class HousesSection(abc.Serializable):
 
     Attributes
     ----------
-    filters: :class:`HouseFilters`
-        The filters used.
-    entries: :class:`list` of :class:`ListedHouse`
+    world: :class:`str`
+        The selected world to show houses for.
+    town: :class:`str`
+        The town to show houses for.
+    status: :class:`HouseStatus`
+        The status to show. If `:obj:`None`, any status is shown.
+    house_type: :class:`HouseType`
+        The type of houses to show.
+    order: :class:`HouseOrder`
+        The ordering to use for the results.
+    entries: :class:`list` of :class:`HouseEntry`
         The houses matching the filters.
+    available_worlds: :class:`list` of :class:`str`
+        The list of available worlds to choose from.
+    available_towns: :class:`list` of :class:`str`
+        The list of available towns to choose from.
     """
 
     __slots__ = (
-        "filters",
+        "world",
+        "town",
+        "status",
+        "house_type",
+        "order",
         "entries",
+        "available_worlds",
+        "available_towns",
     )
 
     def __init__(self, **kwargs):
-        self.filters: HouseFilters = kwargs.get("filters")
-        self.entries: List[ListedHouse] = kwargs.get("entries", [])
+        self.world: str = kwargs.get("world")
+        self.town: str = kwargs.get("town")
+        self.status: Optional[HouseStatus] = kwargs.get("status")
+        self.house_type: HouseType = kwargs.get("house_type")
+        self.order: HouseOrder = kwargs.get("order", HouseOrder.NAME)
+        self.available_worlds: List[str] = kwargs.get("available_worlds", [])
+        self.available_towns: List[str] = kwargs.get("available_towns", [])
+        self.entries: List[HouseEntry] = kwargs.get("entries", [])
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} filters={self.filters!r}>"
+        return f"<{self.__class__.__name__} world={self.world!r} town={self.town!r} house_type={self.house_type!r}>"
+
+    @classmethod
+    def _get_query_params(self, world, town, status, house_type, order):
+        """:class:`dict`: The query parameters representing for a house search."""
+        params = {
+            "world": world,
+            "town": town,
+            "status": status.value if status else None,
+            "type": house_type.value if house_type else None,
+            "order": order.value if order else None,
+        }
+        return {k: v for k, v in params.items() if v is not None}
 
     @property
     def url(self):
-        return self.get_url(self.filters)
+        return self.get_url(self.world, self.town, self.house_type, self.status, self.order)
 
     @classmethod
-    def get_url(cls, filters=None, *, world=None, town=None, house_type=None, status=None, order=None):
+    def get_url(cls,  world=None, town=None, house_type=None, status=None, order=None):
         """
         Gets the URL to the house list on Tibia.com with the specified filters.
 
-        You may pass the optional keyword only parameters in order to avoid creating a filter instance.
-
         Parameters
         ----------
-        filters: :class:`HouseFilters`
-            The filters to use for the search.
         world: :class:`str`
             The world to search in.
         town: :class:`str`
@@ -90,18 +121,7 @@ class HousesSection(abc.Serializable):
         :class:`str`
             The URL to the list matching the parameters.
         """
-        filters = filters or HouseFilters()
-        if world:
-            filters.world = world
-        if town:
-            filters.town = town
-        if house_type:
-            filters.house_type = house_type
-        if order:
-            filters.order = order
-        if status:
-            filters.status = status
-        query = filters.query_params
+        query = cls._get_query_params(world, town, status, house_type, order)
         return get_tibia_url("community", "houses", **query)
 
     @classmethod
@@ -123,22 +143,21 @@ class HousesSection(abc.Serializable):
         InvalidContent`
             Content is not the house list from Tibia.com
         """
-        results = HousesSection()
         try:
             parsed_content = parse_tibiacom_content(content)
             tables = parsed_content.find_all("table")
-
-            filters = HouseFilters._parse_filters(tables[-1])
-            results.filters = filters
+            house_results = cls()
+            house_results._parse_filters(tables[-1])
             if len(tables) < 2:
-                return results
+                return house_results
             _, *rows = tables[0].find_all("tr")
             for row in rows[1:]:
                 cols = row.find_all("td")
                 if len(cols) != 5:
                     continue
                 name = cols[0].text.replace('\u00a0', ' ')
-                house = ListedHouse(name, filters.world, 0, town=filters.town, type=filters.house_type)
+                house = HouseEntry(name, house_results.world, 0, town=house_results.town,
+                                   type=house_results.house_type)
                 size = cols[1].text.replace('sqm', '')
                 house.size = int(size)
                 rent = cols[2].text.replace('gold', '')
@@ -147,92 +166,33 @@ class HousesSection(abc.Serializable):
                 house._parse_status(status)
                 id_input = cols[4].find("input", {'name': 'houseid'})
                 house.id = int(id_input["value"])
-                results.entries.append(house)
-            return results
+                house_results.entries.append(house)
+            return house_results
         except (ValueError, AttributeError) as e:
             raise InvalidContent("content does not belong to a Tibia.com house list", e)
 
-
-class HouseFilters(abc.Serializable):
-    """
-
-    Attributes
-    ----------
-    world: :class:`str`
-        The selected world to show houses for.
-    town: :class:`str`
-        The town to show houses for.
-    status: :class:`HouseStatus`
-        The status to show. If `:obj:`None`, any status is shown.
-    house_type: :class:`HouseType`
-        The type of houses to show.
-    order: :class:`HouseOrder`
-        The ordering to use for the results.
-    available_worlds: :class:`list` of :class:`str`
-        The list of available worlds to choose from.
-    available_towns: :class:`list` of :class:`str`
-        The list of available towns to choose from.
-    """
-
-    __slots__ = (
-        "world",
-        "town",
-        "status",
-        "house_type",
-        "order",
-        "available_worlds",
-        "available_towns",
-    )
-
-    def __init__(self, **kwargs):
-        self.world: str = kwargs.get("world")
-        self.town: str = kwargs.get("town")
-        self.status: Optional[HouseStatus] = kwargs.get("status")
-        self.house_type: HouseType = kwargs.get("house_type")
-        self.order: HouseOrder = kwargs.get("order", HouseOrder.NAME)
-        self.available_worlds: List[str] = kwargs.get("available_worlds", [])
-        self.available_towns: List[str] = kwargs.get("available_towns", [])
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} world={self.world!r} town={self.town!r} status={self.status!r} " \
-               f"house_type={self.house_type!r} order={self.order!r}>"
-
-    @property
-    def query_params(self):
-        """:class:`dict`: The query parameters representing this filter."""
-        params = {
-            "world": self.world,
-            "town": self.town,
-            "status": self.status.value if self.status else None,
-            "type": self.house_type.value if self.house_type else None,
-            "order": self.order.value if self.order else None,
-        }
-        return {k: v for k, v in params.items() if v is not None}
-
-    @classmethod
-    def _parse_filters(cls, filters_table):
+    def _parse_filters(self, filters_table):
         world_select = filters_table.find("select", {"name": "world"})
-        filters = cls()
         for world_option in world_select.find_all("option"):
             world_name = world_option.text
-            filters.available_worlds.append(world_name)
+            self.available_worlds.append(world_name)
             if world_option.attrs.get("selected"):
-                filters.world = world_name
+                self.world = world_name
         for town_option in filters_table.find_all("input", {"name": "town"}):
             town_name = town_option.attrs.get("value")
-            filters.available_towns.append(town_name)
+            self.available_towns.append(town_name)
             if "checked" in town_option.attrs:
-                filters.town = town_name
+                self.town = town_name
         checked_status = filters_table.find("input", {"name": "state", "checked": True})
         if checked_status.attrs.get("value"):
-            filters.status = try_enum(HouseStatus, checked_status.attrs.get("value"))
+            self.status = try_enum(HouseStatus, checked_status.attrs.get("value"))
         checked_type = filters_table.find("input", {"name": "type", "checked": True})
         if checked_type.attrs.get("value"):
-            filters.house_type = try_enum(HouseType, checked_type.attrs.get("value")[:-1])
+            self.house_type = try_enum(HouseType, checked_type.attrs.get("value")[:-1])
         checked_order = filters_table.find("input", {"name": "order", "checked": True})
         if checked_order and checked_order.attrs.get("value"):
-            filters.order = try_enum(HouseOrder, checked_order.attrs.get("value"), HouseOrder.NAME)
-        return filters
+            self.order = try_enum(HouseOrder, checked_order.attrs.get("value"), HouseOrder.NAME)
+        return self
 
 
 class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
@@ -512,7 +472,7 @@ class GuildHouse(abc.BaseHouse, abc.Serializable):
         return "<%s name=%r>" % (self.__class__.__name__, self.name)
 
 
-class ListedHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
+class HouseEntry(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     """Represents a house from the house list in Tibia.com.
 
     Attributes

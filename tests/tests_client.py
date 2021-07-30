@@ -21,7 +21,7 @@ from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, HouseType, HousesSection, \
     NewsArchive, VocationFilter, \
     Category, \
-    House, ListedHouse, \
+    House, HouseEntry, \
     ListedGuild, \
     KillStatistics, NewsEntry, News, World, WorldOverview, Forbidden, NetworkError, Creature, AuctionDetails, \
     EventSchedule
@@ -136,7 +136,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         houses = await self.client.fetch_world_houses(world, city)
 
         self.assertIsInstance(houses.data, HousesSection)
-        self.assertIsInstance(houses.data.entries[0], ListedHouse)
+        self.assertIsInstance(houses.data.entries[0], HouseEntry)
 
     @aioresponses()
     async def test_client_fetch_kill_statistics(self, mock):

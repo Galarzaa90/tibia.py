@@ -393,7 +393,7 @@ class BaseHouse(metaclass=abc.ABCMeta):
     - :class:`.House`
     - :class:`.GuildHouse`
     - :class:`.CharacterHouse`
-    - :class:`.ListedHouse`
+    - :class:`.HouseEntry`
 
     Attributes
     ----------
