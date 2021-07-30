@@ -12,7 +12,7 @@ import tibiapy
 from tibiapy import AuctionDetails, AuctionFilters, CharacterBazaar, Leaderboard, abc
 from tibiapy.character import Character
 from tibiapy.creature import Creature, CreatureDetail, CreaturesSection
-from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseOrder, HouseStatus, HouseType, NewsCategory, \
+from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseStatus, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
@@ -76,6 +76,11 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
 
     _serializable_properties = ("time_left", )
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__}[{type(self.data).__name__}] timestamp={self.timestamp!r} " \
+               f"fetching_time={self.fetching_time!r} parsing_time={self.fetching_time!r} cahed={self.cached!r} " \
+               f"age={self.age!r}>"
+
     @property
     def time_left(self):
         """:class:`datetime.timedelta`: The time left for the cache of this response to expire."""
@@ -91,7 +96,7 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
 
 class RawResponse:
     def __init__(self, response: aiohttp.ClientResponse, fetching_time: float):
-        self.timestamp = datetime.datetime.utcnow()
+        self.timestamp = datetime.datetime.now(datetime.timezone.utc)
         self.fetching_time = fetching_time
         self.cached = response.headers.get("CF-Cache-Status") == "HIT"
         age = response.headers.get("Age")
@@ -100,6 +105,10 @@ class RawResponse:
         else:
             self.age = 0
         self.content = None
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} timestamp={self.timestamp!r} fetching_time={self.fetching_time!r} " \
+               f"cached={self.cached!r} age={self.age!r}>"
 
 
 class Client:
@@ -1078,7 +1087,7 @@ class Client:
         return TibiaResponse(response, world, parsing_time)
 
     async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status: HouseStatus = None,
-                                 order=HouseOrder.NAME, *, test=False):
+                                 order=None, *, test=False):
         """Fetches the house list of a world and type.
 
         Parameters
