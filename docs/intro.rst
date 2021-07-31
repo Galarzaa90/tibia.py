@@ -71,7 +71,7 @@ Supported Sections
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | `Character Bazaar`_ (History)    | :meth:`CharacterBazaar.from_content`       | :meth:`Client.fetch_auction_history`        |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
-| `Character Bazaar`_ (Detail)     | :meth:`AuctionDetails.from_content`        | :meth:`Client.fetch_auction`                |
+| `Character Bazaar`_ (Detail)     | :meth:`Auction.from_content`               | :meth:`Client.fetch_auction`                |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | Characters_                      | :meth:`Character.from_content`             | :meth:`Client.fetch_character`              |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
@@ -85,11 +85,11 @@ Supported Sections
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (Individual)             | :meth:`Guild.from_content`                 | :meth:`Client.fetch_guild`                  |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
-| Guilds_ (List)                   | :meth:`ListedGuild.list_from_content`      | :meth:`Client.fetch_world_guilds`           |
+| Guilds_ (List)                   | :meth:`GuildEntry.list_from_content`       | :meth:`Client.fetch_world_guilds`           |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (Wars)                   | :meth:`GuildWars.from_content`             | :meth:`Client.fetch_guild_wars`             |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
-| Forums_ (Section)                | :meth:`ListedBoard.list_from_content`      | :meth:`Client.fetch_forum_world_boards`     |
+| Forums_ (Section)                | :meth:`BoardEntry.list_from_content`       | :meth:`Client.fetch_forum_world_boards`     |
 |                                  |                                            | :meth:`Client.fetch_forum_trade_boards`     |
 |                                  |                                            | :meth:`Client.fetch_forum_community_boards` |
 |                                  |                                            | :meth:`Client.fetch_forum_support_boards`   |

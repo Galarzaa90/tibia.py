@@ -16,7 +16,7 @@ from tibiapy.utils import convert_line_breaks, deprecated, get_tibia_url, parse_
 
 __all__ = (
     "AchievementEntry",
-    "AuctionDetails",
+    "Auction",
     "AuctionFilters",
     "CharacterBazaar",
     "CharmEntry",
@@ -27,7 +27,7 @@ __all__ = (
     "DisplayOutfit",
     "DisplayFamiliar",
     "ItemSummary",
-    "ListedAuction",
+    "AuctionEntry",
     "Outfits",
     "OutfitImage",
     "Mounts",
@@ -292,7 +292,7 @@ class CharacterBazaar(abc.Serializable):
         The total number of pages available.
     results_count: :class:`int`
         The number of auctions listed.
-    entries: :class:`list` of :class:`ListedAuction`
+    entries: :class:`list` of :class:`AuctionEntry`
         The auctions displayed.
     type: :class:`BazaarType`
         The type of auctions being displayed, either current or auction history.
@@ -315,7 +315,7 @@ class CharacterBazaar(abc.Serializable):
         self.page: int = kwargs.get("page", 1)
         self.total_pages: int = kwargs.get("total_pages", 1)
         self.results_count: int = kwargs.get("results_count", 0)
-        self.entries: List[ListedAuction] = kwargs.get("entries", [])
+        self.entries: List[AuctionEntry] = kwargs.get("entries", [])
 
     def __repr__(self):
         return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} " \
@@ -401,7 +401,7 @@ class CharacterBazaar(abc.Serializable):
 
             auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
             for auction_row in auction_rows:
-                auction = ListedAuction._parse_auction(auction_row)
+                auction = AuctionEntry._parse_auction(auction_row)
 
                 bazaar.entries.append(auction)
             return bazaar
@@ -626,7 +626,7 @@ class DisplayFamiliar(DisplayImage):
         return familiar
 
 
-class ListedAuction(BaseCharacter, abc.Serializable):
+class AuctionEntry(BaseCharacter, abc.Serializable):
     """Represents an auction in the list, containing the summary.
 
     Attributes
@@ -739,7 +739,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
 
         Returns
         -------
-        :class:`ListedAuction`
+        :class:`AuctionEntry`
             The auction contained in the table.
         """
         header_container = auction_row.find("div", attrs={"class": "AuctionHeader"})
@@ -800,7 +800,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         return auction
 
 
-class AuctionDetails(ListedAuction):
+class Auction(AuctionEntry):
     """Represents the details of an auction.
 
     Attributes
@@ -1032,7 +1032,7 @@ class AuctionDetails(ListedAuction):
 
         Returns
         -------
-        :class:`AuctionDetails`
+        :class:`Auction`
             The auction details if found, :obj:`None` otherwise.
 
         Raises

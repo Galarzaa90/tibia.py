@@ -17,7 +17,7 @@ __all__ = (
     "GuildInvite",
     "GuildWars",
     "GuildWarEntry",
-    "ListedGuild",
+    "GuildEntry",
 )
 
 COLS_INVITED_MEMBER = 2
@@ -689,9 +689,8 @@ class GuildWarEntry(abc.Serializable):
         return Guild.get_url(self.opponent_name) if self.opponent_name else None
 
 
-class ListedGuild(abc.BaseGuild, abc.Serializable):
-    """
-    Represents a Tibia guild in the guild list of a world.
+class GuildEntry(abc.BaseGuild, abc.Serializable):
+    """Represents a Tibia guild in the guild list of a world.
 
     Attributes
     ------------
@@ -734,7 +733,7 @@ class ListedGuild(abc.BaseGuild, abc.Serializable):
 
         Returns
         -------
-        :class:`list` of :class:`ListedGuild`
+        :class:`list` of :class:`GuildEntry`
             List of guilds in the current world. :obj:`None` if it's the list of a world that doesn't exist.
 
         Raises

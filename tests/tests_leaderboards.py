@@ -2,7 +2,7 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, Leaderboard, ListedTournament, PvpType, RuleSet, ScoreSet, Tournament, \
+from tibiapy import InvalidContent, Leaderboard, TournamentEntry, PvpType, RuleSet, ScoreSet, Tournament, \
     TournamentLeaderboard, \
     TournamentPhase
 

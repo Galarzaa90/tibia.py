@@ -2,7 +2,7 @@ import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import Highscores, Vocation, Category, VocationFilter, Character, AccountStatus, World, WorldLocation, \
-    TransferType, PvpType, ListedGuild, Guild, CharacterBazaar, BazaarType, AuctionStatus, BidType, AuctionDetails
+    TransferType, PvpType, GuildEntry, Guild, CharacterBazaar, BazaarType, AuctionStatus, BidType, Auction
 
 
 class TestNewChanges(TestCommons, unittest.TestCase):
@@ -54,7 +54,7 @@ class TestNewChanges(TestCommons, unittest.TestCase):
 
     def test_world_guilds_changes(self):
         content = self.load_resource("website_changes/4_community_guilds_adra.txt")
-        guilds = ListedGuild.list_from_content(content)
+        guilds = GuildEntry.list_from_content(content)
 
         self.assertEqual(14, len(guilds))
         guild = guilds[0]
@@ -102,7 +102,7 @@ class TestNewChanges(TestCommons, unittest.TestCase):
 
     def test_bazaar_auction_changes(self):
         content = self.load_resource("website_changes/7_char_bazaar_current_auctions_auctionid_312647.txt")
-        auction = AuctionDetails.from_content(content)
+        auction = Auction.from_content(content)
 
         self.assertEqual("Lethal Nightmarez", auction.name)
         self.assertEqual(30, auction.level)

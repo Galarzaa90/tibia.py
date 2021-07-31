@@ -13,7 +13,7 @@ from tibiapy.utils import get_tibia_url, parse_integer, parse_popup, parse_tibia
 
 __all__ = (
     "TournamentLeaderboardEntry",
-    "ListedTournament",
+    "TournamentEntry",
     "RewardEntry",
     "RuleSet",
     "ScoreSet",
@@ -71,7 +71,7 @@ class TournamentLeaderboardEntry(abc.BaseCharacter, abc.Serializable):
                "points={0.score}>".format(self)
 
 
-class ListedTournament(abc.BaseTournament, abc.Serializable):
+class TournamentEntry(abc.BaseTournament, abc.Serializable):
     """Represents an tournament in the archived tournaments list.
 
     :py:attr:`start_date` and :py:attr:`end_date` might be :obj:`None` when a tournament that is currently running
@@ -323,7 +323,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         The ways to gain points in the tournament.
     reward_set: :obj:`list` of :class:`RewardEntry`
         The list of rewards awarded for the specified ranges.
-    archived_tournaments: :obj:`list` of :class:`ListedTournament`
+    archived_tournaments: :obj:`list` of :class:`TournamentEntry`
         The list of other archived tournaments. This is only present when viewing an archived tournament.
     """
 
@@ -353,7 +353,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         self.rule_set: RuleSet = kwargs.get("rule_set")
         self.score_set: ScoreSet = kwargs.get("score_set")
         self.reward_set: List[RewardEntry] = kwargs.get("reward_set", [])
-        self.archived_tournaments: List[ListedTournament] = kwargs.get("archived_tournaments", [])
+        self.archived_tournaments: List[TournamentEntry] = kwargs.get("archived_tournaments", [])
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
@@ -621,8 +621,8 @@ class Tournament(abc.BaseTournament, abc.Serializable):
             value = int(option["value"])
             if title == self.title:
                 self.cycle = value
-            self.archived_tournaments.append(ListedTournament(title=title, start_date=start_date, end_date=end_date,
-                                                              cycle=value))
+            self.archived_tournaments.append(TournamentEntry(title=title, start_date=start_date, end_date=end_date,
+                                                             cycle=value))
 
 
 class TournamentLeaderboard(abc.Serializable):
@@ -634,7 +634,7 @@ class TournamentLeaderboard(abc.Serializable):
     ----------
     world: :class:`str`
         The world this leaderboard belongs to.
-    tournament: :class:`ListedTournament`
+    tournament: :class:`TournamentEntry`
         The tournament this leaderboard belongs to.
     entries: :obj:`list` of :class:`TournamentLeaderboardEntry`
         The leaderboard entries.
@@ -658,7 +658,7 @@ class TournamentLeaderboard(abc.Serializable):
 
     def __init__(self, **kwargs):
         self.world: str = kwargs.get("world")
-        self.tournament: ListedTournament = kwargs.get("tournament")
+        self.tournament: TournamentEntry = kwargs.get("tournament")
         self.entries: List[TournamentLeaderboardEntry] = kwargs.get("entries", [])
         self.results_count = kwargs.get("results_count", 0)
 
@@ -776,8 +776,8 @@ class TournamentLeaderboard(abc.Serializable):
             tournament_title = m.group(1).strip()
             start_date = parse_tibia_full_date(m.group(2))
             end_date = parse_tibia_full_date(m.group(3))
-        self.tournament = ListedTournament(title=tournament_title, start_date=start_date, end_date=end_date,
-                                           cycle=cycle)
+        self.tournament = TournamentEntry(title=tournament_title, start_date=start_date, end_date=end_date,
+                                          cycle=cycle)
         return True
 
     def _parse_leaderboard_entries(self, ranking_table):

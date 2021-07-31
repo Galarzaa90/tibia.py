@@ -18,9 +18,9 @@ __all__ = (
     'ForumPost',
     'ForumThread',
     'LastPost',
-    'ListedAnnouncement',
-    'ListedBoard',
-    'ListedThread',
+    'AnnouncementEntry',
+    'BoardEntry',
+    'ThreadEntry',
     'ForumAuthor',
 )
 
@@ -562,9 +562,9 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
         The maximum age of the displayed threads, in days.
 
         -1 means all threads will be shown.
-    announcements: list of :class:`ListedAnnouncement`
+    announcements: list of :class:`AnnouncementEntry`
         The list of announcements currently visible.
-    threads: list of :class:`ListedThread`
+    threads: list of :class:`ThreadEntry`
         The list of threads currently visible.
     """
 
@@ -575,8 +575,8 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
         self.page: int = kwargs.get("page", 1)
         self.total_pages: int = kwargs.get("total_pages", 1)
         self.age: int = kwargs.get("age", 30)
-        self.announcements: List[ListedAnnouncement] = kwargs.get("announcements", [])
-        self.threads: List[ListedThread] = kwargs.get("threads", [])
+        self.announcements: List[AnnouncementEntry] = kwargs.get("announcements", [])
+        self.threads: List[ThreadEntry] = kwargs.get("threads", [])
 
     __slots__ = (
         "name",
@@ -685,12 +685,12 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
                 continue
 
             entry = cls._parse_thread_row(columns)
-            if isinstance(entry, ListedThread):
+            if isinstance(entry, ThreadEntry):
                 board.threads.append(entry)
                 cip_border = thread_row.find("div", attrs={"class": "CipBorder"})
                 if cip_border:
                     entry.golden_frame = True
-            elif isinstance(entry, ListedAnnouncement):
+            elif isinstance(entry, AnnouncementEntry):
                 board.announcements.append(entry)
 
         return board
@@ -710,7 +710,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
 
         Returns
         -------
-        :class:`ListedThread` or :class:`ListedAnnouncement`
+        :class:`ThreadEntry` or :class:`AnnouncementEntry`
         """
         # First Column: Thread's status
         status = None
@@ -758,13 +758,13 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
             last_post_column = columns[6]
             last_post = LastPost._parse_column(last_post_column)
 
-            entry = ListedThread(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
-                                 views=views, last_post=last_post, emoticon=emoticon, status=status, pages=pages,
-                                 status_icon=status_icon)
+            entry = ThreadEntry(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
+                                views=views, last_post=last_post, emoticon=emoticon, status=status, pages=pages,
+                                status_icon=status_icon)
         else:
             title = title.replace("Announcement: ", "")
             announcement_id = int(announcement_id_regex.search(thread_link["href"]).group(1))
-            entry = ListedAnnouncement(title=title, announcement_id=announcement_id, announcement_author=thread_starter)
+            entry = AnnouncementEntry(title=title, announcement_id=announcement_id, announcement_author=thread_starter)
         return entry
 
     # endregion
@@ -1187,7 +1187,7 @@ class LastPost(abc.BasePost, abc.Serializable):
         return cls(author, post_id, last_post_date, deleted=deleted)
 
 
-class ListedAnnouncement(abc.BaseAnnouncement, abc.Serializable):
+class AnnouncementEntry(abc.BaseAnnouncement, abc.Serializable):
     """Represents an announcement in the forum boards.
 
     .. versionadded:: 3.0.0
@@ -1218,7 +1218,7 @@ class ListedAnnouncement(abc.BaseAnnouncement, abc.Serializable):
                f"announcement_author={self.announcement_author!r}>"
 
 
-class ListedBoard(abc.BaseBoard, abc.Serializable):
+class BoardEntry(abc.BaseBoard, abc.Serializable):
     """Represents a board in the list of boards.
 
     This is the board information available when viewing a section (e.g. World, Trade, Community)
@@ -1273,7 +1273,7 @@ class ListedBoard(abc.BaseBoard, abc.Serializable):
 
         Returns
         -------
-        :class:`list` of :class:`ListedBoard`
+        :class:`list` of :class:`BoardEntry`
 
         Raises
         ------
@@ -1317,7 +1317,7 @@ class ListedBoard(abc.BaseBoard, abc.Serializable):
 
         Returns
         -------
-        :class:`ListedBoard`
+        :class:`BoardEntry`
             The board contained in this row.
         """
         columns = board_row.find_all("td")
@@ -1343,7 +1343,7 @@ class ListedBoard(abc.BaseBoard, abc.Serializable):
     # endregion
 
 
-class ListedThread(abc.BaseThread, abc.Serializable):
+class ThreadEntry(abc.BaseThread, abc.Serializable):
     """Represents a thread in a forum board.
 
     .. versionadded:: 3.0.0

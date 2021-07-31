@@ -2,7 +2,7 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Guild, GuildHouse, GuildInvite, GuildMember, GuildWars, InvalidContent, ListedGuild
+from tibiapy import Guild, GuildHouse, GuildInvite, GuildMember, GuildWars, InvalidContent, GuildEntry
 
 FILE_GUILD_FULL = "guild/tibiacom_full.txt"
 FILE_GUILD_NOT_FOUND = "guild/tibiacom_not_found.txt"
@@ -141,9 +141,9 @@ class TestsGuild(TestCommons, unittest.TestCase):
     def test_listed_guild_from_content(self):
         """Testing parsing the list of guilds of a world"""
         content = self.load_resource(FILE_GUILD_LIST)
-        guilds = ListedGuild.list_from_content(content)
+        guilds = GuildEntry.list_from_content(content)
         self.assertTrue(guilds)
-        self.assertIsNotNone(ListedGuild.get_world_list_url(guilds[0].world))
+        self.assertIsNotNone(GuildEntry.get_world_list_url(guilds[0].world))
         self.assertEqual("Zuna", guilds[0].world)
         self.assertTrue(guilds[0].active)
         self.assertFalse(guilds[-1].active)
@@ -151,14 +151,14 @@ class TestsGuild(TestCommons, unittest.TestCase):
     def test_listed_guild_from_content_not_found(self):
         """Testing parsing the guild list of a world that doesn't exist"""
         content = self.load_resource(FILE_GUILD_LIST_NOT_FOUND)
-        guilds = ListedGuild.list_from_content(content)
+        guilds = GuildEntry.list_from_content(content)
         self.assertIsNone(guilds)
 
     def test_listed_guild_from_content_unrelated(self):
         """Testing parsing and unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            ListedGuild.list_from_content(content)
+            GuildEntry.list_from_content(content)
 
     def test_parse_invited_member_date(self):
         """Testing the invitation date of a invited member"""

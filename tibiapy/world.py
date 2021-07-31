@@ -12,7 +12,7 @@ from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, pa
     parse_tibiacom_content, try_date, try_datetime, try_enum
 
 __all__ = (
-    "ListedWorld",
+    "WorldEntry",
     "World",
     "WorldOverview",
 )
@@ -21,7 +21,7 @@ record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
 
 
-class ListedWorld(abc.BaseWorld, abc.Serializable):
+class WorldEntry(abc.BaseWorld, abc.Serializable):
     """Represents a game server listed in the World Overview section.
 
     Attributes
@@ -116,7 +116,7 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
 
         Returns
         -------
-        :class:`list` of :class:`ListedWorld`
+        :class:`list` of :class:`WorldEntry`
             A list of the worlds and their current information.
 
         Raises
@@ -396,7 +396,7 @@ class WorldOverview(abc.Serializable):
         The overall player online record.
     record_date: :class:`datetime.datetime`
         The date when the record was achieved.
-    worlds: :class:`list` of :class:`ListedWorld`
+    worlds: :class:`list` of :class:`WorldEntry`
         List of worlds, with limited info.
     """
     __slots__ = (
@@ -410,7 +410,7 @@ class WorldOverview(abc.Serializable):
     def __init__(self, **kwargs):
         self.record_count: int = kwargs.get("record_count", 0)
         self.record_date = try_datetime(kwargs.get("record_date"))
-        self.worlds: List[ListedWorld] = kwargs.get("worlds", [])
+        self.worlds: List[WorldEntry] = kwargs.get("worlds", [])
 
     def __repr__(self):
         return f"<{self.__class__.__name__} total_online={self.total_online:d}>"
@@ -429,7 +429,7 @@ class WorldOverview(abc.Serializable):
 
     @property
     def regular_worlds(self):
-        """:class:`list` of :class:`ListedWorld`: List of worlds that are not tournament worlds."""
+        """:class:`list` of :class:`WorldEntry`: List of worlds that are not tournament worlds."""
         return [w for w in self.worlds if w.tournament_world_type is None]
 
     @classmethod
@@ -497,7 +497,7 @@ class WorldOverview(abc.Serializable):
             location = cols[2].text.replace("\u00a0", " ").strip()
             pvp = cols[3].text.strip()
 
-            world = ListedWorld(name, location, pvp, online_count=online, status=status)
+            world = WorldEntry(name, location, pvp, online_count=online, status=status)
             # Check Battleye icon to get information
             battleye_icon = cols[4].find("span", attrs={"class": "HelperDivIndicator"})
             if battleye_icon is not None:

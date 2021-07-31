@@ -77,14 +77,36 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwar
     return url
 
 
-def parse_form_data(form: bs4.Tag):
+def parse_form_data(form: bs4.Tag, include_options=False):
+    """Parse the currently selected values in a form.
+
+    This should correspond to all the data the form would send if submitted.
+
+    Parameters
+    ----------
+    form: :class:`bs4.Tag`
+        A form tag.
+    include_options: :class:`bool`
+        Whether to also include listings of all the possible options.
+        These will be nested inside the __options__ parameter of the resulting dictionary.
+
+    Returns
+    -------
+    :class:`dict`
+        A dictionary containing all the data.
+    """
     data = {}
     text_inputs = form.find_all("input", {"type": "text"})
     data.update({field.attrs.get("name"): field.attrs.get("value") for field in text_inputs})
     selects = form.find_all("select")
+    if include_options:
+        data["__options__"] = {}
     for select in selects:
         name = select.attrs.get("name")
         selected_option = select.find("option", {"selected": True})
+        if include_options:
+            options = select.find_all("option")
+            data["__options__"][name] = {opt.text: opt.attrs.get("value") for opt in options}
         data[name] = selected_option.attrs.get("value") if selected_option else None
     checkboxes = form.find_all("input", {"type": "checkbox", "checked": True})
     data.update({field.attrs.get("name"): field.attrs.get("value") for field in checkboxes})

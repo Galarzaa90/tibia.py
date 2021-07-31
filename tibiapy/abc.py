@@ -99,7 +99,7 @@ class BaseAnnouncement(metaclass=abc.ABCMeta):
     The following implement this class:
 
     - :class:`.ForumAnnouncement`
-    - :class:`.ListedAnnouncement`
+    - :class:`.AnnouncementEntry`
 
     Attributes
     ----------
@@ -146,7 +146,7 @@ class BaseBoard(metaclass=abc.ABCMeta):
     The following implement this class:
 
     - :class:`.ForumBoard`
-    - :class:`.ListedBoard`
+    - :class:`.BoardEntry`
 
     Attributes
     ----------
@@ -251,8 +251,8 @@ class BaseCharacter(metaclass=abc.ABCMeta):
     - :class:`.TournamentLeaderboardEntry`
     - :class:`.OnlineCharacter`
     - :class:`.OtherCharacter`
-    - :class:`.ListedAuction`
-    - :class:`.AuctionDetails`
+    - :class:`.AuctionEntry`
+    - :class:`.Auction`
 
     Attributes
     ----------
@@ -302,7 +302,7 @@ class BaseGuild(metaclass=abc.ABCMeta):
 
     - :class:`.Guild`
     - :class:`.GuildMembership`
-    - :class:`.ListedGuild`
+    - :class:`.GuildEntry`
 
     Attributes
     ----------
@@ -544,7 +544,7 @@ class BaseThread(metaclass=abc.ABCMeta):
 
     The following implement this class:
 
-    - :class:`.ListedThread`
+    - :class:`.ThreadEntry`
     - :class:`.ForumThread`
 
     Attributes
@@ -591,7 +591,7 @@ class BaseTournament(metaclass=abc.ABCMeta):
 
     The following implement this class:
 
-    - :class:`.ListedTournament`
+    - :class:`.TournamentEntry`
     - :class:`.Tournament`
 
     Attributes
@@ -647,7 +647,7 @@ class BaseWorld(metaclass=abc.ABCMeta):
 
     The following implement this class:
 
-    - :class:`.ListedWorld`
+    - :class:`.WorldEntry`
     - :class:`.World`
 
     Attributes

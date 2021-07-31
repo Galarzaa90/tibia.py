@@ -19,6 +19,7 @@ Changelog
     - Internal URL attributes might still point to the regular website.
 - New ``HousesSection`` class, including the house filtering attributes.
 - New ``NewsArchive`` class, including the news filtering attributes.
+- Many "ListedObject" classes were renamed to "ObjectEntry", for details check the breaking changes below.
 
 **Breaking Changes**:
 
@@ -31,6 +32,14 @@ Changelog
 - ``Client.fetch_news_archive``, ``Client.fetch_recent_news`` now returns an instance of ``NewsArchive`` in the ``data`` attribute.
 - ``ListedNews`` class renamed to ``NewsEntry``.
 - ``News`` and ``NewsEntry`` no longer have a ``get_list_url`` method.
+- ``ListedBoard`` class renamed to ``BoardEntry``.
+- ``ListedThread`` class renamed to ``ThreadEntry``.
+- ``ListedAnnouncement`` class renamed to ``AnnouncementEntry``.
+- ``ListedWorld`` class renamed to ``WorldEntry``.
+- ``ListedAuction`` class renamed to ``AuctionEntry``.
+- ``AuctionDetails`` class renamed to ``Auction``.
+- ``ListedGuild`` class renamed to ``GuildEntry``.
+- ``ListedTournament`` class renamed to ``TournamentEntry``.
 
 
 .. v4.1.7

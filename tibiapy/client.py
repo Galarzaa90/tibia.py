@@ -9,15 +9,15 @@ import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy import AuctionDetails, AuctionFilters, CharacterBazaar, Leaderboard, abc
+from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, abc
 from tibiapy.character import Character
 from tibiapy.creature import Creature, CreatureDetail, CreaturesSection
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseStatus, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
-from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, ListedBoard
-from tibiapy.guild import Guild, GuildWars, ListedGuild
+from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, BoardEntry
+from tibiapy.guild import Guild, GuildWars, GuildEntry
 from tibiapy.highscores import Highscores
 from tibiapy.house import House, HousesSection
 from tibiapy.kill_statistics import KillStatistics
@@ -313,7 +313,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`AuctionDetails`
+        :class:`TibiaResponse` of :class:`Auction`
             The auction matching the ID if found.
 
         Raises
@@ -328,9 +328,9 @@ class Client:
         """
         if auction_id <= 0:
             raise ValueError('auction_id must be 1 or greater.')
-        response = await self._request("GET", AuctionDetails.get_url(auction_id), test=test)
+        response = await self._request("GET", Auction.get_url(auction_id), test=test)
         start_time = time.perf_counter()
-        auction = AuctionDetails.from_content(response.content, auction_id, skip_details)
+        auction = Auction.from_content(response.content, auction_id, skip_details)
         parsing_time = time.perf_counter() - start_time
         if auction and not skip_details:
             if fetch_items:
@@ -364,7 +364,7 @@ class Client:
         while current_page <= paginator.total_pages:
             content = await self._fetch_ajax_page(auction_id, item_type, current_page, test=test)
             if content:
-                entries = AuctionDetails._parse_page_items(content, paginator.entry_class)
+                entries = Auction._parse_page_items(content, paginator.entry_class)
                 paginator.entries.extend(entries)
             current_page += 1
         paginator.fully_fetched = True
@@ -494,7 +494,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`ListedBoard`
+        :class:`TibiaResponse` of list of :class:`BoardEntry`
             The forum boards in the community section.
 
         Raises
@@ -505,9 +505,9 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", ListedBoard.get_community_boards_url(), test=test)
+        response = await self._request("GET", BoardEntry.get_community_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = ListedBoard.list_from_content(response.content)
+        boards = BoardEntry.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
@@ -523,7 +523,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`ListedBoard`
+        :class:`TibiaResponse` of list of :class:`BoardEntry`
             The forum boards in the community section.
 
         Raises
@@ -533,9 +533,9 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ListedBoard.get_support_boards_url(), test=test)
+        response = await self._request("GET", BoardEntry.get_support_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = ListedBoard.list_from_content(response.content)
+        boards = BoardEntry.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
@@ -551,7 +551,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`ListedBoard`
+        :class:`TibiaResponse` of list of :class:`BoardEntry`
             The forum boards in the world section.
 
         Raises
@@ -561,9 +561,9 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ListedBoard.get_world_boards_url(), test=test)
+        response = await self._request("GET", BoardEntry.get_world_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = ListedBoard.list_from_content(response.content)
+        boards = BoardEntry.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
@@ -579,7 +579,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`ListedBoard`
+        :class:`TibiaResponse` of list of :class:`BoardEntry`
             The forum boards in the trade section.
 
         Raises
@@ -589,9 +589,9 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request."""
-        response = await self._request("GET", ListedBoard.get_trade_boards_url(), test=test)
+        response = await self._request("GET", BoardEntry.get_trade_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = ListedBoard.list_from_content(response.content)
+        boards = BoardEntry.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
@@ -1137,7 +1137,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`ListedGuild`
+        :class:`TibiaResponse` of list of :class:`GuildEntry`
             A response containing the lists of guilds in the world.
 
         Raises
@@ -1148,9 +1148,9 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", ListedGuild.get_world_list_url(world), test=test)
+        response = await self._request("GET", GuildEntry.get_world_list_url(world), test=test)
         start_time = time.perf_counter()
-        guilds = ListedGuild.list_from_content(response.content)
+        guilds = GuildEntry.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guilds, parsing_time)
 

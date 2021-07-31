@@ -22,8 +22,8 @@ from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Hi
     NewsArchive, VocationFilter, \
     Category, \
     House, HouseEntry, \
-    ListedGuild, \
-    KillStatistics, NewsEntry, News, World, WorldOverview, Forbidden, NetworkError, Creature, AuctionDetails, \
+    GuildEntry, \
+    KillStatistics, NewsEntry, News, World, WorldOverview, Forbidden, NetworkError, Creature, Auction, \
     EventSchedule
 
 
@@ -98,10 +98,10 @@ class TestClient(asynctest.TestCase, TestCommons):
         """Testing fetching a world's guild list"""
         world = "Zuna"
         content = self.load_resource(FILE_GUILD_LIST)
-        mock.get(ListedGuild.get_world_list_url(world), status=200, body=content)
+        mock.get(GuildEntry.get_world_list_url(world), status=200, body=content)
         guilds = await self.client.fetch_world_guilds(world)
 
-        self.assertIsInstance(guilds.data[0], ListedGuild)
+        self.assertIsInstance(guilds.data[0], GuildEntry)
 
     @aioresponses()
     async def test_client_fetch_highscores_page(self, mock):
@@ -258,9 +258,9 @@ class TestClient(asynctest.TestCase, TestCommons):
     async def test_client_fetch_auction(self, mock):
         """Testing fetching an auction"""
         content = self.load_resource(FILE_AUCTION_FINISHED)
-        mock.get(AuctionDetails.get_url(134), status=200, body=content)
+        mock.get(Auction.get_url(134), status=200, body=content)
         response = await self.client.fetch_auction(134)
-        self.assertIsInstance(response.data, AuctionDetails)
+        self.assertIsInstance(response.data, Auction)
 
     async def test_client_fetch_auction_invalid_id(self):
         """Testing fetching an auction with an invalid id"""
@@ -280,7 +280,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         with self.assertRaises(ValueError):
             await self.client.fetch_event_schedule(3)
 
-    @unittest.mock.patch("tibiapy.bazaar.AuctionDetails._parse_page_items")
+    @unittest.mock.patch("tibiapy.bazaar.Auction._parse_page_items")
     @unittest.skipIf(sys.version_info < (3, 8, 0), "AsyncMock was implemented in 3.8")
     async def test_client__fetch_all_pages_success(self, parse_page_items):
         """Testing internal method to fetch all pages of an auction item collection."""

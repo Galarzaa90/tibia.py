@@ -215,9 +215,9 @@ WorldOverview
    :members:
    :inherited-members:
 
-ListedWorld
+WorldEntry
 -----------
-.. autoclass:: ListedWorld
+.. autoclass:: WorldEntry
    :members:
    :inherited-members:
 
@@ -235,7 +235,7 @@ OnlineCharacter
 
 Guilds
 ======
-Models related to `Tibia.com's Guilds section`_. The main model is :class:`Guild`, while :class:`ListedGuild` is the
+Models related to `Tibia.com's Guilds section`_. The main model is :class:`Guild`, while :class:`GuildEntry` is the
 previewed information in the guild list.
 
 .. _Tibia.com's Guilds section: https://www.tibia.com/community/?subtopic=guilds
@@ -246,9 +246,9 @@ Guild
    :members:
    :inherited-members:
 
-ListedGuild
------------
-.. autoclass:: ListedGuild
+GuildEntry
+----------
+.. autoclass:: GuildEntry
    :members:
    :inherited-members:
 
@@ -380,9 +380,9 @@ TournamentLeaderboard
 Auxiliary Classes
 -----------------
 
-ListedTournament
-~~~~~~~~~~~~~~~~
-.. autoclass:: ListedTournament
+TournamentEntry
+~~~~~~~~~~~~~~~
+.. autoclass:: TournamentEntry
    :members:
    :inherited-members:
 
@@ -447,21 +447,21 @@ ForumThread
     :members:
     :inherited-members:
 
-ListedAnnouncement
+AnnouncementEntry
 ------------------
-.. autoclass:: ListedAnnouncement
+.. autoclass:: AnnouncementEntry
     :members:
     :inherited-members:
 
-ListedBoard
+BoardEntry
+----------
+.. autoclass:: BoardEntry
+    :members:
+    :inherited-members:
+
+ThreadEntry
 -----------
-.. autoclass:: ListedBoard
-    :members:
-    :inherited-members:
-
-ListedThread
-------------
-.. autoclass:: ListedThread
+.. autoclass:: ThreadEntry
     :members:
     :inherited-members:
 
@@ -540,15 +540,15 @@ CharacterBazaar
    :members:
    :inherited-members:
 
-ListedAuction
--------------
-.. autoclass:: ListedAuction
+AuctionEntry
+------------
+.. autoclass:: AuctionEntry
     :members:
     :inherited-members:
 
-AuctionDetails
----------------
-.. autoclass:: AuctionDetails
+Auction
+-------
+.. autoclass:: Auction
    :members:
    :inherited-members:
 
