@@ -563,10 +563,10 @@ class Character(abc.BaseCharacter, abc.Serializable):
         rows: :class:`list` of :class:`bs4.Tag`
             A list of all rows contained in the table.
         """
-        for row in rows:
+        for row in rows[1:]:
             cols_raw = row.find_all('td')
             cols = [ele.text.strip() for ele in cols_raw]
-            if len(cols) != 5:
+            if len(cols) != 4:
                 continue
             name, world, status, *__ = cols
             _, *name = name.replace("\xa0", " ").split(" ")
@@ -603,8 +603,15 @@ class Character(abc.BaseCharacter, abc.Serializable):
         tables = parsed_content.find_all('table', attrs={"width": "100%"})
         output = OrderedDict()
         for table in tables:
-            title = table.find("td").text
-            output[title] = table.find_all("tr")[1:]
+            container = table.find_parent("div", {"class": "TableContainer"})
+            if container:
+                caption_container = container.find("div", {"class": "CaptionContainer"})
+                title = caption_container.text.strip()
+                offset = 0
+            else:
+                title = table.find("td").text.strip()
+                offset = 1
+            output[title] = table.find_all("tr")[offset:]
         return output
     # endregion
 

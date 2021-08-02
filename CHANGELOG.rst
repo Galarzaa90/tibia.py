@@ -20,6 +20,7 @@ Changelog
 - New ``HousesSection`` class, including the house filtering attributes.
 - New ``NewsArchive`` class, including the news filtering attributes.
 - Many "ListedObject" classes were renamed to "ObjectEntry", for details check the breaking changes below.
+- Fixed bug with other characters not being parsed.
 
 **Breaking Changes**:
 

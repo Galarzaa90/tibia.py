@@ -355,8 +355,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
 
 class GuildMember(abc.BaseCharacter, abc.Serializable):
-    """
-    Represents a guild member.
+    """Represents a guild member.
 
     Attributes
     --------------
@@ -375,7 +374,15 @@ class GuildMember(abc.BaseCharacter, abc.Serializable):
     online: :class:`bool`
         Whether the member is online or not.
     """
-    __slots__ = ("name", "rank", "title", "level", "vocation", "joined", "online")
+    __slots__ = (
+        "name",
+        "rank",
+        "title",
+        "level",
+        "vocation",
+        "joined",
+        "online"
+    )
 
     def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, **kwargs):
         self.name: str = name
@@ -385,6 +392,10 @@ class GuildMember(abc.BaseCharacter, abc.Serializable):
         self.level = int(level)
         self.online: bool = kwargs.get("online", False)
         self.joined: datetime.date = try_date(kwargs.get("joined"))
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} rank={self.rank!r} level={self.level} " \
+               f"vocation={self.vocation!r}>"
 
 
 class GuildInvite(abc.BaseCharacter, abc.Serializable):

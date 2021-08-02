@@ -66,7 +66,7 @@ class AchievementEntry(abc.Serializable):
     )
 
     def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} secret={self.secret}>"
+        return f"<{self.__class__.__name__} name={self.name!r} secret={self.secret}>"
 
 
 class AuctionFilters(abc.Serializable):
@@ -254,7 +254,7 @@ class BestiaryEntry(abc.Serializable):
     )
 
     def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} kills={self.kills} step={self.step}>"
+        return f"<{self.__class__.__name__} name={self.name!r} kills={self.kills} step={self.step}>"
 
     @property
     def completed(self):
@@ -270,15 +270,20 @@ class BlessingEntry(abc.Serializable):
     name: :class:`str`
         The name of the blessing.
     amount: :class:`int`
-        The amount of blessing charges the character has."""
-    def __init__(self, name, amount=0):
-        self.name: str = name
-        self.amount: int = amount
+        The amount of blessing charges the character has.
+    """
 
     __slots__ = (
         "name",
         "amount",
     )
+
+    def __init__(self, name, amount=0):
+        self.name: str = name
+        self.amount: int = amount
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} amount={self.amount}>"
 
 
 class CharacterBazaar(abc.Serializable):
@@ -429,7 +434,7 @@ class CharmEntry(abc.Serializable):
     )
 
     def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} cost={self.cost}>"
+        return f"<{self.__class__.__name__} name={self.name!r} cost={self.cost}>"
 
 
 class DisplayImage(abc.Serializable):
@@ -694,7 +699,7 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
         self.status: AuctionStatus = kwargs.get("status")
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} auction_id={self.auction_id} name={self.name} world={self.world}>"
+        return f"<{self.__class__.__name__} auction_id={self.auction_id} name={self.name!r} world={self.world!r}>"
 
     @property
     def character_url(self):

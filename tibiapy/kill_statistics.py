@@ -83,6 +83,8 @@ class KillStatistics(abc.Serializable):
             world = selection_table.find("option", {"selected": True})["value"]
 
             entries_table = parsed_content.find('table', attrs={'border': '0', 'cellpadding': '3'})
+            if not entries_table:
+                entries_table = parsed_content.find("table", {"class": "Table3"})
             # If the entries table doesn't exist, it means that this belongs to an nonexistent or unselected world.
             if entries_table is None:
                 return None
@@ -92,6 +94,8 @@ class KillStatistics(abc.Serializable):
             for i, row in enumerate(rows):
                 columns_raw = row.find_all('td')
                 columns = [c.text.replace('\xa0', ' ').strip() for c in columns_raw]
+                if not columns[2].isnumeric():
+                    continue
                 entry = RaceEntry(last_day_players_killed=int(columns[1]),
                                   last_day_killed=int(columns[2]),
                                   last_week_players_killed=int(columns[3]),
