@@ -7,7 +7,7 @@ from tibiapy import abc
 from tibiapy.enums import Category, Vocation, VocationFilter, BattlEyeTypeFilter, PvpTypeFilter, \
     BattlEyeHighscoresFilter
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_tibiacom_content, try_enum, parse_integer
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibiacom_content, try_enum, parse_integer
 
 __all__ = (
     "Highscores",
@@ -51,6 +51,8 @@ class Highscores(abc.Serializable):
         How long ago were this results updated. The resolution is 1 minute.
     entries: :class:`list` of :class:`HighscoresEntry`
         The highscores entries found.
+    available_worlds: :class:`list` of :class:`str`
+        The worlds available for selection.
     """
     _ENTRIES_PER_PAGE = 50
 
@@ -76,6 +78,7 @@ class Highscores(abc.Serializable):
         'results_count',
         'last_updated',
         'entries',
+        'available_worlds',
     )
 
     _serializable_properties = (
@@ -157,14 +160,14 @@ class Highscores(abc.Serializable):
         InvalidContent
             If content is not the HTML of a highscore's page."""
         parsed_content = parse_tibiacom_content(content)
+        form = parsed_content.find("form")
         tables = cls._parse_tables(parsed_content)
-        filters = tables.get("Highscores Filter")
-        if filters is None:
+        if form is None:
             if "Error" in tables and "The world doesn't exist!" in tables["Error"].text:
                 return None
             raise InvalidContent("content does is not from the highscores section of Tibia.com")
         highscores = cls(None)
-        highscores._parse_filters_table(filters)
+        highscores._parse_filters_table(form)
         last_update_container = parsed_content.find("span", attrs={"class": "RightArea"})
         if last_update_container:
             m = numeric_pattern.search(last_update_container.text)
@@ -231,38 +234,24 @@ class Highscores(abc.Serializable):
                 break
             self._parse_entry(cols_raw)
 
-    def _parse_filters_table(self, table):
+    def _parse_filters_table(self, form):
         """
         Parses the filters table found in a highscores page.
 
         Parameters
         ----------
-        table: :class:`bs4.Tag`
+        form: :class:`bs4.Tag`
             The table containing the filters.
         """
-        dropdowns = {s["name"]: s for s in table.find_all("select")}
-        selected_world = dropdowns["world"].find("option", {"selected": "selected"})
-        if selected_world:
-            value = selected_world["value"]
-            self.world = value if value and "All Worlds" not in value else None
-        selected_be = dropdowns["beprotection"].find("option", {"selected": "selected"})
-        if selected_be:
-            value = selected_be["value"]
-            num_value = int(value)
-            self.battleye_filter = try_enum(BattlEyeHighscoresFilter, num_value)
-        selected_profession = dropdowns["profession"].find("option", {"selected": "selected"})
-        if selected_profession:
-            value = selected_profession["value"]
-            num_value = int(value)
-            self.vocation = try_enum(VocationFilter, num_value, VocationFilter.ALL)
-        selected_category = dropdowns["category"].find("option", {"selected": "selected"})
-        if selected_category:
-            value = selected_category["value"]
-            num_value = int(value)
-            self.category = try_enum(Category, num_value)
-        checkboxes = table.find_all("input", {"type": "checkbox", "checked": "checked"})
+        data = parse_form_data(form, include_options=True)
+        self.world = data["world"] if data.get("world") else None
+        self.battleye_filter = try_enum(BattlEyeHighscoresFilter, parse_integer(data.get("beprotection"), None))
+        self.category = try_enum(Category, parse_integer(data.get("category"), None))
+        self.vocation = try_enum(VocationFilter, parse_integer(data.get("profession"), None), VocationFilter.ALL)
+        checkboxes = form.find_all("input", {"type": "checkbox", "checked": "checked"})
         values = [int(c["value"]) for c in checkboxes]
         self.pvp_types_filter = [try_enum(PvpTypeFilter, v) for v in values]
+        self.available_words = [v for v in data["__options__"]["world"].values() if v]
 
     @classmethod
     def _parse_tables(cls, parsed_content):

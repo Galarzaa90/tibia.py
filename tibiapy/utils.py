@@ -110,6 +110,8 @@ def parse_form_data(form: bs4.Tag, include_options=False):
         data[name] = selected_option.attrs.get("value") if selected_option else None
     checkboxes = form.find_all("input", {"type": "checkbox", "checked": True})
     data.update({field.attrs.get("name"): field.attrs.get("value") for field in checkboxes})
+    radios = form.find_all("input", {"type": "radio", "checked": True})
+    data.update({field.attrs.get("name"): field.attrs.get("value") for field in radios})
     return data
 
 

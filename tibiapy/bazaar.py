@@ -2,7 +2,6 @@ import datetime
 import logging
 import re
 import urllib.parse
-import warnings
 from typing import Dict, List, Optional
 
 import bs4
@@ -11,7 +10,7 @@ from tibiapy import InvalidContent, Sex, Vocation, abc
 from tibiapy.abc import BaseCharacter
 from tibiapy.enums import AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
     BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter
-from tibiapy.utils import convert_line_breaks, deprecated, get_tibia_url, parse_integer, parse_pagination, \
+from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_form_data, parse_integer, parse_pagination, \
     parse_tibia_datetime, parse_tibiacom_content, try_enum
 
 __all__ = (
@@ -99,6 +98,8 @@ class AuctionFilters(abc.Serializable):
         The search term to filter out auctions.
     search_type: :class:`AuctionSearchType`
         The type of search to use. Defines the behaviour of :py:attr:`search_string`.
+    available_worlds: :class:`list` of :class:`str`
+        The list of available worlds to select to filter.
     """
 
     __slots__ = (
@@ -115,6 +116,7 @@ class AuctionFilters(abc.Serializable):
         "order",
         "search_string",
         "search_type",
+        "available_worlds",
     )
 
     def __init__(self, **kwargs):
@@ -131,6 +133,7 @@ class AuctionFilters(abc.Serializable):
         self.order: Optional[AuctionOrder] = kwargs.get("order")
         self.search_string: Optional[str] = kwargs.get("search_string")
         self.search_type: Optional[AuctionSearchType] = kwargs.get("search_type")
+        self.available_worlds: List[str] = kwargs.get("available_worlds", [])
 
     def __repr__(self):
         attributes = ""
@@ -173,59 +176,23 @@ class AuctionFilters(abc.Serializable):
 
         """
         filters = AuctionFilters()
-        world_select = table.find("select", {"name": "filter_world"})
-        selected_world_option = world_select.find("option", {"selected": True})
-        if selected_world_option is not None and selected_world_option["value"]:
-            filters.world = selected_world_option["value"]
-
-        pvp_select = table.find("select", {"name": "filter_worldpvptype"})
-        selected_pvp_option = pvp_select.find("option", {"selected": True})
-        if selected_pvp_option is not None and selected_pvp_option["value"]:
-            filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(selected_pvp_option["value"], None))
-
-        battleye_select = table.find("select", {"name": "filter_worldbattleyestate"})
-        selected_battleye_option = battleye_select.find("option", {"selected": True})
-        if selected_battleye_option is not None and selected_battleye_option["value"]:
-            filters.battleye = try_enum(BattlEyeTypeFilter, parse_integer(selected_battleye_option["value"], None))
-
-        vocation_select = table.find("select", {"name": "filter_profession"})
-        selected_vocation_option = vocation_select.find("option", {"selected": True})
-        if selected_vocation_option is not None and selected_vocation_option["value"]:
-            filters.vocation = try_enum(VocationAuctionFilter, parse_integer(selected_vocation_option["value"], None))
-
-        minlevel_input = table.find("input", {"name": "filter_levelrangefrom"})
-        maxlevel_input = table.find("input", {"name": "filter_levelrangeto"})
-        filters.min_level = parse_integer(minlevel_input["value"], None)
-        filters.max_level = parse_integer(maxlevel_input["value"], None)
-
-        skill_select = table.find("select", {"name": "filter_skillid"})
-        selected_skill_option = skill_select.find("option", {"selected": True})
-        if selected_skill_option is not None and selected_skill_option["value"]:
-            filters.skill = try_enum(SkillFilter, parse_integer(selected_skill_option["value"], None))
-        min_skill_level_input = table.find("input", {"name": "filter_skillrangefrom"})
-        max_skill_level_input = table.find("input", {"name": "filter_skillrangeto"})
-        filters.min_skill_level = parse_integer(min_skill_level_input["value"], None)
-        filters.max_skill_level = parse_integer(max_skill_level_input["value"], None)
-
-        order_by_select = table.find("select", {"name": "order_column"})
-        selected_order_by_option = order_by_select.find("option", {"selected": True})
-        if selected_order_by_option is not None and selected_order_by_option["value"]:
-            filters.order_by = try_enum(AuctionOrderBy, parse_integer(selected_order_by_option["value"], None))
-
-        order_select = table.find("select", {"name": "order_direction"})
-        selected_order_option = order_select.find("option", {"selected": True})
-        if selected_order_option is not None and selected_order_option["value"]:
-            filters.order = try_enum(AuctionOrder, parse_integer(selected_order_option["value"], None))
-
-        search_string_input = table.find("input", {"name": "searchstring"})
-        if search_string_input is not None and search_string_input["value"]:
-            filters.search_string = search_string_input["value"] or None
-
-        search_type_input = table.find("input", {"name": "searchtype", "checked": "checked"})
-
-        if search_type_input is not None and search_type_input["value"]:
-            filters.search_type = try_enum(AuctionSearchType, parse_integer(search_type_input["value"], None))
-
+        forms = table.find_all("form")
+        data = parse_form_data(forms[0], include_options=True)
+        data_search = parse_form_data(forms[1], include_options=True)
+        filters.world = data["filter_world"]
+        filters.available_worlds = [w for w in data.get("__options__", {}).get("filter_world", []) if "(" not in w]
+        filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(data.get("filter_worldpvptype"), None))
+        filters.battleye = try_enum(BattlEyeTypeFilter, parse_integer(data.get("filter_worldbattleyestate"), None))
+        filters.vocation = try_enum(VocationAuctionFilter, parse_integer(data.get("filter_profession"), None))
+        filters.min_level = parse_integer(data.get("filter_levelrangefrom"), None)
+        filters.max_level = parse_integer(data.get("filter_levelrangeto"), None)
+        filters.skill = try_enum(SkillFilter, parse_integer(data.get("filter_skillid"), None))
+        filters.min_skill_level = parse_integer(data.get("filter_skillrangefrom"), None)
+        filters.max_skill_level = parse_integer(data.get("filter_skillrangeto"), None)
+        filters.order_by = try_enum(AuctionOrderBy, parse_integer(data.get("order_column"), None))
+        filters.order = try_enum(AuctionOrder, parse_integer(data.get("order_direction"), None))
+        filters.search_string = data_search.get("searchstring")
+        filters.search_type = try_enum(AuctionSearchType, parse_integer(data_search.get("searchtype"), None))
         return filters
 
 
