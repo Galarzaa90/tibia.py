@@ -1,8 +1,8 @@
-from typing import Dict
+from typing import Dict, List
 
 from tibiapy import abc
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_tibiacom_content
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibiacom_content
 
 __all__ = (
     "KillStatistics",
@@ -21,17 +21,21 @@ class KillStatistics(abc.Serializable):
         A dictionary of kills entries of every race, where the key is the name of the race.
     total: :class:`RaceEntry`
         The kill statistics totals.
+    available_worlds: :class:`list` of :class:`str`
+        The list of worlds available for selection.
     """
     __slots__ = (
         "world",
-        "entries",
         "total",
+        "entries",
+        "available_worlds",
     )
 
-    def __init__(self, world, entries=None, total=None):
+    def __init__(self, world, entries=None, total=None, available_worlds=None):
         self.world: str = world
         self.entries: Dict[str, RaceEntry] = entries or dict()
         self.total: RaceEntry = total or RaceEntry()
+        self.available_worlds: List[str] = available_worlds or []
 
     @property
     def url(self):
@@ -79,10 +83,11 @@ class KillStatistics(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            selection_table = parsed_content.find('div', attrs={'class': 'TableContainer'})
-            world = selection_table.find("option", {"selected": True})["value"]
-
             entries_table = parsed_content.find('table', attrs={'border': '0', 'cellpadding': '3'})
+            form = parsed_content.find("form")
+            data = parse_form_data(form, include_options=True)
+            world = data["world"]
+            available_worlds = list(data["__options__"]["world"].values())
             if not entries_table:
                 entries_table = parsed_content.find("table", {"class": "Table3"})
             # If the entries table doesn't exist, it means that this belongs to an nonexistent or unselected world.
@@ -104,9 +109,9 @@ class KillStatistics(abc.Serializable):
                     total = entry
                 else:
                     entries[columns[0]] = entry
-            return cls(world, entries, total)
-        except AttributeError:
-            raise InvalidContent("content does not belong to a Tibia.com kill statistics page.")
+            return cls(world, entries, total, available_worlds=available_worlds)
+        except AttributeError as e:
+            raise InvalidContent("content does not belong to a Tibia.com kill statistics page.", e)
 
 
 class RaceEntry(abc.Serializable):
