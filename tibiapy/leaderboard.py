@@ -3,7 +3,7 @@ import re
 from typing import List, Optional
 
 from tibiapy import abc
-from tibiapy.utils import get_tibia_url, parse_pagination, parse_tibia_datetime, parse_tibiacom_content
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_pagination, parse_tibia_datetime, parse_tibiacom_content
 
 __all__ = (
     'Leaderboard',
@@ -56,7 +56,7 @@ class Leaderboard(abc.Serializable):
         self.rotation: LeaderboardRotation = rotation
         self.available_worlds: List[str] = kwargs.get("available_worlds", [])
         self.available_rotations: List[LeaderboardRotation] = kwargs.get("available_rotations", [])
-        self.entries = kwargs.get("entries", [])
+        self.entries: List[LeaderboardEntry] = kwargs.get("entries", [])
         self.last_update: Optional[datetime.timedelta] = kwargs.get("last_update")
         self.page: int = kwargs.get("page", 1)
         self.total_pages: int = kwargs.get("total_pages", 1)
@@ -134,12 +134,23 @@ class Leaderboard(abc.Serializable):
         """
         parsed_content = parse_tibiacom_content(content)
         tables = parsed_content.find_all("table", {"class": "TableContent"})
-        filter_table = tables[1]
-        world_select, rotation_select = filter_table.find_all("select")
-        current_world, worlds = cls._parse_world(world_select)
-        current_rotation, rotations = cls._parse_rotation(rotation_select)
+        form = parsed_content.find("form")
+        data = parse_form_data(form, include_options=True)
+        current_world =data["world"]
+        current_rotation = None
+        rotations = []
+        for label, value in data["__options__"]["rotation"].items():
+            current = False
+            if "Current" in label:
+                label = "".join(rotation_end_pattern.findall(label))
+                current = True
+            rotation_end = parse_tibia_datetime(label)
+            rotation = LeaderboardRotation(int(value), rotation_end, current)
+            if value == data["rotation"]:
+                current_rotation = rotation
+            rotations.append(rotation)
         leaderboard = cls(current_world, current_rotation)
-        leaderboard.available_worlds = worlds
+        leaderboard.available_worlds = [w for w in data["__options__"]["world"].values() if w]
         leaderboard.available_rotations = rotations
         if leaderboard.rotation.current:
             last_update_table = tables[2]
@@ -153,39 +164,6 @@ class Leaderboard(abc.Serializable):
         leaderboard.total_pages = total
         leaderboard.results_count = count
         return leaderboard
-
-    @classmethod
-    def _parse_rotation(cls, rotation_select):
-        rotations = []
-        current_rotation = None
-        rotation_options = rotation_select.find_all("option")
-        for rotation_option in rotation_options:
-            rotation_text = rotation_option.text
-            rotation_id = int(rotation_option.attrs.get("value"))
-            rotation_current = False
-            if "Current" in rotation_text:
-                rotation_current = True
-                rotation_text = "".join(rotation_end_pattern.findall(rotation_text))
-            rotation_end = parse_tibia_datetime(rotation_text)
-            rotation = LeaderboardRotation(rotation_id, rotation_end, rotation_current)
-            rotations.append(rotation)
-            if "selected" in rotation_option.attrs:
-                current_rotation = rotation
-        return current_rotation, rotations
-
-    @classmethod
-    def _parse_world(cls, world_select):
-        worlds = []
-        current_world = None
-        world_options = world_select.find_all("option")
-        for world_option in world_options:
-            world_name = world_option.text
-            if "-" in world_name:
-                continue
-            worlds.append(world_name)
-            if "selected" in world_option.attrs:
-                current_world = world_name
-        return current_world, worlds
 
     def _parse_entries(self, entries_table):
         entries_rows = entries_table.find_all("tr", {'style': True})
@@ -252,3 +230,8 @@ class LeaderboardRotation(abc.Serializable):
     def __repr__(self):
         return f"<{self.__class__.__name__} rotation_id={self.rotation_id} end_date={self.end_date!r} " \
                f"current={self.current!r}>"
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return other.rotation_id == self.rotation_id
+        return False

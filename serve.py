@@ -395,4 +395,4 @@ if __name__ == "__main__":
     print("Registered routes:")
     for route in routes:  # type: RouteDef
         print('- %s %s' % (route.method, route.path))
-    web.run_app(app, port=8080)
+    web.run_app(app, port=8000)
