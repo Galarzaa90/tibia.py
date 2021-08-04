@@ -22,6 +22,8 @@ Changelog
 - New ``GuildsSection`` class, to replace the lists of ``GuildEntry``
 - Many "ListedObject" classes were renamed to "ObjectEntry", for details check the breaking changes below.
 - Fixed bug with other characters not being parsed.
+- Added ``traded`` attribute to ``LastPost`` class.
+- Added ``thread_starter_traded`` attribute to ``ThreadEntry``
 
 **Breaking Changes**:
 

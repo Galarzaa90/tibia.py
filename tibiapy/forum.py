@@ -758,9 +758,14 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
             last_post_column = columns[6]
             last_post = LastPost._parse_column(last_post_column)
 
+            traded = False
+            if "(traded)" in thread_starter:
+                traded = True
+                thread_starter = thread_starter.replace("(traded)", "").strip()
+
             entry = ThreadEntry(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
                                 views=views, last_post=last_post, emoticon=emoticon, status=status, pages=pages,
-                                status_icon=status_icon)
+                                status_icon=status_icon, thread_starter_traded=traded)
         else:
             title = title.replace("Announcement: ", "")
             announcement_id = int(announcement_id_regex.search(thread_link["href"]).group(1))
@@ -1131,19 +1136,23 @@ class LastPost(abc.BasePost, abc.Serializable):
         The date when the last post was made.
     deleted: :class:`bool`
         Whether the last post's author is a character that is already deleted.
+    traded: :class:`bool`
+        Whether the last post's author was recently traded.
     """
 
-    def __init__(self, author, post_id, date, *, deleted=False):
+    def __init__(self, author, post_id, date, *, deleted=False, traded=False):
         self.author: str = author
         self.post_id: int = post_id
         self.date: datetime.datetime = date
         self.deleted: bool = deleted
+        self.traded: bool = traded
 
     __slots__ = (
         "author",
         "post_id",
         "date",
         "deleted",
+        "traded",
     )
 
     def __repr__(self):
@@ -1183,8 +1192,11 @@ class LastPost(abc.BasePost, abc.Serializable):
         author_link = last_post_author_tag.find("a")
         deleted = author_link is None
         author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
-
-        return cls(author, post_id, last_post_date, deleted=deleted)
+        traded = False
+        if "(traded)" in author:
+            author = author.replace("(traded)", "").strip()
+            traded = True
+        return cls(author, post_id, last_post_date, deleted=deleted, traded=traded)
 
 
 class AnnouncementEntry(abc.BaseAnnouncement, abc.Serializable):
@@ -1354,8 +1366,10 @@ class ThreadEntry(abc.BaseThread, abc.Serializable):
         The title of the thread.
     thread_id: :class:`int`
         The internal id of the thread.
-    thread_started: :class:`str`
+    thread_starter: :class:`str`
         The character that started the thread.
+    thread_starter_traded: :class:`bool`
+        Whether the thread starter was recently traded or not.
     replies: :class:`int`
         The number of replies.
     views: :class:`int`
@@ -1380,6 +1394,7 @@ class ThreadEntry(abc.BaseThread, abc.Serializable):
         self.title: str = kwargs.get("title")
         self.thread_id: int = kwargs.get("thread_id")
         self.thread_starter: str = kwargs.get("thread_starter")
+        self.thread_starter_traded: bool = kwargs.get("thread_starter_traded")
         self.replies: int = kwargs.get("replies")
         self.views: int = kwargs.get("views")
         self.last_post: LastPost = kwargs.get("last_post")
@@ -1393,6 +1408,7 @@ class ThreadEntry(abc.BaseThread, abc.Serializable):
         "title",
         "thread_id",
         "thread_starter",
+        "thread_starter_traded",
         "replies",
         "views",
         "last_post",
