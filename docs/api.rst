@@ -240,6 +240,12 @@ previewed information in the guild list.
 
 .. _Tibia.com's Guilds section: https://www.tibia.com/community/?subtopic=guilds
 
+GuildsSection
+-------------
+.. autoclass:: GuildsSection
+   :members:
+   :inherited-members:
+
 Guild
 -----
 .. autoclass:: Guild

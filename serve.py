@@ -36,13 +36,13 @@ class CustomJson:
 
 def json_response(content):
     status = 200 if content and content.data else 404
-    return web.json_response(content, status=status, dumps=CustomJson.dumps)
+    return web.Response(text=content.to_json(), content_type="application/json")
 
 
 @routes.get('/')
 async def home(request: web.Request):
     content = "<h1>Routes</hº><table><tr><th>Name</th><th>Path</th><tr>"
-    for route in routes:  # type: RouteDef
+    for route in sorted(routes, key=lambda r: r.path):  # type: RouteDef
         if route.path == "/":
             continue
         content += f'<tr><td>{route.handler.__name__}</td><td><code>{route.path}</code></td></tr>'
@@ -395,4 +395,4 @@ if __name__ == "__main__":
     print("Registered routes:")
     for route in routes:  # type: RouteDef
         print('- %s %s' % (route.method, route.path))
-    web.run_app(app, port=8000)
+    web.run_app(app, port=8080)

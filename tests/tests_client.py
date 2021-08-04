@@ -18,7 +18,8 @@ from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
-from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, HouseType, HousesSection, \
+from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, GuildsSection, Highscores, HouseType, \
+    HousesSection, \
     NewsArchive, VocationFilter, \
     Category, \
     House, HouseEntry, \
@@ -98,10 +99,11 @@ class TestClient(asynctest.TestCase, TestCommons):
         """Testing fetching a world's guild list"""
         world = "Zuna"
         content = self.load_resource(FILE_GUILD_LIST)
-        mock.get(GuildEntry.get_world_list_url(world), status=200, body=content)
-        guilds = await self.client.fetch_world_guilds(world)
+        mock.get(GuildsSection.get_url(world), status=200, body=content)
+        response = await self.client.fetch_world_guilds(world)
+        guilds = response.data.entries
 
-        self.assertIsInstance(guilds.data[0], GuildEntry)
+        self.assertIsInstance(guilds[0], GuildEntry)
 
     @aioresponses()
     async def test_client_fetch_highscores_page(self, mock):

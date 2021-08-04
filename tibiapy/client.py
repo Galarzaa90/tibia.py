@@ -17,7 +17,7 @@ from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseStatus, House
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
 from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, BoardEntry
-from tibiapy.guild import Guild, GuildWars, GuildEntry
+from tibiapy.guild import Guild, GuildWars, GuildEntry, GuildsSection
 from tibiapy.highscores import Highscores
 from tibiapy.house import House, HousesSection
 from tibiapy.kill_statistics import KillStatistics
@@ -86,7 +86,7 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
         """:class:`datetime.timedelta`: The time left for the cache of this response to expire."""
         if not self.age:
             return datetime.timedelta()
-        return datetime.timedelta(seconds=CACHE_LIMIT-self.age)-(datetime.datetime.utcnow()-self.timestamp)
+        return datetime.timedelta(seconds=CACHE_LIMIT-self.age)-(datetime.datetime.now(datetime.timezone.utc)-self.timestamp)
 
     @property
     def seconds_left(self):
@@ -1128,6 +1128,9 @@ class Client:
     async def fetch_world_guilds(self, world: str, *, test=False):
         """Fetches the list of guilds in a world from Tibia.com
 
+        If a world that does not exist is passed, the world attribute of the result will be :obj:`None`.
+        If the world attribute is set, but the list is empty, it just means the world has no guilds.
+
         Parameters
         ----------
         world: :class:`str`
@@ -1137,8 +1140,8 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of list of :class:`GuildEntry`
-            A response containing the lists of guilds in the world.
+        :class:`TibiaResponse` of :class:`GuildsSection`
+            A response containing the guilds section for the specified world.
 
         Raises
         ------
@@ -1148,9 +1151,9 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", GuildEntry.get_world_list_url(world), test=test)
+        response = await self._request("GET", GuildsSection.get_url(world), test=test)
         start_time = time.perf_counter()
-        guilds = GuildEntry.list_from_content(response.content)
+        guilds = GuildsSection.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guilds, parsing_time)
 

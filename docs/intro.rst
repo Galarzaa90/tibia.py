@@ -85,7 +85,7 @@ Supported Sections
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (Individual)             | :meth:`Guild.from_content`                 | :meth:`Client.fetch_guild`                  |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
-| Guilds_ (List)                   | :meth:`GuildEntry.list_from_content`       | :meth:`Client.fetch_world_guilds`           |
+| Guilds_ (List)                   | :meth:`GuildsSection.from_content`         | :meth:`Client.fetch_world_guilds`           |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | Guilds_ (Wars)                   | :meth:`GuildWars.from_content`             | :meth:`Client.fetch_guild_wars`             |
 +----------------------------------+--------------------------------------------+---------------------------------------------+

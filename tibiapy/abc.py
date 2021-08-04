@@ -368,22 +368,6 @@ class BaseGuild(metaclass=abc.ABCMeta):
         """
         return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
 
-    @classmethod
-    def get_world_list_url(cls, world):
-        """Gets the Tibia.com URL for the guild section of a specific world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's page
-        """
-        return get_tibia_url("community", "guilds", world=world)
-
 
 class BaseHouse(metaclass=abc.ABCMeta):
     """Base class for all house classes

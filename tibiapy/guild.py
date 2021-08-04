@@ -9,12 +9,14 @@ from tibiapy import abc
 from tibiapy.enums import Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import parse_tibia_date, parse_tibiacom_content, try_date, try_datetime, try_enum
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibia_date, parse_tibiacom_content, try_date, \
+    try_datetime, try_enum
 
 __all__ = (
     "Guild",
     "GuildMember",
     "GuildInvite",
+    "GuildsSection",
     "GuildWars",
     "GuildWarEntry",
     "GuildEntry",
@@ -47,6 +49,111 @@ war_ended_regex = re.compile(r'war ended on (\w{3}\s\d{2}\s\d{4}) when the guild
 war_score_end_regex = re.compile(r'scored (\d+) kills against')
 
 war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
+
+
+class GuildsSection(abc.Serializable):
+    """The guilds section in Tibia.com.
+
+    Attributes
+    ----------
+    world: :class:`str`
+        The name of the world. If :obj:`None`, the section belongs to a world that doesn't exist.
+    entries: :class:`list` of :class:`GuildEntry`
+        The list of guilds in the world.
+    available_worlds: :class:`list` of :class:`str`
+        The list of worlds available for selection.
+    """
+
+    __slots__ = (
+        "world",
+        "entries",
+        "available_worlds",
+    )
+
+    def __init__(self, world, entries=None, available_worlds=None):
+        self.world: str = world
+        self.entries: List[GuildEntry] = entries or []
+        self.available_worlds: List[str] = available_worlds or []
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} world={self.world!r} len(entries)={len(self.entries)}>"
+
+    @property
+    def active_guilds(self):
+        """:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are in course of formation."""
+        return [g for g in self.entries if g.active]
+
+    @property
+    def in_formation_guilds(self):
+        """:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are in course of formation."""
+        return [g for g in self.entries if not g.active]
+
+    @property
+    def url(self):
+        """:class:`str`: Gets the URL to this guild section."""
+        return self.get_url(self.world)
+
+    @classmethod
+    def from_content(cls, content):
+        """Gets a list of guilds from the HTML content of the world guilds' page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`GuildsSection`
+            List of guilds in the current world. :obj:`None` if it's the list of a world that doesn't exist.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a guild's page.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            form = parsed_content.find("form")
+            data = parse_form_data(form, include_options=True)
+            selected_world = data["world"] if data["world"] else None
+            available_worlds = [w for w in data["__options__"]["world"].values() if w]
+            guilds = cls(selected_world, available_worlds=available_worlds)
+        except AttributeError as e:
+            raise InvalidContent("Content does not belong to world guild list.", e)
+        # First TableContainer contains world selector.
+        _, *containers = parsed_content.find_all('div', class_="TableContainer")
+        for container in containers:
+            header = container.find('div', class_="Text")
+            active = "Active" in header.text
+            header, *rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+            for row in rows:
+                columns = row.find_all('td')
+                logo_img = columns[0].find('img')["src"]
+                description_lines = columns[1].get_text("\n").split("\n", 1)
+                name = description_lines[0]
+                description = None
+                if len(description_lines) > 1:
+                    description = description_lines[1].replace("\r", "").replace("\n", " ")
+                guild = GuildEntry(name, guilds.world, logo_img, description, active)
+                guilds.entries.append(guild)
+        return guilds
+
+    @classmethod
+    def get_url(cls, world):
+        """Gets the Tibia.com URL for the guild section of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page
+        """
+        return get_tibia_url("community", "guilds", world=world)
 
 
 class Guild(abc.BaseGuild, abc.Serializable):
@@ -730,54 +837,3 @@ class GuildEntry(abc.BaseGuild, abc.Serializable):
         self.logo_url: str = logo_url
         self.description: Optional[str] = description
         self.active: bool = active
-
-    # region Public methods
-    @classmethod
-    def list_from_content(cls, content):
-        """
-        Gets a list of guilds from the HTML content of the world guilds' page.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the page.
-
-        Returns
-        -------
-        :class:`list` of :class:`GuildEntry`
-            List of guilds in the current world. :obj:`None` if it's the list of a world that doesn't exist.
-
-        Raises
-        ------
-        InvalidContent
-            If content is not the HTML of a guild's page.
-        """
-        parsed_content = parse_tibiacom_content(content)
-        selected_world = parsed_content.find('option', selected=True)
-        try:
-            if "choose world" in selected_world.text:
-                # It belongs to a world that doesn't exist
-                return None
-            world = selected_world.text
-        except AttributeError:
-            raise InvalidContent("Content does not belong to world guild list.")
-        # First TableContainer contains world selector.
-        _, *containers = parsed_content.find_all('div', class_="TableContainer")
-        guilds = []
-        for container in containers:
-            header = container.find('div', class_="Text")
-            active = "Active" in header.text
-            header, *rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
-            for row in rows:
-                columns = row.find_all('td')
-                logo_img = columns[0].find('img')["src"]
-                description_lines = columns[1].get_text("\n").split("\n", 1)
-                name = description_lines[0]
-                description = None
-                if len(description_lines) > 1:
-                    description = description_lines[1].replace("\r", "").replace("\n", " ")
-                guild = cls(name, world, logo_img, description, active)
-                guilds.append(guild)
-        return guilds
-
-    # endregion

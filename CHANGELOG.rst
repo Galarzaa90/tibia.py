@@ -19,6 +19,7 @@ Changelog
     - Internal URL attributes might still point to the regular website.
 - New ``HousesSection`` class, including the house filtering attributes.
 - New ``NewsArchive`` class, including the news filtering attributes.
+- New ``GuildsSection`` class, to replace the lists of ``GuildEntry``
 - Many "ListedObject" classes were renamed to "ObjectEntry", for details check the breaking changes below.
 - Fixed bug with other characters not being parsed.
 
@@ -41,6 +42,7 @@ Changelog
 - ``AuctionDetails`` class renamed to ``Auction``.
 - ``ListedGuild`` class renamed to ``GuildEntry``.
 - ``ListedTournament`` class renamed to ``TournamentEntry``.
+- ``Guild`` and ``GuildEntry`` class no longer have a ``get_list_url`` method.
 
 
 .. v4.1.7
