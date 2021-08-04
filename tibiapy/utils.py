@@ -1,5 +1,6 @@
 import datetime
 import functools
+import itertools
 import re
 import urllib.parse
 import warnings
@@ -77,7 +78,7 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwar
     return url
 
 
-def parse_form_data(form: bs4.Tag, include_options=False):
+def parse_form_data(form: bs4.Tag, include_options=True):
     """Parse the currently selected values in a form.
 
     This should correspond to all the data the form would send if submitted.
@@ -110,8 +111,13 @@ def parse_form_data(form: bs4.Tag, include_options=False):
         data[name] = selected_option.attrs.get("value") if selected_option else None
     checkboxes = form.find_all("input", {"type": "checkbox", "checked": True})
     data.update({field.attrs.get("name"): field.attrs.get("value") for field in checkboxes})
-    radios = form.find_all("input", {"type": "radio", "checked": True})
-    data.update({field.attrs.get("name"): field.attrs.get("value") for field in radios})
+    # Parse Radios
+    all_radios = form.find_all("input", {"type": "radio"})
+    for name, radios in itertools.groupby(all_radios, key=lambda t: t.attrs["name"]):
+        selected_radio = next((r for r in radios if r.attrs.get("checked") is not None), None)
+        if include_options:
+            data["__options__"][name] = {str(r.next_sibling).strip(): r.attrs["value"] for r in radios}
+        data[name] = selected_radio.attrs["value"] if selected_radio else None
     return data
 
 

@@ -9,7 +9,7 @@ import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, abc
+from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, Spell, SpellsSection, abc
 from tibiapy.character import Character
 from tibiapy.creature import Creature, CreatureDetail, CreaturesSection
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseStatus, HouseType, NewsCategory, \
@@ -1285,6 +1285,50 @@ class Client:
         news = News.from_content(response.content, news_id)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, news, parsing_time)
+
+    async def fetch_spells(self, *, vocation=None, group=None, spell_type=None, premium=None, sort=None, test=False):
+        """Fetchs the spells section.
+
+        Parameters
+        ----------
+        vocation: :class:`VocationSpellFilter`, optional
+            The vocation to filter in spells for.
+        group: :class:`SpellGroup`, optional
+            The spell's primary cooldown group.
+        spell_type: :class:`SpellType`, optional
+            The type of spells to show.
+        premium: :class:`bool`, optional
+            The type of premium requirement to filter. :obj:`None` means any premium requirement.
+        sort: :class:`SpellSorting`, optional
+            The field to sort spells by.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`SpellsSection`
+            The spells section with the results.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", SpellsSection.get_url(vocation=vocation, group=group,
+                                                                    spell_type=spell_type, premium=premium,
+                                                                    sort=sort), test=test)
+        start_time = time.perf_counter()
+        spells = SpellsSection.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, spells, parsing_time)
+
+    async def fetch_spell(self, name, *, test=False):
+        response = await self._request("GET", Spell.get_url(name), test=test)
+        start_time = time.perf_counter()
+        spells = Spell.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, spells, parsing_time)
 
     async def fetch_tournament(self, tournament_cycle=0, *, test=False):
         """Fetches a tournament from Tibia.com

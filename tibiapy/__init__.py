@@ -19,6 +19,7 @@ from tibiapy.news import *
 from tibiapy.tournament import *
 from tibiapy.world import *
 from tibiapy.bazaar import *
+from tibiapy.spell import *
 from tibiapy.client import *
 
 from logging import NullHandler

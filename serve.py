@@ -347,6 +347,26 @@ async def get_tournaments_leaderboard(request: web.Request):
     return json_response(response)
 
 
+@routes.get('/spells')
+async def get_spells(request: web.Request):
+    spell_type = try_enum(tibiapy.SpellType, request.query.get("type"))
+    vocation = try_enum(tibiapy.VocationSpellFilter, request.query.get("vocation"))
+    group = try_enum(tibiapy.SpellGroup, request.query.get("group"))
+    sort = try_enum(tibiapy.SpellSorting, request.query.get("sort"))
+    premium_str = request.query.get("premium")
+    premium = bool(int(premium_str)) if premium_str is not None else None
+    response = await app["tibiapy"].fetch_spells(spell_type=spell_type, vocation=vocation, group=group, premium=premium,
+                                                 sort=sort)
+    return json_response(response)
+
+
+@routes.get('/spells/{name}')
+async def get_spell(request: web.Request):
+    name = request.match_info['name']
+    response = await app["tibiapy"].fetch_spell(name)
+    return json_response(response)
+
+
 def json_error(status_code: int, exception: Exception, tb=None) -> web.Response:
     return web.Response(
         status=status_code,
@@ -395,4 +415,4 @@ if __name__ == "__main__":
     print("Registered routes:")
     for route in routes:  # type: RouteDef
         print('- %s %s' % (route.method, route.path))
-    web.run_app(app, port=8080)
+    web.run_app(app, port=8000)

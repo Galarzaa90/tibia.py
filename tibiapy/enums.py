@@ -21,6 +21,9 @@ __all__ = (
     'PvpTypeFilter',
     'Sex',
     'SkillFilter',
+    'SpellGroup',
+    'SpellSorting',
+    'SpellType',
     'ThreadStatus',
     'TournamentWorldType',
     'TournamentPhase',
@@ -28,6 +31,7 @@ __all__ = (
     'Vocation',
     'VocationAuctionFilter',
     'VocationFilter',
+    'VocationSpellFilter',
     'WorldLocation',
 )
 
@@ -286,6 +290,27 @@ class SkillFilter(NumericEnum):
     SWORD_FIGHTING = 8
 
 
+class SpellGroup(BaseEnum):
+    ATTACK = "Attack"
+    HEALING = "Healing"
+    SUPPORT = "Support"
+
+
+class SpellType(BaseEnum):
+    INSTANT = "Instant"
+    RUNE = "Rune"
+
+
+class SpellSorting(BaseEnum):
+    NAME = "name"
+    GROUP = "group"
+    TYPE = "type"
+    EXP_LEVEL = "level"
+    MANA = "mana"
+    PRICE = "price"
+    PREMIUM = "premium"
+
+
 class ThreadStatus(enum.Flag):
     """The possible status a thread can have.
 
@@ -414,6 +439,14 @@ class VocationFilter(NumericEnum):
         if all_fallback or name.upper() == "ALL":
             return cls.ALL
         return None
+
+
+class VocationSpellFilter(BaseEnum):
+    """The possible vocation types to filter out spells."""
+    DRUID = "Druid"
+    KNIGHT = "Knight"
+    PALADIN = "Paladin"
+    SORCERER = "Sorcerer"
 
 
 class WorldLocation(BaseEnum):
