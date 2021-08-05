@@ -17,123 +17,6 @@ Client
 .. autoclass:: TibiaResponse
     :members:
 
-Enumerations
-============
-Enumerations are provided for various values in order to avoid depending on strings.
-
-.. autoclass:: AccountStatus
-    :members:
-    :undoc-members:
-
-.. autoclass:: AuctionOrder
-    :members:
-    :undoc-members:
-
-.. autoclass:: AuctionOrderBy
-    :members:
-    :undoc-members:
-
-.. autoclass:: AuctionSearchType
-    :members:
-    :undoc-members:
-
-.. autoclass:: AuctionStatus
-    :members:
-    :undoc-members:
-
-.. autoclass:: BattlEyeType
-    :members:
-    :undoc-members:
-
-.. autoclass:: BattlEyeHighscoresFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: BattlEyeTypeFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: BazaarType
-    :members:
-    :undoc-members:
-
-.. autoclass:: BidType
-    :members:
-    :undoc-members:
-
-.. autoclass:: Category
-    :members:
-    :undoc-members:
-
-.. autoclass:: HouseOrder
-    :members:
-    :undoc-members:
-
-.. autoclass:: HouseStatus
-    :members:
-    :undoc-members:
-
-.. autoclass:: HouseType
-    :members:
-    :undoc-members:
-
-.. autoclass:: NewsCategory
-    :members:
-    :undoc-members:
-
-.. autoclass:: NewsType
-    :members:
-    :undoc-members:
-
-.. autoclass:: PvpTypeFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: PvpType
-    :members:
-    :undoc-members:
-
-.. autoclass:: Sex
-    :members:
-    :undoc-members:
-
-.. autoclass:: SkillFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: ThreadStatus
-    :members:
-    :undoc-members:
-
-.. autoclass:: TournamentWorldType
-    :members:
-    :undoc-members:
-
-.. autoclass:: TournamentPhase
-    :members:
-    :undoc-members:
-
-.. autoclass:: TransferType
-    :members:
-    :undoc-members:
-
-.. autoclass:: Vocation
-    :members:
-    :undoc-members:
-
-.. autoclass:: VocationAuctionFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: VocationFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: WorldLocation
-    :members:
-    :undoc-members:
-
-
 Characters
 ===========
 The `Character section`_ consists of the :class:`Character` class and its auxiliary classes used to hold its data.
@@ -694,6 +577,24 @@ CreatureDetail
    :members:
    :inherited-members:
 
+SpellsSection
+-------------
+.. autoclass:: SpellsSection
+   :members:
+   :inherited-members:
+
+Spell
+-----
+.. autoclass:: Spell
+   :members:
+   :inherited-members:
+
+SpellEntry
+----------
+.. autoclass:: SpellEntry
+   :members:
+   :inherited-members:
+
 Base Classes
 ============
 The following classes are not meant to be used or instantiated, but are documented here for informational purposes.
@@ -760,6 +661,15 @@ Exceptions
 .. autoclass:: SiteMaintenanceError
 
 .. autoclass:: Forbidden
+
+Enumerations
+============
+Enumerations are provided for various values in order to avoid depending on strings.
+
+.. automodule:: tibiapy.enums
+   :members:
+   :undoc-members:
+
 
 Utility functions
 ==================

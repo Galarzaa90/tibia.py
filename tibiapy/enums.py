@@ -291,17 +291,23 @@ class SkillFilter(NumericEnum):
 
 
 class SpellGroup(BaseEnum):
+    """The possible cooldown groups.
+
+    Note that secondary groups are not enumerated.
+    """
     ATTACK = "Attack"
     HEALING = "Healing"
     SUPPORT = "Support"
 
 
 class SpellType(BaseEnum):
+    """The possible spell types."""
     INSTANT = "Instant"
     RUNE = "Rune"
 
 
 class SpellSorting(BaseEnum):
+    """The different sorting options for the spells section."""
     NAME = "name"
     GROUP = "group"
     TYPE = "type"

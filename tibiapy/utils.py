@@ -97,6 +97,10 @@ def parse_form_data(form: bs4.Tag, include_options=True):
         A dictionary containing all the data.
     """
     data = {}
+    if "action" in form.attrs:
+        data["__action__"] = form.attrs["action"]
+    if "method" in form.attrs:
+        data["__method__"] = form.attrs["method"]
     text_inputs = form.find_all("input", {"type": "text"})
     data.update({field.attrs.get("name"): field.attrs.get("value") for field in text_inputs})
     selects = form.find_all("select")

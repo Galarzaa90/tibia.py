@@ -36,7 +36,7 @@ class CustomJson:
 
 def json_response(content):
     status = 200 if content and content.data else 404
-    return web.Response(text=content.to_json(), content_type="application/json")
+    return web.Response(text=content.to_json(), content_type="application/json", status=status)
 
 
 @routes.get('/')

@@ -5,19 +5,21 @@ from typing import List, Optional
 
 import bs4
 
-from tibiapy import SpellGroup, SpellSorting, SpellType, VocationSpellFilter, abc
+from tibiapy import abc, errors
+from tibiapy.enums import SpellGroup, SpellSorting, SpellType, VocationSpellFilter
 from tibiapy.utils import get_tibia_url, parse_form_data, parse_integer, parse_tibiacom_content, try_enum
 
 __all__ = (
     'SpellsSection',
     'SpellEntry',
     'Spell',
-    'Rune'
+    'Rune',
 )
 
 spell_name = re.compile(r"([^(]+)\(([^)]+)\)")
 group_pattern = re.compile(r"(?P<group>\w+)(?: \(Secondary Group: (?P<secondary>[^)]+))?")
-cooldown_pattern = re.compile(r"(?P<cooldown>\d+)s \(Group: (?P<group_cooldown>\d+)s(?: ,Secondary Group: (?P<secondary_group_cooldown>\d+))?")
+cooldown_pattern = re.compile(
+    r"(?P<cooldown>\d+)s \(Group: (?P<group_cooldown>\d+)s(?: ,Secondary Group: (?P<secondary_group_cooldown>\d+))?")
 
 
 def to_yes_no(value: Optional[bool]):
@@ -40,7 +42,7 @@ class SpellsSection(abc.Serializable):
     premium: :class:`bool`
         The premium status to filter in. :obj:`True` to show only premium spells,
         :obj:`False` to show free account spells and :obj:`None` will show any spells.
-    sort_by: :class:SpellSorting:
+    sort_by: :class:`SpellSorting`
         The sorting order of the displayed spells.
     entries: :class:`SpellEntry`
         The spells matching the selected filters.
@@ -73,37 +75,57 @@ class SpellsSection(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        parsed_content = parse_tibiacom_content(content)
-        spells_table = parsed_content.find("table")
-        spell_rows = spells_table.find_all("tr")
-        spells_section = cls()
-        for row in spell_rows[1:]:
-            columns = row.find_all("td")
-            spell_link = columns[0].find("a")
-            url = urllib.parse.urlparse(spell_link["href"])
-            query = urllib.parse.parse_qs(url.query)
-            cols_text = [c.text for c in columns]
-            identifier = query["spell"][0]
-            match = spell_name.findall(cols_text[0])
-            name, words = match[0]
-            group = try_enum(SpellGroup, cols_text[1])
-            spell_type = try_enum(SpellType, cols_text[2])
-            level = int(cols_text[3])
-            mana = parse_integer(cols_text[4], None)
-            price = parse_integer(cols_text[5], 0)
-            premium = "yes" in cols_text[6]
-            spell = SpellEntry(name=name.strip(), words=words.strip(), spell_type=spell_type, level=level, group=group,
-                               mana=mana, premium=premium, price=price, identifier=identifier)
-            spells_section.entries.append(spell)
-        form = parsed_content.find("form")
-        data = parse_form_data(form)
-        spells_section.vocation = try_enum(VocationSpellFilter, data["vocation"])
-        spells_section.group = try_enum(SpellGroup, data["group"])
-        spells_section.premium = try_enum(SpellGroup, data["group"])
-        spells_section.spell_type = try_enum(SpellType, data["type"])
-        spells_section.sort_by = try_enum(SpellSorting, data["sort"])
-        spells_section.premium = "yes" in data["premium"] if data["premium"] else None
-        return spells_section
+        """Parses the content of the spells section.
+
+        Parameters
+        -----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        ----------
+        :class:`SpellsSection`
+            The spells contained and the filtering information.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of the spells section.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            spells_table = parsed_content.find("table")
+            spell_rows = spells_table.find_all("tr")
+            spells_section = cls()
+            for row in spell_rows[1:]:
+                columns = row.find_all("td")
+                spell_link = columns[0].find("a")
+                url = urllib.parse.urlparse(spell_link["href"])
+                query = urllib.parse.parse_qs(url.query)
+                cols_text = [c.text for c in columns]
+                identifier = query["spell"][0]
+                match = spell_name.findall(cols_text[0])
+                name, words = match[0]
+                group = try_enum(SpellGroup, cols_text[1])
+                spell_type = try_enum(SpellType, cols_text[2])
+                level = int(cols_text[3])
+                mana = parse_integer(cols_text[4], None)
+                price = parse_integer(cols_text[5], 0)
+                premium = "yes" in cols_text[6]
+                spell = SpellEntry(name=name.strip(), words=words.strip(), spell_type=spell_type, level=level, group=group,
+                                   mana=mana, premium=premium, price=price, identifier=identifier)
+                spells_section.entries.append(spell)
+            form = parsed_content.find("form")
+            data = parse_form_data(form)
+            spells_section.vocation = try_enum(VocationSpellFilter, data["vocation"])
+            spells_section.group = try_enum(SpellGroup, data["group"])
+            spells_section.premium = try_enum(SpellGroup, data["group"])
+            spells_section.spell_type = try_enum(SpellType, data["type"])
+            spells_section.sort_by = try_enum(SpellSorting, data["sort"])
+            spells_section.premium = "yes" in data["premium"] if data["premium"] else None
+            return spells_section
+        except (AttributeError, TypeError) as e:
+            raise errors.InvalidContent("content does not belong to the Spells section", e)
 
     @classmethod
     def get_url(cls, *, vocation=None, group=None, spell_type=None, premium=None, sort=None):
@@ -281,32 +303,56 @@ class Spell(SpellEntry):
 
     @classmethod
     def from_content(cls, content):
+        """Parses the content of a spells page.
+
+        Parameters
+        -----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        ----------
+        :class:`Spell`
+            The spells data. If the spell doesn't exist, this will be :obj:`None`.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of the spells section.
+        """
         parsed_content = parse_tibiacom_content(content)
-        tables = parsed_content.find_all("table")
-        title_table = tables[0]
-        spell_table = tables[1]
-        img = title_table.find("img")
-        url = urllib.parse.urlparse(img["src"])
-        filename = os.path.basename(url.path)
-        identifier = filename.split(".")[0]
-        next_sibling = title_table.next_sibling
-        description = ""
-        while next_sibling:
-            if isinstance(next_sibling, bs4.Tag):
-                if next_sibling.name == "br":
-                    description += "\n"
-                elif next_sibling.name == "table":
-                    break
-                else:
-                    description += next_sibling.text
-            elif isinstance(next_sibling, bs4.NavigableString):
-                description += str(next_sibling)
-            next_sibling = next_sibling.next_sibling
-        spell = cls._parse_spells_table(identifier, spell_table)
-        spell.description = description
-        if len(tables) > 2:
-            cls._parse_rune_table(spell, tables)
-        return spell
+        try:
+            tables = parsed_content.find_all("table")
+            title_table = tables[0]
+            spell_table = tables[1]
+            img = title_table.find("img")
+            url = urllib.parse.urlparse(img["src"])
+            filename = os.path.basename(url.path)
+            identifier = filename.split(".")[0]
+            next_sibling = title_table.next_sibling
+            description = ""
+            while next_sibling:
+                if isinstance(next_sibling, bs4.Tag):
+                    if next_sibling.name == "br":
+                        description += "\n"
+                    elif next_sibling.name == "table":
+                        break
+                    else:
+                        description += next_sibling.text
+                elif isinstance(next_sibling, bs4.NavigableString):
+                    description += str(next_sibling)
+                next_sibling = next_sibling.next_sibling
+            spell = cls._parse_spells_table(identifier, spell_table)
+            spell.description = description.strip()
+            if len(tables) > 2:
+                cls._parse_rune_table(spell, tables)
+            return spell
+        except (TypeError, AttributeError) as e:
+            form = parsed_content.find("form")
+            data = parse_form_data(form)
+            if "subtopic=spells" in data.get("__action__"):
+                return None
+            raise errors.InvalidContent("content is not a spell page", e)
 
     @classmethod
     def _parse_rune_table(cls, spell, tables):

@@ -117,6 +117,10 @@ Supported Sections
 | News_ (List)                     | :meth:`NewsArchive.from_content`           | :meth:`Client.fetch_news_archive`           |
 |                                  |                                            | :meth:`Client.fetch_recent_news`            |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
+| `Spell Library`_ (List)          | :meth:`SpellsSection.from_content`         | :meth:`Client.fetch_spells`                 |
++----------------------------------+--------------------------------------------+---------------------------------------------+
+| `Spell Library`_ (Individual)    | :meth:`Spell.from_content`                 | :meth:`Client.fetch_spell`                  |
++----------------------------------+--------------------------------------------+---------------------------------------------+
 | Tournaments_                     | :meth:`Tournament.from_content`            | :meth:`Client.fetch_tournament`             |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | `Tournament Leaderboards`_       | :meth:`TournamentLeaderboard.from_content` | :meth:`Client.fetch_tournament_leaderboard` |
@@ -140,6 +144,7 @@ Supported Sections
 .. _Leaderboards: https://www.tibia.com/community/?subtopic=leaderboards
 .. _News: https://www.tibia.com/news/?subtopic=newsarchive
 .. _Worlds: https://www.tibia.com/community/?subtopic=worlds
+.. _Spell Library: https://www.tibia.com/library/?subtopic=spells
 .. _Tournaments: https://www.tibia.com/community/?subtopic=tournament
 .. _Tournament Leaderboards: https://www.tibia.com/community/?subtopic=tournamentleaderboards
 
