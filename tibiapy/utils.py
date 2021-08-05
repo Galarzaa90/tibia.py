@@ -526,7 +526,7 @@ def parse_popup(popup_content) -> Tuple[str, bs4.BeautifulSoup]:
     """
     parts = popup_content.split(",", 2)
     title = parts[1].replace(r"'", "").strip()
-    html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").strip()
+    html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").replace(", );", "").strip()
     parsed_html = bs4.BeautifulSoup(html, 'lxml')
     return title, parsed_html
 

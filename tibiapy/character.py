@@ -10,7 +10,8 @@ from tibiapy import abc
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import CharacterHouse
-from tibiapy.utils import parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list, try_datetime, \
+from tibiapy.utils import parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list, \
+    try_datetime, \
     try_enum
 
 # Extracts the scheduled deletion date of a character."""
@@ -71,7 +72,7 @@ class AccountBadge(abc.Serializable):
 
 
 class AccountInformation(abc.Serializable):
-    """Represents the account information of a character.
+    """Contains the information of a character's account.
 
     This is only visible if the character is not marked as hidden.
 
@@ -128,7 +129,7 @@ class Achievement(abc.Serializable):
 
 
 class Character(abc.BaseCharacter, abc.Serializable):
-    """Represents a Tibia character.
+    """A full character from Tibia.com, obtained from its character page.
 
     Attributes
     ----------
@@ -137,7 +138,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
     traded: :class:`bool`
         If the character was traded in the last 6 months.
     deletion_date: :class:`datetime.datetime`, optional
-        The date when the character will be deleted if it is scheduled for deletion.
+        The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise.
     former_names: :class:`list` of :class:`str`
         Previous names of the character.
     title: :class:`str`, optional
@@ -159,11 +160,11 @@ class Character(abc.BaseCharacter, abc.Serializable):
     residence: :class:`str`
         The current hometown of the character.
     married_to: :class:`str`, optional
-        The name of the character's spouse.
+        The name of the character's spouse. It will be :obj:`None` if not married.
     houses: :class:`list` of :class:`CharacterHouse`
         The houses currently owned by the character.
     guild_membership: :class:`GuildMembership`, optional
-        The guild the character is a member of.
+        The guild the character is a member of. It will be :obj:`None` if the character is not in a guild.
     last_login: :class:`datetime.datetime`, optional
         The last time the character logged in. It will be :obj:`None` if the character has never logged in.
     position: :class:`str`, optional
@@ -183,12 +184,13 @@ class Character(abc.BaseCharacter, abc.Serializable):
 
         In some cases, there are more deaths in the last 30 days than what can be displayed.
     account_information: :class:`AccountInformation`, optional
-        The character's account information, if visible.
+        The character's account information. If the character is hidden, this will be :obj:`None`.
     other_characters: :class:`list` of :class:`OtherCharacter`
         Other characters in the same account.
 
         It will be empty if the character is hidden, otherwise, it will contain at least the character itself.
     """
+
     __slots__ = (
         "name",
         "former_names",
@@ -263,27 +265,27 @@ class Character(abc.BaseCharacter, abc.Serializable):
 
     @property
     def guild_name(self) -> Optional[str]:
-        """:class:`str`: The name of the guild the character belongs to, or :obj:`None`."""
+        """:class:`str`, optional: The name of the guild the character belongs to, or :obj:`None`."""
         return self.guild_membership.name if self.guild_membership else None
 
     @property
     def guild_rank(self) -> Optional[str]:
-        """:class:`str`: The character's rank in the guild they belong to, or :obj:`None`."""
+        """:class:`str`, optional: The character's rank in the guild they belong to, or :obj:`None`."""
         return self.guild_membership.rank if self.guild_membership else None
 
     @property
-    def guild_url(self):
-        """:class:`str`: The character's rank in the guild they belong to, or :obj:`None`."""
+    def guild_url(self) -> Optional[str]:
+        """:class:`str`, optional: The character's rank in the guild they belong to, or :obj:`None`."""
         return abc.BaseGuild.get_url(self.guild_membership.name) if self.guild_membership else None
 
     @property
-    def hidden(self):
+    def hidden(self) -> bool:
         """:class:`bool`: Whether this is a hidden character or not."""
         return len(self.other_characters) == 0
 
     @property
-    def married_to_url(self):
-        """:class:`str`: The URL to the husband/spouse information page on Tibia.com, if applicable."""
+    def married_to_url(self) -> Optional[str]:
+        """:class:`str`, optional: The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return self.get_url(self.married_to) if self.married_to else None
     # endregion
 
@@ -386,16 +388,13 @@ class Character(abc.BaseCharacter, abc.Serializable):
         row = rows[0]
         columns = row.find_all('td')
         for column in columns:
-            popup = column.find("span", attrs={"class": "HelperDivIndicator"})
-            if not popup:
+            popup_span = column.find("span", attrs={"class": "HelperDivIndicator"})
+            if not popup_span:
                 # Badges are visible, but none selected.
                 return
-            m = badge_popup_regexp.search(popup['onmouseover'])
-            if m:
-                name = m.group(1)
-                description = m.group(2)
-            else:
-                continue
+            popup = parse_popup(popup_span['onmouseover'])
+            name = popup[0]
+            description = popup[1].text
             icon_image = column.find("img")
             icon_url = icon_image['src']
             self.account_badges.append(AccountBadge(name, icon_url, description))
@@ -683,7 +682,7 @@ class Death(abc.Serializable):
 
 class GuildMembership(abc.BaseGuild, abc.Serializable):
     """
-    Represents the guild information of a character.
+    The guild information of a character.
 
     Attributes
     ----------
@@ -691,8 +690,8 @@ class GuildMembership(abc.BaseGuild, abc.Serializable):
         The name of the guild.
     rank: :class:`str`
         The name of the rank the member has.
-    title: :class:`str`
-        The title of the member in the guild.
+    title: :class:`str`, optional
+        The title of the member in the guild. This is only available for characters in the forums section.
     """
 
     __slots__ = (

@@ -17,6 +17,140 @@ Client
 .. autoclass:: TibiaResponse
     :members:
 
+Enumerations
+============
+Enumerations are provided for various values in order to avoid depending on strings.
+
+Many of these enumerations correspond to available options in forms in Tibia.com
+
+.. autoclass:: AccountStatus
+    :members:
+    :undoc-members:
+
+.. autoclass:: AuctionOrder
+    :members:
+    :undoc-members:
+
+.. autoclass:: AuctionOrderBy
+    :members:
+    :undoc-members:
+
+.. autoclass:: AuctionSearchType
+    :members:
+    :undoc-members:
+
+.. autoclass:: AuctionStatus
+    :members:
+    :undoc-members:
+
+.. autoclass:: BattlEyeType
+    :members:
+    :undoc-members:
+
+.. autoclass:: BattlEyeHighscoresFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: BattlEyeTypeFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: BazaarType
+    :members:
+    :undoc-members:
+
+.. autoclass:: BidType
+    :members:
+    :undoc-members:
+
+.. autoclass:: Category
+    :members:
+    :undoc-members:
+
+.. autoclass:: HouseOrder
+    :members:
+    :undoc-members:
+
+.. autoclass:: HouseStatus
+    :members:
+    :undoc-members:
+
+.. autoclass:: HouseType
+    :members:
+    :undoc-members:
+
+.. autoclass:: NewsCategory
+    :members:
+    :undoc-members:
+
+.. autoclass:: NewsType
+    :members:
+    :undoc-members:
+
+.. autoclass:: PvpTypeFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: PvpType
+    :members:
+    :undoc-members:
+
+.. autoclass:: Sex
+    :members:
+    :undoc-members:
+
+.. autoclass:: SkillFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: SpellGroup
+    :members:
+    :undoc-members:
+
+.. autoclass:: SpellSorting
+    :members:
+    :undoc-members:
+
+.. autoclass:: SpellType
+    :members:
+    :undoc-members:
+
+.. autoclass:: ThreadStatus
+    :members:
+    :undoc-members:
+
+.. autoclass:: TournamentWorldType
+    :members:
+    :undoc-members:
+
+.. autoclass:: TournamentPhase
+    :members:
+    :undoc-members:
+
+.. autoclass:: TransferType
+    :members:
+    :undoc-members:
+
+.. autoclass:: Vocation
+    :members:
+    :undoc-members:
+
+.. autoclass:: VocationAuctionFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: VocationFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: VocationSpellFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: WorldLocation
+    :members:
+    :undoc-members:
+
 Characters
 ===========
 The `Character section`_ consists of the :class:`Character` class and its auxiliary classes used to hold its data.
@@ -119,7 +253,7 @@ OnlineCharacter
 Guilds
 ======
 Models related to `Tibia.com's Guilds section`_. The main model is :class:`Guild`, while :class:`GuildEntry` is the
-previewed information in the guild list.
+previewed information in the guild list of the :class:`GuildsSection`.
 
 .. _Tibia.com's Guilds section: https://www.tibia.com/community/?subtopic=guilds
 
@@ -383,9 +517,10 @@ LastPost
 
 News
 =======
-Models related to `Tibia.com's News section`_.
+Models related to `Tibia.com's News section`_. This also contains the `Event Calendar`_
 
 .. _Tibia.com's News section: https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades
+.. _Event Calendar: https://www.tibia.com/news/?subtopic=eventcalendar
 
 NewsArchive
 -----------
@@ -661,14 +796,6 @@ Exceptions
 .. autoclass:: SiteMaintenanceError
 
 .. autoclass:: Forbidden
-
-Enumerations
-============
-Enumerations are provided for various values in order to avoid depending on strings.
-
-.. automodule:: tibiapy.enums
-   :members:
-   :undoc-members:
 
 
 Utility functions

@@ -1086,9 +1086,8 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world, parsing_time)
 
-    async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status: HouseStatus = None,
-                                 order=None, *, test=False):
-        """Fetches the house list of a world and type.
+    async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status=None, order=None, *, test=False):
+        """Fetch the house list of a world and type.
 
         Parameters
         ----------
@@ -1098,9 +1097,9 @@ class Client:
             The name of the town.
         house_type: :class:`HouseType`
             The type of building. House by default.
-        status: :class:`.HouseStatus`, optional
+        status: :class:`HouseStatus`, optional
             The house status to filter results. By default no filters will be applied.
-        order: :class:`.HouseOrder`, optional
+        order: :class:`HouseOrder`, optional
             The ordering to use for the results. By default they are sorted by name.
         test: :class:`bool`
             Whether to request the test website instead.

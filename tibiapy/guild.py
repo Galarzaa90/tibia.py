@@ -80,7 +80,7 @@ class GuildsSection(abc.Serializable):
 
     @property
     def active_guilds(self):
-        """:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are in course of formation."""
+        """:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are active."""
         return [g for g in self.entries if g.active]
 
     @property
@@ -157,8 +157,7 @@ class GuildsSection(abc.Serializable):
 
 
 class Guild(abc.BaseGuild, abc.Serializable):
-    """
-    Represents a Tibia guild.
+    """A Tibia guild, viewed from its guild's page.
 
     Attributes
     ------------

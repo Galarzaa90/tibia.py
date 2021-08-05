@@ -48,6 +48,12 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual(5, len(character.other_characters))
         self.assertFalse(character.hidden)
 
+        # Badges
+        self.assertEqual(3, len(character.account_badges))
+        badge = character.account_badges[0]
+        self.assertEqual("Ancient Hero", badge.name)
+        self.assertEqual("The account is older than 15 years.", badge.description)
+
     def test_character_from_content_not_found(self):
         """Testing parsing a character not found page"""
         content = self.load_resource(FILE_CHARACTER_NOT_FOUND)

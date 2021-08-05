@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from tibiapy import abc
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
@@ -45,7 +45,7 @@ class HousesSection(abc.Serializable):
     town: :class:`str`
         The town to show houses for.
     status: :class:`HouseStatus`
-        The status to show. If `:obj:`None`, any status is shown.
+        The status to show. If :obj:`None`, any status is shown.
     house_type: :class:`HouseType`
         The type of houses to show.
     order: :class:`HouseOrder`
@@ -82,26 +82,44 @@ class HousesSection(abc.Serializable):
     def __repr__(self):
         return f"<{self.__class__.__name__} world={self.world!r} town={self.town!r} house_type={self.house_type!r}>"
 
+    @property
+    def url(self):
+        """:class:`str`: Get the URL to the houses section with the current parameters."""
+        return self.get_url(self.world, self.town, self.house_type, self.status, self.order)
+
     @classmethod
-    def _get_query_params(self, world, town, status, house_type, order):
-        """:class:`dict`: The query parameters representing for a house search."""
+    def _get_query_params(cls, world, town, house_type, status=None, order=None) -> Dict[str, str]:
+        """Builds the query parameters for a house search.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The world to search for houses in.
+        town: :class:`str`
+            The town to search houses in.
+        house_type: :class:`HouseType`
+            The type of houses to filter.
+        status: :class:`HouseStatus`, optional
+            The status of the house to filter. If undefined, all status will be included.
+        order: :class:`HouseOrder`
+            The field to order houses by.
+        Returns
+        -------
+        :class:`dict`
+            The query parameters representing for a house search.
+        """
         params = {
             "world": world,
             "town": town,
-            "status": status.value if status else None,
             "type": house_type.value if house_type else None,
+            "status": status.value if status else None,
             "order": order.value if order else None,
         }
         return {k: v for k, v in params.items() if v is not None}
 
-    @property
-    def url(self):
-        return self.get_url(self.world, self.town, self.house_type, self.status, self.order)
-
     @classmethod
-    def get_url(cls,  world=None, town=None, house_type=None, status=None, order=None):
-        """
-        Gets the URL to the house list on Tibia.com with the specified filters.
+    def get_url(cls, world, town, house_type, status=None, order=None):
+        """Get the URL to the house list on Tibia.com with the specified filters.
 
         Parameters
         ----------
@@ -121,7 +139,7 @@ class HousesSection(abc.Serializable):
         :class:`str`
             The URL to the list matching the parameters.
         """
-        query = cls._get_query_params(world, town, status, house_type, order)
+        query = cls._get_query_params(world, town, house_type, status, order)
         return get_tibia_url("community", "houses", **query)
 
     @classmethod
@@ -391,7 +409,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
 
 
 class CharacterHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
-    """Represents a House owned by a character.
+    """A house owned by a character.
 
     Attributes
     ----------
@@ -435,7 +453,9 @@ class CharacterHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
 
 
 class GuildHouse(abc.BaseHouse, abc.Serializable):
-    """Represents a House owned by a guild.
+    """A guildhall owned by a guild.
+
+    By limitation of Tibia.com, the ID of the guildhall is not available.
 
     Attributes
     ----------
@@ -445,12 +465,17 @@ class GuildHouse(abc.BaseHouse, abc.Serializable):
         The name of the world the house belongs to.
     status: :class:`HouseStatus`
         The current status of the house.
+
+        This is kept for compatibility with house objects and will always be :obj:`HouseStatus.RENTED`.
     type: :class:`HouseType`
         The type of the house.
+
+        This is kept for compatibility with house objects and will always be :obj:`HouseType.GUILDHALL`.
     owner: :class:`str`
         The owner of the guildhall.
     paid_until_date: :class:`datetime.date`
-        The date the last paid rent is due."""
+        The date the last paid rent is due.
+    """
 
     __slots__ = (
         "name",
@@ -464,9 +489,9 @@ class GuildHouse(abc.BaseHouse, abc.Serializable):
         self.name: str = name
         self.world: str = world
         self.owner: str = owner
-        self.paid_until_date = try_date(paid_until_date)
-        self.status = HouseStatus.RENTED
-        self.type = HouseType.GUILDHALL
+        self.paid_until_date: datetime.date = try_date(paid_until_date)
+        self.status: HouseStatus = HouseStatus.RENTED
+        self.type: HouseType = HouseType.GUILDHALL
 
     def __repr__(self):
         return "<%s name=%r>" % (self.__class__.__name__, self.name)
