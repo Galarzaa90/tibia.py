@@ -1065,7 +1065,7 @@ class Auction(AuctionEntry):
 
         Parameters
         ----------
-        parsed_content: :class:`bs4.Tag'
+        parsed_content: :class:`bs4.Tag`
             The parsed content of the auction.
 
         Returns
