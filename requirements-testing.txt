@@ -1,3 +1,4 @@
+aioresponses
 asynctest
 coverage
 flake8
