@@ -17,6 +17,8 @@ rotation_end_pattern = re.compile(r"ends on ([^)]+)")
 class Leaderboard(abc.Serializable):
     """Represents the Tibiadrome leaderboards.
 
+    .. versionadded:: 5.0.0
+
     Attributes
     ----------
     world: :class:`str`
@@ -170,7 +172,7 @@ class Leaderboard(abc.Serializable):
                     leaderboard.last_update = datetime.timedelta(minutes=int(numbers[0]))
             leaderboard._parse_entries(tables[-1])
             pagination_block = parsed_content.find("small")
-            pages, total, count = parse_pagination(pagination_block)
+            pages, total, count = parse_pagination(pagination_block) if pagination_block else (0, 0, 0)
             leaderboard.page = pages
             leaderboard.total_pages = total
             leaderboard.results_count = count
@@ -218,6 +220,8 @@ class LeaderboardEntry(abc.BaseCharacter, abc.Serializable):
 
 class LeaderboardRotation(abc.Serializable):
     """A leaderboard rotation.
+
+    .. versionadded:: 5.0.0
 
     Parameters
     ----------

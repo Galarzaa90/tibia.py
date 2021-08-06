@@ -31,6 +31,8 @@ def to_yes_no(value: Optional[bool]):
 class SpellsSection(abc.Serializable):
     """The spells section in Tibia.com.
 
+    .. versionadded:: 5.0.0
+
     Attributes
     ----------
     vocation: :class:`VocationSpellFilter`
@@ -163,6 +165,8 @@ class SpellsSection(abc.Serializable):
 class SpellEntry(abc.Serializable):
     """A spell listed on the spells section.
 
+    .. versionadded:: 5.0.0
+
     Attributes
     ----------
     identifier: :class:`str`
@@ -245,6 +249,8 @@ class SpellEntry(abc.Serializable):
 
 class Spell(SpellEntry):
     """A spell listed on the spells section.
+
+    .. versionadded:: 5.0.0
 
     Attributes
     ----------
@@ -460,6 +466,8 @@ class Spell(SpellEntry):
 
 class Rune(abc.Serializable):
     """Information about runes created by spells.
+
+    .. versionadded:: 5.0.0
 
     Attributes
     ----------

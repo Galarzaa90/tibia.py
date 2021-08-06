@@ -557,7 +557,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
     current_page: :class:`int`
         The current page being viewed.
     pages: :class:`int`
-        The number of total_pages the board has for the current display range.
+        The number of pages the board has for the current display range.
     age: :class:`ìnt`
         The maximum age of the displayed threads, in days.
 
@@ -1137,6 +1137,7 @@ class LastPost(abc.BasePost, abc.Serializable):
         Whether the last post's author is a character that is already deleted.
     traded: :class:`bool`
         Whether the last post's author was recently traded.
+        .. versionadded:: 5.0.0
     """
 
     def __init__(self, author, post_id, date, *, deleted=False, traded=False):
@@ -1370,6 +1371,7 @@ class ThreadEntry(abc.BaseThread, abc.Serializable):
         The character that started the thread.
     thread_starter_traded: :class:`bool`
         Whether the thread starter was recently traded or not.
+        .. versionadded:: 5.0.0
     replies: :class:`int`
         The number of replies.
     views: :class:`int`

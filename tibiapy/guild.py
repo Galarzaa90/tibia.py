@@ -54,6 +54,8 @@ war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
 class GuildsSection(abc.Serializable):
     """The guilds section in Tibia.com.
 
+    .. versionadded:: 5.0.0
+
     Attributes
     ----------
     world: :class:`str`

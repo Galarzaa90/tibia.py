@@ -1055,6 +1055,8 @@ class Client:
     async def fetch_leaderboard(self, world, rotation=None, page=1, *, test=False):
         """Fetch the leaderboards for a specific world and rotation.
 
+        .. versionadded:: 5.0.0
+
         Parameters
         ----------
         world: :class:`str`
@@ -1118,6 +1120,9 @@ class Client:
     async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status=None, order=None, *, test=False):
         """Fetch the house list of a world and type.
 
+        .. versionchanged:: 5.0.0
+            The data attribute of the response contains an instance of :class:`HousesSection` instead.
+
         Parameters
         ----------
         world: :class:`str`
@@ -1158,6 +1163,9 @@ class Client:
 
         If a world that does not exist is passed, the world attribute of the result will be :obj:`None`.
         If the world attribute is set, but the list is empty, it just means the world has no guilds.
+
+        .. versionchanged:: 5.0.0
+            The data attribute of the response contains an instance of :class:`GuildsSection` instead.
 
         Parameters
         ----------
@@ -1218,6 +1226,9 @@ class Client:
     async def fetch_news_archive(self, start_date, end_date, categories=None, types=None, *, test=False):
         """Fetch news from the archive meeting the search criteria.
 
+        .. versionchanged:: 5.0.0
+            The data attribute of the response contains an instance of :class:`NewsArchive` instead.
+
         Parameters
         ----------
         start_date: :class:`datetime.date`
@@ -1259,6 +1270,9 @@ class Client:
         """Fetch all the published news in the last specified days.
 
         This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.
+
+        .. versionchanged:: 5.0.0
+            The data attribute of the response contains an instance of :class:`NewsArchive` instead.
 
         Parameters
         ----------

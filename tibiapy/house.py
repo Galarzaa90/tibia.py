@@ -38,6 +38,8 @@ list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<ti
 class HousesSection(abc.Serializable):
     """Represents the house section.
 
+    .. versionadded:: 5.0.0
+
     Attributes
     ----------
     world: :class:`str`

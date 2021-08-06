@@ -20,6 +20,8 @@ ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 class NewsArchive(abc.Serializable):
     """Represents the news archive.
 
+    .. versionadded:: 5.0.0
+
     Attributes
     ----------
     start_date: :class:`datetime.date`

@@ -10,7 +10,7 @@ import tibiapy
 from tests.tests_bazaar import FILE_BAZAAR_CURRENT, FILE_BAZAAR_HISTORY, FILE_AUCTION_FINISHED
 from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
 from tests.tests_events import FILE_EVENT_CALENDAR
-from tests.tests_forums import FILE_CM_POST_ARCHIVE_PAGES
+from tests.tests_forums import FILE_BOARD_THREAD_LIST, FILE_CM_POST_ARCHIVE_PAGES, FILE_WORLD_BOARDS
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
 from tests.tests_highscores import FILE_HIGHSCORES_FULL
 from tests.tests_house import FILE_HOUSE_FULL, FILE_HOUSE_LIST
@@ -19,7 +19,9 @@ from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
-from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, GuildsSection, Highscores, HouseType, \
+from tibiapy import BoardEntry, CharacterBazaar, Client, Character, CMPostArchive, ForumBoard, Guild, GuildsSection, \
+    Highscores, \
+    HouseType, \
     HousesSection, \
     Leaderboard, NewsArchive, VocationFilter, \
     Category, \
@@ -282,6 +284,46 @@ class TestClient(asynctest.TestCase, TestCommons):
         """Testing fetching the auction history"""
         with self.assertRaises(ValueError):
             await self.client.fetch_event_schedule(3)
+
+    @aioresponses()
+    async def test_client_fetch_forum_community_boards(self, mock):
+        """Testing fetching the community boards"""
+        content = self.load_resource(FILE_WORLD_BOARDS)
+        mock.get(BoardEntry.get_community_boards_url(), status=200, body=content)
+        response = await self.client.fetch_forum_community_boards()
+        self.assertIsInstance(response.data[0], BoardEntry)
+
+    @aioresponses()
+    async def test_client_fetch_forum_trade_boards(self, mock):
+        """Testing fetching the trade boards"""
+        content = self.load_resource(FILE_WORLD_BOARDS)
+        mock.get(BoardEntry.get_trade_boards_url(), status=200, body=content)
+        response = await self.client.fetch_forum_trade_boards()
+        self.assertIsInstance(response.data[0], BoardEntry)
+
+    @aioresponses()
+    async def test_client_fetch_forum_support_boards(self, mock):
+        """Testing fetching the support boards"""
+        content = self.load_resource(FILE_WORLD_BOARDS)
+        mock.get(BoardEntry.get_support_boards_url(), status=200, body=content)
+        response = await self.client.fetch_forum_support_boards()
+        self.assertIsInstance(response.data[0], BoardEntry)
+
+    @aioresponses()
+    async def test_client_fetch_forum_world_boards(self, mock):
+        """Testing fetching the world boards"""
+        content = self.load_resource(FILE_WORLD_BOARDS)
+        mock.get(BoardEntry.get_world_boards_url(), status=200, body=content)
+        response = await self.client.fetch_forum_world_boards()
+        self.assertIsInstance(response.data[0], BoardEntry)
+
+    @aioresponses()
+    async def test_client_fetch_forum_board(self, mock):
+        """Testing fetching a forum board"""
+        content = self.load_resource(FILE_BOARD_THREAD_LIST)
+        mock.get(BoardEntry.get_url(1), status=200, body=content)
+        response = await self.client.fetch_forum_board(1)
+        self.assertIsInstance(response.data, ForumBoard)
 
     @aioresponses()
     async def test_client_fetch_leaderboards(self, mock):
