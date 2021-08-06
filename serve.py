@@ -25,16 +25,17 @@ class CustomJson:
 
     @staticmethod
     def dumps(obj, **kwargs):
-        """Dumps an object into a JSON string representing it."""
+        """Dump an object into a JSON string representing it."""
         return json.dumps(obj, default=tibiapy.abc.Serializable._try_dict)
 
     @staticmethod
     def loads(s, **kwargs):
-        """Loads a JSON string into a python object"""
+        """Load a JSON string into a python object."""
         return json.loads(s, **kwargs)
 
 
 def json_response(content):
+    """Create a json response from the content."""
     status = 200 if content and content.data else 404
     return web.Response(text=content.to_json(), content_type="application/json", status=status)
 
@@ -238,7 +239,8 @@ async def get_world_guilds(request: web.Request):
 @routes.get(r'/highscores/{world}')
 async def get_highscores(request: web.Request):
     world = request.match_info['world']
-    category = try_enum(tibiapy.Category, request.query.get("category", "EXPERIENCE").upper(), tibiapy.Category.EXPERIENCE)
+    category = try_enum(tibiapy.Category, request.query.get("category", "EXPERIENCE").upper(),
+                        tibiapy.Category.EXPERIENCE)
     vocations = try_enum(tibiapy.VocationFilter, int(request.query.get("vocation", 0)), tibiapy.VocationFilter.ALL)
     battleye_type = try_enum(tibiapy.BattlEyeHighscoresFilter, int(request.query.get("battleye", -1)))
     page = int(request.query.get("page", 1))
@@ -373,7 +375,7 @@ def json_error(status_code: int, exception: Exception, tb=None) -> web.Response:
         body=json.dumps({
             'error': exception.__class__.__name__,
             'detail': str(exception),
-            'stack': tb
+            'stack': tb,
         }).encode('utf-8'),
         content_type='application/json')
 
@@ -381,8 +383,7 @@ def json_error(status_code: int, exception: Exception, tb=None) -> web.Response:
 async def error_middleware(app, handler):
     async def middleware_handler(request: web.Request):
         try:
-            response = await handler(request)
-            return response
+            return await handler(request)
         except web.HTTPException as ex:
             if ex.status == 404:
                 return json_error(ex.status, ex)
@@ -414,5 +415,5 @@ if __name__ == "__main__":
     app.on_cleanup.append(cleanup_client)
     print("Registered routes:")
     for route in routes:  # type: RouteDef
-        print('- %s %s' % (route.method, route.path))
+        print(f'- {route.method} {route.path}')
     web.run_app(app, port=8000)

@@ -2,9 +2,7 @@ import datetime
 import re
 import urllib.parse
 from collections import OrderedDict
-from typing import List, Optional
-
-import bs4
+from typing import List, Optional, TYPE_CHECKING
 
 from tibiapy import abc
 from tibiapy.enums import AccountStatus, Sex, Vocation
@@ -12,6 +10,9 @@ from tibiapy.errors import InvalidContent
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import (parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list,
                            try_datetime, try_enum)
+
+if TYPE_CHECKING:
+    import bs4
 
 # Extracts the scheduled deletion date of a character."""
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
@@ -55,6 +56,7 @@ class AccountBadge(abc.Serializable):
     description: :class:`str`
         The description of the badge.
     """
+
     __slots__ = (
         "name",
         "icon_url",
@@ -292,7 +294,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
     # region Public methods
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the character's page.
+        """Create an instance of the class from the html content of the character's page.
 
         Parameters
         ----------
@@ -331,8 +333,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
 
     # region Private methods
     def _parse_account_information(self, rows):
-        """
-        Parses the character's account information
+        """Parse the character's account information.
 
         Parameters
         ----------
@@ -355,8 +356,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
         self.account_information = AccountInformation(created, loyalty_title, position)
 
     def _parse_achievements(self, rows):
-        """
-        Parses the character's displayed achievements
+        """Parse the character's displayed achievements.
 
         Parameters
         ----------
@@ -377,8 +377,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             self.achievements.append(Achievement(name, grade, secret))
 
     def _parse_badges(self, rows):
-        """
-        Parses the character's displayed badges
+        """Parse the character's displayed badges.
 
         Parameters
         ----------
@@ -401,7 +400,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
 
     def _parse_character_information(self, rows):
         """
-        Parses the character's basic information and applies the found values.
+        Parse the character's basic information and applies the found values.
 
         Parameters
         ----------
@@ -481,8 +480,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
                        for h in houses]
 
     def _parse_deaths(self, rows):
-        """
-        Parses the character's recent deaths
+        """Parse the character's recent deaths.
 
         Parameters
         ----------
@@ -530,7 +528,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
 
     @classmethod
     def _parse_killer(cls, killer):
-        """Parses a killer into a dictionary.
+        """Parse a killer into a dictionary.
 
         Parameters
         ----------
@@ -554,8 +552,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
         return killer_dict
 
     def _parse_other_characters(self, rows):
-        """
-        Parses the character's other visible characters.
+        """Parse the character's other visible characters.
 
         Parameters
         ----------
@@ -587,7 +584,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
     @classmethod
     def _parse_tables(cls, parsed_content):
         """
-        Parses the information tables contained in a character's page.
+        Parse the information tables contained in a character's page.
 
         Parameters
         ----------
@@ -674,7 +671,8 @@ class Death(abc.Serializable):
     def killer(self):
         """:class:`Killer`: The first killer in the list.
 
-        This is usually the killer that gave the killing blow."""
+        This is usually the killer that gave the killing blow.
+        """
         return self.killers[0] if self.killers else None
     # endregion
 
@@ -729,7 +727,7 @@ class Killer(abc.Serializable):
     __slots__ = (
         "name",
         "player",
-        "summon"
+        "summon",
     )
 
     def __init__(self, name, player=False, summon=None):

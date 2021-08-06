@@ -54,6 +54,7 @@ class Highscores(abc.Serializable):
     available_worlds: :class:`list` of :class:`str`
         The worlds available for selection.
     """
+
     _ENTRIES_PER_PAGE = 50
 
     def __init__(self, world, category=Category.EXPERIENCE, **kwargs):
@@ -86,7 +87,7 @@ class Highscores(abc.Serializable):
     )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} world={0.world!r} category={0.category!r} vocation={0.vocation!r}>".format(self)
+        return f"<{self.__class__.__name__} world={self.world!r} category={self.category!r} vocation={self.vocation!r}>"
 
     @property
     def from_rank(self):
@@ -115,7 +116,7 @@ class Highscores(abc.Serializable):
         return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
 
     def get_page_url(self, page):
-        """Gets the URL to a specific page for the current highscores.
+        """Get the URL to a specific page for the current highscores.
 
         Parameters
         ----------
@@ -138,7 +139,7 @@ class Highscores(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of a highscores page.
+        """Create an instance of the class from the html content of a highscores page.
 
         Notes
         -----
@@ -158,7 +159,8 @@ class Highscores(abc.Serializable):
         Raises
         ------
         InvalidContent
-            If content is not the HTML of a highscore's page."""
+            If content is not the HTML of a highscore's page.
+        """
         parsed_content = parse_tibiacom_content(content)
         form = parsed_content.find("form")
         tables = cls._parse_tables(parsed_content)
@@ -179,7 +181,7 @@ class Highscores(abc.Serializable):
     @classmethod
     def get_url(cls, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
                 battleye_type=None, pvp_types=None):
-        """Gets the Tibia.com URL of the highscores for the given parameters.
+        """Get the Tibia.com URL of the highscores for the given parameters.
 
         Parameters
         ----------
@@ -195,6 +197,7 @@ class Highscores(abc.Serializable):
             The battleEye filters to use.
         pvp_types: :class:`list` of :class:`PvpTypeFilter`, optional
             The list of PvP types to filter the results for.
+
         Returns
         -------
         The URL to the Tibia.com highscores.
@@ -207,7 +210,7 @@ class Highscores(abc.Serializable):
 
     # region Private methods
     def _parse_entries_table(self, table):
-        """Parses the table containing the highscore entries
+        """Parse the table containing the highscore entries.
 
         Parameters
         ----------
@@ -216,7 +219,7 @@ class Highscores(abc.Serializable):
         """
         entries = table.find_all("tr")
         if entries is None:
-            return None
+            return
         _, header, *rows = entries
         info_row = rows.pop()
         pages_div, results_div = info_row.find_all("div")
@@ -236,7 +239,7 @@ class Highscores(abc.Serializable):
 
     def _parse_filters_table(self, form):
         """
-        Parses the filters table found in a highscores page.
+        Parse the filters table found in a highscores page.
 
         Parameters
         ----------
@@ -256,7 +259,7 @@ class Highscores(abc.Serializable):
     @classmethod
     def _parse_tables(cls, parsed_content):
         """
-        Parses the information tables found in a highscores page.
+        Parse the information tables found in a highscores page.
 
         Parameters
         ----------
@@ -279,7 +282,7 @@ class Highscores(abc.Serializable):
         return output
 
     def _parse_entry(self, cols):
-        """Parses an entry's row and adds the result to py:attr:`entries`.
+        """Parse an entry's row and adds the result to py:attr:`entries`.
 
         Parameters
         ----------
@@ -321,6 +324,7 @@ class HighscoresEntry(abc.BaseCharacter, abc.Serializable):
     value: :class:`int`
         The character's value for the highscores.
     """
+
     def __init__(self, rank, name, vocation, world, level, value):
         self.name: str = name
         self.rank: int = rank
@@ -364,6 +368,7 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
     title: :class:`str`
         The character's loyalty title.
     """
+
     def __init__(self, rank, name, vocation, world, level, value, title):
         super().__init__(rank, name, vocation, world, level, value)
         self.title: str = title

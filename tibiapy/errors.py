@@ -1,9 +1,9 @@
 class TibiapyException(Exception):
-    """
-    Base exception for the tibiapy module.
+    """Base exception for the tibiapy module.
 
     All exceptions thrown by the module are inherited from this.
     """
+
     pass
 
 
@@ -18,7 +18,9 @@ class InvalidContent(TibiapyException):
     Attributes
     ----------
     original: :class:`Exception`
-        The original exception that caused this exception."""
+        The original exception that caused this exception.
+    """
+
     def __init__(self, message, original=None):
         super().__init__(message)
         self.original = original
@@ -34,6 +36,7 @@ class NetworkError(TibiapyException):
     fetching_time: :class:`float`
         The time between the request and the response.
     """
+
     def __init__(self, message, original=None, fetching_time=0):
         super().__init__(message)
         self.original = original

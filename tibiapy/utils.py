@@ -13,7 +13,7 @@ TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)\s?k*$')
 
 
 def convert_line_breaks(element):
-    """Converts the <br> tags in a HTML elements to actual line breaks.
+    """Convert the <br> tags in a HTML elements to actual line breaks.
 
     Parameters
     ----------
@@ -25,7 +25,7 @@ def convert_line_breaks(element):
 
 
 def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
-    """Builds a URL to Tibia.com with the given parameters.
+    """Build a URL to Tibia.com with the given parameters.
 
     Parameters
     ----------
@@ -60,7 +60,7 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwar
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
     base_url = "www.tibia.com" if not test else "www.test.tibia.com"
-    url = "https://%s/%s/?" % (base_url, section)
+    url = f"https://{base_url}/{section}/?"
     params = OrderedDict(subtopic=subtopic) if subtopic else OrderedDict()
     if kwargs:
         for key, value in kwargs.items():
@@ -74,7 +74,7 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwar
         url += "&"
         url += urllib.parse.urlencode(args)
     if anchor:
-        url += "#%s" % anchor
+        url += f"#{anchor}"
     return url
 
 
@@ -126,7 +126,7 @@ def parse_form_data(form: bs4.Tag, include_options=True):
 
 
 def parse_integer(number: str, default: Optional[int] = 0):
-    """Parses a string representing an integer, ignoring commas or periods.
+    """Parse a string representing an integer, ignoring commas or periods.
 
     Parameters
     ----------
@@ -151,7 +151,7 @@ def parse_integer(number: str, default: Optional[int] = 0):
 
 
 def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
-    """Parses date and time from the format used in Tibia.com
+    """Parse date and time from the format used in Tibia.com.
 
     Accepted format:
 
@@ -195,7 +195,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
 
 
 def parse_tibia_date(date_str) -> Optional[datetime.date]:
-    """Parses a date from the format used in Tibia.com
+    """Parse a date from the format used in Tibia.com.
 
     Accepted format:
 
@@ -209,7 +209,8 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
     Returns
     -----------
     :class:`datetime.date`, optional
-        The represented date, in UTC (timezone aware)."""
+        The represented date, in UTC (timezone aware).
+    """
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")
         return t.date()
@@ -218,7 +219,7 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
 
 
 def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
-    """Parses a date in the format used in the Tibia.com forums.
+    """Parse a date in the format used in the Tibia.com forums.
 
     Accepted format:
 
@@ -247,7 +248,7 @@ def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
 
 
 def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
-    """Parses a date in the fuller format used in Tibia.com
+    """Parse a date in the fuller format used in Tibia.com.
 
     Accepted format:
 
@@ -271,7 +272,7 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
 
 
 def parse_number_words(text_num):
-    """Parses the word representation of a number to a integer.
+    """Parse the word representation of a number to a integer.
 
     Parameters
     ----------
@@ -318,7 +319,7 @@ def parse_number_words(text_num):
 
 
 def try_datetime(obj) -> Optional[datetime.datetime]:
-    """Attempts to convert an object into a datetime.
+    """Attempt to convert an object into a datetime.
 
     If the date format is known, it's recommended to use the corresponding function
     This is meant to be used in constructors.
@@ -337,12 +338,11 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
         return None
     if isinstance(obj, datetime.datetime):
         return obj
-    res = parse_tibia_datetime(obj)
-    return res
+    return parse_tibia_datetime(obj)
 
 
 def try_date(obj) -> Optional[datetime.date]:
-    """Attempts to convert an object into a date.
+    """Attempt to convert an object into a date.
 
     If the date format is known, it's recommended to use the corresponding function
     This is meant to be used in constructors.
@@ -366,12 +366,11 @@ def try_date(obj) -> Optional[datetime.date]:
     res = parse_tibia_date(obj)
     if res is not None:
         return res
-    res = parse_tibia_full_date(obj)
-    return res
+    return parse_tibia_full_date(obj)
 
 
 def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", builder="lxml"):
-    """Parses HTML content from Tibia.com into a BeautifulSoup object.
+    """Parse HTML content from Tibia.com into a BeautifulSoup object.
 
     Parameters
     ----------
@@ -398,7 +397,7 @@ D = TypeVar('D')
 
 
 def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
-    """Attempts to convert a value into their enum value
+    """Attempt to convert a value into their enum value.
 
     Parameters
     ----------
@@ -428,7 +427,7 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
 
 
 def parse_tibia_money(argument):
-    """Parses a string that may contain 'k' as thousand suffix.
+    """Parse a string that may contain 'k' as thousand suffix.
 
     Parameters
     ----------
@@ -454,8 +453,7 @@ def parse_tibia_money(argument):
 
 
 def split_list(items, separator=",", last_separator=" and "):
-    """
-    Splits a string listing elements into an actual list.
+    """Split a string listing elements into an actual list.
 
     Parameters
     ----------
@@ -510,7 +508,7 @@ def deprecated(instead=None):  # pragma: no cover
 
 
 def parse_popup(popup_content) -> Tuple[str, bs4.BeautifulSoup]:
-    """Parses the information popups used through Tibia.com.
+    """Parse the information popups used through Tibia.com.
 
     Parameters
     ----------
@@ -536,7 +534,7 @@ page_pattern = re.compile(r'page=(\d+)')
 
 
 def parse_pagination(pagination_block) -> Tuple[int, int, int]:
-    """Parses a pagination section in Tibia.com and extracts its information.
+    """Parse a pagination section in Tibia.com and extracts its information.
 
     Parameters
     ----------
@@ -567,7 +565,7 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
                 total_pages = int(m.group(1))
         else:
             last_page_link = page_links[-2].find("a")
-            total_pages = int(last_page_link.text)+1
+            total_pages = int(last_page_link.text) + 1
     else:
         last_page_link = page_links[-1]
         total_pages = int(last_page_link.text)

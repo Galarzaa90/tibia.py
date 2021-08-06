@@ -167,7 +167,7 @@ class RewardEntry(abc.Serializable):
         attributes = ""
         for attr in self.__slots__:
             v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
+            attributes += f" {attr}={v!r}"
         return f"<{self.__class__.__name__}{attributes}>"
 
 
@@ -235,8 +235,8 @@ class RuleSet(abc.Serializable):
         attributes = ""
         for attr in self.__slots__:
             v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+            attributes += f" {attr}={v!r}"
+        return f"<{self.__class__.__name__}{attributes}>"
 
     @staticmethod
     def _try_parse_interval(interval):
@@ -293,8 +293,8 @@ class ScoreSet(abc.Serializable):
         attributes = ""
         for attr in self.__slots__:
             v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+            attributes += f" {attr}={v!r}"
+        return f"<{self.__class__.__name__}{attributes}>"
 
 
 class Tournament(abc.BaseTournament, abc.Serializable):
@@ -357,8 +357,8 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         self.archived_tournaments: List[TournamentEntry] = kwargs.get("archived_tournaments", [])
 
     def __repr__(self):
-        return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
-               "end_date={0.start_date!r}>".format(self)
+        return ("<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} "
+                "end_date={0.start_date!r}>").format(self)
 
     @property
     def rewards_range(self):
@@ -371,7 +371,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         return self.end_date - self.start_date
 
     def rewards_for_rank(self, rank):
-        """Gets the rewards for a given rank, if any.
+        """Get the rewards for a given rank, if any.
 
         Parameters
         ----------
@@ -390,7 +390,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the tournament's page.
+        """Create an instance of the class from the html content of the tournament's page.
 
         Parameters
         ----------
@@ -434,7 +434,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
             raise InvalidContent("content does not belong to the Tibia.com's tournament section", e)
 
     def _parse_tournament_info(self, table):
-        """Parses the tournament info table.
+        """Parse the tournament info table.
 
         Parameters
         ----------
@@ -462,7 +462,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
                 pass
 
     def _parse_tournament_rules(self, table):
-        """Parses the tournament rules table.
+        """Parse the tournament rules table.
 
         Parameters
         ----------
@@ -476,7 +476,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
             "xp_multiplier",
             "skill_multiplier",
             "spawn_rate_multiplier",
-            "loot_probability"
+            "loot_probability",
         )
         int_fields = ("rent_percentage", "house_auction_durations")
         rules = {}
@@ -496,7 +496,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         self.rule_set = RuleSet(**rules)
 
     def _parse_tournament_scores(self, table):
-        """Parses the tournament scores table.
+        """Parse the tournament scores table.
 
         Parameters
         ----------
@@ -522,7 +522,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         self.score_set = ScoreSet(**rules)
 
     def _parse_tournament_rewards(self, table):
-        """Parses the reward section of the tournament information section.
+        """Parse the reward section of the tournament information section.
 
         Parameters
         ----------
@@ -546,7 +546,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
 
     @classmethod
     def _parse_rewards_column(cls, column, entry):
-        """Parses a column from the tournament's reward section.
+        """Parse a column from the tournament's reward section.
 
         Parameters
         ----------
@@ -579,7 +579,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
 
     @staticmethod
     def _parse_rank_range(rank_text):
-        """Parses the rank range text from the reward set table.
+        """Parse the rank range text from the reward set table.
 
         Parameters
         ----------
@@ -601,7 +601,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         return first, last
 
     def _parse_archive_list(self, archive_table):
-        """Parses the archive list table.
+        """Parse the archive list table.
 
         This table is only visible when viewing a tournament from the archive.
 
@@ -654,7 +654,7 @@ class TournamentLeaderboard(abc.Serializable):
 
     _serializable_properties = (
         "page",
-        "total_pages"
+        "total_pages",
     )
 
     def __init__(self, **kwargs):
@@ -679,7 +679,7 @@ class TournamentLeaderboard(abc.Serializable):
 
     @property
     def page(self):
-        """:class:`int`: The page number the shown results correspond to on Tibia.com"""
+        """:class:`int`: The page number the shown results correspond to on Tibia.com."""
         return int(math.floor(self.from_rank / self.ENTRIES_PER_PAGE)) + 1 if self.from_rank else 0
 
     @property
@@ -689,12 +689,12 @@ class TournamentLeaderboard(abc.Serializable):
 
     @property
     def url(self):
-        """:class:`str`: Gets the URL to the current leaderboard and page."""
+        """:class:`str`: Get the URL to the current leaderboard and page."""
         return self.get_url(self.world, self.tournament.cycle, self.page)
 
     @classmethod
     def get_url(cls, world, tournament_cycle, page=1):
-        """Gets the URL to the leaderboards of a specific world, tournament and page.
+        """Get the URL to the leaderboards of a specific world, tournament and page.
 
         Parameters
         ----------
@@ -714,7 +714,7 @@ class TournamentLeaderboard(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the tournament's leaderboards page.
+        """Create an instance of the class from the html content of the tournament's leaderboards page.
 
         Parameters
         ----------
@@ -748,7 +748,7 @@ class TournamentLeaderboard(abc.Serializable):
             raise InvalidContent("content does not belong to the Tibia.com's tournament leaderboards section", e)
 
     def _parse_leaderboard_selectors(self, selector_table):
-        """Parses the option selectors from the leaderboards to get their information.
+        """Parse the option selectors from the leaderboards to get their information.
 
         Parameters
         ----------
@@ -782,7 +782,7 @@ class TournamentLeaderboard(abc.Serializable):
         return True
 
     def _parse_leaderboard_entries(self, ranking_table):
-        """Parses the leaderboards' entries.
+        """Parse the leaderboards' entries.
 
         Parameters
         ----------

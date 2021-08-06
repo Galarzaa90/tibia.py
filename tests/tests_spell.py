@@ -85,4 +85,10 @@ class TestSpell(TestCommons, unittest.TestCase):
 
         self.assertIsNone(spell)
 
+    def test_spells_from_content_unrelated_section(self):
+        """Testing parsing a boosted creature"""
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
+        with self.assertRaises(tibiapy.InvalidContent):
+            spell = Spell.from_content(content)
+
     # endregion

@@ -89,7 +89,7 @@ class HousesSection(abc.Serializable):
 
     @classmethod
     def _get_query_params(cls, world, town, house_type, status=None, order=None) -> Dict[str, str]:
-        """Builds the query parameters for a house search.
+        """Build the query parameters for a house search.
 
         Parameters
         ----------
@@ -103,6 +103,7 @@ class HousesSection(abc.Serializable):
             The status of the house to filter. If undefined, all status will be included.
         order: :class:`HouseOrder`
             The field to order houses by.
+
         Returns
         -------
         :class:`dict`
@@ -144,7 +145,7 @@ class HousesSection(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Parses the content of a house list from Tibia.com into a list of houses
+        """Parse the content of a house list from Tibia.com into a list of houses.
 
         Parameters
         ----------
@@ -257,6 +258,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     auction_end: :class:`datetime.datetime`, optional
         The date when the auction will end.
     """
+
     __slots__ = (
         "id",
         "name",
@@ -321,7 +323,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     # region Public methods
     @classmethod
     def from_content(cls, content):
-        """Parses a Tibia.com response into a House object.
+        """Parse a Tibia.com response into a House object.
 
         Parameters
         ----------
@@ -374,7 +376,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     # endregion
 
     def _parse_status(self, status):
-        """Parses the house's state description and applies the corresponding values
+        """Parse the house's state description and applies the corresponding values.
 
         Parameters
         ----------
@@ -430,6 +432,7 @@ class CharacterHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     paid_until_date: :class:`datetime.date`
         The date the last paid rent is due.
     """
+
     __slots__ = (
         "id",
         "name",
@@ -524,6 +527,7 @@ class HouseEntry(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     highest_bid: :class:`int`, optional.
         The highest bid so far, if the auction has started.
     """
+
     __slots__ = (
         "id",
         "name",
@@ -552,7 +556,7 @@ class HouseEntry(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     # region Private methods
     def _parse_status(self, status):
         """
-        Parses the status string found in the table and applies the corresponding values.
+        Parse the status string found in the table and applies the corresponding values.
 
         Parameters
         ----------

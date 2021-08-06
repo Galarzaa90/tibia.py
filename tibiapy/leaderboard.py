@@ -82,7 +82,7 @@ class Leaderboard(abc.Serializable):
         return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
 
     def get_page_url(self, page):
-        """Gets the URL of the leaderboard at a specific page, with the current date parameters.
+        """Get the URL of the leaderboard at a specific page, with the current date parameters.
 
         Parameters
         ----------
@@ -130,7 +130,7 @@ class Leaderboard(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Parses the content of the leaderboards page.
+        """Parse the content of the leaderboards page.
 
         Parameters
         ----------
@@ -147,7 +147,7 @@ class Leaderboard(abc.Serializable):
             tables = parsed_content.find_all("table", {"class": "TableContent"})
             form = parsed_content.find("form")
             data = parse_form_data(form, include_options=True)
-            current_world =data["world"]
+            current_world = data["world"]
             current_rotation = None
             rotations = []
             for label, value in data["__options__"]["rotation"].items():

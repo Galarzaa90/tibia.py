@@ -8,10 +8,10 @@ import bs4
 
 from tibiapy import InvalidContent, Sex, Vocation, abc
 from tibiapy.abc import BaseCharacter
-from tibiapy.enums import AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
-    BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter
-from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_form_data, parse_integer, parse_pagination, \
-    parse_tibia_datetime, parse_tibiacom_content, try_enum
+from tibiapy.enums import (AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter,
+                           BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter)
+from tibiapy.utils import (convert_line_breaks, get_tibia_url, parse_form_data, parse_integer, parse_pagination,
+                           parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
 __all__ = (
     "AchievementEntry",
@@ -139,7 +139,7 @@ class AuctionFilters(abc.Serializable):
         attributes = ""
         for attr in self.__slots__:
             v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
+            attributes += f" {attr}={v!r}"
         return f"<{self.__class__.__name__}{attributes}>"
 
     @property
@@ -164,7 +164,7 @@ class AuctionFilters(abc.Serializable):
 
     @classmethod
     def _parse_filter_table(cls, table):
-        """Parses the filters table to extract its values.
+        """Parse the filters table to extract its values.
 
         Parameters
         ----------
@@ -173,7 +173,8 @@ class AuctionFilters(abc.Serializable):
 
         Returns
         -------
-
+        :class:`AuctionFilters`
+            The currently applied filters.
         """
         filters = AuctionFilters()
         forms = table.find_all("form")
@@ -296,7 +297,7 @@ class CharacterBazaar(abc.Serializable):
     # region Properties
     @property
     def url(self):
-        """:class:`str`: Gets the URL to the bazaar."""
+        """:class:`str`: Get the URL to the bazaar."""
         return self.get_auctions_history_url(self.page) if self.type == BazaarType.HISTORY else \
             self.get_current_auctions_url(self.page, self.filters)
     # endregion
@@ -304,7 +305,7 @@ class CharacterBazaar(abc.Serializable):
     # region Public Methods
     @classmethod
     def get_current_auctions_url(cls, page=1, filters=None):
-        """Gets the URL to the list of current auctions in Tibia.com
+        """Get the URL to the list of current auctions in Tibia.com.
 
         Parameters
         ----------
@@ -323,7 +324,7 @@ class CharacterBazaar(abc.Serializable):
 
     @classmethod
     def get_auctions_history_url(cls, page=1, filters=None):
-        """Gets the URL to the auction history in Tibia.com
+        """Get the URL to the auction history in Tibia.com.
 
         Parameters
         ----------
@@ -342,7 +343,7 @@ class CharacterBazaar(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Gets the bazaar's information and list of auctions from Tibia.com
+        """Get the bazaar's information and list of auctions from Tibia.com.
 
         Parameters
         ----------
@@ -419,6 +420,7 @@ class DisplayImage(abc.Serializable):
     name: :class:`str`
         The element's name.
     """
+
     def __init__(self, **kwargs):
         self.image_url: str = kwargs.get("image_url")
         self.name: str = kwargs.get("name")
@@ -681,23 +683,19 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
     # region Properties
     @property
     def character_url(self):
-        """
-        :class:`str`: The URL of the character's information page on Tibia.com
-        """
+        """:class:`str`: The URL of the character's information page on Tibia.com."""
         return BaseCharacter.get_url(self.name)
 
     @property
     def url(self):
-        """
-        :class:`str`: The URL to this auction's detail page on Tibia.com
-        """
+        """:class:`str`: The URL to this auction's detail page on Tibia.com."""
         return self.get_url(self.auction_id)
     # endregion
 
     # region Public Methods
     @classmethod
     def get_url(cls, auction_id):
-        """Gets the URL to the Tibia.com detail page of an auction with a given id.
+        """Get the URL to the Tibia.com detail page of an auction with a given id.
 
         Parameters
         ----------
@@ -715,7 +713,7 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
     # region Private Methods
     @classmethod
     def _parse_auction(cls, auction_row, auction_id=0):
-        """Parses an auction's table, extracting its data.
+        """Parse an auction's table, extracting its data.
 
         Parameters
         ----------
@@ -915,8 +913,9 @@ class Auction(AuctionEntry):
         self.experience: int = kwargs.get("experience", 0)
         self.gold: int = kwargs.get("gold", 0)
         self.achievement_points: int = kwargs.get("achievement_points", 0)
-        self.regular_world_transfer_available_date: datetime.datetime = \
-            kwargs.get("regular_world_transfer_available_date")
+        self.regular_world_transfer_available_date: datetime.datetime = kwargs.get(
+            "regular_world_transfer_available_date",
+        )
         self.charm_expansion: bool = kwargs.get("charm_expansion", False)
         self.available_charm_points: int = kwargs.get("available_charm_points", 0)
         self.spent_charm_points: int = kwargs.get("spent_charm_points", 0)
@@ -989,7 +988,7 @@ class Auction(AuctionEntry):
     # region Properties
     @property
     def completed_bestiary_entries(self):
-        """:class:`list` of :class:`BestiaryEntry`: Gets a list of completed bestiary entries."""
+        """:class:`list` of :class:`BestiaryEntry`: Get a list of completed bestiary entries."""
         return [e for e in self.bestiary_progress if e.completed]
 
     @property
@@ -1006,7 +1005,7 @@ class Auction(AuctionEntry):
     # region Public Methods
     @classmethod
     def from_content(cls, content, auction_id=0, skip_details=False):
-        """Parses an auction detail page from Tibia.com and extracts its data.
+        """Parse an auction detail page from Tibia.com and extracts its data.
 
         Parameters
         ----------
@@ -1083,7 +1082,7 @@ class Auction(AuctionEntry):
     # region Private Methods
     @classmethod
     def _parse_tables(cls, parsed_content) -> Dict[str, bs4.Tag]:
-        """Parses the character details tables.
+        """Parse the character details tables.
 
         Parameters
         ----------
@@ -1100,7 +1099,7 @@ class Auction(AuctionEntry):
 
     @classmethod
     def _parse_data_table(cls, table) -> Dict[str, str]:
-        """Parses a simple data table into a key value mapping.
+        """Parse a simple data table into a key value mapping.
 
         Parameters
         ----------
@@ -1122,7 +1121,7 @@ class Auction(AuctionEntry):
         return data
 
     def _parse_skills_table(self, table):
-        """Parses the skills table.
+        """Parse the skills table.
 
         Parameters
         ----------
@@ -1140,7 +1139,7 @@ class Auction(AuctionEntry):
         self.skills = skills
 
     def _parse_blessings_table(self, table):
-        """Parses the blessings table.
+        """Parse the blessings table.
 
         Parameters
         ----------
@@ -1157,7 +1156,7 @@ class Auction(AuctionEntry):
 
     @classmethod
     def _parse_single_column_table(cls, table):
-        """Parses a table with a single column into an array.
+        """Parse a table with a single column into an array.
 
         Parameters
         ----------
@@ -1181,7 +1180,7 @@ class Auction(AuctionEntry):
         return ret
 
     def _parse_charms_table(self, table):
-        """Parses the charms table and extracts its information.
+        """Parse the charms table and extracts its information.
 
         Parameters
         ----------
@@ -1199,7 +1198,7 @@ class Auction(AuctionEntry):
             self.charms.append(CharmEntry(name_c, cost))
 
     def _parse_achievements_table(self, table):
-        """Parses the achievements table and extracts its information.
+        """Parse the achievements table and extracts its information.
 
         Parameters
         ----------
@@ -1217,7 +1216,7 @@ class Auction(AuctionEntry):
             self.achievements.append(AchievementEntry(text, secret))
 
     def _parse_bestiary_table(self, table):
-        """Parses the bestiary table and extracts its information.
+        """Parse the bestiary table and extracts its information.
 
         Parameters
         ----------
@@ -1237,7 +1236,7 @@ class Auction(AuctionEntry):
 
     @classmethod
     def _parse_page_items(cls, content, entry_class):
-        """Parses the elements of a page in the items, mounts and outfits.
+        """Parse the elements of a page in the items, mounts and outfits.
 
         Attributes
         ----------
@@ -1260,7 +1259,7 @@ class Auction(AuctionEntry):
         return entries
 
     def _parse_general_table(self, table):
-        """Parses the general information table and assigns its values.
+        """Parse the general information table and assigns its values.
 
         Parameters
         ----------
@@ -1397,7 +1396,7 @@ class PaginatedSummary(abc.Serializable):
         return next((e for e in self.entries if e.name.lower() == name.lower()), None)
 
     def search(self, value):
-        """Search an entry by its name
+        """Search an entry by its name.
 
         Parameters
         ----------
@@ -1412,7 +1411,7 @@ class PaginatedSummary(abc.Serializable):
         return [e for e in self.entries if value.lower() in e.name.lower()]
 
     def get_by_id(self, name):
-        """Gets an entry by its id.
+        """Get an entry by its id.
 
         Parameters
         ----------
@@ -1433,6 +1432,7 @@ class PaginatedSummary(abc.Serializable):
         if pagination_block is not None:
             self.page, self.total_pages, self.results = parse_pagination(pagination_block)
     # endregion
+
 
 class ItemSummary(PaginatedSummary):
     """Items in a character's inventory and depot.
@@ -1458,7 +1458,7 @@ class ItemSummary(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
-        """Gets an item by its item id.
+        """Get an item by its item id.
 
         Parameters
         ----------
@@ -1474,7 +1474,7 @@ class ItemSummary(PaginatedSummary):
 
     @classmethod
     def _parse_table(cls, table):
-        """Parses the item summary table.
+        """Parse the item summary table.
 
         Parameters
         ----------
@@ -1520,7 +1520,7 @@ class Mounts(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
-        """Gets a mount by its mount id.
+        """Get a mount by its mount id.
 
         Parameters
         ----------
@@ -1544,6 +1544,7 @@ class Mounts(PaginatedSummary):
             if item:
                 summary.entries.append(item)
         return summary
+
 
 class Familiars(PaginatedSummary):
     """The familiars the character has unlocked or purchased.
@@ -1569,7 +1570,7 @@ class Familiars(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
-        """Gets an outfit by its familiar id.
+        """Get an outfit by its familiar id.
 
         Parameters
         ----------
@@ -1585,7 +1586,7 @@ class Familiars(PaginatedSummary):
 
     @classmethod
     def _parse_table(cls, table):
-        """Parses the outfits table.
+        """Parse the outfits table.
 
         Parameters
         ----------
@@ -1631,7 +1632,7 @@ class Outfits(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
-        """Gets an outfit by its outfit id.
+        """Get an outfit by its outfit id.
 
         Parameters
         ----------
@@ -1647,7 +1648,7 @@ class Outfits(PaginatedSummary):
 
     @classmethod
     def _parse_table(cls, table):
-        """Parses the outfits table.
+        """Parse the outfits table.
 
         Parameters
         ----------
@@ -1680,7 +1681,8 @@ class SalesArgument(abc.Serializable):
     category_image: :class:`str`
         The URL to the category icon.
     content: :class:`str`
-        The content of the sales argument."""
+        The content of the sales argument.
+    """
 
     __slots__ = (
         "category_id",

@@ -62,7 +62,7 @@ class NewsArchive(abc.Serializable):
 
     @classmethod
     def get_form_data(cls, start_date, end_date, categories=None, types=None):
-        """Gets the form data attributes to search news with specific parameters.
+        """Get the form data attributes to search news with specific parameters.
 
         Parameters
         ----------
@@ -93,7 +93,7 @@ class NewsArchive(abc.Serializable):
             "filter_end_year": end_date.year,
         }
         for category in categories:
-            key = "filter_%s" % category.value
+            key = f"filter_{category.value}"
             data[key] = category.value
         if NewsType.FEATURED_ARTICLE in types:
             data["filter_article"] = "article"
@@ -105,7 +105,7 @@ class NewsArchive(abc.Serializable):
 
     @classmethod
     def get_url(cls):
-        """Gets the URL to Tibia.com's news archive page.
+        """Get the URL to Tibia.com's news archive page.
 
         Notes
         -----
@@ -121,7 +121,7 @@ class NewsArchive(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Gets a list of news from the HTML content of the news search page.
+        """Get a list of news from the HTML content of the news search page.
 
         Parameters
         ----------
@@ -223,6 +223,7 @@ class News(abc.BaseNews, abc.Serializable):
     thread_id: :class:`int`, optional
         The thread id of the designated discussion thread for this entry.
     """
+
     def __init__(self, news_id, title, content, date, category, **kwargs):
         self.id: int = news_id
         self.title: str = title
@@ -250,8 +251,7 @@ class News(abc.BaseNews, abc.Serializable):
 
     @classmethod
     def from_content(cls, content, news_id=0):
-        """
-        Gets a news entry by its HTML content from Tibia.com
+        """Get a news entry by its HTML content from Tibia.com.
 
         Notes
         -----
@@ -327,6 +327,7 @@ class NewsEntry(abc.BaseNews, abc.Serializable):
     type: :class:`NewsType`
         The type of news of this list entry.
     """
+
     __slots__ = (
         "id",
         "title",
@@ -347,4 +348,3 @@ class NewsEntry(abc.BaseNews, abc.Serializable):
     def __repr__(self):
         return f"<{self.__class__.__name__} id={self.id} title={self.title!r} type={self.type!r} " \
                f"category={self.category!r} date={self.date!r}>"
-

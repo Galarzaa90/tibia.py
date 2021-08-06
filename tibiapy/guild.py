@@ -1,6 +1,6 @@
 import datetime
 import re
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict, defaultdict
 from typing import Dict, List, Optional
 
 import bs4
@@ -9,8 +9,8 @@ from tibiapy import abc
 from tibiapy.enums import Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibia_date, parse_tibiacom_content, try_date, \
-    try_datetime, try_enum
+from tibiapy.utils import (get_tibia_url, parse_form_data, parse_tibia_date, parse_tibiacom_content, try_date,
+                           try_datetime, try_enum)
 
 __all__ = (
     "Guild",
@@ -90,12 +90,12 @@ class GuildsSection(abc.Serializable):
 
     @property
     def url(self):
-        """:class:`str`: Gets the URL to this guild section."""
+        """:class:`str`: Get the URL to this guild section."""
         return self.get_url(self.world)
 
     @classmethod
     def from_content(cls, content):
-        """Gets a list of guilds from the HTML content of the world guilds' page.
+        """Get a list of guilds from the HTML content of the world guilds' page.
 
         Parameters
         ----------
@@ -141,7 +141,7 @@ class GuildsSection(abc.Serializable):
 
     @classmethod
     def get_url(cls, world):
-        """Gets the Tibia.com URL for the guild section of a specific world.
+        """Get the Tibia.com URL for the guild section of a specific world.
 
         Parameters
         ----------
@@ -192,6 +192,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
     invites: :class:`list` of :class:`GuildInvite`
         List of invited characters.
     """
+
     __slots__ = (
         "world",
         "logo_url",
@@ -211,7 +212,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
     _serializable_properties = (
         "member_count",
         "online_count",
-        "ranks"
+        "ranks",
     )
 
     def __init__(self, name=None, world=None, **kwargs):
@@ -231,7 +232,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
         self.invites: List[GuildInvite] = kwargs.get("invites", [])
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} world={self.world!r}>"
 
     # region Properties
     @property
@@ -256,7 +257,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     @property
     def members_by_rank(self) -> Dict[str, List['GuildMember']]:
-        """:class:`dict`: Gets a mapping of members, grouped by their guild rank."""
+        """:class:`dict`: Get a mapping of members, grouped by their guild rank."""
         rank_dict = defaultdict(list)
         [rank_dict[m.rank].append(m) for m in self.members]
         return dict(rank_dict)
@@ -265,7 +266,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
     # region Public methods
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the HTML content of the guild's page.
+        """Create an instance of the class from the HTML content of the guild's page.
 
         Parameters
         -----------
@@ -312,8 +313,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     # region Private methods
     def _parse_current_member(self, previous_rank, values):
-        """
-        Parses the column texts of a member row into a member dictionary.
+        """Parse the column texts of a member row into a member dictionary.
 
         Parameters
         ----------
@@ -335,7 +335,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_application_info(self, info_container):
         """
-        Parses the guild's application info.
+        Parse the guild's application info.
 
         Parameters
         ----------
@@ -349,7 +349,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_guild_disband_info(self, info_container):
         """
-        Parses the guild's disband info, if available.
+        Parse the guild's disband info, if available.
 
         Parameters
         ----------
@@ -363,7 +363,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_guild_guildhall(self, info_container):
         """
-        Parses the guild's guildhall info.
+        Parse the guild's guildhall info.
 
         Parameters
         ----------
@@ -376,8 +376,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
             self.guildhall = GuildHouse(m.group("name"), self.world, paid_until_date=paid_until)
 
     def _parse_guild_homepage(self, info_container):
-        """
-        Parses the guild's homepage info.
+        """Parse the guild's homepage info.
 
         Parameters
         ----------
@@ -390,7 +389,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_guild_info(self, info_container):
         """
-        Parses the guild's general information and applies the found values.
+        Parse the guild's general information and applies the found values.
 
         Parameters
         ----------
@@ -406,8 +405,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
             self.active = "currently active" in m.group("status")
 
     def _parse_logo(self, parsed_content):
-        """
-        Parses the guild logo and saves it to the instance.
+        """Parse the guild logo and saves it to the instance.
 
         Parameters
         ----------
@@ -428,7 +426,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_guild_members(self, parsed_content):
         """
-        Parses the guild's member and invited list.
+        Parse the guild's member and invited list.
 
         Parameters
         ----------
@@ -446,8 +444,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
                 self._parse_invited_member(values)
 
     def _parse_invited_member(self, values):
-        """
-        Parses the column texts of an invited row into a invited dictionary.
+        """Parse the column texts of an invited row into a invited dictionary.
 
         Parameters
         ----------
@@ -480,6 +477,7 @@ class GuildMember(abc.BaseCharacter, abc.Serializable):
     online: :class:`bool`
         Whether the member is online or not.
     """
+
     __slots__ = (
         "name",
         "rank",
@@ -487,7 +485,7 @@ class GuildMember(abc.BaseCharacter, abc.Serializable):
         "level",
         "vocation",
         "joined",
-        "online"
+        "online",
     )
 
     def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, **kwargs):
@@ -505,7 +503,7 @@ class GuildMember(abc.BaseCharacter, abc.Serializable):
 
 
 class GuildInvite(abc.BaseCharacter, abc.Serializable):
-    """Represents an invited character
+    """Represents an invited character.
 
     Attributes
     ------------
@@ -515,6 +513,7 @@ class GuildInvite(abc.BaseCharacter, abc.Serializable):
     date: :class:`datetime.date`
         The day when the character was invited.
     """
+
     __slots__ = (
         "name",
         "date",
@@ -540,7 +539,8 @@ class GuildWars(abc.Serializable):
     current: :class:`GuildWarEntry`
         The current war the guild is involved in.
     history: :class:`list` of :class:`GuildWarEntry`
-        The previous wars the guild has been involved in."""
+        The previous wars the guild has been involved in.
+    """
 
     __slots__ = (
         'name',
@@ -563,8 +563,7 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def get_url(cls, name):
-        """
-        Gets the URL to the guild's war page of a guild with the given name.
+        """Get the URL to the guild's war page of a guild with the given name.
 
         Parameters
         ----------
@@ -580,7 +579,7 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Gets a guild's war information from Tibia.com's content
+        """Get a guild's war information from Tibia.com's content.
 
         Parameters
         ----------
@@ -626,7 +625,7 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def _parse_current_war_information(cls, text):
-        """Parses the guild's current war information.
+        """Parse the guild's current war information.
 
         Parameters
         ----------
@@ -653,14 +652,13 @@ class GuildWars(abc.Serializable):
         end_date_str = end_date_match.group(1)
         end_date = parse_tibia_date(end_date_str)
 
-        entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, guild_score=int(guild_score),
-                              opponent_score=int(opposing_score), guild_fee=int(guild_fee),
-                              opponent_fee=int(opposing_fee), score_limit=int(score_limit), end_date=end_date)
-        return entry
+        return GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, guild_score=int(guild_score),
+                             opponent_score=int(opposing_score), guild_fee=int(guild_fee),
+                             opponent_fee=int(opposing_fee), score_limit=int(score_limit), end_date=end_date)
 
     @classmethod
     def _parse_war_history_entry(cls, text):
-        """Parses a guild's war information.
+        """Parse a guild's war information.
 
         Parameters
         ----------
@@ -717,11 +715,10 @@ class GuildWars(abc.Serializable):
         if "no guild had reached the needed kills" in text:
             winner = guild_name if guild_score > opponent_score else opposing_name
 
-        entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, start_date=start_date,
-                              duration=duration, score_limit=kills_needed, guild_fee=int(guild_fee),
-                              opponent_fee=int(opponent_fee), surrender=surrender, winner=winner, end_date=end_date,
-                              opponent_score=opponent_score, guild_score=guild_score)
-        return entry
+        return GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, start_date=start_date,
+                             duration=duration, score_limit=kills_needed, guild_fee=int(guild_fee),
+                             opponent_fee=int(opponent_fee), surrender=surrender, winner=winner, end_date=end_date,
+                             opponent_score=opponent_score, guild_score=guild_score)
 
 
 class GuildWarEntry(abc.Serializable):
@@ -763,6 +760,7 @@ class GuildWarEntry(abc.Serializable):
     surrender: :class:`bool`
         Whether the losing guild surrendered or not.
     """
+
     __slots__ = (
         "guild_name",
         "guild_score",
@@ -793,7 +791,7 @@ class GuildWarEntry(abc.Serializable):
         self.surrender: bool = kwargs.get("surrender", False)
 
     def __repr__(self):
-        return "<{0.__class__.__name__} guild_name={0.guild_name!r} opponent_name={0.opponent_name!r}>".format(self)
+        return f"<{self.__class__.__name__} guild_name={self.guild_name!r} opponent_name={self.opponent_name!r}>"
 
     @property
     def guild_url(self):
@@ -822,6 +820,7 @@ class GuildEntry(abc.BaseGuild, abc.Serializable):
     active: :class:`bool`
         Whether the guild is active or still in formation.
     """
+
     __slots__ = (
         "name",
         "logo_url",

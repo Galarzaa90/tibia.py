@@ -16,7 +16,7 @@ month_year_regex = re.compile(r'([A-z]+)\s(\d+)')
 
 
 class EventSchedule(abc.Serializable):
-    """Represents the event's calendar in Tibia.com
+    """Represents the event's calendar in Tibia.com.
 
     Attributes
     ----------
@@ -48,11 +48,11 @@ class EventSchedule(abc.Serializable):
 
     @property
     def url(self):
-        """:class:`str`: Gets the URL to the event calendar with the current parameters."""
+        """:class:`str`: Get the URL to the event calendar with the current parameters."""
         return self.get_url(self.month, self.year)
 
     def get_events_on(self, date):
-        """Gets a list of events that are active during the specified desired_date.
+        """Get a list of events that are active during the specified desired_date.
 
         Parameters
         ----------
@@ -76,7 +76,7 @@ class EventSchedule(abc.Serializable):
 
     @classmethod
     def get_url(cls, month=None, year=None):
-        """Gets the URL to the Event Schedule or Event Calendar on Tibia.com
+        """Get the URL to the Event Schedule or Event Calendar on Tibia.com.
 
         Notes
         -----
@@ -101,7 +101,7 @@ class EventSchedule(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the event's calendar.
+        """Create an instance of the class from the html content of the event's calendar.
 
         Parameters
         ----------
@@ -156,7 +156,7 @@ class EventSchedule(abc.Serializable):
                 title, popup_content = parse_popup(popup["onmouseover"])
                 divs = popup_content.find_all("div")
                 # Multiple events can be described in the same popup, they come in pairs, title and content.
-                for title, content in zip(*[iter(d.text for d in divs)]*2):
+                for title, content in zip(*[iter(d.text for d in divs)] * 2):
                     title = title.replace(":", "")
                     content = content.replace("• ", "")
                     event = EventEntry(title, content)
@@ -228,5 +228,5 @@ class EventEntry(abc.Serializable):
     @property
     def duration(self):
         """:class:`int`: The number of days this event will be active for."""
-        return (self.end_date-self.start_date+datetime.timedelta(days=1)).days \
+        return (self.end_date - self.start_date + datetime.timedelta(days=1)).days \
             if (self.end_date and self.start_date) else None

@@ -48,7 +48,7 @@ class CreaturesSection(abc.Serializable):
 
     @classmethod
     def get_url(cls):
-        """Gets the URL to the Tibia.com library section.
+        """Get the URL to the Tibia.com library section.
 
         Returns
         -------
@@ -59,7 +59,7 @@ class CreaturesSection(abc.Serializable):
 
     @classmethod
     def boosted_creature_from_header(cls, content):
-        """Gets the boosted creature from any Tibia.com page.
+        """Get the boosted creature from any Tibia.com page.
 
         Parameters
         ----------
@@ -89,7 +89,7 @@ class CreaturesSection(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the creature library's page.
+        """Create an instance of the class from the html content of the creature library's page.
 
         Parameters
         ----------
@@ -170,7 +170,7 @@ class CreatureEntry(abc.Serializable):
 
     @classmethod
     def get_url(cls, identifier):
-        """Gets the URL to the creature's detail page on Tibia.com
+        """Get the URL to the creature's detail page on Tibia.com.
 
         Parameters
         ----------
@@ -248,7 +248,7 @@ class Creature(CreatureEntry):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the creature library's page.
+        """Create an instance of the class from the html content of the creature library's page.
 
         Parameters
         ----------
@@ -286,7 +286,7 @@ class Creature(CreatureEntry):
             return None
 
     def _parse_exp_text(self, exp_text):
-        """Parses the experience text, containing dropped loot and adds it to the creature,
+        """Parse the experience text, containing dropped loot and adds it to the creature.
 
         Parameters
         ----------
@@ -301,7 +301,7 @@ class Creature(CreatureEntry):
             self.loot = m.group(1)
 
     def _parse_hp_text(self, hp_text):
-        """Parses the text containing the creatures hitpoints, containing weaknesses, immunities and more and adds it.
+        """Parse the text containing the creatures hitpoints, containing weaknesses, immunities and more and adds it.
 
         Parameters
         ----------
@@ -337,7 +337,7 @@ class Creature(CreatureEntry):
 
     @classmethod
     def _parse_elements(cls, collection, text):
-        """Parses the elements found in a string, adding them to the collection.
+        """Parse the elements found in a string, adding them to the collection.
 
         Parameters
         ----------

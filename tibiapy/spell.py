@@ -1,7 +1,7 @@
 import os
 import re
 import urllib.parse
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import bs4
 
@@ -29,7 +29,7 @@ def to_yes_no(value: Optional[bool]):
 
 
 class SpellsSection(abc.Serializable):
-    """The spells section in Tibia.com
+    """The spells section in Tibia.com.
 
     Attributes
     ----------
@@ -47,6 +47,7 @@ class SpellsSection(abc.Serializable):
     entries: :class:`SpellEntry`
         The spells matching the selected filters.
     """
+
     __slots__ = (
         "vocation",
         "group",
@@ -65,8 +66,8 @@ class SpellsSection(abc.Serializable):
         self.entries: List[SpellEntry] = kwargs.get("entries", [])
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} vocation={self.vocation!r} group={self.group!r} " \
-               f"spell_type={self.spell_type!r} len(entries)={len(self.entries)}>"
+        return (f"<{self.__class__.__name__} vocation={self.vocation!r} group={self.group!r} "
+                f"spell_type={self.spell_type!r} len(entries)={len(self.entries)}>")
 
     @property
     def url(self):
@@ -75,7 +76,7 @@ class SpellsSection(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Parses the content of the spells section.
+        """Parse the content of the spells section.
 
         Parameters
         -----------
@@ -129,7 +130,7 @@ class SpellsSection(abc.Serializable):
 
     @classmethod
     def get_url(cls, *, vocation=None, group=None, spell_type=None, premium=None, sort=None):
-        """Gets the URL to the spells section with the desired filtering parameters.
+        """Get the URL to the spells section with the desired filtering parameters.
 
         Parameters
         ----------
@@ -183,6 +184,7 @@ class SpellEntry(abc.Serializable):
     premium: :class:`bool`
         Whether the spell requires a premium account to learn and use it.
     """
+
     __slots__ = (
         "identifier",
         "name",
@@ -216,6 +218,7 @@ class SpellEntry(abc.Serializable):
 
     @property
     def url(self):
+        """:class:`str`: The URL to the spell."""
         return self.get_url(self.identifier)
 
     @property
@@ -225,6 +228,18 @@ class SpellEntry(abc.Serializable):
 
     @classmethod
     def get_url(cls, identifier):
+        """Get the URL to a spell in the Tibia.com spells section.
+
+        Parameters
+        ----------
+        identifier: :class:`str`
+            The identifier of the spell.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the spell.
+        """
         return get_tibia_url("library", "spells", spell=identifier.lower())
 
 
@@ -303,7 +318,7 @@ class Spell(SpellEntry):
 
     @classmethod
     def from_content(cls, content):
-        """Parses the content of a spells page.
+        """Parse the content of a spells page.
 
         Parameters
         -----------
@@ -313,7 +328,7 @@ class Spell(SpellEntry):
         Returns
         ----------
         :class:`Spell`
-            The spells data. If the spell doesn't exist, this will be :obj:`None`.
+            The spell data. If the spell doesn't exist, this will be :obj:`None`.
 
         Raises
         ------
@@ -328,7 +343,7 @@ class Spell(SpellEntry):
             img = title_table.find("img")
             url = urllib.parse.urlparse(img["src"])
             filename = os.path.basename(url.path)
-            identifier = filename.split(".")[0]
+            identifier = str(filename.split(".")[0])
             next_sibling = title_table.next_sibling
             description = ""
             while next_sibling:
@@ -345,28 +360,55 @@ class Spell(SpellEntry):
             spell = cls._parse_spells_table(identifier, spell_table)
             spell.description = description.strip()
             if len(tables) > 2:
-                cls._parse_rune_table(spell, tables)
+                spell.rune = cls._parse_rune_table(tables[2])
             return spell
-        except (TypeError, AttributeError) as e:
+        except (TypeError, AttributeError, IndexError) as e:
             form = parsed_content.find("form")
-            data = parse_form_data(form)
-            if "subtopic=spells" in data.get("__action__"):
-                return None
+            if form:
+                data = parse_form_data(form)
+                if "subtopic=spells" in data.get("__action__"):
+                    return None
             raise errors.InvalidContent("content is not a spell page", e)
 
     @classmethod
-    def _parse_rune_table(cls, spell, tables):
-        rune_atrs = cls._parse_table_attributes(tables[2])
-        rune = Rune(name=rune_atrs["name"], group=try_enum(SpellGroup, rune_atrs["group"]))
-        rune.vocations = [v.strip() for v in rune_atrs["vocation"].split(",")]
-        rune.magic_type = rune_atrs.get("magic_type")
-        rune.magic_level = parse_integer(rune_atrs.get("mag_lvl"), 0)
-        rune.exp_level = parse_integer(rune_atrs.get("exp_lvl"), 0)
-        rune.mana = parse_integer(rune_atrs.get("mana"), None)
-        spell.rune = rune
+    def _parse_rune_table(cls, table):
+        """Parse the rune information table.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table containing the rune information.
+
+        Returns
+        -------
+        :class:`Rune`
+            The rune described in the table.
+        """
+        attrs = cls._parse_table_attributes(table)
+        rune = Rune(name=attrs["name"], group=try_enum(SpellGroup, attrs["group"]))
+        rune.vocations = [v.strip() for v in attrs["vocation"].split(",")]
+        rune.magic_type = attrs.get("magic_type")
+        rune.magic_level = parse_integer(attrs.get("mag_lvl"), 0)
+        rune.exp_level = parse_integer(attrs.get("exp_lvl"), 0)
+        rune.mana = parse_integer(attrs.get("mana"), None)
+        return rune
 
     @classmethod
     def _parse_spells_table(cls, identifier, spell_table):
+        """Parse the table containing spell information.
+
+        Parameters
+        ----------
+        identifier: :class:`str`
+            The identifier of the spell.
+        spell_table: :class:`bs4.Tag`
+            The table containing the spell information.
+
+        Returns
+        -------
+        :class:`Spell`
+            The spell described in the table.
+        """
         attrs = cls._parse_table_attributes(spell_table)
         spell = cls(identifier, attrs["name"], attrs["formula"], premium="yes" in attrs["premium"],
                     exp_level=int(attrs["exp_lvl"]))
@@ -390,7 +432,21 @@ class Spell(SpellEntry):
         return spell
 
     @classmethod
-    def _parse_table_attributes(cls, table):
+    def _parse_table_attributes(cls, table) -> Dict[str, str]:
+        """Parse the attributes of a table.
+
+        Create a dictionary where every key is the left column (cleaned up) and the value is the right column.
+
+        Parameters
+        ----------
+        table: :class:`bs4.Tag`
+            The table to get the attributes from.
+
+        Returns
+        -------
+        :class:`dict`
+            The table attributes.
+        """
         spell_rows = table.find_all("tr")
         attrs = {}
         for row in spell_rows[1:]:

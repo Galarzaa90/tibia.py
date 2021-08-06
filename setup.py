@@ -46,7 +46,7 @@ extras_require = {
         'asynctest',
         'aioresponses',
         'coverage',
-    ]
+    ],
 }
 
 setup(
@@ -90,5 +90,5 @@ setup(
         'Topic :: Text Processing :: Markup :: HTML',
         'Topic :: Utilities',
         'Typing :: Typed',
-    ]
+    ],
 )

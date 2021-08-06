@@ -11,13 +11,13 @@ import aiohttp_socks
 import tibiapy
 from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, Spell, SpellsSection, abc
 from tibiapy.character import Character
-from tibiapy.creature import CreatureEntry, Creature, CreaturesSection
-from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseStatus, HouseType, NewsCategory, \
+from tibiapy.creature import Creature, CreatureEntry, CreaturesSection
+from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
-from tibiapy.forum import CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread, BoardEntry
-from tibiapy.guild import Guild, GuildWars, GuildEntry, GuildsSection
+from tibiapy.forum import BoardEntry, CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread
+from tibiapy.guild import Guild, GuildWars, GuildsSection
 from tibiapy.highscores import Highscores
 from tibiapy.house import House, HousesSection
 from tibiapy.kill_statistics import KillStatistics
@@ -40,7 +40,7 @@ log = logging.getLogger("tibiapy")
 
 
 class TibiaResponse(typing.Generic[T], abc.Serializable):
-    """Represents a response from Tibia.com
+    """Represents a response from Tibia.com.
 
     Attributes
     ----------
@@ -57,6 +57,7 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
     data: :class:`T`
         The data contained in the response.
     """
+
     def __init__(self, raw_response, data: T, parsing_time=None):
         self.timestamp: datetime.datetime = raw_response.timestamp
         self.cached: bool = raw_response.cached
@@ -86,7 +87,8 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
         """:class:`datetime.timedelta`: The time left for the cache of this response to expire."""
         if not self.age:
             return datetime.timedelta()
-        return datetime.timedelta(seconds=CACHE_LIMIT-self.age)-(datetime.datetime.now(datetime.timezone.utc)-self.timestamp)
+        return (datetime.timedelta(seconds=CACHE_LIMIT - self.age)
+                - (datetime.datetime.now(datetime.timezone.utc) - self.timestamp))
 
     @property
     def seconds_left(self):
@@ -112,7 +114,7 @@ class RawResponse:
 
 
 class Client:
-    """An asynchronous client that fetches information from Tibia.com
+    """An asynchronous client that fetches information from Tibia.com.
 
     The client uses a :class:`aiohttp.ClientSession` to request the information.
     A single session is shared across all operations.
@@ -144,19 +146,25 @@ class Client:
         else:
             self.loop.create_task(self._initialize_session(proxy_url))
 
+    # region Private Methods
+
     async def _initialize_session(self, proxy_url=None):
+        """Initialize the aiohttp session object."""
         headers = {
             'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py)" % tibiapy.__version__,
-            'Accept-Encoding': "deflate, gzip"
+            'Accept-Encoding': "deflate, gzip",
         }
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
-        self.session: aiohttp.ClientSession = aiohttp.ClientSession(loop=self.loop, headers=headers,
-                                                                    connector=connector)
+        self.session: aiohttp.ClientSession = aiohttp.ClientSession(
+            loop=self.loop,
+            headers=headers,
+            connector=connector,
+        )
         self._session_ready.set()
 
     @classmethod
-    def _handle_status(cls, status_code, fetching_time=0):
-        """Handles error status codes, raising exceptions if necessary."""
+    def _handle_status(cls, status_code: int, fetching_time=0.0):
+        """Handle error status codes, raising exceptions if necessary."""
         if status_code < 400:
             return
         if status_code == 403:
@@ -201,23 +209,85 @@ class Client:
             async with self.session.request(method, url, data=data, headers=headers) as resp:
                 diff_time = time.perf_counter()-init_time
                 if "maintenance.tibia.com" in str(resp.url):
-                    log.info(f"%s | %s | %s %s | maintenance.tibia.com", url, resp.method, resp.status, resp.reason)
+                    log.info("%s | %s | %s %s | maintenance.tibia.com", url, resp.method, resp.status, resp.reason)
                     raise SiteMaintenanceError("Tibia.com is down for maintenance.")
-                log.info(f"%s | %s | %s %s | %dms", url, resp.method, resp.status, resp.reason, int(diff_time*1000))
+                log.info("%s | %s | %s %s | %dms", url, resp.method, resp.status, resp.reason, int(diff_time * 1000))
                 self._handle_status(resp.status, diff_time)
                 response = RawResponse(resp, diff_time)
                 response.content = await resp.text()
                 return response
         except aiohttp.ClientError as e:
-            raise NetworkError("aiohttp.ClientError: %s" % e, e, time.perf_counter()-init_time)
+            raise NetworkError(f"aiohttp.ClientError: {e}", e, time.perf_counter() - init_time)
         except aiohttp_socks.SocksConnectionError as e:
-            raise NetworkError("aiohttp_socks.SocksConnectionError: %s" % e, e, time.perf_counter()-init_time)
+            raise NetworkError(f"aiohttp_socks.SocksConnectionError: {e}", e, time.perf_counter() - init_time)
         except UnicodeDecodeError as e:
-            raise NetworkError('UnicodeDecodeError: %s' % e, e, time.perf_counter()-init_time)
+            raise NetworkError(f'UnicodeDecodeError: {e}', e, time.perf_counter() - init_time)
+
+    async def _fetch_all_pages(self, auction_id, paginator, item_type, *, test=False):
+        """Fetch all the pages of an auction paginator.
+
+        Parameters
+        ----------
+        auction_id: :class:`int`
+            The id of the auction.
+        paginator:
+            The paginator object
+        item_type: :class:`int`
+            The item type.
+        test: :class:`bool`
+            Whether to request the test website instead.
+        """
+        if paginator is None or paginator.entry_class is None:
+            return
+        current_page = 2
+        while current_page <= paginator.total_pages:
+            content = await self._fetch_ajax_page(auction_id, item_type, current_page, test=test)
+            if content:
+                entries = Auction._parse_page_items(content, paginator.entry_class)
+                paginator.entries.extend(entries)
+            current_page += 1
+        paginator.fully_fetched = True
+
+    async def _fetch_ajax_page(self, auction_id, type_id, page, *, test=False):
+        """Fetch an ajax page from the paginated summaries in the auction section.
+
+        Parameters
+        ----------
+        auction_id: :class:`int`
+            The id of the auction.
+        type_id: :class:`int`
+            The ID of the type of the catalog to check.
+        page: :class:`int`
+            The page number to fetch.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`str`:
+            The HTML content of the obtained page.
+        """
+        headers = {"x-requested-with": "XMLHttpRequest"}
+        page_response = await self._request("GET", f"https://www.tibia.com/websiteservices/handle_charactertrades.php?"
+                                                   f"auctionid={auction_id}&"
+                                                   f"type={type_id}&"
+                                                   f"currentpage={page}",
+                                            headers=headers,
+                                            test=test)
+        try:
+            data = json.loads(page_response.content.replace("\x0a", " "))
+        except json.decoder.JSONDecodeError:
+            return None
+        try:
+            return data['AjaxObjects'][0]['Data']
+        except KeyError:
+            return None
+
+    # endregion
 
     # region Bazaar
     async def fetch_current_auctions(self, page=1, filters=None, *, test=False):
-        """Fetches the current auctions in the bazaar
+        """Fetch the current auctions in the bazaar.
 
         .. versionadded:: 3.3.0
 
@@ -252,7 +322,7 @@ class Client:
         return TibiaResponse(response, current_auctions, parsing_time)
 
     async def fetch_auction_history(self, page=1, filters=None, *, test=False):
-        """Fetches the auction history of the bazaar.
+        """Fetch the auction history of the bazaar.
 
         .. versionadded:: 3.3.0
 
@@ -290,7 +360,7 @@ class Client:
 
     async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
                             skip_details=False, test=False):
-        """Fetches an auction by its ID.
+        """Fetch an auction by its ID.
 
         .. versionadded:: 3.3.0
 
@@ -345,70 +415,10 @@ class Client:
                 await self._fetch_all_pages(auction_id, auction.store_outfits, 5, test=test)
         return TibiaResponse(response, auction, parsing_time)
 
-    async def _fetch_all_pages(self, auction_id, paginator, item_type, *, test=False):
-        """Fetches all the pages of an auction paginator.
-
-        Parameters
-        ----------
-        auction_id: :class:`int`
-            The id of the auction.
-        paginator:
-            The paginator object
-        item_type: :class:`int`
-            The item type.
-        test: :class:`bool`
-            Whether to request the test website instead.
-        """
-        if paginator is None or paginator.entry_class is None:
-            return
-        current_page = 2
-        while current_page <= paginator.total_pages:
-            content = await self._fetch_ajax_page(auction_id, item_type, current_page, test=test)
-            if content:
-                entries = Auction._parse_page_items(content, paginator.entry_class)
-                paginator.entries.extend(entries)
-            current_page += 1
-        paginator.fully_fetched = True
-
-    async def _fetch_ajax_page(self, auction_id, type_id, page, *, test=False):
-        """Fetches an ajax page from the paginated summaries in the auction section.
-
-        Parameters
-        ----------
-        auction_id: :class:`int`
-            The id of the auction.
-        type_id: :class:`int`
-            The ID of the type of the catalog to check.
-        page: :class:`int`
-            The page number to fetch.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`str`:
-            The HTML content of the obtained page.
-        """
-        headers = {"x-requested-with": "XMLHttpRequest"}
-        page_response = await self._request("GET", f"https://www.tibia.com/websiteservices/handle_charactertrades.php?"
-                                                   f"auctionid={auction_id}&"
-                                                   f"type={type_id}&"
-                                                   f"currentpage={page}",
-                                            headers=headers,
-                                            test=test)
-        try:
-            data = json.loads(page_response.content.replace("\x0a", " "))
-        except json.decoder.JSONDecodeError:
-            return None
-        try:
-            return data['AjaxObjects'][0]['Data']
-        except KeyError:
-            return None
-
     # endregion
 
     async def fetch_cm_post_archive(self, start_date, end_date, page=1, *, test=False):
-        """Fetches the CM post archive.
+        """Fetch the CM post archive.
 
         .. versionadded:: 3.0.0
 
@@ -449,7 +459,7 @@ class Client:
         return TibiaResponse(response, cm_post_archive, parsing_time)
 
     async def fetch_event_schedule(self, month=None, year=None, *, test=False):
-        """Fetches the event calendar. By default, it gets the events for the current month.
+        """Fetch the event calendar. By default, it gets the events for the current month.
 
         .. versionadded:: 3.0.0
 
@@ -487,7 +497,7 @@ class Client:
 
     # region Forums
     async def fetch_forum_community_boards(self, *, test=False):
-        """Fetches the forum's community boards.
+        """Fetch the forum's community boards.
 
         .. versionadded:: 3.0.0
 
@@ -516,7 +526,7 @@ class Client:
         return TibiaResponse(response, boards, parsing_time)
 
     async def fetch_forum_support_boards(self, *, test=False):
-        """Fetches the forum's community boards.
+        """Fetch the forum's community boards.
 
         .. versionadded:: 3.0.0
 
@@ -536,7 +546,8 @@ class Client:
             If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
-            If there's any connection errors during the request."""
+            If there's any connection errors during the request.
+        """
         response = await self._request("GET", BoardEntry.get_support_boards_url(), test=test)
         start_time = time.perf_counter()
         boards = BoardEntry.list_from_content(response.content)
@@ -544,7 +555,7 @@ class Client:
         return TibiaResponse(response, boards, parsing_time)
 
     async def fetch_forum_world_boards(self, *, test=False):
-        """Fetches the forum's world boards.
+        """Fetch the forum's world boards.
 
         .. versionadded:: 3.0.0
 
@@ -564,7 +575,8 @@ class Client:
             If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
-            If there's any connection errors during the request."""
+            If there's any connection errors during the request.
+        """
         response = await self._request("GET", BoardEntry.get_world_boards_url(), test=test)
         start_time = time.perf_counter()
         boards = BoardEntry.list_from_content(response.content)
@@ -572,7 +584,7 @@ class Client:
         return TibiaResponse(response, boards, parsing_time)
 
     async def fetch_forum_trade_boards(self, *, test=False):
-        """Fetches the forum's trade boards.
+        """Fetch the forum's trade boards.
 
         .. versionadded:: 3.0.0
 
@@ -592,7 +604,8 @@ class Client:
             If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
-            If there's any connection errors during the request."""
+            If there's any connection errors during the request.
+        """
         response = await self._request("GET", BoardEntry.get_trade_boards_url(), test=test)
         start_time = time.perf_counter()
         boards = BoardEntry.list_from_content(response.content)
@@ -628,7 +641,8 @@ class Client:
             If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
-            If there's any connection errors during the request."""
+            If there's any connection errors during the request.
+        """
         response = await self._request("GET", ForumBoard.get_url(board_id, page, age), test=test)
         start_time = time.perf_counter()
         board = ForumBoard.from_content(response.content)
@@ -636,7 +650,7 @@ class Client:
         return TibiaResponse(response, board, parsing_time)
 
     async def fetch_forum_thread(self, thread_id, page=1, *, test=False):
-        """Fetches a forum thread with a given id.
+        """Fetch a forum thread with a given id.
 
         .. versionadded:: 3.0.0
 
@@ -660,7 +674,8 @@ class Client:
             If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
-            If there's any connection errors during the request."""
+            If there's any connection errors during the request.
+        """
         response = await self._request("GET", ForumThread.get_url(thread_id, page), test=test)
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)
@@ -668,7 +683,7 @@ class Client:
         return TibiaResponse(response, thread, parsing_time)
 
     async def fetch_forum_post(self, post_id, *, test=False):
-        """Fetches a forum post with a given id.
+        """Fetch a forum post with a given id.
 
         The thread that contains the post will be returned, containing the desired post in
         :py:attr:`ForumThread.anchored_post`.
@@ -695,7 +710,8 @@ class Client:
             If a 403 Forbidden error was returned.
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
-            If there's any connection errors during the request."""
+            If there's any connection errors during the request.
+        """
         response = await self._request("GET", ForumPost.get_url(post_id), test=test)
         start_time = time.perf_counter()
         thread = ForumThread.from_content(response.content)
@@ -705,7 +721,7 @@ class Client:
         return TibiaResponse(response, thread, parsing_time)
 
     async def fetch_forum_announcement(self, announcement_id, *, test=False):
-        """Fetches a forum announcement.
+        """Fetch a forum announcement.
 
         .. versionadded:: 3.0.0
 
@@ -739,7 +755,7 @@ class Client:
 
     # region Creatures
     async def fetch_boosted_creature(self, *, test=False):
-        """Fetches today's boosted creature.
+        """Fetch today's boosted creature.
 
         .. versionadded:: 2.1.0
         .. versionchanged:: 4.0.0
@@ -770,7 +786,7 @@ class Client:
         return TibiaResponse(response, boosted_creature, parsing_time)
 
     async def fetch_library_creatures(self, *, test=False):
-        """Fetches the creatures from the library section.
+        """Fetch the creatures from the library section.
 
         .. versionadded:: 4.0.0
 
@@ -799,7 +815,7 @@ class Client:
         return TibiaResponse(response, boosted_creature, parsing_time)
 
     async def fetch_creature(self, identifier, *, test=False):
-        """Fetches a creature's information from the Tibia.com library.
+        """Fetch a creature's information from the Tibia.com library.
 
         .. versionadded:: 4.0.0
 
@@ -832,7 +848,7 @@ class Client:
     # endregion
 
     async def fetch_character(self, name, *, test=False):
-        """Fetches a character by its name from Tibia.com
+        """Fetch a character by its name from Tibia.com.
 
         Parameters
         ----------
@@ -862,7 +878,7 @@ class Client:
 
     # region Guilds
     async def fetch_guild(self, name, *, test=False):
-        """Fetches a guild by its name from Tibia.com
+        """Fetch a guild by its name from Tibia.com.
 
         Parameters
         ----------
@@ -891,7 +907,7 @@ class Client:
         return TibiaResponse(response, guild, parsing_time)
 
     async def fetch_guild_wars(self, name, *, test=False):
-        """Fetches a guild's wars by its name from Tibia.com
+        """Fetch a guild's wars by its name from Tibia.com.
 
         .. versionadded:: 3.0.0
 
@@ -927,7 +943,7 @@ class Client:
     # endregion
 
     async def fetch_house(self, house_id, world, *, test=False):
-        """Fetches a house in a specific world by its id.
+        """Fetch a house in a specific world by its id.
 
         Parameters
         ----------
@@ -959,7 +975,7 @@ class Client:
 
     async def fetch_highscores_page(self, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
                                     battleye_type=None, pvp_types=None, *, test=False):
-        """Fetches a single highscores page from Tibia.com
+        """Fetch a single highscores page from Tibia.com.
 
         Notes
         -----
@@ -1008,7 +1024,7 @@ class Client:
         return TibiaResponse(response, highscores, parsing_time)
 
     async def fetch_kill_statistics(self, world, *, test=False):
-        """Fetches the kill statistics of a world from Tibia.com.
+        """Fetch the kill statistics of a world from Tibia.com.
 
         Parameters
         ----------
@@ -1071,7 +1087,7 @@ class Client:
 
     # region Worlds
     async def fetch_world(self, name, *, test=False):
-        """Fetches a world from Tibia.com
+        """Fetch a world from Tibia.com.
 
         Parameters
         ----------
@@ -1138,7 +1154,7 @@ class Client:
         return TibiaResponse(response, world_houses, parsing_time)
 
     async def fetch_world_guilds(self, world: str, *, test=False):
-        """Fetches the list of guilds in a world from Tibia.com
+        """Fetch the list of guilds in a world from Tibia.com.
 
         If a world that does not exist is passed, the world attribute of the result will be :obj:`None`.
         If the world attribute is set, but the list is empty, it just means the world has no guilds.
@@ -1170,7 +1186,7 @@ class Client:
         return TibiaResponse(response, guilds, parsing_time)
 
     async def fetch_world_list(self, *, test=False):
-        """Fetches the world overview information from Tibia.com.
+        """Fetch the world overview information from Tibia.com.
 
         Parameters
         ----------
@@ -1200,7 +1216,7 @@ class Client:
 
     # region News
     async def fetch_news_archive(self, start_date, end_date, categories=None, types=None, *, test=False):
-        """Fetches news from the archive meeting the search criteria.
+        """Fetch news from the archive meeting the search criteria.
 
         Parameters
         ----------
@@ -1240,7 +1256,7 @@ class Client:
         return TibiaResponse(response, news, parsing_time)
 
     async def fetch_recent_news(self, days=30, categories=None, types=None, *, test=False):
-        """Fetches all the published news in the last specified days.
+        """Fetch all the published news in the last specified days.
 
         This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.
 
@@ -1273,7 +1289,7 @@ class Client:
         return await self.fetch_news_archive(begin, end, categories, types, test=test)
 
     async def fetch_news(self, news_id, *, test=False):
-        """Fetches a news entry by its id from Tibia.com
+        """Fetch a news entry by its id from Tibia.com.
 
         Parameters
         ----------
@@ -1304,7 +1320,7 @@ class Client:
 
     # region Spells
     async def fetch_spells(self, *, vocation=None, group=None, spell_type=None, premium=None, sort=None, test=False):
-        """Fetchs the spells section.
+        """Fetch the spells section.
 
         Parameters
         ----------
@@ -1341,7 +1357,7 @@ class Client:
         return TibiaResponse(response, spells, parsing_time)
 
     async def fetch_spell(self, identifier, *, test=False):
-        """Fetches a spell by its identifier
+        """Fetch a spell by its identifier.
 
         Parameters
         ----------
@@ -1372,7 +1388,7 @@ class Client:
 
     # region Tournaments
     async def fetch_tournament(self, tournament_cycle=0, *, test=False):
-        """Fetches a tournament from Tibia.com
+        """Fetch a tournament from Tibia.com.
 
         .. versionadded:: 2.5.0
 
@@ -1403,7 +1419,7 @@ class Client:
         return TibiaResponse(response, tournament, parsing_time)
 
     async def fetch_tournament_leaderboard(self, tournament_cycle, world, page=1, *, test=False):
-        """Fetches a tournament leaderboard from Tibia.com
+        """Fetch a tournament leaderboard from Tibia.com.
 
         .. versionadded:: 2.5.0
 

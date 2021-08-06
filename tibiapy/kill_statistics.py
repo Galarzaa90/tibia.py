@@ -24,6 +24,7 @@ class KillStatistics(abc.Serializable):
     available_worlds: :class:`list` of :class:`str`
         The list of worlds available for selection.
     """
+
     __slots__ = (
         "world",
         "total",
@@ -33,7 +34,7 @@ class KillStatistics(abc.Serializable):
 
     def __init__(self, world, entries=None, total=None, available_worlds=None):
         self.world: str = world
-        self.entries: Dict[str, RaceEntry] = entries or dict()
+        self.entries: Dict[str, RaceEntry] = entries or {}
         self.total: RaceEntry = total or RaceEntry()
         self.available_worlds: List[str] = available_worlds or []
 
@@ -41,7 +42,7 @@ class KillStatistics(abc.Serializable):
     def url(self):
         """:class:`str`: The URL to the kill statistics page on Tibia.com containing the results."""
         return self.get_url(self.world)
-    
+
     @property
     def players(self):
         """:class:`RaceEntry`: The kill statistics for players."""
@@ -49,7 +50,7 @@ class KillStatistics(abc.Serializable):
 
     @classmethod
     def get_url(cls, world):
-        """Gets the Tibia.com URL of the kill statistics of a world.
+        """Get the Tibia.com URL of the kill statistics of a world.
 
         Parameters
         ----------
@@ -64,7 +65,7 @@ class KillStatistics(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the HTML content of the kill statistics' page.
+        """Create an instance of the class from the HTML content of the kill statistics' page.
 
         Parameters
         -----------
@@ -104,7 +105,7 @@ class KillStatistics(abc.Serializable):
                 entry = RaceEntry(last_day_players_killed=int(columns[1]),
                                   last_day_killed=int(columns[2]),
                                   last_week_players_killed=int(columns[3]),
-                                  last_week_killed=int(columns[4]), )
+                                  last_week_killed=int(columns[4]))
                 if i == len(rows) - 1:
                     total = entry
                 else:
@@ -128,6 +129,7 @@ class RaceEntry(abc.Serializable):
     last_week_players_killed: :class:`int`
         Number of players killed by this race in the last week.
     """
+
     __slots__ = (
         "last_day_killed",
         "last_day_players_killed",

@@ -73,7 +73,7 @@ class Serializable:
             return str(obj)
 
     def to_json(self, *, indent=None, sort_keys=False):
-        """Gets the object's JSON representation.
+        """Get the object's JSON representation.
 
         Parameters
         ----------
@@ -106,6 +106,7 @@ class BaseAnnouncement(metaclass=abc.ABCMeta):
     announcement_id: :class:`int`
         The ID of the announcement.
     """
+
     announcement_id: int
     __slots__ = (
         "announcement_id",
@@ -118,12 +119,12 @@ class BaseAnnouncement(metaclass=abc.ABCMeta):
 
     @property
     def url(self):
-        """:class:`str` Gets the URL to this announcement."""
+        """:class:`str` Get the URL to this announcement."""
         return self.get_url(self.announcement_id)
 
     @classmethod
     def get_url(cls, announcement_id):
-        """Gets the URL to an announcement with a given ID.
+        """Get the URL to an announcement with a given ID.
 
         Parameters
         ----------
@@ -174,7 +175,7 @@ class BaseBoard(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, board_id, page=1, age=30):
-        """Gets the Tibia.com URL to a board with a given id.
+        """Get the Tibia.com URL to a board with a given id.
 
         Parameters
         ----------
@@ -194,8 +195,8 @@ class BaseBoard(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_world_boards_url(cls):
-        """Gets the URL to the World Boards section in Tibia.com
-        
+        """Get the URL to the World Boards section in Tibia.com.
+
         Returns
         -------
         :class:`str`:
@@ -205,7 +206,7 @@ class BaseBoard(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_trade_boards_url(cls):
-        """Gets the URL to the Trade Boards section in Tibia.com
+        """Get the URL to the Trade Boards section in Tibia.com.
 
         Returns
         -------
@@ -216,7 +217,7 @@ class BaseBoard(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_community_boards_url(cls):
-        """Gets the URL to the Community Boards section in Tibia.com
+        """Get the URL to the Community Boards section in Tibia.com.
 
         Returns
         -------
@@ -227,7 +228,7 @@ class BaseBoard(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_support_boards_url(cls):
-        """Gets the URL to the Support Boards section in Tibia.com
+        """Get the URL to the Support Boards section in Tibia.com.
 
         Returns
         -------
@@ -259,6 +260,7 @@ class BaseCharacter(metaclass=abc.ABCMeta):
     name: :class:`str`
         The name of the character.
     """
+
     __slots__ = (
         "name",
     )
@@ -274,14 +276,12 @@ class BaseCharacter(metaclass=abc.ABCMeta):
 
     @property
     def url(self):
-        """
-        :class:`str`: The URL of the character's information page on Tibia.com
-        """
+        """:class:`str`: The URL of the character's information page on Tibia.com."""
         return self.get_url(self.name)
 
     @classmethod
     def get_url(cls, name):
-        """Gets the Tibia.com URL for a given character name.
+        """Get the Tibia.com URL for a given character name.
 
         Parameters
         ------------
@@ -291,7 +291,8 @@ class BaseCharacter(metaclass=abc.ABCMeta):
         Returns
         --------
         :class:`str`
-            The URL to the character's page."""
+            The URL to the character's page.
+        """
         return get_tibia_url("community", "characters", name=name)
 
 
@@ -309,6 +310,7 @@ class BaseGuild(metaclass=abc.ABCMeta):
     name: :class:`str`
         The name of the guild.
     """
+
     __slots__ = (
         "name",
     )
@@ -336,7 +338,7 @@ class BaseGuild(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, name):
-        """Gets the Tibia.com URL for a given guild name.
+        """Get the Tibia.com URL for a given guild name.
 
         Parameters
         ------------
@@ -352,7 +354,7 @@ class BaseGuild(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url_wars(cls, name):
-        """Gets the Tibia.com URL for the guild wars of a guild with a given name.
+        """Get the Tibia.com URL for the guild wars of a guild with a given name.
 
         .. versionadded:: 3.0.0
 
@@ -370,7 +372,7 @@ class BaseGuild(metaclass=abc.ABCMeta):
 
 
 class BaseHouse(metaclass=abc.ABCMeta):
-    """Base class for all house classes
+    """Base class for all house classes.
 
     The following implement this class:
 
@@ -384,6 +386,7 @@ class BaseHouse(metaclass=abc.ABCMeta):
     name: :class:`str`
         The name of the house.
     """
+
     __slots__ = (
         "name",
     )
@@ -416,7 +419,7 @@ class BaseHouse(metaclass=abc.ABCMeta):
 
 
 class BaseNews(metaclass=abc.ABCMeta):
-    """Base class for all news classes
+    """Base class for all news classes.
 
     Implements the :py:attr:`id` attribute and common properties.
 
@@ -458,7 +461,8 @@ class BaseNews(metaclass=abc.ABCMeta):
         Returns
         --------
         :class:`str`
-            The URL to the news' page"""
+            The URL to the news' page
+        """
         return get_tibia_url("news", "newsarchive", id=news_id)
 
     @classmethod
@@ -504,7 +508,7 @@ class BasePost(metaclass=abc.ABCMeta):
 
     @property
     def url(self):
-        """:class:`str`: Gets the URL to this specific post."""
+        """:class:`str`: Get the URL to this specific post."""
         return self.get_url(self.post_id)
 
     @classmethod

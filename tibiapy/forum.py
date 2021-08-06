@@ -6,8 +6,8 @@ import bs4
 
 from tibiapy import GuildMembership, abc, errors
 from tibiapy.enums import ThreadStatus, Vocation
-from tibiapy.utils import convert_line_breaks, get_tibia_url, parse_tibia_datetime, parse_tibia_forum_datetime, \
-    parse_tibiacom_content, split_list, try_enum
+from tibiapy.utils import (convert_line_breaks, get_tibia_url, parse_tibia_datetime, parse_tibia_forum_datetime,
+                           parse_tibiacom_content, split_list, try_enum)
 
 __all__ = (
     'CMPost',
@@ -145,7 +145,7 @@ class CMPostArchive(abc.Serializable):
     # region Public Methods
 
     def get_page_url(self, page):
-        """Gets the URL of the CM Post Archive at a specific page, with the current date parameters.
+        """Get the URL of the CM Post Archive at a specific page, with the current date parameters.
 
         Parameters
         ----------
@@ -163,7 +163,7 @@ class CMPostArchive(abc.Serializable):
 
     @classmethod
     def get_url(cls, start_date, end_date, page=1):
-        """Gets the URL to the CM Post Archive for the given date range.
+        """Get the URL to the CM Post Archive for the given date range.
 
         Parameters
         ----------
@@ -200,7 +200,7 @@ class CMPostArchive(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Parses the content of the CM Post Archive page from Tibia.com
+        """Parse the content of the CM Post Archive page from Tibia.com.
 
         Parameters
         ----------
@@ -272,8 +272,8 @@ class CMPostArchive(abc.Serializable):
 
     @classmethod
     def _get_selected_date(cls, month_selector, day_selector, year_selector):
-        """Gets the date made from the selected options in the selectors.
-        
+        """Get the date made from the selected options in the selectors.
+
         Parameters
         ----------
         month_selector: :class:`bs4.Tag`
@@ -361,7 +361,7 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
 
     @classmethod
     def from_content(cls, content, announcement_id=0):
-        """Parses the content of an announcement's page from Tibia.com
+        """Parse the content of an announcement's page from Tibia.com.
 
         Parameters
         ----------
@@ -417,7 +417,6 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
         announcement.content = announcement_content
 
         announcement.start_date, announcement.end_date = (parse_tibia_forum_datetime(date, offset) for date in dates)
-
         return announcement
 
 
@@ -483,7 +482,7 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
 
     @classmethod
     def _parse_author_table(cls, character_info_container):
-        """Parses the table containing the author's information.
+        """Parse the table containing the author's information.
 
         Parameters
         ----------
@@ -614,7 +613,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
     # region Public Methods
 
     def get_page_url(self, page):
-        """Gets the URL to a given page of the board.
+        """Get the URL to a given page of the board.
 
         Parameters
         ----------
@@ -632,7 +631,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Parses the board's HTML content from Tibia.com.
+        """Parse the board's HTML content from Tibia.com.
 
         Parameters
         ----------
@@ -702,7 +701,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
 
     @classmethod
     def _parse_thread_row(cls, columns):
-        """Parses the thread row, containing a single thread or announcement.
+        """Parse the thread row, containing a single thread or announcement.
 
         Parameters
         ----------
@@ -738,7 +737,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
         try:
             thread_link, *page_links = thread_column.find_all("a")
         except ValueError:
-            return
+            return None
         if page_links:
             last_page_link = page_links[-1]
             pages = int(page_number_regex.search(last_page_link["href"]).group(1))
@@ -958,7 +957,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
     # region Public Methods
 
     def get_page_url(self, page):
-        """Gets the URL to a given page of the board.
+        """Get the URL to a given page of the board.
 
         Parameters
         ----------
@@ -976,7 +975,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the thread's page.
+        """Create an instance of the class from the html content of the thread's page.
 
         Parameters
         ----------
@@ -1058,7 +1057,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
 
     @classmethod
     def _parse_post_table(cls, post_table, offset=1):
-        """Parses the table containing a single posts, extracting its information.
+        """Parse the table containing a single posts, extracting its information.
 
         Parameters
         ----------
@@ -1114,10 +1113,9 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         post_details = post_table.find('div', attrs={"class": "AdditionalBox"})
         post_number = post_details.text.replace("Post #", "")
         post_id = int(post_number)
-        post = ForumPost(author=post_author, content=content, signature=signature, posted_date=posted_date,
+        return ForumPost(author=post_author, content=content, signature=signature, posted_date=posted_date,
                          edited_date=edited_date, edited_by=edited_by, post_id=post_id, title=title, emoticon=emoticon,
                          golden_frame=golden_frame is not None)
-        return post
 
     # endregion
 
@@ -1166,7 +1164,7 @@ class LastPost(abc.BasePost, abc.Serializable):
 
     @classmethod
     def _parse_column(cls, last_post_column, offset=1):
-        """Parses the column containing the last post information and extracts its data.
+        """Parse the column containing the last post information and extracts its data.
 
         Parameters
         ----------
@@ -1253,6 +1251,7 @@ class BoardEntry(abc.BaseBoard, abc.Serializable):
     last_post: :class:`LastPost`
         The information of the last post made in this board.
     """
+
     def __init__(self, **kwargs):
         self.name: str = kwargs.get("name")
         self.board_id: int = kwargs.get("board_id")
@@ -1277,7 +1276,7 @@ class BoardEntry(abc.BaseBoard, abc.Serializable):
     # region Public Methods
     @classmethod
     def list_from_content(cls, content):
-        """Parses the content of a board list Tibia.com into a list of boards.
+        """Parse the content of a board list Tibia.com into a list of boards.
 
         Parameters
         ----------
@@ -1318,7 +1317,7 @@ class BoardEntry(abc.BaseBoard, abc.Serializable):
     # region Private Methods
     @classmethod
     def _parse_board_row(cls, board_row, offset=1):
-        """Parses a row containing a board and extracts its information.
+        """Parse a row containing a board and extracts its information.
 
         Parameters
         ----------

@@ -51,6 +51,7 @@ class NumericEnum(BaseEnum):
 
 class AccountStatus(BaseEnum):
     """Possible account statuses."""
+
     FREE_ACCOUNT = "Free Account"
     PREMIUM_ACCOUNT = "Premium Account"
 
@@ -58,7 +59,9 @@ class AccountStatus(BaseEnum):
 class AuctionOrder(NumericEnum):
     """The possible ordering directions for auctions.
 
-    The field or value used for the ordering is defined by :class:`AuctionOrderBy`."""
+    The field or value used for the ordering is defined by :class:`AuctionOrderBy`.
+    """
+
     HIGHEST_LATEST = 0
     """Order by the highest or latest value."""
     LOWEST_EARLIEST = 1
@@ -67,6 +70,7 @@ class AuctionOrder(NumericEnum):
 
 class AuctionOrderBy(NumericEnum):
     """The possible values to order the auctions by."""
+
     BID = 100
     """The currently displayed bid for the auction."""
     END_DATE = 101
@@ -87,7 +91,8 @@ class AuctionOrderBy(NumericEnum):
 
 class AuctionSearchType(NumericEnum):
     """The possible search types."""
-    ITEM_DEFAULT  = 0
+
+    ITEM_DEFAULT = 0
     """Searches everything that includes the words on the search string."""
     ITEM_WILDCARD = 1
     """Searches everything that includes the search string"""
@@ -97,9 +102,10 @@ class AuctionSearchType(NumericEnum):
 
 class AuctionStatus(BaseEnum):
     """The possible values an auction might have."""
+
     IN_PROGRESS = 'in progress'
     """The auction is currently active.
-    
+
     Notes
     -----
     This status doesn't exist in Tibia.com explicitly. It is given to all ongoing auctions."""
@@ -118,6 +124,7 @@ class BattlEyeType(NumericEnum):
 
     .. versionadded:: 4.0.0
     """
+
     UNPROTECTED = 0
     """Worlds without any BattlEye protection."""
     PROTECTED = 1
@@ -144,18 +151,19 @@ class BattlEyeHighscoresFilter(NumericEnum):
     """Worlds without any BattlEye protection."""
     YELLOW = PROTECTED
     """Alias for protected worlds.
-    
+
     .. versionadded:: 4.0.0
     """
     GREEN = INITIALLY_PROTECTED
     """Alias for initially protected worlds.
-    
+
     .. versionadded:: 4.0.0
     """
 
 
 class BattlEyeTypeFilter(NumericEnum):
     """The possible BattlEye filters that can be used for auctions."""
+
     INITIALLY_PROTECTED = 1
     """Worlds protected from the beginning, represented by a green symbol."""
     PROTECTED = 2
@@ -164,24 +172,26 @@ class BattlEyeTypeFilter(NumericEnum):
     """Worlds without any BattlEye protection."""
     YELLOW = PROTECTED
     """Alias for protected worlds.
-    
+
     .. versionadded:: 4.0.0
     """
     GREEN = INITIALLY_PROTECTED
     """Alias for initially protected worlds.
-    
+
     .. versionadded:: 4.0.0
     """
 
 
 class BazaarType(BaseEnum):
     """The possible bazaar types."""
+
     CURRENT = "Current Auctions"
     HISTORY = "Auction History"
 
 
 class BidType(BaseEnum):
     """The possible bid types for an auction."""
+
     MINIMUM = "Minimum Bid"
     """The minimum bid set by the auction author, meaning the auction hasn't received any bids or it finished
      without bids."""
@@ -193,6 +203,7 @@ class BidType(BaseEnum):
 
 class Category(NumericEnum):
     """The different highscores categories."""
+
     ACHIEVEMENTS = 1
     AXE_FIGHTING = 2
     CHARM_POINTS = 3
@@ -211,6 +222,7 @@ class Category(NumericEnum):
 
 class HouseOrder(BaseEnum):
     """The possible ordering methods for house lists in Tibia.com"""
+
     NAME = "name"
     SIZE = "size"
     RENT = "rent"
@@ -220,18 +232,21 @@ class HouseOrder(BaseEnum):
 
 class HouseStatus(BaseEnum):
     """Renting statuses of a house."""
+
     RENTED = "rented"
     AUCTIONED = "auctioned"
 
 
 class HouseType(BaseEnum):
     """The types of house available."""
+
     HOUSE = "house"
     GUILDHALL = "guildhall"
 
 
 class NewsCategory(BaseEnum):
     """The different news categories."""
+
     CIPSOFT = "cipsoft"
     COMMUNITY = "community"
     DEVELOPMENT = "development"
@@ -245,6 +260,7 @@ class NewsCategory(BaseEnum):
 
 class NewsType(BaseEnum):
     """The different types of new entries."""
+
     NEWS_TICKER = "News Ticker"
     FEATURED_ARTICLE = "Featured Article"
     NEWS = "News"
@@ -256,6 +272,7 @@ class NewsType(BaseEnum):
 
 class PvpType(BaseEnum):
     """The possible PvP types a World can have."""
+
     OPEN_PVP = "Open PvP"
     OPTIONAL_PVP = "Optional PvP"
     RETRO_OPEN_PVP = "Retro Open PvP"
@@ -265,6 +282,7 @@ class PvpType(BaseEnum):
 
 class PvpTypeFilter(NumericEnum):
     """The possible PVP filters that can be used for auctions."""
+
     OPEN_PVP = 0
     OPTIONAL_PVP = 1
     HARDCORE_PVP = 2
@@ -274,12 +292,14 @@ class PvpTypeFilter(NumericEnum):
 
 class Sex(BaseEnum):
     """Possible character sexes."""
+
     MALE = "male"
     FEMALE = "female"
 
 
 class SkillFilter(NumericEnum):
     """The different skill filters for auctions."""
+
     AXE_FIGHTING = 10
     CLUB_FIGHTING = 9
     DISTANCE_FIGHTING = 7
@@ -295,6 +315,7 @@ class SpellGroup(BaseEnum):
 
     Note that secondary groups are not enumerated.
     """
+
     ATTACK = "Attack"
     HEALING = "Healing"
     SUPPORT = "Support"
@@ -302,12 +323,14 @@ class SpellGroup(BaseEnum):
 
 class SpellType(BaseEnum):
     """The possible spell types."""
+
     INSTANT = "Instant"
     RUNE = "Rune"
 
 
 class SpellSorting(BaseEnum):
     """The different sorting options for the spells section."""
+
     NAME = "name"
     GROUP = "group"
     TYPE = "type"
@@ -320,7 +343,9 @@ class SpellSorting(BaseEnum):
 class ThreadStatus(enum.Flag):
     """The possible status a thread can have.
 
-    Threads can have a combination of multiple status. The numeric values are arbitrary."""
+    Threads can have a combination of multiple status. The numeric values are arbitrary.
+    """
+
     NONE = 0
     HOT = 1  #: Thread has more than 16 replies.
     NEW = 2  #: Thread has new posts since last visit.
@@ -336,20 +361,21 @@ class ThreadStatus(enum.Flag):
                 yield entry
 
     def get_icon_name(self):
-        """Generates an icon name, following the same ordering used in Tibia.com
+        """Generate an icon name, following the same ordering used in Tibia.com.
 
         Returns
         -------
         :class:`str`
-            The name of the icon used in Tibia.com"""
+            The name of the icon used in Tibia.com
+        """
         if self.value == 0:
             return None
         joined_str = "".join(v.name.lower() for v in list(self))
-        return "logo_%s.gif" % joined_str
+        return f"logo_{joined_str}.gif"
 
     @classmethod
     def from_icon(cls, icon):
-        """Gets the flag combination, based from the icon's name present in the thread status.
+        """Get the flag combination, based from the icon's name present in the thread status.
 
         Parameters
         ----------
@@ -371,12 +397,14 @@ class ThreadStatus(enum.Flag):
 
 class TournamentWorldType(BaseEnum):
     """The possible types of tournament worlds."""
+
     REGULAR = "Regular"
     RESTRICTED = "Restricted Store"
 
 
 class TournamentPhase(BaseEnum):
     """The possible tournament phases."""
+
     SIGN_UP = "sign up"
     RUNNING = "running"
     ENDED = "ended"
@@ -384,6 +412,7 @@ class TournamentPhase(BaseEnum):
 
 class TransferType(BaseEnum):
     """The possible special transfer restrictions a world may have."""
+
     REGULAR = "regular"  #: No special transfer restrictions
     BLOCKED = "blocked"  #: Can't transfer to this world, but can transfer out of this world.
     LOCKED = "locked"  #: Can transfer to this world, but can't transfer out of this world.
@@ -391,6 +420,7 @@ class TransferType(BaseEnum):
 
 class Vocation(BaseEnum):
     """The possible vocation types."""
+
     NONE = "None"
     DRUID = "Druid"
     KNIGHT = "Knight"
@@ -404,6 +434,7 @@ class Vocation(BaseEnum):
 
 class VocationAuctionFilter(NumericEnum):
     """The possible vocation filters for auctions."""
+
     NONE = 1
     DRUID = 2
     KNIGHT = 3
@@ -414,7 +445,9 @@ class VocationAuctionFilter(NumericEnum):
 class VocationFilter(NumericEnum):
     """The vocation filters available for Highscores.
 
-    The numeric values are what the highscores form accepts."""
+    The numeric values are what the highscores form accepts.
+    """
+
     ALL = 0
     NONE = 1
     KNIGHTS = 2
@@ -424,7 +457,7 @@ class VocationFilter(NumericEnum):
 
     @classmethod
     def from_name(cls, name, all_fallback=True):
-        """Gets a vocation filter from a vocation's name.
+        """Get a vocation filter from a vocation's name.
 
         Parameters
         ----------
@@ -449,6 +482,7 @@ class VocationFilter(NumericEnum):
 
 class VocationSpellFilter(BaseEnum):
     """The possible vocation types to filter out spells."""
+
     DRUID = "Druid"
     KNIGHT = "Knight"
     PALADIN = "Paladin"
@@ -457,6 +491,7 @@ class VocationSpellFilter(BaseEnum):
 
 class WorldLocation(BaseEnum):
     """The possible physical locations for servers."""
+
     EUROPE = "Europe"
     NORTH_AMERICA = "North America"
     SOUTH_AMERICA = "South America"
