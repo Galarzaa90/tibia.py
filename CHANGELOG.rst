@@ -10,9 +10,12 @@ Changelog
 
 5.0.0 (Unreleased)
 ==================
-- New ``Leaderboard`` class, for Tibia Drome leaderboards.
+- Added parsing for Tibia Drome leaderboards, new ``Leaderboard`` class.
     - Auxiliary classes ``LeaderboardEntry`` and ``LeaderboardRotation`` were added as well.
     - New ``Client`` method: ``fetch_leaderboards``.
+- Added parsing for Spells library, new ``SpellsSection class.
+    - Auxiliary  classes ``Spell`` and ``SpellEntry``.
+    - New ``Client`` methods: ``fetch_spell`` and ``fetch_spells``
 - Fix last page of highscores having ``0`` as page value.
 - Using the ``Client`` class, you can now fetch and parse content from the test version of www.tibia.com when available.
     - Note that if the test website has changes, parsing might not be possible.
@@ -45,6 +48,8 @@ Changelog
 - ``ListedGuild`` class renamed to ``GuildEntry``.
 - ``ListedTournament`` class renamed to ``TournamentEntry``.
 - ``Guild`` and ``GuildEntry`` class no longer have a ``get_list_url`` method.
+- Renamed ``begin_date`` parameter to ``start_date`` in ``fetch_news_archive``.
+- Renamed ``race`` attribute of ``CreatureEntry`` and ``Creature`` to ``identifier``
 
 
 .. v4.1.7

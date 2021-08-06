@@ -28,14 +28,14 @@ class TestCreature(TestCommons, unittest.TestCase):
         self.assertIsNotNone(creatures)
         self.assertIsNotNone(creatures.boosted_creature)
         self.assertEqual("Blood Crab", creatures.boosted_creature.name)
-        self.assertEqual("bloodcrab", creatures.boosted_creature.race)
+        self.assertEqual("bloodcrab", creatures.boosted_creature.identifier)
         self.assertIsNotNone(creatures.boosted_creature.image_url)
         self.assertIsNotNone(creatures.boosted_creature.url)
         self.assertEqual(536, len(creatures.creatures))
         for creature in creatures.creatures:
             with self.subTest(name=creature.name):
                 self.assertIsInstance(creature.name, str)
-                self.assertIsInstance(creature.race, str)
+                self.assertIsInstance(creature.identifier, str)
 
     def test_creature_detail_from_content(self):
         content = self.load_resource(FILE_CREATURE)
@@ -43,7 +43,7 @@ class TestCreature(TestCommons, unittest.TestCase):
 
         self.assertIsNotNone(creature)
         self.assertEqual("Animated Feathers", creature.name)
-        self.assertEqual("animatedfeather", creature.race)
+        self.assertEqual("animatedfeather", creature.identifier)
         self.assertEqual(13000, creature.hitpoints)
         self.assertEqual(9860, creature.experience)
         self.assertIsNone(creature.mana_cost)

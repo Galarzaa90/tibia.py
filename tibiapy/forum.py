@@ -282,6 +282,7 @@ class CMPostArchive(abc.Serializable):
             The day selector.
         year_selector: :class:`bs4.Tag`
             The year selector.
+
         Returns
         -------
         :class:`datetime.date`

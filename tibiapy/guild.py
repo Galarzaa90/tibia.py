@@ -319,7 +319,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
         ----------
         previous_rank: :class:`dict`[int, str]
             The last rank present in the rows.
-        values: tuple[:class:`str`]
+        values: :class:`tuple` of :class:`str`
             A list of row contents.
         """
         rank, name, vocation, level, joined, status = values

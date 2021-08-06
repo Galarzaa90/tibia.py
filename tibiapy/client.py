@@ -791,14 +791,14 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
-    async def fetch_creature(self, race, *, test=False):
+    async def fetch_creature(self, identifier, *, test=False):
         """Fetches a creature's information from the Tibia.com library.
 
         .. versionadded:: 4.0.0
 
         Parameters
         ----------
-        race: :class:`str`
+        identifier: :class:`str`
             The internal name of the race.
         test: :class:`bool`
             Whether to request the test website instead.
@@ -816,7 +816,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", CreatureDetail.get_url(race), test=test)
+        response = await self._request("GET", CreatureDetail.get_url(identifier), test=test)
         start_time = time.perf_counter()
         boosted_creature = CreatureDetail.from_content(response.content)
         parsing_time = time.perf_counter() - start_time

@@ -399,7 +399,7 @@ class BaseHouse(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, house_id, world):
-        """ Gets the Tibia.com URL for a house with the given id and world.
+        """Get the Tibia.com URL for a house with the given id and world.
 
         Parameters
         ----------
@@ -430,6 +430,7 @@ class BaseNews(metaclass=abc.ABCMeta):
     id: :class:`int`
         The internal ID of the news entry.
     """
+
     __slots__ = (
         "id",
     )
@@ -447,7 +448,7 @@ class BaseNews(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, news_id):
-        """Gets the Tibia.com URL for a news entry by its id.
+        """Get the Tibia.com URL for a news entry by its id.
 
         Parameters
         ------------
@@ -462,7 +463,7 @@ class BaseNews(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_list_url(cls):
-        """Gets the URL to Tibia.com's news archive page.
+        """Get the URL to Tibia.com's news archive page.
 
         Notes
         -----
@@ -508,7 +509,7 @@ class BasePost(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, post_id):
-        """Gets the URL to a specific post.
+        """Get the URL to a specific post.
 
         Parameters
         ----------
@@ -548,7 +549,7 @@ class BaseThread(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, thread_id, page=1):
-        """Gets the URL to a thread with a given id.
+        """Get the URL to a thread with a given id.
 
         Parameters
         ----------
@@ -604,8 +605,9 @@ class BaseTournament(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, tournament_cycle):
-        """Gets the URL to a tournament's information page if its cycle is provided,
-        otherwise it shows the current tournament.
+        """Get the URL to a tournament's information page.
+
+        If its cycle is provided, otherwise it shows the current tournament.
 
         Parameters
         ----------
@@ -658,7 +660,7 @@ class BaseWorld(metaclass=abc.ABCMeta):
 
     @classmethod
     def get_url(cls, name):
-        """Gets the URL to the World's information page on Tibia.com.
+        """Get the URL to the World's information page on Tibia.com.
 
         Parameters
         ----------
@@ -676,7 +678,9 @@ class BaseWorld(metaclass=abc.ABCMeta):
 class HouseWithId:
     """Implements the :py:attr:`id` attribute and dependant functions and properties.
 
-    Subclasses mut also implement :class:`.BaseHouse`"""
+    Subclasses mut also implement :class:`.BaseHouse`
+    """
+
     name: str
     id: int
     world: str

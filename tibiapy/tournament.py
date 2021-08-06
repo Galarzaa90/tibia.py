@@ -1,15 +1,16 @@
 import datetime
 import math
 import re
-from typing import List
-
-import bs4
+from typing import List, TYPE_CHECKING
 
 from tibiapy import abc
 from tibiapy.enums import PvpType, TournamentPhase, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_integer, parse_popup, parse_tibia_datetime, parse_tibia_full_date, \
     parse_tibiacom_content, split_list, try_enum
+
+if TYPE_CHECKING:
+    import bs4
 
 __all__ = (
     "TournamentLeaderboardEntry",
