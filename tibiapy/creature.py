@@ -8,9 +8,9 @@ from tibiapy import abc
 from tibiapy.errors import InvalidContent
 
 __all__ = (
-    "Creature",
+    "CreatureEntry",
     "CreaturesSection",
-    "CreatureDetail",
+    "Creature",
 )
 
 from tibiapy.utils import parse_tibiacom_content, get_tibia_url
@@ -26,7 +26,112 @@ LOOT_PATTERN = re.compile(r"They carry (.*) with them.")
 MANA_COST = re.compile(r"takes (\d+) mana")
 
 
-class Creature(abc.Serializable):
+class CreaturesSection(abc.Serializable):
+    """Represents the creature's section in the Tibia.com library.
+
+    Attributes
+    ----------
+    boosted_creature: :class:`CreatureEntry`
+        The current boosted creature.
+    creatures: list of :class:`CreatureEntry`
+        The list of creatures in the library.
+    """
+
+    __slots__ = (
+        "boosted_creature",
+        "creatures",
+    )
+
+    def __init__(self, boosted_creature, creatures):
+        self.boosted_creature: CreatureEntry = boosted_creature
+        self.creatures: List[CreatureEntry] = creatures or []
+
+    @classmethod
+    def get_url(cls):
+        """Gets the URL to the Tibia.com library section.
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Tibia.com library section.
+        """
+        return get_tibia_url("library", "creature")
+
+    @classmethod
+    def from_boosted_creature_header(cls, content):
+        """Gets the boosted creature from any Tibia.com page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of a Tibia.com page.
+
+        Returns
+        -------
+        :class:`CreatureEntry`
+            The boosted creature of the day.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a Tibia.com's page.
+        """
+        try:
+            parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), "lxml",
+                                               parse_only=bs4.SoupStrainer("div", attrs={"id": "RightArtwork"}))
+            img = parsed_content.find("img", attrs={"id": "Monster"})
+            name = img["title"].replace(BOOSTED_ALT, "").strip()
+            image_url = img["src"]
+            identifier = image_url.split("/")[-1].replace(".gif", "")
+            return CreatureEntry(name, identifier)
+        except TypeError as e:
+            raise InvalidContent("content is not from Tibia.com", e)
+
+    @classmethod
+    def from_content(cls, content):
+        """Creates an instance of the class from the html content of the creature library's page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`Character`
+            The character contained in the page.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a creature library's page.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
+            boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
+            if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
+                return None
+            boosted_creature_link = boosted_creature_table.find("a")
+            url = urllib.parse.urlparse(boosted_creature_link["href"])
+            query = urllib.parse.parse_qs(url.query)
+            boosted_creature = CreatureEntry(boosted_creature_link.text, query["race"][0])
+
+            list_table = parsed_content.find("div", style=lambda v: v and 'display: table' in v)
+            entries_container = list_table.find_all("div", style=lambda v: v and 'float: left' in v)
+            entries = []
+            for entry_container in entries_container:
+                name = entry_container.text.strip()
+                link = entry_container.find("a")
+                url = urllib.parse.urlparse(link["href"])
+                query = urllib.parse.parse_qs(url.query)
+                entries.append(CreatureEntry(name, query["race"][0]))
+            return cls(boosted_creature, entries)
+        except ValueError as e:
+            raise InvalidContent("content is not the creature's library", e)
+
+
+class CreatureEntry(abc.Serializable):
     """Represents a creature in the Library section.
 
     Attributes
@@ -80,112 +185,7 @@ class Creature(abc.Serializable):
         return get_tibia_url("library", "creatures", race=identifier)
 
 
-class CreaturesSection(abc.Serializable):
-    """Represents the creature's section in the Tibia.com library.
-
-    Attributes
-    ----------
-    boosted_creature: :class:`Creature`
-        The current boosted creature.
-    creatures: list of :class:`Creature`
-        The list of creatures in the library.
-    """
-
-    __slots__ = (
-        "boosted_creature",
-        "creatures",
-    )
-
-    def __init__(self, boosted_creature, creatures):
-        self.boosted_creature: Creature = boosted_creature
-        self.creatures: List[Creature] = creatures or []
-
-    @classmethod
-    def get_url(cls):
-        """Gets the URL to the Tibia.com library section.
-
-        Returns
-        -------
-        :class:`str`:
-            The URL to the Tibia.com library section.
-        """
-        return get_tibia_url("library", "creature")
-
-    @classmethod
-    def from_boosted_creature_header(cls, content):
-        """Gets the boosted creature from any Tibia.com page.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of a Tibia.com page.
-
-        Returns
-        -------
-        :class:`Creature`
-            The boosted creature of the day.
-
-        Raises
-        ------
-        InvalidContent
-            If content is not the HTML of a Tibia.com's page.
-        """
-        try:
-            parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), "lxml",
-                                               parse_only=bs4.SoupStrainer("div", attrs={"id": "RightArtwork"}))
-            img = parsed_content.find("img", attrs={"id": "Monster"})
-            name = img["title"].replace(BOOSTED_ALT, "").strip()
-            image_url = img["src"]
-            identifier = image_url.split("/")[-1].replace(".gif", "")
-            return Creature(name, identifier)
-        except TypeError as e:
-            raise InvalidContent("content is not from Tibia.com", e)
-
-    @classmethod
-    def from_content(cls, content):
-        """Creates an instance of the class from the html content of the creature library's page.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the page.
-
-        Returns
-        -------
-        :class:`Character`
-            The character contained in the page.
-
-        Raises
-        ------
-        InvalidContent
-            If content is not the HTML of a creature library's page.
-        """
-        try:
-            parsed_content = parse_tibiacom_content(content)
-            boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
-            boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
-            if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
-                return None
-            boosted_creature_link = boosted_creature_table.find("a")
-            url = urllib.parse.urlparse(boosted_creature_link["href"])
-            query = urllib.parse.parse_qs(url.query)
-            boosted_creature = Creature(boosted_creature_link.text, query["race"][0])
-
-            list_table = parsed_content.find("div", style=lambda v: v and 'display: table' in v)
-            entries_container = list_table.find_all("div", style=lambda v: v and 'float: left' in v)
-            entries = []
-            for entry_container in entries_container:
-                name = entry_container.text.strip()
-                link = entry_container.find("a")
-                url = urllib.parse.urlparse(link["href"])
-                query = urllib.parse.parse_qs(url.query)
-                entries.append(Creature(name, query["race"][0]))
-            return cls(boosted_creature, entries)
-        except ValueError as e:
-            raise InvalidContent("content is not the creature's library", e)
-
-
-class CreatureDetail(Creature):
+class Creature(CreatureEntry):
     """Represents a creature's details on the Tibia.com library.
 
     Attributes
@@ -257,7 +257,7 @@ class CreatureDetail(Creature):
 
         Returns
         -------
-        :class:`CreatureDetail`
+        :class:`Creature`
             The character contained in the page.
         """
         try:

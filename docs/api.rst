@@ -706,9 +706,9 @@ Creature
    :members:
    :inherited-members:
 
-CreatureDetail
---------------
-.. autoclass:: CreatureDetail
+CreatureEntry
+-------------
+.. autoclass:: CreatureEntry
    :members:
    :inherited-members:
 

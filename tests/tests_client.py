@@ -24,7 +24,7 @@ from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Gu
     Category, \
     House, HouseEntry, \
     GuildEntry, \
-    KillStatistics, NewsEntry, News, World, WorldOverview, Forbidden, NetworkError, Creature, Auction, \
+    KillStatistics, NewsEntry, News, World, WorldOverview, Forbidden, NetworkError, CreatureEntry, Auction, \
     EventSchedule
 
 
@@ -203,7 +203,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(News.get_list_url(), status=200, body=content)
         creature = await self.client.fetch_boosted_creature()
 
-        self.assertIsInstance(creature.data, Creature)
+        self.assertIsInstance(creature.data, CreatureEntry)
 
     @aioresponses()
     async def test_client_fetch_cm_post_archive(self, mock):

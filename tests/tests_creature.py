@@ -1,7 +1,7 @@
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, CreaturesSection, CreatureDetail, Creature
+from tibiapy import InvalidContent, CreaturesSection, Creature, CreatureEntry
 
 FILE_CREATURE_SECTION = "library/creature_list.txt"
 FILE_CREATURE = "library/creature_animatedfeather.txt"
@@ -13,7 +13,7 @@ class TestCreature(TestCommons, unittest.TestCase):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         creature = CreaturesSection.from_boosted_creature_header(content)
 
-        self.assertIsInstance(creature, Creature)
+        self.assertIsInstance(creature, CreatureEntry)
         self.assertEqual("Skeleton Warrior", creature.name)
 
     def test_creature_from_content_not_tibiacom(self):
@@ -39,7 +39,7 @@ class TestCreature(TestCommons, unittest.TestCase):
 
     def test_creature_detail_from_content(self):
         content = self.load_resource(FILE_CREATURE)
-        creature = CreatureDetail.from_content(content)
+        creature = Creature.from_content(content)
 
         self.assertIsNotNone(creature)
         self.assertEqual("Animated Feathers", creature.name)

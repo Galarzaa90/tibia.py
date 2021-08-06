@@ -47,9 +47,11 @@ Changelog
 - ``AuctionDetails`` class renamed to ``Auction``.
 - ``ListedGuild`` class renamed to ``GuildEntry``.
 - ``ListedTournament`` class renamed to ``TournamentEntry``.
+- ``Creature`` class renamed to ``CreatureEntry``.
+- ``CreatureDetail`` class renamed to ``Creature``.
 - ``Guild`` and ``GuildEntry`` class no longer have a ``get_list_url`` method.
 - Renamed ``begin_date`` parameter to ``start_date`` in ``fetch_news_archive``.
-- Renamed ``race`` attribute of ``CreatureEntry`` and ``Creature`` to ``identifier``
+- Renamed ``race`` attribute of ``CreatureEntry`` and ``Creature`` to ``identifier``, method parameters renamed as well.
 
 
 .. v4.1.7

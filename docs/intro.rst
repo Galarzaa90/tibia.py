@@ -79,7 +79,7 @@ Supported Sections
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | `Creature Library`_ (List)       | :meth:`CreaturesSection.from_content`      | :meth:`Client.fetch_library_creatures`      |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
-| `Creature Library`_ (Individual) | :meth:`CreatureDetail.from_content`        | :meth:`Client.fetch_creature`               |
+| `Creature Library`_ (Individual) | :meth:`Creature.from_content`              | :meth:`Client.fetch_creature`               |
 +----------------------------------+--------------------------------------------+---------------------------------------------+
 | `Event Schedule`_                | :meth:`EventSchedule.from_content`         | :meth:`Client.fetch_event_schedule`         |
 +----------------------------------+--------------------------------------------+---------------------------------------------+

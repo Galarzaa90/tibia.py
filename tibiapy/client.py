@@ -11,7 +11,7 @@ import aiohttp_socks
 import tibiapy
 from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, Spell, SpellsSection, abc
 from tibiapy.character import Character
-from tibiapy.creature import Creature, CreatureDetail, CreaturesSection
+from tibiapy.creature import CreatureEntry, Creature, CreaturesSection
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseStatus, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
@@ -745,7 +745,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`Creature`
+        :class:`TibiaResponse` of :class:`CreatureEntry`
             The boosted creature of the day.
 
         Raises
@@ -805,7 +805,7 @@ class Client:
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`CreatureDetail`
+        :class:`TibiaResponse` of :class:`Creature`
             The creature's section in Tibia.com
 
         Raises
@@ -816,9 +816,9 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", CreatureDetail.get_url(identifier), test=test)
+        response = await self._request("GET", Creature.get_url(identifier), test=test)
         start_time = time.perf_counter()
-        boosted_creature = CreatureDetail.from_content(response.content)
+        boosted_creature = Creature.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
