@@ -15,12 +15,13 @@ from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
 from tests.tests_highscores import FILE_HIGHSCORES_FULL
 from tests.tests_house import FILE_HOUSE_FULL, FILE_HOUSE_LIST
 from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
+from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, GuildsSection, Highscores, HouseType, \
     HousesSection, \
-    NewsArchive, VocationFilter, \
+    Leaderboard, NewsArchive, VocationFilter, \
     Category, \
     House, HouseEntry, \
     GuildEntry, \
@@ -281,6 +282,14 @@ class TestClient(asynctest.TestCase, TestCommons):
         """Testing fetching the auction history"""
         with self.assertRaises(ValueError):
             await self.client.fetch_event_schedule(3)
+
+    @aioresponses()
+    async def test_client_fetch_leaderboards(self, mock):
+        """Testing fetching the leaderboards"""
+        content = self.load_resource(FILE_LEADERBOARD_CURRENT)
+        mock.get(Leaderboard.get_url("Antica"), status=200, body=content)
+        response = await self.client.fetch_leaderboard("Antica")
+        self.assertIsInstance(response.data, Leaderboard)
 
     @unittest.mock.patch("tibiapy.bazaar.Auction._parse_page_items")
     @unittest.skipIf(sys.version_info < (3, 8, 0), "AsyncMock was implemented in 3.8")

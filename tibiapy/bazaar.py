@@ -55,6 +55,7 @@ class AchievementEntry(abc.Serializable):
     secret: :class:`bool`
         Whether the achievement is secret or not.
     """
+
     def __init__(self, name, secret=False):
         self.name: str = name
         self.secret: int = secret
@@ -69,8 +70,7 @@ class AchievementEntry(abc.Serializable):
 
 
 class AuctionFilters(abc.Serializable):
-    """
-    Represents the auctions filters available in the current auctions section.
+    """The auction filters available in the auctions section.
 
     All attributes are optional.
 
@@ -230,7 +230,7 @@ class BestiaryEntry(abc.Serializable):
 
 
 class BlessingEntry(abc.Serializable):
-    """Represents a blessing.
+    """A character's blessings.
 
     Attributes
     ----------
@@ -293,12 +293,15 @@ class CharacterBazaar(abc.Serializable):
         return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} " \
                f"results_count={self.results_count}>"
 
+    # region Properties
     @property
     def url(self):
         """:class:`str`: Gets the URL to the bazaar."""
         return self.get_auctions_history_url(self.page) if self.type == BazaarType.HISTORY else \
             self.get_current_auctions_url(self.page, self.filters)
+    # endregion
 
+    # region Public Methods
     @classmethod
     def get_current_auctions_url(cls, page=1, filters=None):
         """Gets the URL to the list of current auctions in Tibia.com
@@ -379,6 +382,7 @@ class CharacterBazaar(abc.Serializable):
             return bazaar
         except ValueError as e:
             raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e)
+    # endregion
 
 
 class CharmEntry(abc.Serializable):
@@ -391,6 +395,7 @@ class CharmEntry(abc.Serializable):
     cost: :class:`int`
         The cost of the charm in charm points.
     """
+
     def __init__(self, name, cost=0):
         self.name: str = name
         self.cost: int = cost
@@ -405,7 +410,7 @@ class CharmEntry(abc.Serializable):
 
 
 class DisplayImage(abc.Serializable):
-    """Represents an image displayed in an auction.
+    """An image displayed in the auction.
 
     Attributes
     ----------
@@ -451,6 +456,7 @@ class DisplayItem(abc.Serializable):
     item_id: :class:`int`
         The item's client id.
     """
+
     __slots__ = (
         "image_url",
         "name",
@@ -503,6 +509,7 @@ class DisplayMount(DisplayImage):
     mount_id: :class:`int`
         The internal ID of the mount.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.mount_id: int = kwargs.get("mount_id", 0)
@@ -537,6 +544,7 @@ class DisplayOutfit(DisplayImage):
     addons: :class:`int`
         The unlocked or owned addons for this outfit.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.outfit_id: int = kwargs.get("outfit_id", 0)
@@ -575,6 +583,7 @@ class DisplayFamiliar(DisplayImage):
     familiar_id: :class:`int`
         The internal ID of the familiar.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.familiar_id: int = kwargs.get("familiar_id", 0)
@@ -632,6 +641,7 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
     status: :class:`AuctionStatus`
         The current status of the auction.
     """
+
     __slots__ = (
         "auction_id",
         "name",
@@ -668,6 +678,7 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
     def __repr__(self):
         return f"<{self.__class__.__name__} auction_id={self.auction_id} name={self.name!r} world={self.world!r}>"
 
+    # region Properties
     @property
     def character_url(self):
         """
@@ -681,7 +692,9 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
         :class:`str`: The URL to this auction's detail page on Tibia.com
         """
         return self.get_url(self.auction_id)
+    # endregion
 
+    # region Public Methods
     @classmethod
     def get_url(cls, auction_id):
         """Gets the URL to the Tibia.com detail page of an auction with a given id.
@@ -697,7 +710,9 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
             The URL to the auction's detail page.
         """
         return get_tibia_url("charactertrade", "currentcharactertrades", page="details", auctionid=auction_id)
+    # endregion
 
+    # region Private Methods
     @classmethod
     def _parse_auction(cls, auction_row, auction_id=0):
         """Parses an auction's table, extracting its data.
@@ -770,10 +785,11 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
             auction.sales_arguments.append(SalesArgument(content=entry.text, category_image=img_url,
                                                          category_id=category_id))
         return auction
+    # endregion
 
 
 class Auction(AuctionEntry):
-    """Represents the details of an auction.
+    """The details of an auction.
 
     Attributes
     ----------
@@ -883,6 +899,7 @@ class Auction(AuctionEntry):
     bestiary_progress: :class:`list` of :class:`BestiaryEntry`
         The bestiary progress of the character.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.hit_points: int = kwargs.get("hit_points", 0)
@@ -969,6 +986,7 @@ class Auction(AuctionEntry):
         "bestiary_progress",
     )
 
+    # region Properties
     @property
     def completed_bestiary_entries(self):
         """:class:`list` of :class:`BestiaryEntry`: Gets a list of completed bestiary entries."""
@@ -983,7 +1001,9 @@ class Auction(AuctionEntry):
     def skills_map(self) -> Dict[str, 'SkillEntry']:
         """:class:`dict` of :class:`str`, :class:`SkillEntry`: A mapping of skills by their name."""
         return {skill.name: skill for skill in self.skills}
+    # endregion
 
+    # region Public Methods
     @classmethod
     def from_content(cls, content, auction_id=0, skip_details=False):
         """Parses an auction detail page from Tibia.com and extracts its data.
@@ -1058,7 +1078,9 @@ class Auction(AuctionEntry):
         if "BestiaryProgress" in details_tables:
             auction._parse_bestiary_table(details_tables["BestiaryProgress"])
         return auction
+    # endregion
 
+    # region Private Methods
     @classmethod
     def _parse_tables(cls, parsed_content) -> Dict[str, bs4.Tag]:
         """Parses the character details tables.
@@ -1288,6 +1310,7 @@ class Auction(AuctionEntry):
         self.hirelings = parse_integer(hirelings_data.get("hirelings", ""))
         self.hireling_jobs = parse_integer(hirelings_data.get("hireling_jobs", ""))
         self.hireling_outfits = parse_integer(hirelings_data.get("hireling_outfits", ""))
+    # endregion
 
 
 class OutfitImage(abc.Serializable):
@@ -1357,8 +1380,9 @@ class PaginatedSummary(abc.Serializable):
         return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} results={self.results} " \
                f"fully_fetched={self.fully_fetched} len(entries)={len(self.entries)}>"
 
+    # region Public Methods
     def get_by_name(self, name):
-        """Gets an entry by its name.
+        """Get an entry by its name.
 
         Parameters
         ----------
@@ -1373,7 +1397,7 @@ class PaginatedSummary(abc.Serializable):
         return next((e for e in self.entries if e.name.lower() == name.lower()), None)
 
     def search(self, value):
-        """Searches an entry by its name
+        """Search an entry by its name
 
         Parameters
         ----------
@@ -1401,12 +1425,14 @@ class PaginatedSummary(abc.Serializable):
             The entry matching the name.
         """
         return NotImplemented
+    # endregion
 
+    # region Private Methods
     def _parse_pagination(self, parsed_content):
         pagination_block = parsed_content.find("div", attrs={"class": "BlockPageNavigationRow"})
         if pagination_block is not None:
             self.page, self.total_pages, self.results = parse_pagination(pagination_block)
-
+    # endregion
 
 class ItemSummary(PaginatedSummary):
     """Items in a character's inventory and depot.
@@ -1518,7 +1544,6 @@ class Mounts(PaginatedSummary):
             if item:
                 summary.entries.append(item)
         return summary
-
 
 class Familiars(PaginatedSummary):
     """The familiars the character has unlocked or purchased.

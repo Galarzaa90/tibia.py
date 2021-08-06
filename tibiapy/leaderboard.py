@@ -2,7 +2,7 @@ import datetime
 import re
 from typing import List, Optional
 
-from tibiapy import abc
+from tibiapy import abc, errors
 from tibiapy.utils import get_tibia_url, parse_form_data, parse_pagination, parse_tibia_datetime, parse_tibiacom_content
 
 __all__ = (
@@ -81,6 +81,26 @@ class Leaderboard(abc.Serializable):
         """:class:`str`: The URL to the next page of the current leaderboard results, if there's any."""
         return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
 
+    def get_page_url(self, page):
+        """Gets the URL of the leaderboard at a specific page, with the current date parameters.
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The desired page.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the desired page.
+
+        Raises
+        ------
+        ValueError
+            If the specified page is zer or less.
+        """
+        return self.get_url(self.world, self.rotation.rotation_id, page)
+
     @classmethod
     def get_url(cls, world, rotation_id=None, page=1):
         """Get the URL to the leaderboards of a world.
@@ -98,25 +118,15 @@ class Leaderboard(abc.Serializable):
         -------
         :class:`str`
             The URL to the leaderboard with the desired parameters.
-        """
-        return get_tibia_url("community", "leaderboards", world=world, rotation=rotation_id, currentpage=page)
 
-    def get_page_url(self, page):
-        """Gets the URL of the leaderboard at a specific page, with the current date parameters.
-
-        Parameters
-        ----------
-        page: :class:`int`
-            The desired page.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the desired page.
+        Raises
+        ------
+        ValueError
+            If the specified page is zer or less.
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
-        return self.get_url(self.world, self.rotation.rotation_id, page)
+        return get_tibia_url("community", "leaderboards", world=world, rotation=rotation_id, currentpage=page)
 
     @classmethod
     def from_content(cls, content):
@@ -132,38 +142,41 @@ class Leaderboard(abc.Serializable):
         :class:`Leaderboard`
             The ledaerboard if found.
         """
-        parsed_content = parse_tibiacom_content(content)
-        tables = parsed_content.find_all("table", {"class": "TableContent"})
-        form = parsed_content.find("form")
-        data = parse_form_data(form, include_options=True)
-        current_world =data["world"]
-        current_rotation = None
-        rotations = []
-        for label, value in data["__options__"]["rotation"].items():
-            current = False
-            if "Current" in label:
-                label = "".join(rotation_end_pattern.findall(label))
-                current = True
-            rotation_end = parse_tibia_datetime(label)
-            rotation = LeaderboardRotation(int(value), rotation_end, current)
-            if value == data["rotation"]:
-                current_rotation = rotation
-            rotations.append(rotation)
-        leaderboard = cls(current_world, current_rotation)
-        leaderboard.available_worlds = [w for w in data["__options__"]["world"].values() if w]
-        leaderboard.available_rotations = rotations
-        if leaderboard.rotation.current:
-            last_update_table = tables[2]
-            numbers = re.findall(r'(\d+)', last_update_table.text)
-            if numbers:
-                leaderboard.last_update = datetime.timedelta(minutes=int(numbers[0]))
-        leaderboard._parse_entries(tables[-1])
-        pagination_block = parsed_content.find("small")
-        pages, total, count = parse_pagination(pagination_block)
-        leaderboard.page = pages
-        leaderboard.total_pages = total
-        leaderboard.results_count = count
-        return leaderboard
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            tables = parsed_content.find_all("table", {"class": "TableContent"})
+            form = parsed_content.find("form")
+            data = parse_form_data(form, include_options=True)
+            current_world =data["world"]
+            current_rotation = None
+            rotations = []
+            for label, value in data["__options__"]["rotation"].items():
+                current = False
+                if "Current" in label:
+                    label = "".join(rotation_end_pattern.findall(label))
+                    current = True
+                rotation_end = parse_tibia_datetime(label)
+                rotation = LeaderboardRotation(int(value), rotation_end, current)
+                if value == data["rotation"]:
+                    current_rotation = rotation
+                rotations.append(rotation)
+            leaderboard = cls(current_world, current_rotation)
+            leaderboard.available_worlds = [w for w in data["__options__"]["world"].values() if w]
+            leaderboard.available_rotations = rotations
+            if leaderboard.rotation.current:
+                last_update_table = tables[2]
+                numbers = re.findall(r'(\d+)', last_update_table.text)
+                if numbers:
+                    leaderboard.last_update = datetime.timedelta(minutes=int(numbers[0]))
+            leaderboard._parse_entries(tables[-1])
+            pagination_block = parsed_content.find("small")
+            pages, total, count = parse_pagination(pagination_block)
+            leaderboard.page = pages
+            leaderboard.total_pages = total
+            leaderboard.results_count = count
+            return leaderboard
+        except (AttributeError, ValueError) as e:
+            raise errors.InvalidContent("content does not belong to the leaderboards", e)
 
     def _parse_entries(self, entries_table):
         entries_rows = entries_table.find_all("tr", {'style': True})

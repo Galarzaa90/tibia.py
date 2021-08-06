@@ -52,6 +52,7 @@ Changelog
 - ``Guild`` and ``GuildEntry`` class no longer have a ``get_list_url`` method.
 - Renamed ``begin_date`` parameter to ``start_date`` in ``fetch_news_archive``.
 - Renamed ``race`` attribute of ``CreatureEntry`` and ``Creature`` to ``identifier``, method parameters renamed as well.
+- ``CreaturesSection.from_boosted_creature_header`` renamed to ``CreaturesSection.boosted_creature_from_header``.
 
 
 .. v4.1.7

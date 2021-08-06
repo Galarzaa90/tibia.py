@@ -58,7 +58,7 @@ class CreaturesSection(abc.Serializable):
         return get_tibia_url("library", "creature")
 
     @classmethod
-    def from_boosted_creature_header(cls, content):
+    def boosted_creature_from_header(cls, content):
         """Gets the boosted creature from any Tibia.com page.
 
         Parameters
@@ -127,7 +127,7 @@ class CreaturesSection(abc.Serializable):
                 query = urllib.parse.parse_qs(url.query)
                 entries.append(CreatureEntry(name, query["race"][0]))
             return cls(boosted_creature, entries)
-        except ValueError as e:
+        except (AttributeError, ValueError) as e:
             raise InvalidContent("content is not the creature's library", e)
 
 

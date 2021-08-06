@@ -10,9 +10,8 @@ from tibiapy import abc
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import CharacterHouse
-from tibiapy.utils import parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list, \
-    try_datetime, \
-    try_enum
+from tibiapy.utils import (parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list,
+                           try_datetime, try_enum)
 
 # Extracts the scheduled deletion date of a character."""
 deleted_regexp = re.compile(r'([^,]+), will be deleted at (.*)')
@@ -45,7 +44,7 @@ __all__ = (
 
 
 class AccountBadge(abc.Serializable):
-    """Represents an account badge.
+    """A displayed account badge in the character's information.
 
     Attributes
     ----------
@@ -113,6 +112,7 @@ class Achievement(abc.Serializable):
     secret: :class:`bool`
         Whether the achievement is secret or not.
     """
+
     __slots__ = (
         "name",
         "grade",
@@ -616,8 +616,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
 
 
 class Death(abc.Serializable):
-    """
-    Represents a death by a character
+    """A character's death.
 
     Attributes
     -----------
@@ -646,11 +645,11 @@ class Death(abc.Serializable):
     )
 
     def __init__(self, name=None, level=0, **kwargs):
-        self.name = name
-        self.level = level
+        self.name: str = name
+        self.level: int = level
         self.killers: List[Killer] = kwargs.get("killers", [])
         self.assists: List[Killer] = kwargs.get("assists", [])
-        self.time = try_datetime(kwargs.get("time"))
+        self.time: datetime.datetime = try_datetime(kwargs.get("time"))
 
     def __repr__(self):
         attributes = ""
@@ -681,8 +680,7 @@ class Death(abc.Serializable):
 
 
 class GuildMembership(abc.BaseGuild, abc.Serializable):
-    """
-    The guild information of a character.
+    """The guild information of a character.
 
     Attributes
     ----------
@@ -750,7 +748,7 @@ class Killer(abc.Serializable):
 
 
 class OnlineCharacter(abc.BaseCharacter, abc.Serializable):
-    """Represents an online character.
+    """An online character in the world's page.
 
     Attributes
     ----------
@@ -782,7 +780,9 @@ class OnlineCharacter(abc.BaseCharacter, abc.Serializable):
 
 
 class OtherCharacter(abc.BaseCharacter, abc.Serializable):
-    """Represents other characters displayed in the Character's information page.
+    """A character listed in the characters section of a character's page.
+
+    These are only shown if the character is not hidden, and only characters that are not hidden are shown here.
 
     Attributes
     ----------

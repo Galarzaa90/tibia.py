@@ -482,7 +482,7 @@ def split_list(items, separator=",", last_separator=" and "):
     return [e.strip() for e in items]
 
 
-def _recursive_strip(value):
+def _recursive_strip(value):  # pragma: no cover
     if isinstance(value, dict):
         return {k: _recursive_strip(v) for k, v in value.items()}
     if isinstance(value, list):
@@ -492,7 +492,7 @@ def _recursive_strip(value):
     return value
 
 
-def deprecated(instead=None):
+def deprecated(instead=None):  # pragma: no cover
     def actual_decorator(func):
         @functools.wraps(func)
         def decorated(*args, **kwargs):
