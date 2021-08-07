@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.guild &#8212; Tibia.py 4.1.7 documentation</title>
+    <title>tibiapy.guild &#8212; Tibia.py 5.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.1.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 5.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.guild</a></li> 
       </ul>
@@ -46,7 +46,7 @@
   <h1>Source code for tibiapy.guild</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
@@ -55,15 +55,17 @@
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">Vocation</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
 <span class="kn">from</span> <span class="nn">tibiapy.house</span> <span class="kn">import</span> <span class="n">GuildHouse</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_date</span><span class="p">,</span> <span class="n">try_datetime</span><span class="p">,</span> <span class="n">try_enum</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_tibia_url</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">,</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_date</span><span class="p">,</span>
+                           <span class="n">try_datetime</span><span class="p">,</span> <span class="n">try_enum</span><span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;Guild&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GuildMember&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GuildInvite&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GuildsSection&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GuildWars&quot;</span><span class="p">,</span>
     <span class="s2">&quot;GuildWarEntry&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ListedGuild&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GuildEntry&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">COLS_INVITED_MEMBER</span> <span class="o">=</span> <span class="mi">2</span>
@@ -95,9 +97,115 @@
 <span class="n">war_current_empty</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;The guild ([\w\s]+) is currently not&#39;</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="GuildsSection"><a class="viewcode-back" href="../../api.html#tibiapy.GuildsSection">[docs]</a><span class="k">class</span> <span class="nc">GuildsSection</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The guilds section in Tibia.com.</span>
+
+<span class="sd">    .. versionadded:: 5.0.0</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    world: :class:`str`</span>
+<span class="sd">        The name of the world. If :obj:`None`, the section belongs to a world that doesn&#39;t exist.</span>
+<span class="sd">    entries: :class:`list` of :class:`GuildEntry`</span>
+<span class="sd">        The list of guilds in the world.</span>
+<span class="sd">    available_worlds: :class:`list` of :class:`str`</span>
+<span class="sd">        The list of worlds available for selection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;world&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;entries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;available_worlds&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">entries</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">available_worlds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildEntry</span><span class="p">]</span> <span class="o">=</span> <span class="n">entries</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_worlds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">available_worlds</span> <span class="ow">or</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> world=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="si">!r}</span><span class="s2"> len(entries)=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">)</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">active_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are active.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">in_formation_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are in course of formation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">g</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: Get the URL to this guild section.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GuildsSection.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.GuildsSection.from_content">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of guilds from the HTML content of the world guilds&#39; page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`GuildsSection`</span>
+<span class="sd">            List of guilds in the current world. :obj:`None` if it&#39;s the list of a world that doesn&#39;t exist.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If content is not the HTML of a guild&#39;s page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;form&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">parse_form_data</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">include_options</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">selected_world</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">available_worlds</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;__options__&quot;</span><span class="p">][</span><span class="s2">&quot;world&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">w</span><span class="p">]</span>
+            <span class="n">guilds</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">selected_world</span><span class="p">,</span> <span class="n">available_worlds</span><span class="o">=</span><span class="n">available_worlds</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;Content does not belong to world guild list.&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="c1"># First TableContainer contains world selector.</span>
+        <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">containers</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;TableContainer&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">containers</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;Text&quot;</span><span class="p">)</span>
+            <span class="n">active</span> <span class="o">=</span> <span class="s2">&quot;Active&quot;</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">rows</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;#D4C0A1&quot;</span><span class="p">,</span> <span class="s2">&quot;#F1E0C6&quot;</span><span class="p">]})</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+                <span class="n">columns</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
+                <span class="n">logo_img</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">)[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+                <span class="n">description_lines</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">description_lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">description_lines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">description</span> <span class="o">=</span> <span class="n">description_lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+                <span class="n">guild</span> <span class="o">=</span> <span class="n">GuildEntry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">guilds</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">logo_img</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">active</span><span class="p">)</span>
+                <span class="n">guilds</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">guild</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">guilds</span></div>
+
+<div class="viewcode-block" id="GuildsSection.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.GuildsSection.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the Tibia.com URL for the guild section of a specific world.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`</span>
+<span class="sd">            The URL to the guild&#39;s page</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">)</span></div></div>
+
+
 <div class="viewcode-block" id="Guild"><a class="viewcode-back" href="../../api.html#tibiapy.Guild">[docs]</a><span class="k">class</span> <span class="nc">Guild</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseGuild</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represents a Tibia guild.</span>
+    <span class="sd">&quot;&quot;&quot;A Tibia guild, viewed from its guild&#39;s page.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ------------</span>
@@ -132,6 +240,7 @@
 <span class="sd">    invites: :class:`list` of :class:`GuildInvite`</span>
 <span class="sd">        List of invited characters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;world&quot;</span><span class="p">,</span>
         <span class="s2">&quot;logo_url&quot;</span><span class="p">,</span>
@@ -151,7 +260,7 @@
     <span class="n">_serializable_properties</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;member_count&quot;</span><span class="p">,</span>
         <span class="s2">&quot;online_count&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ranks&quot;</span>
+        <span class="s2">&quot;ranks&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -171,7 +280,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">invites</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildInvite</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;invites&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> name=</span><span class="si">{0.name!r}</span><span class="s2"> world=</span><span class="si">{0.world!r}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> world=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
 
     <span class="c1"># region Properties</span>
     <span class="nd">@property</span>
@@ -196,7 +305,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">members_by_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;GuildMember&#39;</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`dict`: Gets a mapping of members, grouped by their guild rank.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;:class:`dict`: Get a mapping of members, grouped by their guild rank.&quot;&quot;&quot;</span>
         <span class="n">rank_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
         <span class="p">[</span><span class="n">rank_dict</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">rank</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">rank_dict</span><span class="p">)</span>
@@ -205,7 +314,7 @@
     <span class="c1"># region Public methods</span>
 <div class="viewcode-block" id="Guild.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.Guild.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of the class from the HTML content of the guild&#39;s page.</span>
+        <span class="sd">&quot;&quot;&quot;Create an instance of the class from the HTML content of the guild&#39;s page.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        -----------</span>
@@ -252,14 +361,13 @@
 
     <span class="c1"># region Private methods</span>
     <span class="k">def</span> <span class="nf">_parse_current_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_rank</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the column texts of a member row into a member dictionary.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the column texts of a member row into a member dictionary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        previous_rank: :class:`dict`[int, str]</span>
 <span class="sd">            The last rank present in the rows.</span>
-<span class="sd">        values: tuple[:class:`str`]</span>
+<span class="sd">        values: :class:`tuple` of :class:`str`</span>
 <span class="sd">            A list of row contents.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">joined</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">values</span>
@@ -275,7 +383,7 @@
 
     <span class="k">def</span> <span class="nf">_parse_application_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the guild&#39;s application info.</span>
+<span class="sd">        Parse the guild&#39;s application info.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -289,7 +397,7 @@
 
     <span class="k">def</span> <span class="nf">_parse_guild_disband_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the guild&#39;s disband info, if available.</span>
+<span class="sd">        Parse the guild&#39;s disband info, if available.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -303,7 +411,7 @@
 
     <span class="k">def</span> <span class="nf">_parse_guild_guildhall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the guild&#39;s guildhall info.</span>
+<span class="sd">        Parse the guild&#39;s guildhall info.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -316,8 +424,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">guildhall</span> <span class="o">=</span> <span class="n">GuildHouse</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">paid_until_date</span><span class="o">=</span><span class="n">paid_until</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_guild_homepage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the guild&#39;s homepage info.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the guild&#39;s homepage info.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -330,7 +437,7 @@
 
     <span class="k">def</span> <span class="nf">_parse_guild_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info_container</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the guild&#39;s general information and applies the found values.</span>
+<span class="sd">        Parse the guild&#39;s general information and applies the found values.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -346,8 +453,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="s2">&quot;currently active&quot;</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_logo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the guild logo and saves it to the instance.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the guild logo and saves it to the instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -368,7 +474,7 @@
 
     <span class="k">def</span> <span class="nf">_parse_guild_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the guild&#39;s member and invited list.</span>
+<span class="sd">        Parse the guild&#39;s member and invited list.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -386,8 +492,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parse_invited_member</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_invited_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parses the column texts of an invited row into a invited dictionary.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the column texts of an invited row into a invited dictionary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -401,8 +506,7 @@
 
 
 <div class="viewcode-block" id="GuildMember"><a class="viewcode-back" href="../../api.html#tibiapy.GuildMember">[docs]</a><span class="k">class</span> <span class="nc">GuildMember</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represents a guild member.</span>
+    <span class="sd">&quot;&quot;&quot;Represents a guild member.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    --------------</span>
@@ -421,20 +525,33 @@
 <span class="sd">    online: :class:`bool`</span>
 <span class="sd">        Whether the member is online or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;rank&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;vocation&quot;</span><span class="p">,</span> <span class="s2">&quot;joined&quot;</span><span class="p">,</span> <span class="s2">&quot;online&quot;</span><span class="p">)</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rank&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;level&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;vocation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;joined&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;online&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rank</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Vocation</span><span class="p">,</span> <span class="n">vocation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">:</span> <span class="n">Vocation</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">Vocation</span><span class="p">,</span> <span class="n">vocation</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">online</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;online&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">joined</span> <span class="o">=</span> <span class="n">try_date</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;joined&quot;</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">joined</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">try_date</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;joined&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> rank=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="si">!r}</span><span class="s2"> level=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2"> &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;vocation=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span></div>
 
 
 <div class="viewcode-block" id="GuildInvite"><a class="viewcode-back" href="../../api.html#tibiapy.GuildInvite">[docs]</a><span class="k">class</span> <span class="nc">GuildInvite</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents an invited character</span>
+    <span class="sd">&quot;&quot;&quot;Represents an invited character.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ------------</span>
@@ -444,6 +561,7 @@
 <span class="sd">    date: :class:`datetime.date`</span>
 <span class="sd">        The day when the character was invited.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;date&quot;</span><span class="p">,</span>
@@ -451,7 +569,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">try_date</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">try_date</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> date=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span></div>
@@ -469,7 +587,8 @@
 <span class="sd">    current: :class:`GuildWarEntry`</span>
 <span class="sd">        The current war the guild is involved in.</span>
 <span class="sd">    history: :class:`list` of :class:`GuildWarEntry`</span>
-<span class="sd">        The previous wars the guild has been involved in.&quot;&quot;&quot;</span>
+<span class="sd">        The previous wars the guild has been involved in.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s1">&#39;name&#39;</span><span class="p">,</span>
@@ -492,8 +611,7 @@
 
 <div class="viewcode-block" id="GuildWars.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.GuildWars.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Gets the URL to the guild&#39;s war page of a guild with the given name.</span>
+        <span class="sd">&quot;&quot;&quot;Get the URL to the guild&#39;s war page of a guild with the given name.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -509,7 +627,7 @@
 
 <div class="viewcode-block" id="GuildWars.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.GuildWars.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets a guild&#39;s war information from Tibia.com&#39;s content</span>
+        <span class="sd">&quot;&quot;&quot;Get a guild&#39;s war information from Tibia.com&#39;s content.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -555,7 +673,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_current_war_information</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the guild&#39;s current war information.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the guild&#39;s current war information.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -582,14 +700,13 @@
         <span class="n">end_date_str</span> <span class="o">=</span> <span class="n">end_date_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">end_date</span> <span class="o">=</span> <span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">end_date_str</span><span class="p">)</span>
 
-        <span class="n">entry</span> <span class="o">=</span> <span class="n">GuildWarEntry</span><span class="p">(</span><span class="n">guild_name</span><span class="o">=</span><span class="n">guild_name</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="n">opposing_name</span><span class="p">,</span> <span class="n">guild_score</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">guild_score</span><span class="p">),</span>
-                              <span class="n">opponent_score</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">opposing_score</span><span class="p">),</span> <span class="n">guild_fee</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">guild_fee</span><span class="p">),</span>
-                              <span class="n">opponent_fee</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">opposing_fee</span><span class="p">),</span> <span class="n">score_limit</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">score_limit</span><span class="p">),</span> <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">entry</span>
+        <span class="k">return</span> <span class="n">GuildWarEntry</span><span class="p">(</span><span class="n">guild_name</span><span class="o">=</span><span class="n">guild_name</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="n">opposing_name</span><span class="p">,</span> <span class="n">guild_score</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">guild_score</span><span class="p">),</span>
+                             <span class="n">opponent_score</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">opposing_score</span><span class="p">),</span> <span class="n">guild_fee</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">guild_fee</span><span class="p">),</span>
+                             <span class="n">opponent_fee</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">opposing_fee</span><span class="p">),</span> <span class="n">score_limit</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">score_limit</span><span class="p">),</span> <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_war_history_entry</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses a guild&#39;s war information.</span>
+        <span class="sd">&quot;&quot;&quot;Parse a guild&#39;s war information.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -646,11 +763,10 @@
         <span class="k">if</span> <span class="s2">&quot;no guild had reached the needed kills&quot;</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
             <span class="n">winner</span> <span class="o">=</span> <span class="n">guild_name</span> <span class="k">if</span> <span class="n">guild_score</span> <span class="o">&gt;</span> <span class="n">opponent_score</span> <span class="k">else</span> <span class="n">opposing_name</span>
 
-        <span class="n">entry</span> <span class="o">=</span> <span class="n">GuildWarEntry</span><span class="p">(</span><span class="n">guild_name</span><span class="o">=</span><span class="n">guild_name</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="n">opposing_name</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span>
-                              <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">score_limit</span><span class="o">=</span><span class="n">kills_needed</span><span class="p">,</span> <span class="n">guild_fee</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">guild_fee</span><span class="p">),</span>
-                              <span class="n">opponent_fee</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">opponent_fee</span><span class="p">),</span> <span class="n">surrender</span><span class="o">=</span><span class="n">surrender</span><span class="p">,</span> <span class="n">winner</span><span class="o">=</span><span class="n">winner</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
-                              <span class="n">opponent_score</span><span class="o">=</span><span class="n">opponent_score</span><span class="p">,</span> <span class="n">guild_score</span><span class="o">=</span><span class="n">guild_score</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">entry</span></div>
+        <span class="k">return</span> <span class="n">GuildWarEntry</span><span class="p">(</span><span class="n">guild_name</span><span class="o">=</span><span class="n">guild_name</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="n">opposing_name</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span>
+                             <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">score_limit</span><span class="o">=</span><span class="n">kills_needed</span><span class="p">,</span> <span class="n">guild_fee</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">guild_fee</span><span class="p">),</span>
+                             <span class="n">opponent_fee</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">opponent_fee</span><span class="p">),</span> <span class="n">surrender</span><span class="o">=</span><span class="n">surrender</span><span class="p">,</span> <span class="n">winner</span><span class="o">=</span><span class="n">winner</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
+                             <span class="n">opponent_score</span><span class="o">=</span><span class="n">opponent_score</span><span class="p">,</span> <span class="n">guild_score</span><span class="o">=</span><span class="n">guild_score</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GuildWarEntry"><a class="viewcode-back" href="../../api.html#tibiapy.GuildWarEntry">[docs]</a><span class="k">class</span> <span class="nc">GuildWarEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
@@ -692,6 +808,7 @@
 <span class="sd">    surrender: :class:`bool`</span>
 <span class="sd">        Whether the losing guild surrendered or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;guild_name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;guild_score&quot;</span><span class="p">,</span>
@@ -708,21 +825,21 @@
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guild_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_name&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guild_score</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_score&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guild_fee</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_fee&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opponent_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opponent_name&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opponent_score</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opponent_score&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">opponent_fee</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opponent_fee&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">score_limit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score_limit&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;duration&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_date&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">winner</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;winner&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">surrender</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;surrender&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_name&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_score</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_score&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_fee</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guild_fee&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opponent_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opponent_name&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opponent_score</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opponent_score&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opponent_fee</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opponent_fee&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_date&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score_limit&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;duration&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_date&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">winner</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;winner&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surrender</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;surrender&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> guild_name=</span><span class="si">{0.guild_name!r}</span><span class="s2"> opponent_name=</span><span class="si">{0.opponent_name!r}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> guild_name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_name</span><span class="si">!r}</span><span class="s2"> opponent_name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">opponent_name</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">guild_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -735,9 +852,8 @@
         <span class="k">return</span> <span class="n">Guild</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opponent_name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opponent_name</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="ListedGuild"><a class="viewcode-back" href="../../api.html#tibiapy.ListedGuild">[docs]</a><span class="k">class</span> <span class="nc">ListedGuild</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseGuild</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Represents a Tibia guild in the guild list of a world.</span>
+<div class="viewcode-block" id="GuildEntry"><a class="viewcode-back" href="../../api.html#tibiapy.GuildEntry">[docs]</a><span class="k">class</span> <span class="nc">GuildEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseGuild</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a Tibia guild in the guild list of a world.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ------------</span>
@@ -752,6 +868,7 @@
 <span class="sd">    active: :class:`bool`</span>
 <span class="sd">        Whether the guild is active or still in formation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;logo_url&quot;</span><span class="p">,</span>
@@ -765,58 +882,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">world</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logo_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">logo_url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">active</span>
-
-    <span class="c1"># region Public methods</span>
-<div class="viewcode-block" id="ListedGuild.list_from_content"><a class="viewcode-back" href="../../api.html#tibiapy.ListedGuild.list_from_content">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">list_from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Gets a list of guilds from the HTML content of the world guilds&#39; page.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        content: :class:`str`</span>
-<span class="sd">            The HTML content of the page.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`list` of :class:`ListedGuild`</span>
-<span class="sd">            List of guilds in the current world. :obj:`None` if it&#39;s the list of a world that doesn&#39;t exist.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        InvalidContent</span>
-<span class="sd">            If content is not the HTML of a guild&#39;s page.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">selected_world</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">,</span> <span class="n">selected</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;choose world&quot;</span> <span class="ow">in</span> <span class="n">selected_world</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
-                <span class="c1"># It belongs to a world that doesn&#39;t exist</span>
-                <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">world</span> <span class="o">=</span> <span class="n">selected_world</span><span class="o">.</span><span class="n">text</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;Content does not belong to world guild list.&quot;</span><span class="p">)</span>
-        <span class="c1"># First TableContainer contains world selector.</span>
-        <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">containers</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;TableContainer&quot;</span><span class="p">)</span>
-        <span class="n">guilds</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">containers</span><span class="p">:</span>
-            <span class="n">header</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="s2">&quot;Text&quot;</span><span class="p">)</span>
-            <span class="n">active</span> <span class="o">=</span> <span class="s2">&quot;Active&quot;</span> <span class="ow">in</span> <span class="n">header</span><span class="o">.</span><span class="n">text</span>
-            <span class="n">header</span><span class="p">,</span> <span class="o">*</span><span class="n">rows</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;#D4C0A1&quot;</span><span class="p">,</span> <span class="s2">&quot;#F1E0C6&quot;</span><span class="p">]})</span>
-            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-                <span class="n">columns</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
-                <span class="n">logo_img</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">)[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
-                <span class="n">description_lines</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">description_lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">description_lines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">description</span> <span class="o">=</span> <span class="n">description_lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
-                <span class="n">guild</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">logo_img</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">active</span><span class="p">)</span>
-                <span class="n">guilds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">guild</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">guilds</span></div></div>
-
-    <span class="c1"># endregion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">active</span></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -873,7 +939,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -901,7 +967,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.
   </div>
   
   </body>

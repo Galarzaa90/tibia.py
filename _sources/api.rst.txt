@@ -21,6 +21,8 @@ Enumerations
 ============
 Enumerations are provided for various values in order to avoid depending on strings.
 
+Many of these enumerations correspond to available options in forms in Tibia.com
+
 .. autoclass:: AccountStatus
     :members:
     :undoc-members:
@@ -101,6 +103,18 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
+.. autoclass:: SpellGroup
+    :members:
+    :undoc-members:
+
+.. autoclass:: SpellSorting
+    :members:
+    :undoc-members:
+
+.. autoclass:: SpellType
+    :members:
+    :undoc-members:
+
 .. autoclass:: ThreadStatus
     :members:
     :undoc-members:
@@ -129,10 +143,13 @@ Enumerations are provided for various values in order to avoid depending on stri
     :members:
     :undoc-members:
 
-.. autoclass:: WorldLocation
+.. autoclass:: VocationSpellFilter
     :members:
     :undoc-members:
 
+.. autoclass:: WorldLocation
+    :members:
+    :undoc-members:
 
 Characters
 ===========
@@ -215,9 +232,9 @@ WorldOverview
    :members:
    :inherited-members:
 
-ListedWorld
+WorldEntry
 -----------
-.. autoclass:: ListedWorld
+.. autoclass:: WorldEntry
    :members:
    :inherited-members:
 
@@ -235,10 +252,16 @@ OnlineCharacter
 
 Guilds
 ======
-Models related to `Tibia.com's Guilds section`_. The main model is :class:`Guild`, while :class:`ListedGuild` is the
-previewed information in the guild list.
+Models related to `Tibia.com's Guilds section`_. The main model is :class:`Guild`, while :class:`GuildEntry` is the
+previewed information in the guild list of the :class:`GuildsSection`.
 
 .. _Tibia.com's Guilds section: https://www.tibia.com/community/?subtopic=guilds
+
+GuildsSection
+-------------
+.. autoclass:: GuildsSection
+   :members:
+   :inherited-members:
 
 Guild
 -----
@@ -246,9 +269,9 @@ Guild
    :members:
    :inherited-members:
 
-ListedGuild
------------
-.. autoclass:: ListedGuild
+GuildEntry
+----------
+.. autoclass:: GuildEntry
    :members:
    :inherited-members:
 
@@ -314,15 +337,48 @@ Models related to `Tibia.com's Houses section`_.
 
 .. _Tibia.com's Houses section: https://www.tibia.com/community/?subtopic=houses
 
+HousesSection
+-------------
+.. autoclass:: HousesSection
+   :members:
+   :inherited-members:
+
 House
 -----
 .. autoclass:: House
    :members:
    :inherited-members:
 
-ListedHouse
+HouseEntry
+----------
+.. autoclass:: HouseEntry
+   :members:
+   :inherited-members:
+
+Leaderboard
+===========
+Models related to `Tibia.com's Leaderboard section`_.
+
+.. _Tibia.com's Leaderboard section: https://www.tibia.com/community/?subtopic=tournament
+
+Leaderboard
 -----------
-.. autoclass:: ListedHouse
+.. autoclass:: Leaderboard
+   :members:
+   :inherited-members:
+
+Auxiliary Classes
+-----------------
+
+LeaderboardRotation
+~~~~~~~~~~~~~~~~~~~
+.. autoclass:: LeaderboardRotation
+   :members:
+   :inherited-members:
+
+LeaderboardEntry
+~~~~~~~~~~~~~~~~
+.. autoclass:: LeaderboardEntry
    :members:
    :inherited-members:
 
@@ -347,15 +403,15 @@ TournamentLeaderboard
 Auxiliary Classes
 -----------------
 
-ListedTournament
-~~~~~~~~~~~~~~~~
-.. autoclass:: ListedTournament
+TournamentEntry
+~~~~~~~~~~~~~~~
+.. autoclass:: TournamentEntry
    :members:
    :inherited-members:
 
-LeaderboardEntry
-~~~~~~~~~~~~~~~~
-.. autoclass:: LeaderboardEntry
+TournamentLeaderboardEntry
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. autoclass:: TournamentLeaderboardEntry
    :members:
    :inherited-members:
 
@@ -414,21 +470,21 @@ ForumThread
     :members:
     :inherited-members:
 
-ListedAnnouncement
+AnnouncementEntry
 ------------------
-.. autoclass:: ListedAnnouncement
+.. autoclass:: AnnouncementEntry
     :members:
     :inherited-members:
 
-ListedBoard
+BoardEntry
+----------
+.. autoclass:: BoardEntry
+    :members:
+    :inherited-members:
+
+ThreadEntry
 -----------
-.. autoclass:: ListedBoard
-    :members:
-    :inherited-members:
-
-ListedThread
-------------
-.. autoclass:: ListedThread
+.. autoclass:: ThreadEntry
     :members:
     :inherited-members:
 
@@ -461,9 +517,16 @@ LastPost
 
 News
 =======
-Models related to `Tibia.com's News section`_.
+Models related to `Tibia.com's News section`_. This also contains the `Event Calendar`_
 
 .. _Tibia.com's News section: https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades
+.. _Event Calendar: https://www.tibia.com/news/?subtopic=eventcalendar
+
+NewsArchive
+-----------
+.. autoclass:: NewsArchive
+   :members:
+   :inherited-members:
 
 News
 ---------
@@ -471,10 +534,9 @@ News
    :members:
    :inherited-members:
 
-
-ListedNews
+NewsEntry
 -----------
-.. autoclass:: ListedNews
+.. autoclass:: NewsEntry
    :members:
    :inherited-members:
 
@@ -502,15 +564,15 @@ CharacterBazaar
    :members:
    :inherited-members:
 
-ListedAuction
--------------
-.. autoclass:: ListedAuction
+AuctionEntry
+------------
+.. autoclass:: AuctionEntry
     :members:
     :inherited-members:
 
-AuctionDetails
----------------
-.. autoclass:: AuctionDetails
+Auction
+-------
+.. autoclass:: Auction
    :members:
    :inherited-members:
 
@@ -644,9 +706,27 @@ Creature
    :members:
    :inherited-members:
 
-CreatureDetail
---------------
-.. autoclass:: CreatureDetail
+CreatureEntry
+-------------
+.. autoclass:: CreatureEntry
+   :members:
+   :inherited-members:
+
+SpellsSection
+-------------
+.. autoclass:: SpellsSection
+   :members:
+   :inherited-members:
+
+Spell
+-----
+.. autoclass:: Spell
+   :members:
+   :inherited-members:
+
+SpellEntry
+----------
+.. autoclass:: SpellEntry
    :members:
    :inherited-members:
 
@@ -716,6 +796,7 @@ Exceptions
 .. autoclass:: SiteMaintenanceError
 
 .. autoclass:: Forbidden
+
 
 Utility functions
 ==================

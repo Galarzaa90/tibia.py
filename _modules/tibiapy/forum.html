@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.forum &#8212; Tibia.py 4.1.7 documentation</title>
+    <title>tibiapy.forum &#8212; Tibia.py 5.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 4.1.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 5.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.forum</a></li> 
       </ul>
@@ -50,10 +50,10 @@
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">GuildMembership</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">GuildMembership</span><span class="p">,</span> <span class="n">abc</span><span class="p">,</span> <span class="n">errors</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">ThreadStatus</span><span class="p">,</span> <span class="n">Vocation</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">convert_line_breaks</span><span class="p">,</span> <span class="n">get_tibia_url</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibia_forum_datetime</span><span class="p">,</span> \
-    <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">split_list</span><span class="p">,</span> <span class="n">try_enum</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">convert_line_breaks</span><span class="p">,</span> <span class="n">get_tibia_url</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibia_forum_datetime</span><span class="p">,</span>
+                           <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">split_list</span><span class="p">,</span> <span class="n">try_enum</span><span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s1">&#39;CMPost&#39;</span><span class="p">,</span>
@@ -64,9 +64,9 @@
     <span class="s1">&#39;ForumPost&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ForumThread&#39;</span><span class="p">,</span>
     <span class="s1">&#39;LastPost&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;ListedAnnouncement&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;ListedBoard&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;ListedThread&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;AnnouncementEntry&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;BoardEntry&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ThreadEntry&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ForumAuthor&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -145,7 +145,8 @@
 <span class="sd">    results_count: :class:`int`</span>
 <span class="sd">        The total number of results available in the selected date range.</span>
 <span class="sd">    posts: :class:`list` of :class:`CMPost`</span>
-<span class="sd">        The list of posts for the selected range.&quot;&quot;&quot;</span>
+<span class="sd">        The list of posts for the selected range.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;start_date&quot;</span><span class="p">,</span>
@@ -190,7 +191,7 @@
     <span class="c1"># region Public Methods</span>
 
 <div class="viewcode-block" id="CMPostArchive.get_page_url"><a class="viewcode-back" href="../../api.html#tibiapy.CMPostArchive.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets the URL of the CM Post Archive at a specific page, with the current date parameters.</span>
+        <span class="sd">&quot;&quot;&quot;Get the URL of the CM Post Archive at a specific page, with the current date parameters.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -208,7 +209,7 @@
 
 <div class="viewcode-block" id="CMPostArchive.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.CMPostArchive.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets the URL to the CM Post Archive for the given date range.</span>
+        <span class="sd">&quot;&quot;&quot;Get the URL to the CM Post Archive for the given date range.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -245,7 +246,7 @@
 
 <div class="viewcode-block" id="CMPostArchive.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.CMPostArchive.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the content of the CM Post Archive page from Tibia.com</span>
+        <span class="sd">&quot;&quot;&quot;Parse the content of the CM Post Archive page from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -317,8 +318,8 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_get_selected_date</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">month_selector</span><span class="p">,</span> <span class="n">day_selector</span><span class="p">,</span> <span class="n">year_selector</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets the date made from the selected options in the selectors.</span>
-<span class="sd">        </span>
+        <span class="sd">&quot;&quot;&quot;Get the date made from the selected options in the selectors.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        month_selector: :class:`bs4.Tag`</span>
@@ -327,6 +328,7 @@
 <span class="sd">            The day selector.</span>
 <span class="sd">        year_selector: :class:`bs4.Tag`</span>
 <span class="sd">            The year selector.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        :class:`datetime.date`</span>
@@ -344,7 +346,7 @@
 
 
 <div class="viewcode-block" id="ForumAnnouncement"><a class="viewcode-back" href="../../api.html#tibiapy.ForumAnnouncement">[docs]</a><span class="k">class</span> <span class="nc">ForumAnnouncement</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseAnnouncement</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represent&#39;s a forum announcement.</span>
+    <span class="sd">&quot;&quot;&quot;Represents a forum announcement.</span>
 
 <span class="sd">    These are a special kind of thread that are shown at the top of boards.</span>
 <span class="sd">    They cannot be replied to and they show no view counts.</span>
@@ -405,7 +407,7 @@
 
 <div class="viewcode-block" id="ForumAnnouncement.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.ForumAnnouncement.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">announcement_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the content of an announcement&#39;s page from Tibia.com</span>
+        <span class="sd">&quot;&quot;&quot;Parse the content of an announcement&#39;s page from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -461,7 +463,6 @@
         <span class="n">announcement</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">announcement_content</span>
 
         <span class="n">announcement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="n">announcement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">parse_tibia_forum_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">announcement</span></div></div>
 
 
@@ -527,7 +528,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_author_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">character_info_container</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the table containing the author&#39;s information.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the table containing the author&#39;s information.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -602,14 +603,14 @@
 <span class="sd">    current_page: :class:`int`</span>
 <span class="sd">        The current page being viewed.</span>
 <span class="sd">    pages: :class:`int`</span>
-<span class="sd">        The number of total_pages the board has for the current display range.</span>
+<span class="sd">        The number of pages the board has for the current display range.</span>
 <span class="sd">    age: :class:`ìnt`</span>
 <span class="sd">        The maximum age of the displayed threads, in days.</span>
 
 <span class="sd">        -1 means all threads will be shown.</span>
-<span class="sd">    announcements: list of :class:`ListedAnnouncement`</span>
+<span class="sd">    announcements: list of :class:`AnnouncementEntry`</span>
 <span class="sd">        The list of announcements currently visible.</span>
-<span class="sd">    threads: list of :class:`ListedThread`</span>
+<span class="sd">    threads: list of :class:`ThreadEntry`</span>
 <span class="sd">        The list of threads currently visible.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -620,8 +621,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">total_pages</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total_pages&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">announcements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ListedAnnouncement</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;announcements&quot;</span><span class="p">,</span> <span class="p">[])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ListedThread</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;threads&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">announcements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AnnouncementEntry</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;announcements&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;threads&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;name&quot;</span><span class="p">,</span>
@@ -658,7 +659,7 @@
     <span class="c1"># region Public Methods</span>
 
 <div class="viewcode-block" id="ForumBoard.get_page_url"><a class="viewcode-back" href="../../api.html#tibiapy.ForumBoard.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets the URL to a given page of the board.</span>
+        <span class="sd">&quot;&quot;&quot;Get the URL to a given page of the board.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -676,7 +677,7 @@
 
 <div class="viewcode-block" id="ForumBoard.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.ForumBoard.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the board&#39;s HTML content from Tibia.com.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the board&#39;s HTML content from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -730,12 +731,12 @@
                 <span class="k">continue</span>
 
             <span class="n">entry</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_thread_row</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ListedThread</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ThreadEntry</span><span class="p">):</span>
                 <span class="n">board</span><span class="o">.</span><span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
                 <span class="n">cip_border</span> <span class="o">=</span> <span class="n">thread_row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;CipBorder&quot;</span><span class="p">})</span>
                 <span class="k">if</span> <span class="n">cip_border</span><span class="p">:</span>
                     <span class="n">entry</span><span class="o">.</span><span class="n">golden_frame</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ListedAnnouncement</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">AnnouncementEntry</span><span class="p">):</span>
                 <span class="n">board</span><span class="o">.</span><span class="n">announcements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">board</span></div>
@@ -746,7 +747,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_thread_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the thread row, containing a single thread or announcement.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the thread row, containing a single thread or announcement.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -755,7 +756,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`ListedThread` or :class:`ListedAnnouncement`</span>
+<span class="sd">        :class:`ThreadEntry` or :class:`AnnouncementEntry`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># First Column: Thread&#39;s status</span>
         <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
@@ -782,7 +783,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">thread_link</span><span class="p">,</span> <span class="o">*</span><span class="n">page_links</span> <span class="o">=</span> <span class="n">thread_column</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">return</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">page_links</span><span class="p">:</span>
             <span class="n">last_page_link</span> <span class="o">=</span> <span class="n">page_links</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">pages</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">page_number_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">last_page_link</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -803,13 +804,18 @@
             <span class="n">last_post_column</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
             <span class="n">last_post</span> <span class="o">=</span> <span class="n">LastPost</span><span class="o">.</span><span class="n">_parse_column</span><span class="p">(</span><span class="n">last_post_column</span><span class="p">)</span>
 
-            <span class="n">entry</span> <span class="o">=</span> <span class="n">ListedThread</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">thread_id</span><span class="o">=</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">thread_starter</span><span class="o">=</span><span class="n">thread_starter</span><span class="p">,</span> <span class="n">replies</span><span class="o">=</span><span class="n">replies</span><span class="p">,</span>
-                                 <span class="n">views</span><span class="o">=</span><span class="n">views</span><span class="p">,</span> <span class="n">last_post</span><span class="o">=</span><span class="n">last_post</span><span class="p">,</span> <span class="n">emoticon</span><span class="o">=</span><span class="n">emoticon</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">pages</span><span class="o">=</span><span class="n">pages</span><span class="p">,</span>
-                                 <span class="n">status_icon</span><span class="o">=</span><span class="n">status_icon</span><span class="p">)</span>
+            <span class="n">traded</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s2">&quot;(traded)&quot;</span> <span class="ow">in</span> <span class="n">thread_starter</span><span class="p">:</span>
+                <span class="n">traded</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">thread_starter</span> <span class="o">=</span> <span class="n">thread_starter</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(traded)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">ThreadEntry</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">thread_id</span><span class="o">=</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">thread_starter</span><span class="o">=</span><span class="n">thread_starter</span><span class="p">,</span> <span class="n">replies</span><span class="o">=</span><span class="n">replies</span><span class="p">,</span>
+                                <span class="n">views</span><span class="o">=</span><span class="n">views</span><span class="p">,</span> <span class="n">last_post</span><span class="o">=</span><span class="n">last_post</span><span class="p">,</span> <span class="n">emoticon</span><span class="o">=</span><span class="n">emoticon</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">pages</span><span class="o">=</span><span class="n">pages</span><span class="p">,</span>
+                                <span class="n">status_icon</span><span class="o">=</span><span class="n">status_icon</span><span class="p">,</span> <span class="n">thread_starter_traded</span><span class="o">=</span><span class="n">traded</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Announcement: &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="n">announcement_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">announcement_id_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">thread_link</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-            <span class="n">entry</span> <span class="o">=</span> <span class="n">ListedAnnouncement</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">announcement_id</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">,</span> <span class="n">announcement_author</span><span class="o">=</span><span class="n">thread_starter</span><span class="p">)</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">AnnouncementEntry</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">announcement_id</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">,</span> <span class="n">announcement_author</span><span class="o">=</span><span class="n">thread_starter</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">entry</span></div>
 
     <span class="c1"># endregion</span>
@@ -834,8 +840,8 @@
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">url</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> url=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span></div>
@@ -885,17 +891,17 @@
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;author&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">emoticon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;emoticon&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;signature&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">emoticon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;emoticon&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">post_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;post_id&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">golden_frame</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;golden_frame&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">posted_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;posted_date&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edited_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;edited_date&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edited_by</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;edited_by&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">:</span> <span class="n">ForumAuthor</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;author&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emoticon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumEmoticon</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;emoticon&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">signature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;signature&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emoticon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumEmoticon</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;emoticon&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;post_id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">golden_frame</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;golden_frame&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posted_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;posted_date&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edited_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;edited_date&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edited_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;edited_by&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> title=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">!r}</span><span class="s2"> post_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
@@ -935,6 +941,7 @@
 
 <span class="sd">        When a post is fetched directly, the thread that contains it is displayed, anchored to the specific post.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;title&quot;</span><span class="p">,</span>
         <span class="s2">&quot;thread_id&quot;</span><span class="p">,</span>
@@ -996,7 +1003,7 @@
     <span class="c1"># region Public Methods</span>
 
 <div class="viewcode-block" id="ForumThread.get_page_url"><a class="viewcode-back" href="../../api.html#tibiapy.ForumThread.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Gets the URL to a given page of the board.</span>
+        <span class="sd">&quot;&quot;&quot;Get the URL to a given page of the board.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1014,7 +1021,7 @@
 
 <div class="viewcode-block" id="ForumThread.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.ForumThread.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an instance of the class from the html content of the thread&#39;s page.</span>
+        <span class="sd">&quot;&quot;&quot;Create an instance of the class from the html content of the thread&#39;s page.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1096,7 +1103,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_post_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">post_table</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the table containing a single posts, extracting its information.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the table containing a single posts, extracting its information.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1152,10 +1159,9 @@
         <span class="n">post_details</span> <span class="o">=</span> <span class="n">post_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;AdditionalBox&quot;</span><span class="p">})</span>
         <span class="n">post_number</span> <span class="o">=</span> <span class="n">post_details</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Post #&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">post_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">post_number</span><span class="p">)</span>
-        <span class="n">post</span> <span class="o">=</span> <span class="n">ForumPost</span><span class="p">(</span><span class="n">author</span><span class="o">=</span><span class="n">post_author</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> <span class="n">signature</span><span class="o">=</span><span class="n">signature</span><span class="p">,</span> <span class="n">posted_date</span><span class="o">=</span><span class="n">posted_date</span><span class="p">,</span>
+        <span class="k">return</span> <span class="n">ForumPost</span><span class="p">(</span><span class="n">author</span><span class="o">=</span><span class="n">post_author</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> <span class="n">signature</span><span class="o">=</span><span class="n">signature</span><span class="p">,</span> <span class="n">posted_date</span><span class="o">=</span><span class="n">posted_date</span><span class="p">,</span>
                          <span class="n">edited_date</span><span class="o">=</span><span class="n">edited_date</span><span class="p">,</span> <span class="n">edited_by</span><span class="o">=</span><span class="n">edited_by</span><span class="p">,</span> <span class="n">post_id</span><span class="o">=</span><span class="n">post_id</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">emoticon</span><span class="o">=</span><span class="n">emoticon</span><span class="p">,</span>
-                         <span class="n">golden_frame</span><span class="o">=</span><span class="n">golden_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">post</span></div>
+                         <span class="n">golden_frame</span><span class="o">=</span><span class="n">golden_frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span></div>
 
     <span class="c1"># endregion</span>
 
@@ -1175,19 +1181,24 @@
 <span class="sd">        The date when the last post was made.</span>
 <span class="sd">    deleted: :class:`bool`</span>
 <span class="sd">        Whether the last post&#39;s author is a character that is already deleted.</span>
+<span class="sd">    traded: :class:`bool`</span>
+<span class="sd">        Whether the last post&#39;s author was recently traded.</span>
+<span class="sd">        .. versionadded:: 5.0.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">author</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">traded</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">author</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">post_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span> <span class="o">=</span> <span class="n">date</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deleted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">deleted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">traded</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;author&quot;</span><span class="p">,</span>
         <span class="s2">&quot;post_id&quot;</span><span class="p">,</span>
         <span class="s2">&quot;date&quot;</span><span class="p">,</span>
         <span class="s2">&quot;deleted&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;traded&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1200,7 +1211,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_column</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">last_post_column</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the column containing the last post information and extracts its data.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the column containing the last post information and extracts its data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1227,11 +1238,14 @@
         <span class="n">author_link</span> <span class="o">=</span> <span class="n">last_post_author_tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
         <span class="n">deleted</span> <span class="o">=</span> <span class="n">author_link</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="n">author</span> <span class="o">=</span> <span class="n">last_post_author_tag</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;by&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">traded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="s2">&quot;(traded)&quot;</span> <span class="ow">in</span> <span class="n">author</span><span class="p">:</span>
+            <span class="n">author</span> <span class="o">=</span> <span class="n">author</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(traded)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">traded</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">author</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">last_post_date</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="n">deleted</span><span class="p">,</span> <span class="n">traded</span><span class="o">=</span><span class="n">traded</span><span class="p">)</span></div>
 
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">author</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="n">last_post_date</span><span class="p">,</span> <span class="n">deleted</span><span class="o">=</span><span class="n">deleted</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="ListedAnnouncement"><a class="viewcode-back" href="../../api.html#tibiapy.ListedAnnouncement">[docs]</a><span class="k">class</span> <span class="nc">ListedAnnouncement</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseAnnouncement</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+<div class="viewcode-block" id="AnnouncementEntry"><a class="viewcode-back" href="../../api.html#tibiapy.AnnouncementEntry">[docs]</a><span class="k">class</span> <span class="nc">AnnouncementEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseAnnouncement</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents an announcement in the forum boards.</span>
 
 <span class="sd">    .. versionadded:: 3.0.0</span>
@@ -1247,9 +1261,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">announcement_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;announcement_id&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">announcement_author</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;announcement_author&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">announcement_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;announcement_id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">announcement_author</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;announcement_author&quot;</span><span class="p">)</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;title&quot;</span><span class="p">,</span>
@@ -1258,11 +1272,11 @@
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">{0.__class__.__name__}</span><span class="s2"> title=</span><span class="si">{0.title!r}</span><span class="s2"> announcement_id=</span><span class="si">{0.announcement_id}</span><span class="s2"> &quot;</span> \
-               <span class="s2">&quot;announcement_author=</span><span class="si">{0.announcement_author!r}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> title=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">!r}</span><span class="s2"> announcement_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">announcement_id</span><span class="si">}</span><span class="s2"> &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;announcement_author=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">announcement_author</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span></div>
 
 
-<div class="viewcode-block" id="ListedBoard"><a class="viewcode-back" href="../../api.html#tibiapy.ListedBoard">[docs]</a><span class="k">class</span> <span class="nc">ListedBoard</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseBoard</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+<div class="viewcode-block" id="BoardEntry"><a class="viewcode-back" href="../../api.html#tibiapy.BoardEntry">[docs]</a><span class="k">class</span> <span class="nc">BoardEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseBoard</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a board in the list of boards.</span>
 
 <span class="sd">    This is the board information available when viewing a section (e.g. World, Trade, Community)</span>
@@ -1284,6 +1298,7 @@
 <span class="sd">    last_post: :class:`LastPost`</span>
 <span class="sd">        The information of the last post made in this board.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">board_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;board_id&quot;</span><span class="p">)</span>
@@ -1306,9 +1321,9 @@
                <span class="sa">f</span><span class="s2">&quot;threads=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="si">}</span><span class="s2"> description=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
 
     <span class="c1"># region Public Methods</span>
-<div class="viewcode-block" id="ListedBoard.list_from_content"><a class="viewcode-back" href="../../api.html#tibiapy.ListedBoard.list_from_content">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BoardEntry.list_from_content"><a class="viewcode-back" href="../../api.html#tibiapy.BoardEntry.list_from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">list_from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses the content of a board list Tibia.com into a list of boards.</span>
+        <span class="sd">&quot;&quot;&quot;Parse the content of a board list Tibia.com into a list of boards.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1317,7 +1332,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`list` of :class:`ListedBoard`</span>
+<span class="sd">        :class:`list` of :class:`BoardEntry`</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -1349,7 +1364,7 @@
     <span class="c1"># region Private Methods</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_board_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">board_row</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parses a row containing a board and extracts its information.</span>
+        <span class="sd">&quot;&quot;&quot;Parse a row containing a board and extracts its information.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1361,7 +1376,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`ListedBoard`</span>
+<span class="sd">        :class:`BoardEntry`</span>
 <span class="sd">            The board contained in this row.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="n">board_row</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
@@ -1387,7 +1402,7 @@
     <span class="c1"># endregion</span>
 
 
-<div class="viewcode-block" id="ListedThread"><a class="viewcode-back" href="../../api.html#tibiapy.ListedThread">[docs]</a><span class="k">class</span> <span class="nc">ListedThread</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseThread</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+<div class="viewcode-block" id="ThreadEntry"><a class="viewcode-back" href="../../api.html#tibiapy.ThreadEntry">[docs]</a><span class="k">class</span> <span class="nc">ThreadEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseThread</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents a thread in a forum board.</span>
 
 <span class="sd">    .. versionadded:: 3.0.0</span>
@@ -1398,8 +1413,11 @@
 <span class="sd">        The title of the thread.</span>
 <span class="sd">    thread_id: :class:`int`</span>
 <span class="sd">        The internal id of the thread.</span>
-<span class="sd">    thread_started: :class:`str`</span>
+<span class="sd">    thread_starter: :class:`str`</span>
 <span class="sd">        The character that started the thread.</span>
+<span class="sd">    thread_starter_traded: :class:`bool`</span>
+<span class="sd">        Whether the thread starter was recently traded or not.</span>
+<span class="sd">        .. versionadded:: 5.0.0</span>
 <span class="sd">    replies: :class:`int`</span>
 <span class="sd">        The number of replies.</span>
 <span class="sd">    views: :class:`int`</span>
@@ -1413,30 +1431,32 @@
 <span class="sd">    emoticon: :class:`ForumEmoticon`</span>
 <span class="sd">        The emoticon used for the thread.</span>
 <span class="sd">    pages: :class:`int`</span>
-<span class="sd">        The number of total_pages the thread has.</span>
+<span class="sd">        The number of pages the thread has.</span>
 <span class="sd">    golden_frame: :class:`bool`</span>
 <span class="sd">        Whether the thread has a gold frame or not.</span>
 
 <span class="sd">        In the Proposals board, the gold frame indicates that a staff member has replied in the thread.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thread_id&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">thread_starter</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thread_starter&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">replies</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;replies&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">views</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;views&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_post</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_post&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">status_icon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status_icon&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">icon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;icon&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">emoticon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;emoticon&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pages</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total_pages&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">golden_frame</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;golden_frame&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thread_id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_starter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thread_starter&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_starter_traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thread_starter_traded&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replies</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;replies&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">views</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;views&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_post</span><span class="p">:</span> <span class="n">LastPost</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_post&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">:</span> <span class="n">ThreadStatus</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status_icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status_icon&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emoticon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumEmoticon</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;emoticon&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pages&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">golden_frame</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;golden_frame&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;title&quot;</span><span class="p">,</span>
         <span class="s2">&quot;thread_id&quot;</span><span class="p">,</span>
         <span class="s2">&quot;thread_starter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;thread_starter_traded&quot;</span><span class="p">,</span>
         <span class="s2">&quot;replies&quot;</span><span class="p">,</span>
         <span class="s2">&quot;views&quot;</span><span class="p">,</span>
         <span class="s2">&quot;last_post&quot;</span><span class="p">,</span>
@@ -1506,7 +1526,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -1534,7 +1554,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.
   </div>
   
   </body>
