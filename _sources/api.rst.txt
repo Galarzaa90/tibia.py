@@ -800,7 +800,6 @@ Exceptions
 
 Utility functions
 ==================
-These are functions used thorough the module that may not be intended for public use.
 
 .. automodule:: tibiapy.utils
    :members:
