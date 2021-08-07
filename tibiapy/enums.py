@@ -243,6 +243,11 @@ class HouseType(BaseEnum):
     HOUSE = "house"
     GUILDHALL = "guildhall"
 
+    @property
+    def plural(self):
+        """:class:`str`: The plural for the house type."""
+        return f"{self.value}s"
+
 
 class NewsCategory(BaseEnum):
     """The different news categories."""

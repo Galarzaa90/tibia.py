@@ -114,7 +114,7 @@ class HousesSection(abc.Serializable):
         params = {
             "world": world,
             "town": town,
-            "type": house_type.value if house_type else None,
+            "type": house_type.plural if house_type else None,
             "status": status.value if status else None,
             "order": order.value if order else None,
         }
