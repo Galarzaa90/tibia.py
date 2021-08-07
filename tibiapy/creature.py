@@ -1,5 +1,6 @@
 import re
 import urllib.parse
+from typing import List, Optional
 
 import bs4
 
@@ -7,9 +8,9 @@ from tibiapy import abc
 from tibiapy.errors import InvalidContent
 
 __all__ = (
-    "Creature",
+    "CreatureEntry",
     "CreaturesSection",
-    "CreatureDetail",
+    "Creature",
 )
 
 from tibiapy.utils import parse_tibiacom_content, get_tibia_url
@@ -25,67 +26,14 @@ LOOT_PATTERN = re.compile(r"They carry (.*) with them.")
 MANA_COST = re.compile(r"takes (\d+) mana")
 
 
-class Creature(abc.Serializable):
-    """Represents a creature in the Library section.
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The name of the creature, usually in plural, except for the boosted creature.
-    race: :class:`str`
-        The internal name of the creature's race. Used for links and images."""
-
-    __slots__ = (
-        "name",
-        "race",
-    )
-
-    _serializable_properties = (
-        "image_url",
-    )
-
-    def __init__(self, name, race=None):
-        self.name = name
-        self.race = race
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} name={self.name!r} race={self.race!r}>"
-
-    @property
-    def url(self):
-        """:class:`str`: The URL to this creature's details."""
-        return self.get_url(self.race)
-
-    @property
-    def image_url(self):
-        """:class:`str`: The URL to this creature's image."""
-        return f"https://static.tibia.com/images/library/{self.race}.gif"
-
-    @classmethod
-    def get_url(cls, race):
-        """Gets the URL to the creature's detail page on Tibia.com
-
-        Parameters
-        ----------
-        race: :class:`str`
-            The race's internal name.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the detail page.
-        """
-        return get_tibia_url("library", "creatures", race=race)
-
-
 class CreaturesSection(abc.Serializable):
     """Represents the creature's section in the Tibia.com library.
 
     Attributes
     ----------
-    boosted_creature: :class:`Creature`
+    boosted_creature: :class:`CreatureEntry`
         The current boosted creature.
-    creatures: list of :class:`Creature`
+    creatures: list of :class:`CreatureEntry`
         The list of creatures in the library.
     """
 
@@ -95,12 +43,12 @@ class CreaturesSection(abc.Serializable):
     )
 
     def __init__(self, boosted_creature, creatures):
-        self.boosted_creature = boosted_creature
-        self.creatures = creatures or []
+        self.boosted_creature: CreatureEntry = boosted_creature
+        self.creatures: List[CreatureEntry] = creatures or []
 
     @classmethod
     def get_url(cls):
-        """Gets the URL to the Tibia.com library section.
+        """Get the URL to the Tibia.com library section.
 
         Returns
         -------
@@ -110,9 +58,8 @@ class CreaturesSection(abc.Serializable):
         return get_tibia_url("library", "creature")
 
     @classmethod
-    def from_boosted_creature_header(cls, content):
-        """
-        Gets the boosted creature from any Tibia.com page.
+    def boosted_creature_from_header(cls, content):
+        """Get the boosted creature from any Tibia.com page.
 
         Parameters
         ----------
@@ -121,7 +68,7 @@ class CreaturesSection(abc.Serializable):
 
         Returns
         -------
-        :class:`Creature`
+        :class:`CreatureEntry`
             The boosted creature of the day.
 
         Raises
@@ -135,14 +82,14 @@ class CreaturesSection(abc.Serializable):
             img = parsed_content.find("img", attrs={"id": "Monster"})
             name = img["title"].replace(BOOSTED_ALT, "").strip()
             image_url = img["src"]
-            race = image_url.split("/")[-1].replace(".gif", "")
-            return Creature(name, race)
+            identifier = image_url.split("/")[-1].replace(".gif", "")
+            return CreatureEntry(name, identifier)
         except TypeError as e:
             raise InvalidContent("content is not from Tibia.com", e)
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the creature library's page.
+        """Create an instance of the class from the html content of the creature library's page.
 
         Parameters
         ----------
@@ -168,7 +115,7 @@ class CreaturesSection(abc.Serializable):
             boosted_creature_link = boosted_creature_table.find("a")
             url = urllib.parse.urlparse(boosted_creature_link["href"])
             query = urllib.parse.parse_qs(url.query)
-            boosted_creature = Creature(boosted_creature_link.text, query["race"][0])
+            boosted_creature = CreatureEntry(boosted_creature_link.text, query["race"][0])
 
             list_table = parsed_content.find("div", style=lambda v: v and 'display: table' in v)
             entries_container = list_table.find_all("div", style=lambda v: v and 'float: left' in v)
@@ -178,20 +125,74 @@ class CreaturesSection(abc.Serializable):
                 link = entry_container.find("a")
                 url = urllib.parse.urlparse(link["href"])
                 query = urllib.parse.parse_qs(url.query)
-                entries.append(Creature(name, query["race"][0]))
+                entries.append(CreatureEntry(name, query["race"][0]))
             return cls(boosted_creature, entries)
-        except ValueError as e:
+        except (AttributeError, ValueError) as e:
             raise InvalidContent("content is not the creature's library", e)
 
 
-class CreatureDetail(Creature):
+class CreatureEntry(abc.Serializable):
+    """Represents a creature in the Library section.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the creature, usually in plural, except for the boosted creature.
+    identifier: :class:`str`
+        The internal name of the creature's race. Used for links and images.
+    """
+
+    __slots__ = (
+        "name",
+        "identifier",
+    )
+
+    _serializable_properties = (
+        "image_url",
+    )
+
+    def __init__(self, name, identifier=None):
+        self.name: str = name
+        self.identifier: str = identifier
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} identifier={self.identifier!r}>"
+
+    @property
+    def url(self):
+        """:class:`str`: The URL to this creature's details."""
+        return self.get_url(self.identifier)
+
+    @property
+    def image_url(self):
+        """:class:`str`: The URL to this creature's image."""
+        return f"https://static.tibia.com/images/library/{self.identifier}.gif"
+
+    @classmethod
+    def get_url(cls, identifier):
+        """Get the URL to the creature's detail page on Tibia.com.
+
+        Parameters
+        ----------
+        identifier: :class:`str`
+            The race's internal name.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the detail page.
+        """
+        return get_tibia_url("library", "creatures", race=identifier)
+
+
+class Creature(CreatureEntry):
     """Represents a creature's details on the Tibia.com library.
 
     Attributes
     ----------
     name: :class:`str`
         The name of the creature, in plural form.
-    race: :class:`str`
+    identifier: :class:`str`
         The race's internal name. Used for links and images.
     description: :class:`str`
         A description of the creature.
@@ -214,10 +215,12 @@ class CreatureDetail(Creature):
     convinceable: :class:`bool`
         Whether this creature can be convinced or not.
     """
+
     _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
+
     __slots__ = (
         "name",
-        "race",
+        "identifier",
         "description",
         "hitpoints",
         "experience",
@@ -230,22 +233,22 @@ class CreatureDetail(Creature):
         "convinceable",
     )
 
-    def __init__(self, name, race, **kwargs):
-        super().__init__(name, race)
-        self.immune_to = kwargs.get("immune_to", [])
-        self.weak_against = kwargs.get("weak_against", [])
-        self.strong_against = kwargs.get("strong_against", [])
-        self.loot = kwargs.get("loot")
-        self.mana_cost = kwargs.get("loot")
-        self.summonable = kwargs.get("summonable", False)
-        self.convinceable = kwargs.get("convinceable", False)
+    def __init__(self, name, identifier, **kwargs):
+        super().__init__(name, identifier)
+        self.immune_to: List[str] = kwargs.get("immune_to", [])
+        self.weak_against: List[str] = kwargs.get("weak_against", [])
+        self.strong_against: List[str] = kwargs.get("strong_against", [])
+        self.loot: str = kwargs.get("loot")
+        self.mana_cost: Optional[int] = kwargs.get("mana_cost")
+        self.summonable: bool = kwargs.get("summonable", False)
+        self.convinceable: bool = kwargs.get("convinceable", False)
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} name={self.name!r} race={self.race!r}>"
+        return f"<{self.__class__.__name__} name={self.name!r} identifier={self.identifier!r}>"
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the creature library's page.
+        """Create an instance of the class from the html content of the creature library's page.
 
         Parameters
         ----------
@@ -254,7 +257,7 @@ class CreatureDetail(Creature):
 
         Returns
         -------
-        :class:`CreatureDetail`
+        :class:`Creature`
             The character contained in the page.
         """
         try:
@@ -283,7 +286,7 @@ class CreatureDetail(Creature):
             return None
 
     def _parse_exp_text(self, exp_text):
-        """Parses the experience text, containing dropped loot and adds it to the creature,
+        """Parse the experience text, containing dropped loot and adds it to the creature.
 
         Parameters
         ----------
@@ -298,7 +301,7 @@ class CreatureDetail(Creature):
             self.loot = m.group(1)
 
     def _parse_hp_text(self, hp_text):
-        """Parses the text containing the creatures hitpoints, containing weaknesses, immunities and more and adds it.
+        """Parse the text containing the creatures hitpoints, containing weaknesses, immunities and more and adds it.
 
         Parameters
         ----------
@@ -334,7 +337,7 @@ class CreatureDetail(Creature):
 
     @classmethod
     def _parse_elements(cls, collection, text):
-        """Parses the elements found in a string, adding them to the collection.
+        """Parse the elements found in a string, adding them to the collection.
 
         Parameters
         ----------

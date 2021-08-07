@@ -27,7 +27,7 @@ async def main():
         assert isinstance(response.data.record_date, datetime.datetime)
 
         selected = random.choice(response.data.regular_worlds)
-        assert isinstance(selected, tibiapy.ListedWorld)
+        assert isinstance(selected, tibiapy.WorldEntry)
         log.info(f"World {selected.name} selected: {selected.online_count} online | {selected.pvp_type}"
                  f" | {selected.location}")
         assert isinstance(selected.pvp_type, tibiapy.PvpType)

@@ -30,23 +30,29 @@ class TestCharacter(TestCommons, unittest.TestCase):
     def test_character_from_content(self):
         """Testing parsing a character's HTML content"""
         character = Character.from_content(self.load_resource(FILE_CHARACTER_RESOURCE))
-        self._compare_character(Character("Tschas", "Gladera", Vocation.DRUID, 260, Sex.FEMALE), character)
+        self._compare_character(Character("Tschas", "Gladera", Vocation.ELDER_DRUID, 522, Sex.FEMALE), character)
         self.assertIsNotNone(character.guild_membership)
-        self.assertEqual("Atlantis", character.guild_membership.name)
-        self.assertEqual("Gaia", character.guild_membership.rank)
+        self.assertEqual("Bald Dwarfs", character.guild_membership.name)
+        self.assertEqual("Emperor", character.guild_membership.rank)
         self.assertIsNotNone(character.guild_url)
         self.assertIsNone(character.married_to_url)
         self.assertEqual(character.guild_name, character.guild_membership.name)
         self.assertEqual(character.guild_rank, character.guild_membership.rank)
-        self.assertEqual(AccountStatus.FREE_ACCOUNT, character.account_status)
-        self.assertEqual(182, character.achievement_points)
+        self.assertEqual(AccountStatus.PREMIUM_ACCOUNT, character.account_status)
+        self.assertEqual(304, character.achievement_points)
         self.assertIsNone(character.deletion_date)
         self.assertIsNotNone(character.deaths)
-        self.assertEqual(0, character.deaths.__len__())
-        self.assertEqual(parse_tibia_datetime("Aug 04 2019, 13:56:59 CEST"), character.last_login)
+        self.assertEqual(2, character.deaths.__len__())
+        self.assertEqual(parse_tibia_datetime("Aug 02 2021, 17:32:07 CEST"), character.last_login)
         self.assertEqual(character.url, Character.get_url(character.name))
         self.assertEqual(5, len(character.other_characters))
         self.assertFalse(character.hidden)
+
+        # Badges
+        self.assertEqual(3, len(character.account_badges))
+        badge = character.account_badges[0]
+        self.assertEqual("Ancient Hero", badge.name)
+        self.assertEqual("The account is older than 15 years.", badge.description)
 
     def test_character_from_content_not_found(self):
         """Testing parsing a character not found page"""

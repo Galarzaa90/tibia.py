@@ -2,7 +2,7 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, ListedTournament, PvpType, RuleSet, ScoreSet, Tournament, TournamentLeaderboard, \
+from tibiapy import InvalidContent, TournamentEntry, PvpType, RuleSet, ScoreSet, Tournament, TournamentLeaderboard, \
     TournamentPhase
 
 FILE_TOURNAMENT_SIGN_UP = "tournaments/tibiacom_sign_up.txt"
@@ -154,7 +154,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         content = self.load_resource(FILE_TOURNAMENT_LEADERBOARD_CURRENT)
         leaderboard = TournamentLeaderboard.from_content(content)
 
-        self.assertIsInstance(leaderboard.tournament, ListedTournament)
+        self.assertIsInstance(leaderboard.tournament, TournamentEntry)
         self.assertEqual("TRIUMPH", leaderboard.tournament.title)
         self.assertIsNone(leaderboard.tournament.start_date)
         self.assertIsNone(leaderboard.tournament.end_date)
@@ -173,7 +173,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         content = self.load_resource(FILE_TOURNAMENT_LEADERBOARD_ENDED)
         leaderboard = TournamentLeaderboard.from_content(content)
 
-        self.assertIsInstance(leaderboard.tournament, ListedTournament)
+        self.assertIsInstance(leaderboard.tournament, TournamentEntry)
         self.assertEqual("GLORY", leaderboard.tournament.title)
         self.assertIsInstance(leaderboard.tournament.start_date, datetime.date)
         self.assertIsInstance(leaderboard.tournament.end_date, datetime.date)
@@ -190,7 +190,7 @@ class TestTournaments(TestCommons, unittest.TestCase):
         content = self.load_resource(FILE_TOURNAMENT_LEADERBOARD_NO_DATA)
         leaderboard = TournamentLeaderboard.from_content(content)
 
-        self.assertIsInstance(leaderboard.tournament, ListedTournament)
+        self.assertIsInstance(leaderboard.tournament, TournamentEntry)
         self.assertEqual("TRIUMPH", leaderboard.tournament.title)
         self.assertIsNone(leaderboard.tournament.start_date)
         self.assertIsNone(leaderboard.tournament.end_date)

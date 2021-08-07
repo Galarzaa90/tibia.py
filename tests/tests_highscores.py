@@ -23,7 +23,7 @@ class TestHighscores(unittest.TestCase, TestCommons):
         self.assertEqual("Estela", highscores.world)
         self.assertEqual(VocationFilter.KNIGHTS, highscores.vocation)
         self.assertEqual(Category.MAGIC_LEVEL, highscores.category)
-        self.assertIsNone(highscores.battleye_filter)
+        self.assertEqual(BattlEyeHighscoresFilter.ANY_WORLD, highscores.battleye_filter)
         self.assertEqual(1983, highscores.results_count)
         self.assertEqual(38, highscores.from_rank)
         self.assertEqual(38, highscores.to_rank)

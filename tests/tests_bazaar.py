@@ -2,7 +2,7 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import AuctionDetails, AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
+from tibiapy import Auction, AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
     BidType, \
     CharacterBazaar, \
     InvalidContent, PvpTypeFilter, \
@@ -75,7 +75,6 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(50, bazaar.filters.max_skill_level)
         self.assertEqual(AuctionOrderBy.SHIELDING, bazaar.filters.order_by)
         self.assertEqual(AuctionOrder.HIGHEST_LATEST, bazaar.filters.order)
-        self.assertEqual("potion", bazaar.filters.item)
         self.assertEqual(AuctionSearchType.ITEM_WILDCARD, bazaar.filters.search_type)
 
     def test_character_bazaar_from_content_empty(self):
@@ -121,7 +120,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
             CharacterBazaar.from_content(content)
 
     def test_auction_details_from_content_finished(self):
-        auction = AuctionDetails.from_content(self.load_resource(FILE_AUCTION_FINISHED))
+        auction = Auction.from_content(self.load_resource(FILE_AUCTION_FINISHED))
 
         self.assertIsNotNone(auction)
 
@@ -240,7 +239,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(205, len(auction.completed_bestiary_entries))
 
     def test_auction_details_from_content_finished_skip_details(self):
-        auction = AuctionDetails.from_content(self.load_resource(FILE_AUCTION_FINISHED), skip_details=True)
+        auction = Auction.from_content(self.load_resource(FILE_AUCTION_FINISHED), skip_details=True)
 
         self.assertIsNotNone(auction)
 
@@ -265,7 +264,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(AuctionStatus.FINISHED, auction.status)
 
     def test_auction_details_from_content_not_found(self):
-        auction = AuctionDetails.from_content(self.load_resource(FILE_AUCTION_NOT_FOUND))
+        auction = Auction.from_content(self.load_resource(FILE_AUCTION_NOT_FOUND))
 
         self.assertIsNone(auction)
 
@@ -273,4 +272,4 @@ class TestBazaar(TestCommons, unittest.TestCase):
         """Testing parsing an unrelated tibia.com section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            AuctionDetails.from_content(content)
+            Auction.from_content(content)

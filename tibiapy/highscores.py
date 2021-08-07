@@ -7,7 +7,7 @@ from tibiapy import abc
 from tibiapy.enums import Category, Vocation, VocationFilter, BattlEyeTypeFilter, PvpTypeFilter, \
     BattlEyeHighscoresFilter
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_tibiacom_content, try_enum, parse_integer
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibiacom_content, try_enum, parse_integer
 
 __all__ = (
     "Highscores",
@@ -51,7 +51,10 @@ class Highscores(abc.Serializable):
         How long ago were this results updated. The resolution is 1 minute.
     entries: :class:`list` of :class:`HighscoresEntry`
         The highscores entries found.
+    available_worlds: :class:`list` of :class:`str`
+        The worlds available for selection.
     """
+
     _ENTRIES_PER_PAGE = 50
 
     def __init__(self, world, category=Category.EXPERIENCE, **kwargs):
@@ -76,6 +79,7 @@ class Highscores(abc.Serializable):
         'results_count',
         'last_updated',
         'entries',
+        'available_worlds',
     )
 
     _serializable_properties = (
@@ -83,7 +87,7 @@ class Highscores(abc.Serializable):
     )
 
     def __repr__(self):
-        return "<{0.__class__.__name__} world={0.world!r} category={0.category!r} vocation={0.vocation!r}>".format(self)
+        return f"<{self.__class__.__name__} world={self.world!r} category={self.category!r} vocation={self.vocation!r}>"
 
     @property
     def from_rank(self):
@@ -112,7 +116,7 @@ class Highscores(abc.Serializable):
         return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
 
     def get_page_url(self, page):
-        """Gets the URL to a specific page for the current highscores.
+        """Get the URL to a specific page for the current highscores.
 
         Parameters
         ----------
@@ -135,7 +139,7 @@ class Highscores(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of a highscores page.
+        """Create an instance of the class from the html content of a highscores page.
 
         Notes
         -----
@@ -155,16 +159,17 @@ class Highscores(abc.Serializable):
         Raises
         ------
         InvalidContent
-            If content is not the HTML of a highscore's page."""
+            If content is not the HTML of a highscore's page.
+        """
         parsed_content = parse_tibiacom_content(content)
+        form = parsed_content.find("form")
         tables = cls._parse_tables(parsed_content)
-        filters = tables.get("Highscores Filter")
-        if filters is None:
+        if form is None:
             if "Error" in tables and "The world doesn't exist!" in tables["Error"].text:
                 return None
             raise InvalidContent("content does is not from the highscores section of Tibia.com")
         highscores = cls(None)
-        highscores._parse_filters_table(filters)
+        highscores._parse_filters_table(form)
         last_update_container = parsed_content.find("span", attrs={"class": "RightArea"})
         if last_update_container:
             m = numeric_pattern.search(last_update_container.text)
@@ -176,7 +181,7 @@ class Highscores(abc.Serializable):
     @classmethod
     def get_url(cls, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
                 battleye_type=None, pvp_types=None):
-        """Gets the Tibia.com URL of the highscores for the given parameters.
+        """Get the Tibia.com URL of the highscores for the given parameters.
 
         Parameters
         ----------
@@ -192,6 +197,7 @@ class Highscores(abc.Serializable):
             The battleEye filters to use.
         pvp_types: :class:`list` of :class:`PvpTypeFilter`, optional
             The list of PvP types to filter the results for.
+
         Returns
         -------
         The URL to the Tibia.com highscores.
@@ -204,7 +210,7 @@ class Highscores(abc.Serializable):
 
     # region Private methods
     def _parse_entries_table(self, table):
-        """Parses the table containing the highscore entries
+        """Parse the table containing the highscore entries.
 
         Parameters
         ----------
@@ -213,14 +219,14 @@ class Highscores(abc.Serializable):
         """
         entries = table.find_all("tr")
         if entries is None:
-            return None
+            return
         _, header, *rows = entries
         info_row = rows.pop()
         pages_div, results_div = info_row.find_all("div")
         page_links = pages_div.find_all("a")
         listed_pages = [int(p.text) for p in page_links]
         if listed_pages:
-            self.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
+            self.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), listed_pages[-1] + 1)
             self.total_pages = max(int(page_links[-1].text), self.page)
         self.results_count = parse_integer(results_pattern.search(results_div.text).group(1))
         for row in rows:
@@ -231,43 +237,29 @@ class Highscores(abc.Serializable):
                 break
             self._parse_entry(cols_raw)
 
-    def _parse_filters_table(self, table):
+    def _parse_filters_table(self, form):
         """
-        Parses the filters table found in a highscores page.
+        Parse the filters table found in a highscores page.
 
         Parameters
         ----------
-        table: :class:`bs4.Tag`
+        form: :class:`bs4.Tag`
             The table containing the filters.
         """
-        dropdowns = {s["name"]: s for s in table.find_all("select")}
-        selected_world = dropdowns["world"].find("option", {"selected": "selected"})
-        if selected_world:
-            value = selected_world["value"]
-            self.world = value if value and "All Worlds" not in value else None
-        selected_be = dropdowns["beprotection"].find("option", {"selected": "selected"})
-        if selected_be:
-            value = selected_be["value"]
-            num_value = int(value)
-            self.battleye_filter = try_enum(BattlEyeHighscoresFilter, num_value)
-        selected_profession = dropdowns["profession"].find("option", {"selected": "selected"})
-        if selected_profession:
-            value = selected_profession["value"]
-            num_value = int(value)
-            self.vocation = try_enum(VocationFilter, num_value, VocationFilter.ALL)
-        selected_category = dropdowns["category"].find("option", {"selected": "selected"})
-        if selected_category:
-            value = selected_category["value"]
-            num_value = int(value)
-            self.category = try_enum(Category, num_value)
-        checkboxes = table.find_all("input", {"type": "checkbox", "checked": "checked"})
+        data = parse_form_data(form, include_options=True)
+        self.world = data["world"] if data.get("world") else None
+        self.battleye_filter = try_enum(BattlEyeHighscoresFilter, parse_integer(data.get("beprotection"), None))
+        self.category = try_enum(Category, parse_integer(data.get("category"), None))
+        self.vocation = try_enum(VocationFilter, parse_integer(data.get("profession"), None), VocationFilter.ALL)
+        checkboxes = form.find_all("input", {"type": "checkbox", "checked": "checked"})
         values = [int(c["value"]) for c in checkboxes]
         self.pvp_types_filter = [try_enum(PvpTypeFilter, v) for v in values]
+        self.available_words = [v for v in data["__options__"]["world"].values() if v]
 
     @classmethod
     def _parse_tables(cls, parsed_content):
         """
-        Parses the information tables found in a highscores page.
+        Parse the information tables found in a highscores page.
 
         Parameters
         ----------
@@ -290,7 +282,7 @@ class Highscores(abc.Serializable):
         return output
 
     def _parse_entry(self, cols):
-        """Parses an entry's row and adds the result to py:attr:`entries`.
+        """Parse an entry's row and adds the result to py:attr:`entries`.
 
         Parameters
         ----------
@@ -332,6 +324,7 @@ class HighscoresEntry(abc.BaseCharacter, abc.Serializable):
     value: :class:`int`
         The character's value for the highscores.
     """
+
     def __init__(self, rank, name, vocation, world, level, value):
         self.name: str = name
         self.rank: int = rank
@@ -375,6 +368,7 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
     title: :class:`str`
         The character's loyalty title.
     """
+
     def __init__(self, rank, name, vocation, world, level, value, title):
         super().__init__(rank, name, vocation, world, level, value)
         self.title: str = title

@@ -2,21 +2,20 @@ import datetime
 import logging
 import re
 import urllib.parse
-import warnings
 from typing import Dict, List, Optional
 
 import bs4
 
-from tibiapy import abc, InvalidContent, Sex, Vocation
+from tibiapy import InvalidContent, Sex, Vocation, abc
 from tibiapy.abc import BaseCharacter
-from tibiapy.enums import AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
-    BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter
-from tibiapy.utils import convert_line_breaks, deprecated, get_tibia_url, parse_integer, parse_pagination, \
-    parse_tibia_datetime, parse_tibiacom_content, try_enum
+from tibiapy.enums import (AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter,
+                           BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter)
+from tibiapy.utils import (convert_line_breaks, get_tibia_url, parse_form_data, parse_integer, parse_pagination,
+                           parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
 __all__ = (
     "AchievementEntry",
-    "AuctionDetails",
+    "Auction",
     "AuctionFilters",
     "CharacterBazaar",
     "CharmEntry",
@@ -27,7 +26,7 @@ __all__ = (
     "DisplayOutfit",
     "DisplayFamiliar",
     "ItemSummary",
-    "ListedAuction",
+    "AuctionEntry",
     "Outfits",
     "OutfitImage",
     "Mounts",
@@ -56,6 +55,7 @@ class AchievementEntry(abc.Serializable):
     secret: :class:`bool`
         Whether the achievement is secret or not.
     """
+
     def __init__(self, name, secret=False):
         self.name: str = name
         self.secret: int = secret
@@ -66,12 +66,11 @@ class AchievementEntry(abc.Serializable):
     )
 
     def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} secret={self.secret}>"
+        return f"<{self.__class__.__name__} name={self.name!r} secret={self.secret}>"
 
 
 class AuctionFilters(abc.Serializable):
-    """
-    Represents the auctions filters available in the current auctions section.
+    """The auction filters available in the auctions section.
 
     All attributes are optional.
 
@@ -99,7 +98,10 @@ class AuctionFilters(abc.Serializable):
         The search term to filter out auctions.
     search_type: :class:`AuctionSearchType`
         The type of search to use. Defines the behaviour of :py:attr:`search_string`.
+    available_worlds: :class:`list` of :class:`str`
+        The list of available worlds to select to filter.
     """
+
     __slots__ = (
         "world",
         "pvp_type",
@@ -114,6 +116,7 @@ class AuctionFilters(abc.Serializable):
         "order",
         "search_string",
         "search_type",
+        "available_worlds",
     )
 
     def __init__(self, **kwargs):
@@ -130,32 +133,18 @@ class AuctionFilters(abc.Serializable):
         self.order: Optional[AuctionOrder] = kwargs.get("order")
         self.search_string: Optional[str] = kwargs.get("search_string")
         self.search_type: Optional[AuctionSearchType] = kwargs.get("search_type")
+        self.available_worlds: List[str] = kwargs.get("available_worlds", [])
 
     def __repr__(self):
         attributes = ""
         for attr in self.__slots__:
             v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
-
-    @property
-    def item(self):
-        """:class:`str`: The name of the item to search for.
-
-        .. deprecated:: 3.5.0
-            Use :py:attr:`search_string` instead.
-        """
-        warnings.warn("Deprecated, use 'search_string'instead", DeprecationWarning)
-        return self.search_string
-
-    @item.setter
-    @deprecated(instead="search_string")
-    def item(self, value):
-        self.search_string = value
+            attributes += f" {attr}={v!r}"
+        return f"<{self.__class__.__name__}{attributes}>"
 
     @property
     def query_params(self):
-        """:class:`str`: The query parameters representing this filter."""
+        """:class:`dict`: The query parameters representing this filter."""
         params = {
             "filter_profession": self.vocation.value if self.vocation else None,
             "filter_levelrangefrom": self.min_level,
@@ -175,7 +164,7 @@ class AuctionFilters(abc.Serializable):
 
     @classmethod
     def _parse_filter_table(cls, table):
-        """Parses the filters table to extract its values.
+        """Parse the filters table to extract its values.
 
         Parameters
         ----------
@@ -184,62 +173,27 @@ class AuctionFilters(abc.Serializable):
 
         Returns
         -------
-
+        :class:`AuctionFilters`
+            The currently applied filters.
         """
         filters = AuctionFilters()
-        world_select = table.find("select", {"name": "filter_world"})
-        selected_world_option = world_select.find("option", {"selected": True})
-        if selected_world_option is not None and selected_world_option["value"]:
-            filters.world = selected_world_option["value"]
-
-        pvp_select = table.find("select", {"name": "filter_worldpvptype"})
-        selected_pvp_option = pvp_select.find("option", {"selected": True})
-        if selected_pvp_option is not None and selected_pvp_option["value"]:
-            filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(selected_pvp_option["value"], None))
-
-        battleye_select = table.find("select", {"name": "filter_worldbattleyestate"})
-        selected_battleye_option = battleye_select.find("option", {"selected": True})
-        if selected_battleye_option is not None and selected_battleye_option["value"]:
-            filters.battleye = try_enum(BattlEyeTypeFilter, parse_integer(selected_battleye_option["value"], None))
-
-        vocation_select = table.find("select", {"name": "filter_profession"})
-        selected_vocation_option = vocation_select.find("option", {"selected": True})
-        if selected_vocation_option is not None and selected_vocation_option["value"]:
-            filters.vocation = try_enum(VocationAuctionFilter, parse_integer(selected_vocation_option["value"], None))
-
-        minlevel_input = table.find("input", {"name": "filter_levelrangefrom"})
-        maxlevel_input = table.find("input", {"name": "filter_levelrangeto"})
-        filters.min_level = parse_integer(minlevel_input["value"], None)
-        filters.max_level = parse_integer(maxlevel_input["value"], None)
-
-        skill_select = table.find("select", {"name": "filter_skillid"})
-        selected_skill_option = skill_select.find("option", {"selected": True})
-        if selected_skill_option is not None and selected_skill_option["value"]:
-            filters.skill = try_enum(SkillFilter, parse_integer(selected_skill_option["value"], None))
-        min_skill_level_input = table.find("input", {"name": "filter_skillrangefrom"})
-        max_skill_level_input = table.find("input", {"name": "filter_skillrangeto"})
-        filters.min_skill_level = parse_integer(min_skill_level_input["value"], None)
-        filters.max_skill_level = parse_integer(max_skill_level_input["value"], None)
-
-        order_by_select = table.find("select", {"name": "order_column"})
-        selected_order_by_option = order_by_select.find("option", {"selected": True})
-        if selected_order_by_option is not None and selected_order_by_option["value"]:
-            filters.order_by = try_enum(AuctionOrderBy, parse_integer(selected_order_by_option["value"], None))
-
-        order_select = table.find("select", {"name": "order_direction"})
-        selected_order_option = order_select.find("option", {"selected": True})
-        if selected_order_option is not None and selected_order_option["value"]:
-            filters.order = try_enum(AuctionOrder, parse_integer(selected_order_option["value"], None))
-
-        search_string_input = table.find("input", {"name": "searchstring"})
-        if search_string_input is not None and search_string_input["value"]:
-            filters.search_string = search_string_input["value"] or None
-
-        search_type_input = table.find("input", {"name": "searchtype", "checked": "checked"})
-
-        if search_type_input is not None and search_type_input["value"]:
-            filters.search_type = try_enum(AuctionSearchType, parse_integer(search_type_input["value"], None))
-
+        forms = table.find_all("form")
+        data = parse_form_data(forms[0], include_options=True)
+        data_search = parse_form_data(forms[1], include_options=True)
+        filters.world = data["filter_world"]
+        filters.available_worlds = [w for w in data.get("__options__", {}).get("filter_world", []) if "(" not in w]
+        filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(data.get("filter_worldpvptype"), None))
+        filters.battleye = try_enum(BattlEyeTypeFilter, parse_integer(data.get("filter_worldbattleyestate"), None))
+        filters.vocation = try_enum(VocationAuctionFilter, parse_integer(data.get("filter_profession"), None))
+        filters.min_level = parse_integer(data.get("filter_levelrangefrom"), None)
+        filters.max_level = parse_integer(data.get("filter_levelrangeto"), None)
+        filters.skill = try_enum(SkillFilter, parse_integer(data.get("filter_skillid"), None))
+        filters.min_skill_level = parse_integer(data.get("filter_skillrangefrom"), None)
+        filters.max_skill_level = parse_integer(data.get("filter_skillrangeto"), None)
+        filters.order_by = try_enum(AuctionOrderBy, parse_integer(data.get("order_column"), None))
+        filters.order = try_enum(AuctionOrder, parse_integer(data.get("order_direction"), None))
+        filters.search_string = data_search.get("searchstring")
+        filters.search_type = try_enum(AuctionSearchType, parse_integer(data_search.get("searchtype"), None))
         return filters
 
 
@@ -253,7 +207,9 @@ class BestiaryEntry(abc.Serializable):
     kills: :class:`int`
         The number of kills of this creature the player has done.
     step: :class:`int`
-        The current step to unlock this creature the character is in, where 4 is fully unlocked."""
+        The current step to unlock this creature the character is in, where 4 is fully unlocked.
+    """
+
     def __init__(self, name, kills, step):
         self.name: str = name
         self.kills: int = kills
@@ -266,7 +222,7 @@ class BestiaryEntry(abc.Serializable):
     )
 
     def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} kills={self.kills} step={self.step}>"
+        return f"<{self.__class__.__name__} name={self.name!r} kills={self.kills} step={self.step}>"
 
     @property
     def completed(self):
@@ -275,22 +231,27 @@ class BestiaryEntry(abc.Serializable):
 
 
 class BlessingEntry(abc.Serializable):
-    """Represents a blessing.
+    """A character's blessings.
 
     Attributes
     ----------
     name: :class:`str`
         The name of the blessing.
     amount: :class:`int`
-        The amount of blessing charges the character has."""
-    def __init__(self, name, amount=0):
-        self.name: str = name
-        self.amount: int = amount
+        The amount of blessing charges the character has.
+    """
 
     __slots__ = (
         "name",
         "amount",
     )
+
+    def __init__(self, name, amount=0):
+        self.name: str = name
+        self.amount: int = amount
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} amount={self.amount}>"
 
 
 class CharacterBazaar(abc.Serializable):
@@ -304,7 +265,7 @@ class CharacterBazaar(abc.Serializable):
         The total number of pages available.
     results_count: :class:`int`
         The number of auctions listed.
-    entries: :class:`list` of :class:`ListedAuction`
+    entries: :class:`list` of :class:`AuctionEntry`
         The auctions displayed.
     type: :class:`BazaarType`
         The type of auctions being displayed, either current or auction history.
@@ -327,21 +288,24 @@ class CharacterBazaar(abc.Serializable):
         self.page: int = kwargs.get("page", 1)
         self.total_pages: int = kwargs.get("total_pages", 1)
         self.results_count: int = kwargs.get("results_count", 0)
-        self.entries: List[ListedAuction] = kwargs.get("entries", [])
+        self.entries: List[AuctionEntry] = kwargs.get("entries", [])
 
     def __repr__(self):
         return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} " \
                f"results_count={self.results_count}>"
 
+    # region Properties
     @property
     def url(self):
-        """:class:`st`: Gets the URL to the bazaar."""
+        """:class:`str`: Get the URL to the bazaar."""
         return self.get_auctions_history_url(self.page) if self.type == BazaarType.HISTORY else \
             self.get_current_auctions_url(self.page, self.filters)
+    # endregion
 
+    # region Public Methods
     @classmethod
     def get_current_auctions_url(cls, page=1, filters=None):
-        """Gets the URL to the list of current auctions in Tibia.com
+        """Get the URL to the list of current auctions in Tibia.com.
 
         Parameters
         ----------
@@ -360,7 +324,7 @@ class CharacterBazaar(abc.Serializable):
 
     @classmethod
     def get_auctions_history_url(cls, page=1, filters=None):
-        """Gets the URL to the auction history in Tibia.com
+        """Get the URL to the auction history in Tibia.com.
 
         Parameters
         ----------
@@ -379,7 +343,7 @@ class CharacterBazaar(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Gets the bazaar's information and list of auctions from Tibia.com
+        """Get the bazaar's information and list of auctions from Tibia.com.
 
         Parameters
         ----------
@@ -413,12 +377,13 @@ class CharacterBazaar(abc.Serializable):
 
             auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
             for auction_row in auction_rows:
-                auction = ListedAuction._parse_auction(auction_row)
+                auction = AuctionEntry._parse_auction(auction_row)
 
                 bazaar.entries.append(auction)
             return bazaar
         except ValueError as e:
             raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e)
+    # endregion
 
 
 class CharmEntry(abc.Serializable):
@@ -431,6 +396,7 @@ class CharmEntry(abc.Serializable):
     cost: :class:`int`
         The cost of the charm in charm points.
     """
+
     def __init__(self, name, cost=0):
         self.name: str = name
         self.cost: int = cost
@@ -441,11 +407,11 @@ class CharmEntry(abc.Serializable):
     )
 
     def __repr__(self):
-        return f"<{self.__class__.name} name={self.name!r} cost={self.cost}>"
+        return f"<{self.__class__.__name__} name={self.name!r} cost={self.cost}>"
 
 
 class DisplayImage(abc.Serializable):
-    """Represents an image displayed in an auction.
+    """An image displayed in the auction.
 
     Attributes
     ----------
@@ -454,6 +420,7 @@ class DisplayImage(abc.Serializable):
     name: :class:`str`
         The element's name.
     """
+
     def __init__(self, **kwargs):
         self.image_url: str = kwargs.get("image_url")
         self.name: str = kwargs.get("name")
@@ -491,6 +458,7 @@ class DisplayItem(abc.Serializable):
     item_id: :class:`int`
         The item's client id.
     """
+
     __slots__ = (
         "image_url",
         "name",
@@ -543,6 +511,7 @@ class DisplayMount(DisplayImage):
     mount_id: :class:`int`
         The internal ID of the mount.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.mount_id: int = kwargs.get("mount_id", 0)
@@ -577,6 +546,7 @@ class DisplayOutfit(DisplayImage):
     addons: :class:`int`
         The unlocked or owned addons for this outfit.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.outfit_id: int = kwargs.get("outfit_id", 0)
@@ -615,6 +585,7 @@ class DisplayFamiliar(DisplayImage):
     familiar_id: :class:`int`
         The internal ID of the familiar.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.familiar_id: int = kwargs.get("familiar_id", 0)
@@ -638,7 +609,7 @@ class DisplayFamiliar(DisplayImage):
         return familiar
 
 
-class ListedAuction(BaseCharacter, abc.Serializable):
+class AuctionEntry(BaseCharacter, abc.Serializable):
     """Represents an auction in the list, containing the summary.
 
     Attributes
@@ -672,6 +643,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
     status: :class:`AuctionStatus`
         The current status of the auction.
     """
+
     __slots__ = (
         "auction_id",
         "name",
@@ -706,25 +678,24 @@ class ListedAuction(BaseCharacter, abc.Serializable):
         self.status: AuctionStatus = kwargs.get("status")
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} auction_id={self.auction_id} name={self.name} world={self.world}>"
+        return f"<{self.__class__.__name__} auction_id={self.auction_id} name={self.name!r} world={self.world!r}>"
 
+    # region Properties
     @property
     def character_url(self):
-        """
-        :class:`str`: The URL of the character's information page on Tibia.com
-        """
+        """:class:`str`: The URL of the character's information page on Tibia.com."""
         return BaseCharacter.get_url(self.name)
 
     @property
     def url(self):
-        """
-        :class:`str`: The URL to this auction's detail page on Tibia.com
-        """
+        """:class:`str`: The URL to this auction's detail page on Tibia.com."""
         return self.get_url(self.auction_id)
+    # endregion
 
+    # region Public Methods
     @classmethod
     def get_url(cls, auction_id):
-        """Gets the URL to the Tibia.com detail page of an auction with a given id.
+        """Get the URL to the Tibia.com detail page of an auction with a given id.
 
         Parameters
         ----------
@@ -737,10 +708,12 @@ class ListedAuction(BaseCharacter, abc.Serializable):
             The URL to the auction's detail page.
         """
         return get_tibia_url("charactertrade", "currentcharactertrades", page="details", auctionid=auction_id)
+    # endregion
 
+    # region Private Methods
     @classmethod
     def _parse_auction(cls, auction_row, auction_id=0):
-        """Parses an auction's table, extracting its data.
+        """Parse an auction's table, extracting its data.
 
         Parameters
         ----------
@@ -751,7 +724,7 @@ class ListedAuction(BaseCharacter, abc.Serializable):
 
         Returns
         -------
-        :class:`ListedAuction`
+        :class:`AuctionEntry`
             The auction contained in the table.
         """
         header_container = auction_row.find("div", attrs={"class": "AuctionHeader"})
@@ -810,10 +783,11 @@ class ListedAuction(BaseCharacter, abc.Serializable):
             auction.sales_arguments.append(SalesArgument(content=entry.text, category_image=img_url,
                                                          category_id=category_id))
         return auction
+    # endregion
 
 
-class AuctionDetails(ListedAuction):
-    """Represents the details of an auction.
+class Auction(AuctionEntry):
+    """The details of an auction.
 
     Attributes
     ----------
@@ -923,6 +897,7 @@ class AuctionDetails(ListedAuction):
     bestiary_progress: :class:`list` of :class:`BestiaryEntry`
         The bestiary progress of the character.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.hit_points: int = kwargs.get("hit_points", 0)
@@ -938,8 +913,9 @@ class AuctionDetails(ListedAuction):
         self.experience: int = kwargs.get("experience", 0)
         self.gold: int = kwargs.get("gold", 0)
         self.achievement_points: int = kwargs.get("achievement_points", 0)
-        self.regular_world_transfer_available_date: datetime.datetime = \
-            kwargs.get("regular_world_transfer_available_date")
+        self.regular_world_transfer_available_date: datetime.datetime = kwargs.get(
+            "regular_world_transfer_available_date",
+        )
         self.charm_expansion: bool = kwargs.get("charm_expansion", False)
         self.available_charm_points: int = kwargs.get("available_charm_points", 0)
         self.spent_charm_points: int = kwargs.get("spent_charm_points", 0)
@@ -1009,9 +985,10 @@ class AuctionDetails(ListedAuction):
         "bestiary_progress",
     )
 
+    # region Properties
     @property
     def completed_bestiary_entries(self):
-        """:class:`list` of :class:`BestiaryEntry`: Gets a list of completed bestiary entries."""
+        """:class:`list` of :class:`BestiaryEntry`: Get a list of completed bestiary entries."""
         return [e for e in self.bestiary_progress if e.completed]
 
     @property
@@ -1023,10 +1000,12 @@ class AuctionDetails(ListedAuction):
     def skills_map(self) -> Dict[str, 'SkillEntry']:
         """:class:`dict` of :class:`str`, :class:`SkillEntry`: A mapping of skills by their name."""
         return {skill.name: skill for skill in self.skills}
+    # endregion
 
+    # region Public Methods
     @classmethod
     def from_content(cls, content, auction_id=0, skip_details=False):
-        """Parses an auction detail page from Tibia.com and extracts its data.
+        """Parse an auction detail page from Tibia.com and extracts its data.
 
         Parameters
         ----------
@@ -1044,7 +1023,7 @@ class AuctionDetails(ListedAuction):
 
         Returns
         -------
-        :class:`AuctionDetails`
+        :class:`Auction`
             The auction details if found, :obj:`None` otherwise.
 
         Raises
@@ -1098,14 +1077,16 @@ class AuctionDetails(ListedAuction):
         if "BestiaryProgress" in details_tables:
             auction._parse_bestiary_table(details_tables["BestiaryProgress"])
         return auction
+    # endregion
 
+    # region Private Methods
     @classmethod
     def _parse_tables(cls, parsed_content) -> Dict[str, bs4.Tag]:
-        """Parses the character details tables.
+        """Parse the character details tables.
 
         Parameters
         ----------
-        parsed_content: :class:`bs4.Tag'
+        parsed_content: :class:`bs4.Tag`
             The parsed content of the auction.
 
         Returns
@@ -1118,7 +1099,7 @@ class AuctionDetails(ListedAuction):
 
     @classmethod
     def _parse_data_table(cls, table) -> Dict[str, str]:
-        """Parses a simple data table into a key value mapping.
+        """Parse a simple data table into a key value mapping.
 
         Parameters
         ----------
@@ -1140,7 +1121,7 @@ class AuctionDetails(ListedAuction):
         return data
 
     def _parse_skills_table(self, table):
-        """Parses the skills table.
+        """Parse the skills table.
 
         Parameters
         ----------
@@ -1158,7 +1139,7 @@ class AuctionDetails(ListedAuction):
         self.skills = skills
 
     def _parse_blessings_table(self, table):
-        """Parses the blessings table.
+        """Parse the blessings table.
 
         Parameters
         ----------
@@ -1175,7 +1156,7 @@ class AuctionDetails(ListedAuction):
 
     @classmethod
     def _parse_single_column_table(cls, table):
-        """Parses a table with a single column into an array.
+        """Parse a table with a single column into an array.
 
         Parameters
         ----------
@@ -1199,7 +1180,7 @@ class AuctionDetails(ListedAuction):
         return ret
 
     def _parse_charms_table(self, table):
-        """Parses the charms table and extracts its information.
+        """Parse the charms table and extracts its information.
 
         Parameters
         ----------
@@ -1217,7 +1198,7 @@ class AuctionDetails(ListedAuction):
             self.charms.append(CharmEntry(name_c, cost))
 
     def _parse_achievements_table(self, table):
-        """Parses the achievements table and extracts its information.
+        """Parse the achievements table and extracts its information.
 
         Parameters
         ----------
@@ -1235,7 +1216,7 @@ class AuctionDetails(ListedAuction):
             self.achievements.append(AchievementEntry(text, secret))
 
     def _parse_bestiary_table(self, table):
-        """Parses the bestiary table and extracts its information.
+        """Parse the bestiary table and extracts its information.
 
         Parameters
         ----------
@@ -1255,7 +1236,7 @@ class AuctionDetails(ListedAuction):
 
     @classmethod
     def _parse_page_items(cls, content, entry_class):
-        """Parses the elements of a page in the items, mounts and outfits.
+        """Parse the elements of a page in the items, mounts and outfits.
 
         Attributes
         ----------
@@ -1278,7 +1259,7 @@ class AuctionDetails(ListedAuction):
         return entries
 
     def _parse_general_table(self, table):
-        """Parses the general information table and assigns its values.
+        """Parse the general information table and assigns its values.
 
         Parameters
         ----------
@@ -1328,6 +1309,7 @@ class AuctionDetails(ListedAuction):
         self.hirelings = parse_integer(hirelings_data.get("hirelings", ""))
         self.hireling_jobs = parse_integer(hirelings_data.get("hireling_jobs", ""))
         self.hireling_outfits = parse_integer(hirelings_data.get("hireling_outfits", ""))
+    # endregion
 
 
 class OutfitImage(abc.Serializable):
@@ -1342,6 +1324,7 @@ class OutfitImage(abc.Serializable):
     addons: :class:`int`
         The addons displayed in the outfit.
     """
+
     def __init__(self, **kwargs):
         self.image_url: str = kwargs.get("image_url")
         self.outfit_id: int = kwargs.get("outfit_id", 0)
@@ -1374,6 +1357,7 @@ class PaginatedSummary(abc.Serializable):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entry_class = None
 
     def __init__(self, **kwargs):
@@ -1395,8 +1379,9 @@ class PaginatedSummary(abc.Serializable):
         return f"<{self.__class__.__name__} page={self.page} total_pages={self.total_pages} results={self.results} " \
                f"fully_fetched={self.fully_fetched} len(entries)={len(self.entries)}>"
 
+    # region Public Methods
     def get_by_name(self, name):
-        """Gets an entry by its name.
+        """Get an entry by its name.
 
         Parameters
         ----------
@@ -1411,7 +1396,7 @@ class PaginatedSummary(abc.Serializable):
         return next((e for e in self.entries if e.name.lower() == name.lower()), None)
 
     def search(self, value):
-        """Searches an entry by its name
+        """Search an entry by its name.
 
         Parameters
         ----------
@@ -1426,7 +1411,7 @@ class PaginatedSummary(abc.Serializable):
         return [e for e in self.entries if value.lower() in e.name.lower()]
 
     def get_by_id(self, name):
-        """Gets an entry by its id.
+        """Get an entry by its id.
 
         Parameters
         ----------
@@ -1439,11 +1424,14 @@ class PaginatedSummary(abc.Serializable):
             The entry matching the name.
         """
         return NotImplemented
+    # endregion
 
+    # region Private Methods
     def _parse_pagination(self, parsed_content):
         pagination_block = parsed_content.find("div", attrs={"class": "BlockPageNavigationRow"})
         if pagination_block is not None:
             self.page, self.total_pages, self.results = parse_pagination(pagination_block)
+    # endregion
 
 
 class ItemSummary(PaginatedSummary):
@@ -1462,6 +1450,7 @@ class ItemSummary(PaginatedSummary):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entries: List[DisplayItem]
     entry_class = DisplayItem
 
@@ -1469,7 +1458,7 @@ class ItemSummary(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
-        """Gets an item by its item id.
+        """Get an item by its item id.
 
         Parameters
         ----------
@@ -1485,7 +1474,7 @@ class ItemSummary(PaginatedSummary):
 
     @classmethod
     def _parse_table(cls, table):
-        """Parses the item summary table.
+        """Parse the item summary table.
 
         Parameters
         ----------
@@ -1523,6 +1512,7 @@ class Mounts(PaginatedSummary):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entries: List[DisplayMount]
     entry_class = DisplayMount
 
@@ -1530,7 +1520,7 @@ class Mounts(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
-        """Gets a mount by its mount id.
+        """Get a mount by its mount id.
 
         Parameters
         ----------
@@ -1572,6 +1562,7 @@ class Familiars(PaginatedSummary):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entries: List[DisplayFamiliar]
     entry_class = DisplayFamiliar
 
@@ -1579,7 +1570,7 @@ class Familiars(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
-        """Gets an outfit by its familiar id.
+        """Get an outfit by its familiar id.
 
         Parameters
         ----------
@@ -1595,7 +1586,7 @@ class Familiars(PaginatedSummary):
 
     @classmethod
     def _parse_table(cls, table):
-        """Parses the outfits table.
+        """Parse the outfits table.
 
         Parameters
         ----------
@@ -1616,6 +1607,7 @@ class Familiars(PaginatedSummary):
                 summary.entries.append(item)
         return summary
 
+
 class Outfits(PaginatedSummary):
     """The outfits the character has unlocked or purchased.
 
@@ -1632,6 +1624,7 @@ class Outfits(PaginatedSummary):
     fully_fetched: :class:`bool`
         Whether the summary was fetched completely, including all other pages.
     """
+
     entries: List[DisplayOutfit]
     entry_class = DisplayOutfit
 
@@ -1639,7 +1632,7 @@ class Outfits(PaginatedSummary):
         super().__init__(**kwargs)
 
     def get_by_id(self, entry_id):
-        """Gets an outfit by its outfit id.
+        """Get an outfit by its outfit id.
 
         Parameters
         ----------
@@ -1655,7 +1648,7 @@ class Outfits(PaginatedSummary):
 
     @classmethod
     def _parse_table(cls, table):
-        """Parses the outfits table.
+        """Parse the outfits table.
 
         Parameters
         ----------
@@ -1688,7 +1681,8 @@ class SalesArgument(abc.Serializable):
     category_image: :class:`str`
         The URL to the category icon.
     content: :class:`str`
-        The content of the sales argument."""
+        The content of the sales argument.
+    """
 
     __slots__ = (
         "category_id",
@@ -1718,6 +1712,7 @@ class SkillEntry(abc.Serializable):
     progress: :class:`float`
         The percentage of progress for the next level.
     """
+
     def __init__(self, **kwargs):
         self.name: str = kwargs.get("name")
         self.level: int = kwargs.get("level", 0)

@@ -1,18 +1,19 @@
 import datetime
 import re
-from typing import Optional
+from typing import Dict, List, Optional
 
 from tibiapy import abc
-from tibiapy.enums import HouseStatus, HouseType, Sex
+from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_tibia_datetime, parse_tibia_money, \
+from tibiapy.utils import get_tibia_url, parse_tibia_datetime, parse_tibia_money, \
     parse_tibiacom_content, try_date, try_datetime, try_enum
 
 __all__ = (
+    "HousesSection",
     "House",
     "CharacterHouse",
     "GuildHouse",
-    "ListedHouse",
+    "HouseEntry",
 )
 
 id_regex = re.compile(r'house_(\d+)\.')
@@ -32,6 +33,187 @@ auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) a
 
 list_header_regex = re.compile(r'Available (?P<type>[\w\s]+) in (?P<town>[\w\s\']+) on (?P<world>\w+)')
 list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<time_unit>day|hour)s? left\)')
+
+
+class HousesSection(abc.Serializable):
+    """Represents the house section.
+
+    .. versionadded:: 5.0.0
+
+    Attributes
+    ----------
+    world: :class:`str`
+        The selected world to show houses for.
+    town: :class:`str`
+        The town to show houses for.
+    status: :class:`HouseStatus`
+        The status to show. If :obj:`None`, any status is shown.
+    house_type: :class:`HouseType`
+        The type of houses to show.
+    order: :class:`HouseOrder`
+        The ordering to use for the results.
+    entries: :class:`list` of :class:`HouseEntry`
+        The houses matching the filters.
+    available_worlds: :class:`list` of :class:`str`
+        The list of available worlds to choose from.
+    available_towns: :class:`list` of :class:`str`
+        The list of available towns to choose from.
+    """
+
+    __slots__ = (
+        "world",
+        "town",
+        "status",
+        "house_type",
+        "order",
+        "entries",
+        "available_worlds",
+        "available_towns",
+    )
+
+    def __init__(self, **kwargs):
+        self.world: str = kwargs.get("world")
+        self.town: str = kwargs.get("town")
+        self.status: Optional[HouseStatus] = kwargs.get("status")
+        self.house_type: HouseType = kwargs.get("house_type")
+        self.order: HouseOrder = kwargs.get("order", HouseOrder.NAME)
+        self.available_worlds: List[str] = kwargs.get("available_worlds", [])
+        self.available_towns: List[str] = kwargs.get("available_towns", [])
+        self.entries: List[HouseEntry] = kwargs.get("entries", [])
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} world={self.world!r} town={self.town!r} house_type={self.house_type!r}>"
+
+    @property
+    def url(self):
+        """:class:`str`: Get the URL to the houses section with the current parameters."""
+        return self.get_url(self.world, self.town, self.house_type, self.status, self.order)
+
+    @classmethod
+    def _get_query_params(cls, world, town, house_type, status=None, order=None) -> Dict[str, str]:
+        """Build the query parameters for a house search.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The world to search for houses in.
+        town: :class:`str`
+            The town to search houses in.
+        house_type: :class:`HouseType`
+            The type of houses to filter.
+        status: :class:`HouseStatus`, optional
+            The status of the house to filter. If undefined, all status will be included.
+        order: :class:`HouseOrder`
+            The field to order houses by.
+
+        Returns
+        -------
+        :class:`dict`
+            The query parameters representing for a house search.
+        """
+        params = {
+            "world": world,
+            "town": town,
+            "type": house_type.plural if house_type else None,
+            "status": status.value if status else None,
+            "order": order.value if order else None,
+        }
+        return {k: v for k, v in params.items() if v is not None}
+
+    @classmethod
+    def get_url(cls, world, town, house_type, status=None, order=None):
+        """Get the URL to the house list on Tibia.com with the specified filters.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The world to search in.
+        town: :class:`str`
+            The town to show results for.
+        house_type: :class:`HouseType`
+            The type of houses to show.
+        status: :class:`HouseStatus`
+            The status of the houses to show.
+        order: :class:`HouseOrder`
+            The sorting parameter to use for the results.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the list matching the parameters.
+        """
+        query = cls._get_query_params(world, town, house_type, status, order)
+        return get_tibia_url("community", "houses", **query)
+
+    @classmethod
+    def from_content(cls, content):
+        """Parse the content of a house list from Tibia.com into a list of houses.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The raw HTML response from the house list.
+
+        Returns
+        -------
+        :class:`HouseSection`
+            The houses found in the page.
+
+        Raises
+        ------
+        InvalidContent`
+            Content is not the house list from Tibia.com
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            tables = parsed_content.find_all("table")
+            house_results = cls()
+            house_results._parse_filters(tables[-1])
+            if len(tables) < 2:
+                return house_results
+            _, *rows = tables[0].find_all("tr")
+            for row in rows[1:]:
+                cols = row.find_all("td")
+                if len(cols) != 5:
+                    continue
+                name = cols[0].text.replace('\u00a0', ' ')
+                house = HouseEntry(name, house_results.world, 0, town=house_results.town,
+                                   type=house_results.house_type)
+                size = cols[1].text.replace('sqm', '')
+                house.size = int(size)
+                rent = cols[2].text.replace('gold', '')
+                house.rent = parse_tibia_money(rent)
+                status = cols[3].text.replace('\xa0', ' ')
+                house._parse_status(status)
+                id_input = cols[4].find("input", {'name': 'houseid'})
+                house.id = int(id_input["value"])
+                house_results.entries.append(house)
+            return house_results
+        except (ValueError, AttributeError) as e:
+            raise InvalidContent("content does not belong to a Tibia.com house list", e)
+
+    def _parse_filters(self, filters_table):
+        world_select = filters_table.find("select", {"name": "world"})
+        for world_option in world_select.find_all("option"):
+            world_name = world_option.text
+            self.available_worlds.append(world_name)
+            if world_option.attrs.get("selected"):
+                self.world = world_name
+        for town_option in filters_table.find_all("input", {"name": "town"}):
+            town_name = town_option.attrs.get("value")
+            self.available_towns.append(town_name)
+            if "checked" in town_option.attrs:
+                self.town = town_name
+        checked_status = filters_table.find("input", {"name": "state", "checked": True})
+        if checked_status.attrs.get("value"):
+            self.status = try_enum(HouseStatus, checked_status.attrs.get("value"))
+        checked_type = filters_table.find("input", {"name": "type", "checked": True})
+        if checked_type.attrs.get("value"):
+            self.house_type = try_enum(HouseType, checked_type.attrs.get("value")[:-1])
+        checked_order = filters_table.find("input", {"name": "order", "checked": True})
+        if checked_order and checked_order.attrs.get("value"):
+            self.order = try_enum(HouseOrder, checked_order.attrs.get("value"), HouseOrder.NAME)
+        return self
 
 
 class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
@@ -78,6 +260,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     auction_end: :class:`datetime.datetime`, optional
         The date when the auction will end.
     """
+
     __slots__ = (
         "id",
         "name",
@@ -107,20 +290,20 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
         self.world: str = world
         self.image_url: str = kwargs.get("image_url")
         self.beds: int = kwargs.get("beds", 0)
-        self.type = try_enum(HouseType, kwargs.get("type"), HouseType.HOUSE)
+        self.type: HouseType = try_enum(HouseType, kwargs.get("type"), HouseType.HOUSE)
         self.size: int = kwargs.get("size", 0)
         self.rent: int = kwargs.get("rent", 0)
-        self.status = try_enum(HouseStatus, kwargs.get("status"), None)
+        self.status: HouseStatus = try_enum(HouseStatus, kwargs.get("status"), None)
         self.owner: Optional[str] = kwargs.get("owner")
-        self.owner_sex = try_enum(Sex, kwargs.get("owner_sex"))
-        self.paid_until = try_datetime(kwargs.get("paid_until"))
-        self.transfer_date = try_datetime(kwargs.get("transfer_date"))
+        self.owner_sex: Optional[str] = try_enum(Sex, kwargs.get("owner_sex"))
+        self.paid_until: datetime.datetime = try_datetime(kwargs.get("paid_until"))
+        self.transfer_date: datetime.datetime = try_datetime(kwargs.get("transfer_date"))
         self.transferee: Optional[str] = kwargs.get("transferee")
         self.transfer_price: int = kwargs.get("transfer_price", 0)
         self.transfer_accepted: bool = kwargs.get("transfer_accepted", False)
         self.highest_bid: int = kwargs.get("highest_bid", 0)
         self.highest_bidder: Optional[str] = kwargs.get("highest_bidder")
-        self.auction_end = try_datetime(kwargs.get("auction_end"))
+        self.auction_end: datetime.datetime = try_datetime(kwargs.get("auction_end"))
 
     # region Properties
     @property
@@ -142,7 +325,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     # region Public methods
     @classmethod
     def from_content(cls, content):
-        """Parses a Tibia.com response into a House object.
+        """Parse a Tibia.com response into a House object.
 
         Parameters
         ----------
@@ -195,7 +378,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     # endregion
 
     def _parse_status(self, status):
-        """Parses the house's state description and applies the corresponding values
+        """Parse the house's state description and applies the corresponding values.
 
         Parameters
         ----------
@@ -230,7 +413,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
 
 
 class CharacterHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
-    """Represents a House owned by a character.
+    """A house owned by a character.
 
     Attributes
     ----------
@@ -251,6 +434,7 @@ class CharacterHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     paid_until_date: :class:`datetime.date`
         The date the last paid rent is due.
     """
+
     __slots__ = (
         "id",
         "name",
@@ -274,7 +458,9 @@ class CharacterHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
 
 
 class GuildHouse(abc.BaseHouse, abc.Serializable):
-    """Represents a House owned by a guild.
+    """A guildhall owned by a guild.
+
+    By limitation of Tibia.com, the ID of the guildhall is not available.
 
     Attributes
     ----------
@@ -284,12 +470,17 @@ class GuildHouse(abc.BaseHouse, abc.Serializable):
         The name of the world the house belongs to.
     status: :class:`HouseStatus`
         The current status of the house.
+
+        This is kept for compatibility with house objects and will always be :obj:`HouseStatus.RENTED`.
     type: :class:`HouseType`
         The type of the house.
+
+        This is kept for compatibility with house objects and will always be :obj:`HouseType.GUILDHALL`.
     owner: :class:`str`
         The owner of the guildhall.
     paid_until_date: :class:`datetime.date`
-        The date the last paid rent is due."""
+        The date the last paid rent is due.
+    """
 
     __slots__ = (
         "name",
@@ -303,15 +494,15 @@ class GuildHouse(abc.BaseHouse, abc.Serializable):
         self.name: str = name
         self.world: str = world
         self.owner: str = owner
-        self.paid_until_date = try_date(paid_until_date)
-        self.status = HouseStatus.RENTED
-        self.type = HouseType.GUILDHALL
+        self.paid_until_date: datetime.date = try_date(paid_until_date)
+        self.status: HouseStatus = HouseStatus.RENTED
+        self.type: HouseType = HouseType.GUILDHALL
 
     def __repr__(self):
         return "<%s name=%r>" % (self.__class__.__name__, self.name)
 
 
-class ListedHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
+class HouseEntry(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     """Represents a house from the house list in Tibia.com.
 
     Attributes
@@ -335,9 +526,10 @@ class ListedHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     time_left: :class:`datetime.timedelta`, optional
         The number of days or hours left until the bid ends, if it has started.
         This is not an exact measure, it is rounded to hours or days.
-    highest_bid: :class:`int`
+    highest_bid: :class:`int`, optional.
         The highest bid so far, if the auction has started.
     """
+
     __slots__ = (
         "id",
         "name",
@@ -361,64 +553,12 @@ class ListedHouse(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
         self.size: int = kwargs.get("size", 0)
         self.rent: int = kwargs.get("rent", 0)
         self.time_left: Optional[datetime.timedelta] = kwargs.get("time_left")
-        self.highest_bid: int = kwargs.get("highest_bid", 0)
-
-    # region Public methods
-    @classmethod
-    def list_from_content(cls, content):
-        """Parses the content of a house list from Tibia.com into a list of houses
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The raw HTML response from the house list.
-
-        Returns
-        -------
-        :class:`list` of :class:`ListedHouse`
-
-        Raises
-        ------
-        InvalidContent`
-            Content is not the house list from Tibia.com
-        """
-        try:
-            parsed_content = parse_tibiacom_content(content)
-            table = parsed_content.find("table")
-            header, *rows = table.find_all("tr")
-        except (ValueError, AttributeError):
-            raise InvalidContent("content does not belong to a Tibia.com house list")
-
-        m = list_header_regex.match(header.text.strip())
-        if not m:
-            return None
-        town = m.group("town")
-        world = m.group("world")
-        house_type = HouseType.GUILDHALL if m.group("type") == "Guildhalls" else HouseType.HOUSE
-        houses = []
-        for row in rows[1:]:
-            cols = row.find_all("td")
-            if len(cols) != 6:
-                continue
-            name = cols[0].text.replace('\u00a0', ' ')
-            house = ListedHouse(name, world, 0, town=town, type=house_type)
-            size = cols[1].text.replace('sqm', '')
-            house.size = int(size)
-            rent = cols[2].text.replace('gold', '')
-            house.rent = parse_tibia_money(rent)
-            status = cols[3].text.replace('\xa0', ' ')
-            house._parse_status(status)
-            id_input = cols[5].find("input", {'name': 'houseid'})
-            house.id = int(id_input["value"])
-            houses.append(house)
-        return houses
-
-    # endregion
+        self.highest_bid: Optional[int] = kwargs.get("highest_bid", None)
 
     # region Private methods
     def _parse_status(self, status):
         """
-        Parses the status string found in the table and applies the corresponding values.
+        Parse the status string found in the table and applies the corresponding values.
 
         Parameters
         ----------

@@ -1,6 +1,6 @@
 import datetime
 import re
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict, defaultdict
 from typing import Dict, List, Optional
 
 import bs4
@@ -9,15 +9,17 @@ from tibiapy import abc
 from tibiapy.enums import Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import GuildHouse
-from tibiapy.utils import parse_tibia_date, parse_tibiacom_content, try_date, try_datetime, try_enum
+from tibiapy.utils import (get_tibia_url, parse_form_data, parse_tibia_date, parse_tibiacom_content, try_date,
+                           try_datetime, try_enum)
 
 __all__ = (
     "Guild",
     "GuildMember",
     "GuildInvite",
+    "GuildsSection",
     "GuildWars",
     "GuildWarEntry",
-    "ListedGuild",
+    "GuildEntry",
 )
 
 COLS_INVITED_MEMBER = 2
@@ -49,9 +51,115 @@ war_score_end_regex = re.compile(r'scored (\d+) kills against')
 war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
 
 
-class Guild(abc.BaseGuild, abc.Serializable):
+class GuildsSection(abc.Serializable):
+    """The guilds section in Tibia.com.
+
+    .. versionadded:: 5.0.0
+
+    Attributes
+    ----------
+    world: :class:`str`
+        The name of the world. If :obj:`None`, the section belongs to a world that doesn't exist.
+    entries: :class:`list` of :class:`GuildEntry`
+        The list of guilds in the world.
+    available_worlds: :class:`list` of :class:`str`
+        The list of worlds available for selection.
     """
-    Represents a Tibia guild.
+
+    __slots__ = (
+        "world",
+        "entries",
+        "available_worlds",
+    )
+
+    def __init__(self, world, entries=None, available_worlds=None):
+        self.world: str = world
+        self.entries: List[GuildEntry] = entries or []
+        self.available_worlds: List[str] = available_worlds or []
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} world={self.world!r} len(entries)={len(self.entries)}>"
+
+    @property
+    def active_guilds(self):
+        """:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are active."""
+        return [g for g in self.entries if g.active]
+
+    @property
+    def in_formation_guilds(self):
+        """:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are in course of formation."""
+        return [g for g in self.entries if not g.active]
+
+    @property
+    def url(self):
+        """:class:`str`: Get the URL to this guild section."""
+        return self.get_url(self.world)
+
+    @classmethod
+    def from_content(cls, content):
+        """Get a list of guilds from the HTML content of the world guilds' page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`GuildsSection`
+            List of guilds in the current world. :obj:`None` if it's the list of a world that doesn't exist.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a guild's page.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            form = parsed_content.find("form")
+            data = parse_form_data(form, include_options=True)
+            selected_world = data["world"] if data["world"] else None
+            available_worlds = [w for w in data["__options__"]["world"].values() if w]
+            guilds = cls(selected_world, available_worlds=available_worlds)
+        except AttributeError as e:
+            raise InvalidContent("Content does not belong to world guild list.", e)
+        # First TableContainer contains world selector.
+        _, *containers = parsed_content.find_all('div', class_="TableContainer")
+        for container in containers:
+            header = container.find('div', class_="Text")
+            active = "Active" in header.text
+            header, *rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+            for row in rows:
+                columns = row.find_all('td')
+                logo_img = columns[0].find('img')["src"]
+                description_lines = columns[1].get_text("\n").split("\n", 1)
+                name = description_lines[0]
+                description = None
+                if len(description_lines) > 1:
+                    description = description_lines[1].replace("\r", "").replace("\n", " ")
+                guild = GuildEntry(name, guilds.world, logo_img, description, active)
+                guilds.entries.append(guild)
+        return guilds
+
+    @classmethod
+    def get_url(cls, world):
+        """Get the Tibia.com URL for the guild section of a specific world.
+
+        Parameters
+        ----------
+        world: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the guild's page
+        """
+        return get_tibia_url("community", "guilds", world=world)
+
+
+class Guild(abc.BaseGuild, abc.Serializable):
+    """A Tibia guild, viewed from its guild's page.
 
     Attributes
     ------------
@@ -86,6 +194,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
     invites: :class:`list` of :class:`GuildInvite`
         List of invited characters.
     """
+
     __slots__ = (
         "world",
         "logo_url",
@@ -105,7 +214,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
     _serializable_properties = (
         "member_count",
         "online_count",
-        "ranks"
+        "ranks",
     )
 
     def __init__(self, name=None, world=None, **kwargs):
@@ -125,7 +234,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
         self.invites: List[GuildInvite] = kwargs.get("invites", [])
 
     def __repr__(self):
-        return "<{0.__class__.__name__} name={0.name!r} world={0.world!r}>".format(self)
+        return f"<{self.__class__.__name__} name={self.name!r} world={self.world!r}>"
 
     # region Properties
     @property
@@ -150,7 +259,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     @property
     def members_by_rank(self) -> Dict[str, List['GuildMember']]:
-        """:class:`dict`: Gets a mapping of members, grouped by their guild rank."""
+        """:class:`dict`: Get a mapping of members, grouped by their guild rank."""
         rank_dict = defaultdict(list)
         [rank_dict[m.rank].append(m) for m in self.members]
         return dict(rank_dict)
@@ -159,7 +268,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
     # region Public methods
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the HTML content of the guild's page.
+        """Create an instance of the class from the HTML content of the guild's page.
 
         Parameters
         -----------
@@ -206,14 +315,13 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     # region Private methods
     def _parse_current_member(self, previous_rank, values):
-        """
-        Parses the column texts of a member row into a member dictionary.
+        """Parse the column texts of a member row into a member dictionary.
 
         Parameters
         ----------
         previous_rank: :class:`dict`[int, str]
             The last rank present in the rows.
-        values: tuple[:class:`str`]
+        values: :class:`tuple` of :class:`str`
             A list of row contents.
         """
         rank, name, vocation, level, joined, status = values
@@ -229,7 +337,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_application_info(self, info_container):
         """
-        Parses the guild's application info.
+        Parse the guild's application info.
 
         Parameters
         ----------
@@ -243,7 +351,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_guild_disband_info(self, info_container):
         """
-        Parses the guild's disband info, if available.
+        Parse the guild's disband info, if available.
 
         Parameters
         ----------
@@ -257,7 +365,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_guild_guildhall(self, info_container):
         """
-        Parses the guild's guildhall info.
+        Parse the guild's guildhall info.
 
         Parameters
         ----------
@@ -270,8 +378,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
             self.guildhall = GuildHouse(m.group("name"), self.world, paid_until_date=paid_until)
 
     def _parse_guild_homepage(self, info_container):
-        """
-        Parses the guild's homepage info.
+        """Parse the guild's homepage info.
 
         Parameters
         ----------
@@ -284,7 +391,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_guild_info(self, info_container):
         """
-        Parses the guild's general information and applies the found values.
+        Parse the guild's general information and applies the found values.
 
         Parameters
         ----------
@@ -300,8 +407,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
             self.active = "currently active" in m.group("status")
 
     def _parse_logo(self, parsed_content):
-        """
-        Parses the guild logo and saves it to the instance.
+        """Parse the guild logo and saves it to the instance.
 
         Parameters
         ----------
@@ -322,7 +428,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
     def _parse_guild_members(self, parsed_content):
         """
-        Parses the guild's member and invited list.
+        Parse the guild's member and invited list.
 
         Parameters
         ----------
@@ -340,8 +446,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
                 self._parse_invited_member(values)
 
     def _parse_invited_member(self, values):
-        """
-        Parses the column texts of an invited row into a invited dictionary.
+        """Parse the column texts of an invited row into a invited dictionary.
 
         Parameters
         ----------
@@ -355,8 +460,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
 
 
 class GuildMember(abc.BaseCharacter, abc.Serializable):
-    """
-    Represents a guild member.
+    """Represents a guild member.
 
     Attributes
     --------------
@@ -375,20 +479,33 @@ class GuildMember(abc.BaseCharacter, abc.Serializable):
     online: :class:`bool`
         Whether the member is online or not.
     """
-    __slots__ = ("name", "rank", "title", "level", "vocation", "joined", "online")
+
+    __slots__ = (
+        "name",
+        "rank",
+        "title",
+        "level",
+        "vocation",
+        "joined",
+        "online",
+    )
 
     def __init__(self, name=None, rank=None, title=None, level=0, vocation=None, **kwargs):
         self.name: str = name
         self.rank: str = rank
         self.title: Optional[str] = title
-        self.vocation = try_enum(Vocation, vocation)
+        self.vocation: Vocation = try_enum(Vocation, vocation)
         self.level = int(level)
         self.online: bool = kwargs.get("online", False)
-        self.joined = try_date(kwargs.get("joined"))
+        self.joined: datetime.date = try_date(kwargs.get("joined"))
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} rank={self.rank!r} level={self.level} " \
+               f"vocation={self.vocation!r}>"
 
 
 class GuildInvite(abc.BaseCharacter, abc.Serializable):
-    """Represents an invited character
+    """Represents an invited character.
 
     Attributes
     ------------
@@ -398,6 +515,7 @@ class GuildInvite(abc.BaseCharacter, abc.Serializable):
     date: :class:`datetime.date`
         The day when the character was invited.
     """
+
     __slots__ = (
         "name",
         "date",
@@ -405,7 +523,7 @@ class GuildInvite(abc.BaseCharacter, abc.Serializable):
 
     def __init__(self, name=None, date=None):
         self.name: str = name
-        self.date = try_date(date)
+        self.date: datetime.date = try_date(date)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} date={self.date!r}>"
@@ -423,7 +541,8 @@ class GuildWars(abc.Serializable):
     current: :class:`GuildWarEntry`
         The current war the guild is involved in.
     history: :class:`list` of :class:`GuildWarEntry`
-        The previous wars the guild has been involved in."""
+        The previous wars the guild has been involved in.
+    """
 
     __slots__ = (
         'name',
@@ -446,8 +565,7 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def get_url(cls, name):
-        """
-        Gets the URL to the guild's war page of a guild with the given name.
+        """Get the URL to the guild's war page of a guild with the given name.
 
         Parameters
         ----------
@@ -463,7 +581,7 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Gets a guild's war information from Tibia.com's content
+        """Get a guild's war information from Tibia.com's content.
 
         Parameters
         ----------
@@ -509,7 +627,7 @@ class GuildWars(abc.Serializable):
 
     @classmethod
     def _parse_current_war_information(cls, text):
-        """Parses the guild's current war information.
+        """Parse the guild's current war information.
 
         Parameters
         ----------
@@ -536,14 +654,13 @@ class GuildWars(abc.Serializable):
         end_date_str = end_date_match.group(1)
         end_date = parse_tibia_date(end_date_str)
 
-        entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, guild_score=int(guild_score),
-                              opponent_score=int(opposing_score), guild_fee=int(guild_fee),
-                              opponent_fee=int(opposing_fee), score_limit=int(score_limit), end_date=end_date)
-        return entry
+        return GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, guild_score=int(guild_score),
+                             opponent_score=int(opposing_score), guild_fee=int(guild_fee),
+                             opponent_fee=int(opposing_fee), score_limit=int(score_limit), end_date=end_date)
 
     @classmethod
     def _parse_war_history_entry(cls, text):
-        """Parses a guild's war information.
+        """Parse a guild's war information.
 
         Parameters
         ----------
@@ -600,11 +717,10 @@ class GuildWars(abc.Serializable):
         if "no guild had reached the needed kills" in text:
             winner = guild_name if guild_score > opponent_score else opposing_name
 
-        entry = GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, start_date=start_date,
-                              duration=duration, score_limit=kills_needed, guild_fee=int(guild_fee),
-                              opponent_fee=int(opponent_fee), surrender=surrender, winner=winner, end_date=end_date,
-                              opponent_score=opponent_score, guild_score=guild_score)
-        return entry
+        return GuildWarEntry(guild_name=guild_name, opponent_name=opposing_name, start_date=start_date,
+                             duration=duration, score_limit=kills_needed, guild_fee=int(guild_fee),
+                             opponent_fee=int(opponent_fee), surrender=surrender, winner=winner, end_date=end_date,
+                             opponent_score=opponent_score, guild_score=guild_score)
 
 
 class GuildWarEntry(abc.Serializable):
@@ -646,6 +762,7 @@ class GuildWarEntry(abc.Serializable):
     surrender: :class:`bool`
         Whether the losing guild surrendered or not.
     """
+
     __slots__ = (
         "guild_name",
         "guild_score",
@@ -662,21 +779,21 @@ class GuildWarEntry(abc.Serializable):
     )
 
     def __init__(self, **kwargs):
-        self.guild_name = kwargs.get("guild_name")
-        self.guild_score = kwargs.get("guild_score", 0)
-        self.guild_fee = kwargs.get("guild_fee", 0)
-        self.opponent_name = kwargs.get("opponent_name")
-        self.opponent_score = kwargs.get("opponent_score", 0)
-        self.opponent_fee = kwargs.get("opponent_fee", 0)
-        self.start_date = kwargs.get("start_date")
-        self.score_limit = kwargs.get("score_limit", 0)
-        self.duration = kwargs.get("duration")
-        self.end_date = kwargs.get("end_date")
-        self.winner = kwargs.get("winner")
-        self.surrender = kwargs.get("surrender", False)
+        self.guild_name: str = kwargs.get("guild_name")
+        self.guild_score: int = kwargs.get("guild_score", 0)
+        self.guild_fee: int = kwargs.get("guild_fee", 0)
+        self.opponent_name: Optional[str] = kwargs.get("opponent_name")
+        self.opponent_score: str = kwargs.get("opponent_score", 0)
+        self.opponent_fee: int = kwargs.get("opponent_fee", 0)
+        self.start_date: datetime.datetime = kwargs.get("start_date")
+        self.score_limit: int = kwargs.get("score_limit", 0)
+        self.duration: datetime.timedelta = kwargs.get("duration")
+        self.end_date: datetime.datetime = kwargs.get("end_date")
+        self.winner: Optional[str] = kwargs.get("winner")
+        self.surrender: bool = kwargs.get("surrender", False)
 
     def __repr__(self):
-        return "<{0.__class__.__name__} guild_name={0.guild_name!r} opponent_name={0.opponent_name!r}>".format(self)
+        return f"<{self.__class__.__name__} guild_name={self.guild_name!r} opponent_name={self.opponent_name!r}>"
 
     @property
     def guild_url(self):
@@ -689,9 +806,8 @@ class GuildWarEntry(abc.Serializable):
         return Guild.get_url(self.opponent_name) if self.opponent_name else None
 
 
-class ListedGuild(abc.BaseGuild, abc.Serializable):
-    """
-    Represents a Tibia guild in the guild list of a world.
+class GuildEntry(abc.BaseGuild, abc.Serializable):
+    """Represents a Tibia guild in the guild list of a world.
 
     Attributes
     ------------
@@ -706,6 +822,7 @@ class ListedGuild(abc.BaseGuild, abc.Serializable):
     active: :class:`bool`
         Whether the guild is active or still in formation.
     """
+
     __slots__ = (
         "name",
         "logo_url",
@@ -720,54 +837,3 @@ class ListedGuild(abc.BaseGuild, abc.Serializable):
         self.logo_url: str = logo_url
         self.description: Optional[str] = description
         self.active: bool = active
-
-    # region Public methods
-    @classmethod
-    def list_from_content(cls, content):
-        """
-        Gets a list of guilds from the HTML content of the world guilds' page.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the page.
-
-        Returns
-        -------
-        :class:`list` of :class:`ListedGuild`
-            List of guilds in the current world. :obj:`None` if it's the list of a world that doesn't exist.
-
-        Raises
-        ------
-        InvalidContent
-            If content is not the HTML of a guild's page.
-        """
-        parsed_content = parse_tibiacom_content(content)
-        selected_world = parsed_content.find('option', selected=True)
-        try:
-            if "choose world" in selected_world.text:
-                # It belongs to a world that doesn't exist
-                return None
-            world = selected_world.text
-        except AttributeError:
-            raise InvalidContent("Content does not belong to world guild list.")
-        # First TableContainer contains world selector.
-        _, *containers = parsed_content.find_all('div', class_="TableContainer")
-        guilds = []
-        for container in containers:
-            header = container.find('div', class_="Text")
-            active = "Active" in header.text
-            header, *rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
-            for row in rows:
-                columns = row.find_all('td')
-                logo_img = columns[0].find('img')["src"]
-                description_lines = columns[1].get_text("\n").split("\n", 1)
-                name = description_lines[0]
-                description = None
-                if len(description_lines) > 1:
-                    description = description_lines[1].replace("\r", "").replace("\n", " ")
-                guild = cls(name, world, logo_img, description, active)
-                guilds.append(guild)
-        return guilds
-
-    # endregion

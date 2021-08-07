@@ -1,5 +1,6 @@
 import datetime
 import functools
+import itertools
 import re
 import urllib.parse
 import warnings
@@ -12,7 +13,7 @@ TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)\s?k*$')
 
 
 def convert_line_breaks(element):
-    """Converts the <br> tags in a HTML elements to actual line breaks.
+    """Convert the <br> tags in a HTML elements to actual line breaks.
 
     Parameters
     ----------
@@ -23,8 +24,8 @@ def convert_line_breaks(element):
         br.replace_with("\n")
 
 
-def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
-    """Builds a URL to Tibia.com with the given parameters.
+def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
+    """Build a URL to Tibia.com with the given parameters.
 
     Parameters
     ----------
@@ -39,6 +40,8 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
         This allows passing multiple parameters with the same name.
     kwargs:
         Additional parameters to pass to the url as query parameters (e.g name, world, houseid, etc)
+    test: :class:`bool`
+        Whether to use the test website or not.
 
     Returns
     -------
@@ -56,7 +59,8 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
     >>> get_tibia_url("community", "worlds", **params)
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
-    url = "https://www.tibia.com/%s/?" % section
+    base_url = "www.tibia.com" if not test else "www.test.tibia.com"
+    url = f"https://{base_url}/{section}/?"
     params = OrderedDict(subtopic=subtopic) if subtopic else OrderedDict()
     if kwargs:
         for key, value in kwargs.items():
@@ -70,12 +74,59 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, **kwargs):
         url += "&"
         url += urllib.parse.urlencode(args)
     if anchor:
-        url += "#%s" % anchor
+        url += f"#{anchor}"
     return url
 
 
+def parse_form_data(form: bs4.Tag, include_options=True):
+    """Parse the currently selected values in a form.
+
+    This should correspond to all the data the form would send if submitted.
+
+    Parameters
+    ----------
+    form: :class:`bs4.Tag`
+        A form tag.
+    include_options: :class:`bool`
+        Whether to also include listings of all the possible options.
+        These will be nested inside the __options__ parameter of the resulting dictionary.
+
+    Returns
+    -------
+    :class:`dict`
+        A dictionary containing all the data.
+    """
+    data = {}
+    if "action" in form.attrs:
+        data["__action__"] = form.attrs["action"]
+    if "method" in form.attrs:
+        data["__method__"] = form.attrs["method"]
+    text_inputs = form.find_all("input", {"type": "text"})
+    data.update({field.attrs.get("name"): field.attrs.get("value") for field in text_inputs})
+    selects = form.find_all("select")
+    if include_options:
+        data["__options__"] = {}
+    for select in selects:
+        name = select.attrs.get("name")
+        selected_option = select.find("option", {"selected": True})
+        if include_options:
+            options = select.find_all("option")
+            data["__options__"][name] = {opt.text: opt.attrs.get("value") for opt in options}
+        data[name] = selected_option.attrs.get("value") if selected_option else None
+    checkboxes = form.find_all("input", {"type": "checkbox", "checked": True})
+    data.update({field.attrs.get("name"): field.attrs.get("value") for field in checkboxes})
+    # Parse Radios
+    all_radios = form.find_all("input", {"type": "radio"})
+    for name, radios in itertools.groupby(all_radios, key=lambda t: t.attrs["name"]):
+        selected_radio = next((r for r in radios if r.attrs.get("checked") is not None), None)
+        if include_options:
+            data["__options__"][name] = {str(r.next_sibling).strip(): r.attrs["value"] for r in radios}
+        data[name] = selected_radio.attrs["value"] if selected_radio else None
+    return data
+
+
 def parse_integer(number: str, default: Optional[int] = 0):
-    """Parses a string representing an integer, ignoring commas or periods.
+    """Parse a string representing an integer, ignoring commas or periods.
 
     Parameters
     ----------
@@ -100,7 +151,7 @@ def parse_integer(number: str, default: Optional[int] = 0):
 
 
 def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
-    """Parses date and time from the format used in Tibia.com
+    """Parse date and time from the format used in Tibia.com.
 
     Accepted format:
 
@@ -139,12 +190,12 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
         # Add/subtract hours to get the real time
         t = t - datetime.timedelta(hours=utc_offset)
         return t.replace(tzinfo=datetime.timezone.utc)
-    except (ValueError, AttributeError) as e:
+    except (ValueError, AttributeError):
         return None
 
 
 def parse_tibia_date(date_str) -> Optional[datetime.date]:
-    """Parses a date from the format used in Tibia.com
+    """Parse a date from the format used in Tibia.com.
 
     Accepted format:
 
@@ -158,7 +209,8 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
     Returns
     -----------
     :class:`datetime.date`, optional
-        The represented date, in UTC (timezone aware)."""
+        The represented date, in UTC (timezone aware).
+    """
     try:
         t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")
         return t.date()
@@ -167,7 +219,7 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
 
 
 def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
-    """Parses a date in the format used in the Tibia.com forums.
+    """Parse a date in the format used in the Tibia.com forums.
 
     Accepted format:
 
@@ -196,7 +248,7 @@ def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
 
 
 def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
-    """Parses a date in the fuller format used in Tibia.com
+    """Parse a date in the fuller format used in Tibia.com.
 
     Accepted format:
 
@@ -220,7 +272,7 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
 
 
 def parse_number_words(text_num):
-    """Parses the word representation of a number to a integer.
+    """Parse the word representation of a number to a integer.
 
     Parameters
     ----------
@@ -267,7 +319,7 @@ def parse_number_words(text_num):
 
 
 def try_datetime(obj) -> Optional[datetime.datetime]:
-    """Attempts to convert an object into a datetime.
+    """Attempt to convert an object into a datetime.
 
     If the date format is known, it's recommended to use the corresponding function
     This is meant to be used in constructors.
@@ -286,12 +338,11 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
         return None
     if isinstance(obj, datetime.datetime):
         return obj
-    res = parse_tibia_datetime(obj)
-    return res
+    return parse_tibia_datetime(obj)
 
 
 def try_date(obj) -> Optional[datetime.date]:
-    """Attempts to convert an object into a date.
+    """Attempt to convert an object into a date.
 
     If the date format is known, it's recommended to use the corresponding function
     This is meant to be used in constructors.
@@ -315,12 +366,11 @@ def try_date(obj) -> Optional[datetime.date]:
     res = parse_tibia_date(obj)
     if res is not None:
         return res
-    res = parse_tibia_full_date(obj)
-    return res
+    return parse_tibia_full_date(obj)
 
 
 def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", builder="lxml"):
-    """Parses HTML content from Tibia.com into a BeautifulSoup object.
+    """Parse HTML content from Tibia.com into a BeautifulSoup object.
 
     Parameters
     ----------
@@ -347,7 +397,7 @@ D = TypeVar('D')
 
 
 def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
-    """Attempts to convert a value into their enum value
+    """Attempt to convert a value into their enum value.
 
     Parameters
     ----------
@@ -377,12 +427,12 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
 
 
 def parse_tibia_money(argument):
-    """Parses a string that may contain 'k' as thousand suffix.
+    """Parse a string that may contain 'k' as thousand suffix.
 
     Parameters
     ----------
     argument: :class:`str`
-        A numeric string.
+        A numeric string using k as a prefix for thousands.
 
     Returns
     -------
@@ -403,8 +453,7 @@ def parse_tibia_money(argument):
 
 
 def split_list(items, separator=",", last_separator=" and "):
-    """
-    Splits a string listing elements into an actual list.
+    """Split a string listing elements into an actual list.
 
     Parameters
     ----------
@@ -431,7 +480,7 @@ def split_list(items, separator=",", last_separator=" and "):
     return [e.strip() for e in items]
 
 
-def _recursive_strip(value):
+def _recursive_strip(value):  # pragma: no cover
     if isinstance(value, dict):
         return {k: _recursive_strip(v) for k, v in value.items()}
     if isinstance(value, list):
@@ -441,7 +490,7 @@ def _recursive_strip(value):
     return value
 
 
-def deprecated(instead=None):
+def deprecated(instead=None):  # pragma: no cover
     def actual_decorator(func):
         @functools.wraps(func)
         def decorated(*args, **kwargs):
@@ -458,8 +507,8 @@ def deprecated(instead=None):
     return actual_decorator
 
 
-def parse_popup(popup_content):
-    """Parses the information popups used through Tibia.com.
+def parse_popup(popup_content) -> Tuple[str, bs4.BeautifulSoup]:
+    """Parse the information popups used through Tibia.com.
 
     Parameters
     ----------
@@ -475,7 +524,7 @@ def parse_popup(popup_content):
     """
     parts = popup_content.split(",", 2)
     title = parts[1].replace(r"'", "").strip()
-    html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").strip()
+    html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").replace(", );", "").strip()
     parsed_html = bs4.BeautifulSoup(html, 'lxml')
     return title, parsed_html
 
@@ -485,7 +534,7 @@ page_pattern = re.compile(r'page=(\d+)')
 
 
 def parse_pagination(pagination_block) -> Tuple[int, int, int]:
-    """Parses a pagination section in Tibia.com and extracts its information.
+    """Parse a pagination section in Tibia.com and extracts its information.
 
     Parameters
     ----------
@@ -516,7 +565,7 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
                 total_pages = int(m.group(1))
         else:
             last_page_link = page_links[-2].find("a")
-            total_pages = int(last_page_link.text)+1
+            total_pages = int(last_page_link.text) + 1
     else:
         last_page_link = page_links[-1]
         total_pages = int(last_page_link.text)

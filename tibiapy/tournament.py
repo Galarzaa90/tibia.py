@@ -1,9 +1,7 @@
 import datetime
 import math
 import re
-from typing import List
-
-import bs4
+from typing import List, TYPE_CHECKING
 
 from tibiapy import abc
 from tibiapy.enums import PvpType, TournamentPhase, Vocation
@@ -11,9 +9,12 @@ from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_integer, parse_popup, parse_tibia_datetime, parse_tibia_full_date, \
     parse_tibiacom_content, split_list, try_enum
 
+if TYPE_CHECKING:
+    import bs4
+
 __all__ = (
-    "LeaderboardEntry",
-    "ListedTournament",
+    "TournamentLeaderboardEntry",
+    "TournamentEntry",
     "RewardEntry",
     "RuleSet",
     "ScoreSet",
@@ -32,7 +33,7 @@ CURRENT_TOURNAMENT_PATTERN = re.compile(r'(?:.*- (\w+))')
 TOURNAMENT_LEADERBOARDS_URL = "https://www.tibia.com/community/?subtopic=tournamentleaderboard"
 
 
-class LeaderboardEntry(abc.BaseCharacter, abc.Serializable):
+class TournamentLeaderboardEntry(abc.BaseCharacter, abc.Serializable):
     """Represents a single tournament leaderboard's entry.
 
     .. versionadded:: 2.5.0
@@ -60,18 +61,18 @@ class LeaderboardEntry(abc.BaseCharacter, abc.Serializable):
     )
 
     def __init__(self, **kwargs):
-        self.name = kwargs.get("name")
-        self.rank = kwargs.get("rank")
-        self.change = kwargs.get("change")
-        self.vocation = kwargs.get("vocation")
-        self.score = kwargs.get("score")
+        self.name: str = kwargs.get("name")
+        self.rank: int = kwargs.get("rank")
+        self.change: int = kwargs.get("change")
+        self.vocation: Vocation = kwargs.get("vocation")
+        self.score: int = kwargs.get("score")
 
     def __repr__(self):
         return "<{0.__class__.__name__} rank={0.rank} name={0.name!r} vocation={0.vocation!r} " \
                "points={0.score}>".format(self)
 
 
-class ListedTournament(abc.BaseTournament, abc.Serializable):
+class TournamentEntry(abc.BaseTournament, abc.Serializable):
     """Represents an tournament in the archived tournaments list.
 
     :py:attr:`start_date` and :py:attr:`end_date` might be :obj:`None` when a tournament that is currently running
@@ -101,10 +102,10 @@ class ListedTournament(abc.BaseTournament, abc.Serializable):
     _serializable_properties = ("duration",)
 
     def __init__(self, title, start_date, end_date, **kwargs):
-        self.title = title
-        self.start_date = start_date
-        self.end_date = end_date
-        self.cycle = kwargs.get("cycle", 0)
+        self.title: str = title
+        self.start_date: datetime.date = start_date
+        self.end_date: datetime.date = end_date
+        self.cycle: int = kwargs.get("cycle", 0)
 
     def __repr__(self):
         return "<{0.__class__.__name__} title={0.title!r} cycle={0.cycle} start_date={0.start_date!r} " \
@@ -166,7 +167,7 @@ class RewardEntry(abc.Serializable):
         attributes = ""
         for attr in self.__slots__:
             v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
+            attributes += f" {attr}={v!r}"
         return f"<{self.__class__.__name__}{attributes}>"
 
 
@@ -234,8 +235,8 @@ class RuleSet(abc.Serializable):
         attributes = ""
         for attr in self.__slots__:
             v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+            attributes += f" {attr}={v!r}"
+        return f"<{self.__class__.__name__}{attributes}>"
 
     @staticmethod
     def _try_parse_interval(interval):
@@ -292,8 +293,8 @@ class ScoreSet(abc.Serializable):
         attributes = ""
         for attr in self.__slots__:
             v = getattr(self, attr)
-            attributes += " %s=%r" % (attr, v)
-        return "<{0.__class__.__name__}{1}>".format(self, attributes)
+            attributes += f" {attr}={v!r}"
+        return f"<{self.__class__.__name__}{attributes}>"
 
 
 class Tournament(abc.BaseTournament, abc.Serializable):
@@ -323,7 +324,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         The ways to gain points in the tournament.
     reward_set: :obj:`list` of :class:`RewardEntry`
         The list of rewards awarded for the specified ranges.
-    archived_tournaments: :obj:`list` of :class:`ListedTournament`
+    archived_tournaments: :obj:`list` of :class:`TournamentEntry`
         The list of other archived tournaments. This is only present when viewing an archived tournament.
     """
 
@@ -353,11 +354,11 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         self.rule_set: RuleSet = kwargs.get("rule_set")
         self.score_set: ScoreSet = kwargs.get("score_set")
         self.reward_set: List[RewardEntry] = kwargs.get("reward_set", [])
-        self.archived_tournaments: List[ListedTournament] = kwargs.get("archived_tournaments", [])
+        self.archived_tournaments: List[TournamentEntry] = kwargs.get("archived_tournaments", [])
 
     def __repr__(self):
-        return "<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} " \
-               "end_date={0.start_date!r}>".format(self)
+        return ("<{0.__class__.__name__} title={0.title!r} phase={0.phase!r} start_date={0.start_date!r} "
+                "end_date={0.start_date!r}>").format(self)
 
     @property
     def rewards_range(self):
@@ -370,7 +371,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         return self.end_date - self.start_date
 
     def rewards_for_rank(self, rank):
-        """Gets the rewards for a given rank, if any.
+        """Get the rewards for a given rank, if any.
 
         Parameters
         ----------
@@ -389,7 +390,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the tournament's page.
+        """Create an instance of the class from the html content of the tournament's page.
 
         Parameters
         ----------
@@ -433,7 +434,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
             raise InvalidContent("content does not belong to the Tibia.com's tournament section", e)
 
     def _parse_tournament_info(self, table):
-        """Parses the tournament info table.
+        """Parse the tournament info table.
 
         Parameters
         ----------
@@ -461,7 +462,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
                 pass
 
     def _parse_tournament_rules(self, table):
-        """Parses the tournament rules table.
+        """Parse the tournament rules table.
 
         Parameters
         ----------
@@ -475,7 +476,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
             "xp_multiplier",
             "skill_multiplier",
             "spawn_rate_multiplier",
-            "loot_probability"
+            "loot_probability",
         )
         int_fields = ("rent_percentage", "house_auction_durations")
         rules = {}
@@ -495,7 +496,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         self.rule_set = RuleSet(**rules)
 
     def _parse_tournament_scores(self, table):
-        """Parses the tournament scores table.
+        """Parse the tournament scores table.
 
         Parameters
         ----------
@@ -521,7 +522,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         self.score_set = ScoreSet(**rules)
 
     def _parse_tournament_rewards(self, table):
-        """Parses the reward section of the tournament information section.
+        """Parse the reward section of the tournament information section.
 
         Parameters
         ----------
@@ -545,7 +546,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
 
     @classmethod
     def _parse_rewards_column(cls, column, entry):
-        """Parses a column from the tournament's reward section.
+        """Parse a column from the tournament's reward section.
 
         Parameters
         ----------
@@ -578,7 +579,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
 
     @staticmethod
     def _parse_rank_range(rank_text):
-        """Parses the rank range text from the reward set table.
+        """Parse the rank range text from the reward set table.
 
         Parameters
         ----------
@@ -600,7 +601,7 @@ class Tournament(abc.BaseTournament, abc.Serializable):
         return first, last
 
     def _parse_archive_list(self, archive_table):
-        """Parses the archive list table.
+        """Parse the archive list table.
 
         This table is only visible when viewing a tournament from the archive.
 
@@ -621,8 +622,8 @@ class Tournament(abc.BaseTournament, abc.Serializable):
             value = int(option["value"])
             if title == self.title:
                 self.cycle = value
-            self.archived_tournaments.append(ListedTournament(title=title, start_date=start_date, end_date=end_date,
-                                                              cycle=value))
+            self.archived_tournaments.append(TournamentEntry(title=title, start_date=start_date, end_date=end_date,
+                                                             cycle=value))
 
 
 class TournamentLeaderboard(abc.Serializable):
@@ -634,9 +635,9 @@ class TournamentLeaderboard(abc.Serializable):
     ----------
     world: :class:`str`
         The world this leaderboard belongs to.
-    tournament: :class:`ListedTournament`
+    tournament: :class:`TournamentEntry`
         The tournament this leaderboard belongs to.
-    entries: :obj:`list` of :class:`LeaderboardEntry`
+    entries: :obj:`list` of :class:`TournamentLeaderboardEntry`
         The leaderboard entries.
     results_count: :class:`int`
         The total number of leaderboard entries. These might be in a different page.
@@ -653,13 +654,13 @@ class TournamentLeaderboard(abc.Serializable):
 
     _serializable_properties = (
         "page",
-        "total_pages"
+        "total_pages",
     )
 
     def __init__(self, **kwargs):
         self.world: str = kwargs.get("world")
-        self.tournament: ListedTournament = kwargs.get("tournament")
-        self.entries: List[LeaderboardEntry] = kwargs.get("entries", [])
+        self.tournament: TournamentEntry = kwargs.get("tournament")
+        self.entries: List[TournamentLeaderboardEntry] = kwargs.get("entries", [])
         self.results_count = kwargs.get("results_count", 0)
 
     def __repr__(self):
@@ -678,7 +679,7 @@ class TournamentLeaderboard(abc.Serializable):
 
     @property
     def page(self):
-        """:class:`int`: The page number the shown results correspond to on Tibia.com"""
+        """:class:`int`: The page number the shown results correspond to on Tibia.com."""
         return int(math.floor(self.from_rank / self.ENTRIES_PER_PAGE)) + 1 if self.from_rank else 0
 
     @property
@@ -688,12 +689,12 @@ class TournamentLeaderboard(abc.Serializable):
 
     @property
     def url(self):
-        """:class:`str`: Gets the URL to the current leaderboard and page."""
+        """:class:`str`: Get the URL to the current leaderboard and page."""
         return self.get_url(self.world, self.tournament.cycle, self.page)
 
     @classmethod
     def get_url(cls, world, tournament_cycle, page=1):
-        """Gets the URL to the leaderboards of a specific world, tournament and page.
+        """Get the URL to the leaderboards of a specific world, tournament and page.
 
         Parameters
         ----------
@@ -713,7 +714,7 @@ class TournamentLeaderboard(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the html content of the tournament's leaderboards page.
+        """Create an instance of the class from the html content of the tournament's leaderboards page.
 
         Parameters
         ----------
@@ -747,7 +748,7 @@ class TournamentLeaderboard(abc.Serializable):
             raise InvalidContent("content does not belong to the Tibia.com's tournament leaderboards section", e)
 
     def _parse_leaderboard_selectors(self, selector_table):
-        """Parses the option selectors from the leaderboards to get their information.
+        """Parse the option selectors from the leaderboards to get their information.
 
         Parameters
         ----------
@@ -776,12 +777,12 @@ class TournamentLeaderboard(abc.Serializable):
             tournament_title = m.group(1).strip()
             start_date = parse_tibia_full_date(m.group(2))
             end_date = parse_tibia_full_date(m.group(3))
-        self.tournament = ListedTournament(title=tournament_title, start_date=start_date, end_date=end_date,
-                                           cycle=cycle)
+        self.tournament = TournamentEntry(title=tournament_title, start_date=start_date, end_date=end_date,
+                                          cycle=cycle)
         return True
 
     def _parse_leaderboard_entries(self, ranking_table):
-        """Parses the leaderboards' entries.
+        """Parse the leaderboards' entries.
 
         Parameters
         ----------
@@ -802,7 +803,7 @@ class TournamentLeaderboard(abc.Serializable):
             change = int(m.group(2))
             voc = try_enum(Vocation, vocation)
             score = parse_integer(score, 0)
-            entries.append(LeaderboardEntry(rank=rank, change=change, name=character, vocation=voc, score=score))
+            entries.append(TournamentLeaderboardEntry(rank=rank, change=change, name=character, vocation=voc, score=score))
         # Results footer
         small = ranking_table.find("small")
         if small:

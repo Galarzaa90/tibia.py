@@ -5,7 +5,7 @@ import unittest
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent, TournamentWorldType, World, WorldOverview
 from tibiapy.enums import PvpType, TransferType, WorldLocation
-from tibiapy.world import ListedWorld
+from tibiapy.world import WorldEntry
 
 FILE_WORLD_FULL = "world/tibiacom_online.txt"
 FILE_WORLD_FULL_OFFLINE = "world/tibiacom_offline.txt"
@@ -90,7 +90,7 @@ class TestWorld(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(world, World)
         self.assertIsInstance(world.tournament_world_type, TournamentWorldType)
-        self.assertEqual(world.tournament_world_type, TournamentWorldType.REGUlAR)
+        self.assertEqual(world.tournament_world_type, TournamentWorldType.REGULAR)
         self.assertEqual(world.record_count, 21)
         self.assertTrue(world.premium_only)
         self.assertFalse(world.world_quest_titles)
@@ -104,7 +104,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         world_overview = WorldOverview.from_content(content)
 
         self.assertIsInstance(world_overview, WorldOverview)
-        self.assertEqual(WorldOverview.get_url(), ListedWorld.get_list_url())
+        self.assertEqual(WorldOverview.get_url(), WorldEntry.get_list_url())
         self.assertGreater(len(world_overview.worlds), 0)
         self.assertGreater(world_overview.total_online, 0)
         self.assertIsNotNone(world_overview.record_date)
@@ -112,7 +112,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(82, len(world_overview.regular_worlds))
         self.assertEqual(6, len(world_overview.tournament_worlds))
 
-        worlds = ListedWorld.list_from_content(content)
+        worlds = WorldEntry.list_from_content(content)
         self.assertEqual(len(world_overview.worlds), len(worlds))
 
     # TODO: Enable when we have a sample again
@@ -124,7 +124,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(world_overview.record_count, 64028)
         self.assertIsInstance(world_overview.record_date, datetime.datetime)
         self.assertGreater(len(world_overview.worlds), 0)
-        self.assertIsInstance(world_overview.worlds[0], ListedWorld)
+        self.assertIsInstance(world_overview.worlds[0], WorldEntry)
         self.assertIsInstance(world_overview.worlds[0].pvp_type, PvpType)
         self.assertIsInstance(world_overview.worlds[0].transfer_type, TransferType)
         self.assertIsInstance(world_overview.worlds[0].location, WorldLocation)
@@ -134,5 +134,5 @@ class TestWorld(TestCommons, unittest.TestCase):
         """Testing parsing an unrealted tibia section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            ListedWorld.list_from_content(content)
+            WorldEntry.list_from_content(content)
     # endregion

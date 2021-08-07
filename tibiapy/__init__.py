@@ -1,4 +1,4 @@
-__version__ = '4.1.7'
+__version__ = '5.0.0'
 __author__ = 'Allan Galarza'
 
 import logging
@@ -14,10 +14,12 @@ from tibiapy.forum import *
 from tibiapy.guild import *
 from tibiapy.highscores import *
 from tibiapy.kill_statistics import *
+from tibiapy.leaderboard import *
 from tibiapy.news import *
 from tibiapy.tournament import *
 from tibiapy.world import *
 from tibiapy.bazaar import *
+from tibiapy.spell import *
 from tibiapy.client import *
 
 from logging import NullHandler

@@ -1,0 +1,13 @@
+aioresponses
+asynctest
+coverage
+flake8
+flake8-aaa
+flake8-assertive
+flake8-broken-line
+flake8-commas
+flake8-comprehensions
+flake8-docstrings
+flake8-return
+flake8-rst-docstrings
+flake8-use-fstring

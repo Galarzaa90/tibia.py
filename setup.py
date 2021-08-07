@@ -4,8 +4,8 @@ import sys
 
 from setuptools import find_packages, setup
 
-if sys.version_info < (3, 6):
-    sys.exit('Sorry, Python < 3.6 is not supported')
+if sys.version_info < (3, 7):
+    sys.exit('Sorry, Python < 3.7 is not supported')
 
 
 def get_version(package):
@@ -46,7 +46,7 @@ extras_require = {
         'asynctest',
         'aioresponses',
         'coverage',
-    ]
+    ],
 }
 
 setup(
@@ -80,7 +80,6 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
@@ -91,5 +90,5 @@ setup(
         'Topic :: Text Processing :: Markup :: HTML',
         'Topic :: Utilities',
         'Typing :: Typed',
-    ]
+    ],
 )

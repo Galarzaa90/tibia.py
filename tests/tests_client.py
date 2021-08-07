@@ -10,18 +10,24 @@ import tibiapy
 from tests.tests_bazaar import FILE_BAZAAR_CURRENT, FILE_BAZAAR_HISTORY, FILE_AUCTION_FINISHED
 from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
 from tests.tests_events import FILE_EVENT_CALENDAR
-from tests.tests_forums import FILE_CM_POST_ARCHIVE_PAGES
+from tests.tests_forums import FILE_BOARD_THREAD_LIST, FILE_CM_POST_ARCHIVE_PAGES, FILE_WORLD_BOARDS
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
 from tests.tests_highscores import FILE_HIGHSCORES_FULL
 from tests.tests_house import FILE_HOUSE_FULL, FILE_HOUSE_LIST
 from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
+from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_LIST, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
-from tibiapy import CharacterBazaar, Client, Character, CMPostArchive, Guild, Highscores, VocationFilter, Category, \
-    House, ListedHouse, \
-    ListedGuild, \
-    KillStatistics, ListedNews, News, World, WorldOverview, Forbidden, NetworkError, Creature, AuctionDetails, \
+from tibiapy import BoardEntry, CharacterBazaar, Client, Character, CMPostArchive, ForumBoard, Guild, GuildsSection, \
+    Highscores, \
+    HouseType, \
+    HousesSection, \
+    Leaderboard, NewsArchive, VocationFilter, \
+    Category, \
+    House, HouseEntry, \
+    GuildEntry, \
+    KillStatistics, NewsEntry, News, World, WorldOverview, Forbidden, NetworkError, CreatureEntry, Auction, \
     EventSchedule
 
 
@@ -53,11 +59,11 @@ class TestClient(asynctest.TestCase, TestCommons):
         with self.assertRaises(NetworkError):
             await self.client.fetch_world_list()
 
-        mock.get(ListedNews.get_list_url(), exception=aiohttp.ClientError())
+        mock.get(NewsEntry.get_list_url(), exception=aiohttp.ClientError())
         with self.assertRaises(NetworkError):
             await self.client.fetch_world_list()
 
-        mock.post(ListedNews.get_list_url(), exception=aiohttp.ClientOSError())
+        mock.post(NewsEntry.get_list_url(), exception=aiohttp.ClientOSError())
         with self.assertRaises(NetworkError):
             await self.client.fetch_recent_news(30)
 
@@ -96,10 +102,11 @@ class TestClient(asynctest.TestCase, TestCommons):
         """Testing fetching a world's guild list"""
         world = "Zuna"
         content = self.load_resource(FILE_GUILD_LIST)
-        mock.get(ListedGuild.get_world_list_url(world), status=200, body=content)
-        guilds = await self.client.fetch_world_guilds(world)
+        mock.get(GuildsSection.get_url(world), status=200, body=content)
+        response = await self.client.fetch_world_guilds(world)
+        guilds = response.data.entries
 
-        self.assertIsInstance(guilds.data[0], ListedGuild)
+        self.assertIsInstance(guilds[0], GuildEntry)
 
     @aioresponses()
     async def test_client_fetch_highscores_page(self, mock):
@@ -130,11 +137,11 @@ class TestClient(asynctest.TestCase, TestCommons):
         world = "Antica"
         city = "Edron"
         content = self.load_resource(FILE_HOUSE_LIST)
-        mock.get(ListedHouse.get_list_url(world, city), status=200, body=content)
+        mock.get(HousesSection.get_url(world=world, town=city, house_type=HouseType.HOUSE), status=200, body=content)
         houses = await self.client.fetch_world_houses(world, city)
 
-        self.assertIsInstance(houses.data, list)
-        self.assertIsInstance(houses.data[0], ListedHouse)
+        self.assertIsInstance(houses.data, HousesSection)
+        self.assertIsInstance(houses.data.entries[0], HouseEntry)
 
     @aioresponses()
     async def test_client_fetch_kill_statistics(self, mock):
@@ -150,11 +157,11 @@ class TestClient(asynctest.TestCase, TestCommons):
     async def test_client_fetch_recent_news(self, mock):
         """Testing fetching recent nows"""
         content = self.load_resource(FILE_NEWS_LIST)
-        mock.post(ListedNews.get_list_url(), status=200, body=content)
+        mock.post(NewsArchive.get_url(), status=200, body=content)
         recent_news = await self.client.fetch_recent_news(30)
 
-        self.assertIsInstance(recent_news.data, list)
-        self.assertIsInstance(recent_news.data[0], ListedNews)
+        self.assertIsInstance(recent_news.data, NewsArchive)
+        self.assertIsInstance(recent_news.data.entries[0], NewsEntry)
 
     async def test_client_fetch_news_archive_invalid_dates(self):
         """Testing fetching news archive with invalid dates"""
@@ -199,7 +206,7 @@ class TestClient(asynctest.TestCase, TestCommons):
         mock.get(News.get_list_url(), status=200, body=content)
         creature = await self.client.fetch_boosted_creature()
 
-        self.assertIsInstance(creature.data, Creature)
+        self.assertIsInstance(creature.data, CreatureEntry)
 
     @aioresponses()
     async def test_client_fetch_cm_post_archive(self, mock):
@@ -256,9 +263,9 @@ class TestClient(asynctest.TestCase, TestCommons):
     async def test_client_fetch_auction(self, mock):
         """Testing fetching an auction"""
         content = self.load_resource(FILE_AUCTION_FINISHED)
-        mock.get(AuctionDetails.get_url(134), status=200, body=content)
+        mock.get(Auction.get_url(134), status=200, body=content)
         response = await self.client.fetch_auction(134)
-        self.assertIsInstance(response.data, AuctionDetails)
+        self.assertIsInstance(response.data, Auction)
 
     async def test_client_fetch_auction_invalid_id(self):
         """Testing fetching an auction with an invalid id"""
@@ -278,7 +285,55 @@ class TestClient(asynctest.TestCase, TestCommons):
         with self.assertRaises(ValueError):
             await self.client.fetch_event_schedule(3)
 
-    @unittest.mock.patch("tibiapy.bazaar.AuctionDetails._parse_page_items")
+    @aioresponses()
+    async def test_client_fetch_forum_community_boards(self, mock):
+        """Testing fetching the community boards"""
+        content = self.load_resource(FILE_WORLD_BOARDS)
+        mock.get(BoardEntry.get_community_boards_url(), status=200, body=content)
+        response = await self.client.fetch_forum_community_boards()
+        self.assertIsInstance(response.data[0], BoardEntry)
+
+    @aioresponses()
+    async def test_client_fetch_forum_trade_boards(self, mock):
+        """Testing fetching the trade boards"""
+        content = self.load_resource(FILE_WORLD_BOARDS)
+        mock.get(BoardEntry.get_trade_boards_url(), status=200, body=content)
+        response = await self.client.fetch_forum_trade_boards()
+        self.assertIsInstance(response.data[0], BoardEntry)
+
+    @aioresponses()
+    async def test_client_fetch_forum_support_boards(self, mock):
+        """Testing fetching the support boards"""
+        content = self.load_resource(FILE_WORLD_BOARDS)
+        mock.get(BoardEntry.get_support_boards_url(), status=200, body=content)
+        response = await self.client.fetch_forum_support_boards()
+        self.assertIsInstance(response.data[0], BoardEntry)
+
+    @aioresponses()
+    async def test_client_fetch_forum_world_boards(self, mock):
+        """Testing fetching the world boards"""
+        content = self.load_resource(FILE_WORLD_BOARDS)
+        mock.get(BoardEntry.get_world_boards_url(), status=200, body=content)
+        response = await self.client.fetch_forum_world_boards()
+        self.assertIsInstance(response.data[0], BoardEntry)
+
+    @aioresponses()
+    async def test_client_fetch_forum_board(self, mock):
+        """Testing fetching a forum board"""
+        content = self.load_resource(FILE_BOARD_THREAD_LIST)
+        mock.get(BoardEntry.get_url(1), status=200, body=content)
+        response = await self.client.fetch_forum_board(1)
+        self.assertIsInstance(response.data, ForumBoard)
+
+    @aioresponses()
+    async def test_client_fetch_leaderboards(self, mock):
+        """Testing fetching the leaderboards"""
+        content = self.load_resource(FILE_LEADERBOARD_CURRENT)
+        mock.get(Leaderboard.get_url("Antica"), status=200, body=content)
+        response = await self.client.fetch_leaderboard("Antica")
+        self.assertIsInstance(response.data, Leaderboard)
+
+    @unittest.mock.patch("tibiapy.bazaar.Auction._parse_page_items")
     @unittest.skipIf(sys.version_info < (3, 8, 0), "AsyncMock was implemented in 3.8")
     async def test_client__fetch_all_pages_success(self, parse_page_items):
         """Testing internal method to fetch all pages of an auction item collection."""

@@ -3,8 +3,8 @@ import json
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import House, InvalidContent, ListedHouse
-from tibiapy.enums import HouseStatus, HouseType
+from tibiapy import House, HousesSection, InvalidContent, HouseEntry
+from tibiapy.enums import HouseOrder, HouseStatus, HouseType
 
 FILE_HOUSE_FULL = "house/tibiacom_full.txt"
 FILE_HOUSE_STATUS_TRANSFER = "house/tibiacom_status_transfer.txt"
@@ -18,9 +18,6 @@ FILE_HOUSE_LIST_EMPTY = "house/tibiacom_list_empty.txt"
 
 
 class TestsHouse(TestCommons, unittest.TestCase):
-    def setUp(self):
-        self.guild = {}
-
     def test_house_from_content(self):
         """Testing parsing a house"""
         content = self.load_resource(FILE_HOUSE_FULL)
@@ -95,39 +92,52 @@ class TestsHouse(TestCommons, unittest.TestCase):
         with self.assertRaises(InvalidContent):
             House.from_content(content)
 
-    def test_listed_house_from_content(self):
+    def test_house_section_from_content(self):
         """Testing parsing the house list of a world and city"""
         content = self.load_resource(FILE_HOUSE_LIST)
-        houses = ListedHouse.list_from_content(content)
+        house_results = HousesSection.from_content(content)
 
+        self.assertIsInstance(house_results, HousesSection)
+        self.assertEqual("Carlin", house_results.town)
+        self.assertEqual("Alumbra", house_results.world)
+        self.assertEqual(HouseStatus.RENTED, house_results.status)
+        self.assertEqual(HouseType.HOUSE, house_results.house_type)
+        self.assertEqual(HouseOrder.RENT, house_results.order)
+
+        houses = house_results.entries
         self.assertIsInstance(houses, list)
         self.assertGreater(len(houses), 0)
-        self.assertIsInstance(houses[0], ListedHouse)
+        self.assertIsInstance(houses[0], HouseEntry)
         self.assertEqual(houses[0].town, "Carlin")
         self.assertEqual(houses[0].type, HouseType.HOUSE)
         self.assertEqual(houses[0].status, HouseStatus.RENTED)
         self.assertIsInstance(houses[0].id, int)
-        self.assertIsNotNone(ListedHouse.get_list_url(houses[0].world, houses[0].town))
 
         self.assertEqual(houses[25].status, HouseStatus.RENTED)
 
-    def test_listed_house_from_content_empty(self):
+    def test_house_section_from_content_empty(self):
         """Testing parsing an empty house list"""
         content = self.load_resource(FILE_HOUSE_LIST_EMPTY)
-        houses = ListedHouse.list_from_content(content)
+        house_results = HousesSection.from_content(content)
 
-        self.assertEqual(len(houses), 0)
+        self.assertIsInstance(house_results, HousesSection)
+        self.assertEqual("Edron", house_results.town)
+        self.assertEqual("Antica", house_results.world)
+        self.assertEqual(HouseStatus.AUCTIONED, house_results.status)
+        self.assertEqual(HouseType.GUILDHALL, house_results.house_type)
+        self.assertEqual(HouseOrder.RENT, house_results.order)
+        self.assertEqual(len(house_results.entries), 0)
 
-    def test_listed_house_from_content_not_found(self):
+    def test_house_section_from_content_not_found(self):
         """Testing parsing an empty house list"""
-        content = self.load_resource(FILE_HOUSE_NOT_FOUND)
-        houses = ListedHouse.list_from_content(content)
+        content = self.load_resource(FILE_HOUSE_LIST_NOT_FOUND)
+        results = HousesSection.from_content(content)
+        self.assertIsInstance(results, HousesSection)
+        self.assertEqual(0, len(results.entries))
 
-        self.assertIsNone(houses)
-
-    def test_listed_house_from_content_unrelated(self):
+    def test_house_section_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            ListedHouse.list_from_content(content)
+            HousesSection.from_content(content)
 

@@ -6,6 +6,55 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v5.0.0
+
+5.0.0 (Unreleased)
+==================
+- Added parsing for Tibia Drome leaderboards, new ``Leaderboard`` class.
+    - Auxiliary classes ``LeaderboardEntry`` and ``LeaderboardRotation`` were added as well.
+    - New ``Client`` method: ``fetch_leaderboards``.
+- Added parsing for Spells library, new ``SpellsSection class.
+    - Auxiliary  classes ``Spell`` and ``SpellEntry``.
+    - New ``Client`` methods: ``fetch_spell`` and ``fetch_spells``
+- Fix last page of highscores having ``0`` as page value.
+- Using the ``Client`` class, you can now fetch and parse content from the test version of www.tibia.com when available.
+    - Note that if the test website has changes, parsing might not be possible.
+    - Internal URL attributes might still point to the regular website.
+- New ``HousesSection`` class, including the house filtering attributes.
+- New ``NewsArchive`` class, including the news filtering attributes.
+- New ``GuildsSection`` class, to replace the lists of ``GuildEntry``
+- Many "ListedObject" classes were renamed to "ObjectEntry", for details check the breaking changes below.
+- Fixed bug with other characters not being parsed.
+- Added ``traded`` attribute to ``LastPost`` class.
+- Added ``thread_starter_traded`` attribute to ``ThreadEntry``
+
+**Breaking Changes**:
+
+- Python 3.7 or higher is now required.
+- House classes no longer have ``get_list_url`` and ``list_from_content`` methods.
+- ``Client.fetch_world_houses`` now returns a ``HousesSection`` instance in its data attribute, instead of a list of ``ListedHouses``.
+- ``ListedHouse.highest_bid`` attribute now may be ``None`` if the house's auction has not yet started.
+- ``ListedHouse`` class renamed to ``HouseEntry``.
+- Removed deprecated property ``AuctionFilters.item``.
+- ``Client.fetch_news_archive``, ``Client.fetch_recent_news`` now returns an instance of ``NewsArchive`` in the ``data`` attribute.
+- ``ListedNews`` class renamed to ``NewsEntry``.
+- ``News`` and ``NewsEntry`` no longer have a ``get_list_url`` method.
+- ``ListedBoard`` class renamed to ``BoardEntry``.
+- ``ListedThread`` class renamed to ``ThreadEntry``.
+- ``ListedAnnouncement`` class renamed to ``AnnouncementEntry``.
+- ``ListedWorld`` class renamed to ``WorldEntry``.
+- ``ListedAuction`` class renamed to ``AuctionEntry``.
+- ``AuctionDetails`` class renamed to ``Auction``.
+- ``ListedGuild`` class renamed to ``GuildEntry``.
+- ``ListedTournament`` class renamed to ``TournamentEntry``.
+- ``Creature`` class renamed to ``CreatureEntry``.
+- ``CreatureDetail`` class renamed to ``Creature``.
+- ``Guild`` and ``GuildEntry`` class no longer have a ``get_list_url`` method.
+- Renamed ``begin_date`` parameter to ``start_date`` in ``fetch_news_archive``.
+- Renamed ``race`` attribute of ``CreatureEntry`` and ``Creature`` to ``identifier``, method parameters renamed as well.
+- ``CreaturesSection.from_boosted_creature_header`` renamed to ``CreaturesSection.boosted_creature_from_header``.
+
+
 .. v4.1.7
 
 4.1.7 (2021-06-30)
@@ -17,7 +66,7 @@ Changelog
 4.1.6 (2021-06-28)
 ==================
 - Fixed worlds not being parsed correctly again due to tournament worlds order changing. After this fix,
-the order should not matter anymore.
+  the order should not matter anymore.
 
 .. v4.1.5
 

@@ -1,8 +1,8 @@
-from typing import Dict
+from typing import Dict, List
 
 from tibiapy import abc
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_tibiacom_content
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibiacom_content
 
 __all__ = (
     "KillStatistics",
@@ -21,23 +21,28 @@ class KillStatistics(abc.Serializable):
         A dictionary of kills entries of every race, where the key is the name of the race.
     total: :class:`RaceEntry`
         The kill statistics totals.
+    available_worlds: :class:`list` of :class:`str`
+        The list of worlds available for selection.
     """
+
     __slots__ = (
         "world",
-        "entries",
         "total",
+        "entries",
+        "available_worlds",
     )
 
-    def __init__(self, world, entries=None, total=None):
+    def __init__(self, world, entries=None, total=None, available_worlds=None):
         self.world: str = world
-        self.entries: Dict[str, RaceEntry] = entries or dict()
+        self.entries: Dict[str, RaceEntry] = entries or {}
         self.total: RaceEntry = total or RaceEntry()
+        self.available_worlds: List[str] = available_worlds or []
 
     @property
     def url(self):
         """:class:`str`: The URL to the kill statistics page on Tibia.com containing the results."""
         return self.get_url(self.world)
-    
+
     @property
     def players(self):
         """:class:`RaceEntry`: The kill statistics for players."""
@@ -45,7 +50,7 @@ class KillStatistics(abc.Serializable):
 
     @classmethod
     def get_url(cls, world):
-        """Gets the Tibia.com URL of the kill statistics of a world.
+        """Get the Tibia.com URL of the kill statistics of a world.
 
         Parameters
         ----------
@@ -60,7 +65,7 @@ class KillStatistics(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Creates an instance of the class from the HTML content of the kill statistics' page.
+        """Create an instance of the class from the HTML content of the kill statistics' page.
 
         Parameters
         -----------
@@ -79,10 +84,13 @@ class KillStatistics(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            selection_table = parsed_content.find('div', attrs={'class': 'TableContainer'})
-            world = selection_table.find("option", {"selected": True})["value"]
-
             entries_table = parsed_content.find('table', attrs={'border': '0', 'cellpadding': '3'})
+            form = parsed_content.find("form")
+            data = parse_form_data(form, include_options=True)
+            world = data["world"]
+            available_worlds = list(data["__options__"]["world"].values())
+            if not entries_table:
+                entries_table = parsed_content.find("table", {"class": "Table3"})
             # If the entries table doesn't exist, it means that this belongs to an nonexistent or unselected world.
             if entries_table is None:
                 return None
@@ -92,17 +100,19 @@ class KillStatistics(abc.Serializable):
             for i, row in enumerate(rows):
                 columns_raw = row.find_all('td')
                 columns = [c.text.replace('\xa0', ' ').strip() for c in columns_raw]
+                if not columns[2].isnumeric():
+                    continue
                 entry = RaceEntry(last_day_players_killed=int(columns[1]),
                                   last_day_killed=int(columns[2]),
                                   last_week_players_killed=int(columns[3]),
-                                  last_week_killed=int(columns[4]), )
+                                  last_week_killed=int(columns[4]))
                 if i == len(rows) - 1:
                     total = entry
                 else:
                     entries[columns[0]] = entry
-            return cls(world, entries, total)
-        except AttributeError:
-            raise InvalidContent("content does not belong to a Tibia.com kill statistics page.")
+            return cls(world, entries, total, available_worlds=available_worlds)
+        except AttributeError as e:
+            raise InvalidContent("content does not belong to a Tibia.com kill statistics page.", e)
 
 
 class RaceEntry(abc.Serializable):
@@ -119,6 +129,7 @@ class RaceEntry(abc.Serializable):
     last_week_players_killed: :class:`int`
         Number of players killed by this race in the last week.
     """
+
     __slots__ = (
         "last_day_killed",
         "last_day_players_killed",
@@ -127,10 +138,10 @@ class RaceEntry(abc.Serializable):
     )
 
     def __init__(self, last_day_killed=0, last_day_players_killed=0, last_week_killed=0, last_week_players_killed=0):
-        self.last_day_killed = last_day_killed
-        self.last_day_players_killed = last_day_players_killed
-        self.last_week_killed = last_week_killed
-        self.last_week_players_killed = last_week_players_killed
+        self.last_day_killed: int = last_day_killed
+        self.last_day_players_killed: int = last_day_players_killed
+        self.last_week_killed: int = last_week_killed
+        self.last_week_players_killed: int = last_week_players_killed
 
     def __repr__(self):
         return "<{0.__class__.__name__} last_day_killed={0.last_day_killed}" \

@@ -1,18 +1,19 @@
 import re
 from collections import OrderedDict
-from typing import List
-
-import bs4
+from typing import List, TYPE_CHECKING
 
 from tibiapy import abc
 from tibiapy.character import OnlineCharacter
-from tibiapy.enums import PvpType, TournamentWorldType, TransferType, WorldLocation, BattlEyeType
+from tibiapy.enums import BattlEyeType, PvpType, TournamentWorldType, TransferType, WorldLocation
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date, \
-    parse_tibiacom_content, try_date, try_datetime, try_enum
+from tibiapy.utils import (get_tibia_url, parse_integer, parse_tibia_datetime, parse_tibia_full_date,
+                           parse_tibiacom_content, try_date, try_datetime, try_enum)
+
+if TYPE_CHECKING:
+    import bs4
 
 __all__ = (
-    "ListedWorld",
+    "WorldEntry",
     "World",
     "WorldOverview",
 )
@@ -21,7 +22,7 @@ record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
 
 
-class ListedWorld(abc.BaseWorld, abc.Serializable):
+class WorldEntry(abc.BaseWorld, abc.Serializable):
     """Represents a game server listed in the World Overview section.
 
     Attributes
@@ -52,6 +53,7 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
     tournament_world_type: :class:`TournamentWorldType`
         The type of tournament world. :obj:`None` if this is not a tournament world.
     """
+
     __slots__ = (
         "name",
         "status",
@@ -63,7 +65,7 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
         "experimental",
         "premium_only",
         "tournament_world_type",
-        "transfer_type"
+        "transfer_type",
     )
 
     _serializable_properties = (
@@ -95,8 +97,7 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
     # region Public methods
     @classmethod
     def get_list_url(cls):
-        """
-        Gets the URL to the World Overview page in Tibia.com
+        """Get the URL to the World Overview page in Tibia.com.
 
         Returns
         -------
@@ -107,7 +108,7 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
 
     @classmethod
     def list_from_content(cls, content):
-        """Parses the content of the World Overview section from Tibia.com and returns only the list of worlds.
+        """Parse the content of the World Overview section from Tibia.com and returns only the list of worlds.
 
         Parameters
         ----------
@@ -116,7 +117,7 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
 
         Returns
         -------
-        :class:`list` of :class:`ListedWorld`
+        :class:`list` of :class:`WorldEntry`
             A list of the worlds and their current information.
 
         Raises
@@ -143,13 +144,12 @@ class ListedWorld(abc.BaseWorld, abc.Serializable):
             if "restricted Store products" in additional_info:
                 self.tournament_world_type = TournamentWorldType.RESTRICTED
             else:
-                self.tournament_world_type = TournamentWorldType.REGUlAR
+                self.tournament_world_type = TournamentWorldType.REGULAR
     # endregion
 
 
 class World(abc.BaseWorld, abc.Serializable):
     """Represents a Tibia game server.
-
 
     Attributes
     ----------
@@ -189,6 +189,7 @@ class World(abc.BaseWorld, abc.Serializable):
     premium_only: :class:`bool`
         Whether only premium account players are allowed to play in this server.
     """
+
     __slots__ = (
         "name",
         "status",
@@ -205,7 +206,7 @@ class World(abc.BaseWorld, abc.Serializable):
         "record_date",
         "creation_date",
         "world_quest_titles",
-        "online_players"
+        "online_players",
     )
 
     _serializable_properties = (
@@ -254,7 +255,7 @@ class World(abc.BaseWorld, abc.Serializable):
     # region Public methods
     @classmethod
     def from_content(cls, content):
-        """Parses a Tibia.com response into a :class:`World`.
+        """Parse a Tibia.com response into a :class:`World`.
 
         Parameters
         ----------
@@ -296,7 +297,7 @@ class World(abc.BaseWorld, abc.Serializable):
     # region Private methods
     def _parse_world_info(self, world_info_table):
         """
-        Parses the World Information table from Tibia.com and adds the found values to the object.
+        Parse the World Information table from Tibia.com and adds the found values to the object.
 
         Parameters
         ----------
@@ -337,7 +338,7 @@ class World(abc.BaseWorld, abc.Serializable):
             year += 1900
         else:
             year += 2000
-        self.creation_date = "%d-%02d" % (year, month)
+        self.creation_date = f"{year:d}-{month:02d}"
 
         for k, v in world_info.items():
             try:
@@ -346,7 +347,7 @@ class World(abc.BaseWorld, abc.Serializable):
                 pass
 
     def _parse_battleye_status(self, battleye_string):
-        """Parses the BattlEye string and applies the results.
+        """Parse the BattlEye string and applies the results.
 
         Parameters
         ----------
@@ -364,7 +365,7 @@ class World(abc.BaseWorld, abc.Serializable):
     @classmethod
     def _parse_tables(cls, parsed_content):
         """
-        Parses the information tables found in a world's information page.
+        Parse the information tables found in a world's information page.
 
         Parameters
         ----------
@@ -396,9 +397,10 @@ class WorldOverview(abc.Serializable):
         The overall player online record.
     record_date: :class:`datetime.datetime`
         The date when the record was achieved.
-    worlds: :class:`list` of :class:`ListedWorld`
+    worlds: :class:`list` of :class:`WorldEntry`
         List of worlds, with limited info.
     """
+
     __slots__ = (
         "record_count",
         "record_date",
@@ -410,7 +412,7 @@ class WorldOverview(abc.Serializable):
     def __init__(self, **kwargs):
         self.record_count: int = kwargs.get("record_count", 0)
         self.record_date = try_datetime(kwargs.get("record_date"))
-        self.worlds: List[ListedWorld] = kwargs.get("worlds", [])
+        self.worlds: List[WorldEntry] = kwargs.get("worlds", [])
 
     def __repr__(self):
         return f"<{self.__class__.__name__} total_online={self.total_online:d}>"
@@ -424,18 +426,18 @@ class WorldOverview(abc.Serializable):
     def tournament_worlds(self):
         """:class:`list` of :class:`GuildMember`: List of tournament worlds.
 
-        Note that tournament worlds are not listed when there are no active or upcoming tournaments."""
+        Note that tournament worlds are not listed when there are no active or upcoming tournaments.
+        """
         return [w for w in self.worlds if w.tournament_world_type is not None]
 
     @property
     def regular_worlds(self):
-        """:class:`list` of :class:`ListedWorld`: List of worlds that are not tournament worlds."""
+        """:class:`list` of :class:`WorldEntry`: List of worlds that are not tournament worlds."""
         return [w for w in self.worlds if w.tournament_world_type is None]
 
     @classmethod
     def get_url(cls):
-        """
-        Gets the URL to the World Overview page in Tibia.com
+        """Get the URL to the World Overview page in Tibia.com.
 
         Returns
         -------
@@ -446,7 +448,7 @@ class WorldOverview(abc.Serializable):
 
     @classmethod
     def from_content(cls, content):
-        """Parses the content of the World Overview section from Tibia.com into an object of this class.
+        """Parse the content of the World Overview section from Tibia.com into an object of this class.
 
         Parameters
         ----------
@@ -477,7 +479,7 @@ class WorldOverview(abc.Serializable):
             raise InvalidContent("content does not belong to the World Overview section in Tibia.com", e)
 
     def _parse_worlds(self, world_rows, tournament=False):
-        """Parses the world columns and adds the results to :py:attr:`worlds`.
+        """Parse the world columns and adds the results to :py:attr:`worlds`.
 
         Parameters
         ----------
@@ -497,7 +499,7 @@ class WorldOverview(abc.Serializable):
             location = cols[2].text.replace("\u00a0", " ").strip()
             pvp = cols[3].text.strip()
 
-            world = ListedWorld(name, location, pvp, online_count=online, status=status)
+            world = WorldEntry(name, location, pvp, online_count=online, status=status)
             # Check Battleye icon to get information
             battleye_icon = cols[4].find("span", attrs={"class": "HelperDivIndicator"})
             if battleye_icon is not None:
@@ -510,7 +512,7 @@ class WorldOverview(abc.Serializable):
             self.worlds.append(world)
 
     def _parse_worlds_tables(self, tables):
-        """Parses the world columns and adds the results to :py:attr:`worlds`.
+        """Parse the world columns and adds the results to :py:attr:`worlds`.
 
         Parameters
         ----------
@@ -523,6 +525,3 @@ class WorldOverview(abc.Serializable):
             title = title_table.text.lower()
             regular_world_rows = worlds_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
             self._parse_worlds(regular_world_rows, "tournament" in title)
-
-
-
