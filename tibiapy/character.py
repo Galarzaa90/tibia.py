@@ -1,3 +1,4 @@
+"""Models related to the Tibia.com character page."""
 import datetime
 import re
 import urllib.parse

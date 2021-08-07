@@ -1,3 +1,4 @@
+"""Contains all classes related to the Character Bazaar sections in Tibia.com"""
 import datetime
 import logging
 import re

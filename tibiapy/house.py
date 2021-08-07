@@ -1,3 +1,4 @@
+"""Models related to the houses section in Tibia.com."""
 import datetime
 import re
 from typing import Dict, List, Optional

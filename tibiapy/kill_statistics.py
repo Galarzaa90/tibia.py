@@ -1,3 +1,4 @@
+"""Models related to the kill statistics section in Tibia.com."""
 from typing import Dict, List
 
 from tibiapy import abc

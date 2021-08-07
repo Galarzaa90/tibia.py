@@ -1,3 +1,4 @@
+"""Models related to the spells section in the library."""
 import os
 import re
 import urllib.parse

@@ -1,3 +1,5 @@
+"""Models related to the event schedule section in Tibia.com."""
+
 import re
 import time
 import datetime

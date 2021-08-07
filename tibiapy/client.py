@@ -1,3 +1,4 @@
+"""Asynchronous Tibia.com client."""
 import asyncio
 import datetime
 import json

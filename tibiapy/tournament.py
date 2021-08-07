@@ -1,3 +1,4 @@
+"""Models related to the tournaments section in Tibia.com and the tournaments leaderboards."""
 import datetime
 import math
 import re

@@ -1,3 +1,4 @@
+"""Enumerations used by models throughout the library."""
 import enum
 
 __all__ = (

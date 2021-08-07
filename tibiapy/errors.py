@@ -1,3 +1,6 @@
+"""Exceptions thrown by tibia.py."""
+
+
 class TibiapyException(Exception):
     """Base exception for the tibiapy module.
 

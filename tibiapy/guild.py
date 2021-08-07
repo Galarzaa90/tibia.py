@@ -1,3 +1,4 @@
+"""Models related to the guilds section in Tibia.com."""
 import datetime
 import re
 from collections import OrderedDict, defaultdict

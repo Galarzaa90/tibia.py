@@ -1,3 +1,4 @@
+"""Models related to the highscores section in Tibia.com."""
 import datetime
 import re
 from collections import OrderedDict

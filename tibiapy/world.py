@@ -1,3 +1,4 @@
+"""Models related to the worlds section in Tibia.com."""
 import re
 from collections import OrderedDict
 from typing import List, TYPE_CHECKING

@@ -1,5 +1,7 @@
+"""Tibia.com parsing and fetching library."""
 __version__ = '5.0.0'
 __author__ = 'Allan Galarza'
+__license__ = 'Apache-2.0 License'
 
 import logging
 

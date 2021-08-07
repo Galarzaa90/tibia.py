@@ -1,3 +1,4 @@
+"""Events related to the forum section."""
 import datetime
 import re
 from typing import List, Optional
@@ -222,7 +223,7 @@ class CMPostArchive(abc.Serializable):
         form = parsed_content.find("form")
         try:
             start_month_selector, start_day_selector, start_year_selector, \
-             end_month_selector, end_day_selector, end_year_selector = form.find_all("select")
+            end_month_selector, end_day_selector, end_year_selector = form.find_all("select")
             start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
         except (AttributeError, ValueError) as e:

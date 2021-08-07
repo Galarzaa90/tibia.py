@@ -1,3 +1,4 @@
+"""Models related to the leaderboard section in Tibia.com."""
 import datetime
 import re
 from typing import List, Optional

@@ -1,3 +1,4 @@
+"""Base classes shared by various models."""
 from __future__ import annotations
 
 import abc

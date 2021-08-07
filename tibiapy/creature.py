@@ -1,3 +1,4 @@
+"""Models related to the creatures section in the library."""
 import re
 import urllib.parse
 from typing import List, Optional

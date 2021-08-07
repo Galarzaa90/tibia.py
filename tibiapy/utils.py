@@ -1,3 +1,4 @@
+"""These are functions used thorough the module that may not be intended for public use."""
 import datetime
 import functools
 import itertools

@@ -8,12 +8,12 @@ Changelog
 
 .. v5.0.0
 
-5.0.0 (Unreleased)
+5.0.0 (2021-08-06)
 ==================
 - Added parsing for Tibia Drome leaderboards, new ``Leaderboard`` class.
     - Auxiliary classes ``LeaderboardEntry`` and ``LeaderboardRotation`` were added as well.
     - New ``Client`` method: ``fetch_leaderboards``.
-- Added parsing for Spells library, new ``SpellsSection class.
+- Added parsing for Spells library, new ``SpellsSection`` class.
     - Auxiliary  classes ``Spell`` and ``SpellEntry``.
     - New ``Client`` methods: ``fetch_spell`` and ``fetch_spells``
 - Fix last page of highscores having ``0`` as page value.
