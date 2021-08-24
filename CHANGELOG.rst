@@ -6,6 +6,20 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v5.0.1 (Unreleased)
+
+5.0.1 (Unreleased)
+==================
+- Fixed character's houses failing to parse due to a bug in the display in Tibia.com.
+    - Temporarily disabling this attribute.
+- Fixed house list not parsing correctly due to Tibia.com changes
+- Fixed news list not parsing correctly due to Tibia.com changes
+
+Pending:
+
+- Forums section
+- Spells section
+
 .. v5.0.0
 
 5.0.0 (2021-08-06)

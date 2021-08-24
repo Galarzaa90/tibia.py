@@ -413,6 +413,8 @@ def parse_tibiacom_tables(parsed_content) -> Dict[str, bs4.Tag]:
     for table_container in table_containers:
         text_tag = table_container.find("div", attrs={"class": "Text"})
         table = table_container.find("table", attrs={"class": "TableContent"})
+        if not table:
+            continue
         tables[text_tag.text.strip()] = table
     return tables
 

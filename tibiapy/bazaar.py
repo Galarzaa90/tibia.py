@@ -180,7 +180,7 @@ class AuctionFilters(abc.Serializable):
         filters = AuctionFilters()
         forms = table.find_all("form")
         data = parse_form_data(forms[0], include_options=True)
-        data_search = parse_form_data(forms[1], include_options=True)
+
         filters.world = data["filter_world"]
         filters.available_worlds = [w for w in data.get("__options__", {}).get("filter_world", []) if "(" not in w]
         filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(data.get("filter_worldpvptype"), None))
@@ -193,8 +193,10 @@ class AuctionFilters(abc.Serializable):
         filters.max_skill_level = parse_integer(data.get("filter_skillrangeto"), None)
         filters.order_by = try_enum(AuctionOrderBy, parse_integer(data.get("order_column"), None))
         filters.order = try_enum(AuctionOrder, parse_integer(data.get("order_direction"), None))
-        filters.search_string = data_search.get("searchstring")
-        filters.search_type = try_enum(AuctionSearchType, parse_integer(data_search.get("searchtype"), None))
+        if len(forms) > 1:
+            data_search = parse_form_data(forms[1], include_options=True)
+            filters.search_string = data_search.get("searchstring")
+            filters.search_type = try_enum(AuctionSearchType, parse_integer(data_search.get("searchtype"), None))
         return filters
 
 
