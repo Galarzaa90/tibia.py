@@ -420,9 +420,14 @@ class Character(abc.BaseCharacter, abc.Serializable):
             # This is a special case cause we need to see the link
             if field == "house":
                 house_text = value
-                paid_until = house_regexp.search(house_text).group(1)
+                m = house_regexp.search(house_text)
+                if not m:
+                    continue
+                paid_until = m.group(1)
                 paid_until_date = parse_tibia_date(paid_until)
                 house_link = cols_raw[1].find('a')
+                if not house_link:
+                    continue
                 url = urllib.parse.urlparse(house_link["href"])
                 query = urllib.parse.parse_qs(url.query)
                 houses.append({"id": int(query["houseid"][0]), "name": house_link.text.strip(),
