@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.utils &#8212; Tibia.py 5.0.0 documentation</title>
+    <title>tibiapy.utils &#8212; Tibia.py 5.0.1a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 5.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 5.0.1a1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.utils</a></li> 
       </ul>
@@ -52,7 +52,7 @@
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 
@@ -437,6 +437,32 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">strainer</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="n">html_class</span><span class="p">)</span> <span class="k">if</span> <span class="n">builder</span> <span class="o">!=</span> <span class="s2">&quot;html5lib&quot;</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">builder</span><span class="p">,</span> <span class="n">parse_only</span><span class="o">=</span><span class="n">strainer</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="parse_tibiacom_tables"><a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_tibiacom_tables">[docs]</a><span class="k">def</span> <span class="nf">parse_tibiacom_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Parse tables from Tibia.com into a mapping by the tables title.</span>
+
+<span class="sd">    This is used for the table style used in Tibia.com, where a table is wrapped in a container with a title.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    parsed_content: :class:`bs4.BeautifulSoup`</span>
+<span class="sd">        The content to find the tables in.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`dict`</span>
+<span class="sd">        A dictionary mapping the container titles and the contained table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">table_containers</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;TableContainer&quot;</span><span class="p">})</span>
+    <span class="n">tables</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">table_container</span> <span class="ow">in</span> <span class="n">table_containers</span><span class="p">:</span>
+        <span class="n">text_tag</span> <span class="o">=</span> <span class="n">table_container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;Text&quot;</span><span class="p">})</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table_container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;TableContent&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">tables</span><span class="p">[</span><span class="n">text_tag</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">table</span>
+    <span class="k">return</span> <span class="n">tables</span></div>
 
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
