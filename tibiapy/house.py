@@ -198,6 +198,8 @@ class HousesSection(abc.Serializable):
         world_select = filters_table.find("select", {"name": "world"})
         for world_option in world_select.find_all("option"):
             world_name = world_option.text
+            if "(" in world_name:
+                continue
             self.available_worlds.append(world_name)
             if world_option.attrs.get("selected"):
                 self.world = world_name

@@ -6,7 +6,7 @@ import re
 import urllib.parse
 import warnings
 from collections import OrderedDict
-from typing import Optional, Tuple, Type, TypeVar, Union
+from typing import Dict, Optional, Tuple, Type, TypeVar, Union
 
 import bs4
 
@@ -393,7 +393,21 @@ def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", build
     return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8', 1), builder, parse_only=strainer)
 
 
-def parse_tibiacom_tables(parsed_content):
+def parse_tibiacom_tables(parsed_content) -> Dict[str, bs4.Tag]:
+    """Parse tables from Tibia.com into a mapping by the tables title.
+
+    This is used for the table style used in Tibia.com, where a table is wrapped in a container with a title.
+
+    Parameters
+    ----------
+    parsed_content: :class:`bs4.BeautifulSoup`
+        The content to find the tables in.
+
+    Returns
+    -------
+    :class:`dict`
+        A dictionary mapping the container titles and the contained table.
+    """
     table_containers = parsed_content.find_all("div", attrs={"class": "TableContainer"})
     tables = {}
     for table_container in table_containers:
@@ -401,6 +415,7 @@ def parse_tibiacom_tables(parsed_content):
         table = table_container.find("table", attrs={"class": "TableContent"})
         tables[text_tag.text.strip()] = table
     return tables
+
 
 T = TypeVar('T')
 D = TypeVar('D')

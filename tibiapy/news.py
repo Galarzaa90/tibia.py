@@ -7,7 +7,8 @@ from typing import List, Optional
 from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibia_date, parse_tibiacom_content, try_enum
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibia_date, parse_tibiacom_content, \
+    parse_tibiacom_tables, try_enum
 
 __all__ = (
     "News",
@@ -143,22 +144,21 @@ class NewsArchive(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            tables = parsed_content.find_all("table", attrs={"width": "100%"})
-            news_table, filters_table = tables
+            tables = parse_tibiacom_tables(parsed_content)
+            if "News Archive Search" not in tables:
+                raise InvalidContent("content is not from the news archive section in Tibia.com")
             form = parsed_content.find("form")
             news_archive = cls._parse_filtering(form)
-            title_row = news_table.find("td", attrs={"class": "white", "colspan": "3"})
-            if title_row.text != "Search Results":
-                raise InvalidContent("content is not from the news archive section in Tibia.com")
-            rows = news_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
-            for row in rows:
-                cols_raw = row.find_all('td')
-                if len(cols_raw) != 3:
-                    continue
-                entry = cls._parse_entry(cols_raw)
-                news_archive.entries.append(entry)
+            if "Search Results" in tables:
+                rows = tables["Search Results"].find_all("tr", attrs={"class": ["Odd", "Even"]})
+                for row in rows:
+                    cols_raw = row.find_all('td')
+                    if len(cols_raw) != 3:
+                        continue
+                    entry = cls._parse_entry(cols_raw)
+                    news_archive.entries.append(entry)
             return news_archive
-        except (AttributeError, IndexError, ValueError) as e:
+        except (AttributeError, IndexError, ValueError, KeyError) as e:
             raise InvalidContent("content is not from the news archive section in Tibia.com", e)
 
     @classmethod

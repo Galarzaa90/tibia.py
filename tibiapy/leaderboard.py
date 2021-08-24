@@ -166,7 +166,7 @@ class Leaderboard(abc.Serializable):
             leaderboard = cls(current_world, current_rotation)
             leaderboard.available_worlds = [w for w in data["__options__"]["world"].values() if w]
             leaderboard.available_rotations = rotations
-            if leaderboard.rotation.current:
+            if leaderboard.rotation and leaderboard.rotation.current:
                 last_update_table = tables[2]
                 numbers = re.findall(r'(\d+)', last_update_table.text)
                 if numbers:
