@@ -333,7 +333,7 @@ class Guild(abc.BaseGuild, abc.Serializable):
         if m:
             name = m.group(1)
             title = m.group(2)
-        self.members.append(GuildMember(name, rank, title, int(level), vocation, joined=joined,
+        self.members.append(GuildMember(name.strip(), rank.strip(), title, int(level), vocation, joined=joined,
                                         online=status == "online"))
 
     def _parse_application_info(self, info_container):

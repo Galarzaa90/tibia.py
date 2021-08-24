@@ -7,7 +7,7 @@ from tibiapy import abc
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
 from tibiapy.utils import get_tibia_url, parse_tibia_datetime, parse_tibia_money, \
-    parse_tibiacom_content, try_date, try_datetime, try_enum
+    parse_tibiacom_content, parse_tibiacom_tables, try_date, try_datetime, try_enum
 
 __all__ = (
     "HousesSection",
@@ -167,12 +167,13 @@ class HousesSection(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            tables = parsed_content.find_all("table")
+            tables = parse_tibiacom_tables(parsed_content)
             house_results = cls()
-            house_results._parse_filters(tables[-1])
+            house_results._parse_filters(tables["House Search"])
             if len(tables) < 2:
                 return house_results
-            _, *rows = tables[0].find_all("tr")
+            houses_table = tables[list(tables.keys())[0]]
+            _, *rows = houses_table.find_all("tr")
             for row in rows[1:]:
                 cols = row.find_all("td")
                 if len(cols) != 5:
@@ -190,7 +191,7 @@ class HousesSection(abc.Serializable):
                 house.id = int(id_input["value"])
                 house_results.entries.append(house)
             return house_results
-        except (ValueError, AttributeError) as e:
+        except (ValueError, AttributeError, KeyError) as e:
             raise InvalidContent("content does not belong to a Tibia.com house list", e)
 
     def _parse_filters(self, filters_table):

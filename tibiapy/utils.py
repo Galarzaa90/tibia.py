@@ -393,6 +393,15 @@ def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", build
     return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8', 1), builder, parse_only=strainer)
 
 
+def parse_tibiacom_tables(parsed_content):
+    table_containers = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+    tables = {}
+    for table_container in table_containers:
+        text_tag = table_container.find("div", attrs={"class": "Text"})
+        table = table_container.find("table", attrs={"class": "TableContent"})
+        tables[text_tag.text.strip()] = table
+    return tables
+
 T = TypeVar('T')
 D = TypeVar('D')
 
