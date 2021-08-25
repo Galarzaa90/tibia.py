@@ -8,7 +8,8 @@ import bs4
 
 from tibiapy import abc, errors
 from tibiapy.enums import SpellGroup, SpellSorting, SpellType, VocationSpellFilter
-from tibiapy.utils import get_tibia_url, parse_form_data, parse_integer, parse_tibiacom_content, try_enum
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_integer, parse_tibiacom_content, parse_tibiacom_tables, \
+    try_enum
 
 __all__ = (
     'SpellsSection',
@@ -98,11 +99,14 @@ class SpellsSection(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            spells_table = parsed_content.find("table")
-            spell_rows = spells_table.find_all("tr")
+            table_content_container = parsed_content.find("div", attrs={"class": "InnerTableContainer"})
+            spells_table = table_content_container.find("table", class_=lambda t: t != "TableContent")
+            spell_rows = spells_table.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
             spells_section = cls()
-            for row in spell_rows[1:]:
+            for row in spell_rows:
                 columns = row.find_all("td")
+                if len(columns) != 7:
+                    continue
                 spell_link = columns[0].find("a")
                 url = urllib.parse.urlparse(spell_link["href"])
                 query = urllib.parse.parse_qs(url.query)
@@ -344,9 +348,9 @@ class Spell(SpellEntry):
         """
         parsed_content = parse_tibiacom_content(content)
         try:
-            tables = parsed_content.find_all("table")
-            title_table = tables[0]
-            spell_table = tables[1]
+            tables = parse_tibiacom_tables(parsed_content)
+            title_table = parsed_content.find("table", attrs={"class": False})
+            spell_table = tables["Spell Information"]
             img = title_table.find("img")
             url = urllib.parse.urlparse(img["src"])
             filename = os.path.basename(url.path)
@@ -366,10 +370,10 @@ class Spell(SpellEntry):
                 next_sibling = next_sibling.next_sibling
             spell = cls._parse_spells_table(identifier, spell_table)
             spell.description = description.strip()
-            if len(tables) > 2:
-                spell.rune = cls._parse_rune_table(tables[2])
+            if "Rune Information" in tables:
+                spell.rune = cls._parse_rune_table(tables["Rune Information"])
             return spell
-        except (TypeError, AttributeError, IndexError) as e:
+        except (TypeError, AttributeError, IndexError, KeyError) as e:
             form = parsed_content.find("form")
             if form:
                 data = parse_form_data(form)
@@ -456,7 +460,7 @@ class Spell(SpellEntry):
         """
         spell_rows = table.find_all("tr")
         attrs = {}
-        for row in spell_rows[1:]:
+        for row in spell_rows:
             cols = row.find_all("td")
             cols_text = [c.text for c in cols]
             clean_name = cols_text[0].replace(":", "").replace(" ", "_").lower().strip()
