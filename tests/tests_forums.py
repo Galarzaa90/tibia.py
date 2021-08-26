@@ -30,7 +30,7 @@ class TestForum(TestCommons, unittest.TestCase):
 
         boards = BoardEntry.list_from_content(content)
 
-        self.assertEqual(77, len(boards))
+        self.assertEqual(84, len(boards))
         for i, board in enumerate(boards):
             with self.subTest(i=i):
                 self.assertIsInstance(board, BoardEntry)
@@ -45,7 +45,7 @@ class TestForum(TestCommons, unittest.TestCase):
 
         boards = BoardEntry.list_from_content(content)
 
-        self.assertEqual(77, len(boards))
+        self.assertEqual(84, len(boards))
         for i, board in enumerate(boards):
             with self.subTest(i=i):
                 self.assertIsInstance(board, BoardEntry)
@@ -77,7 +77,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual("Antica", board.name)
         self.assertEqual("World Boards", board.section)
         self.assertEqual(1, board.page)
-        self.assertEqual(5, board.total_pages)
+        self.assertEqual(3, board.total_pages)
         self.assertEqual(25, board.board_id)
         self.assertEqual(30, len(board.threads))
         self.assertIsNotNone(board.url)
@@ -108,11 +108,11 @@ class TestForum(TestCommons, unittest.TestCase):
         board = ForumBoard.from_content(content)
 
         self.assertIsNotNone(board)
-        self.assertEqual("Ysolera - Trade", board.name)
-        self.assertEqual("Trade Boards", board.section)
+        self.assertEqual("Role Playing", board.name)
+        self.assertEqual("Community Boards", board.section)
         self.assertEqual(1, board.page)
         self.assertEqual(1, board.total_pages)
-        self.assertEqual(146059, board.board_id)
+        self.assertEqual(11, board.board_id)
         self.assertEqual(0, len(board.threads))
         self.assertIsNone(board.next_page_url)
         self.assertIsNone(board.previous_page_url)
@@ -142,7 +142,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual("Community Boards", board.section)
         self.assertEqual(30, len(board.threads))
         self.assertEqual(5, len(board.announcements))
-        self.assertEqual(1798, board.total_pages)
+        self.assertEqual(1893, board.total_pages)
         for i, thread in enumerate(board.threads):
             with self.subTest(i=i):
                 self.assertTrue(thread.golden_frame)
@@ -207,7 +207,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual("Skerio", post.author.name)
         self.assertEqual("Relania", post.author.world)
         self.assertEqual("Community Manager", post.author.position)
-        self.assertEqual(316, post.author.posts)
+        self.assertEqual(711, post.author.posts)
         self.assertEqual("Mirade", post.edited_by)
         self.assertTrue(post.golden_frame)
         self.assertEqual(38969385, post.post_id)
@@ -221,14 +221,14 @@ class TestForum(TestCommons, unittest.TestCase):
 
         thread = ForumThread.from_content(content)
 
-        self.assertEqual("News: Team Finder, Visualisation of Loot Lists", thread.title)
+        self.assertEqual("News: Te...", thread.title)
         self.assertEqual(0, thread.thread_id)
         self.assertEqual('Auditorium (English Only)', thread.board)
         self.assertEqual('Community Boards', thread.section)
-        self.assertEqual(4796826, thread.previous_topic_number)
-        self.assertEqual(4797838, thread.next_topic_number)
-        self.assertEqual(9, thread.page)
-        self.assertEqual(9, thread.total_pages)
+        self.assertEqual(0, thread.previous_topic_number)
+        self.assertEqual(0, thread.next_topic_number)
+        self.assertEqual(1, thread.page)
+        self.assertEqual(1, thread.total_pages)
         self.assertEqual(0, len(thread.posts))
 
     def test_forum_thread_from_content_not_found(self):
