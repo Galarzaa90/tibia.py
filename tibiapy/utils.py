@@ -6,7 +6,7 @@ import re
 import urllib.parse
 import warnings
 from collections import OrderedDict
-from typing import Dict, Optional, Tuple, Type, TypeVar, TypedDict, Union
+from typing import Dict, Optional, Tuple, Type, TypeVar, Union
 
 import bs4
 
