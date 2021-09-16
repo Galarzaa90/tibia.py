@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.character &#8212; Tibia.py 5.0.1.post0 documentation</title>
+    <title>tibiapy.character &#8212; Tibia.py 5.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
@@ -32,7 +32,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 5.0.1.post0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 5.1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.character</a></li> 
       </ul>
@@ -68,7 +68,7 @@
 <span class="c1"># From the killers list, filters out the assists.</span>
 <span class="n">death_assisted</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;killers&gt;.+)\.&lt;br/&gt;Assisted by (?P&lt;assists&gt;.+)&#39;</span><span class="p">)</span>
 <span class="c1"># From a killer entry, extracts the summoned creature</span>
-<span class="n">death_summon</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;summon&gt;.+) of &lt;a[^&gt;]+&gt;(?P&lt;name&gt;[^&lt;]+)&lt;/a&gt;&#39;</span><span class="p">)</span>
+<span class="n">death_summon</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;summon&gt;an? .+) of (?P&lt;name&gt;[^&lt;]+)&#39;</span><span class="p">)</span>
 <span class="n">link_search</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;a[^&gt;]+&gt;[^&lt;]+&lt;/a&gt;&#39;</span><span class="p">)</span>
 <span class="c1"># Extracts the contents of a tag</span>
 <span class="n">link_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&gt;([^&lt;]+)&lt;&#39;</span><span class="p">)</span>
@@ -77,6 +77,8 @@
 
 <span class="n">title_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(.*)\((\d+) titles? unlocked\)&#39;</span><span class="p">)</span>
 <span class="n">badge_popup_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\$\(this\),\s+&#39;([^&#39;]+)&#39;,\s+&#39;([^&#39;]+)&#39;,&quot;</span><span class="p">)</span>
+
+<span class="n">traded_label</span> <span class="o">=</span> <span class="s2">&quot;(traded)&quot;</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;AccountBadge&quot;</span><span class="p">,</span>
@@ -495,8 +497,8 @@
             <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">char</span><span class="p">[</span><span class="s2">&quot;deletion_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="s2">&quot;(traded)&quot;</span> <span class="ow">in</span> <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span>
-            <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(traded)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">traded_label</span> <span class="ow">in</span> <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+            <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">char</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">traded_label</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="n">char</span><span class="p">[</span><span class="s2">&quot;traded&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="s2">&quot;former_names&quot;</span> <span class="ow">in</span> <span class="n">char</span><span class="p">:</span>
@@ -570,7 +572,8 @@
                 <span class="n">death</span><span class="o">.</span><span class="n">killers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Killer</span><span class="p">(</span><span class="o">**</span><span class="n">killer_dict</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">assist</span> <span class="ow">in</span> <span class="n">assists_name_list</span><span class="p">:</span>
                 <span class="c1"># Extract names from character links in assists list.</span>
-                <span class="n">assist_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">link_content</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">assist</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+                <span class="n">assist</span> <span class="o">=</span> <span class="n">assist</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+                <span class="n">assist_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_killer</span><span class="p">(</span><span class="n">assist</span><span class="p">)</span>
                 <span class="n">death</span><span class="o">.</span><span class="n">assists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Killer</span><span class="p">(</span><span class="o">**</span><span class="n">assist_dict</span><span class="p">))</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">deaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">death</span><span class="p">)</span>
@@ -592,16 +595,24 @@
 <span class="sd">        :class:`dict`: A dictionary containing the killer&#39;s info.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># If the killer contains a link, it is a player.</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">killer</span>
+        <span class="n">player</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">traded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">summon</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">traded_label</span> <span class="ow">in</span> <span class="n">killer</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">killer</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">traded_label</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">traded</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">player</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="s2">&quot;href&quot;</span> <span class="ow">in</span> <span class="n">killer</span><span class="p">:</span>
             <span class="n">m</span> <span class="o">=</span> <span class="n">link_content</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">killer</span><span class="p">)</span>
-            <span class="n">killer_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">killer_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">killer</span><span class="p">,</span> <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">player</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1"># Check if it contains a summon.</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">death_summon</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">killer</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">death_summon</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-            <span class="n">killer_dict</span><span class="p">[</span><span class="s2">&quot;summon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;summon&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">killer_dict</span>
+            <span class="n">summon</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;summon&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\xa0</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="n">player</span><span class="p">,</span> <span class="s2">&quot;summon&quot;</span><span class="p">:</span> <span class="n">summon</span><span class="p">,</span> <span class="s2">&quot;traded&quot;</span><span class="p">:</span> <span class="n">traded</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">_parse_other_characters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Parse the character&#39;s other visible characters.</span>
@@ -620,8 +631,8 @@
             <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="n">traded</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="s2">&quot;(traded)&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(traded)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">traded_label</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">traded_label</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                 <span class="n">traded</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">main_img</span> <span class="o">=</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">)</span>
             <span class="n">main</span> <span class="o">=</span> <span class="kc">False</span>
@@ -774,18 +785,22 @@
 <span class="sd">        Whether the killer is a player or not.</span>
 <span class="sd">    summon: :class:`str`, optional</span>
 <span class="sd">        The name of the summoned creature, if applicable.</span>
+<span class="sd">    traded: :class:`str`, optional</span>
+<span class="sd">        If the killer was traded after this death happened.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;player&quot;</span><span class="p">,</span>
         <span class="s2">&quot;summon&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;traded&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">player</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">summon</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">player</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">summon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">traded</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">player</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">summon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">summon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">traded</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">summon</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; summon=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">summon</span><span class="si">!r}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">summon</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
@@ -958,7 +973,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.
   </div>
   
   </body>
