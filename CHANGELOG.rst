@@ -10,7 +10,7 @@ Changelog
 
 5.1.0 (2021-09-16)
 ==================
-- Added `traded` attribute to death killers, to indicate that the killer was traded after the death occurred.
+- Added ``traded`` attribute to death killers, to indicate that the killer was traded after the death occurred.
 - Properly handle deaths caused by summons of traded characters.
 
 .. v5.0.1
