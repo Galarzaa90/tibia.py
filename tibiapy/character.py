@@ -22,7 +22,7 @@ death_regexp = re.compile(r'Level (?P<level>\d+) by (?P<killers>.*)\.</td>')
 # From the killers list, filters out the assists.
 death_assisted = re.compile(r'(?P<killers>.+)\.<br/>Assisted by (?P<assists>.+)')
 # From a killer entry, extracts the summoned creature
-death_summon = re.compile(r'(?P<summon>.+) of <a[^>]+>(?P<name>[^<]+)</a>')
+death_summon = re.compile(r'(?P<summon>an? .+) of (?P<name>[^<]+)')
 link_search = re.compile(r'<a[^>]+>[^<]+</a>')
 # Extracts the contents of a tag
 link_content = re.compile(r'>([^<]+)<')
@@ -31,6 +31,8 @@ house_regexp = re.compile(r'paid until (.*)')
 
 title_regexp = re.compile(r'(.*)\((\d+) titles? unlocked\)')
 badge_popup_regexp = re.compile(r"\$\(this\),\s+'([^']+)',\s+'([^']+)',")
+
+traded_label = "(traded)"
 
 __all__ = (
     "AccountBadge",
@@ -449,8 +451,8 @@ class Character(abc.BaseCharacter, abc.Serializable):
             char["name"] = m.group(1)
             char["deletion_date"] = parse_tibia_datetime(m.group(2))
 
-        if "(traded)" in char["name"]:
-            char["name"] = char["name"].replace("(traded)", "").strip()
+        if traded_label in char["name"]:
+            char["name"] = char["name"].replace(traded_label, "").strip()
             char["traded"] = True
 
         if "former_names" in char:
@@ -524,7 +526,8 @@ class Character(abc.BaseCharacter, abc.Serializable):
                 death.killers.append(Killer(**killer_dict))
             for assist in assists_name_list:
                 # Extract names from character links in assists list.
-                assist_dict = {"name": link_content.search(assist).group(1), "player": True}
+                assist = assist.replace("\xa0", " ")
+                assist_dict = self._parse_killer(assist)
                 death.assists.append(Killer(**assist_dict))
             try:
                 self.deaths.append(death)
@@ -546,16 +549,24 @@ class Character(abc.BaseCharacter, abc.Serializable):
         :class:`dict`: A dictionary containing the killer's info.
         """
         # If the killer contains a link, it is a player.
+        name = killer
+        player = False
+        traded = False
+        summon = None
+        if traded_label in killer:
+            name = killer.replace('\xa0', ' ').replace(traded_label, "").strip()
+            traded = True
+            player = True
         if "href" in killer:
             m = link_content.search(killer)
-            killer_dict = {"name": m.group(1), "player": True}
-        else:
-            killer_dict = {"name": killer, "player": False}
+            name = m.group(1)
+            player = True
         # Check if it contains a summon.
-        m = death_summon.search(killer)
+        m = death_summon.search(name)
         if m:
-            killer_dict["summon"] = m.group("summon")
-        return killer_dict
+            summon = m.group("summon").replace('\xa0', ' ').strip()
+            name = m.group("name").replace('\xa0', ' ').strip()
+        return {"name": name, "player": player, "summon": summon, "traded": traded}
 
     def _parse_other_characters(self, rows):
         """Parse the character's other visible characters.
@@ -574,8 +585,8 @@ class Character(abc.BaseCharacter, abc.Serializable):
             _, *name = name.replace("\xa0", " ").split(" ")
             name = " ".join(name)
             traded = False
-            if "(traded)" in name:
-                name = name.replace("(traded)", "").strip()
+            if traded_label in name:
+                name = name.replace(traded_label, "").strip()
                 traded = True
             main_img = cols_raw[0].find('img')
             main = False
@@ -728,18 +739,22 @@ class Killer(abc.Serializable):
         Whether the killer is a player or not.
     summon: :class:`str`, optional
         The name of the summoned creature, if applicable.
+    traded: :class:`str`, optional
+        If the killer was traded after this death happened.
     """
 
     __slots__ = (
         "name",
         "player",
         "summon",
+        "traded",
     )
 
-    def __init__(self, name, player=False, summon=None):
+    def __init__(self, name, player=False, summon=None, traded=False):
         self.name: str = name
         self.player: bool = player
         self.summon: Optional[str] = summon
+        self.traded: bool = traded
 
     def __repr__(self):
         summon = f" summon={self.summon!r}" if self.summon else ""

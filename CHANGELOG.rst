@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v5.1.0
+
+5.1.0 (2021-09-16)
+==================
+- Added `traded` attribute to death killers, to indicate that the killer was traded after the death occurred.
+- Properly handle deaths caused by summons of traded characters.
+
 .. v5.0.1
 
 5.0.1 (2021-08-26)

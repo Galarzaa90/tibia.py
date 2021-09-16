@@ -101,11 +101,28 @@ class TestCharacter(TestCommons, unittest.TestCase):
         """Testing parsing a character with complex deaths (summons, assists, etc)"""
         content = self.load_resource(FILE_CHARACTER_DEATHS_COMPLEX)
         char = Character.from_content(content)
-        self.assertTrue(char.deaths)
-        self.assertIsInstance(char.deaths[0], Death)
-        self.assertEqual(len(char.deaths), 19)
-        oldest_death = char.deaths[-1]
-        self.assertEqual(oldest_death.killer.summon, "a fire elemental")
+        self.assertEqual(5, len(char.deaths))
+        death1, death2, death3, death4, death5 = char.deaths
+        self.assertIsInstance(death1, Death)
+        self.assertEqual(23, len(death1.killers))
+        self.assertEqual(1, len(death1.assists))
+
+        self.assertIsInstance(death2, Death)
+        self.assertEqual(1, len(death2.killers))
+        self.assertEqual(0, len(death2.assists))
+
+        self.assertIsInstance(death3, Death)
+        self.assertEqual(11, len(death3.killers))
+        self.assertEqual(0, len(death3.assists))
+        self.assertEqual("a paladin familiar", death3.killers[-1].summon)
+        self.assertEqual("Alloy Hat", death3.killers[-1].name)
+        self.assertTrue(death3.killers[-1].traded)
+
+        self.assertIsInstance(death4, Death)
+        self.assertEqual(12, len(death4.killers))
+        self.assertEqual(0, len(death4.assists))
+        self.assertEqual("Cliff Lee Burton", death4.killers[-1].name)
+        self.assertTrue(death4.killers[-1].traded)
 
     def test_character_from_content_badges_and_title(self):
         """Testing parsing a character with account badges and a title"""
