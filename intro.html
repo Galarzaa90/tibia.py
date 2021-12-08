@@ -91,6 +91,18 @@ With the url, the html/json content can be fetched and then passed to their <cod
     <span class="k">return</span> <span class="n">character</span>
 </pre></div>
 </div>
+<p>On the other hand, using the built-in asynchronous client you can do the fetching and parsing in one step:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">tibiapy</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+    <span class="n">character</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">fetch_character</span><span class="p">(</span><span class="s2">&quot;Galarzaa Fidera&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+</div>
 </section>
 <section id="supported-sections">
 <h2>Supported Sections<a class="headerlink" href="#supported-sections" title="Permalink to this headline">¶</a></h2>
@@ -347,7 +359,7 @@ With the url, the html/json content can be fetched and then passed to their <cod
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.2.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.3.1.
   </div>
   
   </body>
