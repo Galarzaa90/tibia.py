@@ -58,6 +58,20 @@ This allows you to use any networking module to obtain the data, and use the lib
         character = tibiapy.Character.from_content(content)
         return character
 
+On the other hand, using the built-in asynchronous client you can do the fetching and parsing in one step:
+
+.. code-block:: python
+
+    import asyncio
+    import tibiapy
+
+    async def main():
+        client = tibiapy.Client()
+        character = await client.fetch_character("Galarzaa Fidera")
+
+    if __name__ == "__main__":
+        asyncio.get_event_loop().run_until_complete(main())
+
 
 Supported Sections
 ==================
