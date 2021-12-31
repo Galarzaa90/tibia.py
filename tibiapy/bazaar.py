@@ -869,6 +869,10 @@ class Auction(AuctionEntry):
         The number of hireling jobs the character has.
     hireling_outfits: :class:`int`
         The number of hireling outfits the character has.
+    exalted_dust: :class:`int`
+        The amount of exalted dust the character has.
+    exalted_dust_limit: :class:`int`
+        The dust limit of the character.
     items: :class:`ItemSummary`
         The items the character has across inventory, depot and item stash.
     store_items: :class:`ItemSummary`
@@ -930,6 +934,8 @@ class Auction(AuctionEntry):
         self.hirelings: int = kwargs.get("hirelings", 0)
         self.hireling_jobs: int = kwargs.get("hireling_jobs", 0)
         self.hireling_outfits: int = kwargs.get("hireling_outfits", 0)
+        self.exalted_dust: int = kwargs.get("exalted_dust", 0)
+        self.exalted_dust_limit: int = kwargs.get("exalted_dust_limit", 0)
         self.items: ItemSummary = kwargs.get("items")
         self.store_items: ItemSummary = kwargs.get("store_items")
         self.mounts: Mounts = kwargs.get("mounts")
@@ -971,6 +977,8 @@ class Auction(AuctionEntry):
         "hirelings",
         "hireling_jobs",
         "hireling_outfits",
+        "exalted_dust",
+        "exalted_dust_limit",
         "items",
         "store_items",
         "mounts",
@@ -1312,6 +1320,11 @@ class Auction(AuctionEntry):
         self.hirelings = parse_integer(hirelings_data.get("hirelings", ""))
         self.hireling_jobs = parse_integer(hirelings_data.get("hireling_jobs", ""))
         self.hireling_outfits = parse_integer(hirelings_data.get("hireling_outfits", ""))
+        if len(content_containers) == 9:
+            dust_data = self._parse_data_table(content_containers[8])
+            dust_values = dust_data.get("exalted_dust", "0/0").split("/")
+            self.exalted_dust = parse_integer(dust_values[0])
+            self.exalted_dust_limit = parse_integer(dust_values[1])
     # endregion
 
 

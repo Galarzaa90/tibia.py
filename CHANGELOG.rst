@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v5.2.0
+
+5.2.0 (2021-12-31)
+==================
+- Added ``exalted_dust`` and ``exalted_dust_limit`` attributes to auctions.
+
+
 .. v5.1.0
 
 5.1.0 (2021-09-16)
