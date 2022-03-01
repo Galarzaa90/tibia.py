@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v.5.2.1
+
+5.2.1 (2021-12-31)
+==================
+- Fixed bug in news ticker with a ``div`` tag failing to parse.
+- Updated code to detect the discussion thread link.
+
 .. v5.2.0
 
 5.2.0 (2021-12-31)

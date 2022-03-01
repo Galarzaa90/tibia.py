@@ -299,10 +299,9 @@ class News(abc.BaseNews, abc.Serializable):
             content_row = content_table.find("td")
             content = content_row.encode_contents().decode()
             thread_id = None
-            thread_div = content_table.find("div")
-            if thread_div:
-                news_link = thread_div.find('a')
-                url = urllib.parse.urlparse(news_link["href"])
+            thread_link = content_table.select_one("div.NewsForumLink a")
+            if thread_link:
+                url = urllib.parse.urlparse(thread_link["href"])
                 query = urllib.parse.parse_qs(url.query)
                 thread_id = int(query["threadid"][0])
 
