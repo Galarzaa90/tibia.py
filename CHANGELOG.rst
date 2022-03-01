@@ -8,7 +8,7 @@ Changelog
 
 .. v.5.2.1
 
-5.2.1 (2021-12-31)
+5.2.1 (2022-03-01)
 ==================
 - Fixed bug in news ticker with a ``div`` tag failing to parse.
 - Updated code to detect the discussion thread link.
