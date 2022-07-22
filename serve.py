@@ -108,6 +108,24 @@ async def get_boosted_creature(request: web.Request):
     return json_response(response)
 
 
+@routes.get('/bosses/boosted')
+async def get_boosted_bosses(request: web.Request):
+    response = await app["tibiapy"].fetch_boosted_boss()
+    return json_response(response)
+
+
+@routes.get('/boosted')
+async def get_boosted_creatures(request: web.Request):
+    response = await app["tibiapy"].fetch_boosted_creature_and_boss()
+    return json_response(response)
+
+
+@routes.get('/bosses')
+async def get_library_bosses(request: web.Request):
+    response = await app["tibiapy"].fetch_library_bosses()
+    return json_response(response)
+
+
 @routes.get('/creatures/{name}')
 async def get_library_creature(request: web.Request):
     name = request.match_info.get('name')

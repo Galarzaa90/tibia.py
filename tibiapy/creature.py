@@ -1,4 +1,5 @@
 """Models related to the creatures section in the library."""
+import os
 import re
 import urllib.parse
 from typing import List, Optional
@@ -9,6 +10,9 @@ from tibiapy import abc
 from tibiapy.errors import InvalidContent
 
 __all__ = (
+    "BoostedCreatures",
+    "BoostableBosses",
+    "BossEntry",
     "CreatureEntry",
     "CreaturesSection",
     "Creature",
@@ -16,7 +20,8 @@ __all__ = (
 
 from tibiapy.utils import parse_tibiacom_content, get_tibia_url
 
-BOOSTED_ALT = "Today's boosted creature: "
+BOOSTED_ALT = re.compile("Today's boosted \w+: ")
+
 
 HP_PATTERN = re.compile(r"have (\d+) hitpoints")
 EXP_PATTERN = re.compile(r"yield (\d+) experience")
@@ -25,6 +30,193 @@ WEAK_PATTERN = re.compile(r"weak against ([^.]+)")
 STRONG_PATTERN = re.compile(r"strong against ([^.]+)")
 LOOT_PATTERN = re.compile(r"They carry (.*) with them.")
 MANA_COST = re.compile(r"takes (\d+) mana")
+
+
+class BoostedCreatures(abc.Serializable):
+    """Contains both boosted creature and boosted boss.
+
+    Attributes
+    ----------
+    creature: :class:`CreatureEntry`
+        The boosted creature of the day.
+    boss: :class:`BossEntry`
+        The boosted boss of the day.
+    """
+
+    __slots__ = (
+        "creature",
+        "boss",
+    )
+
+    def __init__(self, creature, boss):
+        self.creature: CreatureEntry = creature
+        self.boss: BossEntry = boss
+
+    @classmethod
+    def _parse_boosted_platform(cls, parsed_content: bs4.BeautifulSoup, tag_id: str):
+        img = parsed_content.find("img", attrs={"id": tag_id})
+        name = BOOSTED_ALT.sub("", img["title"]).strip()
+        image_url = img["src"]
+        identifier = image_url.split("/")[-1].replace(".gif", "")
+        return name, identifier
+
+    @classmethod
+    def from_header(cls, content: str):
+        """Parses both boosted creature and boss from the content of any section in Tibia.com
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`BoostedCreatures`
+            The boosted creature an boss.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a Tibia.com page.
+        """
+        try:
+            parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), "lxml",
+                                               parse_only=bs4.SoupStrainer("div", attrs={"id": "RightArtwork"}))
+            creature_name, creature_identifier = cls._parse_boosted_platform(parsed_content, "Monster")
+            boss_name, boss_identifier = cls._parse_boosted_platform(parsed_content, "Boss")
+            return cls(CreatureEntry(creature_name, creature_identifier), BossEntry(boss_name, boss_identifier))
+        except (TypeError, NameError, KeyError) as e:
+            raise InvalidContent("content is not from Tibia.com", e)
+
+
+class BoostableBosses(abc.Serializable):
+    """Represents the boostable bosses section in the Tibia.com library
+
+    Attributes
+    ----------
+    boosted_boss: :class:`BossEntry`
+        The current boosted boss.
+    bosses: list of :class:`BossEntry`
+        The list of boostable bosses.
+    """
+
+    __slots__ = (
+        "boosted_boss",
+        "bosses",
+    )
+
+    def __init__(self, boosted_boss, bosses):
+        self.boosted_boss: BossEntry = boosted_boss
+        self.bosses: List[BossEntry] = bosses
+
+    @classmethod
+    def get_url(cls):
+        """Get the URL to the Tibia.com boostable bosses.
+
+        Returns
+        -------
+        :class:`str`:
+            The URL to the Tibia.com library section.
+        """
+        return get_tibia_url("library", "boostablebosses")
+
+    @classmethod
+    def from_content(cls, content):
+        """Create an instance of the class from the html content of the boostable bosses library's page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the page.
+
+        Returns
+        -------
+        :class:`BoostableBosses`
+            The Boostable Bosses section.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a creature library's page.
+        """
+        try:
+            parsed_content = parse_tibiacom_content(content)
+            boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
+            boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
+            if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
+                return None
+            boosted_boss_tag = boosted_creature_table.find("b")
+            boosted_boss_image = boosted_creature_table.find("img")
+            image_url = urllib.parse.urlparse(boosted_boss_image["src"])
+            boosted_boss = BossEntry(boosted_boss_tag.text, os.path.basename(image_url.path).replace(".gif", ""))
+
+            list_table = parsed_content.find("div", style=lambda v: v and 'display: table' in v)
+            entries_container = list_table.find_all("div", style=lambda v: v and 'float: left' in v)
+            entries = []
+            for entry_container in entries_container:
+                name = entry_container.text.strip()
+                image = entry_container.find("img")
+                image_url = urllib.parse.urlparse(image["src"])
+                identifier = os.path.basename(image_url.path).replace(".gif", "")
+                entries.append(BossEntry(name, identifier))
+            return cls(boosted_boss, entries)
+        except (AttributeError, ValueError) as e:
+            raise InvalidContent("content is not the boosted boss's library", e)
+
+
+    @classmethod
+    def boosted_boss_from_header(cls, content):
+        """Get the boosted boss from any Tibia.com page.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of a Tibia.com page.
+
+        Returns
+        -------
+        :class:`BossEntry`
+            The boosted boss of the day.
+
+        Raises
+        ------
+        InvalidContent
+            If content is not the HTML of a Tibia.com's page.
+        """
+        return BoostedCreatures.from_header(content).boss
+
+
+class BossEntry(abc.Serializable):
+    """Represents a boss in the boostable bosses section in the Tibia.com library.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name of the boss..
+    identifier: :class:`str`
+        The internal name of the boss. Used for images.
+    """
+
+    __slots__ = (
+        "name",
+        "identifier",
+    )
+
+    _serializable_properties = (
+        "image_url",
+    )
+
+    def __init__(self, name, identifier=None):
+        self.name: str = name
+        self.identifier: str = identifier
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__} name={self.name!r} identifier={self.identifier!r}>"
+
+    @property
+    def image_url(self):
+        """:class:`str`: The URL to this boss's image."""
+        return f"https://static.tibia.com/images/library/{self.identifier}.gif"
 
 
 class CreaturesSection(abc.Serializable):
@@ -77,16 +269,7 @@ class CreaturesSection(abc.Serializable):
         InvalidContent
             If content is not the HTML of a Tibia.com's page.
         """
-        try:
-            parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), "lxml",
-                                               parse_only=bs4.SoupStrainer("div", attrs={"id": "RightArtwork"}))
-            img = parsed_content.find("img", attrs={"id": "Monster"})
-            name = img["title"].replace(BOOSTED_ALT, "").strip()
-            image_url = img["src"]
-            identifier = image_url.split("/")[-1].replace(".gif", "")
-            return CreatureEntry(name, identifier)
-        except TypeError as e:
-            raise InvalidContent("content is not from Tibia.com", e)
+        return BoostedCreatures.from_header(content).creature
 
     @classmethod
     def from_content(cls, content):
@@ -99,8 +282,8 @@ class CreaturesSection(abc.Serializable):
 
         Returns
         -------
-        :class:`Character`
-            The character contained in the page.
+        :class:`CreaturesSection`
+            The creatures section from Tibia.com.
 
         Raises
         ------

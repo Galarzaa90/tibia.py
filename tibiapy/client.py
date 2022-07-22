@@ -12,7 +12,7 @@ import aiohttp_socks
 import tibiapy
 from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, Spell, SpellsSection, abc
 from tibiapy.character import Character
-from tibiapy.creature import Creature, CreatureEntry, CreaturesSection
+from tibiapy.creature import BoostableBosses, BoostedCreatures, Creature, CreatureEntry, CreaturesSection
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
@@ -754,6 +754,96 @@ class Client:
 
     # endregion
 
+    async def fetch_boosted_creature_and_boss(self, *, test=False):
+        """Fetch today's boosted creature and boss.
+
+        .. versionadded:: 5.3.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`BoostedCreatures`
+            The boosted creature and boss of the day.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", NewsArchive.get_url(), test=test)
+        start_time = time.perf_counter()
+        boosted_creatures = BoostedCreatures.from_header(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boosted_creatures, parsing_time)
+
+    # Region Bosses
+    async def fetch_boosted_boss(self, *, test=False):
+        """Fetch today's boosted boss.
+
+        .. versionadded:: 5.3.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`BossEntry`
+            The boosted boss of the day.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", NewsArchive.get_url(), test=test)
+        start_time = time.perf_counter()
+        boosted_creature = BoostableBosses.boosted_boss_from_header(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boosted_creature, parsing_time)
+
+    async def fetch_library_bosses(self, *, test=False):
+        """Fetch the bosses from the library section.
+
+        .. versionadded:: 4.0.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`BoostableBosses`
+            The creature's section in Tibia.com
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", BoostableBosses.get_url(), test=test)
+        start_time = time.perf_counter()
+        boosted_creature = BoostableBosses.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse(response, boosted_creature, parsing_time)
+
+    # endregion
+
     # region Creatures
     async def fetch_boosted_creature(self, *, test=False):
         """Fetch today's boosted creature.
@@ -1133,9 +1223,9 @@ class Client:
         house_type: :class:`HouseType`
             The type of building. House by default.
         status: :class:`HouseStatus`, optional
-            The house status to filter results. By default no filters will be applied.
+            The house status to filter results. By default, no filters will be applied.
         order: :class:`HouseOrder`, optional
-            The ordering to use for the results. By default they are sorted by name.
+            The ordering to use for the results. By default, they are sorted by name.
         test: :class:`bool`
             Whether to request the test website instead.
 
