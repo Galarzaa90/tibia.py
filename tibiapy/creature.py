@@ -144,7 +144,7 @@ class BoostableBosses(abc.Serializable):
             boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
             boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
             if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
-                return None
+                raise InvalidContent("content is not from the boostable bosses section.")
             boosted_boss_tag = boosted_creature_table.find("b")
             boosted_boss_image = boosted_creature_table.find("img")
             image_url = urllib.parse.urlparse(boosted_boss_image["src"])

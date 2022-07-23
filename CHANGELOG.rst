@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v.5.3.0
+
+5.3.0 (2022-07-22)
+==================
+- Added support for Boostable Bosses.
+
 .. v.5.2.1
 
 5.2.1 (2022-03-01)

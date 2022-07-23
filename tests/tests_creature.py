@@ -1,15 +1,15 @@
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, CreaturesSection, Creature, CreatureEntry
+from tibiapy import BoostableBosses, InvalidContent, CreaturesSection, Creature, CreatureEntry
 
 FILE_CREATURE_SECTION = "library/creature_list.txt"
 FILE_CREATURE_CONVINCEABLE = "library/creature_convinceable.txt"
 FILE_CREATURE_ELEMENTAL_RESISTANCES = "library/creature_elemental_resistances.txt"
+FILE_BOOSTABLE_BOSSES = "library/boss_list.txt"
 
 
 class TestCreature(TestCommons, unittest.TestCase):
-    # region Tibia.com Tests
     def test_creatures_section_from_boosted_creature_header_content(self):
         """Testing parsing the boosted creture from any tibia.com page."""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
@@ -84,4 +84,28 @@ class TestCreature(TestCommons, unittest.TestCase):
         creature = Creature.from_content(content)
 
         self.assertIsNone(creature)
-    # endregion
+
+    def test_boostable_bosses_from_content(self):
+        """Test parsing the boostable bosses section"""
+        content = self.load_resource(FILE_BOOSTABLE_BOSSES)
+        bosses = BoostableBosses.from_content(content)
+
+        self.assertIsNotNone(bosses)
+        self.assertIsNotNone(bosses.boosted_boss)
+        self.assertEqual("Tentugly", bosses.boosted_boss.name)
+        self.assertEqual("fakeseamonster", bosses.boosted_boss.identifier)
+        self.assertIsNotNone(bosses.boosted_boss.image_url)
+        self.assertEqual(88, len(bosses.bosses))
+        for boss in bosses.bosses:
+            with self.subTest(name=boss.name):
+                self.assertIsInstance(boss.name, str)
+                self.assertIsInstance(boss.identifier, str)
+
+    def test_boostable_bosses_from_content_invalid_content(self):
+        """Testing parsing the creatures section from an invalid section"""
+        content = self.load_resource(self.FILE_UNRELATED_SECTION)
+
+        with self.assertRaises(InvalidContent):
+            BoostableBosses.from_content(content)
+
+
