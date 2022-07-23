@@ -112,7 +112,7 @@ class KillStatistics(abc.Serializable):
                 else:
                     entries[columns[0]] = entry
             return cls(world, entries, total, available_worlds=available_worlds)
-        except AttributeError as e:
+        except (AttributeError, KeyError) as e:
             raise InvalidContent("content does not belong to a Tibia.com kill statistics page.", e)
 
 

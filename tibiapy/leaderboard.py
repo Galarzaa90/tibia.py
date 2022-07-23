@@ -178,7 +178,7 @@ class Leaderboard(abc.Serializable):
             leaderboard.total_pages = total
             leaderboard.results_count = count
             return leaderboard
-        except (AttributeError, ValueError) as e:
+        except (AttributeError, ValueError, KeyError) as e:
             raise errors.InvalidContent("content does not belong to the leaderboards", e)
 
     def _parse_entries(self, entries_table):

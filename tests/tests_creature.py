@@ -16,7 +16,7 @@ class TestCreature(TestCommons, unittest.TestCase):
         creature = CreaturesSection.boosted_creature_from_header(content)
 
         self.assertIsInstance(creature, CreatureEntry)
-        self.assertEqual("Skeleton Warrior", creature.name)
+        self.assertEqual("Menacing Carnivor", creature.name)
 
     def test_creatures_section_from_boosted_creature_header_content_not_tibiacom(self):
         """Testing parsing the boosted creature from a page that is not Tibia.com"""

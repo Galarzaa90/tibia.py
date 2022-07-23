@@ -346,39 +346,42 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
         InvalidContent
             If the content is not the house section on Tibia.com
         """
-        parsed_content = parse_tibiacom_content(content)
-        image_column, desc_column, *_ = parsed_content.find_all('td')
-        if "Error" in image_column.text:
-            return None
-        image = image_column.find('img')
-        for br in desc_column.find_all("br"):
-            br.replace_with("\n")
-        description = desc_column.text.replace("\u00a0", " ").replace("\n\n", "\n")
-        lines = description.splitlines()
         try:
-            name, beds, info, state, *_ = lines
-        except ValueError:
-            raise InvalidContent("content does is not from the house section of Tibia.com")
+            parsed_content = parse_tibiacom_content(content)
+            image_column, desc_column, *_ = parsed_content.find_all('td')
+            if "Error" in image_column.text:
+                return None
+            image = image_column.find('img')
+            for br in desc_column.find_all("br"):
+                br.replace_with("\n")
+            description = desc_column.text.replace("\u00a0", " ").replace("\n\n", "\n")
+            lines = description.splitlines()
+            try:
+                name, beds, info, state, *_ = lines
+            except ValueError:
+                raise InvalidContent("content does is not from the house section of Tibia.com")
 
-        house = cls(name.strip())
-        house.image_url = image["src"]
-        house.id = int(id_regex.search(house.image_url).group(1))
-        m = bed_regex.search(beds)
-        if m:
-            if m.group("type").lower() in ["guildhall", "clanhall"]:
-                house.type = HouseType.GUILDHALL
-            else:
-                house.type = HouseType.HOUSE
-            house.beds = int(m.group("beds"))
+            house = cls(name.strip())
+            house.image_url = image["src"]
+            house.id = int(id_regex.search(house.image_url).group(1))
+            m = bed_regex.search(beds)
+            if m:
+                if m.group("type").lower() in ["guildhall", "clanhall"]:
+                    house.type = HouseType.GUILDHALL
+                else:
+                    house.type = HouseType.HOUSE
+                house.beds = int(m.group("beds"))
 
-        m = info_regex.search(info)
-        if m:
-            house.world = m.group("world")
-            house.rent = parse_tibia_money(m.group("rent"))
-            house.size = int(m.group("size"))
+            m = info_regex.search(info)
+            if m:
+                house.world = m.group("world")
+                house.rent = parse_tibia_money(m.group("rent"))
+                house.size = int(m.group("size"))
 
-        house._parse_status(state)
-        return house
+            house._parse_status(state)
+            return house
+        except (ValueError, TypeError) as e:
+            raise InvalidContent("content does not belong to a house page", e)
     # endregion
 
     def _parse_status(self, status):

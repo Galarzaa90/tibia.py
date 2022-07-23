@@ -295,7 +295,7 @@ class CreaturesSection(abc.Serializable):
             boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
             boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
             if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
-                return None
+                raise InvalidContent("content is not from the creatures section.")
             boosted_creature_link = boosted_creature_table.find("a")
             url = urllib.parse.urlparse(boosted_creature_link["href"])
             query = urllib.parse.parse_qs(url.query)

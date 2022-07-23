@@ -384,7 +384,7 @@ class CharacterBazaar(abc.Serializable):
 
                 bazaar.entries.append(auction)
             return bazaar
-        except ValueError as e:
+        except (ValueError, IndexError) as e:
             raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e)
     # endregion
 

@@ -122,7 +122,7 @@ class GuildsSection(abc.Serializable):
             selected_world = data["world"] if data["world"] else None
             available_worlds = [w for w in data["__options__"]["world"].values() if w]
             guilds = cls(selected_world, available_worlds=available_worlds)
-        except AttributeError as e:
+        except (AttributeError, KeyError) as e:
             raise InvalidContent("Content does not belong to world guild list.", e)
         # First TableContainer contains world selector.
         _, *containers = parsed_content.find_all('div', class_="TableContainer")
