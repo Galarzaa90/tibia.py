@@ -873,6 +873,8 @@ class Auction(AuctionEntry):
         The amount of exalted dust the character has.
     exalted_dust_limit: :class:`int`
         The dust limit of the character.
+    boss_points: :class:`int`
+        The boss points of the character.
     items: :class:`ItemSummary`
         The items the character has across inventory, depot and item stash.
     store_items: :class:`ItemSummary`
@@ -903,6 +905,8 @@ class Auction(AuctionEntry):
         The achievements the character has unlocked.
     bestiary_progress: :class:`list` of :class:`BestiaryEntry`
         The bestiary progress of the character.
+    bosstiary_progress: :class:`list` of :class:`BosstiaryEntry`
+        The bosstiary progress of the character.
     """
 
     def __init__(self, **kwargs):
@@ -936,6 +940,7 @@ class Auction(AuctionEntry):
         self.hireling_outfits: int = kwargs.get("hireling_outfits", 0)
         self.exalted_dust: int = kwargs.get("exalted_dust", 0)
         self.exalted_dust_limit: int = kwargs.get("exalted_dust_limit", 0)
+        self.boss_points: int = kwargs.get("boss_points", 0)
         self.items: ItemSummary = kwargs.get("items")
         self.store_items: ItemSummary = kwargs.get("store_items")
         self.mounts: Mounts = kwargs.get("mounts")
@@ -950,6 +955,7 @@ class Auction(AuctionEntry):
         self.titles: List[str] = kwargs.get("titles", [])
         self.achievements: List[AchievementEntry] = kwargs.get("achievements", [])
         self.bestiary_progress: List[BestiaryEntry] = kwargs.get("bestiary_progress", [])
+        self.bosstiary_progress: List[BestiaryEntry] = kwargs.get("bosstiary_progress", [])
 
     __slots__ = (
         "hit_points",
@@ -979,6 +985,7 @@ class Auction(AuctionEntry):
         "hireling_outfits",
         "exalted_dust",
         "exalted_dust_limit",
+        "boss_points",
         "items",
         "store_items",
         "mounts",
@@ -994,6 +1001,7 @@ class Auction(AuctionEntry):
         "titles",
         "achievements",
         "bestiary_progress",
+        "bosstiary_progress",
     )
 
     # region Properties
@@ -1087,6 +1095,8 @@ class Auction(AuctionEntry):
             auction._parse_achievements_table(details_tables["Achievements"])
         if "BestiaryProgress" in details_tables:
             auction._parse_bestiary_table(details_tables["BestiaryProgress"])
+        if "BosstiaryProgress" in details_tables:
+            auction._parse_bestiary_table(details_tables["BosstiaryProgress"], True)
         return auction
     # endregion
 
@@ -1226,7 +1236,7 @@ class Auction(AuctionEntry):
             secret = col.find("img") is not None
             self.achievements.append(AchievementEntry(text, secret))
 
-    def _parse_bestiary_table(self, table):
+    def _parse_bestiary_table(self, table, bosstiary=False):
         """Parse the bestiary table and extracts its information.
 
         Parameters
@@ -1243,7 +1253,10 @@ class Auction(AuctionEntry):
             step_c, kills_c, name_c = [c.text for c in cols]
             kills = parse_integer(kills_c.replace("x", ""))
             step = int(step_c)
-            self.bestiary_progress.append(BestiaryEntry(name_c, kills, step))
+            if not bosstiary:
+                self.bestiary_progress.append(BestiaryEntry(name_c, kills, step))
+            else:
+                self.bosstiary_progress.append(BestiaryEntry(name_c, kills, step))
 
     @classmethod
     def _parse_page_items(cls, content, entry_class):
@@ -1320,11 +1333,14 @@ class Auction(AuctionEntry):
         self.hirelings = parse_integer(hirelings_data.get("hirelings", ""))
         self.hireling_jobs = parse_integer(hirelings_data.get("hireling_jobs", ""))
         self.hireling_outfits = parse_integer(hirelings_data.get("hireling_outfits", ""))
-        if len(content_containers) == 9:
+        if len(content_containers) >= 9:
             dust_data = self._parse_data_table(content_containers[8])
             dust_values = dust_data.get("exalted_dust", "0/0").split("/")
             self.exalted_dust = parse_integer(dust_values[0])
             self.exalted_dust_limit = parse_integer(dust_values[1])
+        if len(content_containers) >= 10:
+            boss_data = self._parse_data_table(content_containers[9])
+            self.boss_points = parse_integer(boss_data.get("boss_points", ""))
     # endregion
 
 
