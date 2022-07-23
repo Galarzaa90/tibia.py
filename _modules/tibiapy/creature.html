@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -45,6 +46,7 @@
             
   <h1>Source code for tibiapy.creature</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models related to the creatures section in the library.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
@@ -55,6 +57,9 @@
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;BoostedCreatures&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BoostableBosses&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BossEntry&quot;</span><span class="p">,</span>
     <span class="s2">&quot;CreatureEntry&quot;</span><span class="p">,</span>
     <span class="s2">&quot;CreaturesSection&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Creature&quot;</span><span class="p">,</span>
@@ -62,7 +67,8 @@
 
 <span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">get_tibia_url</span>
 
-<span class="n">BOOSTED_ALT</span> <span class="o">=</span> <span class="s2">&quot;Today&#39;s boosted creature: &quot;</span>
+<span class="n">BOOSTED_ALT</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;Today&#39;s boosted \w+: &quot;</span><span class="p">)</span>
+
 
 <span class="n">HP_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;have (\d+) hitpoints&quot;</span><span class="p">)</span>
 <span class="n">EXP_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;yield (\d+) experience&quot;</span><span class="p">)</span>
@@ -71,6 +77,193 @@
 <span class="n">STRONG_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;strong against ([^.]+)&quot;</span><span class="p">)</span>
 <span class="n">LOOT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;They carry (.*) with them.&quot;</span><span class="p">)</span>
 <span class="n">MANA_COST</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;takes (\d+) mana&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BoostedCreatures"><a class="viewcode-back" href="../../api.html#tibiapy.BoostedCreatures">[docs]</a><span class="k">class</span> <span class="nc">BoostedCreatures</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Contains both boosted creature and boosted boss.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    creature: :class:`CreatureEntry`</span>
+<span class="sd">        The boosted creature of the day.</span>
+<span class="sd">    boss: :class:`BossEntry`</span>
+<span class="sd">        The boosted boss of the day.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;creature&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;boss&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">creature</span><span class="p">,</span> <span class="n">boss</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">creature</span><span class="p">:</span> <span class="n">CreatureEntry</span> <span class="o">=</span> <span class="n">creature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boss</span><span class="p">:</span> <span class="n">BossEntry</span> <span class="o">=</span> <span class="n">boss</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_boosted_platform</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">tag_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">tag_id</span><span class="p">})</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">BOOSTED_ALT</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">image_url</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+        <span class="n">identifier</span> <span class="o">=</span> <span class="n">image_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">identifier</span>
+
+<div class="viewcode-block" id="BoostedCreatures.from_header"><a class="viewcode-back" href="../../api.html#tibiapy.BoostedCreatures.from_header">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_header</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses both boosted creature and boss from the content of any section in Tibia.com</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`BoostedCreatures`</span>
+<span class="sd">            The boosted creature an boss.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If content is not the HTML of a Tibia.com page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+                                               <span class="n">parse_only</span><span class="o">=</span><span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;RightArtwork&quot;</span><span class="p">}))</span>
+            <span class="n">creature_name</span><span class="p">,</span> <span class="n">creature_identifier</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_boosted_platform</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">,</span> <span class="s2">&quot;Monster&quot;</span><span class="p">)</span>
+            <span class="n">boss_name</span><span class="p">,</span> <span class="n">boss_identifier</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_boosted_platform</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">,</span> <span class="s2">&quot;Boss&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">CreatureEntry</span><span class="p">(</span><span class="n">creature_name</span><span class="p">,</span> <span class="n">creature_identifier</span><span class="p">),</span> <span class="n">BossEntry</span><span class="p">(</span><span class="n">boss_name</span><span class="p">,</span> <span class="n">boss_identifier</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">NameError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BoostableBosses"><a class="viewcode-back" href="../../api.html#tibiapy.BoostableBosses">[docs]</a><span class="k">class</span> <span class="nc">BoostableBosses</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents the boostable bosses section in the Tibia.com library</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    boosted_boss: :class:`BossEntry`</span>
+<span class="sd">        The current boosted boss.</span>
+<span class="sd">    bosses: list of :class:`BossEntry`</span>
+<span class="sd">        The list of boostable bosses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;boosted_boss&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bosses&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boosted_boss</span><span class="p">,</span> <span class="n">bosses</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boosted_boss</span><span class="p">:</span> <span class="n">BossEntry</span> <span class="o">=</span> <span class="n">boosted_boss</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bosses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BossEntry</span><span class="p">]</span> <span class="o">=</span> <span class="n">bosses</span>
+
+<div class="viewcode-block" id="BoostableBosses.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BoostableBosses.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the URL to the Tibia.com boostable bosses.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`str`:</span>
+<span class="sd">            The URL to the Tibia.com library section.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;boostablebosses&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BoostableBosses.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.BoostableBosses.from_content">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an instance of the class from the html content of the boostable bosses library&#39;s page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`BoostableBosses`</span>
+<span class="sd">            The Boostable Bosses section.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If content is not the HTML of a creature library&#39;s page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">boosted_creature_table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;TableContainer&quot;</span><span class="p">})</span>
+            <span class="n">boosted_creature_text</span> <span class="o">=</span> <span class="n">boosted_creature_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;Text&quot;</span><span class="p">})</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">boosted_creature_text</span> <span class="ow">or</span> <span class="s2">&quot;Boosted&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">boosted_creature_text</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">boosted_boss_tag</span> <span class="o">=</span> <span class="n">boosted_creature_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+            <span class="n">boosted_boss_image</span> <span class="o">=</span> <span class="n">boosted_creature_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
+            <span class="n">image_url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">boosted_boss_image</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">])</span>
+            <span class="n">boosted_boss</span> <span class="o">=</span> <span class="n">BossEntry</span><span class="p">(</span><span class="n">boosted_boss_tag</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">image_url</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+
+            <span class="n">list_table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="ow">and</span> <span class="s1">&#39;display: table&#39;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">entries_container</span> <span class="o">=</span> <span class="n">list_table</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="ow">and</span> <span class="s1">&#39;float: left&#39;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">entry_container</span> <span class="ow">in</span> <span class="n">entries_container</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">entry_container</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">entry_container</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
+                <span class="n">image_url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">])</span>
+                <span class="n">identifier</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">image_url</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BossEntry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">identifier</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">boosted_boss</span><span class="p">,</span> <span class="n">entries</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not the boosted boss&#39;s library&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BoostableBosses.boosted_boss_from_header"><a class="viewcode-back" href="../../api.html#tibiapy.BoostableBosses.boosted_boss_from_header">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">boosted_boss_from_header</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the boosted boss from any Tibia.com page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content: :class:`str`</span>
+<span class="sd">            The HTML content of a Tibia.com page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`BossEntry`</span>
+<span class="sd">            The boosted boss of the day.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If content is not the HTML of a Tibia.com&#39;s page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">BoostedCreatures</span><span class="o">.</span><span class="n">from_header</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">boss</span></div></div>
+
+
+<div class="viewcode-block" id="BossEntry"><a class="viewcode-back" href="../../api.html#tibiapy.BossEntry">[docs]</a><span class="k">class</span> <span class="nc">BossEntry</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a boss in the boostable bosses section in the Tibia.com library.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: :class:`str`</span>
+<span class="sd">        The name of the boss..</span>
+<span class="sd">    identifier: :class:`str`</span>
+<span class="sd">        The internal name of the boss. Used for images.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;identifier&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_serializable_properties</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;image_url&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">identifier</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">identifier</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> identifier=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">image_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:class:`str`: The URL to this boss&#39;s image.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://static.tibia.com/images/library/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">.gif&quot;</span></div>
 
 
 <div class="viewcode-block" id="CreaturesSection"><a class="viewcode-back" href="../../api.html#tibiapy.CreaturesSection">[docs]</a><span class="k">class</span> <span class="nc">CreaturesSection</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
@@ -123,16 +316,7 @@
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If content is not the HTML of a Tibia.com&#39;s page.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;ISO-8859-1&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
-                                               <span class="n">parse_only</span><span class="o">=</span><span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;RightArtwork&quot;</span><span class="p">}))</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;Monster&quot;</span><span class="p">})</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">BOOSTED_ALT</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="n">image_url</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
-            <span class="n">identifier</span> <span class="o">=</span> <span class="n">image_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">CreatureEntry</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">identifier</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">BoostedCreatures</span><span class="o">.</span><span class="n">from_header</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">creature</span></div>
 
 <div class="viewcode-block" id="CreaturesSection.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.CreaturesSection.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
@@ -145,8 +329,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`Character`</span>
-<span class="sd">            The character contained in the page.</span>
+<span class="sd">        :class:`CreaturesSection`</span>
+<span class="sd">            The creatures section from Tibia.com.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -158,7 +342,7 @@
             <span class="n">boosted_creature_table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;TableContainer&quot;</span><span class="p">})</span>
             <span class="n">boosted_creature_text</span> <span class="o">=</span> <span class="n">boosted_creature_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;Text&quot;</span><span class="p">})</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">boosted_creature_text</span> <span class="ow">or</span> <span class="s2">&quot;Boosted&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">boosted_creature_text</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from the creatures section.&quot;</span><span class="p">)</span>
             <span class="n">boosted_creature_link</span> <span class="o">=</span> <span class="n">boosted_creature_table</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">boosted_creature_link</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">])</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse_qs</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
@@ -457,7 +641,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 <h3 class="donation">Donate/support</h3>
@@ -480,7 +664,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.0.2.
   </div>
   
   </body>

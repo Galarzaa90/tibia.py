@@ -712,6 +712,25 @@ CreatureEntry
    :members:
    :inherited-members:
 
+BoostableBosses
+----------------
+.. autoclass:: BoostableBosses
+   :members:
+   :inherited-members:
+
+BoostedCreatures
+----------------
+.. autoclass:: BoostedCreatures
+   :members:
+   :inherited-members:
+
+BossEntry
+-------------
+.. autoclass:: BossEntry
+   :members:
+   :inherited-members:
+
+
 SpellsSection
 -------------
 .. autoclass:: SpellsSection

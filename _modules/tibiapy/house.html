@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -392,39 +393,42 @@
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If the content is not the house section on Tibia.com</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">image_column</span><span class="p">,</span> <span class="n">desc_column</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;Error&quot;</span> <span class="ow">in</span> <span class="n">image_column</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="n">image_column</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">br</span> <span class="ow">in</span> <span class="n">desc_column</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;br&quot;</span><span class="p">):</span>
-            <span class="n">br</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">description</span> <span class="o">=</span> <span class="n">desc_column</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">beds</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">lines</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does is not from the house section of Tibia.com&quot;</span><span class="p">)</span>
+            <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">image_column</span><span class="p">,</span> <span class="n">desc_column</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;Error&quot;</span> <span class="ow">in</span> <span class="n">image_column</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">image_column</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">br</span> <span class="ow">in</span> <span class="n">desc_column</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;br&quot;</span><span class="p">):</span>
+                <span class="n">br</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">desc_column</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\u00a0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">beds</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">lines</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does is not from the house section of Tibia.com&quot;</span><span class="p">)</span>
 
-        <span class="n">house</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-        <span class="n">house</span><span class="o">.</span><span class="n">image_url</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
-        <span class="n">house</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">id_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">house</span><span class="o">.</span><span class="n">image_url</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">bed_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">beds</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;guildhall&quot;</span><span class="p">,</span> <span class="s2">&quot;clanhall&quot;</span><span class="p">]:</span>
-                <span class="n">house</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">GUILDHALL</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">house</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span>
-            <span class="n">house</span><span class="o">.</span><span class="n">beds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;beds&quot;</span><span class="p">))</span>
+            <span class="n">house</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">image_url</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+            <span class="n">house</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">id_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">house</span><span class="o">.</span><span class="n">image_url</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">bed_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">beds</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;guildhall&quot;</span><span class="p">,</span> <span class="s2">&quot;clanhall&quot;</span><span class="p">]:</span>
+                    <span class="n">house</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">GUILDHALL</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">house</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span>
+                <span class="n">house</span><span class="o">.</span><span class="n">beds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;beds&quot;</span><span class="p">))</span>
 
-        <span class="n">m</span> <span class="o">=</span> <span class="n">info_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-            <span class="n">house</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
-            <span class="n">house</span><span class="o">.</span><span class="n">rent</span> <span class="o">=</span> <span class="n">parse_tibia_money</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;rent&quot;</span><span class="p">))</span>
-            <span class="n">house</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">))</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">info_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                <span class="n">house</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+                <span class="n">house</span><span class="o">.</span><span class="n">rent</span> <span class="o">=</span> <span class="n">parse_tibia_money</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;rent&quot;</span><span class="p">))</span>
+                <span class="n">house</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">))</span>
 
-        <span class="n">house</span><span class="o">.</span><span class="n">_parse_status</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">house</span></div>
+            <span class="n">house</span><span class="o">.</span><span class="n">_parse_status</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">house</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a house page&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
     <span class="c1"># endregion</span>
 
     <span class="k">def</span> <span class="nf">_parse_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
@@ -688,7 +692,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 <h3 class="donation">Donate/support</h3>
@@ -711,7 +715,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.0.2.
   </div>
   
   </body>

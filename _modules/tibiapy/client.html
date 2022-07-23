@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,7 @@
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -58,7 +59,7 @@
 <span class="kn">import</span> <span class="nn">tibiapy</span>
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">Auction</span><span class="p">,</span> <span class="n">AuctionFilters</span><span class="p">,</span> <span class="n">CharacterBazaar</span><span class="p">,</span> <span class="n">Leaderboard</span><span class="p">,</span> <span class="n">Spell</span><span class="p">,</span> <span class="n">SpellsSection</span><span class="p">,</span> <span class="n">abc</span>
 <span class="kn">from</span> <span class="nn">tibiapy.character</span> <span class="kn">import</span> <span class="n">Character</span>
-<span class="kn">from</span> <span class="nn">tibiapy.creature</span> <span class="kn">import</span> <span class="n">Creature</span><span class="p">,</span> <span class="n">CreatureEntry</span><span class="p">,</span> <span class="n">CreaturesSection</span>
+<span class="kn">from</span> <span class="nn">tibiapy.creature</span> <span class="kn">import</span> <span class="n">BoostableBosses</span><span class="p">,</span> <span class="n">BoostedCreatures</span><span class="p">,</span> <span class="n">Creature</span><span class="p">,</span> <span class="n">CreatureEntry</span><span class="p">,</span> <span class="n">CreaturesSection</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">BattlEyeHighscoresFilter</span><span class="p">,</span> <span class="n">Category</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> \
     <span class="n">NewsType</span><span class="p">,</span> <span class="n">VocationFilter</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
@@ -800,6 +801,96 @@
 
     <span class="c1"># endregion</span>
 
+<div class="viewcode-block" id="Client.fetch_boosted_creature_and_boss"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_creature_and_boss">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_creature_and_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted creature and boss.</span>
+
+<span class="sd">        .. versionadded:: 5.3.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`BoostedCreatures`</span>
+<span class="sd">            The boosted creature and boss of the day.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">NewsArchive</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">boosted_creatures</span> <span class="o">=</span> <span class="n">BoostedCreatures</span><span class="o">.</span><span class="n">from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creatures</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
+
+    <span class="c1"># Region Bosses</span>
+<div class="viewcode-block" id="Client.fetch_boosted_boss"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_boss">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted boss.</span>
+
+<span class="sd">        .. versionadded:: 5.3.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`BossEntry`</span>
+<span class="sd">            The boosted boss of the day.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">NewsArchive</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBosses</span><span class="o">.</span><span class="n">boosted_boss_from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_library_bosses"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_library_bosses">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_library_bosses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch the bosses from the library section.</span>
+
+<span class="sd">        .. versionadded:: 4.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`BoostableBosses`</span>
+<span class="sd">            The creature&#39;s section in Tibia.com</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoostableBosses</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBosses</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
+
+    <span class="c1"># endregion</span>
+
     <span class="c1"># region Creatures</span>
 <div class="viewcode-block" id="Client.fetch_boosted_creature"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_creature">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_creature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted creature.</span>
@@ -1179,9 +1270,9 @@
 <span class="sd">        house_type: :class:`HouseType`</span>
 <span class="sd">            The type of building. House by default.</span>
 <span class="sd">        status: :class:`HouseStatus`, optional</span>
-<span class="sd">            The house status to filter results. By default no filters will be applied.</span>
+<span class="sd">            The house status to filter results. By default, no filters will be applied.</span>
 <span class="sd">        order: :class:`HouseOrder`, optional</span>
-<span class="sd">            The ordering to use for the results. By default they are sorted by name.</span>
+<span class="sd">            The ordering to use for the results. By default, they are sorted by name.</span>
 <span class="sd">        test: :class:`bool`</span>
 <span class="sd">            Whether to request the test website instead.</span>
 
@@ -1575,7 +1666,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 <h3 class="donation">Donate/support</h3>
@@ -1598,7 +1689,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.0.2.
   </div>
   
   </body>
