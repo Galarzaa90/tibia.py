@@ -6,11 +6,18 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v.5.5.0
+
+5.5.0 (2022-07-27)
+==================
+- Added ``BOSS_POINTS`` to ``Category`` in highscores.
+
+
 .. v.5.4.0
 
 5.4.0 (2022-07-23)
 ==================
-- Added `boss_points` and `bosstiary_progress` to auctions.
+- Added ``boss_points`` and ``bosstiary_progress`` to auctions.
 
 .. v.5.3.0
 
