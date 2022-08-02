@@ -6,6 +6,16 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+
+.. v.5.5.1
+
+5.5.1 (2022-08-2)
+==================
+- Adjusted parsing to support the changes related to mobile devices introduced on the day of this release. The following sections were affected:
+    - Highscores
+    - News
+    - Forums
+
 .. v.5.5.0
 
 5.5.0 (2022-07-27)
