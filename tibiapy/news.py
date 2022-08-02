@@ -278,7 +278,7 @@ class News(abc.BaseNews, abc.Serializable):
         InvalidContent
             If content is not the HTML of a news' page.
         """
-        if "(no news with id " in content:
+        if "News not found" in content:
             return None
         try:
             parsed_content = parse_tibiacom_content(content)
