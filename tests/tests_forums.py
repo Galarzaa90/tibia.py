@@ -30,7 +30,7 @@ class TestForum(TestCommons, unittest.TestCase):
 
         boards = BoardEntry.list_from_content(content)
 
-        self.assertEqual(84, len(boards))
+        self.assertEqual(82, len(boards))
         for i, board in enumerate(boards):
             with self.subTest(i=i):
                 self.assertIsInstance(board, BoardEntry)
@@ -77,7 +77,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual("Antica", board.name)
         self.assertEqual("World Boards", board.section)
         self.assertEqual(1, board.page)
-        self.assertEqual(3, board.total_pages)
+        self.assertEqual(2, board.total_pages)
         self.assertEqual(25, board.board_id)
         self.assertEqual(30, len(board.threads))
         self.assertIsNotNone(board.url)
@@ -205,9 +205,9 @@ class TestForum(TestCommons, unittest.TestCase):
 
         post = thread.posts[0]
         self.assertEqual("Skerio", post.author.name)
-        self.assertEqual("Relania", post.author.world)
+        self.assertEqual("Olima", post.author.world)
         self.assertEqual("Community Manager", post.author.position)
-        self.assertEqual(711, post.author.posts)
+        self.assertEqual(872, post.author.posts)
         self.assertEqual("Mirade", post.edited_by)
         self.assertTrue(post.golden_frame)
         self.assertEqual(38969385, post.post_id)

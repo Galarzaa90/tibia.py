@@ -504,12 +504,12 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
                 traded = True
             return ForumAuthor(name=name, deleted=deleted, traded=traded)
         author = cls(char_link.text)
-
-        position_info = character_info_container.find("font", attrs={"class": "ff_smallinfo"})
+        char_info = character_info_container.select_one("font.ff_infotext")
+        position_info = character_info_container.select_one("font.ff_smallinfo")
         # Position and titles are shown the same way. If we have two, the title is first and then the position.
         # However, if the character only has one of them, there's no way to know which is it unless we validate against
         # possible types
-        if position_info and position_info.parent == character_info_container:
+        if position_info and (not char_info or position_info.parent != char_info):
             convert_line_breaks(position_info)
             titles = [title for title in position_info.text.splitlines() if title]
             positions = ["Tutor", "Community Manager", "Customer Support", "Programmer", "Game Content Designer",
@@ -519,7 +519,6 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
                     author.position = _title
                 else:
                     author.title = _title
-        char_info = character_info_container.find("font", attrs={"class": "ff_infotext"})
         guild_info = char_info.find("font", attrs={"class": "ff_smallinfo"})
         convert_line_breaks(char_info)
         char_info_text = char_info.text
@@ -1072,10 +1071,25 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         golden_frame = "CipPostWithBorderImage" in post_table.parent.attrs.get("class")
         character_info_container = post_table.find("div", attrs={"class": "PostCharacterText"})
         post_author = ForumAuthor._parse_author_table(character_info_container)
-        content_container = post_table.find("div", attrs={"class": "PostText"})
+        content_container = post_table.select_one("div.PostText")
+        emoticon = None
+        title_tag = None
+        # The first elements are the emoticon, the title, and the separator.
+        while True:
+            child = next(content_container.children)
+            child.extract()
+            if child.name == "img":
+                emoticon = ForumEmoticon(child["alt"], child["src"])
+            if child.name == "b":
+                title_tag = child
+            if child.name == "div":
+                break
+        # Remove the first line jump found in post content
+        first_break = content_container.select_one("br")
+        if first_break:
+            first_break.extract()
         title = None
         signature = None
-        emoticon = None
         signature_container = post_table.find("td", attrs={"class": "ff_pagetext"})
         if signature_container:
             # Remove the signature's content from content container
@@ -1088,15 +1102,8 @@ class ForumThread(abc.BaseThread, abc.Serializable):
             # This will handle the post containing another signature separator within the content
             # We join back all the pieces except for the last one
             content = signature_separator.join(parts[:-1])
-        title_raw, content = content.split("<br/><br/>", 1)
-        if title_raw:
-            title_html = bs4.BeautifulSoup(title_raw, 'lxml')
-            emoticon_img = title_html.find("img")
-            if emoticon_img:
-                emoticon = ForumEmoticon(emoticon_img["alt"], emoticon_img["src"])
-            title_tag = title_html.find("b")
-            if title_tag:
-                title = title_tag.text
+        if title_tag:
+            title = title_tag.text
         post_details = post_table.find('div', attrs={"class": "PostDetails"})
         dates = post_dates_regex.findall(post_details.text)
         edited_date = None
@@ -1174,7 +1181,7 @@ class LastPost(abc.BasePost, abc.Serializable):
         Optional[:class:`LastPost`]:
             The last post described in the column, if any.
         """
-        last_post_info = last_post_column.find("div", attrs={"class": "LastPostInfo"})
+        last_post_info = last_post_column.select_one("span.LastPostInfo")
         if last_post_info is None:
             return None
         permalink_tag = last_post_info.find("a")
@@ -1191,6 +1198,7 @@ class LastPost(abc.BasePost, abc.Serializable):
         if "(traded)" in author:
             author = author.replace("(traded)", "").strip()
             traded = True
+            deleted = False
         return cls(author, post_id, last_post_date, deleted=deleted, traded=traded)
 
 
