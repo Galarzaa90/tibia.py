@@ -408,7 +408,7 @@
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">next_sibling</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">next_sibling</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;br&quot;</span><span class="p">:</span>
                         <span class="n">description</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="k">elif</span> <span class="n">next_sibling</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span>
+                    <span class="k">elif</span> <span class="n">next_sibling</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">]:</span>
                         <span class="k">break</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">description</span> <span class="o">+=</span> <span class="n">next_sibling</span><span class="o">.</span><span class="n">text</span>
