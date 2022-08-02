@@ -15,6 +15,7 @@ Changelog
     - Highscores
     - News
     - Forums
+    - Spells
 
 .. v.5.5.0
 

@@ -361,7 +361,7 @@ class Spell(SpellEntry):
                 if isinstance(next_sibling, bs4.Tag):
                     if next_sibling.name == "br":
                         description += "\n"
-                    elif next_sibling.name == "table":
+                    elif next_sibling.name in ["table", "div"]:
                         break
                     else:
                         description += next_sibling.text
