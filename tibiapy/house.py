@@ -6,7 +6,7 @@ from typing import Dict, List, Optional
 from tibiapy import abc
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_tibia_datetime, parse_tibia_money, \
+from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibia_datetime, parse_tibia_money, \
     parse_tibiacom_content, parse_tibiacom_tables, try_date, try_datetime, try_enum
 
 __all__ = (
@@ -116,7 +116,7 @@ class HousesSection(abc.Serializable):
             "world": world,
             "town": town,
             "type": house_type.plural if house_type else None,
-            "status": status.value if status else None,
+            "state": status.value if status else None,
             "order": order.value if order else None,
         }
         return {k: v for k, v in params.items() if v is not None}
@@ -169,7 +169,10 @@ class HousesSection(abc.Serializable):
             parsed_content = parse_tibiacom_content(content)
             tables = parse_tibiacom_tables(parsed_content)
             house_results = cls()
-            house_results._parse_filters(tables["House Search"])
+            if "House Search" not in tables:
+                raise InvalidContent("content does not belong to the houses section")
+            form = parsed_content.select_one("div.BoxContent > form")
+            house_results._parse_filters(form)
             if len(tables) < 2:
                 return house_results
             houses_table = tables[list(tables.keys())[0]]
@@ -194,29 +197,15 @@ class HousesSection(abc.Serializable):
         except (ValueError, AttributeError, KeyError) as e:
             raise InvalidContent("content does not belong to a Tibia.com house list", e)
 
-    def _parse_filters(self, filters_table):
-        world_select = filters_table.find("select", {"name": "world"})
-        for world_option in world_select.find_all("option"):
-            world_name = world_option.text
-            if "(" in world_name:
-                continue
-            self.available_worlds.append(world_name)
-            if world_option.attrs.get("selected"):
-                self.world = world_name
-        for town_option in filters_table.find_all("input", {"name": "town"}):
-            town_name = town_option.attrs.get("value")
-            self.available_towns.append(town_name)
-            if "checked" in town_option.attrs:
-                self.town = town_name
-        checked_status = filters_table.find("input", {"name": "state", "checked": True})
-        if checked_status.attrs.get("value"):
-            self.status = try_enum(HouseStatus, checked_status.attrs.get("value"))
-        checked_type = filters_table.find("input", {"name": "type", "checked": True})
-        if checked_type.attrs.get("value"):
-            self.house_type = try_enum(HouseType, checked_type.attrs.get("value")[:-1])
-        checked_order = filters_table.find("input", {"name": "order", "checked": True})
-        if checked_order and checked_order.attrs.get("value"):
-            self.order = try_enum(HouseOrder, checked_order.attrs.get("value"), HouseOrder.NAME)
+    def _parse_filters(self, form):
+        form_data = parse_form_data(form)
+        self.available_worlds = list(form_data["__options__"]["world"].values())
+        self.available_towns = list(form_data["__options__"]["town"].values())
+        self.world = form_data["world"]
+        self.town = form_data["town"]
+        self.status = try_enum(HouseStatus, form_data.get("state"))
+        self.house_type = try_enum(HouseType, form_data.get("type", "")[:-1])
+        self.order = try_enum(HouseOrder, form_data.get("order"), HouseOrder.NAME)
         return self
 
 
@@ -324,6 +313,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
     def highest_bidder_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character with the highest bid, if applicable."""
         return abc.BaseCharacter.get_url(self.highest_bidder) if self.highest_bidder is not None else None
+
     # endregion
 
     # region Public methods
@@ -382,6 +372,7 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
             return house
         except (ValueError, TypeError) as e:
             raise InvalidContent("content does not belong to a house page", e)
+
     # endregion
 
     def _parse_status(self, status):

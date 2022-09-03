@@ -118,7 +118,8 @@ def parse_form_data(form: bs4.Tag, include_options=True):
     data.update({field.attrs.get("name"): field.attrs.get("value") for field in checkboxes})
     # Parse Radios
     all_radios = form.find_all("input", {"type": "radio"})
-    for name, radios in itertools.groupby(all_radios, key=lambda t: t.attrs["name"]):
+    for name, _radios in itertools.groupby(all_radios, key=lambda t: t.attrs["name"]):
+        radios = list(_radios)
         selected_radio = next((r for r in radios if r.attrs.get("checked") is not None), None)
         if include_options:
             data["__options__"][name] = {str(r.next_sibling).strip(): r.attrs["value"] for r in radios}
