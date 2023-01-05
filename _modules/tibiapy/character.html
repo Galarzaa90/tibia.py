@@ -10,10 +10,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/custom.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -95,7 +93,7 @@
 
 
 <div class="viewcode-block" id="AccountBadge"><a class="viewcode-back" href="../../api.html#tibiapy.AccountBadge">[docs]</a><span class="k">class</span> <span class="nc">AccountBadge</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A displayed account badge in the character&#39;s information.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A displayed account badge in the character&#39;s information.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -123,7 +121,7 @@
 
 
 <div class="viewcode-block" id="AccountInformation"><a class="viewcode-back" href="../../api.html#tibiapy.AccountInformation">[docs]</a><span class="k">class</span> <span class="nc">AccountInformation</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains the information of a character&#39;s account.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the information of a character&#39;s account.</span>
 
 <span class="sd">    This is only visible if the character is not marked as hidden.</span>
 
@@ -153,7 +151,7 @@
 
 
 <div class="viewcode-block" id="Achievement"><a class="viewcode-back" href="../../api.html#tibiapy.Achievement">[docs]</a><span class="k">class</span> <span class="nc">Achievement</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents an achievement listed on a character&#39;s page.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an achievement listed on a character&#39;s page.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -181,7 +179,7 @@
 
 
 <div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../api.html#tibiapy.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A full character from Tibia.com, obtained from its character page.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A full character from Tibia.com, obtained from its character page.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -312,39 +310,39 @@
     <span class="c1"># region Properties</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">deleted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the character is scheduled for deletion or not.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the character is scheduled for deletion or not.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deletion_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">guild_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`, optional: The name of the guild the character belongs to, or :obj:`None`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`, optional: The name of the guild the character belongs to, or :obj:`None`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">guild_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`, optional: The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`, optional: The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">rank</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">guild_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`, optional: The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`, optional: The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">abc</span><span class="o">.</span><span class="n">BaseGuild</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether this is a hidden character or not.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`bool`: Whether this is a hidden character or not.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other_characters</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">married_to_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`, optional: The URL to the husband/spouse information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`, optional: The URL to the husband/spouse information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">married_to</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">married_to</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="c1"># endregion</span>
 
     <span class="c1"># region Public methods</span>
 <div class="viewcode-block" id="Character.from_content"><a class="viewcode-back" href="../../api.html#tibiapy.Character.from_content">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create an instance of the class from the html content of the character&#39;s page.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of the class from the html content of the character&#39;s page.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -383,7 +381,7 @@
 
     <span class="c1"># region Private methods</span>
     <span class="k">def</span> <span class="nf">_parse_account_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parse the character&#39;s account information.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s account information.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -406,7 +404,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">account_information</span> <span class="o">=</span> <span class="n">AccountInformation</span><span class="p">(</span><span class="n">created</span><span class="p">,</span> <span class="n">loyalty_title</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_achievements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parse the character&#39;s displayed achievements.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s displayed achievements.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -427,7 +425,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">achievements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Achievement</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">grade</span><span class="p">,</span> <span class="n">secret</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_parse_badges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parse the character&#39;s displayed badges.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s displayed badges.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -449,7 +447,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">account_badges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AccountBadge</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">icon_url</span><span class="p">,</span> <span class="n">description</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_parse_character_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the character&#39;s basic information and applies the found values.</span>
 
 <span class="sd">        Parameters</span>
@@ -535,7 +533,7 @@
                        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">houses</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_parse_deaths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parse the character&#39;s recent deaths.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s recent deaths.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -584,7 +582,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_killer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">killer</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parse a killer into a dictionary.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a killer into a dictionary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -616,7 +614,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;player&quot;</span><span class="p">:</span> <span class="n">player</span><span class="p">,</span> <span class="s2">&quot;summon&quot;</span><span class="p">:</span> <span class="n">summon</span><span class="p">,</span> <span class="s2">&quot;traded&quot;</span><span class="p">:</span> <span class="n">traded</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">_parse_other_characters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Parse the character&#39;s other visible characters.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s other visible characters.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -647,7 +645,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the information tables contained in a character&#39;s page.</span>
 
 <span class="sd">        Parameters</span>
@@ -677,7 +675,7 @@
 
 
 <div class="viewcode-block" id="Death"><a class="viewcode-back" href="../../api.html#tibiapy.Death">[docs]</a><span class="k">class</span> <span class="nc">Death</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A character&#39;s death.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A character&#39;s death.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    -----------</span>
@@ -728,12 +726,12 @@
     <span class="c1"># region Properties</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">by_player</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the kill involves other characters.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the kill involves other characters.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="n">k</span><span class="o">.</span><span class="n">player</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="n">k</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">])</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">killer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`Killer`: The first killer in the list.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`Killer`: The first killer in the list.</span>
 
 <span class="sd">        This is usually the killer that gave the killing blow.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -742,7 +740,7 @@
 
 
 <div class="viewcode-block" id="GuildMembership"><a class="viewcode-back" href="../../api.html#tibiapy.GuildMembership">[docs]</a><span class="k">class</span> <span class="nc">GuildMembership</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseGuild</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The guild information of a character.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The guild information of a character.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -770,7 +768,7 @@
 
 
 <div class="viewcode-block" id="Killer"><a class="viewcode-back" href="../../api.html#tibiapy.Killer">[docs]</a><span class="k">class</span> <span class="nc">Killer</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents a killer.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a killer.</span>
 
 <span class="sd">    A killer can be:</span>
 
@@ -809,12 +807,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;:class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="OnlineCharacter"><a class="viewcode-back" href="../../api.html#tibiapy.OnlineCharacter">[docs]</a><span class="k">class</span> <span class="nc">OnlineCharacter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;An online character in the world&#39;s page.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An online character in the world&#39;s page.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -846,7 +844,7 @@
 
 
 <div class="viewcode-block" id="OtherCharacter"><a class="viewcode-back" href="../../api.html#tibiapy.OtherCharacter">[docs]</a><span class="k">class</span> <span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A character listed in the characters section of a character&#39;s page.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A character listed in the characters section of a character&#39;s page.</span>
 
 <span class="sd">    These are only shown if the character is not hidden, and only characters that are not hidden are shown here.</span>
 
@@ -974,7 +972,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2021, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.1.1.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.0.0.
   </div>
   
   </body>
