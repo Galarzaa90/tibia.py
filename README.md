@@ -3,7 +3,7 @@ An API to parse Tibia.com content into object oriented data.
 
 No fetching is done by this module, you must provide the html content.
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Galarzaa90/tibia.py/Build)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Galarzaa90/tibia.py/build.yml)
 [![codecov](https://codecov.io/gh/Galarzaa90/tibia.py/branch/master/graph/badge.svg?token=mS9Wxv6O2F)](https://codecov.io/gh/Galarzaa90/tibia.py)
 [![PyPI](https://img.shields.io/pypi/v/tibia.py.svg)](https://pypi.python.org/pypi/tibia.py/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tibia.py.svg)
