@@ -42,6 +42,7 @@ id_addon_regex = re.compile(r'(\d+)_(\d)\.gif')
 id_regex = re.compile(r'(\d+).(?:gif|png)')
 description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
 amount_regex = re.compile(r'([\d,]+)x')
+tier_regex = re.compile(r"(.*)\s\(tier (\d)\)")
 
 log = logging.getLogger("tibiapy")
 
@@ -500,10 +501,16 @@ class DisplayItem(abc.Serializable):
         name, *desc = title_text.split("\n")
         if desc:
             description = " ".join(desc)
+        tier = 0
+        m = tier_regex.search(name)
+        if m:
+            tier = int(m.group(2))
+            name = m.group(1)
         m = id_regex.search(img_tag["src"])
         if m:
             item_id = int(m.group(1))
-        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description)
+        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description,
+                           tier=tier)
 
 
 class DisplayMount(DisplayImage):
