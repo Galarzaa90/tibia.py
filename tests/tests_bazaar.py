@@ -264,7 +264,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(BidType.MINIMUM, auction.bid_type)
         self.assertEqual(AuctionStatus.FINISHED, auction.status)
 
-    def test_auction_details_from_content_finished(self):
+    def test_auction_details_from_content_with_upgraded_items(self):
         auction = Auction.from_content(self.load_resource(FILE_AUCTION_UPGRADED_ITEMS))
 
         self.assertIsNotNone(auction)
