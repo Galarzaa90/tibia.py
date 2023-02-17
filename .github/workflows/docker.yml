@@ -3,7 +3,6 @@ name: Docker Build
 on:
   push:
     branches:
-      - master
       - dev
       - main
     tags:
