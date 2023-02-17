@@ -460,6 +460,8 @@ class DisplayItem(abc.Serializable):
         The item's count.
     item_id: :class:`int`
         The item's client id.
+    tier: :class:ìnt`
+        The item's tier.
     """
 
     __slots__ = (
@@ -468,6 +470,7 @@ class DisplayItem(abc.Serializable):
         "description",
         "count",
         "item_id",
+        "tier",
     )
 
     def __init__(self, **kwargs):
@@ -476,6 +479,7 @@ class DisplayItem(abc.Serializable):
         self.description: str = kwargs.get("description")
         self.count: int = kwargs.get("count", 1)
         self.item_id: int = kwargs.get("item_id", 0)
+        self.tier: int = kwargs.get("tier", 0)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} count={self.count} item_id={self.item_id}>"
