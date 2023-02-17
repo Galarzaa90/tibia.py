@@ -42,6 +42,7 @@ id_addon_regex = re.compile(r'(\d+)_(\d)\.gif')
 id_regex = re.compile(r'(\d+).(?:gif|png)')
 description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
 amount_regex = re.compile(r'([\d,]+)x')
+tier_regex = re.compile(r"(.*)\s\(tier (\d)\)")
 
 log = logging.getLogger("tibiapy")
 
@@ -460,6 +461,8 @@ class DisplayItem(abc.Serializable):
         The item's count.
     item_id: :class:`int`
         The item's client id.
+    tier: :class:ìnt`
+        The item's tier.
     """
 
     __slots__ = (
@@ -468,6 +471,7 @@ class DisplayItem(abc.Serializable):
         "description",
         "count",
         "item_id",
+        "tier",
     )
 
     def __init__(self, **kwargs):
@@ -476,6 +480,7 @@ class DisplayItem(abc.Serializable):
         self.description: str = kwargs.get("description")
         self.count: int = kwargs.get("count", 1)
         self.item_id: int = kwargs.get("item_id", 0)
+        self.tier: int = kwargs.get("tier", 0)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} name={self.name!r} count={self.count} item_id={self.item_id}>"
@@ -496,10 +501,16 @@ class DisplayItem(abc.Serializable):
         name, *desc = title_text.split("\n")
         if desc:
             description = " ".join(desc)
+        tier = 0
+        m = tier_regex.search(name)
+        if m:
+            tier = int(m.group(2))
+            name = m.group(1)
         m = id_regex.search(img_tag["src"])
         if m:
             item_id = int(m.group(1))
-        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description)
+        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description,
+                           tier=tier)
 
 
 class DisplayMount(DisplayImage):

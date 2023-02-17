@@ -14,6 +14,7 @@ FILE_BAZAAR_CURRENT = "bazaar/tibiacom_current.txt"
 FILE_BAZAAR_CURRENT_ALL_FILTERS = "bazaar/tibiacom_current_all_filters.txt"
 FILE_BAZAAR_HISTORY = "bazaar/tibiacom_history.txt"
 FILE_AUCTION_FINISHED = "bazaar/tibiacom_auction_finished.txt"
+FILE_AUCTION_UPGRADED_ITEMS = "bazaar/tibiacom_auction_upgraded_items.txt"
 FILE_AUCTION_NOT_FOUND = "bazaar/tibiacom_auction_not_found.txt"
 
 
@@ -262,6 +263,15 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertEqual(330000, auction.bid)
         self.assertEqual(BidType.MINIMUM, auction.bid_type)
         self.assertEqual(AuctionStatus.FINISHED, auction.status)
+
+    def test_auction_details_from_content_with_upgraded_items(self):
+        auction = Auction.from_content(self.load_resource(FILE_AUCTION_UPGRADED_ITEMS))
+
+        self.assertIsNotNone(auction)
+
+        self.assertEqual(1, auction.displayed_items[0].tier)
+        self.assertEqual(1, auction.items.entries[1].tier)
+
 
     def test_auction_details_from_content_not_found(self):
         auction = Auction.from_content(self.load_resource(FILE_AUCTION_NOT_FOUND))
