@@ -87,6 +87,7 @@
 <span class="n">id_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d+).(?:gif|png)&#39;</span><span class="p">)</span>
 <span class="n">description_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;(?:an?\s)?([^&quot;]+)&quot;&#39;</span><span class="p">)</span>
 <span class="n">amount_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([\d,]+)x&#39;</span><span class="p">)</span>
+<span class="n">tier_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(.*)\s\(tier (\d)\)&quot;</span><span class="p">)</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;tibiapy&quot;</span><span class="p">)</span>
 
@@ -505,6 +506,8 @@
 <span class="sd">        The item&#39;s count.</span>
 <span class="sd">    item_id: :class:`int`</span>
 <span class="sd">        The item&#39;s client id.</span>
+<span class="sd">    tier: :class:ìnt`</span>
+<span class="sd">        The item&#39;s tier.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
@@ -513,6 +516,7 @@
         <span class="s2">&quot;description&quot;</span><span class="p">,</span>
         <span class="s2">&quot;count&quot;</span><span class="p">,</span>
         <span class="s2">&quot;item_id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;tier&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -521,6 +525,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">item_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;item_id&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tier&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> count=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s2"> item_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">item_id</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
@@ -541,10 +546,16 @@
         <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">desc</span> <span class="o">=</span> <span class="n">title_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">desc</span><span class="p">:</span>
             <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+        <span class="n">tier</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">tier_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">tier</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">id_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">img_tag</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
             <span class="n">item_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">DisplayItem</span><span class="p">(</span><span class="n">image_url</span><span class="o">=</span><span class="n">img_tag</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="n">item_id</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">DisplayItem</span><span class="p">(</span><span class="n">image_url</span><span class="o">=</span><span class="n">img_tag</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="n">item_id</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+                           <span class="n">tier</span><span class="o">=</span><span class="n">tier</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DisplayMount"><a class="viewcode-back" href="../../api.html#tibiapy.DisplayMount">[docs]</a><span class="k">class</span> <span class="nc">DisplayMount</span><span class="p">(</span><span class="n">DisplayImage</span><span class="p">):</span>
