@@ -7,9 +7,9 @@ Changelog
     Try to always use the latest version.
 
 
-.. v5.3.0
+.. v5.6.0
 
-5.3.0 (2023-02-17)
+5.6.0 (2023-02-17)
 ==================
 - Added ``tier`` to items in auctions.
 
