@@ -461,7 +461,7 @@ class DisplayItem(abc.Serializable):
         The item's count.
     item_id: :class:`int`
         The item's client id.
-    tier: :class:`ìnt`
+    tier: :class:`int`
         The item's tier.
     """
 
