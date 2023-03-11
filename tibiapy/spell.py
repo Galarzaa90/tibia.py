@@ -99,15 +99,15 @@ class SpellsSection(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            table_content_container = parsed_content.find("div", attrs={"class": "InnerTableContainer"})
+            table_content_container = parsed_content.select_one("div.InnerTableContainer")
             spells_table = table_content_container.find("table", class_=lambda t: t != "TableContent")
             spell_rows = spells_table.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
             spells_section = cls()
             for row in spell_rows:
-                columns = row.find_all("td")
+                columns = row.select("td")
                 if len(columns) != 7:
                     continue
-                spell_link = columns[0].find("a")
+                spell_link = columns[0].select_one("a")
                 url = urllib.parse.urlparse(spell_link["href"])
                 query = urllib.parse.parse_qs(url.query)
                 cols_text = [c.text for c in columns]
@@ -123,7 +123,7 @@ class SpellsSection(abc.Serializable):
                 spell = SpellEntry(name=name.strip(), words=words.strip(), spell_type=spell_type, level=level, group=group,
                                    mana=mana, premium=premium, price=price, identifier=identifier)
                 spells_section.entries.append(spell)
-            form = parsed_content.find("form")
+            form = parsed_content.select_one("form")
             data = parse_form_data(form)
             spells_section.vocation = try_enum(VocationSpellFilter, data["vocation"])
             spells_section.group = try_enum(SpellGroup, data["group"])
@@ -351,7 +351,7 @@ class Spell(SpellEntry):
             tables = parse_tibiacom_tables(parsed_content)
             title_table = parsed_content.find("table", attrs={"class": False})
             spell_table = tables["Spell Information"]
-            img = title_table.find("img")
+            img = title_table.select_one("img")
             url = urllib.parse.urlparse(img["src"])
             filename = os.path.basename(url.path)
             identifier = str(filename.split(".")[0])
@@ -374,7 +374,7 @@ class Spell(SpellEntry):
                 spell.rune = cls._parse_rune_table(tables["Rune Information"])
             return spell
         except (TypeError, AttributeError, IndexError, KeyError) as e:
-            form = parsed_content.find("form")
+            form = parsed_content.select_one("form")
             if form:
                 data = parse_form_data(form)
                 if "subtopic=spells" in data.get("__action__"):
@@ -458,10 +458,10 @@ class Spell(SpellEntry):
         :class:`dict`
             The table attributes.
         """
-        spell_rows = table.find_all("tr")
+        spell_rows = table.select("tr")
         attrs = {}
         for row in spell_rows:
-            cols = row.find_all("td")
+            cols = row.select("td")
             cols_text = [c.text for c in cols]
             clean_name = cols_text[0].replace(":", "").replace(" ", "_").lower().strip()
             value = cols_text[1]
