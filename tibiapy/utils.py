@@ -428,7 +428,7 @@ def try_date(obj) -> Optional[datetime.date]:
     return parse_tibia_full_date(obj)
 
 
-def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", builder="lxml"):
+def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", builder="lxml") -> bs4.BeautifulSoup:
     """Parse HTML content from Tibia.com into a BeautifulSoup object.
 
     Parameters

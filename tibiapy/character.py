@@ -5,6 +5,8 @@ import urllib.parse
 from collections import OrderedDict
 from typing import List, Optional, TYPE_CHECKING
 
+from bs4 import Tag
+
 from tibiapy import abc
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
@@ -318,7 +320,8 @@ class Character(abc.BaseCharacter, abc.Serializable):
         tables = cls._parse_tables(parsed_content)
         char = Character()
         if not tables:
-            messsage_table = parsed_content.find("div", {"class": "TableContainer"})
+
+            messsage_table = parsed_content.select_one("div.TableContainer")
             if messsage_table and "Could not find character" in messsage_table.text:
                 return None
         if "Character Information" in tables.keys():
@@ -347,7 +350,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
         if not rows:
             return
         for row in rows:
-            cols_raw = row.find_all('td')
+            cols_raw = row.select('td')
             cols = [ele.text.strip() for ele in cols_raw]
             field, value = cols
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
@@ -367,7 +370,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             A list of all rows contained in the table.
         """
         for row in rows:
-            cols = row.find_all('td')
+            cols = row.select('td')
             if len(cols) != 2:
                 continue
             field, value = cols
@@ -379,7 +382,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
                 secret = True
             self.achievements.append(Achievement(name, grade, secret))
 
-    def _parse_badges(self, rows):
+    def _parse_badges(self, rows: List[Tag]):
         """Parse the character's displayed badges.
 
         Parameters
@@ -388,16 +391,16 @@ class Character(abc.BaseCharacter, abc.Serializable):
             A list of all rows contained in the table.
         """
         row = rows[0]
-        columns = row.find_all('td')
+        columns = row.select('td')
         for column in columns:
-            popup_span = column.find("span", attrs={"class": "HelperDivIndicator"})
+            popup_span = column.select_one("span.HelperDivIndicator")
             if not popup_span:
                 # Badges are visible, but none selected.
                 return
             popup = parse_popup(popup_span['onmouseover'])
             name = popup[0]
             description = popup[1].text
-            icon_image = column.find("img")
+            icon_image = column.select_one("img")
             icon_url = icon_image['src']
             self.account_badges.append(AccountBadge(name, icon_url, description))
 
@@ -414,7 +417,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
         char = {}
         houses = []
         for row in rows:
-            cols_raw = row.find_all('td')
+            cols_raw = row.select('td')
             cols = [ele.text.strip() for ele in cols_raw]
             field, value = cols
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
@@ -436,7 +439,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
                                "town": query["town"][0], "paid_until": paid_until_date})
                 continue
             if field == "guild_membership":
-                guild_link = cols_raw[1].find('a')
+                guild_link = cols_raw[1].select_one('a')
                 rank = value.split("of the")[0]
                 char["guild_membership"] = GuildMembership(guild_link.text.replace("\xa0", " "), rank.strip())
 
@@ -496,7 +499,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             A list of all rows contained in the table.
         """
         for row in rows:
-            cols = row.find_all('td')
+            cols = row.select('td')
             if len(cols) != 2:
                 self.deaths_truncated = True
                 break
@@ -577,7 +580,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             A list of all rows contained in the table.
         """
         for row in rows[1:]:
-            cols_raw = row.find_all('td')
+            cols_raw = row.select('td')
             cols = [ele.text.strip() for ele in cols_raw]
             if len(cols) != 4:
                 continue
@@ -588,7 +591,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             if traded_label in name:
                 name = name.replace(traded_label, "").strip()
                 traded = True
-            main_img = cols_raw[0].find('img')
+            main_img = cols_raw[0].select_one('img')
             main = False
             if main_img and main_img['title'] == "Main Character":
                 main = True
@@ -613,18 +616,18 @@ class Character(abc.BaseCharacter, abc.Serializable):
         :class:`OrderedDict`[str, :class:`list`of :class:`bs4.Tag`]
             A dictionary containing all the table rows, with the table headers as keys.
         """
-        tables = parsed_content.find_all('table', attrs={"width": "100%"})
+        tables = parsed_content.select('table[width="100%"]')
         output = OrderedDict()
         for table in tables:
             container = table.find_parent("div", {"class": "TableContainer"})
             if container:
-                caption_container = container.find("div", {"class": "CaptionContainer"})
+                caption_container = container.select_one("div.CaptionContainer")
                 title = caption_container.text.strip()
                 offset = 0
             else:
-                title = table.find("td").text.strip()
+                title = table.select_one("td").text.strip()
                 offset = 1
-            output[title] = table.find_all("tr")[offset:]
+            output[title] = table.select("tr")[offset:]
         return output
     # endregion
 
