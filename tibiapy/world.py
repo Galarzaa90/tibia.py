@@ -279,14 +279,14 @@ class World(abc.BaseWorld, abc.Serializable):
             error = tables.get("Error")
             if error and error[0].text == "World with this name doesn't exist!":
                 return None
-            selected_world = parsed_content.find('option', selected=True)
+            selected_world = parsed_content.select_one('option:checked')
             world = cls(selected_world.text)
             world._parse_world_info(tables.get("World Information", []))
 
             online_table = tables.get("Players Online", [])
             world.online_players = []
             for row in online_table[1:]:
-                cols_raw = row.find_all('td')
+                cols_raw = row.select('td')
                 name, level, vocation = (c.text.replace('\xa0', ' ').strip() for c in cols_raw)
                 world.online_players.append(OnlineCharacter(name, world.name, int(level), vocation))
         except AttributeError:
@@ -306,7 +306,7 @@ class World(abc.BaseWorld, abc.Serializable):
         """
         world_info = {}
         for row in world_info_table:
-            cols_raw = row.find_all('td')
+            cols_raw = row.select('td')
             cols = [ele.text.strip() for ele in cols_raw]
             field, value = cols
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
@@ -378,13 +378,13 @@ class World(abc.BaseWorld, abc.Serializable):
         :class:`OrderedDict`[:class:`str`, :class:`list`[:class:`bs4.Tag`]]
             A dictionary containing all the table rows, with the table headers as keys.
         """
-        tables = parsed_content.find_all('div', attrs={'class': 'TableContainer'})
+        tables = parsed_content.select('div.TableContainer')
         output = OrderedDict()
         for table in tables:
-            title = table.find("div", attrs={'class': 'Text'}).text
+            title = table.select_one("div.Text").text
             title = title.split("[")[0].strip()
-            inner_table = table.find("div", attrs={'class': 'InnerTableContainer'})
-            output[title] = inner_table.find_all("tr")
+            inner_table = table.select_one("div.InnerTableContainer")
+            output[title] = inner_table.select("tr")
         return output
     # endregion
 
@@ -470,7 +470,7 @@ class WorldOverview(abc.Serializable):
         world_overview = WorldOverview()
         try:
             record_table, *tables \
-                = parsed_content.find_all("table", {"class": "TableContent"})
+                = parsed_content.select("table.TableContent")
             m = record_regexp.search(record_table.text)
             world_overview.record_count = parse_integer(m.group("count"))
             world_overview.record_date = parse_tibia_datetime(m.group("date"))
@@ -490,7 +490,7 @@ class WorldOverview(abc.Serializable):
             Whether these are tournament worlds or not.
         """
         for world_row in world_rows:
-            cols = world_row.find_all("td")
+            cols = world_row.select("td")
             name = cols[0].text.strip()
             status = "Online"
             online = parse_integer(cols[1].text.strip(), None)
@@ -502,7 +502,7 @@ class WorldOverview(abc.Serializable):
 
             world = WorldEntry(name, location, pvp, online_count=online, status=status)
             # Check Battleye icon to get information
-            battleye_icon = cols[4].find("span", attrs={"class": "HelperDivIndicator"})
+            battleye_icon = cols[4].select_one("span.HelperDivIndicator")
             if battleye_icon is not None:
                 m = battleye_regexp.search(battleye_icon["onmouseover"])
                 if m:
@@ -513,16 +513,14 @@ class WorldOverview(abc.Serializable):
             self.worlds.append(world)
 
     def _parse_worlds_tables(self, tables):
-        """Parse the world columns and adds the results to :py:attr:`worlds`.
+        """Parse the tables and adds the results to the world list.
 
         Parameters
         ----------
-        world_rows: :class:`list` of :class:`bs4.Tag`
-            A list containing the rows of each world.
-        tournament: :class:`bool`
-            Whether these are tournament worlds or not.
+        tables: :class:`map` of :class:`bs4.Tag`
+            A mapping containing the tables with worlds.
         """
         for title_table, worlds_table in zip(tables, tables[1:]):
             title = title_table.text.lower()
-            regular_world_rows = worlds_table.find_all("tr", attrs={"class": ["Odd", "Even"]})
+            regular_world_rows = worlds_table.select("tr.Odd, tr.Even")
             self._parse_worlds(regular_world_rows, "tournament" in title)
