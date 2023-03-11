@@ -117,7 +117,7 @@ class GuildsSection(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            form = parsed_content.find("form")
+            form = parsed_content.select_one("form")
             data = parse_form_data(form, include_options=True)
             selected_world = data["world"] if data["world"] else None
             available_worlds = [w for w in data["__options__"]["world"].values() if w]
@@ -125,14 +125,14 @@ class GuildsSection(abc.Serializable):
         except (AttributeError, KeyError) as e:
             raise InvalidContent("Content does not belong to world guild list.", e)
         # First TableContainer contains world selector.
-        _, *containers = parsed_content.find_all('div', class_="TableContainer")
+        _, *containers = parsed_content.select('div.TableContainer')
         for container in containers:
-            header = container.find('div', class_="Text")
+            header = container.select_one('div.Text')
             active = "Active" in header.text
             header, *rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
             for row in rows:
                 columns = row.find_all('td')
-                logo_img = columns[0].find('img')["src"]
+                logo_img = columns[0].select_one('img')["src"]
                 description_lines = columns[1].get_text("\n").split("\n", 1)
                 name = description_lines[0]
                 description = None
@@ -596,12 +596,12 @@ class GuildWars(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            table_current, table_history = parsed_content.find_all("div", attrs={"class": "TableContainer"})
-            current_table_content = table_current.find("table", attrs={"class": "TableContent"})
+            table_current, table_history = parsed_content.select("div.TableContainer")
+            current_table_content = table_current.select_one("table.TableContent")
             current_war = None
             guild_name = None
             if current_table_content is not None:
-                for br in current_table_content.find_all("br"):
+                for br in current_table_content.select("br"):
                     br.replace_with("\n")
                 current_war = cls._parse_current_war_information(current_table_content.text)
             else:
@@ -610,9 +610,9 @@ class GuildWars(abc.Serializable):
                 guild_name = current_war_match.group(1)
 
             history_entries = []
-            history_contents = table_history.find_all("table", attrs={"class": "TableContent"})
+            history_contents = table_history.select("table.TableContent")
             for history_content in history_contents:
-                for br in history_content.find_all("br"):
+                for br in history_content.select("br"):
                     br.replace_with("\n")
                 entry = cls._parse_war_history_entry(history_content.text)
                 history_entries.append(entry)
