@@ -1,7 +1,6 @@
 """Models related to the Tibia.com character page."""
 import datetime
 import re
-import urllib.parse
 from collections import OrderedDict
 from typing import List, Optional, TYPE_CHECKING
 
@@ -12,7 +11,7 @@ from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.house import CharacterHouse
 from tibiapy.utils import (parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list,
-                           try_datetime, try_enum)
+                           try_datetime, try_enum, parse_link_info)
 
 if TYPE_CHECKING:
     import bs4
@@ -422,7 +421,7 @@ class Character(abc.BaseCharacter, abc.Serializable):
             field, value = cols
             field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
             value = value.replace("\xa0", " ")
-            # This is a special case cause we need to see the link
+            # This is a special case because we need to see the link
             if field == "house":
                 house_text = value
                 m = house_regexp.search(house_text)
@@ -430,13 +429,16 @@ class Character(abc.BaseCharacter, abc.Serializable):
                     continue
                 paid_until = m.group(1)
                 paid_until_date = parse_tibia_date(paid_until)
-                house_link = cols_raw[1].find('a')
-                if not house_link:
+                house_link_tag = cols_raw[1].find('a')
+                if not house_link_tag:
                     continue
-                url = urllib.parse.urlparse(house_link["href"])
-                query = urllib.parse.parse_qs(url.query)
-                houses.append({"id": int(query["houseid"][0]), "name": house_link.text.strip(),
-                               "town": query["town"][0], "paid_until": paid_until_date})
+                house_link = parse_link_info(house_link_tag)
+                houses.append({
+                    "id": house_link["query"]["houseid"],
+                    "name": house_link["text"],
+                    "town": house_link["query"]["town"],
+                    "paid_until": paid_until_date,
+                })
                 continue
             if field == "guild_membership":
                 guild_link = cols_raw[1].select_one('a')

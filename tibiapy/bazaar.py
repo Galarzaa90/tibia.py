@@ -179,7 +179,7 @@ class AuctionFilters(abc.Serializable):
             The currently applied filters.
         """
         filters = AuctionFilters()
-        forms = table.find_all("form")
+        forms = table.select("form")
         data = parse_form_data(forms[0], include_options=True)
 
         filters.world = data["filter_world"]
@@ -361,8 +361,8 @@ class CharacterBazaar(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content, builder='html5lib')
-            content_table = parsed_content.find("div", attrs={"class": "BoxContent"})
-            tables = content_table.find_all("div", attrs={"class": "TableContainer"})
+            content_table = parsed_content.select_one("div.BoxContent")
+            tables = content_table.select("div.TableContainer")
             filter_table = None
             if len(tables) == 1:
                 auctions_table = tables[0]
@@ -375,11 +375,11 @@ class CharacterBazaar(abc.Serializable):
             if filter_table:
                 bazaar.filters = AuctionFilters._parse_filter_table(filter_table)
 
-            page_navigation_row = parsed_content.find("td", attrs={"class": "PageNavigation"})
+            page_navigation_row = parsed_content.select_one("td.PageNavigation")
             if page_navigation_row:
                 bazaar.page, bazaar.total_pages, bazaar.results_count = parse_pagination(page_navigation_row)
 
-            auction_rows = auctions_table.find_all("div", attrs={"class": "Auction"})
+            auction_rows = auctions_table.select("div.Auction")
             for auction_row in auction_rows:
                 auction = AuctionEntry._parse_auction(auction_row)
 
@@ -440,7 +440,7 @@ class DisplayImage(abc.Serializable):
     @classmethod
     def _parse_image_box(cls, item_box):
         description = item_box["title"]
-        img_tag = item_box.find("img")
+        img_tag = item_box.select_one("img")
         if not img_tag:
             return None
         return cls(image_url=img_tag["src"], name=description)
@@ -486,9 +486,9 @@ class DisplayItem(abc.Serializable):
         return f"<{self.__class__.__name__} name={self.name!r} count={self.count} item_id={self.item_id}>"
 
     @classmethod
-    def _parse_image_box(cls, item_box):
+    def _parse_image_box(cls, item_box: bs4.Tag):
         title_text = item_box["title"]
-        img_tag = item_box.find("img")
+        img_tag = item_box.select_one("img")
         if not img_tag:
             return None
         m = amount_regex.match(title_text)
@@ -741,9 +741,9 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
         :class:`AuctionEntry`
             The auction contained in the table.
         """
-        header_container = auction_row.find("div", attrs={"class": "AuctionHeader"})
-        char_name_container = header_container.find("div", attrs={"class": "AuctionCharacterName"})
-        char_link = char_name_container.find("a")
+        header_container = auction_row.select_one("div.AuctionHeader")
+        char_name_container = header_container.select_one("div.AuctionCharacterName")
+        char_link = char_name_container.select_one("a")
         if char_link:
             url = urllib.parse.urlparse(char_link["href"])
             query = urllib.parse.parse_qs(url.query)
@@ -760,35 +760,35 @@ class AuctionEntry(BaseCharacter, abc.Serializable):
             auction.vocation = try_enum(Vocation, m.group(2).strip())
             auction.sex = try_enum(Sex, m.group(3).strip().lower())
             auction.world = m.group(4)
-        outfit_img = auction_row.find("img", {"class": "AuctionOutfitImage"})
+        outfit_img = auction_row.select_one("img.AuctionOutfitImage")
         m = id_addon_regex.search(outfit_img["src"])
         if m:
             auction.outfit = OutfitImage(image_url=outfit_img["src"], outfit_id=int(m.group(1)), addons=int(m.group(2)))
-        item_boxes = auction_row.find_all("div", attrs={"class": "CVIcon"})
+        item_boxes = auction_row.select("div.CVIcon")
         for item_box in item_boxes:
             item = DisplayItem._parse_image_box(item_box)
             if item:
                 auction.displayed_items.append(item)
-        dates_containers = auction_row.find("div", {"class": "ShortAuctionData"})
-        start_date_tag, end_date_tag, *_ = dates_containers.find_all("div", {"class": "ShortAuctionDataValue"})
+        dates_containers = auction_row.select_one("div.ShortAuctionData")
+        start_date_tag, end_date_tag, *_ = dates_containers.select("div.ShortAuctionDataValue")
         auction.auction_start = parse_tibia_datetime(start_date_tag.text.replace('\xa0', ' '))
         auction.auction_end = parse_tibia_datetime(end_date_tag.text.replace('\xa0', ' '))
-        bids_container = auction_row.find("div", {"class": "ShortAuctionDataBidRow"})
-        bid_tag = bids_container.find("div", {"class", "ShortAuctionDataValue"})
-        bid_type_tag = bids_container.find_all("div", {"class", "ShortAuctionDataLabel"})[0]
+        bids_container = auction_row.select_one("div.ShortAuctionDataBidRow")
+        bid_tag = bids_container.select_one("div.ShortAuctionDataValue")
+        bid_type_tag = bids_container.select("div.ShortAuctionDataLabel")[0]
         bid_type_str = bid_type_tag.text.replace(":", "").strip()
         auction.bid_type = try_enum(BidType, bid_type_str)
         auction.bid = parse_integer(bid_tag.text)
-        auction_body_block = auction_row.find("div", {"class", "CurrentBid"})
-        auction_info_tag = auction_body_block.find("div", {"class": "AuctionInfo"})
+        auction_body_block = auction_row.select_one("div.CurrentBid")
+        auction_info_tag = auction_body_block.select_one("div.AuctionInfo")
         status = ""
         if auction_info_tag:
             convert_line_breaks(auction_info_tag)
             status = auction_info_tag.text.replace("\n", " ").replace("  ", " ")
         auction.status = try_enum(AuctionStatus, status, AuctionStatus.IN_PROGRESS)
-        argument_entries = auction_row.find_all("div", {"class": "Entry"})
+        argument_entries = auction_row.select("div.Entry")
         for entry in argument_entries:
-            img = entry.find("img")
+            img = entry.select_one("img")
             img_url = img["src"]
             category_id = 0
             m = id_regex.search(img_url)
@@ -1062,7 +1062,7 @@ class Auction(AuctionEntry):
             If the content does not belong to a auction detail's page.
         """
         parsed_content = parse_tibiacom_content(content, builder='html5lib' if not skip_details else 'lxml')
-        auction_row = parsed_content.find("div", attrs={"class": "Auction"})
+        auction_row = parsed_content.select_one("div.Auction")
         if not auction_row:
             if "internal error" in content:
                 return None
@@ -1126,7 +1126,7 @@ class Auction(AuctionEntry):
         :class:`dict`
             A dictionary of the tables, grouped by their id.
         """
-        details_tables = parsed_content.find_all("div", {"class": "CharacterDetailsBlock"})
+        details_tables = parsed_content.select("div.CharacterDetailsBlock")
         return {table["id"]: table for table in details_tables}
 
     @classmethod
@@ -1143,11 +1143,11 @@ class Auction(AuctionEntry):
         :class:`dict`
             A mapping containing the table's data.
         """
-        rows = table.find_all("tr")
+        rows = table.select("tr")
         data = {}
         for row in rows:
-            name = row.find("span").text
-            value = row.find("div").text
+            name = row.select_one("span").text
+            value = row.select_one("div").text
             name = name.lower().strip().replace(" ", "_").replace(":", "")
             data[name] = value
         return data
@@ -1160,10 +1160,10 @@ class Auction(AuctionEntry):
         table: :class:`bs4.Tag`
             The table containing the character's skill.
         """
-        rows = table.find_all("tr")
+        rows = table.select("tr")
         skills = []
         for row in rows:
-            cols = row.find_all("td")
+            cols = row.select("td")
             name_c, level_c, progress_c = [c.text for c in cols]
             level = int(level_c)
             progress = float(progress_c.replace("%", ""))
@@ -1178,10 +1178,10 @@ class Auction(AuctionEntry):
         table: :class:`bs4.Tag`
             The table containing the character's blessings.
         """
-        table_content = table.find("table", attrs={"class": "TableContent"})
-        _, *rows = table_content.find_all("tr")
+        table_content = table.select_one("table.TableContent")
+        _, *rows = table_content.select("tr")
         for row in rows:
-            cols = row.find_all("td")
+            cols = row.select("td")
             amount_c, name_c = [c.text for c in cols]
             amount = int(amount_c.replace("x", ""))
             self.blessings.append(BlessingEntry(name_c, amount))
@@ -1200,11 +1200,11 @@ class Auction(AuctionEntry):
         :class:`list` of :class:`str`
             A list with the contents of each row.
         """
-        table_content = table.find_all("table", attrs={"class": "TableContent"})[-1]
-        _, *rows = table_content.find_all("tr")
+        table_content = table.select("table.TableContent")[-1]
+        _, *rows = table_content.select("tr")
         ret = []
         for row in rows:
-            col = row.find("td")
+            col = row.select_one("td")
             text = col.text
             if "more entries" in text:
                 continue
@@ -1219,10 +1219,10 @@ class Auction(AuctionEntry):
         table: :class:`bs4.Tag`
             The table containing the charms.
         """
-        table_content = table.find("table", attrs={"class": "TableContent"})
-        _, *rows = table_content.find_all("tr")
+        table_content = table.select_one("table.TableContent")
+        _, *rows = table_content.select("tr")
         for row in rows:
-            cols = row.find_all("td")
+            cols = row.select("td")
             if len(cols) != 2:
                 continue
             cost_c, name_c = [c.text for c in cols]
@@ -1237,14 +1237,14 @@ class Auction(AuctionEntry):
         table: :class:`bs4.Tag`
             The table containing the achievements.
         """
-        table_content = table.find("table", attrs={"class": "TableContent"})
-        _, *rows = table_content.find_all("tr")
+        table_content = table.select_one("table.TableContent")
+        _, *rows = table_content.select("tr")
         for row in rows:
-            col = row.find("td")
+            col = row.select_one("td")
             text = col.text.strip()
             if "more entries" in text:
                 continue
-            secret = col.find("img") is not None
+            secret = col.select_one("img") is not None
             self.achievements.append(AchievementEntry(text, secret))
 
     def _parse_bestiary_table(self, table, bosstiary=False):
@@ -1255,10 +1255,10 @@ class Auction(AuctionEntry):
         table: :class:`bs4.Tag`
             The table containing the bestiary information.
         """
-        table_content = table.find("table", attrs={"class": "TableContent"})
-        _, *rows = table_content.find_all("tr")
+        table_content = table.select_one("table.TableContent")
+        _, *rows = table_content.select("tr")
         for row in rows:
-            cols = row.find_all("td")
+            cols = row.select("td")
             if len(cols) != 3:
                 continue
             step_c, kills_c, name_c = [c.text for c in cols]
@@ -1285,7 +1285,7 @@ class Auction(AuctionEntry):
             The entries contained in the page.
         """
         parsed_content = parse_tibiacom_content(content, builder='html5lib')
-        item_boxes = parsed_content.find_all("div", attrs={"class": "CVIcon"})
+        item_boxes = parsed_content.select("div.CVIcon")
         entries = []
         for item_box in item_boxes:
             item = entry_class._parse_image_box(item_box)
@@ -1301,7 +1301,7 @@ class Auction(AuctionEntry):
         table: :class:`bs4.Tag`
             The table with general information.
         """
-        content_containers = table.find_all("table", {"class": "TableContent"})
+        content_containers = table.select("table.TableContent")
         general_stats = self._parse_data_table(content_containers[0])
         self.hit_points = parse_integer(general_stats.get("hit_points", "0"))
         self.mana = parse_integer(general_stats.get("mana", "0"))
@@ -1471,7 +1471,7 @@ class PaginatedSummary(abc.Serializable):
 
     # region Private Methods
     def _parse_pagination(self, parsed_content):
-        pagination_block = parsed_content.find("div", attrs={"class": "BlockPageNavigationRow"})
+        pagination_block = parsed_content.select_one("div.BlockPageNavigationRow")
         if pagination_block is not None:
             self.page, self.total_pages, self.results = parse_pagination(pagination_block)
     # endregion
@@ -1531,7 +1531,7 @@ class ItemSummary(PaginatedSummary):
         """
         summary = cls()
         summary._parse_pagination(table)
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
             item = DisplayItem._parse_image_box(item_box)
             if item:
@@ -1581,7 +1581,7 @@ class Mounts(PaginatedSummary):
     def _parse_table(cls, table):
         summary = cls()
         summary._parse_pagination(table)
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
             item = DisplayMount._parse_image_box(item_box)
             if item:
@@ -1643,7 +1643,7 @@ class Familiars(PaginatedSummary):
         """
         summary = cls()
         summary._parse_pagination(table)
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
             item = DisplayFamiliar._parse_image_box(item_box)
             if item:
@@ -1705,7 +1705,7 @@ class Outfits(PaginatedSummary):
         """
         summary = cls()
         summary._parse_pagination(table)
-        item_boxes = table.find_all("div", attrs={"class": "CVIcon"})
+        item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
             item = DisplayOutfit._parse_image_box(item_box)
             if item:
