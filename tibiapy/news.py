@@ -147,12 +147,12 @@ class NewsArchive(abc.Serializable):
             tables = parse_tibiacom_tables(parsed_content)
             if "News Archive Search" not in tables:
                 raise InvalidContent("content is not from the news archive section in Tibia.com")
-            form = parsed_content.find("form")
+            form = parsed_content.select_one("form")
             news_archive = cls._parse_filtering(form)
             if "Search Results" in tables:
-                rows = tables["Search Results"].find_all("tr", attrs={"class": ["Odd", "Even"]})
+                rows = tables["Search Results"].select("tr.Odd, tr.Even")
                 for row in rows:
-                    cols_raw = row.find_all('td')
+                    cols_raw = row.select('td')
                     if len(cols_raw) != 3:
                         continue
                     entry = cls._parse_entry(cols_raw)
@@ -188,18 +188,18 @@ class NewsArchive(abc.Serializable):
 
     @classmethod
     def _parse_entry(cls, cols_raw):
-        img = cols_raw[0].find('img')
+        img = cols_raw[0].select_one('img')
         img_url = img["src"]
         category_name = ICON_PATTERN.search(img_url)
         category = try_enum(NewsCategory, category_name.group(1))
-        for br in cols_raw[1].find_all("br"):
+        for br in cols_raw[1].select("br"):
             br.replace_with("\n")
         date_str, news_type_str = cols_raw[1].text.splitlines()
         date = parse_tibia_date(date_str)
         news_type_str = news_type_str.replace('\xa0', ' ')
         news_type = try_enum(NewsType, news_type_str)
         title = cols_raw[2].text
-        news_link = cols_raw[2].find('a')
+        news_link = cols_raw[2].select_one('a')
         url = urllib.parse.urlparse(news_link["href"])
         query = urllib.parse.parse_qs(url.query)
         news_id = int(query["id"][0])
@@ -283,20 +283,20 @@ class News(abc.BaseNews, abc.Serializable):
         try:
             parsed_content = parse_tibiacom_content(content)
             # Read Information from the headline
-            headline = parsed_content.find("div", attrs={"class": "NewsHeadline"})
-            img = headline.find('img')
+            headline = parsed_content.select_one("div.NewsHeadline")
+            img = headline.select_one('img')
             img_url = img["src"]
             category_name = ICON_PATTERN.search(img_url)
             category = try_enum(NewsCategory, category_name.group(1))
-            title_div = headline.find("div", attrs={"class": "NewsHeadlineText"})
+            title_div = headline.select_one("div.NewsHeadlineText")
             title = title_div.text.replace('\xa0', ' ')
-            date_div = headline.find("div", attrs={"class": "NewsHeadlineDate"})
+            date_div = headline.select_one("div.NewsHeadlineDate")
             date_str = date_div.text.replace('\xa0', ' ').replace('-', '').strip()
             date = parse_tibia_date(date_str)
 
             # Read the page's content.
-            content_table = parsed_content.find("table")
-            content_row = content_table.find("td")
+            content_table = parsed_content.select_one("table")
+            content_row = content_table.select_one("td")
             content = content_row.encode_contents().decode()
             thread_id = None
             thread_link = content_table.select_one("div.NewsForumLink a")
