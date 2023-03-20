@@ -86,20 +86,20 @@ class KillStatistics(abc.Serializable):
         try:
             parsed_content = parse_tibiacom_content(content)
             entries_table = parsed_content.find('table', attrs={'border': '0', 'cellpadding': '3'})
-            form = parsed_content.find("form")
+            form = parsed_content.select_one("form")
             data = parse_form_data(form, include_options=True)
             world = data["world"]
             available_worlds = list(data["__options__"]["world"].values())
             if not entries_table:
-                entries_table = parsed_content.find("table", {"class": "Table3"})
-            # If the entries table doesn't exist, it means that this belongs to an nonexistent or unselected world.
+                entries_table = parsed_content.select_one("table.Table3")
+            # If the entries table doesn't exist, it means that this belongs to a nonexistent or unselected world.
             if entries_table is None:
                 return None
-            header, subheader, *rows = entries_table.find_all('tr')
+            header, subheader, *rows = entries_table.select('tr')
             entries = {}
             total = None
             for i, row in enumerate(rows):
-                columns_raw = row.find_all('td')
+                columns_raw = row.select('td')
                 columns = [c.text.replace('\xa0', ' ').strip() for c in columns_raw]
                 if not columns[2].isnumeric():
                     continue
