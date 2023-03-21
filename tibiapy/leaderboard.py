@@ -147,8 +147,8 @@ class Leaderboard(abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            tables = parsed_content.find_all("table", {"class": "TableContent"})
-            form = parsed_content.find("form")
+            tables = parsed_content.select("table.TableContent")
+            form = parsed_content.select_one("form")
             data = parse_form_data(form, include_options=True)
             current_world = data["world"]
             current_rotation = None
@@ -172,7 +172,7 @@ class Leaderboard(abc.Serializable):
                 if numbers:
                     leaderboard.last_update = datetime.timedelta(minutes=int(numbers[0]))
             leaderboard._parse_entries(tables[-1])
-            pagination_block = parsed_content.find("small")
+            pagination_block = parsed_content.select_one("small")
             pages, total, count = parse_pagination(pagination_block) if pagination_block else (0, 0, 0)
             leaderboard.page = pages
             leaderboard.total_pages = total
@@ -182,9 +182,9 @@ class Leaderboard(abc.Serializable):
             raise errors.InvalidContent("content does not belong to the leaderboards", e)
 
     def _parse_entries(self, entries_table):
-        entries_rows = entries_table.find_all("tr", {'style': True})
+        entries_rows = entries_table.select("tr[style]")
         for row in entries_rows:
-            columns_raw = row.find_all("td")
+            columns_raw = row.select("td")
             cols = [c.text for c in columns_raw]
             rank, name, points = cols
             entry = LeaderboardEntry(int(rank.replace(".", "")), name, int(points))
