@@ -216,42 +216,42 @@ class CMPostArchive(abc.Serializable):
         """
         parsed_content = parse_tibiacom_content(content)
 
-        form = parsed_content.find("form")
+        form = parsed_content.select_one("form")
         try:
             start_month_selector, start_day_selector, start_year_selector, \
-            end_month_selector, end_day_selector, end_year_selector = form.find_all("select")
+            end_month_selector, end_day_selector, end_year_selector = form.select("select")
             start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
         except (AttributeError, ValueError) as e:
             raise errors.InvalidContent("content does not belong to the CM Post Archive in Tibia.com", e)
         cm_archive = cls(start_date=start_date, end_date=end_date)
-        table = parsed_content.find("table", attrs={"class", "Table3"})
+        table = parsed_content.select_one("table.Table3")
         if not table:
             return cm_archive
-        inner_table_container = table.find("div", attrs={"class", "InnerTableContainer"})
-        inner_table = inner_table_container.find("table")
-        inner_table_rows = inner_table.find_all("tr")
+        inner_table_container = table.select_one("div.InnerTableContainer")
+        inner_table = inner_table_container.select_one("table")
+        inner_table_rows = inner_table.select("tr")
         inner_table_rows = [e for e in inner_table_rows if e.parent == inner_table]
-        table_content = inner_table_container.find("table", attrs={"class", "TableContent"})
+        table_content = inner_table_container.select_one("table.TableContent")
 
-        header_row, *rows = table_content.find_all("tr")
+        header_row, *rows = table_content.select("tr")
 
         for row in rows:
-            columns = row.find_all("td")
+            columns = row.select("td")
             date_column = columns[0]
             date = parse_tibia_datetime(date_column.text.replace("\xa0", " "))
             board_thread_column = columns[1]
             convert_line_breaks(board_thread_column)
             board, thread = board_thread_column.text.splitlines()
             link_column = columns[2]
-            post_link_tag = link_column.find("a")
+            post_link_tag = link_column.select_one("a")
             post_link = parse_link_info(post_link_tag)
             post_id = int(post_link["query"]["postid"])
             cm_archive.posts.append(CMPost(date=date, board=board, thread_title=thread, post_id=post_id))
         if not cm_archive.posts:
             return cm_archive
-        pages_column, results_column = inner_table_rows[-1].find_all("div")
-        page_links = pages_column.find_all("a")
+        pages_column, results_column = inner_table_rows[-1].select("div")
+        page_links = pages_column.select("a")
         listed_pages = [int(p.text) for p in page_links]
         if listed_pages:
             cm_archive.page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
@@ -285,9 +285,9 @@ class CMPostArchive(abc.Serializable):
         :class:`datetime.date`
             The selected date.
         """
-        selected_month = month_selector.find("option", {"selected": True}) or month_selector.find("option")
-        selected_day = day_selector.find("option", {"selected": True}) or day_selector.find("option")
-        selected_year = year_selector.find("option", {"selected": True}) or year_selector.find("option")
+        selected_month = month_selector.select_one("option[selected]") or month_selector.select_one("option")
+        selected_day = day_selector.select_one("option[selected]") or day_selector.select_one("option")
+        selected_year = year_selector.select_one("option[selected]") or year_selector.select_one("option")
         try:
             return datetime.date(year=int(selected_year["value"]), month=int(selected_month["value"]),
                                  day=int(selected_day["value"]))
@@ -380,14 +380,14 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
         """
         parsed_content = parse_tibiacom_content(content)
 
-        forum_breadcrumbs = parsed_content.find("div", attrs={"class": "ForumBreadCrumbs"})
+        forum_breadcrumbs = parsed_content.select_one("div.ForumBreadCrumbs")
         if not forum_breadcrumbs:
-            message_box = parsed_content.find("div", attrs={"class": "InnerTableContainer"})
+            message_box = parsed_content.select_one("div.InnerTableContainer")
             if not message_box or "not found" not in message_box.text:
                 raise errors.InvalidContent("content is not a Tibia.com forum announcement.")
             return None
 
-        section_link, board_link, *_ = forum_breadcrumbs.find_all("a")
+        section_link, board_link, *_ = forum_breadcrumbs.select("a")
         section_link_info = parse_link_info(section_link)
         section = section_link_info["text"]
         section_id = parse_integer(section_link_info["query"]["sectionid"])
@@ -398,17 +398,17 @@ class ForumAnnouncement(abc.BaseAnnouncement, abc.Serializable):
         announcement = cls(section=section, section_id=section_id, board=board, board_id=board_id,
                            announcement_id=announcement_id)
 
-        times_container = parsed_content.find("div", attrs={"class": "ForumContentFooterLeft"})
+        times_container = parsed_content.select_one("div.ForumContentFooterLeft")
         offset = 2 if times_container.text == "CEST" else 1
 
 
-        post_container = parsed_content.find("div", attrs={"class": "ForumPost"})
-        character_info_container = post_container.find("div", attrs={"class": "PostCharacterText"})
+        post_container = parsed_content.select_one("div.ForumPost")
+        character_info_container = post_container.select_one("div.PostCharacterText")
         announcement.author = ForumAuthor._parse_author_table(character_info_container)
-        post_text_container = post_container.find("div", attrs={"class": "PostText"})
-        title_tag = post_text_container.find("b")
+        post_text_container = post_container.select_one("div.PostText")
+        title_tag = post_text_container.select_one("b")
         announcement.title = title_tag.text
-        dates_container = post_text_container.find("font")
+        dates_container = post_text_container.select_one("font")
         dates = post_dates_regex.findall(dates_container.text)
         announcement_content = post_text_container.encode_contents().decode()
         _, announcement_content = announcement_content.split("<hr/>", 1)
@@ -493,7 +493,7 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
             The author's information.
         """
         # First link belongs to character
-        char_link = character_info_container.find("a")
+        char_link = character_info_container.select_one("a")
         if not char_link:
             name = character_info_container.text
             deleted = True
@@ -519,7 +519,7 @@ class ForumAuthor(abc.BaseCharacter, abc.Serializable):
                     author.position = _title
                 else:
                     author.title = _title
-        guild_info = char_info.find("font", attrs={"class": "ff_smallinfo"})
+        guild_info = char_info.select_one("font.ff_smallinfo")
         convert_line_breaks(char_info)
         char_info_text = char_info.text
         info_match = author_info_regex.search(char_info_text)
@@ -646,43 +646,43 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
             Content is not a board in Tibia.com
         """
         parsed_content = parse_tibiacom_content(content)
-        forum_breadcrumbs = parsed_content.find("div", attrs={"class": "ForumBreadCrumbs"})
+        forum_breadcrumbs = parsed_content.select_one("div.ForumBreadCrumbs")
         if not forum_breadcrumbs:
-            message_box = parsed_content.find("div", attrs={"class": "InnerTableContainer"})
+            message_box = parsed_content.select_one("div.InnerTableContainer")
             if not message_box or "board you requested" not in message_box.text:
                 raise errors.InvalidContent("content does not belong to a board.")
             return None
-        tables = parsed_content.find_all("table", attrs={"class": "TableContent"})
+        tables = parsed_content.select("table.TableContent")
 
         header_text = forum_breadcrumbs.text.strip()
         section, name = split_list(header_text, "|", "|")
 
         board = cls(name=name, section=section)
 
-        forms = parsed_content.find_all("form")
+        forms = parsed_content.select("form")
         post_age_form = forms[0]
         data = parse_form_data(post_age_form)
         if "threadage" in data:
             board.age = parse_integer(data["threadage"])
         else:
             return board
-        pagination_block = parsed_content.find("small")
+        pagination_block = parsed_content.select_one("small")
         pages, total, count = parse_pagination(pagination_block) if pagination_block else (0, 0, 0)
         board.page = pages
         board.total_pages = total
 
-        *thread_rows, times_row = tables[-1].find_all("tr")
+        *thread_rows, times_row = tables[-1].select("tr")
         for thread_row in thread_rows[1:]:
-            columns = thread_row.find_all("td")
+            columns = thread_row.select("td")
             entry = cls._parse_thread_row(columns)
             if "ClassifiedProposal" in thread_row.attrs.get("class"):
                 entry.golden_frame = True
             board.threads.append(entry)
 
         if len(tables) > 1:
-            announcement_rows = tables[0].find_all("tr")
+            announcement_rows = tables[0].select("tr")
             for announcement_row in announcement_rows[1:]:
-                author_link, title_link = announcement_row.find_all("a")
+                author_link, title_link = announcement_row.select("a")
                 author = author_link.text.strip()
                 announcement_link = parse_link_info(title_link)
                 entry = AnnouncementEntry(
@@ -717,7 +717,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
         # First Column: Thread's status
         status = None
         status_column = columns[0]
-        status_img = status_column.find("img")
+        status_img = status_column.select_one("img")
         status_icon = None
         if status_img:
             url = status_img["src"]
@@ -727,7 +727,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
         # Second column: Thread's emoticon
         emoticon = None
         emoticon_column = columns[1]
-        emoticon_img = emoticon_column.find("img")
+        emoticon_img = emoticon_column.select_one("img")
         if emoticon_img and emoticon_img.get("alt"):
             url = emoticon_img["src"]
             name = emoticon_img["alt"]
@@ -737,7 +737,7 @@ class ForumBoard(abc.BaseBoard, abc.Serializable):
         thread_column = columns[2]
         title = thread_column.text.strip()
         try:
-            thread_link, *page_links = thread_column.find_all("a")
+            thread_link, *page_links = thread_column.select("a")
         except ValueError:
             return None
         if page_links:
@@ -991,9 +991,9 @@ class ForumThread(abc.BaseThread, abc.Serializable):
             If content is not the HTML of a thread's page.
         """
         parsed_content = parse_tibiacom_content(content)
-        forum_breadcrumbs = parsed_content.find("div", attrs={"class": "ForumBreadCrumbs"})
+        forum_breadcrumbs = parsed_content.select_one("div.ForumBreadCrumbs")
         if not forum_breadcrumbs:
-            message_box = parsed_content.find("div", attrs={"class": "InnerTableContainer"})
+            message_box = parsed_content.select_one("div.InnerTableContainer")
             if not message_box or "not found" not in message_box.text:
                 raise errors.InvalidContent("content does not belong to a thread.")
             return None
@@ -1002,7 +1002,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         section, board, partial_title = split_list(header_text, "|", "|")
 
         thread = cls(section=section, board=board)
-        forum_title_container = parsed_content.find("div", attrs={"class": "ForumTitleText"})
+        forum_title_container = parsed_content.select_one("div.ForumTitleText")
         if not forum_title_container:
             thread.title = partial_title
             return thread
@@ -1012,18 +1012,18 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         gold_frame = "gold" in border["style"]
         thread.golden_frame = gold_frame
 
-        pagination_block = parsed_content.find("td", attrs={"class": "PageNavigation"})
+        pagination_block = parsed_content.select_one("td.PageNavigation")
         pages, total, count = parse_pagination(pagination_block) if pagination_block else (0, 0, 0)
         thread.page = pages
         thread.total_pages = total
 
-        posts_table = parsed_content.find("table", attrs={"class": "TableContent"})
+        posts_table = parsed_content.select_one("table.TableContent", attrs={"class": "TableContent"})
 
-        thread_info_container = posts_table.find("div", attrs={"class": "ForumPostHeader"})
-        thread_info_text_container = thread_info_container.find("div", attrs={"class": "ForumPostHeaderText"})
+        thread_info_container = posts_table.select_one("div.ForumPostHeader")
+        thread_info_text_container = thread_info_container.select_one("div.ForumPostHeaderText")
         thread_number, navigation_container = thread_info_text_container.children
         thread.thread_id = int(thread_number.split("#")[-1])
-        navigation_links = navigation_container.find_all("a")
+        navigation_links = navigation_container.select("a")
         if len(navigation_links) == 2:
             prev_link_tag, next_link_tag = navigation_links
             prev_link = parse_link_info(prev_link_tag)
@@ -1036,10 +1036,10 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         else:
             next_link = parse_link_info(navigation_links[0])
             thread.next_topic_number = int(next_link["query"]["threadid"])
-        times_container = posts_table.find("div", attrs={"class": "ForumContentFooterLeft"})
+        times_container = posts_table.select_one("div.ForumContentFooterLeft")
         offset = 2 if times_container.text == "CEST" else 1
 
-        post_containers = posts_table.find_all("div", attrs={"class": "PostBody"})
+        post_containers = posts_table.select("div.PostBody")
         for post_container in post_containers:
             post = cls._parse_post_table(post_container, offset)
             thread.posts.append(post)
@@ -1069,7 +1069,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
             The post contained in the table.
         """
         golden_frame = "CipPostWithBorderImage" in post_table.parent.attrs.get("class")
-        character_info_container = post_table.find("div", attrs={"class": "PostCharacterText"})
+        character_info_container = post_table.select_one("div.PostCharacterText")
         post_author = ForumAuthor._parse_author_table(character_info_container)
         content_container = post_table.select_one("div.PostText")
         emoticon = None
@@ -1090,7 +1090,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
             first_break.extract()
         title = None
         signature = None
-        signature_container = post_table.find("td", attrs={"class": "ff_pagetext"})
+        signature_container = post_table.select_one("td.ff_pagetext")
         if signature_container:
             # Remove the signature's content from content container
             signature_container.extract()
@@ -1104,7 +1104,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
             content = signature_separator.join(parts[:-1])
         if title_tag:
             title = title_tag.text
-        post_details = post_table.find('div', attrs={"class": "PostDetails"})
+        post_details = post_table.select_one('div.PostDetails')
         dates = post_dates_regex.findall(post_details.text)
         edited_date = None
         edited_by = None
@@ -1112,7 +1112,7 @@ class ForumThread(abc.BaseThread, abc.Serializable):
         if len(dates) > 1:
             edited_date = parse_tibia_forum_datetime(dates[1], offset)
             edited_by = edited_by_regex.search(post_details.text).group(1)
-        post_details = post_table.find('div', attrs={"class": "AdditionalBox"})
+        post_details = post_table.select_one('div.AdditionalBox')
         post_number = post_details.text.replace("Post #", "")
         post_id = int(post_number)
         return ForumPost(author=post_author, content=content, signature=signature, posted_date=posted_date,
@@ -1184,14 +1184,14 @@ class LastPost(abc.BasePost, abc.Serializable):
         last_post_info = last_post_column.select_one("span.LastPostInfo")
         if last_post_info is None:
             return None
-        permalink_tag = last_post_info.find("a")
+        permalink_tag = last_post_info.select_one("a")
         permalink_info = parse_link_info(permalink_tag)
         post_id = int(permalink_info["query"]["postid"])
         date_text = last_post_info.text.replace("\xa0", " ").strip()
         last_post_date = parse_tibia_forum_datetime(date_text, offset)
 
-        last_post_author_tag = last_post_column.find("font")
-        author_link = last_post_author_tag.find("a")
+        last_post_author_tag = last_post_column.select_one("font")
+        author_link = last_post_author_tag.select_one("a")
         deleted = author_link is None
         author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
         traded = False
@@ -1300,7 +1300,7 @@ class BoardEntry(abc.BaseBoard, abc.Serializable):
             parsed_content = parse_tibiacom_content(content)
             tables = parse_tibiacom_tables(parsed_content)
             boards_table = tables["Boards"]
-            board_rows = boards_table.find_all("tr")
+            board_rows = boards_table.select("tr")
             timezone_row = board_rows[-1]
             timezone = timezone_regex.search(timezone_row.text).group(1)
             offset = 1 if timezone == "CET" else 2
@@ -1336,11 +1336,11 @@ class BoardEntry(abc.BaseBoard, abc.Serializable):
         :class:`BoardEntry`
             The board contained in this row.
         """
-        columns = board_row.find_all("td")
+        columns = board_row.select("td")
         # Second Column: Name and description
         name_column = columns[1]
-        board_link_tag = name_column.find("a")
-        description_tag = name_column.find("font")
+        board_link_tag = name_column.select_one("a")
+        description_tag = name_column.select_one("font")
         description = description_tag.text
         board_link = parse_link_info(board_link_tag)
         name = board_link["text"]
