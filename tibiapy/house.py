@@ -176,9 +176,9 @@ class HousesSection(abc.Serializable):
             if len(tables) < 2:
                 return house_results
             houses_table = tables[list(tables.keys())[0]]
-            _, *rows = houses_table.find_all("tr")
+            _, *rows = houses_table.select("tr")
             for row in rows[1:]:
-                cols = row.find_all("td")
+                cols = row.select("td")
                 if len(cols) != 5:
                     continue
                 name = cols[0].text.replace('\u00a0', ' ')
@@ -190,7 +190,7 @@ class HousesSection(abc.Serializable):
                 house.rent = parse_tibia_money(rent)
                 status = cols[3].text.replace('\xa0', ' ')
                 house._parse_status(status)
-                id_input = cols[4].find("input", {'name': 'houseid'})
+                id_input = cols[4].select_one("input[name=houseid]")
                 house.id = int(id_input["value"])
                 house_results.entries.append(house)
             return house_results
@@ -338,11 +338,11 @@ class House(abc.BaseHouse, abc.HouseWithId, abc.Serializable):
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            image_column, desc_column, *_ = parsed_content.find_all('td')
+            image_column, desc_column, *_ = parsed_content.select('td')
             if "Error" in image_column.text:
                 return None
-            image = image_column.find('img')
-            for br in desc_column.find_all("br"):
+            image = image_column.select_one('img')
+            for br in desc_column.select("br"):
                 br.replace_with("\n")
             description = desc_column.text.replace("\u00a0", " ").replace("\n\n", "\n")
             lines = description.splitlines()
