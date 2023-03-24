@@ -1,25 +1,24 @@
-"""Models related to the news section in Tibia.com."""
 import datetime
 import re
 import urllib.parse
-from typing import List, Optional
 
 from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibia_date, parse_tibiacom_content, \
-    parse_tibiacom_tables, try_enum
+from tibiapy.models import News, NewsArchive, NewsEntry
+from tibiapy.utils import (parse_form_data, parse_tibia_date,
+                           parse_tibiacom_content, parse_tibiacom_tables,
+                           try_enum)
 
 __all__ = (
-    "News",
-    "NewsArchive",
-    "NewsEntry",
+    "NewsParser",
+    "NewsArchiveParser",
 )
 
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 
 
-class NewsArchive(abc.Serializable):
+class NewsArchiveParser(abc.Serializable):
     """Represents the news archive.
 
     .. versionadded:: 5.0.0
@@ -37,28 +36,6 @@ class NewsArchive(abc.Serializable):
     entries: :class:`list` of :class:`NewsEntry`
         The news matching the provided parameters.
     """
-
-    __slots__ = (
-        "start_date",
-        "end_date",
-        "types",
-        "categories",
-        "entries",
-    )
-
-    def __init__(self, **kwargs):
-        self.start_date: datetime.date = kwargs.get("start_date")
-        self.end_date: datetime.date = kwargs.get("end_date")
-        self.types: List[NewsType] = kwargs.get("types", [])
-        self.categories: List[NewsCategory] = kwargs.get("categories", [])
-        self.entries: List[NewsEntry] = kwargs.get("entries", [])
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} start_date={self.start_date!r} end_date={self.end_date!r}>"
-
-    @property
-    def url(self):
-        return self.get_url()
 
     @property
     def form_data(self):
@@ -108,22 +85,6 @@ class NewsArchive(abc.Serializable):
         return data
 
     @classmethod
-    def get_url(cls):
-        """Get the URL to Tibia.com's news archive page.
-
-        Notes
-        -----
-        It is not possible to perform a search using query parameters.
-        News searches can only be performed using POST requests sending the parameters as form-data.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the news archive page on Tibia.com.
-        """
-        return get_tibia_url("news", "newsarchive")
-
-    @classmethod
     def from_content(cls, content):
         """Get a list of news from the HTML content of the news search page.
 
@@ -148,43 +109,43 @@ class NewsArchive(abc.Serializable):
             if "News Archive Search" not in tables:
                 raise InvalidContent("content is not from the news archive section in Tibia.com")
             form = parsed_content.select_one("form")
-            news_archive = cls._parse_filtering(form)
+            data = cls._parse_filtering(form)
+            data["entries"] = []
             if "Search Results" in tables:
                 rows = tables["Search Results"].select("tr.Odd, tr.Even")
                 for row in rows:
                     cols_raw = row.select('td')
                     if len(cols_raw) != 3:
                         continue
-                    entry = cls._parse_entry(cols_raw)
-                    news_archive.entries.append(entry)
-            return news_archive
+                    data["entries"].append(cls._parse_entry(cols_raw))
+            return NewsArchive.parse_obj(data)
         except (AttributeError, IndexError, ValueError, KeyError) as e:
             raise InvalidContent("content is not from the news archive section in Tibia.com", e)
 
     @classmethod
     def _parse_filtering(cls, form):
         form_data = parse_form_data(form)
-        start_date = datetime.date(
+        filters = {"start_date": datetime.date(
             int(form_data.pop("filter_begin_year")),
             int(form_data.pop("filter_begin_month")),
             int(form_data.pop("filter_begin_day")),
-        )
-        end_date = datetime.date(
+        )}
+        filters["end_date"] = datetime.date(
             int(form_data.pop("filter_end_year")),
             int(form_data.pop("filter_end_month")),
             int(form_data.pop("filter_end_day")),
         )
-        news_types = []
+        filters["types"] = []
         for news_type in NewsType:
             value = form_data.pop(news_type.filter_name, None)
             if value:
-                news_types.append(news_type)
-        categories = []
+                filters["types"].append(news_type)
+        filters["categories"] = []
         for category in NewsCategory:
             value = form_data.pop(category.filter_name, None)
             if value:
-                categories.append(category)
-        return cls(start_date=start_date, end_date=end_date, categories=categories, types=news_types)
+                filters["categories"].append(category)
+        return filters
 
     @classmethod
     def _parse_entry(cls, cols_raw):
@@ -206,51 +167,8 @@ class NewsArchive(abc.Serializable):
         return NewsEntry(news_id, title, news_type, category, date, category_icon=img_url)
 
 
-class News(abc.BaseNews, abc.Serializable):
-    """Represents a news entry.
-
-    Attributes
-    ----------
-    id: :class:`int`
-        The internal ID of the news entry.
-    title: :class:`str`
-        The title of the news entry.
-    category: :class:`NewsCategory`
-        The category this belongs to.
-    category_icon: :class:`str`
-        The URL of the icon corresponding to the category.
-    date: :class:`datetime.date`
-        The date when the news were published.
-    content: :class:`str`, optional
-        The raw html content of the entry.
-    thread_id: :class:`int`, optional
-        The thread id of the designated discussion thread for this entry.
-    """
-
-    def __init__(self, news_id, title, content, date, category, **kwargs):
-        self.id: int = news_id
-        self.title: str = title
-        self.content: str = content
-        self.date: datetime.date = date
-        self.category: NewsCategory = category
-        self.thread_id: Optional[int] = kwargs.get("thread_id", None)
-        self.category_icon: Optional[str] = kwargs.get("category_icon")
-
-    # id, title, category and date inherited from BaseNews.
-    __slots__ = (
-        "id",
-        "title",
-        "category",
-        "category_icon",
-        "date",
-        "content",
-        "thread_id",
-    )
-
-    @property
-    def thread_url(self):
-        """:class:`str`: The URL to the thread discussing this news entry, if any."""
-        return abc.BaseThread.get_url(self.thread_id) if self.thread_id else None
+class NewsParser(abc.BaseNews, abc.Serializable):
+    """Represents a news entry."""
 
     @classmethod
     def from_content(cls, content, news_id=0):
@@ -305,48 +223,6 @@ class News(abc.BaseNews, abc.Serializable):
                 query = urllib.parse.parse_qs(url.query)
                 thread_id = int(query["threadid"][0])
 
-            return cls(news_id, title, content, date, category, thread_id=thread_id, category_icon=img_url)
+            return News(news_id, title, content, date, category, thread_id=thread_id, category_icon=img_url)
         except AttributeError:
             raise InvalidContent("content is not from the news archive section in Tibia.com")
-
-
-class NewsEntry(abc.BaseNews, abc.Serializable):
-    """A news entry from the news archive.
-
-    Attributes
-    ----------
-    id: :class:`int`
-        The internal ID of the news entry.
-    title: :class:`str`
-        The title of the news entry.
-        News tickers have a fragment of their content as a title.
-    category: :class:`NewsCategory`
-        The category this belongs to.
-    category_icon: :class:`str`
-        The URL of the icon corresponding to the category.
-    date: :class:`datetime.date`
-        The date when the news were published.
-    type: :class:`NewsType`
-        The type of news of this list entry.
-    """
-
-    __slots__ = (
-        "id",
-        "title",
-        "category",
-        "category_icon",
-        "date",
-        "type",
-    )
-
-    def __init__(self, news_id, title, news_type, category, date, **kwargs):
-        self.id: int = news_id
-        self.title: str = title
-        self.type: NewsType = news_type
-        self.category: NewsCategory = category
-        self.date: datetime.datetime = date
-        self.category_icon: Optional[str] = kwargs.get("category_icon", None)
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} id={self.id} title={self.title!r} type={self.type!r} " \
-               f"category={self.category!r} date={self.date!r}>"

@@ -22,7 +22,8 @@ from tibiapy.guild import Guild, GuildWars, GuildsSection
 from tibiapy.highscores import Highscores
 from tibiapy.house import House, HousesSection
 from tibiapy.kill_statistics import KillStatistics
-from tibiapy.news import News, NewsArchive
+from tibiapy.models.news import NewsArchive
+from tibiapy.parsers.news import News, NewsArchiveParser, NewsEntryParser
 from tibiapy.tournament import Tournament, TournamentLeaderboard
 from tibiapy.world import World, WorldOverview
 
@@ -783,7 +784,7 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creatures, parsing_time)
 
-    # Region Bosses
+    # region Bosses
     async def fetch_boosted_boss(self, *, test=False):
         """Fetch today's boosted boss.
 
@@ -1350,10 +1351,10 @@ class Client:
         """
         if start_date > end_date:
             raise ValueError("start_date can't be more recent than end_date")
-        form_data = NewsArchive.get_form_data(start_date, end_date, categories, types)
+        form_data = NewsArchiveParser.get_form_data(start_date, end_date, categories, types)
         response = await self._request("POST", NewsArchive.get_url(), form_data, test=test)
         start_time = time.perf_counter()
-        news = NewsArchive.from_content(response.content)
+        news = NewsArchiveParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, news, parsing_time)
 

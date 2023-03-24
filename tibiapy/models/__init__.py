@@ -1,0 +1,1 @@
+from tibiapy.models.news import *
