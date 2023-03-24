@@ -23,7 +23,7 @@ from tibiapy.highscores import Highscores
 from tibiapy.house import House, HousesSection
 from tibiapy.kill_statistics import KillStatistics
 from tibiapy.models.news import NewsArchive
-from tibiapy.parsers.news import News, NewsArchiveParser, NewsEntryParser
+from tibiapy.parsers.news import News, NewsArchiveParser, NewsParser
 from tibiapy.tournament import Tournament, TournamentLeaderboard
 from tibiapy.world import World, WorldOverview
 
@@ -1419,7 +1419,7 @@ class Client:
         """
         response = await self._request("GET", News.get_url(news_id), test=test)
         start_time = time.perf_counter()
-        news = News.from_content(response.content, news_id)
+        news = NewsParser.from_content(response.content, news_id)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, news, parsing_time)
     # endregion

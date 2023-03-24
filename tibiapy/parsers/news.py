@@ -164,7 +164,8 @@ class NewsArchiveParser(abc.Serializable):
         url = urllib.parse.urlparse(news_link["href"])
         query = urllib.parse.parse_qs(url.query)
         news_id = int(query["id"][0])
-        return NewsEntry(news_id, title, news_type, category, date, category_icon=img_url)
+        return NewsEntry(id=news_id, title=title, type=news_type, category=category, date=date,
+                         category_icon=img_url)
 
 
 class NewsParser(abc.BaseNews, abc.Serializable):
@@ -223,6 +224,7 @@ class NewsParser(abc.BaseNews, abc.Serializable):
                 query = urllib.parse.parse_qs(url.query)
                 thread_id = int(query["threadid"][0])
 
-            return News(news_id, title, content, date, category, thread_id=thread_id, category_icon=img_url)
+            return News(id=news_id, title=title, content=content, date=date, category=category, thread_id=thread_id,
+                        category_icon=img_url)
         except AttributeError:
             raise InvalidContent("content is not from the news archive section in Tibia.com")

@@ -13,6 +13,7 @@ __all__ = (
     "NewsEntry"
 )
 
+
 class BaseNews(BaseModel):
     id: int
     """The internal ID of the news entry."""
