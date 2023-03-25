@@ -7,7 +7,6 @@ import logging
 
 from tibiapy import abc, enums, utils
 from tibiapy.house import *
-from tibiapy.character import *
 from tibiapy.creature import *
 from tibiapy.event import *
 from tibiapy.enums import *

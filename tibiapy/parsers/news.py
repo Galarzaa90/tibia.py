@@ -37,10 +37,6 @@ class NewsArchiveParser(abc.Serializable):
         The news matching the provided parameters.
     """
 
-    @property
-    def form_data(self):
-        return self.get_form_data(self.start_date, self.end_date, self.categories, self.types)
-
     @classmethod
     def get_form_data(cls, start_date, end_date, categories=None, types=None):
         """Get the form data attributes to search news with specific parameters.
@@ -125,17 +121,19 @@ class NewsArchiveParser(abc.Serializable):
     @classmethod
     def _parse_filtering(cls, form):
         form_data = parse_form_data(form)
-        filters = {"start_date": datetime.date(
-            int(form_data.pop("filter_begin_year")),
-            int(form_data.pop("filter_begin_month")),
-            int(form_data.pop("filter_begin_day")),
-        )}
-        filters["end_date"] = datetime.date(
-            int(form_data.pop("filter_end_year")),
-            int(form_data.pop("filter_end_month")),
-            int(form_data.pop("filter_end_day")),
-        )
-        filters["types"] = []
+        filters = {
+            "start_date": datetime.date(
+                int(form_data.pop("filter_begin_year")),
+                int(form_data.pop("filter_begin_month")),
+                int(form_data.pop("filter_begin_day")),
+            ),
+            "end_date": datetime.date(
+                int(form_data.pop("filter_end_year")),
+                int(form_data.pop("filter_end_month")),
+                int(form_data.pop("filter_end_day")),
+            ),
+            "types": []
+        }
         for news_type in NewsType:
             value = form_data.pop(news_type.filter_name, None)
             if value:

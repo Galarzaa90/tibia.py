@@ -1,0 +1,148 @@
+import datetime
+from typing import List
+
+from pydantic import BaseModel
+
+from tibiapy import WorldLocation, PvpType, TransferType, BattlEyeType, TournamentWorldType
+from tibiapy.models import OnlineCharacter
+from tibiapy.utils import get_tibia_url
+
+
+class BaseWorld(BaseModel):
+    """Base class for all World classes."""
+    name: str
+    """The name of the world."""
+
+    @property
+    def url(self):
+        """:class:`str`: URL to the world's information page on Tibia.com."""
+        return self.get_url(self.name)
+
+    @classmethod
+    def get_url(cls, name):
+        """Get the URL to the World's information page on Tibia.com.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the world.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the world's information page.
+        """
+        return get_tibia_url("community", "worlds", world=name.title())
+
+class World(BaseWorld):
+    """Represents a Tibia game server."""
+    status: str
+    """The current status of the world."""
+    online_count: int
+    """The number of currently online players in the world."""
+    record_count: int
+    """The server's online players record."""
+    record_date: datetime.datetime
+    """The date when the online record was achieved."""
+    location: WorldLocation
+    """The physical location of the game servers."""
+    pvp_type: PvpType
+    """The type of PvP in the world."""
+    creation_date: str
+    """The month and year the world was created. In YYYY-MM format."""
+    transfer_type: TransferType
+    """The type of transfer restrictions this world has."""
+    world_quest_titles: List[str]
+    """List of world quest titles the server has achieved."""
+    battleye_date: datetime.datetime
+    """The date when BattlEye was added to this world."""
+    battleye_type: BattlEyeType
+    """The type of BattlEye protection this world has."""
+    experimental: bool = False
+    """Whether the world is experimental or not."""
+    premium_only: bool
+    """Whether only premium account players are allowed to play in this server."""
+    tournament_world_type: TournamentWorldType
+    """The type of tournament world. :obj:`None` if this is not a tournament world."""
+    online_players: List[OnlineCharacter]
+    """A list of characters currently online in the server."""
+
+    @property
+    def battleye_protected(self):
+        """:class:`bool`: Whether the server is currently protected with BattlEye or not.
+
+        .. versionchanged:: 4.0.0
+            Now a calculated property instead of a field.
+        """
+        return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
+
+    @property
+    def creation_year(self):
+        """:class:`int`: Returns the year when the world was created."""
+        return int(self.creation_date.split("-")[0]) if self.creation_date else None
+
+    @property
+    def creation_month(self):
+        """:class:`int`: Returns the month when the world was created."""
+        return int(self.creation_date.split("-")[1]) if self.creation_date else None
+
+
+class WorldEntry(BaseWorld):
+    name: str
+    """The name of the world."""
+    status: str
+    """The current status of the world."""
+    online_count: int
+    """The number of currently online players in the world."""
+    location: WorldLocation
+    """The physical location of the game servers."""
+    pvp_type: PvpType
+    """The type of PvP in the world."""
+    transfer_type: TransferType
+    """The type of transfer restrictions this world has."""
+    battleye_date: datetime.datetime
+    """The date when BattlEye was added to this world."""
+    battleye_type: BattlEyeType
+    """The type of BattlEye protection this world has."""
+    experimental: bool = False
+    """Whether the world is experimental or not."""
+    premium_only: bool
+    """Whether only premium account players are allowed to play in this server."""
+    tournament_world_type: TournamentWorldType
+    """The type of tournament world. :obj:`None` if this is not a tournament world."""
+
+    @property
+    def battleye_protected(self):
+        """:class:`bool`: Whether the server is currently protected with BattlEye or not.
+
+        .. versionchanged:: 4.0.0
+            Now a calculated property instead of a field.
+        """
+        return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
+
+
+class WorldOverview(BaseModel):
+    """Container class for the World Overview section."""
+
+    record_count: int
+    """The overall player online record."""
+    record_date: datetime.datetime
+    """The date when the record was achieved."""
+    worlds: List['WorldEntry'] = []
+    """List of worlds, with limited info."""
+
+    @property
+    def total_online(self):
+        """:class:`int`: Total players online across all worlds."""
+        return sum(w.online_count for w in self.worlds)
+
+    @classmethod
+    def get_url(cls):
+        """Get the URL to the World Overview page in Tibia.com.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the World Overview's page.
+        """
+        return get_tibia_url("community", "worlds")

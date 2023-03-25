@@ -633,53 +633,6 @@ class BaseTournament(metaclass=abc.ABCMeta):
         return get_tibia_url("community", "tournament", **params)
 
 
-class BaseWorld(metaclass=abc.ABCMeta):
-    """Base class for all World classes.
-
-    The following implement this class:
-
-    - :class:`.WorldEntry`
-    - :class:`.World`
-
-    Attributes
-    ----------
-    name: :class:`str`
-        The name of the world.
-    """
-
-    name: str
-    location: WorldLocation
-    pvp_type: PvpType
-
-    __slots__ = (
-        "name",
-    )
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} name={self.name!r} location={self.location!r} pvp_type={self.pvp_type!r}>"
-
-    @property
-    def url(self):
-        """:class:`str`: URL to the world's information page on Tibia.com."""
-        return self.get_url(self.name)
-
-    @classmethod
-    def get_url(cls, name):
-        """Get the URL to the World's information page on Tibia.com.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the world's information page.
-        """
-        return get_tibia_url("community", "worlds", world=name.title())
-
-
 class HouseWithId:
     """Implements the :py:attr:`id` attribute and dependant functions and properties.
 
