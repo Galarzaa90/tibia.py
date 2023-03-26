@@ -3,9 +3,11 @@ import json
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, TournamentWorldType, World, WorldOverview
+from tibiapy import InvalidContent, TournamentWorldType
 from tibiapy.enums import PvpType, TransferType, WorldLocation
-from tibiapy.world import WorldEntry
+from tibiapy.models.world import WorldOverview, WorldEntry, World
+
+from tibiapy.parsers.world import WorldOverviewParser, WorldParser
 
 FILE_WORLD_FULL = "world/tibiacom_online.txt"
 FILE_WORLD_FULL_OFFLINE = "world/tibiacom_offline.txt"
@@ -21,7 +23,7 @@ class TestWorld(TestCommons, unittest.TestCase):
     def test_world_from_content_full(self):
         """Testing parsing a world with full information"""
         content = self.load_resource(FILE_WORLD_FULL)
-        world = World.from_content(content)
+        world = WorldParser.from_content(content)
 
         self.assertIsInstance(world, World)
         self.assertEqual(world.name, "Premia")
@@ -42,14 +44,14 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(World.get_url(world.name), world.url)
 
-        world_json_raw = world.to_json()
+        world_json_raw = world.json()
         world_json = json.loads(world_json_raw)
         self.assertEqual(len(world.online_players), len(world_json["online_players"]))
 
     def test_world_from_content_offline(self):
         """Testing parsing an offline world"""
-        content = self.load_resource(FILE_WORLD_FULL_OFFLINE, )
-        world = World.from_content(content)
+        content = self.load_resource(FILE_WORLD_FULL_OFFLINE)
+        world = WorldParser.from_content(content)
 
         self.assertIsInstance(world, World)
         self.assertEqual(world.name, "Antica")
@@ -73,7 +75,7 @@ class TestWorld(TestCommons, unittest.TestCase):
     def test_world_from_content_not_found(self):
         """Testing parsing a world that doesn't exist"""
         content = self.load_resource(FILE_WORLD_NOT_FOUND)
-        world = World.from_content(content)
+        world = WorldParser.from_content(content)
 
         self.assertIsNone(world)
 
@@ -81,12 +83,12 @@ class TestWorld(TestCommons, unittest.TestCase):
         """Testing parsing a world using an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            World.from_content(content)
+            WorldParser.from_content(content)
 
     def test_world_from_content_tournament(self):
         """Testing parsing a tournament world"""
         content = self.load_resource(FILE_WORLD_TOURNAMENT)
-        world = World.from_content(content)
+        world = WorldParser.from_content(content)
 
         self.assertIsInstance(world, World)
         self.assertIsInstance(world.tournament_world_type, TournamentWorldType)
@@ -98,28 +100,21 @@ class TestWorld(TestCommons, unittest.TestCase):
     # endregion
 
     # region Tibia.com WorldOverview Tests
-    def _test_world_overview_from_content(self):
+    def test_world_overview_from_content(self):
         """Testing parsing world overview"""
         content = self.load_resource(FILE_WORLD_LIST)
-        world_overview = WorldOverview.from_content(content)
+        world_overview = WorldOverviewParser.from_content(content)
 
         self.assertIsInstance(world_overview, WorldOverview)
-        self.assertEqual(WorldOverview.get_url(), WorldEntry.get_list_url())
         self.assertGreater(len(world_overview.worlds), 0)
         self.assertGreater(world_overview.total_online, 0)
         self.assertIsNotNone(world_overview.record_date)
         self.assertIsNotNone(world_overview.record_count)
-        self.assertEqual(82, len(world_overview.regular_worlds))
-        self.assertEqual(6, len(world_overview.tournament_worlds))
 
-        worlds = WorldEntry.list_from_content(content)
-        self.assertEqual(len(world_overview.worlds), len(worlds))
-
-    # TODO: Enable when we have a sample again
-    def _test_world_overview_from_content_offline(self):
+    def test_world_overview_from_content_offline(self):
         """Testing parsing world overview with offline worlds"""
         content = self.load_resource(FILE_WORLD_LIST_OFFLINE)
-        world_overview = WorldOverview.from_content(content)
+        world_overview = WorldOverviewParser.from_content(content)
 
         self.assertEqual(world_overview.record_count, 64028)
         self.assertIsInstance(world_overview.record_date, datetime.datetime)
@@ -134,5 +129,5 @@ class TestWorld(TestCommons, unittest.TestCase):
         """Testing parsing an unrealted tibia section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            WorldEntry.list_from_content(content)
+            WorldOverviewParser.from_content(content)
     # endregion

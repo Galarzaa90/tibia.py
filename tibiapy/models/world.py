@@ -1,5 +1,5 @@
 import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -34,6 +34,7 @@ class BaseWorld(BaseModel):
         """
         return get_tibia_url("community", "worlds", world=name.title())
 
+
 class World(BaseWorld):
     """Represents a Tibia game server."""
     status: str
@@ -54,15 +55,15 @@ class World(BaseWorld):
     """The type of transfer restrictions this world has."""
     world_quest_titles: List[str]
     """List of world quest titles the server has achieved."""
-    battleye_date: datetime.datetime
+    battleye_date: Optional[datetime.date]
     """The date when BattlEye was added to this world."""
-    battleye_type: BattlEyeType
+    battleye_type: BattlEyeType = BattlEyeType.UNPROTECTED
     """The type of BattlEye protection this world has."""
     experimental: bool = False
     """Whether the world is experimental or not."""
     premium_only: bool
     """Whether only premium account players are allowed to play in this server."""
-    tournament_world_type: TournamentWorldType
+    tournament_world_type: Optional[TournamentWorldType] = None
     """The type of tournament world. :obj:`None` if this is not a tournament world."""
     online_players: List[OnlineCharacter]
     """A list of characters currently online in the server."""
@@ -100,15 +101,15 @@ class WorldEntry(BaseWorld):
     """The type of PvP in the world."""
     transfer_type: TransferType
     """The type of transfer restrictions this world has."""
-    battleye_date: datetime.datetime
+    battleye_date: Optional[datetime.date]
     """The date when BattlEye was added to this world."""
-    battleye_type: BattlEyeType
+    battleye_type: BattlEyeType = BattlEyeType.UNPROTECTED
     """The type of BattlEye protection this world has."""
     experimental: bool = False
     """Whether the world is experimental or not."""
     premium_only: bool
     """Whether only premium account players are allowed to play in this server."""
-    tournament_world_type: TournamentWorldType
+    tournament_world_type: Optional[TournamentWorldType] = None
     """The type of tournament world. :obj:`None` if this is not a tournament world."""
 
     @property

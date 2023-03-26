@@ -52,7 +52,7 @@ class WorldParser:
                 return None
             selected_world = parsed_content.select_one('option:checked')
             data = {"name": selected_world.text}
-            cls._parse_world_info(tables.get("World Information", []))
+            cls._parse_world_info(data, tables.get("World Information", []))
 
             online_table = tables.get("Players Online", [])
             data["online_players"] = []
@@ -62,6 +62,7 @@ class WorldParser:
                 data["online_players"].append(OnlineCharacter(name=name, world=data["name"], level=int(level), vocation=vocation))
         except AttributeError:
             raise InvalidContent("content is not from the world section in Tibia.com")
+
 
         return World.parse_obj(data)
     # endregion
@@ -88,6 +89,7 @@ class WorldParser:
             data["online_count"] = parse_integer(world_info.pop("players_online"))
         except KeyError:
             data["online_count"] = 0
+        data["status"] = world_info["status"]
         data["location"] = try_enum(WorldLocation, world_info.pop("location"))
         data["pvp_type"] = try_enum(PvpType, world_info.pop("pvp_type"))
         data["transfer_type"] = try_enum(TransferType, world_info.pop("transfer_type", None), TransferType.REGULAR)
@@ -254,5 +256,5 @@ class WorldOverviewParser(abc.Serializable):
         for title_table, worlds_table in zip(tables, tables[1:]):
             title = title_table.text.lower()
             regular_world_rows = worlds_table.select("tr.Odd, tr.Even")
-            worlds.extend(cls.parse_worlds(regular_world_rows, "tournament" in title))
+            worlds.extend(cls._parse_worlds(regular_world_rows, "tournament" in title))
         return worlds

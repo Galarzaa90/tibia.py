@@ -11,7 +11,6 @@ import aiohttp_socks
 
 import tibiapy
 from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, Spell, SpellsSection, abc
-from tibiapy.character import Character
 from tibiapy.creature import BoostableBosses, BoostedCreatures, Creature, CreatureEntry, CreaturesSection
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
     NewsType, VocationFilter
@@ -22,10 +21,13 @@ from tibiapy.guild import Guild, GuildWars, GuildsSection
 from tibiapy.highscores import Highscores
 from tibiapy.house import House, HousesSection
 from tibiapy.kill_statistics import KillStatistics
+from tibiapy.models import Character
 from tibiapy.models.news import NewsArchive
+from tibiapy.models.world import World, WorldOverview
+from tibiapy.parsers import CharacterParser
 from tibiapy.parsers.news import News, NewsArchiveParser, NewsParser
+from tibiapy.parsers.world import WorldParser, WorldOverviewParser
 from tibiapy.tournament import Tournament, TournamentLeaderboard
-from tibiapy.world import World, WorldOverview
 
 __all__ = (
     "TibiaResponse",
@@ -964,7 +966,7 @@ class Client:
         """
         response = await self._request("GET", Character.get_url(name.strip()), test=test)
         start_time = time.perf_counter()
-        char = Character.from_content(response.content)
+        char = CharacterParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, char, parsing_time)
 
@@ -1205,7 +1207,7 @@ class Client:
         """
         response = await self._request("GET", World.get_url(name), test=test)
         start_time = time.perf_counter()
-        world = World.from_content(response.content)
+        world = WorldParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world, parsing_time)
 
@@ -1308,7 +1310,7 @@ class Client:
         """
         response = await self._request("GET", WorldOverview.get_url(), test=test)
         start_time = time.perf_counter()
-        world_overview = WorldOverview.from_content(response.content)
+        world_overview = WorldOverviewParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world_overview, parsing_time)
 

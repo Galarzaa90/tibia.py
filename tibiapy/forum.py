@@ -5,8 +5,9 @@ from typing import List, Optional
 
 import bs4
 
-from tibiapy import GuildMembership, abc, errors
+from tibiapy import abc, errors
 from tibiapy.enums import ThreadStatus, Vocation
+from tibiapy.models import GuildMembership
 from tibiapy.utils import (
     convert_line_breaks, get_tibia_url, parse_form_data, parse_integer, parse_link_info, parse_pagination,
     parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content, parse_tibiacom_tables, split_list,
