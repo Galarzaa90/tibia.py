@@ -27,7 +27,6 @@ from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
 from tibiapy.parsers.news import News, NewsArchiveParser, NewsParser
 from tibiapy.parsers.world import WorldParser, WorldOverviewParser
-from tibiapy.tournament import Tournament, TournamentLeaderboard
 
 __all__ = (
     "TibiaResponse",
@@ -1492,72 +1491,4 @@ class Client:
         spells = Spell.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, spells, parsing_time)
-    # endregion
-
-    # region Tournaments
-    async def fetch_tournament(self, tournament_cycle=0, *, test=False):
-        """Fetch a tournament from Tibia.com.
-
-        .. versionadded:: 2.5.0
-
-        Parameters
-        ----------
-        tournament_cycle: :class:`int`
-            The cycle of the tournament. if unspecified, it will get the currently running tournament.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`Tournament`
-            The tournament if found, :obj:`None` otherwise.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", Tournament.get_url(tournament_cycle), test=test)
-        start_time = time.perf_counter()
-        tournament = Tournament.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, tournament, parsing_time)
-
-    async def fetch_tournament_leaderboard(self, tournament_cycle, world, page=1, *, test=False):
-        """Fetch a tournament leaderboard from Tibia.com.
-
-        .. versionadded:: 2.5.0
-
-        Parameters
-        ----------
-        tournament_cycle: :class:`int`
-            The cycle of the tournament. if unspecified, it will get the currently running tournament.
-        world: :class:`str`
-            The name of the world to get the leaderboards for.
-        page: :class:`int`
-            The desired leaderboards page, by default 1 is used.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`TournamentLeaderboard`
-            The tournament's leaderboard if found, :obj:`None` otherwise.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", TournamentLeaderboard.get_url(world, tournament_cycle, page), test=test)
-        start_time = time.perf_counter()
-        tournament_leaderboard = TournamentLeaderboard.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, tournament_leaderboard, parsing_time)
     # endregion
