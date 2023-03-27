@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from tibiapy import WorldLocation, PvpType, TransferType, BattlEyeType, TournamentWorldType
 from tibiapy.models import OnlineCharacter
-from tibiapy.models.world import World, WorldEntry
+from tibiapy.models.world import World, WorldEntry, WorldOverview
 from tibiapy.utils import try_enum, try_datetime, try_date
 
 
@@ -215,7 +215,7 @@ class WorldOverviewBuilder:
         return self
 
     def build(self):
-        return WorldOverviewBuilder(
+        return WorldOverview(
             record_count=self._record_count,
             record_date=self._record_date,
             worlds=self._worlds,

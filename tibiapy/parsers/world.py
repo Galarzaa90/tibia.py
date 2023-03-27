@@ -64,8 +64,6 @@ class WorldParser:
                 builder.add_online_player(OnlineCharacter(name=name, level=int(level), vocation=vocation))
         except AttributeError:
             raise InvalidContent("content is not from the world section in Tibia.com")
-
-
         return builder.build()
     # endregion
 
@@ -179,16 +177,15 @@ class WorldOverviewParser(abc.Serializable):
             If the provided content is not the HTML content of the worlds section in Tibia.com
         """
         parsed_content = parse_tibiacom_content(content)
-        data = {}
         try:
             record_table, *tables \
                 = parsed_content.select("table.TableContent")
             m = record_regexp.search(record_table.text)
-            return WorldOverviewBuilder(
-                record_count=parse_integer(m.group("count")),
-                record_date=parse_tibia_datetime(m.group("date")),
-                world= cls._parse_worlds_tables(tables)
-            ).build()
+            return (WorldOverviewBuilder()
+                    .record_count(parse_integer(m.group("count")))
+                    .record_date(parse_tibia_datetime(m.group("date")))
+                    .worlds(cls._parse_worlds_tables(tables))
+                    .build())
         except (AttributeError, KeyError, ValueError) as e:
             raise InvalidContent("content does not belong to the World Overview section in Tibia.com", e)
 
@@ -209,19 +206,19 @@ class WorldOverviewParser(abc.Serializable):
             online_count = parse_integer(cols[1].text.strip(), None)
             if online_count is None:
                 online = False
-            location = cols[2].text.replace("\u00a0", " ").strip()
-            pvp = cols[3].text.strip()
-            builder = WorldEntryBuilder(
-                name=name,
-                location=location,
-                pvp_type=pvp,
-                online_coint=online_count,
-                online=online
-            )
+                online_count = 0
+            location = try_enum(WorldLocation, cols[2].text.replace("\u00a0", " ").strip())
+            pvp = try_enum(PvpType, cols[3].text.strip())
+            builder = (WorldEntryBuilder()
+                       .name(name)
+                       .location(location)
+                       .pvp_type(pvp)
+                       .online_count(online_count)
+                       .online(online))
             # Check Battleye icon to get information
             battleye_icon = cols[4].select_one("span.HelperDivIndicator")
             if battleye_icon is not None:
-                if m:= battleye_regexp.search(battleye_icon["onmouseover"]):
+                if m := battleye_regexp.search(battleye_icon["onmouseover"]):
                     battleye_date = parse_tibia_full_date(m.group(1))
                     builder.battleye_date(battleye_date).battleye_type(BattlEyeType.PROTECTED if battleye_date else BattlEyeType.INITIALLY_PROTECTED)
             additional_info = cols[5].text.strip()
@@ -251,7 +248,6 @@ class WorldOverviewParser(abc.Serializable):
         """
         worlds = []
         for title_table, worlds_table in zip(tables, tables[1:]):
-            title = title_table.text.lower()
             regular_world_rows = worlds_table.select("tr.Odd, tr.Even")
             worlds.extend(cls._parse_worlds(regular_world_rows))
         return worlds
