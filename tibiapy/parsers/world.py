@@ -4,6 +4,7 @@ from collections import OrderedDict
 from typing import TYPE_CHECKING
 
 from tibiapy import abc
+from tibiapy.builders.world import WorldBuilder
 from tibiapy.enums import BattlEyeType, PvpType, TournamentWorldType, TransferType, WorldLocation
 from tibiapy.errors import InvalidContent
 from tibiapy.models import OnlineCharacter
@@ -51,25 +52,24 @@ class WorldParser:
             if error and error[0].text == "World with this name doesn't exist!":
                 return None
             selected_world = parsed_content.select_one('option:checked')
-            data = {"name": selected_world.text}
-            cls._parse_world_info(data, tables.get("World Information", []))
+            builder = WorldBuilder().name(selected_world.text)
+            cls._parse_world_info(builder, tables.get("World Information", []))
 
             online_table = tables.get("Players Online", [])
-            data["online_players"] = []
             for row in online_table[1:]:
                 cols_raw = row.select('td')
                 name, level, vocation = (c.text.replace('\xa0', ' ').strip() for c in cols_raw)
-                data["online_players"].append(OnlineCharacter(name=name, world=data["name"], level=int(level), vocation=vocation))
+                builder.add_online_player(OnlineCharacter(name=name, level=int(level), vocation=vocation))
         except AttributeError:
             raise InvalidContent("content is not from the world section in Tibia.com")
 
 
-        return World.parse_obj(data)
+        return builder.build()
     # endregion
 
     # region Private methods
     @classmethod
-    def _parse_world_info(cls, data, world_info_table):
+    def _parse_world_info(cls, builder: WorldBuilder, world_info_table):
         """
         Parse the World Information table from Tibia.com and adds the found values to the object.
 
@@ -86,25 +86,23 @@ class WorldParser:
             value = value.replace("\xa0", " ")
             world_info[field] = value
         try:
-            data["online_count"] = parse_integer(world_info.pop("players_online"))
+            builder.online_count(parse_integer(world_info.pop("players_online")))
         except KeyError:
-            data["online_count"] = 0
-        data["status"] = world_info["status"]
-        data["location"] = try_enum(WorldLocation, world_info.pop("location"))
-        data["pvp_type"] = try_enum(PvpType, world_info.pop("pvp_type"))
-        data["transfer_type"] = try_enum(TransferType, world_info.pop("transfer_type", None), TransferType.REGULAR)
-        m = record_regexp.match(world_info.pop("online_record"))
-        if m:
-            data["record_count"] = parse_integer(m.group("count"))
-            data["record_date"] = parse_tibia_datetime(m.group("date"))
+            builder.online_count(0)
+        builder.online(world_info["status"].lower() == "online")\
+            .location(try_enum(WorldLocation, world_info.pop("location")))\
+            .pvp_type(try_enum(PvpType, world_info.pop("pvp_type")))\
+            .transfer_type(try_enum(TransferType, world_info.pop("transfer_type", None), TransferType.REGULAR))
+        if m := record_regexp.match(world_info.pop("online_record")):
+            builder.record_count(parse_integer(m.group("count")))
+            builder.record_date(parse_tibia_datetime(m.group("date")))
         if "world_quest_titles" in world_info:
-            data["world_quest_titles"] = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
-        if data["world_quest_titles"] and "currently has no title" in data["world_quest_titles"][0]:
-            data["world_quest_titles"] = []
-        data["experimental"] = world_info.pop("game_world_type", None) == "Experimental"
-        data["tournament_world_type"] = try_enum(TournamentWorldType, world_info.pop("tournament_world_type", None))
-        cls._parse_battleye_status(data, world_info.pop("battleye_status"))
-        data["premium_only"] = "premium_type" in world_info
+            titles = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
+            if "currently has no title" not in titles[0]:
+                builder.world_quest_titles(titles)
+        builder.experimental(world_info.pop("game_world_type", None) == "Experimental")
+        cls._parse_battleye_status(builder, world_info.pop("battleye_status"))
+        builder.premium_only("premium_type" in world_info)
 
         month, year = world_info.pop("creation_date").split("/")
         month = int(month)
@@ -113,10 +111,10 @@ class WorldParser:
             year += 1900
         else:
             year += 2000
-        data["creation_date"] = f"{year:d}-{month:02d}"
+        builder.creation_date(f"{year:d}-{month:02d}")
 
     @classmethod
-    def _parse_battleye_status(cls, data, battleye_string):
+    def _parse_battleye_status(cls, builder, battleye_string):
         """Parse the BattlEye string and applies the results.
 
         Parameters
@@ -124,13 +122,13 @@ class WorldParser:
         battleye_string: :class:`str`
             String containing the world's Battleye Status.
         """
-        m = battleye_regexp.search(battleye_string)
-        if m:
-            data["battleye_date"] = parse_tibia_full_date(m.group(1))
-            data["battleye_type"] = BattlEyeType.PROTECTED if data["battleye_date"] else BattlEyeType.INITIALLY_PROTECTED
+        if m := battleye_regexp.search(battleye_string):
+            battleye_date = parse_tibia_full_date(m.group(1))
+            builder.battleye_date(battleye_date)\
+                .battleye_type(BattlEyeType.PROTECTED if battleye_date else BattlEyeType.INITIALLY_PROTECTED)
         else:
-            data["battleye_date"] = None
-            data["battleye_type"] = BattlEyeType.UNPROTECTED
+            builder.battleye_date(None)\
+                .battleye_type(BattlEyeType.UNPROTECTED)
 
     @classmethod
     def _parse_tables(cls, parsed_content):

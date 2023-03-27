@@ -229,7 +229,7 @@ class Killer(BaseModel):
 class OnlineCharacter(BaseCharacter):
     """An online character in the world's page."""
 
-    world: str
+    world: Optional[str]
     """The name of the world."""
     vocation: Vocation
     """The vocation of the character."""

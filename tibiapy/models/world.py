@@ -37,20 +37,22 @@ class BaseWorld(BaseModel):
 
 class World(BaseWorld):
     """Represents a Tibia game server."""
-    status: str
-    """The current status of the world."""
+    online: bool
+    """Whether the world is online or not."""
     online_count: int
     """The number of currently online players in the world."""
     record_count: int
     """The server's online players record."""
     record_date: datetime.datetime
     """The date when the online record was achieved."""
+    creation_date: str
+    """The month and year the world was created. In YYYY-MM format."""
     location: WorldLocation
     """The physical location of the game servers."""
     pvp_type: PvpType
     """The type of PvP in the world."""
-    creation_date: str
-    """The month and year the world was created. In YYYY-MM format."""
+    premium_only: bool
+    """Whether only premium account players are allowed to play in this server."""
     transfer_type: TransferType
     """The type of transfer restrictions this world has."""
     world_quest_titles: List[str]
@@ -61,10 +63,6 @@ class World(BaseWorld):
     """The type of BattlEye protection this world has."""
     experimental: bool = False
     """Whether the world is experimental or not."""
-    premium_only: bool
-    """Whether only premium account players are allowed to play in this server."""
-    tournament_world_type: Optional[TournamentWorldType] = None
-    """The type of tournament world. :obj:`None` if this is not a tournament world."""
     online_players: List[OnlineCharacter]
     """A list of characters currently online in the server."""
 
@@ -109,8 +107,6 @@ class WorldEntry(BaseWorld):
     """Whether the world is experimental or not."""
     premium_only: bool
     """Whether only premium account players are allowed to play in this server."""
-    tournament_world_type: Optional[TournamentWorldType] = None
-    """The type of tournament world. :obj:`None` if this is not a tournament world."""
 
     @property
     def battleye_protected(self):

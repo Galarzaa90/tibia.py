@@ -27,7 +27,7 @@ class TestWorld(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(world, World)
         self.assertEqual(world.name, "Premia")
-        self.assertEqual(world.status, "Online")
+        self.assertTrue(world.online)
         self.assertEqual(world.record_count, 531)
         self.assertIsInstance(world.record_date, datetime.datetime)
         self.assertEqual(world.creation_date, "2002-04")
@@ -55,7 +55,7 @@ class TestWorld(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(world, World)
         self.assertEqual(world.name, "Antica")
-        self.assertEqual(world.status, "Offline")
+        self.assertFalse(world.online)
         self.assertEqual(world.record_count, 1052)
         self.assertIsInstance(world.record_date, datetime.datetime)
         self.assertEqual(world.creation_date, "1997-01")
@@ -85,17 +85,6 @@ class TestWorld(TestCommons, unittest.TestCase):
         with self.assertRaises(InvalidContent):
             WorldParser.from_content(content)
 
-    def test_world_from_content_tournament(self):
-        """Testing parsing a tournament world"""
-        content = self.load_resource(FILE_WORLD_TOURNAMENT)
-        world = WorldParser.from_content(content)
-
-        self.assertIsInstance(world, World)
-        self.assertIsInstance(world.tournament_world_type, TournamentWorldType)
-        self.assertEqual(world.tournament_world_type, TournamentWorldType.REGULAR)
-        self.assertEqual(world.record_count, 21)
-        self.assertTrue(world.premium_only)
-        self.assertFalse(world.world_quest_titles)
 
     # endregion
 
