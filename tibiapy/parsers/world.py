@@ -4,13 +4,15 @@ from collections import OrderedDict
 from typing import TYPE_CHECKING
 
 from tibiapy import abc
-from tibiapy.builders.world import WorldBuilder
-from tibiapy.enums import BattlEyeType, PvpType, TournamentWorldType, TransferType, WorldLocation
+from tibiapy.builders.world import (WorldBuilder, WorldEntryBuilder,
+                                    WorldOverviewBuilder)
+from tibiapy.enums import (BattlEyeType, PvpType,
+                           TransferType, WorldLocation)
 from tibiapy.errors import InvalidContent
 from tibiapy.models import OnlineCharacter
-from tibiapy.models.world import World, WorldOverview, WorldEntry
-from tibiapy.utils import (parse_integer, parse_tibia_datetime, parse_tibia_full_date,
-                           parse_tibiacom_content, try_enum)
+from tibiapy.utils import (parse_integer, parse_tibia_datetime,
+                           parse_tibia_full_date, parse_tibiacom_content,
+                           try_enum)
 
 if TYPE_CHECKING:
     import bs4
@@ -182,64 +184,61 @@ class WorldOverviewParser(abc.Serializable):
             record_table, *tables \
                 = parsed_content.select("table.TableContent")
             m = record_regexp.search(record_table.text)
-            data["record_count"] = parse_integer(m.group("count"))
-            data["record_date"] = parse_tibia_datetime(m.group("date"))
-            data["worlds"] = cls._parse_worlds_tables(tables)
-            return WorldOverview.parse_obj(data)
+            return WorldOverviewBuilder(
+                record_count=parse_integer(m.group("count")),
+                record_date=parse_tibia_datetime(m.group("date")),
+                world= cls._parse_worlds_tables(tables)
+            ).build()
         except (AttributeError, KeyError, ValueError) as e:
             raise InvalidContent("content does not belong to the World Overview section in Tibia.com", e)
 
     @classmethod
-    def _parse_worlds(cls, world_rows, tournament=False):
+    def _parse_worlds(cls, world_rows):
         """Parse the world columns and adds the results to :py:attr:`worlds`.
 
         Parameters
         ----------
         world_rows: :class:`list` of :class:`bs4.Tag`
             A list containing the rows of each world.
-        tournament: :class:`bool`
-            Whether these are tournament worlds or not.
         """
         worlds = []
         for world_row in world_rows:
             cols = world_row.select("td")
             name = cols[0].text.strip()
-            status = "Online"
-            online = parse_integer(cols[1].text.strip(), None)
-            if online is None:
-                online = 0
-                status = "Offline"
+            online = True
+            online_count = parse_integer(cols[1].text.strip(), None)
+            if online_count is None:
+                online = False
             location = cols[2].text.replace("\u00a0", " ").strip()
             pvp = cols[3].text.strip()
-
-            data = {'name': name, 'location': location, 'pvp_type': pvp, 'online_count': online, 'status': status}
+            builder = WorldEntryBuilder(
+                name=name,
+                location=location,
+                pvp_type=pvp,
+                online_coint=online_count,
+                online=online
+            )
             # Check Battleye icon to get information
             battleye_icon = cols[4].select_one("span.HelperDivIndicator")
             if battleye_icon is not None:
-                m = battleye_regexp.search(battleye_icon["onmouseover"])
-                if m:
-                    data["battleye_date"] = parse_tibia_full_date(m.group(1))
-                    data["battleye_type"] = BattlEyeType.PROTECTED if data["battleye_date"] else BattlEyeType.INITIALLY_PROTECTED
+                if m:= battleye_regexp.search(battleye_icon["onmouseover"]):
+                    battleye_date = parse_tibia_full_date(m.group(1))
+                    builder.battleye_date(battleye_date).battleye_type(BattlEyeType.PROTECTED if battleye_date else BattlEyeType.INITIALLY_PROTECTED)
             additional_info = cols[5].text.strip()
-            cls._parse_additional_info(data, additional_info, tournament)
-            worlds.append(WorldEntry.parse_obj(data))
+            cls._parse_additional_info(builder, additional_info)
+            worlds.append(builder.build())
         return worlds
 
     @classmethod
-    def _parse_additional_info(cls, data, additional_info, tournament=False):
+    def _parse_additional_info(cls, builder, additional_info):
         if "blocked" in additional_info:
-            data["transfer_type"] = TransferType.BLOCKED
+            builder.transfer_type(TransferType.BLOCKED)
         elif "locked" in additional_info:
-            data["transfer_type"] = TransferType.LOCKED
+            builder.transfer_type(TransferType.LOCKED)
         else:
-            data["transfer_type"] = TransferType.REGULAR
-        data["experimental"] = "experimental" in additional_info
-        data["premium_only"] = "premium" in additional_info
-        if tournament:
-            if "restricted Store products" in additional_info:
-                data["tournament_world_type"] = TournamentWorldType.RESTRICTED
-            else:
-                data["tournament_world_type"] = TournamentWorldType.REGULAR
+            builder.transfer_type(TransferType.REGULAR)
+        builder.experimental("experimental" in additional_info)
+        builder.premium_only("premium" in additional_info)
 
     @classmethod
     def _parse_worlds_tables(cls, tables):
@@ -254,5 +253,5 @@ class WorldOverviewParser(abc.Serializable):
         for title_table, worlds_table in zip(tables, tables[1:]):
             title = title_table.text.lower()
             regular_world_rows = worlds_table.select("tr.Odd, tr.Even")
-            worlds.extend(cls._parse_worlds(regular_world_rows, "tournament" in title))
+            worlds.extend(cls._parse_worlds(regular_world_rows))
         return worlds
