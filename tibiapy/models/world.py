@@ -89,8 +89,8 @@ class World(BaseWorld):
 class WorldEntry(BaseWorld):
     name: str
     """The name of the world."""
-    status: str
-    """The current status of the world."""
+    online: bool
+    """Whether the world is currently online."""
     online_count: int
     """The number of currently online players in the world."""
     location: WorldLocation
@@ -125,7 +125,7 @@ class WorldOverview(BaseModel):
     """The overall player online record."""
     record_date: datetime.datetime
     """The date when the record was achieved."""
-    worlds: List['WorldEntry'] = []
+    worlds: List[WorldEntry] = []
     """List of worlds, with limited info."""
 
     @property
