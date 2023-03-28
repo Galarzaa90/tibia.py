@@ -2,7 +2,7 @@ import unittest
 
 import tibiapy
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Spell, SpellsSection
+from tibiapy.parsers.spell import SpellsSectionParser, SpellParser
 
 FILE_SPELLS_SECTION = "library/spell_list_default.txt"
 FILE_SPELL_RUNE = "library/spell_rune.txt"
@@ -14,7 +14,7 @@ class TestSpell(TestCommons, unittest.TestCase):
     def test_spells_section_from_content(self):
         """Testing parsing a boosted creature"""
         content = self.load_resource(FILE_SPELLS_SECTION)
-        spells_section = SpellsSection.from_content(content)
+        spells_section = SpellsSectionParser.from_content(content)
 
         self.assertIsNotNone(spells_section)
         self.assertEqual(141, len(spells_section.entries))
@@ -23,12 +23,12 @@ class TestSpell(TestCommons, unittest.TestCase):
         """Testing parsing a boosted creature"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(tibiapy.InvalidContent):
-            spells_section = SpellsSection.from_content(content)
+            spells_section = SpellsSectionParser.from_content(content)
 
     def test_spell_from_content_rune(self):
         """Testing parsing a rune spell."""
         content = self.load_resource(FILE_SPELL_RUNE)
-        spell = Spell.from_content(content)
+        spell = SpellParser.from_content(content)
 
         self.assertIsNotNone(spell)
         self.assertEqual("Chameleon Rune", spell.name)
@@ -56,7 +56,7 @@ class TestSpell(TestCommons, unittest.TestCase):
     def test_spell_from_content_secondary_group(self):
         """Testing parsing a spell with a secondary group."""
         content = self.load_resource(FILE_SPELL_SECONDARY_GROUP)
-        spell = Spell.from_content(content)
+        spell = SpellParser.from_content(content)
 
         self.assertIsNotNone(spell)
         self.assertEqual("Protector", spell.name)
@@ -81,7 +81,7 @@ class TestSpell(TestCommons, unittest.TestCase):
 
         When trying to fetch a spell that doesn't exist, the website will just show the spells section."""
         content = self.load_resource(FILE_SPELLS_SECTION)
-        spell = Spell.from_content(content)
+        spell = SpellParser.from_content(content)
 
         self.assertIsNone(spell)
 
@@ -89,6 +89,6 @@ class TestSpell(TestCommons, unittest.TestCase):
         """Testing parsing a boosted creature"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(tibiapy.InvalidContent):
-            spell = Spell.from_content(content)
+            spell = SpellParser.from_content(content)
 
     # endregion

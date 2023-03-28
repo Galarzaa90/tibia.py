@@ -10,7 +10,7 @@ import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, Spell, SpellsSection, abc
+from tibiapy import Auction, AuctionFilters, CharacterBazaar, Leaderboard, abc
 from tibiapy.creature import BoostableBosses, BoostedCreatures, Creature, CreatureEntry, CreaturesSection
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
     NewsType, VocationFilter
@@ -21,11 +21,12 @@ from tibiapy.guild import Guild, GuildWars, GuildsSection
 from tibiapy.highscores import Highscores
 from tibiapy.house import House, HousesSection
 from tibiapy.kill_statistics import KillStatistics
-from tibiapy.models import Character
+from tibiapy.models import Character, SpellsSection, Spell
 from tibiapy.models.news import NewsArchive
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
 from tibiapy.parsers.news import News, NewsArchiveParser, NewsParser
+from tibiapy.parsers.spell import SpellsSectionParser, SpellParser
 from tibiapy.parsers.world import WorldParser, WorldOverviewParser
 
 __all__ = (
@@ -1459,7 +1460,7 @@ class Client:
                                                                     spell_type=spell_type, premium=premium,
                                                                     sort=sort), test=test)
         start_time = time.perf_counter()
-        spells = SpellsSection.from_content(response.content)
+        spells = SpellsSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, spells, parsing_time)
 
@@ -1488,7 +1489,7 @@ class Client:
         """
         response = await self._request("GET", Spell.get_url(identifier), test=test)
         start_time = time.perf_counter()
-        spells = Spell.from_content(response.content)
+        spells = SpellParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, spells, parsing_time)
     # endregion
