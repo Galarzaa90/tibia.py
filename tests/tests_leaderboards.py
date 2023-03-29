@@ -2,9 +2,9 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, Leaderboard, TournamentEntry, PvpType, RuleSet, ScoreSet, Tournament, \
-    TournamentLeaderboard, \
-    TournamentPhase
+from tibiapy import InvalidContent
+from tibiapy.models import Leaderboard
+from tibiapy.parsers.leaderboard import LeaderboardParser
 
 FILE_LEADERBOARD_CURRENT = "leaderboards/tibiacom_current_rotation.txt"
 
@@ -14,7 +14,7 @@ class TestLeaderboards(TestCommons, unittest.TestCase):
     def test_leaderboard_from_content(self):
         """Testing parsing a leaderboard's page"""
         content = self.load_resource(FILE_LEADERBOARD_CURRENT)
-        leaderboard = Leaderboard.from_content(content)
+        leaderboard = LeaderboardParser.from_content(content)
 
         self.assertIsNotNone(leaderboard)
         self.assertEqual("Antica", leaderboard.world)
@@ -36,7 +36,7 @@ class TestLeaderboards(TestCommons, unittest.TestCase):
         """Testing parsing a leaderboard's page"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            Leaderboard.from_content(content)
+            LeaderboardParser.from_content(content)
 
     def test_leaderboard_get_url_invalid_page(self):
         with self.assertRaises(ValueError):

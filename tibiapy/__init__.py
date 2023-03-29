@@ -15,7 +15,6 @@ from tibiapy.forum import *
 from tibiapy.guild import *
 from tibiapy.highscores import *
 from tibiapy.kill_statistics import *
-from tibiapy.leaderboard import *
 from tibiapy.bazaar import *
 from tibiapy.client import *
 
