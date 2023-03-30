@@ -1,7 +1,8 @@
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import KillStatistics, InvalidContent
+from tibiapy import InvalidContent
+from tibiapy.parsers.kill_statistics import KillStatisticsParser
 
 FILE_KILL_STATISTICS_FULL = "kill_statistics/tibiacom_full.txt"
 FILE_KILL_STATISTICS_EMPTY = "kill_statistics/tibiacom_empty.txt"
@@ -12,7 +13,7 @@ class TestHighscores(TestCommons, unittest.TestCase):
     def test_kill_statistics_from_content(self):
         """Testing parsing kill statistics"""
         content = self.load_resource(FILE_KILL_STATISTICS_FULL)
-        kill_statistics = KillStatistics.from_content(content)
+        kill_statistics = KillStatisticsParser.from_content(content)
 
         self.assertEqual(kill_statistics.world, "Gladera")
         self.assertEqual(len(kill_statistics.entries), 920)
@@ -36,7 +37,7 @@ class TestHighscores(TestCommons, unittest.TestCase):
     def test_kill_statistics_from_content_empty(self):
         """Testing parsing empty kill statistics"""
         content = self.load_resource(FILE_KILL_STATISTICS_EMPTY)
-        kill_statistics = KillStatistics.from_content(content)
+        kill_statistics = KillStatisticsParser.from_content(content)
 
         self.assertIsNone(kill_statistics)
 
@@ -44,6 +45,6 @@ class TestHighscores(TestCommons, unittest.TestCase):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            KillStatistics.from_content(content)
+            KillStatisticsParser.from_content(content)
 
     # endregion

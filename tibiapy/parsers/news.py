@@ -5,7 +5,7 @@ import urllib.parse
 from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.errors import InvalidContent
-from tibiapy.models import News, NewsArchive, NewsEntry
+from tibiapy.models.news import NewsArchive, News, NewsEntry
 from tibiapy.utils import (parse_form_data, parse_tibia_date,
                            parse_tibiacom_content, parse_tibiacom_tables,
                            try_enum)

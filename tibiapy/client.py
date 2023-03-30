@@ -20,13 +20,13 @@ from tibiapy.forum import BoardEntry, CMPostArchive, ForumAnnouncement, ForumBoa
 from tibiapy.guild import Guild, GuildWars, GuildsSection
 from tibiapy.highscores import Highscores
 from tibiapy.house import House, HousesSection
-from tibiapy.kill_statistics import KillStatistics
-from tibiapy.models import Character, SpellsSection, Spell, Leaderboard
-from tibiapy.models.news import NewsArchive
+from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics
+from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
+from tibiapy.parsers.kill_statistics import KillStatisticsParser
 from tibiapy.parsers.leaderboard import LeaderboardParser
-from tibiapy.parsers.news import News, NewsArchiveParser, NewsParser
+from tibiapy.parsers.news import NewsArchiveParser, NewsParser
 from tibiapy.parsers.spell import SpellsSectionParser, SpellParser
 from tibiapy.parsers.world import WorldParser, WorldOverviewParser
 
@@ -1143,7 +1143,7 @@ class Client:
         """
         response = await self._request("GET", KillStatistics.get_url(world), test=test)
         start_time = time.perf_counter()
-        kill_statistics = KillStatistics.from_content(response.content)
+        kill_statistics = KillStatisticsParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, kill_statistics, parsing_time)
 
