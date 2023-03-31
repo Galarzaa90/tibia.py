@@ -19,11 +19,11 @@ from tibiapy.event import EventSchedule
 from tibiapy.forum import BoardEntry, CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread
 from tibiapy.guild import Guild, GuildWars, GuildsSection
 from tibiapy.highscores import Highscores
-from tibiapy.house import House, HousesSection
-from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics
+from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
+from tibiapy.parsers.house import HouseParser, HousesSectionParser
 from tibiapy.parsers.kill_statistics import KillStatisticsParser
 from tibiapy.parsers.leaderboard import LeaderboardParser
 from tibiapy.parsers.news import NewsArchiveParser, NewsParser
@@ -1064,7 +1064,7 @@ class Client:
         """
         response = await self._request("GET", House.get_url(house_id, world), test=test)
         start_time = time.perf_counter()
-        house = House.from_content(response.content)
+        house = HouseParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, house, parsing_time)
 
@@ -1249,7 +1249,7 @@ class Client:
         response = await self._request("GET", HousesSection.get_url(world=world, town=town, house_type=house_type,
                                                                     status=status, order=order), test=test)
         start_time = time.perf_counter()
-        world_houses = HousesSection.from_content(response.content)
+        world_houses = HousesSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, world_houses, parsing_time)
 

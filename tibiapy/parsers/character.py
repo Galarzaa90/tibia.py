@@ -7,9 +7,8 @@ from bs4 import Tag
 
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
-from tibiapy.house import CharacterHouse
 from tibiapy.models import Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, Killer, \
-    Death, GuildMembership
+    Death, GuildMembership, CharacterHouse
 from tibiapy.utils import (parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list,
                            try_enum, parse_link_info)
 
