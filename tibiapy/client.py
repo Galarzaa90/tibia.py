@@ -17,12 +17,12 @@ from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCat
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
 from tibiapy.forum import BoardEntry, CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread
-from tibiapy.guild import Guild, GuildWars, GuildsSection
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
-    Highscores
+    Highscores, Guild, GuildWars, GuildsSection
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
+from tibiapy.parsers.guild import GuildParser, GuildWarsParser, GuildsSectionParser
 from tibiapy.parsers.highscores import HighscoresParser
 from tibiapy.parsers.house import HouseParser, HousesSectionParser
 from tibiapy.parsers.kill_statistics import KillStatisticsParser
@@ -998,7 +998,7 @@ class Client:
         """
         response = await self._request("GET", Guild.get_url(name), test=test)
         start_time = time.perf_counter()
-        guild = Guild.from_content(response.content)
+        guild = GuildParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guild, parsing_time)
 
@@ -1032,7 +1032,7 @@ class Client:
         """
         response = await self._request("GET", GuildWars.get_url(name), test=test)
         start_time = time.perf_counter()
-        guild_wars = GuildWars.from_content(response.content)
+        guild_wars = GuildWarsParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guild_wars, parsing_time)
 
@@ -1285,7 +1285,7 @@ class Client:
         """
         response = await self._request("GET", GuildsSection.get_url(world), test=test)
         start_time = time.perf_counter()
-        guilds = GuildsSection.from_content(response.content)
+        guilds = GuildsSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, guilds, parsing_time)
 

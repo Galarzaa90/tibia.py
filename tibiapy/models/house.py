@@ -222,13 +222,13 @@ class GuildHouse(BaseHouse):
 
     By limitation of Tibia.com, the ID of the guildhall is not available."""
 
-    world: str
+    world: Optional[str] = None
     """The name of the world the house belongs to."""
-    status: HouseStatus
+    status: HouseStatus = HouseStatus.RENTED
     """The current status of the house.
 
     This is kept for compatibility with house objects and will always be :obj:`HouseStatus.RENTED`."""
-    type: HouseType
+    type: HouseType = HouseType.GUILDHALL
     """The type of the house.
 
     This is kept for compatibility with house objects and will always be :obj:`HouseType.GUILDHALL`."""
