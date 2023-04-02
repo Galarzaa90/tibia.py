@@ -2,8 +2,10 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Category, Highscores, HighscoresEntry, InvalidContent, LoyaltyHighscoresEntry, \
+from tibiapy import Category, InvalidContent, \
     Vocation, VocationFilter, BattlEyeHighscoresFilter
+from tibiapy.models import Highscores, HighscoresEntry, LoyaltyHighscoresEntry
+from tibiapy.parsers.highscores import HighscoresParser
 
 FILE_HIGHSCORES_FULL = "highscores/tibiacom_full.txt"
 FILE_HIGHSCORES_EXPERIENCE = "highscores/tibiacom_experience.txt"
@@ -18,7 +20,7 @@ class TestHighscores(unittest.TestCase, TestCommons):
     def test_highscores_from_content(self):
         """Testing parsing Highscores"""
         content = self.load_resource(FILE_HIGHSCORES_FULL)
-        highscores = Highscores.from_content(content)
+        highscores = HighscoresParser.from_content(content)
 
         self.assertEqual("Estela", highscores.world)
         self.assertEqual(VocationFilter.KNIGHTS, highscores.vocation)
@@ -47,7 +49,7 @@ class TestHighscores(unittest.TestCase, TestCommons):
     def test_highscores_from_content_highscores(self):
         """Testing parsing experience highscores"""
         content = self.load_resource(FILE_HIGHSCORES_EXPERIENCE)
-        highscores = Highscores.from_content(content)
+        highscores = HighscoresParser.from_content(content)
 
         self.assertEqual(highscores.world, "Gladera")
         self.assertEqual(highscores.vocation, VocationFilter.PALADINS)
@@ -67,7 +69,7 @@ class TestHighscores(unittest.TestCase, TestCommons):
     def test_highscores_from_content_loyalty(self):
         """Testing parsing experience loyalty"""
         content = self.load_resource(FILE_HIGHSCORES_LOYALTY)
-        highscores = Highscores.from_content(content)
+        highscores = HighscoresParser.from_content(content)
 
         self.assertEqual("Calmera", highscores.world)
         self.assertEqual(VocationFilter.PALADINS, highscores.vocation)
@@ -87,7 +89,7 @@ class TestHighscores(unittest.TestCase, TestCommons):
     def test_highscores_from_content_battleye_and_pvp_filters(self):
         """Testing parsing Highscores"""
         content = self.load_resource(FILE_HIGHSCORES_BATTLEYE_PVP_FILTER)
-        highscores = Highscores.from_content(content)
+        highscores = HighscoresParser.from_content(content)
 
         self.assertEqual(None, highscores.world)
         self.assertEqual(VocationFilter.ALL, highscores.vocation)
@@ -113,14 +115,14 @@ class TestHighscores(unittest.TestCase, TestCommons):
     def test_highscores_from_content_empty(self):
         """Testing parsing highscores when empty (world doesn't exist)"""
         content = self.load_resource(FILE_HIGHSCORES_EMPTY)
-        highscores = Highscores.from_content(content)
+        highscores = HighscoresParser.from_content(content)
 
         self.assertIsNone(highscores)
 
     def _test_highscores_from_content_no_results(self):
         """Testing parsing highscores with no results (first day of a new world)"""
         content = self.load_resource(FILE_HIGHSCORES_NO_RESULTS)
-        highscores = Highscores.from_content(content)
+        highscores = HighscoresParser.from_content(content)
 
         self.assertIsInstance(highscores, Highscores)
         self.assertEqual(highscores.world, "Unica")
@@ -133,6 +135,6 @@ class TestHighscores(unittest.TestCase, TestCommons):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            Highscores.from_content(content)
+            HighscoresParser.from_content(content)
 
     # endregion

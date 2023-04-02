@@ -18,11 +18,12 @@ from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
 from tibiapy.forum import BoardEntry, CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread
 from tibiapy.guild import Guild, GuildWars, GuildsSection
-from tibiapy.highscores import Highscores
-from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection
+from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
+    Highscores
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
+from tibiapy.parsers.highscores import HighscoresParser
 from tibiapy.parsers.house import HouseParser, HousesSectionParser
 from tibiapy.parsers.kill_statistics import KillStatisticsParser
 from tibiapy.parsers.leaderboard import LeaderboardParser
@@ -1114,7 +1115,7 @@ class Client:
         response = await self._request("GET", Highscores.get_url(world, category, vocation, page, battleye_type,
                                                                  pvp_types), test=test)
         start_time = time.perf_counter()
-        highscores = Highscores.from_content(response.content)
+        highscores = HighscoresParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, highscores, parsing_time)
 
