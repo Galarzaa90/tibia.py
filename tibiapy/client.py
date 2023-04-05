@@ -16,12 +16,14 @@ from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCat
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.event import EventSchedule
-from tibiapy.forum import BoardEntry, CMPostArchive, ForumAnnouncement, ForumBoard, ForumPost, ForumThread
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
-    Highscores, Guild, GuildWars, GuildsSection
+    Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
+    ForumPost
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
+from tibiapy.parsers.forum import CMPostArchiveParser, BoardEntryParser, ForumBoardParser, ForumThreadParser, \
+    ForumAnnouncementParser
 from tibiapy.parsers.guild import GuildParser, GuildWarsParser, GuildsSectionParser
 from tibiapy.parsers.highscores import HighscoresParser
 from tibiapy.parsers.house import HouseParser, HousesSectionParser
@@ -460,7 +462,7 @@ class Client:
             raise ValueError("page cannot be lower than 1.")
         response = await self._request("GET", CMPostArchive.get_url(start_date, end_date, page), test=test)
         start_time = time.perf_counter()
-        cm_post_archive = CMPostArchive.from_content(response.content)
+        cm_post_archive = CMPostArchiveParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, cm_post_archive, parsing_time)
 
@@ -527,7 +529,7 @@ class Client:
         """
         response = await self._request("GET", BoardEntry.get_community_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = BoardEntry.list_from_content(response.content)
+        boards = BoardEntryParser.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boards, parsing_time)
 
@@ -651,7 +653,7 @@ class Client:
         """
         response = await self._request("GET", ForumBoard.get_url(board_id, page, age), test=test)
         start_time = time.perf_counter()
-        board = ForumBoard.from_content(response.content)
+        board = ForumBoardParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, board, parsing_time)
 
@@ -684,7 +686,7 @@ class Client:
         """
         response = await self._request("GET", ForumThread.get_url(thread_id, page), test=test)
         start_time = time.perf_counter()
-        thread = ForumThread.from_content(response.content)
+        thread = ForumThreadParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, thread, parsing_time)
 
@@ -720,7 +722,7 @@ class Client:
         """
         response = await self._request("GET", ForumPost.get_url(post_id), test=test)
         start_time = time.perf_counter()
-        thread = ForumThread.from_content(response.content)
+        thread = ForumThreadParser.from_content(response.content)
         if thread:
             thread.anchored_post = next((p for p in thread.posts if p.post_id == post_id), None)
         parsing_time = time.perf_counter() - start_time
@@ -753,7 +755,7 @@ class Client:
         """
         response = await self._request("GET", ForumAnnouncement.get_url(announcement_id), test=test)
         start_time = time.perf_counter()
-        announcement = ForumAnnouncement.from_content(response.content, announcement_id)
+        announcement = ForumAnnouncementParser.from_content(response.content, announcement_id)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, announcement, parsing_time)
 

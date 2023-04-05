@@ -297,7 +297,7 @@ def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
 
     Returns
     -------
-    :class:`datetime`
+    :class:`datetime.datetime`
         The represented datetime, in UTC (timezone aware).
     """
     t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S")

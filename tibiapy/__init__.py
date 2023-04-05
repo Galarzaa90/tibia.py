@@ -10,7 +10,6 @@ from tibiapy.creature import *
 from tibiapy.event import *
 from tibiapy.enums import *
 from tibiapy.errors import *
-from tibiapy.forum import *
 from tibiapy.bazaar import *
 from tibiapy.client import *
 

@@ -3,8 +3,11 @@ import unittest
 
 import tibiapy
 from tests.tests_tibiapy import TestCommons
-from tibiapy import CMPostArchive, ForumAnnouncement, ForumBoard, ForumThread, InvalidContent, LastPost, BoardEntry, \
-    ThreadEntry, ThreadStatus
+from tibiapy import InvalidContent, ThreadStatus
+from tibiapy.models import BoardEntry, LastPost, ThreadEntry, ForumAnnouncement, CMPostArchive
+from tibiapy.models.forum import BasePost
+from tibiapy.parsers.forum import BoardEntryParser, ForumBoardParser, ForumAnnouncementParser, ForumThreadParser, \
+    CMPostArchiveParser
 
 FILE_WORLD_BOARDS = "forums/tibiacom_section.txt"
 FILE_SECTION_EMPTY_BOARD = "forums/tibiacom_section_empty_board.txt"
@@ -28,7 +31,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_listed_board_list_from_content_world_boards(self):
         content = self.load_resource(FILE_WORLD_BOARDS)
 
-        boards = BoardEntry.list_from_content(content)
+        boards = BoardEntryParser.list_from_content(content)
 
         self.assertEqual(82, len(boards))
         for i, board in enumerate(boards):
@@ -43,7 +46,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_listed_board_list_from_content_empty_board(self):
         content = self.load_resource(FILE_SECTION_EMPTY_BOARD)
 
-        boards = BoardEntry.list_from_content(content)
+        boards = BoardEntryParser.list_from_content(content)
 
         self.assertEqual(84, len(boards))
         for i, board in enumerate(boards):
@@ -58,7 +61,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_listed_board_list_from_content_empty_section(self):
         content = self.load_resource(FILE_SECTION_EMPTY)
 
-        boards = BoardEntry.list_from_content(content)
+        boards = BoardEntryParser.list_from_content(content)
 
         self.assertIsInstance(boards, list)
 
@@ -66,23 +69,23 @@ class TestForum(TestCommons, unittest.TestCase):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
-            BoardEntry.list_from_content(content)
+            BoardEntryParser.list_from_content(content)
 
     def test_forum_board_from_content(self):
         content = self.load_resource(FILE_BOARD_THREAD_LIST)
 
-        board = ForumBoard.from_content(content)
+        board = ForumBoardParser.from_content(content)
 
         self.assertIsNotNone(board)
         self.assertEqual("Antica", board.name)
         self.assertEqual("World Boards", board.section)
-        self.assertEqual(1, board.page)
+        self.assertEqual(1, board.current_page)
         self.assertEqual(2, board.total_pages)
         self.assertEqual(25, board.board_id)
         self.assertEqual(30, len(board.threads))
         self.assertIsNotNone(board.url)
         self.assertIsNotNone(board.next_page_url)
-        self.assertEqual(board.next_page_url, BoardEntry.get_url(board.board_id, board.page + 1, board.age))
+        self.assertEqual(board.next_page_url, BoardEntry.get_url(board.board_id, board.current_page + 1, board.age))
         for i, thread in enumerate(board.threads):
             with self.subTest(i=i):
                 self.assertIsInstance(thread, ThreadEntry)
@@ -105,12 +108,12 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_forum_board_from_content_empty_threads(self):
         content = self.load_resource(FILE_BOARD_EMPTY_THREAD_LIST)
 
-        board = ForumBoard.from_content(content)
+        board = ForumBoardParser.from_content(content)
 
         self.assertIsNotNone(board)
         self.assertEqual("Role Playing", board.name)
         self.assertEqual("Community Boards", board.section)
-        self.assertEqual(1, board.page)
+        self.assertEqual(1, board.current_page)
         self.assertEqual(1, board.total_pages)
         self.assertEqual(11, board.board_id)
         self.assertEqual(0, len(board.threads))
@@ -121,12 +124,12 @@ class TestForum(TestCommons, unittest.TestCase):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
-            ForumBoard.from_content(content)
+            ForumBoardParser.from_content(content)
 
     def test_forum_board_from_content_invalid_page(self):
         content = self.load_resource(FILE_BOARD_INVALID_PAGE)
 
-        board = ForumBoard.from_content(content)
+        board = ForumBoardParser.from_content(content)
 
         self.assertEqual("Antica", board.name)
         self.assertEqual("World Boards", board.section)
@@ -136,7 +139,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_forum_board_from_content_golden_frame(self):
         content = self.load_resource(FILE_BOARD_GOLDEN_FRAMES)
 
-        board = ForumBoard.from_content(content)
+        board = ForumBoardParser.from_content(content)
 
         self.assertEqual("Proposals (English Only)", board.name)
         self.assertEqual("Community Boards", board.section)
@@ -153,7 +156,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_forum_announcement_from_content(self):
         content = self.load_resource(FILE_ANNOUNCEMENT)
 
-        announcement = ForumAnnouncement.from_content(content, 33)
+        announcement = ForumAnnouncementParser.from_content(content, 33)
 
         self.assertIsNotNone(announcement)
         self.assertEqual("Legal Disclaimer", announcement.title)
@@ -173,7 +176,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_forum_announcement_from_content_not_found(self):
         content = self.load_resource(FILE_ANNOUNCEMENT_NOT_FOUND)
 
-        announcement = ForumAnnouncement.from_content(content, 34)
+        announcement = ForumAnnouncementParser.from_content(content, 34)
 
         self.assertIsNone(announcement)
 
@@ -181,12 +184,12 @@ class TestForum(TestCommons, unittest.TestCase):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
-            ForumAnnouncement.from_content(content, 34)
+            ForumAnnouncementParser.from_content(content, 34)
 
     def test_forum_thread_from_content(self):
         content = self.load_resource(FILE_THREAD)
 
-        thread = ForumThread.from_content(content)
+        thread = ForumThreadParser.from_content(content)
 
         self.assertEqual("News: Team Finder, Visualisation of Loot Lists", thread.title)
         self.assertEqual(4797985, thread.thread_id)
@@ -194,7 +197,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual('Community Boards', thread.section)
         self.assertEqual(4796826, thread.previous_topic_number)
         self.assertEqual(4797838, thread.next_topic_number)
-        self.assertEqual(1, thread.page)
+        self.assertEqual(1, thread.current_page)
         self.assertEqual(9, thread.total_pages)
         self.assertEqual(20, len(thread.posts))
         self.assertIsNotNone(thread.url)
@@ -219,7 +222,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_forum_thread_from_content_invalid_page(self):
         content = self.load_resource(FILE_THREAD_INVALID_PAGE)
 
-        thread = ForumThread.from_content(content)
+        thread = ForumThreadParser.from_content(content)
 
         self.assertEqual("News: Te...", thread.title)
         self.assertEqual(0, thread.thread_id)
@@ -227,14 +230,14 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual('Community Boards', thread.section)
         self.assertEqual(0, thread.previous_topic_number)
         self.assertEqual(0, thread.next_topic_number)
-        self.assertEqual(1, thread.page)
+        self.assertEqual(1, thread.current_page)
         self.assertEqual(1, thread.total_pages)
         self.assertEqual(0, len(thread.posts))
 
     def test_forum_thread_from_content_not_found(self):
         content = self.load_resource(FILE_THREAD_NOT_FOUND)
 
-        thread = ForumThread.from_content(content)
+        thread = ForumThreadParser.from_content(content)
 
         self.assertIsNone(thread)
 
@@ -242,12 +245,12 @@ class TestForum(TestCommons, unittest.TestCase):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
-            ForumThread.from_content(content)
+            ForumThreadParser.from_content(content)
 
     def test_cm_post_archive_from_content_initial(self):
         content = self.load_resource(FILE_CM_POST_ARCHIVE_INITIAL)
 
-        cm_post_archive = CMPostArchive.from_content(content)
+        cm_post_archive = CMPostArchiveParser.from_content(content)
 
         self.assertIsNotNone(cm_post_archive)
         self.assertEqual(0, cm_post_archive.results_count)
@@ -257,7 +260,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_cm_post_archive_from_content_no_pages(self):
         content = self.load_resource(FILE_CM_POST_ARCHIVE_NO_PAGES)
 
-        cm_post_archive = CMPostArchive.from_content(content)
+        cm_post_archive = CMPostArchiveParser.from_content(content)
 
         self.assertIsNotNone(cm_post_archive)
         self.assertEqual(5, cm_post_archive.results_count)
@@ -266,7 +269,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(cm_post_archive.results_count, len(cm_post_archive.posts))
 
         post = cm_post_archive.posts[0]
-        self.assertIsInstance(post, tibiapy.abc.BasePost)
+        self.assertIsInstance(post, BasePost)
         self.assertEqual('Auditorium (English Only)', post.board)
         self.assertEqual(38974254, post.post_id)
         self.assertEqual('Ticker Messages June 2020', post.thread_title)
@@ -274,7 +277,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_cm_post_archive_from_content_no_results(self):
         content = self.load_resource(FILE_CM_POST_ARCHIVE_NO_RESULTS)
 
-        cm_post_archive = CMPostArchive.from_content(content)
+        cm_post_archive = CMPostArchiveParser.from_content(content)
 
         self.assertIsNotNone(cm_post_archive)
         self.assertEqual(0, cm_post_archive.results_count)
@@ -285,7 +288,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_cm_post_archive_from_content_pages(self):
         content = self.load_resource(FILE_CM_POST_ARCHIVE_PAGES)
 
-        cm_post_archive = CMPostArchive.from_content(content)
+        cm_post_archive = CMPostArchiveParser.from_content(content)
 
         self.assertIsNotNone(cm_post_archive)
         self.assertIsNotNone(cm_post_archive.url)
@@ -299,7 +302,7 @@ class TestForum(TestCommons, unittest.TestCase):
     def test_cm_post_archive_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            CMPostArchive.from_content(content)
+            CMPostArchiveParser.from_content(content)
 
     def test_cm_post_archive_get_page_url_negative_page(self):
         with self.assertRaises(ValueError):
