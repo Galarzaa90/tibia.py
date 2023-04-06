@@ -11,17 +11,19 @@ import aiohttp_socks
 
 import tibiapy
 from tibiapy import Auction, AuctionFilters, CharacterBazaar, abc
-from tibiapy.creature import BoostableBosses, BoostedCreatures, Creature, CreatureEntry, CreaturesSection
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
     ForumPost
+from tibiapy.models.creature import BoostedCreatures, BoostableBosses, CreaturesSection, Creature
 from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
+from tibiapy.parsers.creature import BoostedCreaturesParser, BoostableBossesParser, CreaturesSectionParser, \
+    CreatureParser
 from tibiapy.parsers.event import EventScheduleParser
 from tibiapy.parsers.forum import CMPostArchiveParser, BoardEntryParser, ForumBoardParser, ForumThreadParser, \
     ForumAnnouncementParser
@@ -787,7 +789,7 @@ class Client:
         """
         response = await self._request("GET", NewsArchive.get_url(), test=test)
         start_time = time.perf_counter()
-        boosted_creatures = BoostedCreatures.from_header(response.content)
+        boosted_creatures = BoostedCreaturesParser.from_header(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creatures, parsing_time)
 
@@ -817,7 +819,7 @@ class Client:
         """
         response = await self._request("GET", NewsArchive.get_url(), test=test)
         start_time = time.perf_counter()
-        boosted_creature = BoostableBosses.boosted_boss_from_header(response.content)
+        boosted_creature = BoostableBossesParser.boosted_boss_from_header(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
@@ -846,7 +848,7 @@ class Client:
         """
         response = await self._request("GET", BoostableBosses.get_url(), test=test)
         start_time = time.perf_counter()
-        boosted_creature = BoostableBosses.from_content(response.content)
+        boosted_creature = BoostableBossesParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
@@ -880,7 +882,7 @@ class Client:
         """
         response = await self._request("GET", NewsArchive.get_url(), test=test)
         start_time = time.perf_counter()
-        boosted_creature = CreaturesSection.boosted_creature_from_header(response.content)
+        boosted_creature = CreaturesSectionParser.boosted_creature_from_header(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
@@ -909,7 +911,7 @@ class Client:
         """
         response = await self._request("GET", CreaturesSection.get_url(), test=test)
         start_time = time.perf_counter()
-        boosted_creature = CreaturesSection.from_content(response.content)
+        boosted_creature = CreaturesSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 
@@ -940,7 +942,7 @@ class Client:
         """
         response = await self._request("GET", Creature.get_url(identifier), test=test)
         start_time = time.perf_counter()
-        boosted_creature = Creature.from_content(response.content)
+        boosted_creature = CreatureParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, boosted_creature, parsing_time)
 

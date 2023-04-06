@@ -1,7 +1,9 @@
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import BoostableBosses, InvalidContent, CreaturesSection, Creature, CreatureEntry
+from tibiapy import InvalidContent
+from tibiapy.models.creature import CreatureEntry
+from tibiapy.parsers.creature import CreaturesSectionParser, CreatureParser, BoostableBossesParser
 
 FILE_CREATURE_SECTION = "library/creature_list.txt"
 FILE_CREATURE_CONVINCEABLE = "library/creature_convinceable.txt"
@@ -13,7 +15,7 @@ class TestCreature(TestCommons, unittest.TestCase):
     def test_creatures_section_from_boosted_creature_header_content(self):
         """Testing parsing the boosted creture from any tibia.com page."""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        creature = CreaturesSection.boosted_creature_from_header(content)
+        creature = CreaturesSectionParser.boosted_creature_from_header(content)
 
         self.assertIsInstance(creature, CreatureEntry)
         self.assertEqual("Menacing Carnivor", creature.name)
@@ -21,12 +23,12 @@ class TestCreature(TestCommons, unittest.TestCase):
     def test_creatures_section_from_boosted_creature_header_content_not_tibiacom(self):
         """Testing parsing the boosted creature from a page that is not Tibia.com"""
         with self.assertRaises(InvalidContent):
-            CreaturesSection.boosted_creature_from_header("<html><div><p>Nothing</p></div></html>")
+            CreaturesSectionParser.boosted_creature_from_header("<html><div><p>Nothing</p></div></html>")
 
     def test_creature_section_from_content(self):
         """Test parsing the creatures section"""
         content = self.load_resource(FILE_CREATURE_SECTION)
-        creatures = CreaturesSection.from_content(content)
+        creatures = CreaturesSectionParser.from_content(content)
 
         self.assertIsNotNone(creatures)
         self.assertIsNotNone(creatures.boosted_creature)
@@ -44,11 +46,11 @@ class TestCreature(TestCommons, unittest.TestCase):
         """Testing parsing the creatures section from an invalid section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            CreaturesSection.from_content(content)
+            CreaturesSectionParser.from_content(content)
 
     def test_creature_from_content(self):
         content = self.load_resource(FILE_CREATURE_CONVINCEABLE)
-        creature = Creature.from_content(content)
+        creature = CreatureParser.from_content(content)
 
         self.assertIsNotNone(creature)
         self.assertEqual("Fish", creature.name)
@@ -62,7 +64,7 @@ class TestCreature(TestCommons, unittest.TestCase):
 
     def test_creature_from_content_elemental_resistances(self):
         content = self.load_resource(FILE_CREATURE_ELEMENTAL_RESISTANCES)
-        creature = Creature.from_content(content)
+        creature = CreatureParser.from_content(content)
 
         self.assertIsNotNone(creature)
         self.assertEqual("Dragons", creature.name)
@@ -81,14 +83,14 @@ class TestCreature(TestCommons, unittest.TestCase):
         """Testing parsing the creatures section from an invalid section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        creature = Creature.from_content(content)
+        creature = CreatureParser.from_content(content)
 
         self.assertIsNone(creature)
 
     def test_boostable_bosses_from_content(self):
         """Test parsing the boostable bosses section"""
         content = self.load_resource(FILE_BOOSTABLE_BOSSES)
-        bosses = BoostableBosses.from_content(content)
+        bosses = BoostableBossesParser.from_content(content)
 
         self.assertIsNotNone(bosses)
         self.assertIsNotNone(bosses.boosted_boss)
@@ -106,6 +108,6 @@ class TestCreature(TestCommons, unittest.TestCase):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
-            BoostableBosses.from_content(content)
+            BoostableBossesParser.from_content(content)
 
 

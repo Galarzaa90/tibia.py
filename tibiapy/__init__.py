@@ -6,7 +6,6 @@ __license__ = 'Apache-2.0 License'
 import logging
 
 from tibiapy import abc, enums, utils
-from tibiapy.creature import *
 from tibiapy.enums import *
 from tibiapy.errors import *
 from tibiapy.bazaar import *
