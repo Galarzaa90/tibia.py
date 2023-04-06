@@ -15,13 +15,14 @@ from tibiapy.creature import BoostableBosses, BoostedCreatures, Creature, Creatu
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
-from tibiapy.event import EventSchedule
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
     ForumPost
+from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
+from tibiapy.parsers.event import EventScheduleParser
 from tibiapy.parsers.forum import CMPostArchiveParser, BoardEntryParser, ForumBoardParser, ForumThreadParser, \
     ForumAnnouncementParser
 from tibiapy.parsers.guild import GuildParser, GuildWarsParser, GuildsSectionParser
@@ -499,7 +500,7 @@ class Client:
             raise ValueError("both year and month must be defined or neither must be defined.")
         response = await self._request("GET", EventSchedule.get_url(month, year), test=test)
         start_time = time.perf_counter()
-        calendar = EventSchedule.from_content(response.content)
+        calendar = EventScheduleParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, calendar, parsing_time)
 

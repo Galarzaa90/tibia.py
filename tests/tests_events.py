@@ -2,7 +2,8 @@ import unittest
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import EventSchedule
+from tibiapy.models.event import EventSchedule
+from tibiapy.parsers.event import EventScheduleParser
 
 FILE_EVENT_CALENDAR = "events/tibiacom_calendar.txt"
 
@@ -12,7 +13,7 @@ class TestEvents(TestCommons, unittest.TestCase):
     def test_event_schedule_from_content(self):
         """Testing parsing the event schedule"""
         content = self.load_resource(FILE_EVENT_CALENDAR)
-        calendar = EventSchedule.from_content(content)
+        calendar = EventScheduleParser.from_content(content)
 
         self.assertIsInstance(calendar, EventSchedule)
         self.assertEqual(9, calendar.month)

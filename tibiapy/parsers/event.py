@@ -7,32 +7,19 @@ import datetime
 from typing import List, Optional
 
 from tibiapy import abc
+from tibiapy.builders.event import EventScheduleBuilder
+from tibiapy.models.event import EventEntry
 from tibiapy.utils import get_tibia_url, parse_popup, parse_tibiacom_content
 
 __all__ = (
-    'EventSchedule',
-    'EventEntry',
+    'EventScheduleParser',
 )
 
 month_year_regex = re.compile(r'([A-z]+)\s(\d+)')
 
 
-class EventSchedule(abc.Serializable):
-    """Represents the event's calendar in Tibia.com.
+class EventScheduleParser:
 
-    Attributes
-    ----------
-    month: :class:`int`
-        The month being displayed.
-
-        Note that some days from the previous and next month may be included too.
-    year: :class:`int`
-        The year being displayed.
-    events: :class:`list` of :class:`EventEntry`
-        A list of events that happen during this month.
-
-        It might include some events from the previous and next months as well.
-    """
 
     __slots__ = (
         'month',
@@ -48,58 +35,7 @@ class EventSchedule(abc.Serializable):
     def __repr__(self):
         return f"<{self.__class__.__name__} month={self.month} year={self.year}>"
 
-    @property
-    def url(self):
-        """:class:`str`: Get the URL to the event calendar with the current parameters."""
-        return self.get_url(self.month, self.year)
 
-    def get_events_on(self, date):
-        """Get a list of events that are active during the specified desired_date.
-
-        Parameters
-        ----------
-        date: :class:`datetime.date`
-            The date to check.
-
-        Returns
-        -------
-        :class:`list` of :class:`EventEntry`
-            The events that are active during the desired_date, if any.
-
-        Notes
-        -----
-        Dates outside the calendar's month and year may yield unexpected results.
-        """
-        def is_between(start, end, desired_date):
-            start = start or datetime.date.min
-            end = end or datetime.date.max
-            return start <= desired_date <= end
-        return [e for e in self.events if is_between(e.start_date, e.end_date, date)]
-
-    @classmethod
-    def get_url(cls, month=None, year=None):
-        """Get the URL to the Event Schedule or Event Calendar on Tibia.com.
-
-        Notes
-        -----
-        If no parameters are passed, it will show the calendar for the current month and year.
-
-        Tibia.com limits the dates that the calendar displays, passing a month and year far from the current ones may
-        result in the response being for the current month and year instead.
-
-        Parameters
-        ----------
-        month: :class:`int`, optional
-            The desired month.
-        year: :class:`int`, optional
-            The desired year.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the calendar with the given parameters.
-        """
-        return get_tibia_url("news", "eventcalendar", calendarmonth=month, calendaryear=year)
 
     @classmethod
     def from_content(cls, content):
@@ -127,7 +63,7 @@ class EventSchedule(abc.Serializable):
         month = time.strptime(month, "%B").tm_mon
         year = int(year)
 
-        schedule = cls(month, year)
+        builder = EventScheduleBuilder().year(year).month(month)
 
         events_table = parsed_content.find("table", {"id": "eventscheduletable"})
         day_cells = events_table.find_all("td")
@@ -161,7 +97,7 @@ class EventSchedule(abc.Serializable):
                 for title, content in zip(*[iter(d.text for d in divs)] * 2):
                     title = title.replace(":", "")
                     content = content.replace("• ", "")
-                    event = EventEntry(title, content)
+                    event = EventEntry(title=title, description=content)
                     today_events.append(event)
                     # If this is not an event that was already ongoing from previous days, add to list
                     if event not in ongoing_events:
@@ -176,59 +112,10 @@ class EventSchedule(abc.Serializable):
                     # If it didn't show up today, it means it ended yesterday.
                     end_date = datetime.date(day=day, month=month, year=year) - datetime.timedelta(days=1)
                     pending_event.end_date = end_date
-                    schedule.events.append(pending_event)
+                    builder.add_event(pending_event)
                     # Remove from ongoing
                     ongoing_events.remove(pending_event)
             first_day = False
         # Add any leftover ongoing events without a end date, as we don't know when they end.
-        schedule.events.extend(ongoing_events)
-        return schedule
-
-
-class EventEntry(abc.Serializable):
-    """Represents an event's entry in the calendar.
-
-    Attributes
-    ----------
-    title: :class:`str`
-        The title of the event.
-    description: :class:`str`
-        The description of the event.
-    start_date: :class:`datetime.date`
-        The day the event starts.
-
-        If the event is continuing from the previous month, this will be :obj:`None`.
-    end_date: :class:`datetime.date`
-        The day the event ends.
-
-        If the event is continuing on the next month, this will be :obj:`None`.
-    """
-
-    __slots__ = (
-        "title",
-        "description",
-        "start_date",
-        "end_date",
-    )
-
-    _serializable_properties = (
-        "duration",
-    )
-
-    def __init__(self, title, description, **kwargs):
-        self.title: str = title
-        self.description: str = description
-        self.start_date: Optional[datetime.date] = kwargs.get("start_date")
-        self.end_date: Optional[datetime.date] = kwargs.get("end_date")
-
-    def __eq__(self, other):
-        return self.title == other.title
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} title={self.title!r} description={self.description!r}>"
-
-    @property
-    def duration(self):
-        """:class:`int`: The number of days this event will be active for."""
-        return (self.end_date - self.start_date + datetime.timedelta(days=1)).days \
-            if (self.end_date and self.start_date) else None
+        [builder.add_event(e) for e in ongoing_events]
+        return builder.build()
