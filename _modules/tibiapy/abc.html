@@ -59,7 +59,7 @@
     <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">PvpType</span><span class="p">,</span> <span class="n">WorldLocation</span>
 
 
-<div class="viewcode-block" id="Serializable"><a class="viewcode-back" href="../../api.html#tibiapy.Serializable">[docs]</a><span class="k">class</span> <span class="nc">Serializable</span><span class="p">:</span>
+<div class="viewcode-block" id="Serializable"><a class="viewcode-back" href="../../api.html#tibiapy.abc.Serializable">[docs]</a><span class="k">class</span> <span class="nc">Serializable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains methods to make a class convertible to JSON.</span>
 
 <span class="sd">    Only attributes defined in ``__slots__`` will be serialized.</span>
@@ -118,7 +118,7 @@
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Serializable.to_json"><a class="viewcode-back" href="../../api.html#tibiapy.Serializable.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Serializable.to_json"><a class="viewcode-back" href="../../api.html#tibiapy.abc.Serializable.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the object&#39;s JSON representation.</span>
 
 <span class="sd">        Parameters</span>
@@ -137,7 +137,7 @@
                           <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_try_dict</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BaseAnnouncement"><a class="viewcode-back" href="../../api.html#tibiapy.BaseAnnouncement">[docs]</a><span class="k">class</span> <span class="nc">BaseAnnouncement</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseAnnouncement"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseAnnouncement">[docs]</a><span class="k">class</span> <span class="nc">BaseAnnouncement</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all announcement classes.</span>
 
 <span class="sd">    Implement common properties and methods for announcements.</span>
@@ -168,7 +168,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str` Get the URL to this announcement.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">announcement_id</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BaseAnnouncement.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseAnnouncement.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseAnnouncement.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseAnnouncement.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to an announcement with a given ID.</span>
 
@@ -185,106 +185,7 @@
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;announcement&quot;</span><span class="p">,</span> <span class="n">announcementid</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BaseBoard"><a class="viewcode-back" href="../../api.html#tibiapy.BaseBoard">[docs]</a><span class="k">class</span> <span class="nc">BaseBoard</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all board classes.</span>
-
-<span class="sd">    Implements common properties and methods for boards.</span>
-
-<span class="sd">    The following implement this class:</span>
-
-<span class="sd">    - :class:`.ForumBoard`</span>
-<span class="sd">    - :class:`.BoardEntry`</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    board_id: :class:`int`</span>
-<span class="sd">        The ID of the board.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;board_id&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Two boards are considered equal if their ids are equal.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">board_id</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">board_id</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> board_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">board_id</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL of this board.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board_id</span><span class="p">)</span>
-
-<div class="viewcode-block" id="BaseBoard.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseBoard.get_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">board_id</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Tibia.com URL to a board with a given id.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        board_id: :class:`int`</span>
-<span class="sd">            The ID of the board.</span>
-<span class="sd">        page: :class:`int`</span>
-<span class="sd">            The page to go to.</span>
-<span class="sd">        age: :class:`int`</span>
-<span class="sd">            The age in days of the threads to display.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`str`</span>
-<span class="sd">            The URL to the board.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;board&quot;</span><span class="p">,</span> <span class="n">boardid</span><span class="o">=</span><span class="n">board_id</span><span class="p">,</span> <span class="n">pagenumber</span><span class="o">=</span><span class="n">page</span><span class="p">,</span> <span class="n">threadage</span><span class="o">=</span><span class="n">age</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="BaseBoard.get_world_boards_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseBoard.get_world_boards_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_world_boards_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to the World Boards section in Tibia.com.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`str`:</span>
-<span class="sd">            The URL to the World Boards.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="s2">&quot;worldboards&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="BaseBoard.get_trade_boards_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseBoard.get_trade_boards_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_trade_boards_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to the Trade Boards section in Tibia.com.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`str`:</span>
-<span class="sd">            The URL to the Trade Boards.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="s2">&quot;tradeboards&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="BaseBoard.get_community_boards_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseBoard.get_community_boards_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_community_boards_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to the Community Boards section in Tibia.com.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`str`:</span>
-<span class="sd">            The URL to the Community Boards.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="s2">&quot;communityboards&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="BaseBoard.get_support_boards_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseBoard.get_support_boards_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_support_boards_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to the Support Boards section in Tibia.com.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`str`:</span>
-<span class="sd">            The URL to the Support Boards.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="s2">&quot;supportboards&quot;</span><span class="p">)</span></div></div>
-
-
-<div class="viewcode-block" id="BaseCharacter"><a class="viewcode-back" href="../../api.html#tibiapy.BaseCharacter">[docs]</a><span class="k">class</span> <span class="nc">BaseCharacter</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseCharacter"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseCharacter">[docs]</a><span class="k">class</span> <span class="nc">BaseCharacter</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all character classes.</span>
 
 <span class="sd">    Implements common properties methods for characters.</span>
@@ -325,7 +226,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL of the character&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BaseCharacter.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseCharacter.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseCharacter.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseCharacter.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Tibia.com URL for a given character name.</span>
 
@@ -342,7 +243,7 @@
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;characters&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BaseGuild"><a class="viewcode-back" href="../../api.html#tibiapy.BaseGuild">[docs]</a><span class="k">class</span> <span class="nc">BaseGuild</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseGuild"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseGuild">[docs]</a><span class="k">class</span> <span class="nc">BaseGuild</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Guild classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -382,7 +283,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url_wars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BaseGuild.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseGuild.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseGuild.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseGuild.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Tibia.com URL for a given guild name.</span>
 
@@ -398,7 +299,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">GuildName</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseGuild.get_url_wars"><a class="viewcode-back" href="../../api.html#tibiapy.BaseGuild.get_url_wars">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseGuild.get_url_wars"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseGuild.get_url_wars">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url_wars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Tibia.com URL for the guild wars of a guild with a given name.</span>
 
@@ -417,7 +318,7 @@
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;guildwars&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">GuildName</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BaseHouse"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouse">[docs]</a><span class="k">class</span> <span class="nc">BaseHouse</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseHouse"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseHouse">[docs]</a><span class="k">class</span> <span class="nc">BaseHouse</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all house classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -446,7 +347,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="BaseHouse.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseHouse.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseHouse.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseHouse.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Tibia.com URL for a house with the given id and world.</span>
 
@@ -464,7 +365,7 @@
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;houses&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">houseid</span><span class="o">=</span><span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BaseNews"><a class="viewcode-back" href="../../api.html#tibiapy.BaseNews">[docs]</a><span class="k">class</span> <span class="nc">BaseNews</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseNews"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseNews">[docs]</a><span class="k">class</span> <span class="nc">BaseNews</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all news classes.</span>
 
 <span class="sd">    Implements the :py:attr:`id` attribute and common properties.</span>
@@ -495,7 +396,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the Tibia.com page of the news entry.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BaseNews.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseNews.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseNews.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseNews.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">news_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Tibia.com URL for a news entry by its id.</span>
 
@@ -511,7 +412,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="s2">&quot;newsarchive&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">news_id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseNews.get_list_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseNews.get_list_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseNews.get_list_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseNews.get_list_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_list_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to Tibia.com&#39;s news archive page.</span>
 
@@ -528,7 +429,7 @@
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="s2">&quot;newsarchive&quot;</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BasePost"><a class="viewcode-back" href="../../api.html#tibiapy.BasePost">[docs]</a><span class="k">class</span> <span class="nc">BasePost</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BasePost"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BasePost">[docs]</a><span class="k">class</span> <span class="nc">BasePost</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base classs for post classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -557,7 +458,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: Get the URL to this specific post.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BasePost.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BasePost.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BasePost.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BasePost.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">post_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to a specific post.</span>
 
@@ -574,7 +475,7 @@
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;post</span><span class="si">{</span><span class="n">post_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span> <span class="n">postid</span><span class="o">=</span><span class="n">post_id</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BaseThread"><a class="viewcode-back" href="../../api.html#tibiapy.BaseThread">[docs]</a><span class="k">class</span> <span class="nc">BaseThread</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseThread"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseThread">[docs]</a><span class="k">class</span> <span class="nc">BaseThread</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for thread classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -597,7 +498,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the thread in Tibia.com.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BaseThread.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseThread.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseThread.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseThread.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to a thread with a given id.</span>
 
@@ -621,7 +522,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="BaseTournament"><a class="viewcode-back" href="../../api.html#tibiapy.BaseTournament">[docs]</a><span class="k">class</span> <span class="nc">BaseTournament</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseTournament"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseTournament">[docs]</a><span class="k">class</span> <span class="nc">BaseTournament</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for tournament classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -653,7 +554,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the tournament&#39;s information page.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycle</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BaseTournament.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseTournament.get_url">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseTournament.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.abc.BaseTournament.get_url">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tournament_cycle</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to a tournament&#39;s information page.</span>
 
@@ -678,54 +579,7 @@
         <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;tournament&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="BaseWorld"><a class="viewcode-back" href="../../api.html#tibiapy.BaseWorld">[docs]</a><span class="k">class</span> <span class="nc">BaseWorld</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all World classes.</span>
-
-<span class="sd">    The following implement this class:</span>
-
-<span class="sd">    - :class:`.WorldEntry`</span>
-<span class="sd">    - :class:`.World`</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    name: :class:`str`</span>
-<span class="sd">        The name of the world.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">location</span><span class="p">:</span> <span class="n">WorldLocation</span>
-    <span class="n">pvp_type</span><span class="p">:</span> <span class="n">PvpType</span>
-
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> location=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="si">!r}</span><span class="s2"> pvp_type=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pvp_type</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: URL to the world&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-<div class="viewcode-block" id="BaseWorld.get_url"><a class="viewcode-back" href="../../api.html#tibiapy.BaseWorld.get_url">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">get_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to the World&#39;s information page on Tibia.com.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name: :class:`str`</span>
-<span class="sd">            The name of the world.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`str`</span>
-<span class="sd">            The URL to the world&#39;s information page.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;worlds&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">())</span></div></div>
-
-
-<div class="viewcode-block" id="HouseWithId"><a class="viewcode-back" href="../../api.html#tibiapy.HouseWithId">[docs]</a><span class="k">class</span> <span class="nc">HouseWithId</span><span class="p">:</span>
+<div class="viewcode-block" id="HouseWithId"><a class="viewcode-back" href="../../api.html#tibiapy.abc.HouseWithId">[docs]</a><span class="k">class</span> <span class="nc">HouseWithId</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements the :py:attr:`id` attribute and dependant functions and properties.</span>
 
 <span class="sd">    Subclasses mut also implement :class:`.BaseHouse`</span>

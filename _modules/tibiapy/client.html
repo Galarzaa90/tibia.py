@@ -55,21 +55,32 @@
 <span class="kn">import</span> <span class="nn">aiohttp_socks</span>
 
 <span class="kn">import</span> <span class="nn">tibiapy</span>
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">Auction</span><span class="p">,</span> <span class="n">AuctionFilters</span><span class="p">,</span> <span class="n">CharacterBazaar</span><span class="p">,</span> <span class="n">Leaderboard</span><span class="p">,</span> <span class="n">Spell</span><span class="p">,</span> <span class="n">SpellsSection</span><span class="p">,</span> <span class="n">abc</span>
-<span class="kn">from</span> <span class="nn">tibiapy.character</span> <span class="kn">import</span> <span class="n">Character</span>
-<span class="kn">from</span> <span class="nn">tibiapy.creature</span> <span class="kn">import</span> <span class="n">BoostableBosses</span><span class="p">,</span> <span class="n">BoostedCreatures</span><span class="p">,</span> <span class="n">Creature</span><span class="p">,</span> <span class="n">CreatureEntry</span><span class="p">,</span> <span class="n">CreaturesSection</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">abc</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">BattlEyeHighscoresFilter</span><span class="p">,</span> <span class="n">Category</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> \
     <span class="n">NewsType</span><span class="p">,</span> <span class="n">VocationFilter</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
-<span class="kn">from</span> <span class="nn">tibiapy.event</span> <span class="kn">import</span> <span class="n">EventSchedule</span>
-<span class="kn">from</span> <span class="nn">tibiapy.forum</span> <span class="kn">import</span> <span class="n">BoardEntry</span><span class="p">,</span> <span class="n">CMPostArchive</span><span class="p">,</span> <span class="n">ForumAnnouncement</span><span class="p">,</span> <span class="n">ForumBoard</span><span class="p">,</span> <span class="n">ForumPost</span><span class="p">,</span> <span class="n">ForumThread</span>
-<span class="kn">from</span> <span class="nn">tibiapy.guild</span> <span class="kn">import</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">GuildWars</span><span class="p">,</span> <span class="n">GuildsSection</span>
-<span class="kn">from</span> <span class="nn">tibiapy.highscores</span> <span class="kn">import</span> <span class="n">Highscores</span>
-<span class="kn">from</span> <span class="nn">tibiapy.house</span> <span class="kn">import</span> <span class="n">House</span><span class="p">,</span> <span class="n">HousesSection</span>
-<span class="kn">from</span> <span class="nn">tibiapy.kill_statistics</span> <span class="kn">import</span> <span class="n">KillStatistics</span>
-<span class="kn">from</span> <span class="nn">tibiapy.news</span> <span class="kn">import</span> <span class="n">News</span><span class="p">,</span> <span class="n">NewsArchive</span>
-<span class="kn">from</span> <span class="nn">tibiapy.tournament</span> <span class="kn">import</span> <span class="n">Tournament</span><span class="p">,</span> <span class="n">TournamentLeaderboard</span>
-<span class="kn">from</span> <span class="nn">tibiapy.world</span> <span class="kn">import</span> <span class="n">World</span><span class="p">,</span> <span class="n">WorldOverview</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">Character</span><span class="p">,</span> <span class="n">SpellsSection</span><span class="p">,</span> <span class="n">Spell</span><span class="p">,</span> <span class="n">Leaderboard</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">HousesSection</span><span class="p">,</span> \
+    <span class="n">Highscores</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">GuildWars</span><span class="p">,</span> <span class="n">GuildsSection</span><span class="p">,</span> <span class="n">CMPostArchive</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="p">,</span> <span class="n">ForumBoard</span><span class="p">,</span> <span class="n">ForumThread</span><span class="p">,</span> <span class="n">ForumAnnouncement</span><span class="p">,</span> \
+    <span class="n">ForumPost</span><span class="p">,</span> <span class="n">CharacterBazaar</span><span class="p">,</span> <span class="n">Auction</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models.creature</span> <span class="kn">import</span> <span class="n">BoostedCreatures</span><span class="p">,</span> <span class="n">BoostableBosses</span><span class="p">,</span> <span class="n">CreaturesSection</span><span class="p">,</span> <span class="n">Creature</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models.event</span> <span class="kn">import</span> <span class="n">EventSchedule</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models.news</span> <span class="kn">import</span> <span class="n">NewsArchive</span><span class="p">,</span> <span class="n">News</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models.world</span> <span class="kn">import</span> <span class="n">World</span><span class="p">,</span> <span class="n">WorldOverview</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers</span> <span class="kn">import</span> <span class="n">CharacterParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.bazaar</span> <span class="kn">import</span> <span class="n">AuctionParser</span><span class="p">,</span> <span class="n">CharacterBazaarParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.creature</span> <span class="kn">import</span> <span class="n">BoostedCreaturesParser</span><span class="p">,</span> <span class="n">BoostableBossesParser</span><span class="p">,</span> <span class="n">CreaturesSectionParser</span><span class="p">,</span> \
+    <span class="n">CreatureParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.event</span> <span class="kn">import</span> <span class="n">EventScheduleParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.forum</span> <span class="kn">import</span> <span class="n">CMPostArchiveParser</span><span class="p">,</span> <span class="n">BoardEntryParser</span><span class="p">,</span> <span class="n">ForumBoardParser</span><span class="p">,</span> <span class="n">ForumThreadParser</span><span class="p">,</span> \
+    <span class="n">ForumAnnouncementParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.guild</span> <span class="kn">import</span> <span class="n">GuildParser</span><span class="p">,</span> <span class="n">GuildWarsParser</span><span class="p">,</span> <span class="n">GuildsSectionParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.highscores</span> <span class="kn">import</span> <span class="n">HighscoresParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.house</span> <span class="kn">import</span> <span class="n">HouseParser</span><span class="p">,</span> <span class="n">HousesSectionParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.kill_statistics</span> <span class="kn">import</span> <span class="n">KillStatisticsParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.leaderboard</span> <span class="kn">import</span> <span class="n">LeaderboardParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.news</span> <span class="kn">import</span> <span class="n">NewsArchiveParser</span><span class="p">,</span> <span class="n">NewsParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.spell</span> <span class="kn">import</span> <span class="n">SpellsSectionParser</span><span class="p">,</span> <span class="n">SpellParser</span>
+<span class="kn">from</span> <span class="nn">tibiapy.parsers.world</span> <span class="kn">import</span> <span class="n">WorldParser</span><span class="p">,</span> <span class="n">WorldOverviewParser</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;TibiaResponse&quot;</span><span class="p">,</span>
@@ -289,7 +300,7 @@
         <span class="k">while</span> <span class="n">current_page</span> <span class="o">&lt;=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">total_pages</span><span class="p">:</span>
             <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_ajax_page</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">item_type</span><span class="p">,</span> <span class="n">current_page</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
-                <span class="n">entries</span> <span class="o">=</span> <span class="n">Auction</span><span class="o">.</span><span class="n">_parse_page_items</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">paginator</span><span class="o">.</span><span class="n">entry_class</span><span class="p">)</span>
+                <span class="n">entries</span> <span class="o">=</span> <span class="n">AuctionParser</span><span class="o">.</span><span class="n">_parse_page_items</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">paginator</span><span class="o">.</span><span class="n">entry_class</span><span class="p">)</span>
                 <span class="n">paginator</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span>
             <span class="n">current_page</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">paginator</span><span class="o">.</span><span class="n">fully_fetched</span> <span class="o">=</span> <span class="kc">True</span>
@@ -363,7 +374,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;page must be 1 or greater.&#39;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CharacterBazaar</span><span class="o">.</span><span class="n">get_current_auctions_url</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">filters</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">current_auctions</span> <span class="o">=</span> <span class="n">CharacterBazaar</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">current_auctions</span> <span class="o">=</span> <span class="n">CharacterBazaarParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">current_auctions</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -447,7 +458,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;auction_id must be 1 or greater.&#39;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">Auction</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">auction_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">auction</span> <span class="o">=</span> <span class="n">Auction</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">,</span> <span class="n">skip_details</span><span class="p">)</span>
+        <span class="n">auction</span> <span class="o">=</span> <span class="n">AuctionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">,</span> <span class="n">skip_details</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">if</span> <span class="n">auction</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">skip_details</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">fetch_items</span><span class="p">:</span>
@@ -500,7 +511,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;page cannot be lower than 1.&quot;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CMPostArchive</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">cm_post_archive</span> <span class="o">=</span> <span class="n">CMPostArchive</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">cm_post_archive</span> <span class="o">=</span> <span class="n">CMPostArchiveParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">cm_post_archive</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -537,7 +548,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;both year and month must be defined or neither must be defined.&quot;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">EventSchedule</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">month</span><span class="p">,</span> <span class="n">year</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">calendar</span> <span class="o">=</span> <span class="n">EventSchedule</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">calendar</span> <span class="o">=</span> <span class="n">EventScheduleParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -567,7 +578,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_community_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boards</span> <span class="o">=</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">list_from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">boards</span> <span class="o">=</span> <span class="n">BoardEntryParser</span><span class="o">.</span><span class="n">list_from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boards</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -691,7 +702,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">ForumBoard</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">board_id</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">age</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">board</span> <span class="o">=</span> <span class="n">ForumBoard</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">board</span> <span class="o">=</span> <span class="n">ForumBoardParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -724,7 +735,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">ForumThread</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">thread</span> <span class="o">=</span> <span class="n">ForumThread</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">ForumThreadParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">thread</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -760,7 +771,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">ForumPost</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">post_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">thread</span> <span class="o">=</span> <span class="n">ForumThread</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">ForumThreadParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">thread</span><span class="p">:</span>
             <span class="n">thread</span><span class="o">.</span><span class="n">anchored_post</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">thread</span><span class="o">.</span><span class="n">posts</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">post_id</span> <span class="o">==</span> <span class="n">post_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
@@ -793,7 +804,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">ForumAnnouncement</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">announcement_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">announcement</span> <span class="o">=</span> <span class="n">ForumAnnouncement</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">)</span>
+        <span class="n">announcement</span> <span class="o">=</span> <span class="n">ForumAnnouncementParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">announcement</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -824,11 +835,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">NewsArchive</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creatures</span> <span class="o">=</span> <span class="n">BoostedCreatures</span><span class="o">.</span><span class="n">from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">boosted_creatures</span> <span class="o">=</span> <span class="n">BoostedCreaturesParser</span><span class="o">.</span><span class="n">from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creatures</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
-    <span class="c1"># Region Bosses</span>
+    <span class="c1"># region Bosses</span>
 <div class="viewcode-block" id="Client.fetch_boosted_boss"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_boss">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted boss.</span>
 
@@ -854,7 +865,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">NewsArchive</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBosses</span><span class="o">.</span><span class="n">boosted_boss_from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBossesParser</span><span class="o">.</span><span class="n">boosted_boss_from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -883,7 +894,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoostableBosses</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBosses</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBossesParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -917,7 +928,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">NewsArchive</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">CreaturesSection</span><span class="o">.</span><span class="n">boosted_creature_from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">CreaturesSectionParser</span><span class="o">.</span><span class="n">boosted_creature_from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -946,7 +957,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">CreaturesSection</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">CreaturesSection</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">CreaturesSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -977,7 +988,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">Creature</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">identifier</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">Creature</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">CreatureParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1008,7 +1019,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">Character</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">char</span> <span class="o">=</span> <span class="n">Character</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">char</span> <span class="o">=</span> <span class="n">CharacterParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1038,7 +1049,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">Guild</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">guild</span> <span class="o">=</span> <span class="n">Guild</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">guild</span> <span class="o">=</span> <span class="n">GuildParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1072,7 +1083,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">GuildWars</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">guild_wars</span> <span class="o">=</span> <span class="n">GuildWars</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">guild_wars</span> <span class="o">=</span> <span class="n">GuildWarsParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">guild_wars</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1105,7 +1116,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">House</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">house</span> <span class="o">=</span> <span class="n">House</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">house</span> <span class="o">=</span> <span class="n">HouseParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">house</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1155,7 +1166,7 @@
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">Highscores</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">battleye_type</span><span class="p">,</span>
                                                                  <span class="n">pvp_types</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">highscores</span> <span class="o">=</span> <span class="n">Highscores</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">highscores</span> <span class="o">=</span> <span class="n">HighscoresParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">highscores</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1184,7 +1195,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">kill_statistics</span> <span class="o">=</span> <span class="n">KillStatistics</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">kill_statistics</span> <span class="o">=</span> <span class="n">KillStatisticsParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">kill_statistics</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1219,7 +1230,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">Leaderboard</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">leaderboard</span> <span class="o">=</span> <span class="n">Leaderboard</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">leaderboard</span> <span class="o">=</span> <span class="n">LeaderboardParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">leaderboard</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1249,7 +1260,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">World</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">world</span> <span class="o">=</span> <span class="n">World</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">world</span> <span class="o">=</span> <span class="n">WorldParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1290,7 +1301,7 @@
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">HousesSection</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="o">=</span><span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="o">=</span><span class="n">house_type</span><span class="p">,</span>
                                                                     <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">world_houses</span> <span class="o">=</span> <span class="n">HousesSection</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">world_houses</span> <span class="o">=</span> <span class="n">HousesSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">world_houses</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1325,7 +1336,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">GuildsSection</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">guilds</span> <span class="o">=</span> <span class="n">GuildsSection</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">guilds</span> <span class="o">=</span> <span class="n">GuildsSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">guilds</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1352,7 +1363,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">WorldOverview</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">world_overview</span> <span class="o">=</span> <span class="n">WorldOverview</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">world_overview</span> <span class="o">=</span> <span class="n">WorldOverviewParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">world_overview</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1395,10 +1406,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">start_date</span> <span class="o">&gt;</span> <span class="n">end_date</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;start_date can&#39;t be more recent than end_date&quot;</span><span class="p">)</span>
-        <span class="n">form_data</span> <span class="o">=</span> <span class="n">NewsArchive</span><span class="o">.</span><span class="n">get_form_data</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">types</span><span class="p">)</span>
+        <span class="n">form_data</span> <span class="o">=</span> <span class="n">NewsArchiveParser</span><span class="o">.</span><span class="n">get_form_data</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">types</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">NewsArchive</span><span class="o">.</span><span class="n">get_url</span><span class="p">(),</span> <span class="n">form_data</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">news</span> <span class="o">=</span> <span class="n">NewsArchive</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">news</span> <span class="o">=</span> <span class="n">NewsArchiveParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">news</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1463,7 +1474,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">News</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">news_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">news</span> <span class="o">=</span> <span class="n">News</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">news_id</span><span class="p">)</span>
+        <span class="n">news</span> <span class="o">=</span> <span class="n">NewsParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">news_id</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">news</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
     <span class="c1"># endregion</span>
@@ -1502,7 +1513,7 @@
                                                                     <span class="n">spell_type</span><span class="o">=</span><span class="n">spell_type</span><span class="p">,</span> <span class="n">premium</span><span class="o">=</span><span class="n">premium</span><span class="p">,</span>
                                                                     <span class="n">sort</span><span class="o">=</span><span class="n">sort</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">spells</span> <span class="o">=</span> <span class="n">SpellsSection</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">spells</span> <span class="o">=</span> <span class="n">SpellsSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">spells</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1531,77 +1542,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">Spell</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">identifier</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">spells</span> <span class="o">=</span> <span class="n">Spell</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">spells</span> <span class="o">=</span> <span class="n">SpellParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">spells</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-    <span class="c1"># endregion</span>
-
-    <span class="c1"># region Tournaments</span>
-<div class="viewcode-block" id="Client.fetch_tournament"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_tournament">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_tournament</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_cycle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a tournament from Tibia.com.</span>
-
-<span class="sd">        .. versionadded:: 2.5.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        tournament_cycle: :class:`int`</span>
-<span class="sd">            The cycle of the tournament. if unspecified, it will get the currently running tournament.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`Tournament`</span>
-<span class="sd">            The tournament if found, :obj:`None` otherwise.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">Tournament</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">tournament_cycle</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">tournament</span> <span class="o">=</span> <span class="n">Tournament</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">tournament</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_tournament_leaderboard"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_tournament_leaderboard">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_tournament_leaderboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_cycle</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a tournament leaderboard from Tibia.com.</span>
-
-<span class="sd">        .. versionadded:: 2.5.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        tournament_cycle: :class:`int`</span>
-<span class="sd">            The cycle of the tournament. if unspecified, it will get the currently running tournament.</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The name of the world to get the leaderboards for.</span>
-<span class="sd">        page: :class:`int`</span>
-<span class="sd">            The desired leaderboards page, by default 1 is used.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`TournamentLeaderboard`</span>
-<span class="sd">            The tournament&#39;s leaderboard if found, :obj:`None` otherwise.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">TournamentLeaderboard</span><span class="o">.</span><span class="n">get_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">tournament_cycle</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">tournament_leaderboard</span> <span class="o">=</span> <span class="n">TournamentLeaderboard</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">tournament_leaderboard</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">spells</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div></div>
     <span class="c1"># endregion</span>
 </pre></div>
 
