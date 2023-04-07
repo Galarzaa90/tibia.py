@@ -8,7 +8,6 @@ import logging
 from tibiapy import abc, enums, utils
 from tibiapy.enums import *
 from tibiapy.errors import *
-from tibiapy.bazaar import *
 from tibiapy.client import *
 
 from logging import NullHandler

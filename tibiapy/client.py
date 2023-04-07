@@ -10,18 +10,19 @@ import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy import Auction, AuctionFilters, CharacterBazaar, abc
+from tibiapy import abc
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
     NewsType, VocationFilter
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
-    ForumPost
+    ForumPost, CharacterBazaar, Auction
 from tibiapy.models.creature import BoostedCreatures, BoostableBosses, CreaturesSection, Creature
 from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers import CharacterParser
+from tibiapy.parsers.bazaar import AuctionParser, CharacterBazaarParser
 from tibiapy.parsers.creature import BoostedCreaturesParser, BoostableBossesParser, CreaturesSectionParser, \
     CreatureParser
 from tibiapy.parsers.event import EventScheduleParser
@@ -254,7 +255,7 @@ class Client:
         while current_page <= paginator.total_pages:
             content = await self._fetch_ajax_page(auction_id, item_type, current_page, test=test)
             if content:
-                entries = Auction._parse_page_items(content, paginator.entry_class)
+                entries = AuctionParser._parse_page_items(content, paginator.entry_class)
                 paginator.entries.extend(entries)
             current_page += 1
         paginator.fully_fetched = True
@@ -328,7 +329,7 @@ class Client:
             raise ValueError('page must be 1 or greater.')
         response = await self._request("GET", CharacterBazaar.get_current_auctions_url(page, filters), test=test)
         start_time = time.perf_counter()
-        current_auctions = CharacterBazaar.from_content(response.content)
+        current_auctions = CharacterBazaarParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse(response, current_auctions, parsing_time)
 
@@ -412,7 +413,7 @@ class Client:
             raise ValueError('auction_id must be 1 or greater.')
         response = await self._request("GET", Auction.get_url(auction_id), test=test)
         start_time = time.perf_counter()
-        auction = Auction.from_content(response.content, auction_id, skip_details)
+        auction = AuctionParser.from_content(response.content, auction_id, skip_details)
         parsing_time = time.perf_counter() - start_time
         if auction and not skip_details:
             if fetch_items:
