@@ -6,6 +6,15 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v6.0.0
+
+6.0.0 (Unreleased)
+==================
+- All models are now Pydantic models, for better data validation, serialization and deserialization.
+- The location of models inside the module changed, so all imports need to be modified.
+- Model changes:
+    - Removed ``world`` from ``OnlineCharacter``.
+
 
 .. v5.6.0
 

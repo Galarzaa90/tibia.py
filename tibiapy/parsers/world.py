@@ -1,6 +1,4 @@
-"""Models related to the worlds section in Tibia.com."""
 import re
-from collections import OrderedDict
 from typing import TYPE_CHECKING
 
 from tibiapy import abc
@@ -9,10 +7,11 @@ from tibiapy.builders.world import (WorldBuilder, WorldEntryBuilder,
 from tibiapy.enums import (BattlEyeType, PvpType,
                            TransferType, WorldLocation)
 from tibiapy.errors import InvalidContent
-from tibiapy.models import OnlineCharacter
+from tibiapy.models import OnlineCharacter, World
+from tibiapy.parsers import BaseParser
 from tibiapy.utils import (parse_integer, parse_tibia_datetime,
                            parse_tibia_full_date, parse_tibiacom_content,
-                           try_enum)
+                           try_enum, parse_tables_map, get_rows, clean_text)
 
 if TYPE_CHECKING:
     import bs4
@@ -26,8 +25,8 @@ record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
 
 
-class WorldParser:
-    # region Public methods
+class WorldParser(BaseParser[World]):
+
     @classmethod
     def from_content(cls, content):
         """Parse a Tibia.com response into a :class:`World`.
@@ -48,26 +47,25 @@ class WorldParser:
             If the provided content is not the HTML content of the world section in Tibia.com
         """
         parsed_content = parse_tibiacom_content(content)
-        tables = cls._parse_tables(parsed_content)
+        tables = parse_tables_map(parsed_content, "div.InnerTableContainer")
         try:
-            error = tables.get("Error")
-            if error and error[0].text == "World with this name doesn't exist!":
+            if tables.get("Error"):
                 return None
             selected_world = parsed_content.select_one('option:checked')
             builder = WorldBuilder().name(selected_world.text)
             cls._parse_world_info(builder, tables.get("World Information", []))
 
-            online_table = tables.get("Players Online", [])
-            for row in online_table[1:]:
+            online_table = next((v for k, v in tables.items() if "Players Online" in k), None)
+            if not online_table:
+                return builder.build()
+            for row in online_table.select("tr.Odd, tr.Even"):
                 cols_raw = row.select('td')
                 name, level, vocation = (c.text.replace('\xa0', ' ').strip() for c in cols_raw)
                 builder.add_online_player(OnlineCharacter(name=name, level=int(level), vocation=vocation))
-        except AttributeError:
-            raise InvalidContent("content is not from the world section in Tibia.com")
+        except AttributeError as e:
+            raise InvalidContent("content is not from the world section in Tibia.com") from e
         return builder.build()
-    # endregion
 
-    # region Private methods
     @classmethod
     def _parse_world_info(cls, builder: WorldBuilder, world_info_table):
         """
@@ -75,42 +73,50 @@ class WorldParser:
 
         Parameters
         ----------
-        world_info_table: :class:`list`[:class:`bs4.Tag`]
+        world_info_table: :class:`bs4.Tag`
         """
-        world_info = {}
-        for row in world_info_table:
+        for row in get_rows(world_info_table):
             cols_raw = row.select('td')
-            cols = [ele.text.strip() for ele in cols_raw]
+            cols = [clean_text(ele) for ele in cols_raw]
             field, value = cols
-            field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
-            value = value.replace("\xa0", " ")
-            world_info[field] = value
-        try:
-            builder.online_count(parse_integer(world_info.pop("players_online")))
-        except KeyError:
-            builder.online_count(0)
-        builder.online(world_info["status"].lower() == "online")\
-            .location(try_enum(WorldLocation, world_info.pop("location")))\
-            .pvp_type(try_enum(PvpType, world_info.pop("pvp_type")))\
-            .transfer_type(try_enum(TransferType, world_info.pop("transfer_type", None), TransferType.REGULAR))
-        if m := record_regexp.match(world_info.pop("online_record")):
+            field = field.replace(":", "")
+            if field == "Status":
+                builder.online("online" in value.lower())
+            elif field == "Players Online":
+                builder.online_count(parse_integer(value))
+            elif field == "Online Record":
+                cls._parse_online_record(builder, value)
+            elif field == "Creation Date":
+                cls._parse_creation_date(builder, value)
+            elif field == "Location":
+                builder.location(try_enum(WorldLocation, value))
+            elif field == "PvP Type":
+                builder.pvp_type(try_enum(PvpType, value))
+            elif field == "Premium Type":
+                builder.premium_only(True)
+            elif field == "Transfer Type":
+                builder.transfer_type(try_enum(TransferType, value, TransferType.REGULAR))
+            elif field == "World Quest Titles":
+                titles = [q.strip() for q in value.split(",")]
+                if "currently has no title" not in titles[0]:
+                    builder.world_quest_titles(titles)
+            elif field == "BattlEye Status":
+                cls._parse_battleye_status(builder, value)
+            elif field == "Game World Type":
+                builder.experimental(value.lower() == "experimental")
+
+    @classmethod
+    def _parse_online_record(cls, builder: WorldBuilder, value):
+        if m := record_regexp.match(value):
             builder.record_count(parse_integer(m.group("count")))
             builder.record_date(parse_tibia_datetime(m.group("date")))
-        if "world_quest_titles" in world_info:
-            titles = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
-            if "currently has no title" not in titles[0]:
-                builder.world_quest_titles(titles)
-        builder.experimental(world_info.pop("game_world_type", None) == "Experimental")
-        cls._parse_battleye_status(builder, world_info.pop("battleye_status"))
-        builder.premium_only("premium_type" in world_info)
 
-        month, year = world_info.pop("creation_date").split("/")
+    @classmethod
+    def _parse_creation_date(cls, builder: WorldBuilder, value):
+        month, year = value.split("/")
         month = int(month)
         year = int(year)
-        if year > 90:
-            year += 1900
-        else:
-            year += 2000
+        year += 1900 if year > 90 else 2000
         builder.creation_date(f"{year:d}-{month:02d}")
 
     @classmethod
@@ -129,31 +135,6 @@ class WorldParser:
         else:
             builder.battleye_date(None)\
                 .battleye_type(BattlEyeType.UNPROTECTED)
-
-    @classmethod
-    def _parse_tables(cls, parsed_content):
-        """
-        Parse the information tables found in a world's information page.
-
-        Parameters
-        ----------
-        parsed_content: :class:`bs4.BeautifulSoup`
-            A :class:`BeautifulSoup` object containing all the content.
-
-        Returns
-        -------
-        :class:`OrderedDict`[:class:`str`, :class:`list`[:class:`bs4.Tag`]]
-            A dictionary containing all the table rows, with the table headers as keys.
-        """
-        tables = parsed_content.select('div.TableContainer')
-        output = OrderedDict()
-        for table in tables:
-            title = table.select_one("div.Text").text
-            title = title.split("[")[0].strip()
-            inner_table = table.select_one("div.InnerTableContainer")
-            output[title] = inner_table.select("tr")
-        return output
-    # endregion
 
 
 class WorldOverviewParser(abc.Serializable):
@@ -187,7 +168,7 @@ class WorldOverviewParser(abc.Serializable):
                     .worlds(cls._parse_worlds_tables(tables))
                     .build())
         except (AttributeError, KeyError, ValueError) as e:
-            raise InvalidContent("content does not belong to the World Overview section in Tibia.com", e)
+            raise InvalidContent("content does not belong to the World Overview section in Tibia.com", e) from e
 
     @classmethod
     def _parse_worlds(cls, world_rows):

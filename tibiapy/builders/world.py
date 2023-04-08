@@ -30,74 +30,74 @@ class WorldBuilder:
         self._battleye_type = try_enum(BattlEyeType, kwargs.get("battleye_type"), BattlEyeType.UNPROTECTED)
         self._experimental: bool = kwargs.get("experimental", False)
         self._online_players: List[OnlineCharacter] = kwargs.get("online_players", [])
-        self._premium_only: bool = kwargs.get("premium_only", False)
+        self._premium_only: bool = kwargs.get("premium_only") or False
         self._tournament_world_type = try_enum(TournamentWorldType, kwargs.get("tournament_world_type"), None)
 
-    def name(self, name: str) -> 'WorldBuilder':
+    def name(self, name: str):
         self._name = name
         return self
 
-    def online(self, online: bool) -> 'WorldBuilder':
+    def online(self, online: bool):
         self._online = online
         return self
 
-    def online_count(self, online_count: int) -> 'WorldBuilder':
+    def online_count(self, online_count: int):
         self._online_count = online_count
         return self
 
-    def record_count(self, record_count: int) -> 'WorldBuilder':
+    def record_count(self, record_count: int):
         self._record_count = record_count
         return self
 
-    def record_date(self, record_date: datetime.datetime) -> 'WorldBuilder':
+    def record_date(self, record_date: datetime.datetime):
         self._record_date = record_date
         return self
 
-    def creation_date(self, creation_date: str) -> 'WorldBuilder':
+    def creation_date(self, creation_date: str):
         self._creation_date = creation_date
         return self
 
-    def location(self, location: WorldLocation) -> 'WorldBuilder':
+    def location(self, location: WorldLocation):
         self._location = location
         return self
 
-    def pvp_type(self, pvp_type: PvpType) -> 'WorldBuilder':
+    def pvp_type(self, pvp_type: PvpType):
         self._pvp_type = pvp_type
         return self
 
-    def premium_only(self, premium_only: bool) -> 'WorldBuilder':
+    def premium_only(self, premium_only: bool):
         self._premium_only = premium_only
         return self
 
-    def transfer_type(self, transfer_type: TransferType) -> 'WorldBuilder':
+    def transfer_type(self, transfer_type: TransferType):
         self._transfer_type = transfer_type
         return self
 
-    def world_quest_titles(self, world_quest_titles: List[str]) -> 'WorldBuilder':
+    def world_quest_titles(self, world_quest_titles: List[str]):
         self._world_quest_titles = world_quest_titles
         return self
 
-    def add_world_quest_title(self, world_quest_title: str) -> 'WorldBuilder':
+    def add_world_quest_title(self, world_quest_title: str):
         self._world_quest_titles.append(world_quest_title)
         return self
 
-    def battleye_date(self, battleye_date: Optional[datetime.datetime]) -> 'WorldBuilder':
+    def battleye_date(self, battleye_date: Optional[datetime.datetime]):
         self._battleye_date = battleye_date
         return self
 
-    def battleye_type(self, battleye_type: BattlEyeType) -> 'WorldBuilder':
+    def battleye_type(self, battleye_type: BattlEyeType):
         self._battleye_type = battleye_type
         return self
 
-    def experimental(self, experimental: bool) -> 'WorldBuilder':
+    def experimental(self, experimental: bool):
         self._experimental = experimental
         return self
 
-    def online_players(self, online_players: List[OnlineCharacter]) -> 'WorldBuilder':
+    def online_players(self, online_players: List[OnlineCharacter]):
         self._online_players = online_players
         return self
 
-    def add_online_player(self, player: OnlineCharacter) -> 'WorldBuilder':
+    def add_online_player(self, player: OnlineCharacter):
         self._online_players.append(player)
         return self
 
@@ -133,52 +133,53 @@ class WorldEntryBuilder:
         self._battleye_type = try_enum(BattlEyeType, kwargs.get("battleye_type"), BattlEyeType.UNPROTECTED)
         self._experimental: bool = kwargs.get("experimental", False)
         self._premium_only: bool = kwargs.get("premium_only", False)
+        self._world_quest_titles: List[str] = kwargs.get("world_quest_titles", [])
 
-    def name(self, name: str) -> 'WorldEntryBuilder':
+    def name(self, name: str):
         self._name = name
         return self
 
-    def online(self, online: bool) -> 'WorldEntryBuilder':
+    def online(self, online: bool):
         self._online = online
         return self
 
-    def online_count(self, online_count: int) -> 'WorldEntryBuilder':
+    def online_count(self, online_count: int):
         self._online_count = online_count
         return self
 
-    def location(self, location: WorldLocation) -> 'WorldEntryBuilder':
+    def location(self, location: WorldLocation):
         self._location = location
         return self
 
-    def pvp_type(self, pvp_type: PvpType) -> 'WorldEntryBuilder':
+    def pvp_type(self, pvp_type: PvpType):
         self._pvp_type = pvp_type
         return self
 
-    def premium_only(self, premium_only: bool) -> 'WorldEntryBuilder':
+    def premium_only(self, premium_only: bool):
         self._premium_only = premium_only
         return self
 
-    def transfer_type(self, transfer_type: TransferType) -> 'WorldEntryBuilder':
+    def transfer_type(self, transfer_type: TransferType):
         self._transfer_type = transfer_type
         return self
 
-    def world_quest_titles(self, world_quest_titles: List[str]) -> 'WorldEntryBuilder':
+    def world_quest_titles(self, world_quest_titles: List[str]):
         self._world_quest_titles = world_quest_titles
         return self
 
-    def add_world_quest_title(self, world_quest_title: str) -> 'WorldEntryBuilder':
+    def add_world_quest_title(self, world_quest_title: str):
         self._world_quest_titles.append(world_quest_title)
         return self
 
-    def battleye_date(self, battleye_date: Optional[datetime.datetime]) -> 'WorldEntryBuilder':
+    def battleye_date(self, battleye_date: Optional[datetime.datetime]):
         self._battleye_date = battleye_date
         return self
 
-    def battleye_type(self, battleye_type: BattlEyeType) -> 'WorldEntryBuilder':
+    def battleye_type(self, battleye_type: BattlEyeType):
         self._battleye_type = battleye_type
         return self
 
-    def experimental(self, experimental: bool) -> 'WorldEntryBuilder':
+    def experimental(self, experimental: bool):
         self._experimental = experimental
         return self
 
@@ -195,22 +196,23 @@ class WorldEntryBuilder:
             battleye_type=self._battleye_type,
             experimental=self._experimental,
         )
-    
+
+
 class WorldOverviewBuilder:
     def __init__(self, **kwargs) -> None:
         self._record_count = kwargs.get("record_count")
         self._record_date = kwargs.get("record_date")
         self._worlds = kwargs.get("worlds")
 
-    def record_count(self, record_count: int) -> 'WorldOverviewBuilder':
+    def record_count(self, record_count: int):
         self._record_count = record_count
         return self
     
-    def record_date(self, record_date: datetime.datetime) -> 'WorldOverviewBuilder':
+    def record_date(self, record_date: datetime.datetime):
         self._record_date = record_date
         return self
     
-    def worlds(self, worlds: List[WorldEntry]) -> 'WorldOverviewBuilder':
+    def worlds(self, worlds: List[WorldEntry]):
         self._worlds = worlds
         return self
 

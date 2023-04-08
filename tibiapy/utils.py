@@ -10,7 +10,13 @@ from typing import Dict, Optional, Tuple, Type, TypeVar, Union
 
 import bs4
 
+from tibiapy.errors import InvalidContent
+
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)\s?k*$')
+
+
+def clean_text(tag: bs4.Tag):
+    return tag.text.replace("\xa0", " ").strip()
 
 
 def convert_line_breaks(element):
@@ -24,6 +30,9 @@ def convert_line_breaks(element):
     for br in element.find_all("br"):
         br.replace_with("\n")
 
+
+def get_rows(table_tag: bs4.Tag):
+    return table_tag.select("tr")
 
 def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
     """Build a URL to Tibia.com with the given parameters.
@@ -428,6 +437,18 @@ def try_date(obj) -> Optional[datetime.date]:
     return parse_tibia_full_date(obj)
 
 
+def parse_tables_map(parsed_content: bs4.BeautifulSoup, selector = "div.TableContentContainer") -> Dict[str, bs4.Tag]:
+    tables = parsed_content.select("div.TableContainer")
+    output = {}
+    for table in tables:
+        caption = table.select_one("div.Text")
+        if not caption:
+            raise InvalidContent("table has no caption")
+        if content_table := table.select_one(selector):
+            output[caption.text] = content_table
+    return output
+
+
 def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", builder="lxml") -> bs4.BeautifulSoup:
     """Parse HTML content from Tibia.com into a BeautifulSoup object.
 
@@ -449,6 +470,7 @@ def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", build
     """
     strainer = bs4.SoupStrainer(tag, class_=html_class) if builder != "html5lib" else None
     return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8', 1), builder, parse_only=strainer)
+
 
 
 def parse_tibiacom_tables(parsed_content) -> Dict[str, bs4.Tag]:

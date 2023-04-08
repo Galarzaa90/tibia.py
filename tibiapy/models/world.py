@@ -1,10 +1,8 @@
 import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel
-
-from tibiapy import WorldLocation, PvpType, TransferType, BattlEyeType, TournamentWorldType
-from tibiapy.models import OnlineCharacter
+from tibiapy import WorldLocation, PvpType, TransferType, BattlEyeType
+from tibiapy.models import OnlineCharacter, BaseModel
 from tibiapy.utils import get_tibia_url
 
 

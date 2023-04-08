@@ -8,11 +8,11 @@ import typing
 
 import aiohttp
 import aiohttp_socks
+from pydantic.generics import GenericModel
 
 import tibiapy
-from tibiapy import abc
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
-    NewsType, VocationFilter
+    NewsType, VocationFilter, BattlEyeType, BaseEnum, NumericEnum
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
@@ -51,48 +51,21 @@ T = typing.TypeVar('T')
 log = logging.getLogger("tibiapy")
 
 
-class TibiaResponse(typing.Generic[T], abc.Serializable):
-    """Represents a response from Tibia.com.
+class TibiaResponse(GenericModel, typing.Generic[T]):
+    """Represents a response from Tibia.com."""
 
-    Attributes
-    ----------
-    timestamp: :class:`datetime.datetime`
-        The date and time when the page was fetched, in UTC.
-    cached: :class:`bool`
-        Whether the response is cached or it is a fresh response.
-    age: :class:`int`
-        The age of the cache in seconds.
-    fetching_time: :class:`float`
-        The time in seconds it took for Tibia.com to respond.
-    parsing_time: :class:`float`
-        The time in seconds it took for the response to be parsed into data.
-    data: :class:`T`
-        The data contained in the response.
-    """
-
-    def __init__(self, raw_response, data: T, parsing_time=None):
-        self.timestamp: datetime.datetime = raw_response.timestamp
-        self.cached: bool = raw_response.cached
-        self.age: int = raw_response.age
-        self.fetching_time = raw_response.fetching_time
-        self.parsing_time = parsing_time
-        self.data: T = data
-
-    __slots__ = (
-        'timestamp',
-        'cached',
-        'age',
-        'fetching_time',
-        'parsing_time',
-        'data',
-    )
-
-    _serializable_properties = ("time_left", )
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__}[{type(self.data).__name__}] timestamp={self.timestamp!r} " \
-               f"fetching_time={self.fetching_time!r} parsing_time={self.fetching_time!r} cahed={self.cached!r} " \
-               f"age={self.age!r}>"
+    timestamp: datetime.datetime
+    """The date and time when the page was fetched, in UTC."""
+    cached: bool
+    """Whether the response is cached or it is a fresh response."""
+    age: int
+    """The age of the cache in seconds."""
+    fetching_time: float
+    """The time in seconds it took for Tibia.com to respond."""
+    parsing_time: float
+    """The time in seconds it took for the response to be parsed into data."""
+    data: T
+    """The data contained in the response."""
 
     @property
     def time_left(self):
@@ -106,6 +79,20 @@ class TibiaResponse(typing.Generic[T], abc.Serializable):
     def seconds_left(self):
         """:class:`int`: The time left in seconds for this response's cache to expire."""
         return self.time_left.seconds
+    
+    @classmethod
+    def from_raw(cls, raw_response, data: T, parsing_time=None):
+        return cls(
+            timestamp=raw_response.timestamp,
+            cached=raw_response.cached,
+            age=raw_response.age,
+            fetching_time=raw_response.fetching_time,
+            parsing_time=parsing_time,
+            data=data
+        )
+
+    class Config:
+        json_encoders = {NumericEnum: lambda g: g.name}
 
 
 class RawResponse:
@@ -331,7 +318,7 @@ class Client:
         start_time = time.perf_counter()
         current_auctions = CharacterBazaarParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, current_auctions, parsing_time)
+        return TibiaResponse.from_raw(response, current_auctions, parsing_time)
 
     async def fetch_auction_history(self, page=1, filters=None, *, test=False):
         """Fetch the auction history of the bazaar.
@@ -368,7 +355,7 @@ class Client:
         start_time = time.perf_counter()
         auction_history = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, auction_history, parsing_time)
+        return TibiaResponse.from_raw(response, auction_history, parsing_time)
 
     async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
                             skip_details=False, test=False):
@@ -425,7 +412,7 @@ class Client:
             if fetch_outfits:
                 await self._fetch_all_pages(auction_id, auction.outfits, 4, test=test)
                 await self._fetch_all_pages(auction_id, auction.store_outfits, 5, test=test)
-        return TibiaResponse(response, auction, parsing_time)
+        return TibiaResponse.from_raw(response, auction, parsing_time)
 
     # endregion
 
@@ -468,7 +455,7 @@ class Client:
         start_time = time.perf_counter()
         cm_post_archive = CMPostArchiveParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, cm_post_archive, parsing_time)
+        return TibiaResponse.from_raw(response, cm_post_archive, parsing_time)
 
     async def fetch_event_schedule(self, month=None, year=None, *, test=False):
         """Fetch the event calendar. By default, it gets the events for the current month.
@@ -505,7 +492,7 @@ class Client:
         start_time = time.perf_counter()
         calendar = EventScheduleParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, calendar, parsing_time)
+        return TibiaResponse.from_raw(response, calendar, parsing_time)
 
     # region Forums
     async def fetch_forum_community_boards(self, *, test=False):
@@ -535,7 +522,7 @@ class Client:
         start_time = time.perf_counter()
         boards = BoardEntryParser.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boards, parsing_time)
+        return TibiaResponse.from_raw(response, boards, parsing_time)
 
     async def fetch_forum_support_boards(self, *, test=False):
         """Fetch the forum's community boards.
@@ -564,7 +551,7 @@ class Client:
         start_time = time.perf_counter()
         boards = BoardEntry.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boards, parsing_time)
+        return TibiaResponse.from_raw(response, boards, parsing_time)
 
     async def fetch_forum_world_boards(self, *, test=False):
         """Fetch the forum's world boards.
@@ -593,7 +580,7 @@ class Client:
         start_time = time.perf_counter()
         boards = BoardEntry.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boards, parsing_time)
+        return TibiaResponse.from_raw(response, boards, parsing_time)
 
     async def fetch_forum_trade_boards(self, *, test=False):
         """Fetch the forum's trade boards.
@@ -622,7 +609,7 @@ class Client:
         start_time = time.perf_counter()
         boards = BoardEntry.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boards, parsing_time)
+        return TibiaResponse.from_raw(response, boards, parsing_time)
 
     async def fetch_forum_board(self, board_id, page=1, age=30, *, test=False):
         """Fetch a forum board with a given id.
@@ -659,7 +646,7 @@ class Client:
         start_time = time.perf_counter()
         board = ForumBoardParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, board, parsing_time)
+        return TibiaResponse.from_raw(response, board, parsing_time)
 
     async def fetch_forum_thread(self, thread_id, page=1, *, test=False):
         """Fetch a forum thread with a given id.
@@ -692,7 +679,7 @@ class Client:
         start_time = time.perf_counter()
         thread = ForumThreadParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, thread, parsing_time)
+        return TibiaResponse.from_raw(response, thread, parsing_time)
 
     async def fetch_forum_post(self, post_id, *, test=False):
         """Fetch a forum post with a given id.
@@ -730,7 +717,7 @@ class Client:
         if thread:
             thread.anchored_post = next((p for p in thread.posts if p.post_id == post_id), None)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, thread, parsing_time)
+        return TibiaResponse.from_raw(response, thread, parsing_time)
 
     async def fetch_forum_announcement(self, announcement_id, *, test=False):
         """Fetch a forum announcement.
@@ -761,7 +748,7 @@ class Client:
         start_time = time.perf_counter()
         announcement = ForumAnnouncementParser.from_content(response.content, announcement_id)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, announcement, parsing_time)
+        return TibiaResponse.from_raw(response, announcement, parsing_time)
 
     # endregion
 
@@ -792,7 +779,7 @@ class Client:
         start_time = time.perf_counter()
         boosted_creatures = BoostedCreaturesParser.from_header(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boosted_creatures, parsing_time)
+        return TibiaResponse.from_raw(response, boosted_creatures, parsing_time)
 
     # region Bosses
     async def fetch_boosted_boss(self, *, test=False):
@@ -822,7 +809,7 @@ class Client:
         start_time = time.perf_counter()
         boosted_creature = BoostableBossesParser.boosted_boss_from_header(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boosted_creature, parsing_time)
+        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
 
     async def fetch_library_bosses(self, *, test=False):
         """Fetch the bosses from the library section.
@@ -851,7 +838,7 @@ class Client:
         start_time = time.perf_counter()
         boosted_creature = BoostableBossesParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boosted_creature, parsing_time)
+        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
 
     # endregion
 
@@ -885,7 +872,7 @@ class Client:
         start_time = time.perf_counter()
         boosted_creature = CreaturesSectionParser.boosted_creature_from_header(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boosted_creature, parsing_time)
+        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
 
     async def fetch_library_creatures(self, *, test=False):
         """Fetch the creatures from the library section.
@@ -914,7 +901,7 @@ class Client:
         start_time = time.perf_counter()
         boosted_creature = CreaturesSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boosted_creature, parsing_time)
+        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
 
     async def fetch_creature(self, identifier, *, test=False):
         """Fetch a creature's information from the Tibia.com library.
@@ -945,7 +932,7 @@ class Client:
         start_time = time.perf_counter()
         boosted_creature = CreatureParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, boosted_creature, parsing_time)
+        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
 
     # endregion
 
@@ -976,7 +963,7 @@ class Client:
         start_time = time.perf_counter()
         char = CharacterParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, char, parsing_time)
+        return TibiaResponse.from_raw(response, char, parsing_time)
 
     # region Guilds
     async def fetch_guild(self, name, *, test=False):
@@ -1006,7 +993,7 @@ class Client:
         start_time = time.perf_counter()
         guild = GuildParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, guild, parsing_time)
+        return TibiaResponse.from_raw(response, guild, parsing_time)
 
     async def fetch_guild_wars(self, name, *, test=False):
         """Fetch a guild's wars by its name from Tibia.com.
@@ -1040,7 +1027,7 @@ class Client:
         start_time = time.perf_counter()
         guild_wars = GuildWarsParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, guild_wars, parsing_time)
+        return TibiaResponse.from_raw(response, guild_wars, parsing_time)
 
     # endregion
 
@@ -1073,7 +1060,7 @@ class Client:
         start_time = time.perf_counter()
         house = HouseParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, house, parsing_time)
+        return TibiaResponse.from_raw(response, house, parsing_time)
 
     async def fetch_highscores_page(self, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
                                     battleye_type=None, pvp_types=None, *, test=False):
@@ -1123,7 +1110,7 @@ class Client:
         start_time = time.perf_counter()
         highscores = HighscoresParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, highscores, parsing_time)
+        return TibiaResponse.from_raw(response, highscores, parsing_time)
 
     async def fetch_kill_statistics(self, world, *, test=False):
         """Fetch the kill statistics of a world from Tibia.com.
@@ -1152,7 +1139,7 @@ class Client:
         start_time = time.perf_counter()
         kill_statistics = KillStatisticsParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, kill_statistics, parsing_time)
+        return TibiaResponse.from_raw(response, kill_statistics, parsing_time)
 
     async def fetch_leaderboard(self, world, rotation=None, page=1, *, test=False):
         """Fetch the leaderboards for a specific world and rotation.
@@ -1187,7 +1174,7 @@ class Client:
         start_time = time.perf_counter()
         leaderboard = LeaderboardParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, leaderboard, parsing_time)
+        return TibiaResponse.from_raw(response, leaderboard, parsing_time)
 
     # region Worlds
     async def fetch_world(self, name, *, test=False):
@@ -1217,7 +1204,7 @@ class Client:
         start_time = time.perf_counter()
         world = WorldParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, world, parsing_time)
+        return TibiaResponse.from_raw(response, world, parsing_time)
 
     async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status=None, order=None, *, test=False):
         """Fetch the house list of a world and type.
@@ -1258,7 +1245,7 @@ class Client:
         start_time = time.perf_counter()
         world_houses = HousesSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, world_houses, parsing_time)
+        return TibiaResponse.from_raw(response, world_houses, parsing_time)
 
     async def fetch_world_guilds(self, world: str, *, test=False):
         """Fetch the list of guilds in a world from Tibia.com.
@@ -1293,7 +1280,7 @@ class Client:
         start_time = time.perf_counter()
         guilds = GuildsSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, guilds, parsing_time)
+        return TibiaResponse.from_raw(response, guilds, parsing_time)
 
     async def fetch_world_list(self, *, test=False):
         """Fetch the world overview information from Tibia.com.
@@ -1320,7 +1307,7 @@ class Client:
         start_time = time.perf_counter()
         world_overview = WorldOverviewParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, world_overview, parsing_time)
+        return TibiaResponse.from_raw(response, world_overview, parsing_time)
 
     # endregion
 
@@ -1366,7 +1353,7 @@ class Client:
         start_time = time.perf_counter()
         news = NewsArchiveParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, news, parsing_time)
+        return TibiaResponse.from_raw(response, news, parsing_time)
 
     async def fetch_recent_news(self, days=30, categories=None, types=None, *, test=False):
         """Fetch all the published news in the last specified days.
@@ -1431,7 +1418,7 @@ class Client:
         start_time = time.perf_counter()
         news = NewsParser.from_content(response.content, news_id)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, news, parsing_time)
+        return TibiaResponse.from_raw(response, news, parsing_time)
     # endregion
 
     # region Spells
@@ -1470,7 +1457,7 @@ class Client:
         start_time = time.perf_counter()
         spells = SpellsSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, spells, parsing_time)
+        return TibiaResponse.from_raw(response, spells, parsing_time)
 
     async def fetch_spell(self, identifier, *, test=False):
         """Fetch a spell by its identifier.
@@ -1499,5 +1486,5 @@ class Client:
         start_time = time.perf_counter()
         spells = SpellParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
-        return TibiaResponse(response, spells, parsing_time)
+        return TibiaResponse.from_raw(response, spells, parsing_time)
     # endregion
