@@ -12,7 +12,7 @@ from pydantic.generics import GenericModel
 
 import tibiapy
 from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
-    NewsType, VocationFilter, BattlEyeType, BaseEnum, NumericEnum
+    NewsType, VocationFilter, NumericEnum
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \

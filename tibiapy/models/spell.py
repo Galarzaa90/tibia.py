@@ -1,3 +1,4 @@
+"""Models related to the spells section in the library."""
 from __future__ import annotations
 from typing import List, Optional
 
@@ -52,7 +53,7 @@ class SpellEntry(BaseModel):
     """The cooldown group of the spell."""
     spell_type: SpellType
     """The type of the spell"""
-    exp_level: int
+    exp_level: Optional[int] = None
     """The required level to cast the spell."""
     mana: Optional[int] = None
     """The mana required to use the spell. If :obj:`None`, the mana cost is variable."""

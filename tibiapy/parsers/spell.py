@@ -1,4 +1,3 @@
-"""Models related to the spells section in the library."""
 import os
 import re
 import urllib.parse
@@ -9,9 +8,10 @@ import bs4
 from tibiapy import errors
 from tibiapy.builders.spell import SpellSectionBuilder, SpellBuilder, RuneBuilder
 from tibiapy.enums import SpellGroup, SpellSorting, SpellType, VocationSpellFilter
-from tibiapy.models.spell import SpellEntry, Rune
+from tibiapy.models.spell import SpellEntry, Rune, SpellsSection, Spell
+from tibiapy.parsers import BaseParser
 from tibiapy.utils import parse_form_data, parse_integer, parse_tibiacom_content, parse_tibiacom_tables, \
-    try_enum
+    try_enum, parse_link_info
 
 __all__ = (
     'SpellsSectionParser',
@@ -24,7 +24,7 @@ cooldown_pattern = re.compile(
     r"(?P<cooldown>\d+)s \(Group: (?P<group_cooldown>\d+)s(?: ,Secondary Group: (?P<secondary_group_cooldown>\d+))?")
 
 
-class SpellsSectionParser:
+class SpellsSectionParser(BaseParser[SpellsSection]):
 
     @classmethod
     def from_content(cls, content):
@@ -56,15 +56,14 @@ class SpellsSectionParser:
                 if len(columns) != 7:
                     continue
                 spell_link = columns[0].select_one("a")
-                url = urllib.parse.urlparse(spell_link["href"])
-                query = urllib.parse.parse_qs(url.query)
+                link_info = parse_link_info(spell_link)
                 cols_text = [c.text for c in columns]
-                identifier = query["spell"][0]
+                identifier = link_info["query"]["spell"]
                 match = spell_name.findall(cols_text[0])
                 name, words = match[0]
                 group = try_enum(SpellGroup, cols_text[1])
                 spell_type = try_enum(SpellType, cols_text[2])
-                level = int(cols_text[3])
+                level = parse_integer(cols_text[3], None)
                 mana = parse_integer(cols_text[4], None)
                 price = parse_integer(cols_text[5], 0)
                 premium = "yes" in cols_text[6]
@@ -81,12 +80,12 @@ class SpellsSectionParser:
             builder.premium("yes" in data["premium"] if data["premium"] else None)
             return builder.build()
         except (AttributeError, TypeError, KeyError) as e:
-            raise errors.InvalidContent("content does not belong to the Spells section", e)
+            raise errors.InvalidContent("content does not belong to the Spells section", e) from e
 
 
 class SpellParser:
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> Optional[Spell]:
         """Parse the content of a spells page.
 
         Parameters
@@ -138,7 +137,7 @@ class SpellParser:
                 data = parse_form_data(form)
                 if "subtopic=spells" in data.get("__action__"):
                     return None
-            raise errors.InvalidContent("content is not a spell page", e)
+            raise errors.InvalidContent("content is not a spell page", e) from e
 
     @classmethod
     def _parse_rune_table(cls, table):
@@ -182,7 +181,7 @@ class SpellParser:
         builder.name(attrs["name"])
         builder.words(attrs["formula"])
         builder.premium("yes" in attrs["premium"])
-        builder.exp_level(int(attrs["exp_lvl"]))
+        builder.exp_level(parse_integer(attrs["exp_lvl"], None))
         builder.vocations([s.strip() for s in attrs["vocation"].split(",")])
         builder.cities([s.strip() for s in attrs["city"].split(",")])
         m = group_pattern.match(attrs["group"])
