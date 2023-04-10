@@ -79,6 +79,10 @@
 <span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="n">table_tag</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">table_tag</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)</span>
 
+
+<span class="k">def</span> <span class="nf">get_static_file_url</span><span class="p">(</span><span class="o">*</span><span class="n">path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="s2">&quot;https://static.tibia.com/&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
 <div class="viewcode-block" id="get_tibia_url"><a class="viewcode-back" href="../../api.html#tibiapy.utils.get_tibia_url">[docs]</a><span class="k">def</span> <span class="nf">get_tibia_url</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">subtopic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a URL to Tibia.com with the given parameters.</span>
 
