@@ -2,8 +2,10 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import NewsEntry, News, InvalidContent, NewsArchive
+from tibiapy import InvalidContent
 from tibiapy.enums import NewsCategory, NewsType
+from tibiapy.models.news import NewsEntry, NewsArchive, News
+from tibiapy.parsers.news import NewsArchiveParser, NewsParser
 
 FILE_NEWS_LIST = "news/tibiacom_list.txt"
 FILE_NEWS_LIST_EMPTY = "news/tibiacom_list_empty.txt"
@@ -17,7 +19,7 @@ class TestNews(TestCommons, unittest.TestCase):
     def test_news_archive_from_content(self):
         """Testing parsing news"""
         content = self.load_resource(FILE_NEWS_LIST)
-        news_archive = NewsArchive.from_content(content)
+        news_archive = NewsArchiveParser.from_content(content)
 
         self.assertEqual(datetime.date(2019, 3, 25), news_archive.start_date)
         self.assertEqual(datetime.date(2019, 5, 25), news_archive.end_date)
@@ -38,7 +40,7 @@ class TestNews(TestCommons, unittest.TestCase):
     def test_news_archive_from_content_empty(self):
         """Testing parsing a news article that doesn't exist"""
         content = self.load_resource(FILE_NEWS_LIST_EMPTY)
-        news_archive = NewsArchive.from_content(content)
+        news_archive = NewsArchiveParser.from_content(content)
 
         self.assertEqual(datetime.date(2019, 5, 23), news_archive.start_date)
         self.assertEqual(datetime.date(2019, 5, 25), news_archive.end_date)
@@ -51,24 +53,24 @@ class TestNews(TestCommons, unittest.TestCase):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            NewsArchive.from_content(content)
+            NewsArchiveParser.from_content(content)
 
     def test_news_from_content_empty(self):
         """Testing parsing an empty news article"""
         content = self.load_resource(FILE_NEWS_EMPTY)
-        news = News.from_content(content)
+        news = NewsParser.from_content(content)
         self.assertIsNone(news)
 
     def test_news_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
-            News.from_content(content)
+            NewsParser.from_content(content)
 
     def test_news_from_content_ticker(self):
         """Testing parsing a news ticker"""
         content = self.load_resource(FILE_NEWS_TICKER)
-        news = News.from_content(content)
+        news = NewsParser.from_content(content)
 
         self.assertIsInstance(news, News)
         self.assertEqual(news.category, NewsCategory.TECHNICAL_ISSUES)
@@ -79,7 +81,7 @@ class TestNews(TestCommons, unittest.TestCase):
     def test_news_from_content_article(self):
         """Testing parsing an article"""
         content = self.load_resource(FILE_NEWS_ARTICLE)
-        news = News.from_content(content)
+        news = NewsParser.from_content(content)
 
         self.assertIsInstance(news, News)
         self.assertEqual(news.category, NewsCategory.DEVELOPMENT)

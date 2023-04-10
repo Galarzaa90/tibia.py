@@ -36,6 +36,8 @@ __all__ = (
     'WorldLocation',
 )
 
+from tibiapy.utils import get_static_file_url
+
 
 class BaseEnum(enum.Enum):
     def __str__(self):
@@ -263,6 +265,14 @@ class NewsCategory(BaseEnum):
     @property
     def filter_name(self):
         return f"filter_{self.value}"
+
+    @property
+    def big_icon_url(self):
+        return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_big.gif")
+
+    @property
+    def small_icon_url(self):
+        return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_small.gif")
 
 
 class NewsType(BaseEnum):

@@ -6,9 +6,10 @@ from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.errors import InvalidContent
 from tibiapy.models.news import NewsArchive, News, NewsEntry
+from tibiapy.parsers import BaseParser
 from tibiapy.utils import (parse_form_data, parse_tibia_date,
                            parse_tibiacom_content, parse_tibiacom_tables,
-                           try_enum)
+                           try_enum, parse_link_info)
 
 __all__ = (
     "NewsParser",
@@ -18,25 +19,7 @@ __all__ = (
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 
 
-class NewsArchiveParser(abc.Serializable):
-    """Represents the news archive.
-
-    .. versionadded:: 5.0.0
-
-    Attributes
-    ----------
-    start_date: :class:`datetime.date`
-        The start date to show news for.
-    end_date: :class:`datetime.date`
-        The end date to show news for.
-    types: :class:`list` of :class:`NewsType`
-        The type of news to show.
-    categories: :class:`list` of :class:`NewsCategory`.
-        The categories to show.
-    entries: :class:`list` of :class:`NewsEntry`
-        The news matching the provided parameters.
-    """
-
+class NewsArchiveParser(BaseParser[NewsArchive]):
     @classmethod
     def get_form_data(cls, start_date, end_date, categories=None, types=None):
         """Get the form data attributes to search news with specific parameters.
@@ -116,7 +99,7 @@ class NewsArchiveParser(abc.Serializable):
                     data["entries"].append(cls._parse_entry(cols_raw))
             return NewsArchive.parse_obj(data)
         except (AttributeError, IndexError, ValueError, KeyError) as e:
-            raise InvalidContent("content is not from the news archive section in Tibia.com", e)
+            raise InvalidContent("content is not from the news archive section in Tibia.com", e) from e
 
     @classmethod
     def _parse_filtering(cls, form):
@@ -135,13 +118,11 @@ class NewsArchiveParser(abc.Serializable):
             "types": []
         }
         for news_type in NewsType:
-            value = form_data.pop(news_type.filter_name, None)
-            if value:
+            if form_data.pop(news_type.filter_name, None):
                 filters["types"].append(news_type)
         filters["categories"] = []
         for category in NewsCategory:
-            value = form_data.pop(category.filter_name, None)
-            if value:
+            if form_data.pop(category.filter_name, None):
                 filters["categories"].append(category)
         return filters
 
@@ -158,12 +139,9 @@ class NewsArchiveParser(abc.Serializable):
         news_type_str = news_type_str.replace('\xa0', ' ')
         news_type = try_enum(NewsType, news_type_str)
         title = cols_raw[2].text
-        news_link = cols_raw[2].select_one('a')
-        url = urllib.parse.urlparse(news_link["href"])
-        query = urllib.parse.parse_qs(url.query)
-        news_id = int(query["id"][0])
-        return NewsEntry(id=news_id, title=title, type=news_type, category=category, date=date,
-                         category_icon=img_url)
+        news_link = parse_link_info(cols_raw[2].select_one('a'))
+        news_id = int(news_link["query"]["id"])
+        return NewsEntry(id=news_id, title=title, type=news_type, category=category, date=date)
 
 
 class NewsParser(abc.BaseNews, abc.Serializable):
@@ -175,7 +153,7 @@ class NewsParser(abc.BaseNews, abc.Serializable):
 
         Notes
         -----
-        Since there's no way to obtain the entry's Id from the page contents, it will always be 0.
+        Since there's no way to obtain the entry's ID from the page contents, it will always be 0.
         A news_id can be passed to set the news_id of the resulting object.
 
         Parameters
@@ -216,13 +194,11 @@ class NewsParser(abc.BaseNews, abc.Serializable):
             content_row = content_table.select_one("td")
             content = content_row.encode_contents().decode()
             thread_id = None
-            thread_link = content_table.select_one("div.NewsForumLink a")
-            if thread_link:
+            if thread_link := content_table.select_one("div.NewsForumLink a"):
                 url = urllib.parse.urlparse(thread_link["href"])
                 query = urllib.parse.parse_qs(url.query)
                 thread_id = int(query["threadid"][0])
 
-            return News(id=news_id, title=title, content=content, date=date, category=category, thread_id=thread_id,
-                        category_icon=img_url)
-        except AttributeError:
-            raise InvalidContent("content is not from the news archive section in Tibia.com")
+            return News(id=news_id, title=title, content=content, date=date, category=category, thread_id=thread_id)
+        except AttributeError as e:
+            raise InvalidContent("content is not from the news archive section in Tibia.com") from e

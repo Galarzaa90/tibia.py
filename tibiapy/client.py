@@ -21,8 +21,8 @@ from tibiapy.models.creature import BoostedCreatures, BoostableBosses, Creatures
 from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.world import World, WorldOverview
-from tibiapy.parsers import CharacterParser
 from tibiapy.parsers.bazaar import AuctionParser, CharacterBazaarParser
+from tibiapy.parsers.character import CharacterParser
 from tibiapy.parsers.creature import BoostedCreaturesParser, BoostableBossesParser, CreaturesSectionParser, \
     CreatureParser
 from tibiapy.parsers.event import EventScheduleParser

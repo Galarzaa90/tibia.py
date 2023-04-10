@@ -17,6 +17,8 @@ __all__ = (
 class BaseNews(BaseModel):
     id: int
     """The internal ID of the news entry."""
+    category: NewsCategory
+    """The category this belongs to."""
 
     @property
     def url(self):
@@ -41,12 +43,10 @@ class BaseNews(BaseModel):
 
 
 class News(BaseNews):
+    """Represents a news entry."""
+
     title: str
     """The title of the news entry."""
-    category: NewsCategory
-    """The category this belongs to."""
-    category_icon: str
-    """The URL of the icon corresponding to the category."""
     date: datetime.date
     """The date when the news were published."""
     content: str
@@ -66,10 +66,6 @@ class NewsEntry(BaseNews):
     
     News tickers have a fragment of their content as a title.
     """
-    category: NewsCategory
-    """The category this belongs to."""
-    category_icon: str
-    """The URL of the icon corresponding to the category."""
     date: datetime.date
     """The date when the news were published."""
     type: NewsType
@@ -77,6 +73,8 @@ class NewsEntry(BaseNews):
 
 
 class NewsArchive(BaseModel):
+    """A news entry from the news archive."""
+
     start_date: datetime.date
     """The start date to show news for."""
     end_date: datetime.date
@@ -88,11 +86,9 @@ class NewsArchive(BaseModel):
     entries: List[NewsEntry]
     """The news matching the provided parameters."""
 
-
     @property
     def url(self):
         return self.get_url()
-
 
     @classmethod
     def get_url(cls):

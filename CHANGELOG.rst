@@ -14,6 +14,8 @@ Changelog
 - The location of models inside the module changed, so all imports need to be modified.
 - Model changes:
     - Removed ``world`` from ``OnlineCharacter``.
+    - Removed ``category_icon`` from ``NewsEntry`` and ``News``.
+    - Added ``big_icon_url`` and ``small_icon_url`` to ``NewsCategory``
 
 
 .. v5.6.0
