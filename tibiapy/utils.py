@@ -189,9 +189,10 @@ def parse_form_data_new(form: bs4.Tag):
     for radio in form.select("input[type=radio]"):
         name = radio.attrs.get("name")
         value = radio.attrs.get("value")
-        form_data.available_options[name].extend(value)
+        label = radio.next_sibling.text.strip()
+        form_data.available_options[name][label] = value
         if radio.has_attr("checked"):
-            form_data.values_multiple[name].append(value)
+            form_data.values[name] = value
     return form_data
 
 

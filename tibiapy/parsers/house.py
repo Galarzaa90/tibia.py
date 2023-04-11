@@ -5,8 +5,8 @@ import re
 from tibiapy.builders.house import HousesSectionBuilder, HouseEntryBuilder, HouseBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import parse_form_data, parse_tibia_datetime, parse_tibia_money, \
-    parse_tibiacom_content, parse_tibiacom_tables, try_enum
+from tibiapy.utils import parse_tibia_datetime, parse_tibia_money, \
+    parse_tibiacom_content, parse_tibiacom_tables, try_enum, parse_form_data_new
 
 __all__ = (
     "HousesSectionParser",
@@ -16,7 +16,7 @@ __all__ = (
 id_regex = re.compile(r'house_(\d+)\.')
 bed_regex = re.compile(r'This (?P<type>\w+) can have up to (?P<beds>[\d-]+) bed')
 info_regex = \
-    re.compile(r'The house has a size of (?P<size>\d+) square meter[s]?. '
+    re.compile(r'The house has a size of (?P<size>\d+) square meters?. '
                r'The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).')
 
 rented_regex = re.compile(r'The house has been rented by (?P<owner>[^.]+)\.'
@@ -86,18 +86,18 @@ class HousesSectionParser:
                 builder.add_entry(house_builder.build())
             return builder.build()
         except (ValueError, AttributeError, KeyError) as e:
-            raise InvalidContent("content does not belong to a Tibia.com house list", e)
+            raise InvalidContent("content does not belong to a Tibia.com house list", e) from e
 
     @classmethod
     def _parse_filters(cls, builder, form):
-        form_data = parse_form_data(form)
-        builder.available_worlds(list(form_data["__options__"]["world"].values()))
-        builder.available_towns(list(form_data["__options__"]["town"].values()))
-        builder.world(form_data["world"])
-        builder.town(form_data["town"])
-        builder.status(try_enum(HouseStatus, form_data.get("state")))
-        builder.house_type(try_enum(HouseType, form_data.get("type", "")[:-1]))
-        builder.order(try_enum(HouseOrder, form_data.get("order"), HouseOrder.NAME))
+        form_data = parse_form_data_new(form)
+        builder.available_worlds(list(form_data.available_options["world"].values()))
+        builder.available_towns(list(form_data.available_options["town"].values()))
+        builder.world(form_data.values["world"])
+        builder.town(form_data.values["town"])
+        builder.status(try_enum(HouseStatus, form_data.values.get("state")))
+        builder.house_type(try_enum(HouseType, form_data.values.get("type", "")[:-1]))
+        builder.order(try_enum(HouseOrder, form_data.values.get("order"), HouseOrder.NAME))
 
     @classmethod
     def _parse_status(cls, builder, status):
@@ -112,8 +112,7 @@ class HousesSectionParser:
         if "rented" in status:
             builder.status(HouseStatus.RENTED)
         else:
-            m = list_auction_regex.search(status)
-            if m:
+            if m := list_auction_regex.search(status):
                 builder.highest_bid(int(m.group('bid')))
                 if m.group("time_unit") == "day":
                     builder.time_left(datetime.timedelta(days=int(m.group("time_left"))))
@@ -156,23 +155,21 @@ class HouseParser:
             lines = description.splitlines()
             try:
                 name, beds, info, state, *_ = lines
-            except ValueError:
-                raise InvalidContent("content does is not from the house section of Tibia.com")
+            except ValueError as e:
+                raise InvalidContent("content does is not from the house section of Tibia.com") from e
             image_url = image["src"]
-            builder = HouseBuilder()\
-                .name(name.strip())\
-                .image_url(image_url)\
+            builder = HouseBuilder() \
+                .name(name.strip()) \
+                .image_url(image_url) \
                 .id(int(id_regex.search(image_url).group(1)))
-            m = bed_regex.search(beds)
-            if m:
+            if m := bed_regex.search(beds):
                 if m.group("type").lower() in ["guildhall", "clanhall"]:
                     builder.type(HouseType.GUILDHALL)
                 else:
                     builder.type(HouseType.HOUSE)
                 builder.beds(int(m.group("beds")))
 
-            m = info_regex.search(info)
-            if m:
+            if m := info_regex.search(info):
                 builder.world(m.group("world"))
                 builder.rent(parse_tibia_money(m.group("rent")))
                 builder.size(int(m.group("size")))
@@ -180,7 +177,7 @@ class HouseParser:
             cls._parse_status(builder, state)
             return builder.build()
         except (ValueError, TypeError) as e:
-            raise InvalidContent("content does not belong to a house page", e)
+            raise InvalidContent("content does not belong to a house page", e) from e
 
     # endregion
 
@@ -193,8 +190,7 @@ class HouseParser:
         status: :class:`str`
             Plain text string containing the current renting state of the house.
         """
-        m = rented_regex.search(status)
-        if m:
+        if m := rented_regex.search(status):
             builder.status(HouseStatus.RENTED)
             builder.owner(m.group("owner"))
             builder.owner_sex(Sex.MALE if m.group("pronoun") == "He" else Sex.FEMALE)
@@ -202,19 +198,16 @@ class HouseParser:
         else:
             builder.status(HouseStatus.AUCTIONED)
 
-        m = transfer_regex.search(status)
-        if m:
+        if m := transfer_regex.search(status):
             builder.transfer_date(parse_tibia_datetime(m.group("transfer_date")))
             builder.transfer_accepted(m.group("verb") == "will")
             builder.transferee(m.group("transferee"))
             price = m.group("transfer_price")
             builder.transfer_price(int(price) if price is not None else 0)
 
-        m = auction_regex.search(status)
-        if m:
+        if m := auction_regex.search(status):
             builder.auction_end(parse_tibia_datetime(m.group("auction_end")))
 
-        m = bid_regex.search(status)
-        if m:
+        if m := bid_regex.search(status):
             builder.highest_bid(int(m.group("highest_bid")))
             builder.highest_bidder(m.group("bidder"))

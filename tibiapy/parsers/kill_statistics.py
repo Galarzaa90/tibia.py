@@ -1,11 +1,9 @@
 """Models related to the kill statistics section in Tibia.com."""
-from typing import Dict, List
 
-from tibiapy import abc
 from tibiapy.builders.kill_statistics import KillStatisticsBuilder
 from tibiapy.errors import InvalidContent
 from tibiapy.models import KillStatistics, RaceEntry
-from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibiacom_content
+from tibiapy.utils import parse_form_data, parse_tibiacom_content, parse_form_data_new
 
 __all__ = (
     "KillStatisticsParser",
@@ -38,9 +36,10 @@ class KillStatisticsParser:
             entries_table = parsed_content.find('table', attrs={'border': '0', 'cellpadding': '3'})
             form = parsed_content.select_one("form")
             data = parse_form_data(form, include_options=True)
+            form_data = parse_form_data_new(form)
             builder = KillStatisticsBuilder()\
                 .world(data["world"])\
-                .available_worlds(list(data["__options__"]["world"].values()))
+                .available_worlds(list(form_data.available_options["world"].values()))
             if not entries_table:
                 entries_table = parsed_content.select_one("table.Table3")
             # If the entries table doesn't exist, it means that this belongs to a nonexistent or unselected world.
@@ -63,5 +62,6 @@ class KillStatisticsParser:
                     builder.set_entry(columns[0], entry)
             return builder.build()
         except (AttributeError, KeyError) as e:
-            raise InvalidContent("content does not belong to a Tibia.com kill statistics page.", e)
+            raise InvalidContent("content does not belong to a Tibia.com kill statistics page.", e) from e
+
 

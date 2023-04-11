@@ -5,7 +5,8 @@ from typing import Optional, Set
 from fastapi import FastAPI, Path, Query
 
 import tibiapy
-from tibiapy import VocationSpellFilter, SpellGroup, SpellType, SpellSorting, TibiaResponse, NewsType, NewsCategory
+from tibiapy import VocationSpellFilter, SpellGroup, SpellType, SpellSorting, TibiaResponse, NewsType, NewsCategory, \
+    HouseStatus, HouseOrder, HouseType
 from tibiapy.models import World, WorldOverview, Spell, SpellsSection
 from tibiapy.models.news import NewsArchive, News
 
@@ -23,6 +24,24 @@ async def lifespan(app: FastAPI):
     await app.state.client.session.close()
 
 app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/houses/{world}/{town}")
+async def get_houses_section(
+        world: str = Path(...),
+        town: str = Path(...),
+        status: HouseStatus = Query(None),
+        order: HouseOrder = Query(None),
+        house_type: HouseType = Query(None, alias="type"),
+):
+    return await app.state.client.fetch_world_houses(world, town, status=status, order=order, house_type=house_type)
+
+@app.get("/killStatistics/{world}")
+@app.get("/killstatistics/{world}")
+async def get_kill_statistics(
+        world: str = Path(...)
+):
+    return await app.state.client.fetch_kill_statistics(world)
 
 
 @app.get("/leaderboards/{world}")
