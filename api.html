@@ -3289,6 +3289,28 @@ These will be nested inside the __options__ parameter of the resulting dictionar
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="tibiapy.utils.parse_form_data_new">
+<span class="sig-prename descclassname"><span class="pre">tibiapy.utils.</span></span><span class="sig-name descname"><span class="pre">parse_form_data_new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#parse_form_data_new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.utils.parse_form_data_new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the currently selected values in a form.</p>
+<p>This should correspond to all the data the form would send if submitted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>form</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bs4.Tag</span></code>) – A form tag.</p></li>
+<li><p><strong>include_options</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to also include listings of all the possible options.
+These will be nested inside the __options__ parameter of the resulting dictionary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary containing all the data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">FormData</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="tibiapy.utils.parse_integer">
 <span class="sig-prename descclassname"><span class="pre">tibiapy.utils.</span></span><span class="sig-name descname"><span class="pre">parse_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/utils.html#parse_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.utils.parse_integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a string representing an integer, ignoring commas or periods.</p>
@@ -3831,6 +3853,7 @@ This is meant to be used in constructors.</p>
 <li class="toctree-l3"><a class="reference internal" href="#tibiapy.utils.convert_line_breaks"><code class="docutils literal notranslate"><span class="pre">convert_line_breaks()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tibiapy.utils.get_tibia_url"><code class="docutils literal notranslate"><span class="pre">get_tibia_url()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tibiapy.utils.parse_form_data"><code class="docutils literal notranslate"><span class="pre">parse_form_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tibiapy.utils.parse_form_data_new"><code class="docutils literal notranslate"><span class="pre">parse_form_data_new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tibiapy.utils.parse_integer"><code class="docutils literal notranslate"><span class="pre">parse_integer()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tibiapy.utils.parse_link_info"><code class="docutils literal notranslate"><span class="pre">parse_link_info()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#tibiapy.utils.parse_tibia_datetime"><code class="docutils literal notranslate"><span class="pre">parse_tibia_datetime()</span></code></a></li>
