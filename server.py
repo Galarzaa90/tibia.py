@@ -25,6 +25,13 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+@app.get("/leaderboards/{world}")
+async def get_leaderboards(
+    world: str = Path(...)
+):
+    return await app.state.client.fetch_leaderboard(world=world)
+
+
 @app.get("/news/recent/{days}")
 async def get_recent_news(
     days: int = Path(...),

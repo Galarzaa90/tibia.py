@@ -12,7 +12,7 @@ class LeaderboardBuilder:
         self._available_rotations = kwargs.get("available_rotations")
         self._entries = kwargs.get("entries") or []
         self._last_update = kwargs.get("last_update")
-        self._page = kwargs.get("page")
+        self._current_page = kwargs.get("current_page")
         self._total_pages = kwargs.get("total_pages")
         self._results_count = kwargs.get("results_count")
 
@@ -44,8 +44,8 @@ class LeaderboardBuilder:
         self._last_update = last_update
         return self
 
-    def page(self, page: int) -> 'LeaderboardBuilder':
-        self._page = page
+    def current_page(self, current_page: int) -> 'LeaderboardBuilder':
+        self._current_page = current_page
         return self
 
     def total_pages(self, total_pages: int) -> 'LeaderboardBuilder':
@@ -64,7 +64,7 @@ class LeaderboardBuilder:
             available_rotations=self._available_rotations,
             entries=self._entries,
             last_update=self._last_update,
-            page=self._page,
+            current_page=self._current_page,
             total_pages=self._total_pages,
             results_count=self._results_count,
         )

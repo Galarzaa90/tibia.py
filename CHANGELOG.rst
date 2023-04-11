@@ -16,6 +16,7 @@ Changelog
     - Removed ``world`` from ``OnlineCharacter``.
     - Removed ``category_icon`` from ``NewsEntry`` and ``News``.
     - Added ``big_icon_url`` and ``small_icon_url`` to ``NewsCategory``
+    - ``Leaderboard.page`` renamed to ``current_page``.
 
 
 .. v5.6.0

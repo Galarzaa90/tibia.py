@@ -1,4 +1,3 @@
-import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons

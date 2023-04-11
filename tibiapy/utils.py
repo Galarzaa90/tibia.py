@@ -5,10 +5,11 @@ import itertools
 import re
 import urllib.parse
 import warnings
-from collections import OrderedDict
-from typing import Dict, Optional, Tuple, Type, TypeVar, Union
+from collections import OrderedDict, defaultdict
+from typing import Dict, Optional, Tuple, Type, TypeVar, Union, List
 
 import bs4
+from pydantic import BaseModel
 
 from tibiapy.errors import InvalidContent
 
@@ -138,6 +139,60 @@ def parse_form_data(form: bs4.Tag, include_options=True):
             data["__options__"][name] = {str(r.next_sibling).strip(): r.attrs["value"] for r in radios}
         data[name] = selected_radio.attrs["value"] if selected_radio else None
     return data
+
+
+class FormData(BaseModel):
+    values: Dict[str, str] = {}
+    values_multiple: Dict[str, List[str]] = defaultdict(list)
+    available_options: Dict[str, Dict[str, str]] = defaultdict(dict)
+    action: Optional[str] = None
+    method: Optional[str] = None
+
+
+def parse_form_data_new(form: bs4.Tag):
+    """Parse the currently selected values in a form.
+
+    This should correspond to all the data the form would send if submitted.
+
+    Parameters
+    ----------
+    form: :class:`bs4.Tag`
+        A form tag.
+    include_options: :class:`bool`
+        Whether to also include listings of all the possible options.
+        These will be nested inside the __options__ parameter of the resulting dictionary.
+
+    Returns
+    -------
+    :class:`FormData`
+        A dictionary containing all the data.
+    """
+    form_data = FormData()
+    if "action" in form.attrs:
+        form_data.action = form.attrs["action"]
+    if "method" in form.attrs:
+        form_data.method = form.attrs["method"]
+    for field in form.select("input[type=text], input[type=hidden]"):
+        form_data.values[field.attrs.get("name")] = field.attrs.get("value")
+    for select in form.select("select"):
+        name = select.attrs.get("name")
+        selected_option = select.select_one("option[selected]")
+        options = select.select("option")
+        form_data.available_options[name].update({clean_text(opt): opt.attrs.get("value") for opt in options})
+        form_data.values[name] = selected_option.attrs.get("value") if selected_option else None
+    for checkbox in form.select("input[type=checkbox]"):
+        name = checkbox.attrs.get("name")
+        value = checkbox.attrs.get("value")
+        form_data.available_options[name].append(value)
+        if checkbox.has_attr("checked"):
+            form_data.values_multiple[name].append(value)
+    for radio in form.select("input[type=radio]"):
+        name = radio.attrs.get("name")
+        value = radio.attrs.get("value")
+        form_data.available_options[name].extend(value)
+        if radio.has_attr("checked"):
+            form_data.values_multiple[name].append(value)
+    return form_data
 
 
 def parse_integer(number: str, default: Optional[int] = 0):

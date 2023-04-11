@@ -4,6 +4,7 @@ from typing import List
 from pydantic import BaseModel
 
 from tibiapy.models import BaseCharacter
+from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.utils import get_tibia_url
 
 
@@ -35,7 +36,7 @@ class LeaderboardRotation(BaseModel):
         return False
 
 
-class Leaderboard(BaseModel):
+class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
     """Represents the Tibiadrome leaderboards."""
 
     world: str
@@ -46,31 +47,13 @@ class Leaderboard(BaseModel):
     """The rotation this leaderboards' entries are for."""
     available_rotations: List[LeaderboardRotation]
     """The available rotations for selection."""
-    entries: List[LeaderboardEntry]
-    """The list of entries in this leaderboard."""
     last_update: datetime.timedelta
     """How long ago was the currently displayed data updated. Only available for the current rotation."""
-    page: int
-    """The page number being displayed."""
-    total_pages: int
-    """The total number of pages."""
-    results_count: int
-    """The total amount of entries in this rotation. These may be shown in another page."""
 
     @property
     def url(self):
         """:class:`str`: The URL to the current leaderboard."""
-        return self.get_url(self.world, self.rotation.rotation_id, self.page)
-
-    @property
-    def previous_page_url(self):
-        """:class:`str`: The URL to the previous page of the current leaderboard results, if there's any."""
-        return self.get_page_url(self.page - 1) if self.page > 1 else None
-
-    @property
-    def next_page_url(self):
-        """:class:`str`: The URL to the next page of the current leaderboard results, if there's any."""
-        return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
+        return self.get_url(self.world, self.rotation.rotation_id, self.current_page)
 
     def get_page_url(self, page):
         """Get the URL of the leaderboard at a specific page, with the current date parameters.
