@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 from tibiapy import errors
 from tibiapy.builders.leaderboard import LeaderboardBuilder
 from tibiapy.models.leaderboards import LeaderboardEntry, LeaderboardRotation, Leaderboard
-from tibiapy.parsers import BaseParser
 from tibiapy.utils import parse_pagination, parse_tibia_datetime, parse_tibiacom_content, \
     parse_form_data_new
 
@@ -22,7 +21,7 @@ __all__ = (
 rotation_end_pattern = re.compile(r"ends on ([^)]+)")
 
 
-class LeaderboardParser(BaseParser[Leaderboard]):
+class LeaderboardParser:
 
     @classmethod
     def from_content(cls, content):

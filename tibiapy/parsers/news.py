@@ -6,7 +6,6 @@ from tibiapy import abc
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.errors import InvalidContent
 from tibiapy.models.news import NewsArchive, News, NewsEntry
-from tibiapy.parsers import BaseParser
 from tibiapy.utils import (parse_form_data, parse_tibia_date,
                            parse_tibiacom_content, parse_tibiacom_tables,
                            try_enum, parse_link_info)
@@ -19,7 +18,7 @@ __all__ = (
 ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 
 
-class NewsArchiveParser(BaseParser[NewsArchive]):
+class NewsArchiveParser:
     @classmethod
     def get_form_data(cls, start_date, end_date, categories=None, types=None):
         """Get the form data attributes to search news with specific parameters.

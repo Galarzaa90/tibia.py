@@ -14,7 +14,6 @@ __all__ = (
 
 class KillStatisticsParser:
 
-
     @classmethod
     def from_content(cls, content):
         """Create an instance of the class from the HTML content of the kill statistics' page.

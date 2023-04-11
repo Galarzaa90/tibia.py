@@ -9,7 +9,6 @@ from tibiapy import errors
 from tibiapy.builders.spell import SpellSectionBuilder, SpellBuilder, RuneBuilder
 from tibiapy.enums import SpellGroup, SpellSorting, SpellType, VocationSpellFilter
 from tibiapy.models.spell import SpellEntry, Rune, SpellsSection, Spell
-from tibiapy.parsers import BaseParser
 from tibiapy.utils import parse_form_data, parse_integer, parse_tibiacom_content, parse_tibiacom_tables, \
     try_enum, parse_link_info
 
@@ -24,7 +23,7 @@ cooldown_pattern = re.compile(
     r"(?P<cooldown>\d+)s \(Group: (?P<group_cooldown>\d+)s(?: ,Secondary Group: (?P<secondary_group_cooldown>\d+))?")
 
 
-class SpellsSectionParser(BaseParser[SpellsSection]):
+class SpellsSectionParser:
 
     @classmethod
     def from_content(cls, content):

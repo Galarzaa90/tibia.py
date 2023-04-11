@@ -8,7 +8,6 @@ from tibiapy.enums import (BattlEyeType, PvpType,
                            TransferType, WorldLocation)
 from tibiapy.errors import InvalidContent
 from tibiapy.models import OnlineCharacter, World
-from tibiapy.parsers import BaseParser
 from tibiapy.utils import (parse_integer, parse_tibia_datetime,
                            parse_tibia_full_date, parse_tibiacom_content,
                            try_enum, parse_tables_map, get_rows, clean_text)
@@ -25,7 +24,7 @@ record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
 battleye_regexp = re.compile(r'since ([^.]+).')
 
 
-class WorldParser(BaseParser[World]):
+class WorldParser:
 
     @classmethod
     def from_content(cls, content):
