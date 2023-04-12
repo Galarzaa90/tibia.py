@@ -52,8 +52,6 @@ class Highscores(PaginatedWithUrl[HighscoresEntry]):
     """The selected PvP types filter. If :obj:`None`, all world will be displayed.
 
     Only applies for global highscores. Only characters from worlds with the matching PvP type will be shown."""
-    current_page: int
-    """The page number being displayed."""
     last_updated: datetime.timedelta
     """How long ago were this results updated. The resolution is 1 minute."""
     available_worlds: List[str]
@@ -74,18 +72,8 @@ class Highscores(PaginatedWithUrl[HighscoresEntry]):
     @property
     def url(self):
         """:class:`str`: The URL to the highscores page on Tibia.com containing the results."""
-        return self.get_url(self.world, self.category, self.vocation, self.page, self.battleye_filter,
+        return self.get_url(self.world, self.category, self.vocation, self.current_page, self.battleye_filter,
                             self.pvp_types_filter)
-
-    @property
-    def previous_page_url(self):
-        """:class:`str`: The URL to the previous page of the current highscores, if there's any."""
-        return self.get_page_url(self.page - 1) if self.page > 1 else None
-
-    @property
-    def next_page_url(self):
-        """:class:`str`: The URL to the next page of the current highscores, if there's any."""
-        return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
 
     def get_page_url(self, page):
         """Get the URL to a specific page for the current highscores.
