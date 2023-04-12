@@ -44,7 +44,7 @@
             
   <h1>Source code for tibiapy.enums</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Enumerations used by models throughout the library.&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">IntEnum</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s1">&#39;AccountStatus&#39;</span><span class="p">,</span>
@@ -81,23 +81,27 @@
     <span class="s1">&#39;WorldLocation&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">get_static_file_url</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">get_static_file_url</span><span class="p">,</span> <span class="n">try_enum</span>
 
 
-<span class="k">class</span> <span class="nc">BaseEnum</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">NumericEnum</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NumericEnum</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__get_validators__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">lookup</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__members__</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">yield</span> <span class="bp">cls</span><span class="o">.</span><span class="n">validate</span>
 
-<div class="viewcode-block" id="AccountStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AccountStatus">[docs]</a><span class="k">class</span> <span class="nc">AccountStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">try_enum</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid value&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AccountStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AccountStatus">[docs]</a><span class="k">class</span> <span class="nc">AccountStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Possible account statuses.&quot;&quot;&quot;</span>
 
     <span class="n">FREE_ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;Free Account&quot;</span>
@@ -148,7 +152,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Searches a character&#39;s name.&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="AuctionStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionStatus">[docs]</a><span class="k">class</span> <span class="nc">AuctionStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="AuctionStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionStatus">[docs]</a><span class="k">class</span> <span class="nc">AuctionStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible values an auction might have.&quot;&quot;&quot;</span>
 
     <span class="n">IN_PROGRESS</span> <span class="o">=</span> <span class="s1">&#39;in progress&#39;</span>
@@ -230,14 +234,14 @@
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="BazaarType"><a class="viewcode-back" href="../../api.html#tibiapy.BazaarType">[docs]</a><span class="k">class</span> <span class="nc">BazaarType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="BazaarType"><a class="viewcode-back" href="../../api.html#tibiapy.BazaarType">[docs]</a><span class="k">class</span> <span class="nc">BazaarType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible bazaar types.&quot;&quot;&quot;</span>
 
     <span class="n">CURRENT</span> <span class="o">=</span> <span class="s2">&quot;Current Auctions&quot;</span>
     <span class="n">HISTORY</span> <span class="o">=</span> <span class="s2">&quot;Auction History&quot;</span></div>
 
 
-<div class="viewcode-block" id="BidType"><a class="viewcode-back" href="../../api.html#tibiapy.BidType">[docs]</a><span class="k">class</span> <span class="nc">BidType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="BidType"><a class="viewcode-back" href="../../api.html#tibiapy.BidType">[docs]</a><span class="k">class</span> <span class="nc">BidType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible bid types for an auction.&quot;&quot;&quot;</span>
 
     <span class="n">MINIMUM</span> <span class="o">=</span> <span class="s2">&quot;Minimum Bid&quot;</span>
@@ -269,7 +273,7 @@
     <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="mi">13</span></div>
 
 
-<div class="viewcode-block" id="HouseOrder"><a class="viewcode-back" href="../../api.html#tibiapy.HouseOrder">[docs]</a><span class="k">class</span> <span class="nc">HouseOrder</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="HouseOrder"><a class="viewcode-back" href="../../api.html#tibiapy.HouseOrder">[docs]</a><span class="k">class</span> <span class="nc">HouseOrder</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible ordering methods for house lists in Tibia.com&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
@@ -279,14 +283,14 @@
     <span class="n">AUCTION_END</span> <span class="o">=</span> <span class="s2">&quot;end&quot;</span></div>
 
 
-<div class="viewcode-block" id="HouseStatus"><a class="viewcode-back" href="../../api.html#tibiapy.HouseStatus">[docs]</a><span class="k">class</span> <span class="nc">HouseStatus</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="HouseStatus"><a class="viewcode-back" href="../../api.html#tibiapy.HouseStatus">[docs]</a><span class="k">class</span> <span class="nc">HouseStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Renting statuses of a house.&quot;&quot;&quot;</span>
 
     <span class="n">RENTED</span> <span class="o">=</span> <span class="s2">&quot;rented&quot;</span>
     <span class="n">AUCTIONED</span> <span class="o">=</span> <span class="s2">&quot;auctioned&quot;</span></div>
 
 
-<div class="viewcode-block" id="HouseType"><a class="viewcode-back" href="../../api.html#tibiapy.HouseType">[docs]</a><span class="k">class</span> <span class="nc">HouseType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="HouseType"><a class="viewcode-back" href="../../api.html#tibiapy.HouseType">[docs]</a><span class="k">class</span> <span class="nc">HouseType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The types of house available.&quot;&quot;&quot;</span>
 
     <span class="n">HOUSE</span> <span class="o">=</span> <span class="s2">&quot;house&quot;</span>
@@ -298,7 +302,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">s&quot;</span></div>
 
 
-<div class="viewcode-block" id="NewsCategory"><a class="viewcode-back" href="../../api.html#tibiapy.NewsCategory">[docs]</a><span class="k">class</span> <span class="nc">NewsCategory</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="NewsCategory"><a class="viewcode-back" href="../../api.html#tibiapy.NewsCategory">[docs]</a><span class="k">class</span> <span class="nc">NewsCategory</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The different news categories.&quot;&quot;&quot;</span>
 
     <span class="n">CIPSOFT</span> <span class="o">=</span> <span class="s2">&quot;cipsoft&quot;</span>
@@ -320,7 +324,7 @@
         <span class="k">return</span> <span class="n">get_static_file_url</span><span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;newsicon_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">_small.gif&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="NewsType"><a class="viewcode-back" href="../../api.html#tibiapy.NewsType">[docs]</a><span class="k">class</span> <span class="nc">NewsType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="NewsType"><a class="viewcode-back" href="../../api.html#tibiapy.NewsType">[docs]</a><span class="k">class</span> <span class="nc">NewsType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The different types of new entries.&quot;&quot;&quot;</span>
 
     <span class="n">NEWS_TICKER</span> <span class="o">=</span> <span class="s2">&quot;News Ticker&quot;</span>
@@ -332,7 +336,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;filter_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="PvpType"><a class="viewcode-back" href="../../api.html#tibiapy.PvpType">[docs]</a><span class="k">class</span> <span class="nc">PvpType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="PvpType"><a class="viewcode-back" href="../../api.html#tibiapy.PvpType">[docs]</a><span class="k">class</span> <span class="nc">PvpType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible PvP types a World can have.&quot;&quot;&quot;</span>
 
     <span class="n">OPEN_PVP</span> <span class="o">=</span> <span class="s2">&quot;Open PvP&quot;</span>
@@ -352,7 +356,7 @@
     <span class="n">RETRO_HARDCORE_PVP</span> <span class="o">=</span> <span class="mi">4</span></div>
 
 
-<div class="viewcode-block" id="Sex"><a class="viewcode-back" href="../../api.html#tibiapy.Sex">[docs]</a><span class="k">class</span> <span class="nc">Sex</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="Sex"><a class="viewcode-back" href="../../api.html#tibiapy.Sex">[docs]</a><span class="k">class</span> <span class="nc">Sex</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Possible character sexes.&quot;&quot;&quot;</span>
 
     <span class="n">MALE</span> <span class="o">=</span> <span class="s2">&quot;male&quot;</span>
@@ -372,7 +376,7 @@
     <span class="n">SWORD_FIGHTING</span> <span class="o">=</span> <span class="mi">8</span></div>
 
 
-<div class="viewcode-block" id="SpellGroup"><a class="viewcode-back" href="../../api.html#tibiapy.SpellGroup">[docs]</a><span class="k">class</span> <span class="nc">SpellGroup</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="SpellGroup"><a class="viewcode-back" href="../../api.html#tibiapy.SpellGroup">[docs]</a><span class="k">class</span> <span class="nc">SpellGroup</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible cooldown groups.</span>
 
 <span class="sd">    Note that secondary groups are not enumerated.</span>
@@ -383,14 +387,14 @@
     <span class="n">SUPPORT</span> <span class="o">=</span> <span class="s2">&quot;Support&quot;</span></div>
 
 
-<div class="viewcode-block" id="SpellType"><a class="viewcode-back" href="../../api.html#tibiapy.SpellType">[docs]</a><span class="k">class</span> <span class="nc">SpellType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="SpellType"><a class="viewcode-back" href="../../api.html#tibiapy.SpellType">[docs]</a><span class="k">class</span> <span class="nc">SpellType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible spell types.&quot;&quot;&quot;</span>
 
     <span class="n">INSTANT</span> <span class="o">=</span> <span class="s2">&quot;Instant&quot;</span>
     <span class="n">RUNE</span> <span class="o">=</span> <span class="s2">&quot;Rune&quot;</span></div>
 
 
-<div class="viewcode-block" id="SpellSorting"><a class="viewcode-back" href="../../api.html#tibiapy.SpellSorting">[docs]</a><span class="k">class</span> <span class="nc">SpellSorting</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="SpellSorting"><a class="viewcode-back" href="../../api.html#tibiapy.SpellSorting">[docs]</a><span class="k">class</span> <span class="nc">SpellSorting</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The different sorting options for the spells section.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
@@ -402,7 +406,7 @@
     <span class="n">PREMIUM</span> <span class="o">=</span> <span class="s2">&quot;premium&quot;</span></div>
 
 
-<div class="viewcode-block" id="ThreadStatus"><a class="viewcode-back" href="../../api.html#tibiapy.ThreadStatus">[docs]</a><span class="k">class</span> <span class="nc">ThreadStatus</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Flag</span><span class="p">):</span>
+<div class="viewcode-block" id="ThreadStatus"><a class="viewcode-back" href="../../api.html#tibiapy.ThreadStatus">[docs]</a><span class="k">class</span> <span class="nc">ThreadStatus</span><span class="p">(</span><span class="n">Flag</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible status a thread can have.</span>
 
 <span class="sd">    Threads can have a combination of multiple status. The numeric values are arbitrary.</span>
@@ -457,14 +461,14 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="TournamentWorldType"><a class="viewcode-back" href="../../api.html#tibiapy.TournamentWorldType">[docs]</a><span class="k">class</span> <span class="nc">TournamentWorldType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="TournamentWorldType"><a class="viewcode-back" href="../../api.html#tibiapy.TournamentWorldType">[docs]</a><span class="k">class</span> <span class="nc">TournamentWorldType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible types of tournament worlds.&quot;&quot;&quot;</span>
 
     <span class="n">REGULAR</span> <span class="o">=</span> <span class="s2">&quot;Regular&quot;</span>
     <span class="n">RESTRICTED</span> <span class="o">=</span> <span class="s2">&quot;Restricted Store&quot;</span></div>
 
 
-<div class="viewcode-block" id="TournamentPhase"><a class="viewcode-back" href="../../api.html#tibiapy.TournamentPhase">[docs]</a><span class="k">class</span> <span class="nc">TournamentPhase</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="TournamentPhase"><a class="viewcode-back" href="../../api.html#tibiapy.TournamentPhase">[docs]</a><span class="k">class</span> <span class="nc">TournamentPhase</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible tournament phases.&quot;&quot;&quot;</span>
 
     <span class="n">SIGN_UP</span> <span class="o">=</span> <span class="s2">&quot;sign up&quot;</span>
@@ -472,7 +476,7 @@
     <span class="n">ENDED</span> <span class="o">=</span> <span class="s2">&quot;ended&quot;</span></div>
 
 
-<div class="viewcode-block" id="TransferType"><a class="viewcode-back" href="../../api.html#tibiapy.TransferType">[docs]</a><span class="k">class</span> <span class="nc">TransferType</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="TransferType"><a class="viewcode-back" href="../../api.html#tibiapy.TransferType">[docs]</a><span class="k">class</span> <span class="nc">TransferType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible special transfer restrictions a world may have.&quot;&quot;&quot;</span>
 
     <span class="n">REGULAR</span> <span class="o">=</span> <span class="s2">&quot;regular&quot;</span>  <span class="c1">#: No special transfer restrictions</span>
@@ -480,7 +484,7 @@
     <span class="n">LOCKED</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span>  <span class="c1">#: Can transfer to this world, but can&#39;t transfer out of this world.</span></div>
 
 
-<div class="viewcode-block" id="Vocation"><a class="viewcode-back" href="../../api.html#tibiapy.Vocation">[docs]</a><span class="k">class</span> <span class="nc">Vocation</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="Vocation"><a class="viewcode-back" href="../../api.html#tibiapy.Vocation">[docs]</a><span class="k">class</span> <span class="nc">Vocation</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible vocation types.&quot;&quot;&quot;</span>
 
     <span class="n">NONE</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
@@ -542,7 +546,7 @@
         <span class="k">return</span> <span class="kc">None</span></div></div>
 
 
-<div class="viewcode-block" id="VocationSpellFilter"><a class="viewcode-back" href="../../api.html#tibiapy.VocationSpellFilter">[docs]</a><span class="k">class</span> <span class="nc">VocationSpellFilter</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="VocationSpellFilter"><a class="viewcode-back" href="../../api.html#tibiapy.VocationSpellFilter">[docs]</a><span class="k">class</span> <span class="nc">VocationSpellFilter</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible vocation types to filter out spells.&quot;&quot;&quot;</span>
 
     <span class="n">DRUID</span> <span class="o">=</span> <span class="s2">&quot;Druid&quot;</span>
@@ -551,7 +555,7 @@
     <span class="n">SORCERER</span> <span class="o">=</span> <span class="s2">&quot;Sorcerer&quot;</span></div>
 
 
-<div class="viewcode-block" id="WorldLocation"><a class="viewcode-back" href="../../api.html#tibiapy.WorldLocation">[docs]</a><span class="k">class</span> <span class="nc">WorldLocation</span><span class="p">(</span><span class="n">BaseEnum</span><span class="p">):</span>
+<div class="viewcode-block" id="WorldLocation"><a class="viewcode-back" href="../../api.html#tibiapy.WorldLocation">[docs]</a><span class="k">class</span> <span class="nc">WorldLocation</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible physical locations for servers.&quot;&quot;&quot;</span>
 
     <span class="n">EUROPE</span> <span class="o">=</span> <span class="s2">&quot;Europe&quot;</span>
