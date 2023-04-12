@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from tibiapy import Category, VocationFilter, BattlEyeHighscoresFilter, PvpTypeFilter, Vocation
 from tibiapy.models import BaseCharacter
+from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.utils import get_tibia_url
 
 
@@ -34,7 +35,7 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
     """The character's loyalty title."""
 
 
-class Highscores(BaseModel):
+class Highscores(PaginatedWithUrl[HighscoresEntry]):
     """Represents the highscores of a world."""
 
     world:  Optional[str] = None
@@ -51,16 +52,10 @@ class Highscores(BaseModel):
     """The selected PvP types filter. If :obj:`None`, all world will be displayed.
 
     Only applies for global highscores. Only characters from worlds with the matching PvP type will be shown."""
-    page: int
+    current_page: int
     """The page number being displayed."""
-    total_pages: int
-    """The total number of pages."""
-    results_count: int
-    """The total amount of highscores entries in this category. These may be shown in another page."""
     last_updated: datetime.timedelta
     """How long ago were this results updated. The resolution is 1 minute."""
-    entries: List[HighscoresEntry]
-    """The highscores entries found."""
     available_worlds: List[str]
     """The worlds available for selection."""
 

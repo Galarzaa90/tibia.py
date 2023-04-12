@@ -9,7 +9,7 @@ class HighscoresBuilder:
         self._vocation = kwargs.get("vocation")
         self._battleye_filter = kwargs.get("battleye_filter")
         self._pvp_types_filter = kwargs.get("pvp_types_filter")
-        self._page = kwargs.get("page")
+        self._current_page = kwargs.get("current_page")
         self._total_pages = kwargs.get("total_pages")
         self._results_count = kwargs.get("results_count")
         self._last_updated = kwargs.get("last_updated")
@@ -36,8 +36,8 @@ class HighscoresBuilder:
         self._pvp_types_filter = pvp_types_filter
         return self
 
-    def page(self, page) -> 'HighscoresBuilder':
-        self._page = page
+    def current_page(self, current_page) -> 'HighscoresBuilder':
+        self._current_page = current_page
         return self
 
     def total_pages(self, total_pages) -> 'HighscoresBuilder':
@@ -72,7 +72,7 @@ class HighscoresBuilder:
             vocation=self._vocation,
             battleye_filter=self._battleye_filter,
             pvp_types_filter=self._pvp_types_filter,
-            page=self._page,
+           current_page=self._current_page,
             total_pages=self._total_pages,
             results_count=self._results_count,
             last_updated=self._last_updated,

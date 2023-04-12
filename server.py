@@ -1,13 +1,13 @@
 import logging
 from contextlib import asynccontextmanager
-from typing import Optional, Set
+from typing import Optional, Set, List
 
 from fastapi import FastAPI, Path, Query
 
 import tibiapy
 from tibiapy import VocationSpellFilter, SpellGroup, SpellType, SpellSorting, TibiaResponse, NewsType, NewsCategory, \
-    HouseStatus, HouseOrder, HouseType
-from tibiapy.models import World, WorldOverview, Spell, SpellsSection
+    HouseStatus, HouseOrder, HouseType, Category, VocationFilter, BattlEyeHighscoresFilter, PvpTypeFilter
+from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores
 from tibiapy.models.news import NewsArchive, News
 
 logging_formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
@@ -24,6 +24,28 @@ async def lifespan(app: FastAPI):
     await app.state.client.session.close()
 
 app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/highscores/{world}")
+async def get_highscores(
+        world: str = Path(...),
+        page: int = Query(1),
+        category: Category = Query(Category.EXPERIENCE),
+        vocation: VocationFilter = Query(VocationFilter.ALL),
+        battleye: BattlEyeHighscoresFilter = Query(None),
+        pvp_types: List[PvpTypeFilter] = Query([], alias="pvp"),
+) -> TibiaResponse[Highscores]:
+    if world.lower() in ("global", "all"):
+        world = None
+    return await app.state.client.fetch_highscores_page(world, category, page=page, vocation=vocation, battleye_type=battleye,
+                                                        pvp_types=pvp_types)
+
+@app.get("/houses/{world}/{house_id}")
+async def get_house(
+        world: str = Path(...),
+        house_id: int = Path(...)
+):
+    return await app.state.client.fetch_house(house_id, world)
 
 
 @app.get("/houses/{world}/{town}")

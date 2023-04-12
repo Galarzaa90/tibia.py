@@ -16,7 +16,7 @@ class TestNewChanges(TestCommons, unittest.TestCase):
         self.assertEqual(Category.EXPERIENCE, highscores.category)
         self.assertEqual(VocationFilter.ALL, highscores.vocation)
         self.assertEqual(1000, highscores.results_count)
-        self.assertEqual(1, highscores.page)
+        self.assertEqual(1, highscores.current_page)
         self.assertEqual(20, highscores.total_pages)
         first_entry = highscores.entries[0]
         self.assertEqual("Goraca", first_entry.name)

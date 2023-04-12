@@ -1,5 +1,5 @@
 """Enumerations used by models throughout the library."""
-import enum
+from enum import Enum, Flag, IntEnum
 
 __all__ = (
     'AccountStatus',
@@ -36,23 +36,27 @@ __all__ = (
     'WorldLocation',
 )
 
-from tibiapy.utils import get_static_file_url
+from tibiapy.utils import get_static_file_url, try_enum
 
 
-class BaseEnum(enum.Enum):
-    def __str__(self):
-        return self.value
-
-    def __repr__(self):
-        return "%s.%s" % (self.__class__.__name__, self.name)
-
-
-class NumericEnum(BaseEnum):
+class NumericEnum(IntEnum):
     def __str__(self):
         return self.name.lower()
 
+    @classmethod
+    def __get_validators__(cls):
+        cls.lookup = {v: k.value for v, k in cls.__members__.items()}
+        yield cls.validate
 
-class AccountStatus(BaseEnum):
+    @classmethod
+    def validate(cls, v):
+        try:
+            return try_enum(cls, v)
+        except KeyError:
+            raise ValueError('invalid value')
+
+
+class AccountStatus(str, Enum):
     """Possible account statuses."""
 
     FREE_ACCOUNT = "Free Account"
@@ -103,7 +107,7 @@ class AuctionSearchType(NumericEnum):
     """Searches a character's name."""
 
 
-class AuctionStatus(BaseEnum):
+class AuctionStatus(str, Enum):
     """The possible values an auction might have."""
 
     IN_PROGRESS = 'in progress'
@@ -185,14 +189,14 @@ class BattlEyeTypeFilter(NumericEnum):
     """
 
 
-class BazaarType(BaseEnum):
+class BazaarType(str, Enum):
     """The possible bazaar types."""
 
     CURRENT = "Current Auctions"
     HISTORY = "Auction History"
 
 
-class BidType(BaseEnum):
+class BidType(str, Enum):
     """The possible bid types for an auction."""
 
     MINIMUM = "Minimum Bid"
@@ -224,7 +228,7 @@ class Category(NumericEnum):
     SWORD_FIGHTING = 13
 
 
-class HouseOrder(BaseEnum):
+class HouseOrder(str, Enum):
     """The possible ordering methods for house lists in Tibia.com"""
 
     NAME = "name"
@@ -234,14 +238,14 @@ class HouseOrder(BaseEnum):
     AUCTION_END = "end"
 
 
-class HouseStatus(BaseEnum):
+class HouseStatus(str, Enum):
     """Renting statuses of a house."""
 
     RENTED = "rented"
     AUCTIONED = "auctioned"
 
 
-class HouseType(BaseEnum):
+class HouseType(str, Enum):
     """The types of house available."""
 
     HOUSE = "house"
@@ -253,7 +257,7 @@ class HouseType(BaseEnum):
         return f"{self.value}s"
 
 
-class NewsCategory(BaseEnum):
+class NewsCategory(str, Enum):
     """The different news categories."""
 
     CIPSOFT = "cipsoft"
@@ -275,7 +279,7 @@ class NewsCategory(BaseEnum):
         return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_small.gif")
 
 
-class NewsType(BaseEnum):
+class NewsType(str, Enum):
     """The different types of new entries."""
 
     NEWS_TICKER = "News Ticker"
@@ -287,7 +291,7 @@ class NewsType(BaseEnum):
         return f"filter_{self.value.split(' ')[-1].lower()}"
 
 
-class PvpType(BaseEnum):
+class PvpType(str, Enum):
     """The possible PvP types a World can have."""
 
     OPEN_PVP = "Open PvP"
@@ -307,7 +311,7 @@ class PvpTypeFilter(NumericEnum):
     RETRO_HARDCORE_PVP = 4
 
 
-class Sex(BaseEnum):
+class Sex(str, Enum):
     """Possible character sexes."""
 
     MALE = "male"
@@ -327,7 +331,7 @@ class SkillFilter(NumericEnum):
     SWORD_FIGHTING = 8
 
 
-class SpellGroup(BaseEnum):
+class SpellGroup(str, Enum):
     """The possible cooldown groups.
 
     Note that secondary groups are not enumerated.
@@ -338,14 +342,14 @@ class SpellGroup(BaseEnum):
     SUPPORT = "Support"
 
 
-class SpellType(BaseEnum):
+class SpellType(str, Enum):
     """The possible spell types."""
 
     INSTANT = "Instant"
     RUNE = "Rune"
 
 
-class SpellSorting(BaseEnum):
+class SpellSorting(str, Enum):
     """The different sorting options for the spells section."""
 
     NAME = "name"
@@ -357,7 +361,7 @@ class SpellSorting(BaseEnum):
     PREMIUM = "premium"
 
 
-class ThreadStatus(enum.Flag):
+class ThreadStatus(Flag):
     """The possible status a thread can have.
 
     Threads can have a combination of multiple status. The numeric values are arbitrary.
@@ -412,14 +416,14 @@ class ThreadStatus(enum.Flag):
         return cls(flags)
 
 
-class TournamentWorldType(BaseEnum):
+class TournamentWorldType(str, Enum):
     """The possible types of tournament worlds."""
 
     REGULAR = "Regular"
     RESTRICTED = "Restricted Store"
 
 
-class TournamentPhase(BaseEnum):
+class TournamentPhase(str, Enum):
     """The possible tournament phases."""
 
     SIGN_UP = "sign up"
@@ -427,7 +431,7 @@ class TournamentPhase(BaseEnum):
     ENDED = "ended"
 
 
-class TransferType(BaseEnum):
+class TransferType(str, Enum):
     """The possible special transfer restrictions a world may have."""
 
     REGULAR = "regular"  #: No special transfer restrictions
@@ -435,7 +439,7 @@ class TransferType(BaseEnum):
     LOCKED = "locked"  #: Can transfer to this world, but can't transfer out of this world.
 
 
-class Vocation(BaseEnum):
+class Vocation(str, Enum):
     """The possible vocation types."""
 
     NONE = "None"
@@ -497,7 +501,7 @@ class VocationFilter(NumericEnum):
         return None
 
 
-class VocationSpellFilter(BaseEnum):
+class VocationSpellFilter(str, Enum):
     """The possible vocation types to filter out spells."""
 
     DRUID = "Druid"
@@ -506,7 +510,7 @@ class VocationSpellFilter(BaseEnum):
     SORCERER = "Sorcerer"
 
 
-class WorldLocation(BaseEnum):
+class WorldLocation(str, Enum):
     """The possible physical locations for servers."""
 
     EUROPE = "Europe"

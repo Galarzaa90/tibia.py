@@ -2,11 +2,9 @@
 import datetime
 import re
 from collections import OrderedDict
-from typing import List, Optional
 
-from tibiapy import abc
 from tibiapy.builders.highscores import HighscoresBuilder
-from tibiapy.enums import Category, Vocation, VocationFilter, BattlEyeTypeFilter, PvpTypeFilter, \
+from tibiapy.enums import Category, VocationFilter, PvpTypeFilter, \
     BattlEyeHighscoresFilter
 from tibiapy.errors import InvalidContent
 from tibiapy.models import LoyaltyHighscoresEntry, HighscoresEntry
@@ -58,8 +56,7 @@ class HighscoresParser:
             raise InvalidContent("content does is not from the highscores section of Tibia.com")
         builder = HighscoresBuilder()
         cls._parse_filters_table(builder, form)
-        last_update_container = parsed_content.find("span", attrs={"class": "RightArea"})
-        if last_update_container:
+        if last_update_container := parsed_content.select_one("span.RightArea"):
             m = numeric_pattern.search(last_update_container.text)
             builder.last_updated(datetime.timedelta(minutes=int(m.group(1))) if m else datetime.timedelta())
         entries_table = tables.get("Highscores")
@@ -113,10 +110,9 @@ class HighscoresParser:
         info_row = rows.pop()
         pages_div, results_div = info_row.find_all("div")
         page_links = pages_div.find_all("a")
-        listed_pages = [int(p.text) for p in page_links]
-        if listed_pages:
+        if listed_pages := [int(p.text) for p in page_links]:
             page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), listed_pages[-1] + 1)
-            builder.page(page)
+            builder.current_page(page)
             builder.total_pages(max(int(page_links[-1].text), page))
         builder.results_count(parse_integer(results_pattern.search(results_div.text).group(1)))
         for row in rows:
