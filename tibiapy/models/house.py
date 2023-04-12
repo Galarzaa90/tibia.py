@@ -217,22 +217,3 @@ class CharacterHouse(HouseWithId):
     """The date the last paid rent is due."""
 
 
-class GuildHouse(BaseHouse):
-    """A guildhall owned by a guild.
-
-    By limitation of Tibia.com, the ID of the guildhall is not available."""
-
-    world: Optional[str] = None
-    """The name of the world the house belongs to."""
-    status: HouseStatus = HouseStatus.RENTED
-    """The current status of the house.
-
-    This is kept for compatibility with house objects and will always be :obj:`HouseStatus.RENTED`."""
-    type: HouseType = HouseType.GUILDHALL
-    """The type of the house.
-
-    This is kept for compatibility with house objects and will always be :obj:`HouseType.GUILDHALL`."""
-    owner: str
-    """The owner of the guildhall."""
-    paid_until_date: datetime.date
-    """The date the last paid rent is due."""

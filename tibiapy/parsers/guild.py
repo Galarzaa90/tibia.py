@@ -6,7 +6,7 @@ import bs4
 
 from tibiapy.builders.guild import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContent
-from tibiapy.models import GuildHouse, GuildEntry, GuildsSection, GuildMember, GuildInvite, GuildWarEntry
+from tibiapy.models import GuildEntry, GuildsSection, GuildMember, GuildInvite, GuildWarEntry, GuildHouse
 from tibiapy.utils import (parse_form_data, parse_tibia_date, parse_tibiacom_content)
 
 __all__ = (
@@ -69,11 +69,11 @@ class GuildsSectionParser:
             parsed_content = parse_tibiacom_content(content)
             form = parsed_content.select_one("form")
             data = parse_form_data(form, include_options=True)
-            selected_world = data["world"] if data["world"] else None
+            selected_world = data["world"] or None
             available_worlds = [w for w in data["__options__"]["world"].values() if w]
             guilds = GuildsSection(world=selected_world, available_worlds=available_worlds)
         except (AttributeError, KeyError) as e:
-            raise InvalidContent("Content does not belong to world guild list.", e)
+            raise InvalidContent("Content does not belong to world guild list.", e) from e
         # First TableContainer contains world selector.
         _, *containers = parsed_content.select('div.TableContainer')
         for container in containers:
@@ -122,8 +122,8 @@ class GuildParser:
         try:
             name_header = parsed_content.find('h1')
             builder = GuildBuilder().name(name_header.text.strip())
-        except AttributeError:
-            raise InvalidContent("content does not belong to a Tibia.com guild page.")
+        except AttributeError as e:
+            raise InvalidContent("content does not belong to a Tibia.com guild page.", e) from e
 
         cls._parse_logo(builder, parsed_content)
         info_container = parsed_content.find("div", id="GuildInformationContainer")
@@ -154,8 +154,7 @@ class GuildParser:
         rank = previous_rank[1] if rank == " " else rank
         title = None
         previous_rank[1] = rank
-        m = title_regex.match(name)
-        if m:
+        if m := title_regex.match(name):
             name = m.group(1)
             title = m.group(2)
         joined = parse_tibia_date(joined)
@@ -172,8 +171,7 @@ class GuildParser:
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
-        m = applications_regex.search(info_container.text)
-        if m:
+        if m := applications_regex.search(info_container.text):
             builder.open_applications(m.group(1) == "opened")
         builder.active_war("during war" in info_container.text)
 
@@ -187,8 +185,7 @@ class GuildParser:
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
-        m = disband_regex.search(info_container.text)
-        if m:
+        if m := disband_regex.search(info_container.text):
             builder.disband_condition(m.group(2))
             builder.disband_date(parse_tibia_date(m.group(1).replace("\xa0", " ")))
 
@@ -202,10 +199,9 @@ class GuildParser:
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
-        m = guildhall_regex.search(info_container.text)
-        if m:
+        if m := guildhall_regex.search(info_container.text):
             paid_until = parse_tibia_date(m.group("date").replace("\xa0", " "))
-            builder.guildhall(GuildHouse(name=m.group("name"), world=builder._world, paid_until_date=paid_until, owner=""))
+            builder.guildhall(GuildHouse(name=m.group("name"), paid_until_date=paid_until))
 
     @classmethod
     def _parse_guild_homepage(cls, builder, info_container):
@@ -216,8 +212,7 @@ class GuildParser:
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
-        m = homepage_regex.search(info_container.text)
-        if m:
+        if m := homepage_regex.search(info_container.text):
             builder.homepage(m.group(1))
 
     @classmethod
@@ -230,10 +225,9 @@ class GuildParser:
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
-        m = founded_regex.search(info_container.text)
-        if m:
+        if m := founded_regex.search(info_container.text):
             description = m.group("desc").strip()
-            builder.description(description if description else None)
+            builder.description(description or None)
             builder.world(m.group("world"))
             builder.founded(parse_tibia_date(m.group("date").replace("\xa0", " ")))
             builder.active("currently active" in m.group("status"))
@@ -341,7 +335,7 @@ class GuildWarsParser:
 
             return builder.build()
         except ValueError as e:
-            raise InvalidContent("content does not belong to the guild wars section", e)
+            raise InvalidContent("content does not belong to the guild wars section", e) from e
 
     @classmethod
     def _parse_current_war_information(cls, text):
@@ -409,8 +403,7 @@ class GuildWarsParser:
         builder.guild_fee(guild_fee).opponent_fee(opponent_fee)
         guild_score = opponent_score = 0
         winner = None
-        surrender_match = surrender_regex.search(text)
-        if surrender_match:
+        if surrender_match := surrender_regex.search(text):
             surrending_guild = surrender_match.group(1)
             builder.end_date(parse_tibia_date(surrender_match.group(2)))
             winner = guild_name if surrending_guild != guild_name else opposing_name
@@ -420,10 +413,9 @@ class GuildWarsParser:
         if war_score_match and len(war_score_match) == 2:
             guild_score, opponent_score = war_score_match
             guild_score = int(guild_score)
-            opponent_score = int(guild_score)
+            opponent_score = guild_score
 
-        war_end_match = war_ended_regex.search(text)
-        if war_end_match:
+        if war_end_match := war_ended_regex.search(text):
             builder.end_date(parse_tibia_date(war_end_match.group(1)))
             winning_guild = war_end_match.group(2)
             if "disbanded guild" in winning_guild:

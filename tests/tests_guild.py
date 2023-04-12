@@ -4,7 +4,8 @@ import unittest
 from tests.tests_tibiapy import TestCommons
 from tibiapy import  InvalidContent
 from tibiapy.builders.guild import GuildBuilder
-from tibiapy.models import Guild, GuildHouse, GuildWars, GuildsSection
+from tibiapy.models import Guild, GuildWars, GuildsSection
+from tibiapy.models.guild import GuildHouse
 from tibiapy.parsers.guild import GuildParser, GuildWarsParser, GuildsSectionParser
 
 FILE_GUILD_FULL = "guild/tibiacom_full.txt"
@@ -54,9 +55,6 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertEqual(8, len(guild.members_by_rank['Vice Leader']))
 
         self.assertIsInstance(guild.guildhall, GuildHouse)
-        # TODO: Keep owner?
-        # self.assertEqual(guild.guildhall.owner, guild.members[0].name)
-        self.assertEqual(guild.guildhall.world, guild.world)
         self.assertIsInstance(guild.guildhall.paid_until_date, datetime.date)
 
     def test_guild_from_content_not_found(self):

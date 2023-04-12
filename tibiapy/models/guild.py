@@ -5,12 +5,13 @@ from typing import Optional, List, Dict, OrderedDict
 from pydantic import BaseModel
 
 from tibiapy import Vocation
-from tibiapy.models import BaseCharacter, GuildHouse
+from tibiapy.models import BaseCharacter, BaseHouse
 from tibiapy.utils import get_tibia_url
 
 
 __all__ = (
     'BaseGuild',
+    'GuildHouse',
     'GuildMember',
     'GuildInvite',
     'Guild',
@@ -102,6 +103,15 @@ class GuildInvite(BaseCharacter):
     """Represents an invited character."""
     date: datetime.date
     """The day when the character was invited."""
+
+
+class GuildHouse(BaseHouse):
+    """A guildhall owned by a guild.
+
+    By limitation of Tibia.com, the ID of the guildhall is not available."""
+
+    paid_until_date: datetime.date
+    """The date the last paid rent is due."""
 
 
 class Guild(BaseGuild):
@@ -240,7 +250,7 @@ class GuildWarEntry(BaseModel):
     """The set duration of the war.
 
     When a war is in progress, the duration is not visible."""
-    end_date: datetime.date
+    end_date: Optional[datetime.date] = None
     """The deadline for the war to finish if the score is not reached for wars in progress, or the date when the
      war ended."""
     winner: Optional[str] = None
@@ -291,3 +301,5 @@ class GuildWars(BaseModel):
             The URL to the guild's war page.
         """
         return Guild.get_url_wars(name)
+
+

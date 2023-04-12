@@ -26,6 +26,27 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+@app.get("/guilds/{name}")
+async def get_guild(
+        name: str = Path(...)
+):
+    return await app.state.client.fetch_guild(name)
+
+
+@app.get("/guilds/{name}/wars")
+async def get_guild_wars(
+        name: str = Path(...)
+):
+    return await app.state.client.fetch_guild_wars(name)
+
+
+@app.get("/worlds/{world}/guilds")
+async def get_world_guilds(
+        world: str = Path(...)
+):
+    return await app.state.client.fetch_world_guilds(world)
+
+
 @app.get("/highscores/{world}")
 async def get_highscores(
         world: str = Path(...),
