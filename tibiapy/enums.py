@@ -408,10 +408,7 @@ class ThreadStatus(Flag):
         :class:`ThreadStatus`
             The combination of thread status founds.
         """
-        flags = 0
-        for entry in list(cls):
-            if entry.name.lower() in icon:
-                flags += entry.value
+        flags = sum(entry.value for entry in list(cls) if entry.name.lower() in icon)
         # noinspection PyArgumentList
         return cls(flags)
 
@@ -496,9 +493,7 @@ class VocationFilter(NumericEnum):
         for vocation in cls:  # type: VocationFilter
             if vocation.name in name or vocation.name[:-1] in name and vocation != cls.ALL:
                 return vocation
-        if all_fallback or name.upper() == "ALL":
-            return cls.ALL
-        return None
+        return cls.ALL if all_fallback or name.upper() == "ALL" else None
 
 
 class VocationSpellFilter(str, Enum):

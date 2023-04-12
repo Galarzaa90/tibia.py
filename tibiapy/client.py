@@ -70,10 +70,14 @@ class TibiaResponse(GenericModel, typing.Generic[T]):
     @property
     def time_left(self):
         """:class:`datetime.timedelta`: The time left for the cache of this response to expire."""
-        if not self.age:
-            return datetime.timedelta()
-        return (datetime.timedelta(seconds=CACHE_LIMIT - self.age)
-                - (datetime.datetime.now(datetime.timezone.utc) - self.timestamp))
+        return (
+            (
+                datetime.timedelta(seconds=CACHE_LIMIT - self.age)
+                - (datetime.datetime.now(datetime.timezone.utc) - self.timestamp)
+            )
+            if self.age
+            else datetime.timedelta()
+        )
 
     @property
     def seconds_left(self):
@@ -101,10 +105,7 @@ class RawResponse:
         self.fetching_time = fetching_time
         self.cached = response.headers.get("CF-Cache-Status") == "HIT"
         age = response.headers.get("Age")
-        if age is not None and age.isnumeric():
-            self.age = int(age)
-        else:
-            self.age = 0
+        self.age = int(age) if age is not None and age.isnumeric() else 0
         self.content = None
 
     def __repr__(self):
@@ -150,7 +151,7 @@ class Client:
     async def _initialize_session(self, proxy_url=None):
         """Initialize the aiohttp session object."""
         headers = {
-            'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py)" % tibiapy.__version__,
+            'User-Agent': f"Tibia.py/{tibiapy.__version__} (+https://github.com/Galarzaa90/tibia.py)",
             'Accept-Encoding': "deflate, gzip",
         }
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None

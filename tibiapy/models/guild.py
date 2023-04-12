@@ -29,9 +29,7 @@ class BaseGuild(BaseModel):
     """The name of the guild."""
 
     def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.name == other.name
-        return False
+        return self.name == other.name if isinstance(other, self.__class__) else False
 
 
     @property

@@ -95,8 +95,9 @@ class CharacterBazaarParser:
             if filter_table:
                 builder.filters(AuctionFiltersParser._parse_filter_table(filter_table))
 
-            page_navigation_row = parsed_content.select_one("td.PageNavigation")
-            if page_navigation_row:
+            if page_navigation_row := parsed_content.select_one(
+                "td.PageNavigation"
+            ):
                 page, total_pages, results_count = parse_pagination(page_navigation_row)
                 builder.page(page).total_pages(total_pages).results_count(results_count)
 
@@ -117,9 +118,11 @@ class DisplayImageParser:
     def _parse_image_box(cls, item_box):
         description = item_box["title"]
         img_tag = item_box.select_one("img")
-        if not img_tag:
-            return None
-        return DisplayImage(image_url=img_tag["src"], name=description)
+        return (
+            DisplayImage(image_url=img_tag["src"], name=description)
+            if img_tag
+            else None
+        )
 
 
 class DisplayItemParser:
@@ -135,19 +138,13 @@ class DisplayItemParser:
         if m:
             amount = parse_integer(m.group(1))
             title_text = amount_regex.sub("", title_text, 1).strip()
-        item_id = 0
-        description = None
         name, *desc = title_text.split("\n")
-        if desc:
-            description = " ".join(desc)
+        description = " ".join(desc) if desc else None
         tier = 0
-        m = tier_regex.search(name)
-        if m:
+        if m := tier_regex.search(name):
             tier = int(m.group(2))
             name = m.group(1)
-        m = id_regex.search(img_tag["src"])
-        if m:
-            item_id = int(m.group(1))
+        item_id = int(m.group(1)) if (m := id_regex.search(img_tag["src"])) else 0
         return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description,
                            tier=tier)
 
@@ -183,8 +180,7 @@ class DisplayMountParser(DisplayImageParser):
         if not img_tag:
             return None
         mount = DisplayMount(image_url=img_tag["src"], name=description, mount_id=0)
-        m = id_regex.search(mount.image_url)
-        if m:
+        if m := id_regex.search(mount.image_url):
             mount.mount_id = int(m.group(1))
         return mount
 
@@ -200,10 +196,8 @@ class DisplayOutfitParser(DisplayImageParser):
         outfit = DisplayOutfit(image_url=img_tag["src"], name=description, outfit_id=0)
         name = outfit.name.split("(")[0].strip()
         outfit.name = name
-        m = id_addon_regex.search(outfit.image_url)
-        if m:
+        if m := id_addon_regex.search(outfit.image_url):
             outfit.outfit_id = int(m.group(1))
-            # outfit.addons = int(m.group(2))
         return outfit
 
 
@@ -241,8 +235,7 @@ class DisplayFamiliarParser(DisplayImageParser):
         familiar = DisplayFamiliar(image_url=img_tag["src"], name=description, familiar_id=0)
         name = familiar.name.split("(")[0].strip()
         familiar.name = name
-        m = id_regex.search(familiar.image_url)
-        if m:
+        if m := id_regex.search(familiar.image_url):
             familiar.familiar_id = int(m.group(1))
         return familiar
 
@@ -268,8 +261,7 @@ class AuctionEntryParser:
         """
         header_container = auction_row.select_one("div.AuctionHeader")
         char_name_container = header_container.select_one("div.AuctionCharacterName")
-        char_link = char_name_container.select_one("a")
-        if char_link:
+        if char_link := char_name_container.select_one("a"):
             url = urllib.parse.urlparse(char_link["href"])
             query = urllib.parse.parse_qs(url.query)
             auction_id = int(query["auctionid"][0])
@@ -279,20 +271,17 @@ class AuctionEntryParser:
 
         builder = AuctionEntryBuilder().name(name).auction_id(auction_id)
         char_name_container.replaceWith('')
-        m = char_info_regex.search(header_container.text)
-        if m:
+        if m := char_info_regex.search(header_container.text):
             builder.level(int(m.group(1)))
             builder.vocation(try_enum(Vocation, m.group(2).strip()))
             builder.sex(try_enum(Sex, m.group(3).strip().lower()))
             builder.world(m.group(4))
         outfit_img = auction_row.select_one("img.AuctionOutfitImage")
-        m = id_addon_regex.search(outfit_img["src"])
-        if m:
+        if m := id_addon_regex.search(outfit_img["src"]):
             builder.outfit(OutfitImage(image_url=outfit_img["src"], outfit_id=int(m.group(1)), addons=int(m.group(2))))
         item_boxes = auction_row.select("div.CVIcon")
         for item_box in item_boxes:
-            item = DisplayItemParser._parse_image_box(item_box)
-            if item:
+            if item := DisplayItemParser._parse_image_box(item_box):
                 builder.add_displayed_item(item)
         dates_containers = auction_row.select_one("div.ShortAuctionData")
         start_date_tag, end_date_tag, *_ = dates_containers.select("div.ShortAuctionDataValue")
@@ -316,14 +305,11 @@ class AuctionEntryParser:
             img = entry.select_one("img")
             img_url = img["src"]
             category_id = 0
-            m = id_regex.search(img_url)
-            if m:
+            if m := id_regex.search(img_url):
                 category_id = parse_integer(m.group(1))
             builder.add_sales_argument(SalesArgument(content=entry.text, category_image=img_url,
                                                      category_id=category_id))
-        if return_builder:
-            return builder
-        return builder.build()
+        return builder if return_builder else builder.build()
     # endregion
 
 
@@ -359,7 +345,9 @@ class AuctionParser(AuctionEntryParser):
         InvalidContent
             If the content does not belong to a auction detail's page.
         """
-        parsed_content = parse_tibiacom_content(content, builder='html5lib' if not skip_details else 'lxml')
+        parsed_content = parse_tibiacom_content(
+            content, builder='lxml' if skip_details else 'html5lib'
+        )
         auction_row = parsed_content.select_one("div.Auction")
         if not auction_row:
             if "internal error" in content:
@@ -601,8 +589,7 @@ class AuctionParser(AuctionEntryParser):
         item_boxes = parsed_content.select("div.CVIcon")
         entries = []
         for item_box in item_boxes:
-            item = entry_class._parse_image_box(item_box)
-            if item:
+            if item := entry_class._parse_image_box(item_box):
                 entries.append(item)
         return entries
 
@@ -784,8 +771,7 @@ class ItemSummaryParser(PaginatedSummary):
         summary = ItemSummary(page=page, total_pages=total_pages, results=results)
         item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
-            item = DisplayItemParser._parse_image_box(item_box)
-            if item:
+            if item := DisplayItemParser._parse_image_box(item_box):
                 summary.entries.append(item)
         return summary
 
@@ -834,8 +820,7 @@ class MountsParser(PaginatedSummary):
         summary = Mounts(page=page, total_pages=total_pages, results=results)
         item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
-            item = DisplayMountParser._parse_image_box(item_box)
-            if item:
+            if item := DisplayMountParser._parse_image_box(item_box):
                 summary.entries.append(item)
         return summary
 
@@ -896,8 +881,7 @@ class FamiliarsParser(PaginatedSummary):
         summary = Familiars(page=page, total_pages=total_pages, results=results)
         item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
-            item = DisplayFamiliarParser._parse_image_box(item_box)
-            if item:
+            if item := DisplayFamiliarParser._parse_image_box(item_box):
                 summary.entries.append(item)
         return summary
 
@@ -958,8 +942,7 @@ class OutfitsParser:
         summary = Outfits(page=page, total_pages=total_pages, results=results)
         item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
-            item = DisplayOutfitParser._parse_image_box(item_box)
-            if item:
+            if item := DisplayOutfitParser._parse_image_box(item_box):
                 summary.entries.append(item)
         return summary
 

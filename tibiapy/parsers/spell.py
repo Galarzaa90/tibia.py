@@ -131,8 +131,7 @@ class SpellParser:
                 builder.rune(cls._parse_rune_table(tables["Rune Information"]))
             return builder.build()
         except (TypeError, AttributeError, IndexError, KeyError) as e:
-            form = parsed_content.select_one("form")
-            if form:
+            if form := parsed_content.select_one("form"):
                 data = parse_form_data(form)
                 if "subtopic=spells" in data.get("__action__"):
                     return None

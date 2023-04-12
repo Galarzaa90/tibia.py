@@ -203,9 +203,7 @@ class CharacterParser:
                 value = int(value)
             data[field] = value
 
-        # If the character is deleted, the information is fouund with the name, so we must clean it
-        m = deleted_regexp.match(data["name"])
-        if m:
+        if m := deleted_regexp.match(data["name"]):
             data["name"] = m.group(1)
             data["deletion_date"] = parse_tibia_datetime(m.group(2))
 
@@ -222,8 +220,7 @@ class CharacterParser:
         else:
             data["last_login"] = parse_tibia_datetime(data["last_login"])
 
-        m = title_regexp.match(data.get("title", ""))
-        if m:
+        if m := title_regexp.match(data.get("title", "")):
             name = m.group(1).strip()
             unlocked = int(m.group(2))
             if name == "None":
@@ -256,17 +253,13 @@ class CharacterParser:
             death_time_str = cols[0].text.replace("\xa0", " ").strip()
             death_time = parse_tibia_datetime(death_time_str)
             death = str(cols[1])
-            death_info = death_regexp.search(death)
-            if death_info:
-                level = int(death_info.group("level"))
-                killers_desc = death_info.group("killers")
-            else:
+            if not (death_info := death_regexp.search(death)):
                 continue
+            level = int(death_info.group("level"))
+            killers_desc = death_info.group("killers")
             death = Death(name=data["name"], level=level, time=death_time)
             assists_name_list = []
-            # Check if the killers list contains assists
-            assist_match = death_assisted.search(killers_desc)
-            if assist_match:
+            if assist_match := death_assisted.search(killers_desc):
                 # Filter out assists
                 killers_desc = assist_match.group("killers")
                 # Split assists into a list.
@@ -314,9 +307,7 @@ class CharacterParser:
             m = link_content.search(killer)
             name = m.group(1)
             player = True
-        # Check if it contains a summon.
-        m = death_summon.search(name)
-        if m:
+        if m := death_summon.search(name):
             summon = m.group("summon").replace('\xa0', ' ').strip()
             name = m.group("name").replace('\xa0', ' ').strip()
         return {"name": name, "player": player, "summon": summon, "traded": traded}
@@ -374,8 +365,7 @@ class CharacterParser:
         tables = parsed_content.select('table[width="100%"]')
         output = OrderedDict()
         for table in tables:
-            container = table.find_parent("div", {"class": "TableContainer"})
-            if container:
+            if container := table.find_parent("div", {"class": "TableContainer"}):
                 caption_container = container.select_one("div.CaptionContainer")
                 title = caption_container.text.strip()
                 offset = 0

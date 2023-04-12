@@ -56,7 +56,7 @@ async def get_highscores(
         battleye: BattlEyeHighscoresFilter = Query(None),
         pvp_types: List[PvpTypeFilter] = Query([], alias="pvp"),
 ) -> TibiaResponse[Highscores]:
-    if world.lower() in ("global", "all"):
+    if world.lower() in {"global", "all"}:
         world = None
     return await app.state.client.fetch_highscores_page(world, category, page=page, vocation=vocation, battleye_type=battleye,
                                                         pvp_types=pvp_types)

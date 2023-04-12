@@ -44,13 +44,12 @@ class Serializable:
         return list(self.__slots_inherited__())
 
     def __getitem__(self, item):
-        if item in self.keys():
-            try:
-                return getattr(self, item)
-            except AttributeError:
-                return None
-        else:
+        if item not in self.keys():
             raise KeyError(item)
+        try:
+            return getattr(self, item)
+        except AttributeError:
+            return None
 
     def __setitem__(self, key, value):
         if key in self.keys():
@@ -221,9 +220,7 @@ class BaseGuild(metaclass=abc.ABCMeta):
         return f"<{self.__class__.__name__} name={self.name!r}>"
 
     def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.name == other.name
-        return False
+        return self.name == other.name if isinstance(other, self.__class__) else False
 
     @property
     def url(self):
@@ -342,9 +339,7 @@ class BaseNews(metaclass=abc.ABCMeta):
 
     def __eq__(self, o: object) -> bool:
         """Two news articles are considered equal if their names or ids are equal."""
-        if isinstance(o, self.__class__):
-            return self.id == o.id
-        return False
+        return self.id == o.id if isinstance(o, self.__class__) else False
 
     @property
     def url(self):

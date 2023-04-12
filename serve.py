@@ -326,10 +326,7 @@ async def get_world(request: web.Request):
 @routes.get('/news/recent/{days}')
 async def get_recent_news(request: web.Request):
     days = request.match_info.get("days")
-    if days:
-        days = int(days)
-    else:
-        days = 30
+    days = int(days) if days else 30
     response = await app["tibiapy"].fetch_recent_news(days)
     return json_response(response)
 

@@ -74,7 +74,7 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwar
     >>> get_tibia_url("community", "worlds", **params)
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
-    base_url = "www.tibia.com" if not test else "www.test.tibia.com"
+    base_url = "www.test.tibia.com" if test else "www.tibia.com"
     url = f"https://{base_url}/{section}/?"
     params = OrderedDict(subtopic=subtopic) if subtopic else OrderedDict()
     if kwargs:
@@ -117,7 +117,10 @@ def parse_form_data(form: bs4.Tag, include_options=True):
     if "method" in form.attrs:
         data["__method__"] = form.attrs["method"]
     text_inputs = form.find_all("input", {"type": "text"})
-    data.update({field.attrs.get("name"): field.attrs.get("value") for field in text_inputs})
+    data |= {
+        field.attrs.get("name"): field.attrs.get("value")
+        for field in text_inputs
+    }
     selects = form.find_all("select")
     if include_options:
         data["__options__"] = {}
@@ -129,7 +132,10 @@ def parse_form_data(form: bs4.Tag, include_options=True):
             data["__options__"][name] = {opt.text: opt.attrs.get("value") for opt in options}
         data[name] = selected_option.attrs.get("value") if selected_option else None
     checkboxes = form.find_all("input", {"type": "checkbox", "checked": True})
-    data.update({field.attrs.get("name"): field.attrs.get("value") for field in checkboxes})
+    data |= {
+        field.attrs.get("name"): field.attrs.get("value")
+        for field in checkboxes
+    }
     # Parse Radios
     all_radios = form.find_all("input", {"type": "radio"})
     for name, _radios in itertools.groupby(all_radios, key=lambda t: t.attrs["name"]):
@@ -271,10 +277,7 @@ def parse_link_info(link_tag):
     if parsed_url.query:
         query_params = urllib.parse.parse_qs(parsed_url.query)
         for param, value in query_params.items():
-            if len(value) == 1:
-                info["query"][param] = value[0]
-            else:
-                info["query"][param] = value
+            info["query"][param] = value[0] if len(value) == 1 else value
     return info
 
 
@@ -412,7 +415,6 @@ def parse_number_words(text_num):
     :class:`int`
         The number represented by the string.
     """
-    numwords = {}
     units = [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
         "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
@@ -423,7 +425,7 @@ def parse_number_words(text_num):
 
     scales = ["hundred", "thousand", "million", "billion", "trillion"]
 
-    numwords["and"] = (1, 0)
+    numwords = {"and": (1, 0)}
     for idx, word in enumerate(units):
         numwords[word] = (1, idx)
     for idx, word in enumerate(tens):
@@ -464,9 +466,7 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
     """
     if obj is None:
         return None
-    if isinstance(obj, datetime.datetime):
-        return obj
-    return parse_tibia_datetime(obj)
+    return obj if isinstance(obj, datetime.datetime) else parse_tibia_datetime(obj)
 
 
 def try_date(obj) -> Optional[datetime.date]:
@@ -492,9 +492,7 @@ def try_date(obj) -> Optional[datetime.date]:
     if isinstance(obj, datetime.date):
         return obj
     res = parse_tibia_date(obj)
-    if res is not None:
-        return res
-    return parse_tibia_full_date(obj)
+    return res if res is not None else parse_tibia_full_date(obj)
 
 
 def parse_tables_map(parsed_content: bs4.BeautifulSoup, selector = "div.TableContentContainer") -> Dict[str, bs4.Tag]:
@@ -552,10 +550,10 @@ def parse_tibiacom_tables(parsed_content) -> Dict[str, bs4.Tag]:
     tables = {}
     for table_container in table_containers:
         text_tag = table_container.find("div", attrs={"class": "Text"})
-        table = table_container.find("table", attrs={"class": "TableContent"})
-        if not table:
-            continue
-        tables[text_tag.text.strip()] = table
+        if table := table_container.find(
+            "table", attrs={"class": "TableContent"}
+        ):
+            tables[text_tag.text.strip()] = table
     return tables
 
 
@@ -652,9 +650,7 @@ def _recursive_strip(value):  # pragma: no cover
         return {k: _recursive_strip(v) for k, v in value.items()}
     if isinstance(value, list):
         return [_recursive_strip(i) for i in value]
-    if isinstance(value, str):
-        return value.strip()
-    return value
+    return value.strip() if isinstance(value, str) else value
 
 
 def deprecated(instead=None):  # pragma: no cover
@@ -725,10 +721,8 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
     page = -1
     total_pages = -1
     if first_or_last_pages:
-        last_page_link = first_or_last_pages[-1].find("a")
-        if last_page_link:
-            m = page_pattern.search(last_page_link["href"])
-            if m:
+        if last_page_link := first_or_last_pages[-1].find("a"):
+            if m := page_pattern.search(last_page_link["href"]):
                 total_pages = int(m.group(1))
         else:
             last_page_link = page_links[-2].find("a")
@@ -739,9 +733,6 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
     try:
         page = int(current_page_link.text)
     except ValueError:
-        if "First" in current_page_link.text:
-            page = 1
-        else:
-            page = total_pages
+        page = 1 if "First" in current_page_link.text else total_pages
     results_count = parse_integer(results_pattern.search(results_div.text).group(1))
     return page, total_pages, results_count

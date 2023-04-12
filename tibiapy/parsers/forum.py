@@ -62,7 +62,7 @@ class CMPostArchiveParser(abc.Serializable):
         form = parsed_content.select_one("form")
         try:
             start_month_selector, start_day_selector, start_year_selector, \
-            end_month_selector, end_day_selector, end_year_selector = form.select("select")
+                end_month_selector, end_day_selector, end_year_selector = form.select("select")
             start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
         except (AttributeError, ValueError) as e:
@@ -95,8 +95,7 @@ class CMPostArchiveParser(abc.Serializable):
             return builder.build()
         pages_column, results_column = inner_table_rows[-1].select("div")
         page_links = pages_column.select("a")
-        listed_pages = [int(p.text) for p in page_links]
-        if listed_pages:
+        if listed_pages := [int(p.text) for p in page_links]:
             page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
             total_pages = max(int(page_links[-1].text), page)
             if not page:
@@ -255,8 +254,7 @@ class ForumAuthorParser(abc.BaseCharacter, abc.Serializable):
         guild_info = char_info.select_one("font.ff_smallinfo")
         convert_line_breaks(char_info)
         char_info_text = char_info.text
-        info_match = author_info_regex.search(char_info_text)
-        if info_match:
+        if info_match := author_info_regex.search(char_info_text):
             author.world = info_match.group(1)
             author.vocation = try_enum(Vocation, info_match.group(2))
             author.level = int(info_match.group(3))
@@ -413,10 +411,19 @@ class ForumBoardParser:
             traded = True
             thread_starter = thread_starter.replace("(traded)", "").strip()
 
-        entry = ThreadEntry(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
-                            views=views, last_post=last_post, emoticon=emoticon, status=status, total_pages=pages,
-                            status_icon=status_icon, thread_starter_traded=traded)
-        return entry
+        return ThreadEntry(
+            title=title,
+            thread_id=thread_id,
+            thread_starter=thread_starter,
+            replies=replies,
+            views=views,
+            last_post=last_post,
+            emoticon=emoticon,
+            status=status,
+            total_pages=pages,
+            status_icon=status_icon,
+            thread_starter_traded=traded,
+        )
 
     # endregion
 
@@ -535,13 +542,10 @@ class ForumThreadParser:
                 emoticon = ForumEmoticon(name=child["alt"], url=child["src"])
             if child.name == "b":
                 title_tag = child
-            if child.name == "div":
+            elif child.name == "div":
                 break
-        # Remove the first line jump found in post content
-        first_break = content_container.select_one("br")
-        if first_break:
+        if first_break := content_container.select_one("br"):
             first_break.extract()
-        title = None
         signature = None
         signature_container = post_table.select_one("td.ff_pagetext")
         if signature_container:
@@ -555,8 +559,7 @@ class ForumThreadParser:
             # This will handle the post containing another signature separator within the content
             # We join back all the pieces except for the last one
             content = signature_separator.join(parts[:-1])
-        if title_tag:
-            title = title_tag.text
+        title = title_tag.text if title_tag else None
         post_details = post_table.select_one('div.PostDetails')
         dates = post_dates_regex.findall(post_details.text)
         edited_date = None

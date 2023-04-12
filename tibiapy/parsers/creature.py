@@ -260,11 +260,9 @@ class CreatureParser:
         exp_text: :class:`str`
             The text containing experience.
         """
-        m = EXP_PATTERN.search(exp_text)
-        if m:
+        if m := EXP_PATTERN.search(exp_text):
             builder.experience(int(m.group(1)))
-        m = LOOT_PATTERN.search(exp_text)
-        if m:
+        if m := LOOT_PATTERN.search(exp_text):
             builder.loot(m.group(1))
 
     @classmethod
@@ -288,14 +286,11 @@ class CreatureParser:
         if "sense invisible" in hp_text:
             immune.append("invisible")
         builder.immune_to(immune)
-        m = WEAK_PATTERN.search(hp_text)
-        if m:
+        if m := WEAK_PATTERN.search(hp_text):
             builder.weak_against(cls._parse_elements(m.group(1)))
-        m = STRONG_PATTERN.search(hp_text)
-        if m:
+        if m := STRONG_PATTERN.search(hp_text):
             builder.strong_against(cls._parse_elements(m.group(1)))
-        m = MANA_COST.search(hp_text)
-        if m:
+        if m := MANA_COST.search(hp_text):
             builder.mana_cost(int(m.group(1)))
             if "summon or convince" in hp_text:
                 builder.convinceable(True)

@@ -147,9 +147,7 @@ class BaseBoard(BaseModel):
 
     def __eq__(self, o: object) -> bool:
         """Two boards are considered equal if their ids are equal."""
-        if isinstance(o, self.__class__):
-            return self.board_id == o.board_id
-        return False
+        return self.board_id == o.board_id if isinstance(o, self.__class__) else False
 
 class BasePost(BaseModel):
     """Base class for post classes.
