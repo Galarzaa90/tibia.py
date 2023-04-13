@@ -549,7 +549,7 @@ class Client:
         """
         response = await self._request("GET", BoardEntry.get_support_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = BoardEntry.list_from_content(response.content)
+        boards = BoardEntryParser.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boards, parsing_time)
 
@@ -578,7 +578,7 @@ class Client:
         """
         response = await self._request("GET", BoardEntry.get_world_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = BoardEntry.list_from_content(response.content)
+        boards = BoardEntryParser.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boards, parsing_time)
 
@@ -607,7 +607,7 @@ class Client:
         """
         response = await self._request("GET", BoardEntry.get_trade_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = BoardEntry.list_from_content(response.content)
+        boards = BoardEntryParser.list_from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boards, parsing_time)
 

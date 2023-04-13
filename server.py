@@ -26,6 +26,35 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+@app.get("/forums/world")
+async def get_world_boards():
+    return await app.state.client.fetch_forum_world_boards()
+
+
+@app.get("/forums/trade")
+async def get_trade_boards():
+    return await app.state.client.fetch_forum_trade_boards()
+
+
+@app.get("/forums/community")
+async def get_community_boards():
+    return await app.state.client.fetch_forum_community_boards()
+
+
+@app.get("/forums/support")
+async def get_support_boards():
+    return await app.state.client.fetch_forum_support_boards()
+
+
+@app.get("/forums/boards/{board_id}")
+async def get_forum_board(
+        board_id: int = Path(...),
+        page: int = Query(1),
+        age: int = Query(30),
+):
+    return await app.state.client.fetch_forum_board(board_id=board_id, page=page, age=age)
+
+
 @app.get("/guilds/{name}")
 async def get_guild(
         name: str = Path(...)

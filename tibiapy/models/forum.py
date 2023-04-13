@@ -438,7 +438,7 @@ class ThreadEntry(BaseThread):
     """The number of replies."""
     views: int
     """The number of views."""
-    last_post: LastPost
+    last_post: Optional[LastPost] = None
     """The information of the last post made in this board."""
     status: ThreadStatus
     """The status of the thread."""
