@@ -6,8 +6,22 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 from tibiapy import Sex, Vocation, AccountStatus, abc
+from tibiapy.models import HouseWithId
 from tibiapy.utils import get_tibia_url
 
+__all__ = (
+    'AccountBadge',
+    'AccountInformation',
+    'Achievement',
+    'BaseCharacter',
+    'CharacterHouse',
+    'Killer',
+    'Death',
+    'GuildMembership',
+    'OnlineCharacter',
+    'OtherCharacter',
+    'Character',
+)
 
 class AccountBadge(BaseModel):
     """A displayed account badge in the character's information."""
@@ -75,6 +89,101 @@ class BaseCharacter(BaseModel):
         return get_tibia_url("community", "characters", name=name)
 
 
+class CharacterHouse(HouseWithId):
+    """A house owned by a character."""
+
+    town: str
+    """The town where the city is located in."""
+    paid_until_date: datetime.date
+    """The date the last paid rent is due."""
+
+
+class Killer(BaseModel):
+    """Represents a killer.
+
+    A killer can be:
+
+    a) A creature.
+    b) A character.
+    c) A creature summoned by a character."""
+    name: str
+    """The name of the killer. In the case of summons, the name belongs to the owner."""
+    player: bool
+    """Whether the killer is a player or not."""
+    summon: Optional[str] = None
+    """The name of the summoned creature, if applicable."""
+    traded: bool = False
+    """If the killer was traded after this death happened."""
+
+    @property
+    def url(self):
+        """:class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable."""
+        return Character.get_url(self.name) if self.player else None
+
+
+class Death(BaseModel):
+    """A character's death."""
+
+    level: int
+    """The level at which the death occurred."""
+    killers: List[Killer] = []
+    """A list of all the killers involved."""
+    assists: List[Killer] = []
+    """A list of characters that were involved, without dealing damage."""
+    time: datetime.datetime
+    """The time at which the death occurred."""
+
+    @property
+    def by_player(self):
+        """:class:`bool`: Whether the kill involves other characters."""
+        return any(k.player for k in self.killers)
+
+    @property
+    def killer(self):
+        """:class:`Killer`: The first killer in the list.
+
+        This is usually the killer that gave the killing blow.
+        """
+        return self.killers[0] if self.killers else None
+
+
+class GuildMembership(BaseModel):
+    name: str
+    """The name of the guild."""
+    rank: str
+    """The name of the rank the member has."""
+    title: Optional[str] = None
+    """The title of the member in the guild. This is only available for characters in the forums section."""
+
+
+class OnlineCharacter(BaseCharacter):
+    """An online character in the world's page."""
+    vocation: Vocation
+    """The vocation of the character."""
+    level: int
+    """The level of the character."""
+
+
+
+class OtherCharacter(BaseCharacter):
+    """A character listed in the characters section of a character's page.
+
+    These are only shown if the character is not hidden, and only characters that are not hidden are shown here."""
+
+    world: str
+    """The name of the world."""
+    online: bool
+    """Whether the character is online or not."""
+    deleted: bool
+    """Whether the character is scheduled for deletion or not."""
+    traded: bool
+    """Whether the character has been traded recently or not."""
+    main: bool
+    """Whether this is the main character or not."""
+    position: Optional[str]
+    """The character's official position, if any."""
+
+
 class Character(BaseCharacter):
     """A full character from Tibia.com, obtained from its character page."""
 
@@ -104,9 +213,9 @@ class Character(BaseCharacter):
     """The current hometown of the character."""
     married_to: Optional[str] = None
     """The name of the character's spouse. It will be :obj:`None` if not married."""
-    houses: List['CharacterHouse'] = []
+    houses: List[CharacterHouse] = []
     """The houses currently owned by the character."""
-    guild_membership: Optional['GuildMembership'] = None
+    guild_membership: Optional[GuildMembership] = None
     """The guild the character is a member of. It will be :obj:`None` if the character is not in a guild."""
     last_login: Optional[datetime.datetime] = None
     """The last time the character logged in. It will be :obj:`None` if the character has never logged in."""
@@ -120,7 +229,7 @@ class Character(BaseCharacter):
     """The displayed account badges."""
     achievements: List[Achievement] = []
     """The achievements chosen to be displayed."""
-    deaths: List['Death'] = []
+    deaths: List[Death] = []
     """The character's recent deaths."""
     deaths_truncated: bool = False
     """Whether the character's deaths are truncated or not.
@@ -128,7 +237,7 @@ class Character(BaseCharacter):
     In some cases, there are more deaths in the last 30 days than what can be displayed."""
     account_information: Optional[AccountInformation] = None
     """The character's account information. If the character is hidden, this will be :obj:`None`."""
-    other_characters: List['OtherCharacter'] = []
+    other_characters: List[OtherCharacter] = []
     """Other characters in the same account.
 
     It will be empty if the character is hidden, otherwise, it will contain at least the character itself."""
@@ -164,90 +273,3 @@ class Character(BaseCharacter):
         """:class:`str`, optional: The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return self.get_url(self.married_to) if self.married_to else None
     # endregion
-
-
-class Death(BaseModel):
-    """A character's death."""
-
-    name: str
-    """The name of the character this death belongs to."""
-    level: int
-    """The level at which the death occurred."""
-    killers: List['Killer']
-    """A list of all the killers involved."""
-    assists: List['Killer']
-    """A list of characters that were involved, without dealing damage."""
-    time: datetime.datetime
-    """The time at which the death occurred."""
-
-    @property
-    def by_player(self):
-        """:class:`bool`: Whether the kill involves other characters."""
-        return any([k.player and self.name != k.name for k in self.killers])
-
-    @property
-    def killer(self):
-        """:class:`Killer`: The first killer in the list.
-
-        This is usually the killer that gave the killing blow.
-        """
-        return self.killers[0] if self.killers else None
-
-
-class GuildMembership(BaseModel):
-    name: str
-    """The name of the guild."""
-    rank: str
-    """The name of the rank the member has."""
-    title: Optional[str] = None
-    """The title of the member in the guild. This is only available for characters in the forums section."""
-
-
-class Killer(BaseModel):
-    """Represents a killer.
-
-    A killer can be:
-
-    a) A creature.
-    b) A character.
-    c) A creature summoned by a character."""
-    name: str
-    """The name of the killer. In the case of summons, the name belongs to the owner."""
-    player: bool
-    """Whether the killer is a player or not."""
-    summon: Optional[str] = None
-    """The name of the summoned creature, if applicable."""
-    traded: bool = False
-    """If the killer was traded after this death happened."""
-
-    @property
-    def url(self):
-        """:class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable."""
-        return Character.get_url(self.name) if self.player else None
-
-
-class OnlineCharacter(BaseCharacter):
-    """An online character in the world's page."""
-    vocation: Vocation
-    """The vocation of the character."""
-    level: int
-    """The level of the character."""
-
-
-class OtherCharacter(BaseCharacter):
-    """A character listed in the characters section of a character's page.
-
-    These are only shown if the character is not hidden, and only characters that are not hidden are shown here."""
-
-    world: str
-    """The name of the world."""
-    online: bool
-    """Whether the character is online or not."""
-    deleted: bool
-    """Whether the character is scheduled for deletion or not."""
-    traded: bool
-    """Whether the character has been traded recently or not."""
-    main: bool
-    """Whether this is the main character or not."""
-    position: Optional[str]
-    """The character's official position, if any."""

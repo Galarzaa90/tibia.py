@@ -7,6 +7,15 @@ from tibiapy import HouseStatus, HouseType, HouseOrder, Sex, abc
 from tibiapy.utils import get_tibia_url
 
 
+__all__ = (
+    'BaseHouse',
+    'HouseWithId',
+    'HouseEntry',
+    'House',
+    'HousesSection',
+)
+
+
 class BaseHouse(BaseModel):
     name: str
     """The name of the house."""
@@ -202,18 +211,5 @@ class HousesSection(BaseModel):
         return get_tibia_url("community", "houses", **query)
 
 
-class CharacterHouse(HouseWithId):
-    """A house owned by a character."""
-
-    status: HouseStatus
-    """The current status of the house."""
-    type: HouseType
-    """The type of the house."""
-    town: str
-    """The town where the city is located in."""
-    owner: str
-    """The owner of the house."""
-    paid_until_date: datetime.date
-    """The date the last paid rent is due."""
 
 

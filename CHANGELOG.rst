@@ -19,6 +19,8 @@ Changelog
     - ``Leaderboard.page`` renamed to ``current_page``.
     - ``Highscores.page`` renamed to ``current_page``.
     - Removed ``owner``, ``world``, ``status`` and ``type`` from ``GuildHouse``.
+    - Removed ``name`` from ``Death``.
+    - Removed ``owner``, ``status`` and ``type`` from ``CharacterHouse``.
 
 
 .. v5.6.0

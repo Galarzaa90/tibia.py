@@ -5,12 +5,13 @@ from typing import List, TYPE_CHECKING
 
 from bs4 import Tag
 
+from tibiapy.builders.character import CharacterBuilder
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.models import Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, Killer, \
     Death, GuildMembership, CharacterHouse
 from tibiapy.utils import (parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list,
-                           try_enum, parse_link_info)
+                           try_enum, parse_link_info, clean_text, parse_integer)
 
 if TYPE_CHECKING:
     import bs4
@@ -63,23 +64,22 @@ class CharacterParser:
         """
         parsed_content = parse_tibiacom_content(content)
         tables = cls._parse_tables(parsed_content)
-        data = {}
+        builder = CharacterBuilder()
         if not tables:
-
             messsage_table = parsed_content.select_one("div.TableContainer")
             if messsage_table and "Could not find character" in messsage_table.text:
                 return None
         if "Character Information" in tables.keys():
-            cls._parse_character_information(data, tables["Character Information"])
+            cls._parse_character_information(builder, tables["Character Information"])
         else:
             raise InvalidContent("content does not contain a tibia.com character information page.")
-        data["achievements"] = cls._parse_achievements(tables.get("Account Achievements", []))
+        builder.achievements(cls._parse_achievements(tables.get("Account Achievements", [])))
         if "Account Badges" in tables:
-            data["account_badges"] = cls._parse_badges(tables["Account Badges"])
-        cls._parse_deaths(tables.get("Character Deaths", []))
-        data["account_information"] = cls._parse_account_information(tables.get("Account Information", []))
-        data["other_characters"] = cls._parse_other_characters(tables.get("Characters", []))
-        return Character.parse_obj(data)
+            builder.account_badges(cls._parse_badges(tables["Account Badges"]))
+        cls._parse_deaths(builder, tables.get("Character Deaths", []))
+        builder.account_information(cls._parse_account_information(tables.get("Account Information", [])))
+        builder.other_characters(cls._parse_other_characters(tables.get("Characters", [])))
+        return builder.build()
     # endregion
 
     # region Private methods
@@ -147,7 +147,7 @@ class CharacterParser:
             popup_span = column.select_one("span.HelperDivIndicator")
             if not popup_span:
                 # Badges are visible, but none selected.
-                return
+                return []
             popup = parse_popup(popup_span['onmouseover'])
             name = popup[0]
             description = popup[1].text
@@ -157,7 +157,7 @@ class CharacterParser:
         return account_badges
 
     @classmethod
-    def _parse_character_information(cls, data, rows):
+    def _parse_character_information(cls, builder: CharacterBuilder, rows):
         """
         Parse the character's basic information and applies the found values.
 
@@ -166,80 +166,99 @@ class CharacterParser:
         rows: :class:`list` of :class:`bs4.Tag`
             A list of all rows contained in the table.
         """
-        int_rows = ["level", "achievement_points"]
-        houses = []
         for row in rows:
             cols_raw = row.select('td')
-            cols = [ele.text.strip() for ele in cols_raw]
+            cols = [clean_text(ele) for ele in cols_raw]
             field, value = cols
-            field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
-            value = value.replace("\xa0", " ")
-            # This is a special case because we need to see the link
-            if field == "house":
-                house_text = value
-                m = house_regexp.search(house_text)
-                if not m:
-                    continue
-                paid_until = m.group(1)
-                paid_until_date = parse_tibia_date(paid_until)
-                house_link_tag = cols_raw[1].find('a')
-                if not house_link_tag:
-                    continue
-                house_link = parse_link_info(house_link_tag)
-                houses.append({
-                    "id": house_link["query"]["houseid"],
-                    "name": house_link["text"],
-                    "town": house_link["query"]["town"],
-                    "paid_until": paid_until_date,
-                })
-                continue
-            if field == "guild_membership":
-                guild_link = cols_raw[1].select_one('a')
-                rank = value.split("of the")[0]
-                data["guild_membership"] = GuildMembership(guild_link.text.replace("\xa0", " "), rank.strip())
+            field = field.replace(":", "").lower()
+            if field == "name":
+                cls._parse_name_field(builder, value)
+            elif field == "title":
+                cls._parse_titles(builder, value)
+            elif field == "former names":
+                builder.former_names([fn.strip() for fn in value.split(",")])
+            elif field == "former world":
+                builder.former_world(value)
+            elif field == "sex":
+                builder.sex(try_enum(Sex, value))
+            elif field == "vocation":
+                builder.vocation(try_enum(Vocation, value))
+            elif field == "level":
+                builder.level(parse_integer(value))
+            elif field == "achievement points":
+                builder.achievement_points(parse_integer(value))
+            elif field == "world":
+                builder.world(value)
+            elif field == "residence":
+                builder.residence(value)
+            elif field == "last login":
+                if "never logged" in value.lower():
+                    builder.last_login(None)
+                else:
+                    builder.last_login(parse_tibia_datetime(value))
+            elif field == "position":
+                builder.position(value)
+            elif field == "comment":
+                builder.comment(value)
+            elif field == "account status":
+                builder.account_status(try_enum(AccountStatus, value))
+            elif field == "married to":
+                builder.married_to(value)
+            elif field == "house":
+                cls._parse_house_column(builder, cols_raw[1])
+            elif field == "guild membership":
+                cls._parse_guild_column(builder, cols_raw[1])
 
-                continue
-            if field in int_rows:
-                value = int(value)
-            data[field] = value
-
-        # If the character is deleted, the information is fouund with the name, so we must clean it
-        m = deleted_regexp.match(data["name"])
-        if m:
-            data["name"] = m.group(1)
-            data["deletion_date"] = parse_tibia_datetime(m.group(2))
-
-        if traded_label in data["name"]:
-            data["name"] = data["name"].replace(traded_label, "").strip()
-            data["traded"] = True
-
-        if "former_names" in data:
-            former_names = [fn.strip() for fn in data["former_names"].split(",")]
-            data["former_names"] = former_names
-
-        if "never" in data["last_login"]:
-            data["last_login"] = None
+    @classmethod
+    def _parse_name_field(cls, builder: CharacterBuilder, value: str):
+        if m := deleted_regexp.match(value):
+            value = m.group(1)
+            builder.name(value)
+            builder.deletion_date(parse_tibia_datetime(m.group(2)))
         else:
-            data["last_login"] = parse_tibia_datetime(data["last_login"])
+            builder.name(value)
 
-        m = title_regexp.match(data.get("title", ""))
-        if m:
+        if traded_label in value:
+            builder.name(value.replace(traded_label, "").strip())
+            builder.traded(True)
+
+    @classmethod
+    def _parse_titles(cls, builder: CharacterBuilder, value: str):
+        if m := title_regexp.match(value):
             name = m.group(1).strip()
             unlocked = int(m.group(2))
             if name == "None":
                 name = None
-            data["title"] = name
-            data["unlocked_titles"] = unlocked
-
-        data["vocation"] = try_enum(Vocation, data["vocation"])
-        data["sex"] = try_enum(Sex, data["sex"])
-        data["account_status"] = try_enum(AccountStatus, data["account_status"])
-
-        data["houses"] = [CharacterHouse(h["id"], h["name"], data["world"], h["town"], data["name"], h["paid_until"])
-                          for h in houses]
+            builder.title(name)
+            builder.unlocked_titles(unlocked)
 
     @classmethod
-    def _parse_deaths(cls, data, rows):
+    def _parse_house_column(cls, builder: CharacterBuilder, column: Tag):
+        house_text = clean_text(column)
+        m = house_regexp.search(house_text)
+        paid_until = m.group(1)
+        paid_until_date = parse_tibia_date(paid_until)
+        house_link_tag = column.find('a')
+        house_link = parse_link_info(house_link_tag)
+        builder.add_house(
+            CharacterHouse(
+                id=house_link["query"]["houseid"],
+                name=house_link["text"],
+                town=house_link["query"]["town"],
+                paid_until_date=paid_until_date,
+                world=house_link["query"]["world"]
+            )
+        )
+
+    @classmethod
+    def _parse_guild_column(cls, builder: CharacterBuilder, column: Tag):
+        guild_link = column.select_one('a')
+        value = clean_text(column)
+        rank = value.split("of the")[0]
+        builder.guild_membership(GuildMembership(name=guild_link.text.replace("\xa0", " "), rank=rank.strip()))
+
+    @classmethod
+    def _parse_deaths(cls, builder: CharacterBuilder, rows):
         """Parse the character's recent deaths.
 
         Parameters
@@ -247,26 +266,22 @@ class CharacterParser:
         rows: :class:`list` of :class:`bs4.Tag`
             A list of all rows contained in the table.
         """
-        data["deaths"] = []
         for row in rows:
             cols = row.select('td')
             if len(cols) != 2:
-                data["deaths_truncated"] = True
+                builder.deaths_truncated(True)
                 break
             death_time_str = cols[0].text.replace("\xa0", " ").strip()
             death_time = parse_tibia_datetime(death_time_str)
             death = str(cols[1])
-            death_info = death_regexp.search(death)
-            if death_info:
-                level = int(death_info.group("level"))
-                killers_desc = death_info.group("killers")
-            else:
+            if not (death_info := death_regexp.search(death)):
                 continue
-            death = Death(name=data["name"], level=level, time=death_time)
+            level = int(death_info.group("level"))
+            killers_desc = death_info.group("killers")
+            death = Death(level=level, time=death_time)
             assists_name_list = []
             # Check if the killers list contains assists
-            assist_match = death_assisted.search(killers_desc)
-            if assist_match:
+            if assist_match := death_assisted.search(killers_desc):
                 # Filter out assists
                 killers_desc = assist_match.group("killers")
                 # Split assists into a list.
@@ -282,11 +297,7 @@ class CharacterParser:
                 assist = assist.replace("\xa0", " ")
                 assist_dict = cls._parse_killer(assist)
                 death.assists.append(Killer(**assist_dict))
-            try:
-                data["deaths"].append(death)
-            except ValueError:
-                # Some pvp deaths have no level, so they are raising a ValueError, they will be ignored for now.
-                continue
+            builder.add_death(death)
 
     @classmethod
     def _parse_killer(cls, killer):
@@ -315,8 +326,7 @@ class CharacterParser:
             name = m.group(1)
             player = True
         # Check if it contains a summon.
-        m = death_summon.search(name)
-        if m:
+        if m := death_summon.search(name):
             summon = m.group("summon").replace('\xa0', ' ').strip()
             name = m.group("name").replace('\xa0', ' ').strip()
         return {"name": name, "player": player, "summon": summon, "traded": traded}

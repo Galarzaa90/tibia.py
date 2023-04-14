@@ -1,7 +1,7 @@
 import pydantic
 
-from tibiapy.models.bazaar import *
 from tibiapy.models.house import *
+from tibiapy.models.bazaar import *
 from tibiapy.models.character import *
 from tibiapy.models.forum import *
 from tibiapy.models.guild import *
