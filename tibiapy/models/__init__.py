@@ -6,6 +6,7 @@ from tibiapy.models.character import *
 from tibiapy.models.forum import *
 from tibiapy.models.guild import *
 from tibiapy.models.highscores import *
+from tibiapy.models.news import *
 from tibiapy.models.kill_statistics import *
 from tibiapy.models.leaderboards import *
 from tibiapy.models.spell import *
