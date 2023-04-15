@@ -10,6 +10,7 @@ Changelog
 
 6.0.0 (Unreleased)
 ==================
+- Python 3.7 and below no longer supported.
 - All models are now Pydantic models, for better data validation, serialization and deserialization.
 - The location of models inside the module changed, so all imports need to be modified.
 - Model changes:

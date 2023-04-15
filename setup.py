@@ -4,8 +4,8 @@ import sys
 
 from setuptools import find_packages, setup
 
-if sys.version_info < (3, 7):
-    sys.exit('Sorry, Python < 3.7 is not supported')
+if sys.version_info < (3, 8):
+    sys.exit('Sorry, Python < 3.8 is not supported')
 
 
 def get_version(package):
@@ -80,7 +80,6 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3 :: Only',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
