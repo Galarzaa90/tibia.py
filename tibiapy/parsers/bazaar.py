@@ -7,12 +7,12 @@ from typing import Dict, List
 import bs4
 
 from tibiapy import InvalidContent, Sex, Vocation, abc
-from tibiapy.builders.bazaar import CharacterBazaarBuilder, AuctionEntryBuilder, AuctionBuilder
+from tibiapy.builders.bazaar import CharacterBazaarBuilder, AuctionBuilder, AuctionDetailsBuilder
 from tibiapy.enums import (AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter,
                            BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter)
-from tibiapy.models.bazaar import AuctionFilters, DisplayImage, DisplayItem, AuctionEntry, OutfitImage, SalesArgument, \
+from tibiapy.models.bazaar import AuctionFilters, DisplayImage, DisplayItem, OutfitImage, SalesArgument, \
     SkillEntry, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry, PaginatedSummary, DisplayMount, ItemSummary, \
-    Mounts, Familiars, Outfits, DisplayFamiliar, DisplayOutfit
+    Mounts, Familiars, Outfits, DisplayFamiliar, DisplayOutfit, CharacterBazaar, Auction
 from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, parse_pagination,
                            parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
@@ -66,7 +66,7 @@ class AuctionFiltersParser:
 
 class CharacterBazaarParser:
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> CharacterBazaar:
         """Get the bazaar's information and list of auctions from Tibia.com.
 
         Parameters
@@ -95,14 +95,13 @@ class CharacterBazaarParser:
             if filter_table:
                 builder.filters(AuctionFiltersParser._parse_filter_table(filter_table))
 
-            page_navigation_row = parsed_content.select_one("td.PageNavigation")
-            if page_navigation_row:
+            if page_navigation_row := parsed_content.select_one("td.PageNavigation"):
                 page, total_pages, results_count = parse_pagination(page_navigation_row)
-                builder.page(page).total_pages(total_pages).results_count(results_count)
+                builder.current_page(page).total_pages(total_pages).results_count(results_count)
 
             auction_rows = auctions_table.select("div.Auction")
             for auction_row in auction_rows:
-                auction = AuctionEntryParser._parse_auction(auction_row)
+                auction = AuctionParser._parse_auction(auction_row)
 
                 builder.add_entry(auction)
             return builder.build()
@@ -111,7 +110,6 @@ class CharacterBazaarParser:
 
 
 class DisplayImageParser:
-
 
     @classmethod
     def _parse_image_box(cls, item_box):
@@ -247,11 +245,89 @@ class DisplayFamiliarParser(DisplayImageParser):
         return familiar
 
 
-class AuctionEntryParser:
+class AuctionParser:
 
-    # region Private Methods
     @classmethod
-    def _parse_auction(cls, auction_row, auction_id=0, *, return_builder=False):
+    def from_content(cls, content, auction_id=0, skip_details=False):
+        """Parse an auction detail page from Tibia.com and extracts its data.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The HTML content of the auction detail page in Tibia.com
+        auction_id: :class:`int`, optional
+            The ID of the auction.
+
+            It is not possible to extract the ID from the page's content, so it may be passed to assign it manually.
+        skip_details: :class:`bool`, optional
+            Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
+
+            This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
+            parsing time.
+
+        Returns
+        -------
+        :class:`Auction`
+            The auction details if found, :obj:`None` otherwise.
+
+        Raises
+        ------
+        InvalidContent
+            If the content does not belong to a auction detail's page.
+        """
+        parsed_content = parse_tibiacom_content(content, builder='html5lib' if not skip_details else 'lxml')
+        auction_row = parsed_content.select_one("div.Auction")
+        if not auction_row:
+            if "internal error" in content:
+                return None
+            raise InvalidContent("content does not belong to a auction details page in Tibia.com")
+        auction = cls._parse_auction(auction_row)
+        builder = AuctionDetailsBuilder()
+        if skip_details:
+            return auction
+
+        details_tables = cls._parse_tables(parsed_content)
+        if "General" in details_tables:
+            cls._parse_general_table(builder, details_tables["General"])
+        if "ItemSummary" in details_tables:
+            builder.items(ItemSummaryParser._parse_table(details_tables["ItemSummary"]))
+        if "StoreItemSummary" in details_tables:
+            builder.store_items(ItemSummaryParser._parse_table(details_tables["StoreItemSummary"]))
+        if "Mounts" in details_tables:
+            builder.mounts(MountsParser._parse_table(details_tables["Mounts"]))
+        if "StoreMounts" in details_tables:
+            builder.store_mounts(MountsParser._parse_table(details_tables["StoreMounts"]))
+        if "Outfits" in details_tables:
+            builder.outfits(OutfitsParser._parse_table(details_tables["Outfits"]))
+        if "StoreOutfits" in details_tables:
+            builder.store_outfits(OutfitsParser._parse_table(details_tables["StoreOutfits"]))
+        if "Familiars" in details_tables:
+            builder.familiars(FamiliarsParser._parse_table(details_tables["Familiars"]))
+        if "Blessings" in details_tables:
+            cls._parse_blessings_table(builder, details_tables["Blessings"])
+        if "Imbuements" in details_tables:
+            builder.imbuements(cls._parse_single_column_table(details_tables["Imbuements"]))
+        if "Charms" in details_tables:
+            cls._parse_charms_table(builder, details_tables["Charms"])
+        if "CompletedCyclopediaMapAreas" in details_tables:
+            builder.completed_cyclopedia_map_areas(cls._parse_single_column_table(
+                details_tables["CompletedCyclopediaMapAreas"]))
+        if "CompletedQuestLines" in details_tables:
+            builder.completed_quest_lines(cls._parse_single_column_table(details_tables["CompletedQuestLines"]))
+        if "Titles" in details_tables:
+            builder.titles(cls._parse_single_column_table(details_tables["Titles"]))
+        if "Achievements" in details_tables:
+            cls._parse_achievements_table(builder, details_tables["Achievements"])
+        if "BestiaryProgress" in details_tables:
+            cls._parse_bestiary_table(builder, details_tables["BestiaryProgress"])
+        if "BosstiaryProgress" in details_tables:
+            cls._parse_bestiary_table(builder, details_tables["BosstiaryProgress"], True)
+        auction.details = builder.build()
+        return auction
+
+
+    @classmethod
+    def _parse_auction(cls, auction_row, auction_id=0) -> Auction:
         """Parse an auction's table, extracting its data.
 
         Parameters
@@ -263,7 +339,7 @@ class AuctionEntryParser:
 
         Returns
         -------
-        :class:`AuctionEntry`
+        :class:`Auction`
             The auction contained in the table.
         """
         header_container = auction_row.select_one("div.AuctionHeader")
@@ -277,7 +353,7 @@ class AuctionEntryParser:
         else:
             name = char_name_container.text
 
-        builder = AuctionEntryBuilder().name(name).auction_id(auction_id)
+        builder = AuctionBuilder().name(name).auction_id(auction_id)
         char_name_container.replaceWith('')
         m = char_info_regex.search(header_container.text)
         if m:
@@ -321,97 +397,8 @@ class AuctionEntryParser:
                 category_id = parse_integer(m.group(1))
             builder.add_sales_argument(SalesArgument(content=entry.text, category_image=img_url,
                                                      category_id=category_id))
-        if return_builder:
-            return builder
         return builder.build()
-    # endregion
 
-
-class AuctionParser(AuctionEntryParser):
-
-
-    # region Public Methods
-    @classmethod
-    def from_content(cls, content, auction_id=0, skip_details=False):
-        """Parse an auction detail page from Tibia.com and extracts its data.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The HTML content of the auction detail page in Tibia.com
-        auction_id: :class:`int`, optional
-            The ID of the auction.
-
-            It is not possible to extract the ID from the page's content, so it may be passed to assign it manually.
-        skip_details: :class:`bool`, optional
-            Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
-
-            This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
-            parsing time.
-
-        Returns
-        -------
-        :class:`Auction`
-            The auction details if found, :obj:`None` otherwise.
-
-        Raises
-        ------
-        InvalidContent
-            If the content does not belong to a auction detail's page.
-        """
-        parsed_content = parse_tibiacom_content(content, builder='html5lib' if not skip_details else 'lxml')
-        auction_row = parsed_content.select_one("div.Auction")
-        if not auction_row:
-            if "internal error" in content:
-                return None
-            raise InvalidContent("content does not belong to a auction details page in Tibia.com")
-        entry = cls._parse_auction(auction_row, return_builder=True)
-        builder = AuctionBuilder()
-        builder.__dict__.update(entry.__dict__)
-        builder.auction_id(auction_id)
-        if skip_details:
-            return builder.build()
-
-        details_tables = cls._parse_tables(parsed_content)
-        if "General" in details_tables:
-            cls._parse_general_table(builder, details_tables["General"])
-        if "ItemSummary" in details_tables:
-            builder.items(ItemSummaryParser._parse_table(details_tables["ItemSummary"]))
-        if "StoreItemSummary" in details_tables:
-            builder.store_items(ItemSummaryParser._parse_table(details_tables["StoreItemSummary"]))
-        if "Mounts" in details_tables:
-            builder.mounts(MountsParser._parse_table(details_tables["Mounts"]))
-        if "StoreMounts" in details_tables:
-            builder.store_mounts(MountsParser._parse_table(details_tables["StoreMounts"]))
-        if "Outfits" in details_tables:
-            builder.outfits(OutfitsParser._parse_table(details_tables["Outfits"]))
-        if "StoreOutfits" in details_tables:
-            builder.store_outfits(OutfitsParser._parse_table(details_tables["StoreOutfits"]))
-        if "Familiars" in details_tables:
-            builder.familiars(FamiliarsParser._parse_table(details_tables["Familiars"]))
-        if "Blessings" in details_tables:
-            cls._parse_blessings_table(builder, details_tables["Blessings"])
-        if "Imbuements" in details_tables:
-            builder.imbuements(cls._parse_single_column_table(details_tables["Imbuements"]))
-        if "Charms" in details_tables:
-            cls._parse_charms_table(builder, details_tables["Charms"])
-        if "CompletedCyclopediaMapAreas" in details_tables:
-            builder.completed_cyclopedia_map_areas(cls._parse_single_column_table(
-                details_tables["CompletedCyclopediaMapAreas"]))
-        if "CompletedQuestLines" in details_tables:
-            builder.completed_quest_lines(cls._parse_single_column_table(details_tables["CompletedQuestLines"]))
-        if "Titles" in details_tables:
-            builder.titles(cls._parse_single_column_table(details_tables["Titles"]))
-        if "Achievements" in details_tables:
-            cls._parse_achievements_table(builder, details_tables["Achievements"])
-        if "BestiaryProgress" in details_tables:
-            cls._parse_bestiary_table(builder, details_tables["BestiaryProgress"])
-        if "BosstiaryProgress" in details_tables:
-            cls._parse_bestiary_table(builder, details_tables["BosstiaryProgress"], True)
-        return builder.build()
-    # endregion
-
-    # region Private Methods
     @classmethod
     def _parse_tables(cls, parsed_content) -> Dict[str, bs4.Tag]:
         """Parse the character details tables.
@@ -666,8 +653,6 @@ class AuctionParser(AuctionEntryParser):
         if len(content_containers) >= 10:
             boss_data = cls._parse_data_table(content_containers[9])
             builder.boss_points(parse_integer(boss_data.get("boss_points", "")))
-    # endregion
-
 
 
 class PaginatedSummaryParser:

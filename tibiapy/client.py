@@ -351,7 +351,7 @@ class Client:
         """
         if page <= 0:
             raise ValueError('page must be 1 or greater.')
-        response = await self._request("GET", CharacterBazaar.get_auctions_history_url(page, filters), test=test)
+        response = await self._request("GET", CharacterBazaar.get_auctions_history_url(current_page, filters), test=test)
         start_time = time.perf_counter()
         auction_history = CharacterBazaar.from_content(response.content)
         parsing_time = time.perf_counter() - start_time

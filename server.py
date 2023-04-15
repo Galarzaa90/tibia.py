@@ -25,6 +25,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+@app.get("/auctions")
+async def get_current_auctions(
+        page: int = Query(1)
+):
+    return await app.state.client.fetch_current_auctions(page)
+
+@app.get("/auctions/{auction_id}")
+async def get_auction(
+        auction_id: int = Path(...)
+):
+    return await app.state.client.fetch_auction(auction_id)
+
 
 @app.get("/characters/{name}")
 async def get_character(

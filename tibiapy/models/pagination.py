@@ -16,6 +16,7 @@ class Paginated(GenericModel, Generic[T]):
     entries: List[T]
     """The entries in this page."""
 
+
 class PaginatedWithUrl(Paginated[T], Generic[T], ABC):
 
     @property

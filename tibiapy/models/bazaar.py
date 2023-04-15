@@ -5,11 +5,14 @@ from pydantic import BaseModel, PrivateAttr
 
 from tibiapy import PvpTypeFilter, BattlEyeTypeFilter, VocationAuctionFilter, SkillFilter, AuctionSearchType, \
     AuctionOrderBy, AuctionOrder, BazaarType, Vocation, Sex, BidType, AuctionStatus
+from tibiapy.models import PaginatedWithUrl
 from tibiapy.models.base import BaseCharacter
 from tibiapy.utils import get_tibia_url
 
 __all__ = (
     'AchievementEntry',
+    'Auction',
+    'AuctionDetails',
     'AuctionFilters',
     'BestiaryEntry',
     'BlessingEntry',
@@ -19,16 +22,14 @@ __all__ = (
     'DisplayItem',
     'DisplayMount',
     'DisplayOutfit',
-    'OutfitImage',
-    'PaginatedSummary',
+    'Familiars',
     'ItemSummary',
     'Mounts',
-    'Familiars',
+    'OutfitImage',
     'Outfits',
+    'PaginatedSummary',
     'SalesArgument',
     'SkillEntry',
-    'AuctionEntry',
-    'Auction',
 )
 
 class AchievementEntry(BaseModel):
@@ -270,66 +271,8 @@ class SkillEntry(BaseModel):
     progress: float
     """The percentage of progress for the next level."""
 
-class AuctionEntry(BaseCharacter):
-    """Represents an auction in the list, containing the summary."""
 
-    auction_id: int
-    """The internal id of the auction."""
-    name: str
-    """The name of the character."""
-    level: int
-    """The level of the character."""
-    world: str
-    """The world the character is in."""
-    vocation: Vocation
-    """The vocation of the character."""
-    sex: Sex
-    """The sex of the character."""
-    outfit: OutfitImage
-    """The current outfit selected by the user."""
-    displayed_items: List[DisplayItem]
-    """The items selected to be displayed."""
-    sales_arguments: List[SalesArgument]
-    """The sale arguments selected for the auction."""
-    auction_start: datetime.datetime
-    """The date when the auction started."""
-    auction_end: datetime.datetime
-    """The date when the auction ends."""
-    bid: int
-    """The current bid in Tibia Coins."""
-    bid_type: BidType
-    """The type of the auction's bid."""
-    status: AuctionStatus
-    """The current status of the auction."""
-
-    @property
-    def character_url(self):
-        """:class:`str`: The URL of the character's information page on Tibia.com."""
-        return BaseCharacter.get_url(self.name)
-
-    @property
-    def url(self):
-        """:class:`str`: The URL to this auction's detail page on Tibia.com."""
-        return self.get_url(self.auction_id)
-
-    @classmethod
-    def get_url(cls, auction_id):
-        """Get the URL to the Tibia.com detail page of an auction with a given id.
-
-        Parameters
-        ----------
-        auction_id: :class:`int`
-            The ID of the auction.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the auction's detail page.
-        """
-        return get_tibia_url("charactertrade", "currentcharactertrades", page="details", auctionid=auction_id)
-
-
-class Auction(AuctionEntry):
+class AuctionDetails(BaseModel):
     """The details of an auction."""
     hit_points: int
     """The hit points of the character."""
@@ -436,27 +379,82 @@ class Auction(AuctionEntry):
         return {skill.name: skill for skill in self.skills}
 
 
-class CharacterBazaar(BaseModel):
+class Auction(BaseModel):
+    """Represents an auction in the list, containing the summary."""
+
+    auction_id: int
+    """The internal id of the auction."""
+    name: str
+    """The name of the character."""
+    level: int
+    """The level of the character."""
+    world: str
+    """The world the character is in."""
+    vocation: Vocation
+    """The vocation of the character."""
+    sex: Sex
+    """The sex of the character."""
+    outfit: OutfitImage
+    """The current outfit selected by the user."""
+    displayed_items: List[DisplayItem]
+    """The items selected to be displayed."""
+    sales_arguments: List[SalesArgument]
+    """The sale arguments selected for the auction."""
+    auction_start: datetime.datetime
+    """The date when the auction started."""
+    auction_end: datetime.datetime
+    """The date when the auction ends."""
+    bid: int
+    """The current bid in Tibia Coins."""
+    bid_type: BidType
+    """The type of the auction's bid."""
+    status: AuctionStatus
+    """The current status of the auction."""
+    details: Optional[AuctionDetails] = None
+
+    @property
+    def character_url(self):
+        """:class:`str`: The URL of the character's information page on Tibia.com."""
+        return BaseCharacter.get_url(self.name)
+
+    @property
+    def url(self):
+        """:class:`str`: The URL to this auction's detail page on Tibia.com."""
+        return self.get_url(self.auction_id)
+
+    @classmethod
+    def get_url(cls, auction_id):
+        """Get the URL to the Tibia.com detail page of an auction with a given id.
+
+        Parameters
+        ----------
+        auction_id: :class:`int`
+            The ID of the auction.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the auction's detail page.
+        """
+        return get_tibia_url("charactertrade", "currentcharactertrades", page="details", auctionid=auction_id)
+
+
+class CharacterBazaar(PaginatedWithUrl[Auction]):
     """Represents the char bazaar."""
 
-    page: int
-    """The page being currently viewed."""
-    total_pages: int
-    """The total number of pages available."""
-    results_count: int
-    """The number of auctions listed."""
-    entries: List[AuctionEntry]
-    """The auctions displayed."""
     type: BazaarType
     """The type of auctions being displayed, either current or auction history."""
     filters: Optional[AuctionFilters] = None
     """The currently set filtering options."""
 
+    def get_page_url(self, page) -> str:
+        raise NotImplementedError
+
     @property
     def url(self):
         """:class:`str`: Get the URL to the bazaar."""
-        return self.get_auctions_history_url(self.page) if self.type == BazaarType.HISTORY else \
-            self.get_current_auctions_url(self.page, self.filters)
+        return self.get_auctions_history_url(self.current_page) if self.type == BazaarType.HISTORY else \
+            self.get_current_auctions_url(self.current_page, self.filters)
 
     @classmethod
     def get_current_auctions_url(cls, page=1, filters=None):

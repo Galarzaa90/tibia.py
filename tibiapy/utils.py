@@ -717,7 +717,7 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
     results_count : :class:`int`
         The total number of results.
     """
-    pages_div, results_div = pagination_block.find_all("div")
+    pages_div, results_div = pagination_block.select("small > div")
     current_page_link = pages_div.find("span", {"class": "CurrentPageLink"})
     page_links = pages_div.find_all("span", {"class": "PageLink"})
     # pages_with_links = pages_div.select(#)

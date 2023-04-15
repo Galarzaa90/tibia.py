@@ -1,18 +1,19 @@
-from tibiapy.models import CharacterBazaar, AuctionEntry, AuctionFilters, Auction
+from tibiapy.models import CharacterBazaar, AuctionFilters, Auction
+from tibiapy.models.bazaar import AuctionDetails
 
 
 class CharacterBazaarBuilder:
 
     def __init__(self, **kwargs):
-        self._page = kwargs.get("page") or 1
+        self._current_page = kwargs.get("current_page") or 1
         self._total_pages = kwargs.get("total_pages") or 1
         self._results_count = kwargs.get("results_count") or 0
         self._entries = kwargs.get("entries") or []
         self._type = kwargs.get("type")
         self._filters = kwargs.get("filters")
 
-    def page(self, page):
-        self._page = page
+    def current_page(self, current_page):
+        self._current_page = current_page
         return self
 
     def total_pages(self, total_pages):
@@ -42,7 +43,7 @@ class CharacterBazaarBuilder:
 
     def build(self):
         return CharacterBazaar(
-            page=self._page,
+            current_page=self._current_page,
             total_pages=self._total_pages,
             results_count=self._results_count,
             entries=self._entries,
@@ -50,7 +51,8 @@ class CharacterBazaarBuilder:
             filters=self._filters,
         )
 
-class AuctionEntryBuilder:
+
+class AuctionBuilder:
     def __init__(self, **kwargs):
         self._auction_id = kwargs.get("auction_id")
         self._name = kwargs.get("name")
@@ -132,7 +134,7 @@ class AuctionEntryBuilder:
         return self
 
     def build(self):
-        return AuctionEntry(
+        return Auction(
             auction_id=self._auction_id,
             name=self._name,
             level=self._level,
@@ -149,10 +151,9 @@ class AuctionEntryBuilder:
             status=self._status,
         )
 
-class AuctionBuilder(AuctionEntryBuilder):
+class AuctionDetailsBuilder:
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         self._hit_points = kwargs.get("hit_points")
         self._mana = kwargs.get("mana")
         self._capacity = kwargs.get("capacity")
@@ -375,21 +376,7 @@ class AuctionBuilder(AuctionEntryBuilder):
         return self
 
     def build(self):
-        return Auction(
-            auction_id=self._auction_id,
-            name=self._name,
-            level=self._level,
-            world=self._world,
-            vocation=self._vocation,
-            sex=self._sex,
-            outfit=self._outfit,
-            displayed_items=self._displayed_items,
-            sales_arguments=self._sales_arguments,
-            auction_start=self._auction_start,
-            auction_end=self._auction_end,
-            bid=self._bid,
-            bid_type=self._bid_type,
-            status=self._status,
+        return AuctionDetails(
             hit_points=self._hit_points,
             mana=self._mana,
             capacity=self._capacity,

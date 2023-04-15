@@ -21,6 +21,9 @@ Changelog
     - Removed ``owner``, ``world``, ``status`` and ``type`` from ``GuildHouse``.
     - Removed ``name`` from ``Death``.
     - Removed ``owner``, ``status`` and ``type`` from ``CharacterHouse``.
+    - ``Auction`` renamed to ``AuctionDetails`` and is no longer a subclass of ``AuctionEntry``.
+    - ``AuctionEntry`` renamed to ``Auction``.
+    - ``CharacterBazaar.page`` renamed to ``current_page``.
 
 
 .. v5.6.0
