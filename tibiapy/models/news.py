@@ -15,10 +15,26 @@ __all__ = (
 
 
 class BaseNews(BaseModel):
+    """Base class for all news classes.
+
+    Implements the :py:attr:`id` attribute and common properties.
+
+    The following implement this class:
+
+    - :class:`.News`
+    - :class:`.NewsEntry`
+    """
+
     id: int
     """The internal ID of the news entry."""
     category: NewsCategory
     """The category this belongs to."""
+
+    def __eq__(self, o: object) -> bool:
+        """Two news articles are considered equal if their names or ids are equal."""
+        if isinstance(o, self.__class__):
+            return self.id == o.id
+        return False
 
     @property
     def url(self):

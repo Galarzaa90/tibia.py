@@ -136,7 +136,7 @@ class WorldParser:
                 .battleye_type(BattlEyeType.UNPROTECTED)
 
 
-class WorldOverviewParser(abc.Serializable):
+class WorldOverviewParser:
     @classmethod
     def from_content(cls, content):
         """Parse the content of the World Overview section from Tibia.com into an object of this class.

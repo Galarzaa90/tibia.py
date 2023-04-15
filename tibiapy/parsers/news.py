@@ -143,7 +143,7 @@ class NewsArchiveParser:
         return NewsEntry(id=news_id, title=title, type=news_type, category=category, date=date)
 
 
-class NewsParser(abc.BaseNews, abc.Serializable):
+class NewsParser:
     """Represents a news entry."""
 
     @classmethod

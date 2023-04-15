@@ -4,7 +4,8 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from tibiapy import Vocation, ThreadStatus
-from tibiapy.models import BaseCharacter, GuildMembership
+from tibiapy.models import GuildMembership
+from tibiapy.models.base import BaseCharacter
 from tibiapy.utils import get_tibia_url
 
 __all__ = (
@@ -21,6 +22,7 @@ __all__ = (
     'ForumPost',
     'ForumThread',
 )
+
 
 class BaseAnnouncement(BaseModel):
     """Base class for all announcement classes.
@@ -61,6 +63,7 @@ class BaseAnnouncement(BaseModel):
             The URL of the announcement.
         """
         return get_tibia_url("forum", None, action="announcement", announcementid=announcement_id)
+
 
 class BaseBoard(BaseModel):
     """Base class for all board classes.
@@ -150,6 +153,7 @@ class BaseBoard(BaseModel):
         if isinstance(o, self.__class__):
             return self.board_id == o.board_id
         return False
+
 
 class BasePost(BaseModel):
     """Base class for post classes.

@@ -26,6 +26,14 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+@app.get("/characters/{name}")
+async def get_character(
+        name: str = Path(...)
+):
+    return await app.state.client.fetch_character(name)
+
+
+
 @app.get("/forums/world")
 async def get_world_boards():
     return await app.state.client.fetch_forum_world_boards()

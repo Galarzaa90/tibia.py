@@ -670,7 +670,7 @@ class AuctionParser(AuctionEntryParser):
 
 
 
-class PaginatedSummaryParser(abc.Serializable):
+class PaginatedSummaryParser:
 
 
     # region Public Methods

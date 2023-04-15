@@ -4,7 +4,7 @@ from typing import List, Optional, Set
 from pydantic import BaseModel
 
 from tibiapy import Category, VocationFilter, BattlEyeHighscoresFilter, PvpTypeFilter, Vocation
-from tibiapy.models import BaseCharacter
+from tibiapy.models.base import BaseCharacter
 from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.utils import get_tibia_url
 

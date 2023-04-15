@@ -36,7 +36,7 @@ edited_by_regex = re.compile(r'Edited by (.*) on \d{2}')
 signature_separator = "________________"
 
 
-class CMPostArchiveParser(abc.Serializable):
+class CMPostArchiveParser:
 
     @classmethod
     def from_content(cls, content):
@@ -209,7 +209,7 @@ class ForumAnnouncementParser:
         return builder.build()
 
 
-class ForumAuthorParser(abc.BaseCharacter, abc.Serializable):
+class ForumAuthorParser:
 
     @classmethod
     def _parse_author_table(cls, character_info_container):

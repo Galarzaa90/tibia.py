@@ -3,57 +3,15 @@ from typing import List, Optional, Dict
 
 from pydantic import BaseModel
 
-from tibiapy import HouseStatus, HouseType, HouseOrder, Sex, abc
+from tibiapy import HouseStatus, HouseType, HouseOrder, Sex
+from tibiapy.models.base import HouseWithId, BaseCharacter
 from tibiapy.utils import get_tibia_url
 
-
 __all__ = (
-    'BaseHouse',
-    'HouseWithId',
     'HouseEntry',
     'House',
     'HousesSection',
 )
-
-
-class BaseHouse(BaseModel):
-    name: str
-    """The name of the house."""
-
-    @classmethod
-    def get_url(cls, house_id, world):
-        """Get the Tibia.com URL for a house with the given id and world.
-
-        Parameters
-        ----------
-        house_id: :class:`int`
-            The internal id of the house.
-        world: :class:`str`
-            The world of the house.
-
-        Returns
-        -------
-        The URL to the house in Tibia.com
-        """
-        return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
-
-
-class HouseWithId(BaseHouse):
-    id: int
-    """The internal ID of the house. This is used on the website to identify houses."""
-    world: str
-    """The name of the world the house belongs to."""
-
-    def __eq__(self, o: object) -> bool:
-        """Two houses are considered equal if their names or ids are equal."""
-        if isinstance(o, self.__class__):
-            return self.name.lower() == o.name.lower() or self.id == o.id
-        return False
-
-    @property
-    def url(self):
-        """:class:`str`: The URL to the Tibia.com page of the house."""
-        return self.get_url(self.id, self.world) if self.id and self.world else None
 
 
 class HouseEntry(HouseWithId):
@@ -116,17 +74,17 @@ class House(HouseWithId):
     @property
     def owner_url(self):
         """:class:`str`: The URL to the Tibia.com page of the house's owner, if applicable."""
-        return abc.BaseCharacter.get_url(self.owner) if self.owner is not None else None
+        return BaseCharacter.get_url(self.owner) if self.owner is not None else None
 
     @property
     def transferee_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
-        return abc.BaseCharacter.get_url(self.transferee) if self.transferee is not None else None
+        return BaseCharacter.get_url(self.transferee) if self.transferee is not None else None
 
     @property
     def highest_bidder_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character with the highest bid, if applicable."""
-        return abc.BaseCharacter.get_url(self.highest_bidder) if self.highest_bidder is not None else None
+        return BaseCharacter.get_url(self.highest_bidder) if self.highest_bidder is not None else None
 
 
 class HousesSection(BaseModel):

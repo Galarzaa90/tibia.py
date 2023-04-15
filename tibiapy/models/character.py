@@ -5,15 +5,13 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
-from tibiapy import Sex, Vocation, AccountStatus, abc
-from tibiapy.models import HouseWithId
-from tibiapy.utils import get_tibia_url
+from tibiapy import Sex, Vocation, AccountStatus
+from tibiapy.models.base import BaseCharacter, HouseWithId, BaseGuild
 
 __all__ = (
     'AccountBadge',
     'AccountInformation',
     'Achievement',
-    'BaseCharacter',
     'CharacterHouse',
     'Killer',
     'Death',
@@ -22,6 +20,7 @@ __all__ = (
     'OtherCharacter',
     'Character',
 )
+
 
 class AccountBadge(BaseModel):
     """A displayed account badge in the character's information."""
@@ -62,31 +61,6 @@ class Achievement(BaseModel):
     """The grade of the achievement, also known as stars."""
     secret: bool = False
     """Whether the achievement is secret or not."""
-
-
-class BaseCharacter(BaseModel):
-    name: str
-
-    @property
-    def url(self):
-        """:class:`str`: The URL of the character's information page on Tibia.com."""
-        return self.get_url(self.name)
-
-    @classmethod
-    def get_url(cls, name):
-        """Get the Tibia.com URL for a given character name.
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the character.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the character's page.
-        """
-        return get_tibia_url("community", "characters", name=name)
 
 
 class CharacterHouse(HouseWithId):
@@ -261,7 +235,7 @@ class Character(BaseCharacter):
     @property
     def guild_url(self) -> Optional[str]:
         """:class:`str`, optional: The character's rank in the guild they belong to, or :obj:`None`."""
-        return abc.BaseGuild.get_url(self.guild_membership.name) if self.guild_membership else None
+        return BaseGuild.get_url(self.guild_membership.name) if self.guild_membership else None
 
     @property
     def hidden(self) -> bool:

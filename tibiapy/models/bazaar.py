@@ -5,7 +5,7 @@ from pydantic import BaseModel, PrivateAttr
 
 from tibiapy import PvpTypeFilter, BattlEyeTypeFilter, VocationAuctionFilter, SkillFilter, AuctionSearchType, \
     AuctionOrderBy, AuctionOrder, BazaarType, Vocation, Sex, BidType, AuctionStatus
-from tibiapy.models.character import BaseCharacter
+from tibiapy.models.base import BaseCharacter
 from tibiapy.utils import get_tibia_url
 
 __all__ = (

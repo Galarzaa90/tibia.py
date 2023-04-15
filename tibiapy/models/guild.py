@@ -5,12 +5,11 @@ from typing import Optional, List, Dict, OrderedDict
 from pydantic import BaseModel
 
 from tibiapy import Vocation
-from tibiapy.models import BaseCharacter, BaseHouse
+from tibiapy.models.base import BaseCharacter, BaseHouse, BaseGuild
 from tibiapy.utils import get_tibia_url
 
 
 __all__ = (
-    'BaseGuild',
     'GuildHouse',
     'GuildMember',
     'GuildInvite',
@@ -20,66 +19,6 @@ __all__ = (
     'GuildWarEntry',
     'GuildWars'
 )
-
-
-class BaseGuild(BaseModel):
-    """Base class for Guild classes."""
-
-    name: str
-    """The name of the guild."""
-
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.name == other.name
-        return False
-
-
-    @property
-    def url(self):
-        """:class:`str`: The URL to the guild's information page on Tibia.com."""
-        return self.get_url(self.name)
-
-    @property
-    def url_wars(self):
-        """:class:`str` The URL to the guild's wars page on Tibia.com.
-
-        .. versionadded:: 3.0.0
-        """
-        return self.get_url_wars(self.name)
-
-    @classmethod
-    def get_url(cls, name):
-        """Get the Tibia.com URL for a given guild name.
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the guild.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the guild's page.
-        """
-        return get_tibia_url("community", "guilds", page="view", GuildName=name)
-
-    @classmethod
-    def get_url_wars(cls, name):
-        """Get the Tibia.com URL for the guild wars of a guild with a given name.
-
-        .. versionadded:: 3.0.0
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the guild.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the guild's wars page.
-        """
-        return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
 
 
 class GuildMember(BaseCharacter):
