@@ -762,7 +762,7 @@
 <span class="sd">    results_count : :class:`int`</span>
 <span class="sd">        The total number of results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pages_div</span><span class="p">,</span> <span class="n">results_div</span> <span class="o">=</span> <span class="n">pagination_block</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+    <span class="n">pages_div</span><span class="p">,</span> <span class="n">results_div</span> <span class="o">=</span> <span class="n">pagination_block</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;small &gt; div&quot;</span><span class="p">)</span>
     <span class="n">current_page_link</span> <span class="o">=</span> <span class="n">pages_div</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;CurrentPageLink&quot;</span><span class="p">})</span>
     <span class="n">page_links</span> <span class="o">=</span> <span class="n">pages_div</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;PageLink&quot;</span><span class="p">})</span>
     <span class="c1"># pages_with_links = pages_div.select(#)</span>
