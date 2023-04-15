@@ -2,13 +2,16 @@ import datetime
 import re
 import urllib.parse
 
+import bs4
+
 from tibiapy import abc
+from tibiapy.builders.news import NewsArchiveBuilder, NewsBuilder
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.errors import InvalidContent
 from tibiapy.models.news import NewsArchive, News, NewsEntry
 from tibiapy.utils import (parse_form_data, parse_tibia_date,
                            parse_tibiacom_content, parse_tibiacom_tables,
-                           try_enum, parse_link_info)
+                           try_enum, parse_link_info, parse_form_data_new, clean_text)
 
 __all__ = (
     "NewsParser",
@@ -87,43 +90,39 @@ class NewsArchiveParser:
             if "News Archive Search" not in tables:
                 raise InvalidContent("content is not from the news archive section in Tibia.com")
             form = parsed_content.select_one("form")
-            data = cls._parse_filtering(form)
-            data["entries"] = []
+            builder = NewsArchiveBuilder()
+            cls._parse_filter_table(builder, form)
             if "Search Results" in tables:
                 rows = tables["Search Results"].select("tr.Odd, tr.Even")
                 for row in rows:
                     cols_raw = row.select('td')
                     if len(cols_raw) != 3:
                         continue
-                    data["entries"].append(cls._parse_entry(cols_raw))
-            return NewsArchive.parse_obj(data)
+                    builder.add_entry(cls._parse_entry(cols_raw))
+            return builder.build()
         except (AttributeError, IndexError, ValueError, KeyError) as e:
             raise InvalidContent("content is not from the news archive section in Tibia.com", e) from e
 
     @classmethod
-    def _parse_filtering(cls, form):
-        form_data = parse_form_data(form)
-        filters = {
-            "start_date": datetime.date(
-                int(form_data.pop("filter_begin_year")),
-                int(form_data.pop("filter_begin_month")),
-                int(form_data.pop("filter_begin_day")),
-            ),
-            "end_date": datetime.date(
-                int(form_data.pop("filter_end_year")),
-                int(form_data.pop("filter_end_month")),
-                int(form_data.pop("filter_end_day")),
-            ),
-            "types": []
-        }
+    def _parse_filter_table(cls, builder: NewsArchiveBuilder, form: bs4.Tag):
+        form_data = parse_form_data_new(form)
+        builder.start_date(datetime.date(
+            int(form_data.values["filter_begin_year"]),
+            int(form_data.values["filter_begin_month"]),
+            int(form_data.values["filter_begin_day"]),
+        )).end_date(
+            datetime.date(
+                int(form_data.values["filter_end_year"]),
+                int(form_data.values["filter_end_month"]),
+                int(form_data.values["filter_end_day"]),
+            )
+        )
         for news_type in NewsType:
-            if form_data.pop(news_type.filter_name, None):
-                filters["types"].append(news_type)
-        filters["categories"] = []
+            if news_type.filter_name in form_data.values_multiple:
+                builder.add_type(news_type)
         for category in NewsCategory:
-            if form_data.pop(category.filter_name, None):
-                filters["categories"].append(category)
-        return filters
+            if category.filter_name in form_data.values_multiple:
+                builder.add_category(category)
 
     @classmethod
     def _parse_entry(cls, cols_raw):
@@ -176,28 +175,28 @@ class NewsParser:
             return None
         try:
             parsed_content = parse_tibiacom_content(content)
+            builder = NewsBuilder().id(news_id)
             # Read Information from the headline
             headline = parsed_content.select_one("div.NewsHeadline")
             img = headline.select_one('img')
             img_url = img["src"]
             category_name = ICON_PATTERN.search(img_url)
-            category = try_enum(NewsCategory, category_name.group(1))
+            builder.category(try_enum(NewsCategory, category_name.group(1)))
             title_div = headline.select_one("div.NewsHeadlineText")
-            title = title_div.text.replace('\xa0', ' ')
+            builder.title(clean_text(title_div))
             date_div = headline.select_one("div.NewsHeadlineDate")
-            date_str = date_div.text.replace('\xa0', ' ').replace('-', '').strip()
-            date = parse_tibia_date(date_str)
+            date_str = clean_text(date_div).replace('-', '').strip()
+            builder.date(parse_tibia_date(date_str))
 
             # Read the page's content.
             content_table = parsed_content.select_one("table")
             content_row = content_table.select_one("td")
-            content = content_row.encode_contents().decode()
-            thread_id = None
+            builder.content(content_row.encode_contents().decode())
             if thread_link := content_table.select_one("div.NewsForumLink a"):
                 url = urllib.parse.urlparse(thread_link["href"])
                 query = urllib.parse.parse_qs(url.query)
-                thread_id = int(query["threadid"][0])
+                builder.thread_id(int(query["threadid"][0]))
 
-            return News(id=news_id, title=title, content=content, date=date, category=category, thread_id=thread_id)
+            return builder.build()
         except AttributeError as e:
             raise InvalidContent("content is not from the news archive section in Tibia.com") from e

@@ -24,6 +24,7 @@ Changelog
     - ``Auction`` renamed to ``AuctionDetails`` and is no longer a subclass of ``AuctionEntry``.
     - ``AuctionEntry`` renamed to ``Auction``.
     - ``CharacterBazaar.page`` renamed to ``current_page``.
+    - ``NewsArchive.categories`` and ``NewsArchive.types`` are now sets instead of lists.
 
 
 .. v5.6.0
