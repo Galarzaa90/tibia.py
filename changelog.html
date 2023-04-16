@@ -58,6 +58,7 @@ Try to always use the latest version.</p>
 <ul class="simple">
 <li><p>Python 3.7 and below no longer supported.</p></li>
 <li><p>All models are now Pydantic models, for better data validation, serialization and deserialization.</p></li>
+<li><p>Models no longer contain methods to parse content, these have been moved to dedicated parser classes.</p></li>
 <li><p>The location of models inside the module changed, so all imports need to be modified.</p></li>
 <li><dl class="simple">
 <dt>Model changes:</dt><dd><ul>
@@ -73,10 +74,12 @@ Try to always use the latest version.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">AuctionEntry</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">Auction</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">CharacterBazaar.page</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">current_page</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">NewsArchive.categories</span></code> and <code class="docutils literal notranslate"><span class="pre">NewsArchive.types</span></code> are now sets instead of lists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Character.account_status</span></code> replaced with <code class="docutils literal notranslate"><span class="pre">is_premium</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
+<li><p>Fixed <code class="docutils literal notranslate"><span class="pre">Character</span></code> account badges not being parsed properly.</p></li>
 </ul>
 </section>
 <section id="id1">
