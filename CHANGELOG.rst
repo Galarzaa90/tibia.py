@@ -28,6 +28,11 @@ Changelog
     - ``CharacterBazaar.page`` renamed to ``current_page``.
     - ``NewsArchive.categories`` and ``NewsArchive.types`` are now sets instead of lists.
     - ``Character.account_status`` replaced with ``is_premium``.
+    - Renamed ``DisplayImage`` to ``ItemEntry``.
+    - Renamed ``DisplayMount`` to ``MountEntry``.
+    - Renamed ``DisplayOutfit`` to ``OutfitEntry``.
+    - Renamed ``DisplayFamiliar`` to ``FamiliarEntry``.
+    - Renamed ``page`` to ``current_page``, ``results`` to ``results_count``, and ``fully_fetched`` to ``is_fully_fetched`` in ``ItemSummary``, ``Mounts``, ``Familiars`` and ``Outfits``.
 - Fixed ``Character`` account badges not being parsed properly.
 
 

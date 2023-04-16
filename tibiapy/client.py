@@ -236,16 +236,14 @@ class Client:
         test: :class:`bool`
             Whether to request the test website instead.
         """
-        if paginator is None or paginator.entry_class is None:
-            return
         current_page = 2
         while current_page <= paginator.total_pages:
             content = await self._fetch_ajax_page(auction_id, item_type, current_page, test=test)
             if content:
-                entries = AuctionParser._parse_page_items(content, paginator.entry_class)
+                entries = AuctionParser._parse_page_items(content, paginator)
                 paginator.entries.extend(entries)
             current_page += 1
-        paginator.fully_fetched = True
+        paginator.is_fully_fetched = True
 
     async def _fetch_ajax_page(self, auction_id, type_id, page, *, test=False):
         """Fetch an ajax page from the paginated summaries in the auction section.
@@ -358,7 +356,7 @@ class Client:
         return TibiaResponse.from_raw(response, auction_history, parsing_time)
 
     async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
-                            skip_details=False, test=False):
+                            fetch_familiars=False, skip_details=False, test=False):
         """Fetch an auction by its ID.
 
         .. versionadded:: 3.3.0
@@ -404,14 +402,16 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         if auction and not skip_details:
             if fetch_items:
-                await self._fetch_all_pages(auction_id, auction.items, 0, test=test)
-                await self._fetch_all_pages(auction_id, auction.store_items, 1, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.items, 0, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.store_items, 1, test=test)
             if fetch_mounts:
-                await self._fetch_all_pages(auction_id, auction.mounts, 2, test=test)
-                await self._fetch_all_pages(auction_id, auction.store_mounts, 3, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.mounts, 2, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.store_mounts, 3, test=test)
             if fetch_outfits:
-                await self._fetch_all_pages(auction_id, auction.outfits, 4, test=test)
-                await self._fetch_all_pages(auction_id, auction.store_outfits, 5, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.outfits, 4, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.store_outfits, 5, test=test)
+            if fetch_familiars:
+                await self._fetch_all_pages(auction_id, auction.details.outfits, 6, test=test)
         return TibiaResponse.from_raw(response, auction, parsing_time)
 
     # endregion

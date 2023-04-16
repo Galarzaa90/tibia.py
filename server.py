@@ -37,9 +37,16 @@ async def get_current_auctions(
 
 @app.get("/auctions/{auction_id}")
 async def get_auction(
-        auction_id: int = Path(...)
+        auction_id: int = Path(...),
+        skip_details: bool = Query(False),
+        fetch_items: bool = Query(False),
+        fetch_mounts: bool = Query(False),
+        fetch_outfits: bool = Query(False),
+        fetch_familiars: bool = Query(False),
 ):
-    return await app.state.client.fetch_auction(auction_id)
+    return await app.state.client.fetch_auction(auction_id, skip_details=skip_details, fetch_items=fetch_items,
+                                                fetch_mounts=fetch_mounts, fetch_outfits=fetch_outfits,
+                                                fetch_familiars=fetch_familiars)
 
 
 @app.get("/characters/{name}")

@@ -1,12 +1,14 @@
 import datetime
-from typing import Optional, List, Type, Dict
+from abc import ABC, abstractmethod
+from typing import Optional, List, Dict, TypeVar, Generic
 
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel
 
 from tibiapy import PvpTypeFilter, BattlEyeTypeFilter, VocationAuctionFilter, SkillFilter, AuctionSearchType, \
     AuctionOrderBy, AuctionOrder, BazaarType, Vocation, Sex, BidType, AuctionStatus
 from tibiapy.models import PaginatedWithUrl
 from tibiapy.models.base import BaseCharacter
+from tibiapy.models.pagination import AjaxPaginator
 from tibiapy.utils import get_tibia_url
 
 __all__ = (
@@ -18,19 +20,19 @@ __all__ = (
     'BlessingEntry',
     'CharacterBazaar',
     'CharmEntry',
-    'DisplayImage',
-    'DisplayItem',
-    'DisplayMount',
-    'DisplayOutfit',
+    'FamiliarEntry',
     'Familiars',
+    'ItemEntry',
     'ItemSummary',
+    'MountEntry',
     'Mounts',
+    'OutfitEntry',
     'OutfitImage',
     'Outfits',
-    'PaginatedSummary',
     'SalesArgument',
     'SkillEntry',
 )
+
 
 class AchievementEntry(BaseModel):
     """An unlocked achievement by the character."""
@@ -111,6 +113,7 @@ class BestiaryEntry(BaseModel):
         """:class:`bool`: Whether the entry is completed or not."""
         return self.step == 4
 
+
 class BlessingEntry(BaseModel):
     """A character's blessings."""
 
@@ -129,6 +132,16 @@ class CharmEntry(BaseModel):
     """The cost of the charm in charm points."""
 
 
+class BaseOutfit(BaseModel):
+    """A base outfit displayed in auctions."""
+
+    outfit_id: int
+    """The internal ID of the outfit."""
+    addons: int
+    """The selected or unlocked addons."""
+    image_url: str
+
+
 class DisplayImage(BaseModel):
     """An image displayed in the auction."""
 
@@ -137,7 +150,8 @@ class DisplayImage(BaseModel):
     name: str
     """The element's name."""
 
-class DisplayItem(DisplayImage):
+
+class ItemEntry(DisplayImage):
     """Represents an item displayed on an auction, or the character's items in the auction detail."""
 
     image_url: str
@@ -153,7 +167,8 @@ class DisplayItem(DisplayImage):
     tier: int = 0
     """The item's tier."""
 
-class DisplayMount(DisplayImage):
+
+class MountEntry(DisplayImage):
     """Represents a mount owned or unlocked by the character."""
 
     image_url: str
@@ -164,7 +179,7 @@ class DisplayMount(DisplayImage):
     """The internal ID of the mount."""
 
 
-class DisplayOutfit(DisplayImage):
+class OutfitEntry(DisplayImage, BaseOutfit):
     """Represents a outfit owned or unlocked by the character."""
 
     image_url: str
@@ -174,7 +189,8 @@ class DisplayOutfit(DisplayImage):
     outfit_id: int
     """The internal ID of the outfit."""
 
-class DisplayFamiliar(DisplayImage):
+
+class FamiliarEntry(DisplayImage):
     """Represents a familiar owned or unlocked by the character."""
 
     image_url: str
@@ -184,9 +200,9 @@ class DisplayFamiliar(DisplayImage):
     familiar_id: int
     """The internal ID of the familiar."""
 
-class OutfitImage(BaseModel):
-    """The image of the outfit currently being worn by the character."""
 
+class OutfitImage(BaseOutfit):
+    """The image of the outfit currently being worn by the character."""
 
     image_url: str
     """The URL of the image."""
@@ -195,56 +211,118 @@ class OutfitImage(BaseModel):
     addons: int
     """The addons displayed in the outfit."""
 
-class PaginatedSummary(BaseModel):
-    """Represents a paginated summary in the character auction section."""
+
+T = TypeVar("T", bound=DisplayImage)
 
 
-    page: int
-    """The current page being displayed."""
-    total_pages: int
-    """The total number of pages."""
-    results: int
-    """The total number of results."""
-    entries: list = []
-    """The entries."""
-    fully_fetched: bool = False
-    """Whether the summary was fetched completely, including all other pages."""
+class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
+    def get_by_name(self, name):
+        """Get an entry by its name.
 
-    _entry_class: Type = PrivateAttr(None)
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the entry, case insensitive.
+
+        Returns
+        -------
+        :class:`object`:
+            The entry matching the name.
+        """
+        return next((e for e in self.entries if e.name.lower() == name.lower()), None)
+
+    def search(self, value):
+        """Search an entry by its name.
+
+        Parameters
+        ----------
+        value: :class:`str`
+            The value to look for.
+
+        Returns
+        -------
+        :class:`list`
+            A list of entries with names containing the search term.
+        """
+        return [e for e in self.entries if value.lower() in e.name.lower()]
+
+    @abstractmethod
+    def get_by_id(self, name):
+        ...
 
 
-class ItemSummary(PaginatedSummary):
+class ItemSummary(AuctionSummary[ItemEntry]):
     """Items in a character's inventory and depot."""
 
+    def get_by_id(self, entry_id):
+        """Get an item by its item id.
 
-    entries: List[DisplayItem] = []
-    """The character's items."""
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the item.
 
-    _entry_class: Type = DisplayItem
+        Returns
+        -------
+        :class:`ItemEntry`
+            The item matching the id.
+        """
+        return next((e for e in self.entries if e.item_id == entry_id), None)
 
 
-class Mounts(PaginatedSummary):
-    entries: List[DisplayMount] = []
-    """The character's mounts."""
+class Mounts(AuctionSummary[MountEntry]):
+    def get_by_id(self, entry_id):
+        """Get an mount by its mount id.
 
-    _entry_class: Type = DisplayMount
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the mount.
+
+        Returns
+        -------
+        :class:`MountEntry`
+            The mount matching the id.
+        """
+        return next((e for e in self.entries if e.mount_id == entry_id), None)
 
 
-class Familiars(PaginatedSummary):
+class Familiars(AuctionSummary[FamiliarEntry]):
     """The familiars the character has unlocked or purchased."""
 
-    entries: List[DisplayFamiliar] = []
-    """The character's faimiliars."""
+    def get_by_id(self, entry_id):
+        """Get an familiar by its familiar id.
 
-    _entry_class: Type = DisplayFamiliar
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the familiar.
 
-class Outfits(PaginatedSummary):
+        Returns
+        -------
+        :class:`FamiliarEntry`
+            The familiar matching the id.
+        """
+        return next((e for e in self.entries if e.familiar_id == entry_id), None)
+
+
+class Outfits(AuctionSummary[OutfitEntry]):
     """The outfits the character has unlocked or purchased."""
 
-    entries: List[DisplayOutfit] = []
-    """The character's faimiliars."""
+    def get_by_id(self, entry_id):
+        """Get an outfit by its outfit id.
 
-    _entry_class: Type = DisplayOutfit
+        Parameters
+        ----------
+        entry_id: :class:`int`
+            The ID of the outfit.
+
+        Returns
+        -------
+        :class:`OutfitEntry`
+            The outfit matching the id.
+        """
+        return next((e for e in self.entries if e.outfit_id == entry_id), None)
 
 
 class SalesArgument(BaseModel):
@@ -396,7 +474,7 @@ class Auction(BaseModel):
     """The sex of the character."""
     outfit: OutfitImage
     """The current outfit selected by the user."""
-    displayed_items: List[DisplayItem]
+    displayed_items: List[ItemEntry]
     """The items selected to be displayed."""
     sales_arguments: List[SalesArgument]
     """The sale arguments selected for the auction."""

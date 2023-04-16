@@ -4,11 +4,10 @@ import unittest
 from tests.tests_tibiapy import TestCommons
 from tibiapy import AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
     BidType, \
-    \
+ \
     InvalidContent, PvpTypeFilter, \
     Sex, SkillFilter, \
     Vocation, VocationAuctionFilter
-from tibiapy.models import CharacterBazaar, Auction
 from tibiapy.parsers.bazaar import CharacterBazaarParser, AuctionParser
 
 FILE_BAZAAR_CURRENT_EMPTY = "bazaar/tibiacom_history_empty.txt"
@@ -177,58 +176,58 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertIsNotNone(auction.details.items)
         self.assertEqual(5, len(auction.details.items.entries))
         self.assertEqual(1, auction.details.items.total_pages)
-        self.assertEqual(5, auction.details.items.results)
-        # self.assertEqual(141, auction.items.get_by_name("label").item_id)
-        # self.assertEqual("cigar", auction.items.get_by_id(141).name)
-        # self.assertEqual(7, len(auction.items.search('backpack')))
+        self.assertEqual(5, auction.details.items.results_count)
+        self.assertEqual(3507, auction.details.items.get_by_name("label").item_id)
+        self.assertEqual("brocade backpack", auction.details.items.get_by_id(8860).name)
+        self.assertEqual(1, len(auction.details.items.search('parcel')))
 
         self.assertIsNotNone(auction.details.store_items)
         self.assertEqual(30, len(auction.details.store_items.entries))
         self.assertEqual(1, auction.details.store_items.total_pages)
-        self.assertEqual(30, auction.details.store_items.results)
-        # self.assertEqual(23721, auction.details.store_items.get_by_name("gold pouch").item_id)
-        # self.assertEqual("gold pouch", auction.details.store_items.get_by_id(23721).name)
-        # self.assertEqual(2, len(auction.details.store_items.search('rune')))
+        self.assertEqual(30, auction.details.store_items.results_count)
+        self.assertEqual(32917, auction.details.store_items.get_by_name("gold deed").item_id)
+        self.assertEqual("podium of vigour", auction.details.store_items.get_by_id(38707).name)
+        self.assertEqual(5, len(auction.details.store_items.search('plushie')))
 
         self.assertIsNotNone(auction.details.mounts)
         self.assertEqual(30, len(auction.details.mounts.entries))
         self.assertEqual(3, auction.details.mounts.total_pages)
-        self.assertEqual(61, auction.details.mounts.results)
-        # self.assertEqual(387, auction.details.mounts.get_by_name("donkey").mount_id)
-        # self.assertEqual("Donkey", auction.details.mounts.get_by_id(387).name)
-        # self.assertEqual(1, len(auction.details.mounts.search('drag')))
+        self.assertEqual(61, auction.details.mounts.results_count)
+        self.assertEqual(387, auction.details.mounts.get_by_name("donkey").mount_id)
+        self.assertEqual("Donkey", auction.details.mounts.get_by_id(387).name)
+        self.assertEqual(1, len(auction.details.mounts.search('drag')))
 
         self.assertIsNotNone(auction.details.store_mounts)
         self.assertEqual(4, len(auction.details.store_mounts.entries))
         self.assertEqual(1, auction.details.store_mounts.total_pages)
-        self.assertEqual(4, auction.details.store_mounts.results)
-        # self.assertEqual(906, auction.details.store_mounts.get_by_name("Wolpertinger").mount_id)
-        # self.assertEqual("Wolpertinger", auction.details.store_mounts.get_by_id(906).name)
-        # self.assertEqual(1, len(auction.details.store_mounts.search('Wolpertinger')))
+        self.assertEqual(4, auction.details.store_mounts.results_count)
+        self.assertEqual(427, auction.details.store_mounts.get_by_name("shadow draptor").mount_id)
+        self.assertEqual("Shadow Draptor", auction.details.store_mounts.get_by_id(427).name)
+        self.assertEqual(1, len(auction.details.store_mounts.search('shadow')))
 
         self.assertIsNotNone(auction.details.outfits)
         self.assertEqual(30, len(auction.details.outfits.entries))
         self.assertEqual(2, auction.details.outfits.total_pages)
-        self.assertEqual(50, auction.details.outfits.results)
-        # self.assertEqual(151, auction.details.outfits.get_by_name("pirate").outfit_id)
-        # self.assertEqual('Glooth Engineer', auction.details.outfits.get_by_id(610).name)
-        # self.assertEqual(2, len(auction.details.outfits.search('demon')))
+        self.assertEqual(50, auction.details.outfits.results_count)
+        self.assertEqual(153, auction.details.outfits.get_by_name("beggar").outfit_id)
+        self.assertEqual('Beggar', auction.details.outfits.get_by_id(153).name)
+        self.assertEqual(2, len(auction.details.outfits.search('demon')))
 
         self.assertIsNotNone(auction.details.store_outfits)
         self.assertEqual(1, len(auction.details.store_outfits.entries))
         self.assertEqual(1, auction.details.store_outfits.total_pages)
-        self.assertEqual(1, auction.details.store_outfits.results)
-        # self.assertEqual(962, auction.details.store_outfits.get_by_name("retro warrior").outfit_id)
-        # self.assertEqual('Retro Warrior', auction.details.store_outfits.get_by_id(962).name)
-        # self.assertEqual(2, len(auction.details.store_outfits.search('retro')))
+        self.assertEqual(1, auction.details.store_outfits.results_count)
+        self.assertEqual(1202, auction.details.store_outfits.get_by_name("void master").outfit_id)
+        self.assertEqual('Void Master', auction.details.store_outfits.get_by_id(1202).name)
+        self.assertEqual(1, len(auction.details.store_outfits.search('void')))
 
         self.assertIsNotNone(auction.details.familiars)
         self.assertEqual(2, len(auction.details.familiars.entries))
         self.assertEqual(1, auction.details.familiars.total_pages)
-        self.assertEqual(2, auction.details.familiars.results)
-        # self.assertEqual(992, auction.details.familiars.get_by_name("emberwing").familiar_id)
-        # self.assertEqual('Emberwing', auction.details.familiars.get_by_id(992).name)
-        # self.assertEqual(1, len(auction.details.familiars.search('ember')))
+        self.assertEqual(2, auction.details.familiars.results_count)
+        self.assertEqual(993, auction.details.familiars.get_by_name("grovebeast").familiar_id)
+        self.assertEqual('Grovebeast', auction.details.familiars.get_by_id(993).name)
+        self.assertEqual(1, len(auction.details.familiars.search('grove')))
 
         self.assertEqual(9, len(auction.details.blessings))
         self.assertEqual(23, len(auction.details.imbuements))

@@ -7,13 +7,13 @@ T = TypeVar('T')
 
 
 class Paginated(GenericModel, Generic[T]):
-    current_page: int
+    current_page: int = 1
     """The currently viewed page."""
-    total_pages: int
+    total_pages: int = 1
     """The total number of pages."""
-    results_count: int
+    results_count: int = 0
     """The total number of entries across all pages."""
-    entries: List[T]
+    entries: List[T] = []
     """The entries in this page."""
 
 
@@ -29,4 +29,8 @@ class PaginatedWithUrl(Paginated[T], Generic[T], ABC):
 
     @abstractmethod
     def get_page_url(self, page) -> str:
-        raise NotImplementedError
+        ...
+
+
+class AjaxPaginator(Paginated[T], Generic[T]):
+    is_fully_fetched: bool = False

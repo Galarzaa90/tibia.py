@@ -2,17 +2,18 @@
 import logging
 import re
 import urllib.parse
-from typing import Dict, List
+from typing import Dict, Type
 
 import bs4
 
-from tibiapy import InvalidContent, Sex, Vocation, abc
+from tibiapy import InvalidContent, Sex, Vocation
 from tibiapy.builders.bazaar import CharacterBazaarBuilder, AuctionBuilder, AuctionDetailsBuilder
 from tibiapy.enums import (AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter,
                            BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter)
-from tibiapy.models.bazaar import AuctionFilters, DisplayImage, DisplayItem, OutfitImage, SalesArgument, \
-    SkillEntry, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry, PaginatedSummary, DisplayMount, ItemSummary, \
-    Mounts, Familiars, Outfits, DisplayFamiliar, DisplayOutfit, CharacterBazaar, Auction
+from tibiapy.models.bazaar import AuctionFilters, ItemEntry, OutfitImage, SalesArgument, \
+    SkillEntry, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry, MountEntry, ItemSummary, \
+    Mounts, Familiars, Outfits, FamiliarEntry, OutfitEntry, CharacterBazaar, Auction
+from tibiapy.models.pagination import AjaxPaginator
 from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, parse_pagination,
                            parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
@@ -109,142 +110,6 @@ class CharacterBazaarParser:
             raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e) from e
 
 
-class DisplayImageParser:
-
-    @classmethod
-    def _parse_image_box(cls, item_box):
-        description = item_box["title"]
-        img_tag = item_box.select_one("img")
-        if not img_tag:
-            return None
-        return DisplayImage(image_url=img_tag["src"], name=description)
-
-
-class DisplayItemParser:
-
-    @classmethod
-    def _parse_image_box(cls, item_box: bs4.Tag):
-        title_text = item_box["title"]
-        img_tag = item_box.select_one("img")
-        if not img_tag:
-            return None
-        m = amount_regex.match(title_text)
-        amount = 1
-        if m:
-            amount = parse_integer(m.group(1))
-            title_text = amount_regex.sub("", title_text, 1).strip()
-        item_id = 0
-        description = None
-        name, *desc = title_text.split("\n")
-        if desc:
-            description = " ".join(desc)
-        tier = 0
-        m = tier_regex.search(name)
-        if m:
-            tier = int(m.group(2))
-            name = m.group(1)
-        m = id_regex.search(img_tag["src"])
-        if m:
-            item_id = int(m.group(1))
-        return DisplayItem(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description,
-                           tier=tier)
-
-
-class DisplayMountParser(DisplayImageParser):
-    """Represents a mount owned or unlocked by the character.
-
-    Attributes
-    ----------
-    image_url: :class:`str`
-        The URL to the image.
-    name: :class:`str`
-        The mount's name.
-    mount_id: :class:`int`
-        The internal ID of the mount.
-    """
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.mount_id: int = kwargs.get("mount_id", 0)
-
-    __slots__ = (
-        "mount_id",
-    )
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} name={self.name!r} mount_id={self.mount_id} image_url={self.image_url!r}>"
-
-    @classmethod
-    def _parse_image_box(cls, item_box):
-        description = item_box["title"]
-        img_tag = item_box.select_one("img")
-        if not img_tag:
-            return None
-        mount = DisplayMount(image_url=img_tag["src"], name=description, mount_id=0)
-        m = id_regex.search(mount.image_url)
-        if m:
-            mount.mount_id = int(m.group(1))
-        return mount
-
-
-class DisplayOutfitParser(DisplayImageParser):
-
-    @classmethod
-    def _parse_image_box(cls, item_box):
-        description = item_box["title"]
-        img_tag = item_box.select_one("img")
-        if not img_tag:
-            return None
-        outfit = DisplayOutfit(image_url=img_tag["src"], name=description, outfit_id=0)
-        name = outfit.name.split("(")[0].strip()
-        outfit.name = name
-        m = id_addon_regex.search(outfit.image_url)
-        if m:
-            outfit.outfit_id = int(m.group(1))
-            # outfit.addons = int(m.group(2))
-        return outfit
-
-
-class DisplayFamiliarParser(DisplayImageParser):
-    """Represents a familiar owned or unlocked by the character.
-
-    Attributes
-    ----------
-    image_url: :class:`str`
-        The URL to the image.
-    name: :class:`str`
-        The familiar's name.
-    familiar_id: :class:`int`
-        The internal ID of the familiar.
-    """
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.familiar_id: int = kwargs.get("familiar_id", 0)
-
-    __slots__ = (
-        "familiar_id",
-    )
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} name={self.name!r} familiar_id={self.familiar_id} " \
-               f"image_url={self.image_url!r}>"
-
-    @classmethod
-    def _parse_image_box(cls, item_box):
-        description = item_box["title"]
-        img_tag = item_box.select_one("img")
-        if not img_tag:
-            return None
-        familiar = DisplayFamiliar(image_url=img_tag["src"], name=description, familiar_id=0)
-        name = familiar.name.split("(")[0].strip()
-        familiar.name = name
-        m = id_regex.search(familiar.image_url)
-        if m:
-            familiar.familiar_id = int(m.group(1))
-        return familiar
-
-
 class AuctionParser:
 
     @classmethod
@@ -290,19 +155,19 @@ class AuctionParser:
         if "General" in details_tables:
             cls._parse_general_table(builder, details_tables["General"])
         if "ItemSummary" in details_tables:
-            builder.items(ItemSummaryParser._parse_table(details_tables["ItemSummary"]))
+            builder.items(cls._parse_items_table(details_tables["ItemSummary"]))
         if "StoreItemSummary" in details_tables:
-            builder.store_items(ItemSummaryParser._parse_table(details_tables["StoreItemSummary"]))
+            builder.store_items(cls._parse_items_table(details_tables["StoreItemSummary"]))
         if "Mounts" in details_tables:
-            builder.mounts(MountsParser._parse_table(details_tables["Mounts"]))
+            builder.mounts(cls._parse_mounts_table(details_tables["Mounts"]))
         if "StoreMounts" in details_tables:
-            builder.store_mounts(MountsParser._parse_table(details_tables["StoreMounts"]))
+            builder.store_mounts(cls._parse_mounts_table(details_tables["StoreMounts"]))
         if "Outfits" in details_tables:
-            builder.outfits(OutfitsParser._parse_table(details_tables["Outfits"]))
+            builder.outfits(cls._parse_outfits_table(details_tables["Outfits"]))
         if "StoreOutfits" in details_tables:
-            builder.store_outfits(OutfitsParser._parse_table(details_tables["StoreOutfits"]))
+            builder.store_outfits(cls._parse_outfits_table(details_tables["StoreOutfits"]))
         if "Familiars" in details_tables:
-            builder.familiars(FamiliarsParser._parse_table(details_tables["Familiars"]))
+            builder.familiars(cls._parse_familiars_table(details_tables["Familiars"]))
         if "Blessings" in details_tables:
             cls._parse_blessings_table(builder, details_tables["Blessings"])
         if "Imbuements" in details_tables:
@@ -324,7 +189,6 @@ class AuctionParser:
             cls._parse_bestiary_table(builder, details_tables["BosstiaryProgress"], True)
         auction.details = builder.build()
         return auction
-
 
     @classmethod
     def _parse_auction(cls, auction_row, auction_id=0) -> Auction:
@@ -367,7 +231,7 @@ class AuctionParser:
             builder.outfit(OutfitImage(image_url=outfit_img["src"], outfit_id=int(m.group(1)), addons=int(m.group(2))))
         item_boxes = auction_row.select("div.CVIcon")
         for item_box in item_boxes:
-            item = DisplayItemParser._parse_image_box(item_box)
+            item = cls._parse_displayed_item(item_box)
             if item:
                 builder.add_displayed_item(item)
         dates_containers = auction_row.select_one("div.ShortAuctionData")
@@ -569,29 +433,6 @@ class AuctionParser:
         else:
             builder.bestiary_progress(bestiary)
 
-    @classmethod
-    def _parse_page_items(cls, content, entry_class):
-        """Parse the elements of a page in the items, mounts and outfits.
-
-        Attributes
-        ----------
-        content: :class:`str`
-            The HTML content in the page.
-        entry_class:
-            The class defining the elements.
-
-        Returns
-        -------
-            The entries contained in the page.
-        """
-        parsed_content = parse_tibiacom_content(content, builder='html5lib')
-        item_boxes = parsed_content.select("div.CVIcon")
-        entries = []
-        for item_box in item_boxes:
-            item = entry_class._parse_image_box(item_box)
-            if item:
-                entries.append(item)
-        return entries
 
     @classmethod
     def _parse_general_table(cls, builder, table):
@@ -654,297 +495,133 @@ class AuctionParser:
             boss_data = cls._parse_data_table(content_containers[9])
             builder.boss_points(parse_integer(boss_data.get("boss_points", "")))
 
-
-class PaginatedSummaryParser:
-
-
-    # region Public Methods
-    def get_by_name(self, name):
-        """Get an entry by its name.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the entry, case insensitive.
-
-        Returns
-        -------
-        :class:`object`:
-            The entry matching the name.
-        """
-        return next((e for e in self.entries if e.name.lower() == name.lower()), None)
-
-    def search(self, value):
-        """Search an entry by its name.
-
-        Parameters
-        ----------
-        value: :class:`str`
-            The value to look for.
-
-        Returns
-        -------
-        :class:`list`
-            A list of entries with names containing the search term.
-        """
-        return [e for e in self.entries if value.lower() in e.name.lower()]
-
-    def get_by_id(self, name):
-        """Get an entry by its id.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the entry, case insensitive.
-
-        Returns
-        -------
-        :class:`object`:
-            The entry matching the name.
-        """
-        return NotImplemented
-    # endregion
-
-    # region Private Methods
-    def _parse_pagination(self, parsed_content):
-        pagination_block = parsed_content.select_one("div.BlockPageNavigationRow")
-        if pagination_block is not None:
-            self.page, self.total_pages, self.results = parse_pagination(pagination_block)
-    # endregion
-
-
-class ItemSummaryParser(PaginatedSummary):
-    """Items in a character's inventory and depot.
-
-    Attributes
-    ----------
-    page: :class:`int`
-        The current page being displayed.
-    total_pages: :class:`int`
-        The total number of pages.
-    results: :class:`int`
-        The total number of results.
-    entries: :class:`list` of :class:`DisplayItem`
-        The character's items.
-    fully_fetched: :class:`bool`
-        Whether the summary was fetched completely, including all other pages.
-    """
-
-    entries: List[DisplayItem]
-    entry_class = DisplayItem
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def get_by_id(self, entry_id):
-        """Get an item by its item id.
-
-        Parameters
-        ----------
-        entry_id: :class:`int`
-            The ID of the item.
-
-        Returns
-        -------
-        :class:`DisplayItem`
-            The item matching the id.
-        """
-        return next((e for e in self.entries if e.item_id == entry_id), None)
-
     @classmethod
-    def _parse_table(cls, table):
-        """Parse the item summary table.
-
-        Parameters
-        ----------
-        table: :class:`bs4.Tag`
-            The table containing the item summary.
-
-        Returns
-        -------
-        :class:`ItemSummary`
-            The item summary contained in the table.
-        """
-        page, total_pages, results = parse_pagination(table.select_one("div.BlockPageNavigationRow"))
-        summary = ItemSummary(page=page, total_pages=total_pages, results=results)
+    def _parse_items_table(cls, table: bs4.Tag):
+        if pagination_block := table.select_one("div.BlockPageNavigationRow"):
+            page, total_pages, results = parse_pagination(pagination_block)
+        else:
+            return ItemSummary()
+        summary = ItemSummary(current_page=page, total_pages=total_pages, results_count=results)
         item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
-            item = DisplayItemParser._parse_image_box(item_box)
-            if item:
+            if item := cls._parse_displayed_item(item_box):
                 summary.entries.append(item)
         return summary
 
-
-class MountsParser(PaginatedSummary):
-    """The mounts a character has unlocked or purchased.
-
-    Attributes
-    ----------
-    page: :class:`int`
-        The current page being displayed.
-    total_pages: :class:`int`
-        The total number of pages.
-    results: :class:`int`
-        The total number of results.
-    entries: :class:`list` of :class:`DisplayMount`
-        The character's mounts.
-    fully_fetched: :class:`bool`
-        Whether the summary was fetched completely, including all other pages.
-    """
-
-    entries: List[DisplayMount]
-    entry_class = DisplayMount
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def get_by_id(self, entry_id):
-        """Get a mount by its mount id.
-
-        Parameters
-        ----------
-        entry_id: :class:`int`
-            The ID of the mount.
-
-        Returns
-        -------
-        :class:`DisplayMount`
-            The mount matching the id.
-        """
-        return next((e for e in self.entries if e.mount_id == entry_id), None)
-
     @classmethod
-    def _parse_table(cls, table):
-        page, total_pages, results = parse_pagination(table.select_one("div.BlockPageNavigationRow"))
-        summary = Mounts(page=page, total_pages=total_pages, results=results)
-        item_boxes = table.select("div.CVIcon")
-        for item_box in item_boxes:
-            item = DisplayMountParser._parse_image_box(item_box)
-            if item:
-                summary.entries.append(item)
+    def _parse_mounts_table(cls, table):
+        if pagination_block := table.select_one("div.BlockPageNavigationRow"):
+            page, total_pages, results = parse_pagination(pagination_block)
+        else:
+            return Mounts()
+        summary = Mounts(current_page=page, total_pages=total_pages, results_count=results)
+        mount_boxes = table.select("div.CVIcon")
+        for mount_box in mount_boxes:
+            if mount := cls._parse_displayed_mount(mount_box):
+                summary.entries.append(mount)
         return summary
 
-
-class FamiliarsParser(PaginatedSummary):
-    """The familiars the character has unlocked or purchased.
-
-    Attributes
-    ----------
-    page: :class:`int`
-        The current page being displayed.
-    total_pages: :class:`int`
-        The total number of pages.
-    results: :class:`int`
-        The total number of results.
-    entries: :class:`list` of :class:`DisplayFamiliar`
-        The familiars the character has unlocked or purchased.
-    fully_fetched: :class:`bool`
-        Whether the summary was fetched completely, including all other pages.
-    """
-
-    entries: List[DisplayFamiliar]
-    entry_class = DisplayFamiliar
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def get_by_id(self, entry_id):
-        """Get an outfit by its familiar id.
-
-        Parameters
-        ----------
-        entry_id: :class:`int`
-            The ID of the outfit.
-
-        Returns
-        -------
-        :class:`DisplayOutfit`
-            The outfit matching the id.
-        """
-        return next((e for e in self.entries if e.familiar_id == entry_id), None)
-
     @classmethod
-    def _parse_table(cls, table):
-        """Parse the outfits table.
-
-        Parameters
-        ----------
-        table: :class:`bs4.Tag`
-            The table containing the character outfits.
-
-        Returns
-        -------
-        :class:`Outfits`
-            The outfits contained in the table.
-        """
-        page, total_pages, results = parse_pagination(table.select_one("div.BlockPageNavigationRow"))
-        summary = Familiars(page=page, total_pages=total_pages, results=results)
-        item_boxes = table.select("div.CVIcon")
-        for item_box in item_boxes:
-            item = DisplayFamiliarParser._parse_image_box(item_box)
-            if item:
-                summary.entries.append(item)
+    def _parse_outfits_table(cls, table):
+        if pagination_block := table.select_one("div.BlockPageNavigationRow"):
+            page, total_pages, results = parse_pagination(pagination_block)
+        else:
+            return Outfits()
+        summary = Outfits(current_page=page, total_pages=total_pages, results_count=results)
+        outfit_boxes = table.select("div.CVIcon")
+        for outfit_box in outfit_boxes:
+            if outfit := cls._parse_displayed_outfit(outfit_box):
+                summary.entries.append(outfit)
         return summary
 
-
-class OutfitsParser:
-    """The outfits the character has unlocked or purchased.
-
-    Attributes
-    ----------
-    page: :class:`int`
-        The current page being displayed.
-    total_pages: :class:`int`
-        The total number of pages.
-    results: :class:`int`
-        The total number of results.
-    entries: :class:`list` of :class:`DisplayOutfit`
-        The outfits the character has unlocked or purchased.
-    fully_fetched: :class:`bool`
-        Whether the summary was fetched completely, including all other pages.
-    """
-
-    entries: List[DisplayOutfit]
-    entry_class = DisplayOutfit
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def get_by_id(self, entry_id):
-        """Get an outfit by its outfit id.
-
-        Parameters
-        ----------
-        entry_id: :class:`int`
-            The ID of the outfit.
-
-        Returns
-        -------
-        :class:`DisplayOutfit`
-            The outfit matching the id.
-        """
-        return next((e for e in self.entries if e.outfit_id == entry_id), None)
-
     @classmethod
-    def _parse_table(cls, table):
-        """Parse the outfits table.
-
-        Parameters
-        ----------
-        table: :class:`bs4.Tag`
-            The table containing the character outfits.
-
-        Returns
-        -------
-        :class:`Outfits`
-            The outfits contained in the table.
-        """
-        page, total_pages, results = parse_pagination(table.select_one("div.BlockPageNavigationRow"))
-        summary = Outfits(page=page, total_pages=total_pages, results=results)
-        item_boxes = table.select("div.CVIcon")
-        for item_box in item_boxes:
-            item = DisplayOutfitParser._parse_image_box(item_box)
-            if item:
-                summary.entries.append(item)
+    def _parse_familiars_table(cls, table):
+        if pagination_block := table.select_one("div.BlockPageNavigationRow"):
+            page, total_pages, results = parse_pagination(pagination_block)
+        else:
+            return Familiars()
+        summary = Familiars(current_page=page, total_pages=total_pages, results_count=results)
+        familiar_boxes = table.select("div.CVIcon")
+        for familiar_box in familiar_boxes:
+            if familiar := cls._parse_displayed_familiar(familiar_box):
+                summary.entries.append(familiar)
         return summary
 
+    @classmethod
+    def _parse_displayed_item(cls, item_box):
+        title_text = item_box["title"]
+        img_tag = item_box.select_one("img")
+        if not img_tag:
+            return None
+        m = amount_regex.match(title_text)
+        amount = 1
+        if m:
+            amount = parse_integer(m.group(1))
+            title_text = amount_regex.sub("", title_text, 1).strip()
+        name, *desc = title_text.split("\n")
+        description = " ".join(desc) if desc else None
+        tier = 0
+        if m := tier_regex.search(name):
+            tier = int(m.group(2))
+            name = m.group(1)
+        item_id = int(m.group(1)) if (m := id_regex.search(img_tag["src"])) else 0
+        return ItemEntry(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description,
+                         tier=tier)
+
+    @classmethod
+    def _parse_displayed_mount(cls, item_box):
+        description = item_box["title"]
+        img_tag = item_box.select_one("img")
+        if not img_tag:
+            return None
+        mount = MountEntry(image_url=img_tag["src"], name=description, mount_id=0)
+        if m := id_regex.search(mount.image_url):
+            mount.mount_id = int(m.group(1))
+        return mount
+
+    @classmethod
+    def _parse_displayed_outfit(cls, item_box):
+        description = item_box["title"]
+        img_tag = item_box.select_one("img")
+        if not img_tag:
+            return None
+        outfit = OutfitEntry(image_url=img_tag["src"], name=description, outfit_id=0, addons=0)
+        name = outfit.name.split("(")[0].strip()
+        outfit.name = name
+        if m := id_addon_regex.search(outfit.image_url):
+            outfit.outfit_id = int(m.group(1))
+            outfit.addons = int(m.group(2))
+        return outfit
+
+    @classmethod
+    def _parse_displayed_familiar(cls, item_box):
+        description = item_box["title"]
+        img_tag = item_box.select_one("img")
+        if not img_tag:
+            return None
+        familiar = FamiliarEntry(image_url=img_tag["src"], name=description, familiar_id=0)
+        name = familiar.name.split("(")[0].strip()
+        familiar.name = name
+        if m := id_regex.search(familiar.image_url):
+            familiar.familiar_id = int(m.group(1))
+        return familiar
+
+    @classmethod
+    def _parse_page_items(cls, content, paginator: Type[AjaxPaginator]):
+        parsed_content = parse_tibiacom_content(content, builder='html5lib')
+        item_boxes = parsed_content.select("div.CVIcon")
+        entries = []
+        for item_box in item_boxes:
+            if isinstance(paginator, ItemSummary):
+                item = cls._parse_displayed_item(item_box)
+            elif isinstance(paginator, Outfits):
+                item = cls._parse_displayed_outfit(item_box)
+            elif isinstance(paginator, Mounts):
+                item = cls._parse_displayed_mount(item_box)
+            elif isinstance(paginator, Familiars):
+                item = cls._parse_displayed_familiar(item_box)
+            else:
+                raise TypeError("unsupported paginator type")
+            if item:
+                entries.append(item)
+        return entries
