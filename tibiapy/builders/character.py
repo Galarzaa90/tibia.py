@@ -3,33 +3,33 @@ from tibiapy.models import Character
 
 class CharacterBuilder:
 
-    def __init__(self, **kwargs):
-        self._name = kwargs.get("name")
-        self._traded = kwargs.get("traded") or False
-        self._deletion_date = kwargs.get("deletion_date")
-        self._former_names = kwargs.get("former_names") or []
-        self._title = kwargs.get("title")
-        self._unlocked_titles = kwargs.get("unlocked_titles") or 0
-        self._sex = kwargs.get("sex")
-        self._vocation = kwargs.get("vocation")
-        self._level = kwargs.get("level")
-        self._achievement_points = kwargs.get("achievement_points")
-        self._world = kwargs.get("world")
-        self._former_world = kwargs.get("former_world")
-        self._residence = kwargs.get("residence")
-        self._married_to = kwargs.get("married_to")
-        self._houses = kwargs.get("houses") or []
-        self._guild_membership = kwargs.get("guild_membership")
-        self._last_login = kwargs.get("last_login")
-        self._position = kwargs.get("position")
-        self._comment = kwargs.get("comment")
-        self._account_status = kwargs.get("account_status")
-        self._account_badges = kwargs.get("account_badges") or []
-        self._achievements = kwargs.get("achievements") or []
-        self._deaths = kwargs.get("deaths") or []
-        self._deaths_truncated = kwargs.get("deaths_truncated") or False
-        self._account_information = kwargs.get("account_information")
-        self._other_characters = kwargs.get("other_characters") or []
+    def __init__(self):
+        self._name = None
+        self._traded = False
+        self._deletion_date = None
+        self._former_names = []
+        self._title = None
+        self._unlocked_titles = 0
+        self._sex = None
+        self._vocation = None
+        self._level = None
+        self._achievement_points = None
+        self._world = None
+        self._former_world = None
+        self._residence = None
+        self._married_to = None
+        self._houses = []
+        self._guild_membership = None
+        self._last_login = None
+        self._position = None
+        self._comment = None
+        self._is_premium = None
+        self._account_badges = []
+        self._achievements = []
+        self._deaths = []
+        self._deaths_truncated = False
+        self._account_information = None
+        self._other_characters = []
 
     def name(self, name):
         self._name = name
@@ -111,8 +111,8 @@ class CharacterBuilder:
         self._comment = comment
         return self
 
-    def account_status(self, account_status):
-        self._account_status = account_status
+    def is_premium(self, is_premium):
+        self._is_premium = is_premium
         return self
 
     def account_badges(self, account_badges):
@@ -164,7 +164,7 @@ class CharacterBuilder:
             last_login=self._last_login,
             position=self._position,
             comment=self._comment,
-            account_status=self._account_status,
+            is_premium=self._is_premium,
             account_badges=self._account_badges,
             achievements=self._achievements,
             deaths=self._deaths,

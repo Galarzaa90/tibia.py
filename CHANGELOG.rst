@@ -12,6 +12,7 @@ Changelog
 ==================
 - Python 3.7 and below no longer supported.
 - All models are now Pydantic models, for better data validation, serialization and deserialization.
+- Models no longer contain methods to parse content, these have been moved to dedicated parser classes.
 - The location of models inside the module changed, so all imports need to be modified.
 - Model changes:
     - Removed ``world`` from ``OnlineCharacter``.
@@ -26,6 +27,8 @@ Changelog
     - ``AuctionEntry`` renamed to ``Auction``.
     - ``CharacterBazaar.page`` renamed to ``current_page``.
     - ``NewsArchive.categories`` and ``NewsArchive.types`` are now sets instead of lists.
+    - ``Character.account_status`` replaced with ``is_premium``.
+- Fixed ``Character`` account badges not being parsed properly.
 
 
 .. v5.6.0

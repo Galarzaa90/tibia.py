@@ -42,7 +42,6 @@ __all__ = (
 
 class CharacterParser:
 
-    # region Public methods
     @classmethod
     def from_content(cls, content):
         """Create an instance of the class from the html content of the character's page.
@@ -80,9 +79,7 @@ class CharacterParser:
         builder.account_information(cls._parse_account_information(tables.get("Account Information", [])))
         builder.other_characters(cls._parse_other_characters(tables.get("Characters", [])))
         return builder.build()
-    # endregion
 
-    # region Private methods
     @classmethod
     def _parse_account_information(cls, rows):
         """Parse the character's account information.
@@ -141,7 +138,7 @@ class CharacterParser:
             A list of all rows contained in the table.
         """
         row = rows[0]
-        columns = row.select('td')
+        columns = row.select("td > span")
         account_badges = []
         for column in columns:
             popup_span = column.select_one("span.HelperDivIndicator")
@@ -201,7 +198,7 @@ class CharacterParser:
             elif field == "comment":
                 builder.comment(value)
             elif field == "account status":
-                builder.account_status(try_enum(AccountStatus, value))
+                builder.is_premium("premium" in value.lower())
             elif field == "married to":
                 builder.married_to(value)
             elif field == "house":
@@ -394,4 +391,3 @@ class CharacterParser:
                 offset = 1
             output[title] = table.select("tr")[offset:]
         return output
-    # endregion

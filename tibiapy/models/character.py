@@ -197,7 +197,7 @@ class Character(BaseCharacter):
     """The position of the character (e.g. CipSoft Member), if any."""
     comment: Optional[str] = None
     """The displayed comment."""
-    account_status: AccountStatus
+    is_premium: bool = False
     """Whether the character's account is Premium or Free."""
     account_badges: List[AccountBadge] = []
     """The displayed account badges."""
