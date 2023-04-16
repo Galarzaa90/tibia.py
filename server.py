@@ -17,19 +17,23 @@ log = logging.getLogger("tibiapy")
 log.addHandler(console_handler)
 log.setLevel(logging.DEBUG)
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.client = tibiapy.Client()
     yield
     await app.state.client.session.close()
 
+
 app = FastAPI(lifespan=lifespan)
+
 
 @app.get("/auctions")
 async def get_current_auctions(
         page: int = Query(1)
 ):
     return await app.state.client.fetch_current_auctions(page)
+
 
 @app.get("/auctions/{auction_id}")
 async def get_auction(
@@ -51,6 +55,32 @@ async def get_events_schedule(
         month: int = Path(...),
 ):
     return await app.state.client.fetch_event_schedule(month, year)
+
+
+@app.get("/creatures")
+async def get_creatures():
+    return await app.state.client.fetch_library_creatures()
+
+
+@app.get("/creatures/boosted")
+async def get_boosted_creature():
+    return await app.state.client.fetch_boosted_creature()
+
+
+@app.get("/creatures/{identifier}")
+async def get_creature(identifier: str = Path(...)):
+    return await app.state.client.fetch_creature(identifier)
+
+
+@app.get("/bosses")
+async def get_creatures():
+    return await app.state.client.fetch_library_bosses()
+
+
+@app.get("/bosses/boosted")
+async def get_boosted_creature():
+    return await app.state.client.fetch_boosted_boss()
+
 
 @app.get("/forums/world")
 async def get_world_boards():
@@ -113,8 +143,10 @@ async def get_highscores(
 ) -> TibiaResponse[Highscores]:
     if world.lower() in ("global", "all"):
         world = None
-    return await app.state.client.fetch_highscores_page(world, category, page=page, vocation=vocation, battleye_type=battleye,
+    return await app.state.client.fetch_highscores_page(world, category, page=page, vocation=vocation,
+                                                        battleye_type=battleye,
                                                         pvp_types=pvp_types)
+
 
 @app.get("/houses/{world}/{house_id}")
 async def get_house(
@@ -134,6 +166,7 @@ async def get_houses_section(
 ):
     return await app.state.client.fetch_world_houses(world, town, status=status, order=order, house_type=house_type)
 
+
 @app.get("/killStatistics/{world}")
 @app.get("/killstatistics/{world}")
 async def get_kill_statistics(
@@ -144,23 +177,23 @@ async def get_kill_statistics(
 
 @app.get("/leaderboards/{world}")
 async def get_leaderboards(
-    world: str = Path(...)
+        world: str = Path(...)
 ):
     return await app.state.client.fetch_leaderboard(world=world)
 
 
 @app.get("/news/recent/{days}")
 async def get_recent_news(
-    days: int = Path(...),
-    types: Set[NewsType] = Query(None, alias="type"),
-    categories: Set[NewsCategory] = Query(None, alias="category"),
+        days: int = Path(...),
+        types: Set[NewsType] = Query(None, alias="type"),
+        categories: Set[NewsCategory] = Query(None, alias="category"),
 ) -> TibiaResponse[NewsArchive]:
     return await app.state.client.fetch_recent_news(days=days, types=types, categories=categories)
 
 
 @app.get("/news/{news_id}")
 async def get_news_article(
-    news_id: int = Path(...)
+        news_id: int = Path(...)
 ) -> TibiaResponse[Optional[News]]:
     return await app.state.client.fetch_news(news_id=news_id)
 
@@ -173,12 +206,13 @@ async def get_spells(
         premium: bool = Query(None),
         sort: SpellSorting = Query(None),
 ) -> TibiaResponse[SpellsSection]:
-    return await app.state.client.fetch_spells(vocation=vocation, group=group, spell_type=type, premium=premium, sort=sort)
+    return await app.state.client.fetch_spells(vocation=vocation, group=group, spell_type=type, premium=premium,
+                                               sort=sort)
 
 
 @app.get("/spells/{identifier}")
 async def get_spell(
-    identifier: str = Path(...)
+        identifier: str = Path(...)
 ) -> TibiaResponse[Optional[Spell]]:
     return await app.state.client.fetch_spell(identifier)
 
@@ -191,4 +225,3 @@ async def get_worlds() -> TibiaResponse[WorldOverview]:
 @app.get("/worlds/{name}")
 async def get_world(name: str = Path(...)) -> TibiaResponse[Optional[World]]:
     return await app.state.client.fetch_world(name)
-

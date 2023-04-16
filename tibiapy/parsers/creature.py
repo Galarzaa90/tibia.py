@@ -8,7 +8,7 @@ import bs4
 from tibiapy.builders.creature import CreatureBuilder
 from tibiapy.errors import InvalidContent
 from tibiapy.models.creature import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses
-from tibiapy.utils import parse_tibiacom_content
+from tibiapy.utils import parse_tibiacom_content, convert_line_breaks
 
 __all__ = (
     "BoostedCreaturesParser",
@@ -206,11 +206,9 @@ class CreaturesSectionParser:
             raise InvalidContent("content is not the creature's library", e)
 
 
-
 class CreatureParser:
 
     _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
-
 
     @classmethod
     def from_content(cls, content):
@@ -239,9 +237,10 @@ class CreatureParser:
             race = img_url.split("/")[-1].replace(".gif", "")
             builder = CreatureBuilder().name(name).identifier(race)
 
+            convert_line_breaks(description_container)
             paragraph_tags = description_container.find_all("p")
             paragraphs = [p.text for p in paragraph_tags]
-            builder.description("\n".join(paragraphs[:-2]))
+            builder.description("\n".join(paragraphs[:-2]).strip())
             hp_text = paragraphs[-2]
             cls._parse_hp_text(builder, hp_text)
 
@@ -260,11 +259,9 @@ class CreatureParser:
         exp_text: :class:`str`
             The text containing experience.
         """
-        m = EXP_PATTERN.search(exp_text)
-        if m:
+        if m := EXP_PATTERN.search(exp_text):
             builder.experience(int(m.group(1)))
-        m = LOOT_PATTERN.search(exp_text)
-        if m:
+        if m := LOOT_PATTERN.search(exp_text):
             builder.loot(m.group(1))
 
     @classmethod
@@ -288,14 +285,11 @@ class CreatureParser:
         if "sense invisible" in hp_text:
             immune.append("invisible")
         builder.immune_to(immune)
-        m = WEAK_PATTERN.search(hp_text)
-        if m:
+        if m := WEAK_PATTERN.search(hp_text):
             builder.weak_against(cls._parse_elements(m.group(1)))
-        m = STRONG_PATTERN.search(hp_text)
-        if m:
+        if m := STRONG_PATTERN.search(hp_text):
             builder.strong_against(cls._parse_elements(m.group(1)))
-        m = MANA_COST.search(hp_text)
-        if m:
+        if m := MANA_COST.search(hp_text):
             builder.mana_cost(int(m.group(1)))
             if "summon or convince" in hp_text:
                 builder.convinceable(True)

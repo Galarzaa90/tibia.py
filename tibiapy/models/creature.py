@@ -47,7 +47,6 @@ class CreatureEntry(BaseModel):
     identifier: str
     """The internal name of the creature's race. Used for links and images."""
 
-
     @property
     def url(self):
         """:class:`str`: The URL to this creature's details."""
@@ -73,6 +72,7 @@ class CreatureEntry(BaseModel):
             The URL to the detail page.
         """
         return get_tibia_url("library", "creatures", race=identifier)
+
 
 class Creature(CreatureEntry):
     """Represents a creature's details on the Tibia.com library."""
@@ -110,7 +110,6 @@ class CreaturesSection(BaseModel):
     """The current boosted creature."""
     creatures: List[CreatureEntry]
     """The list of creatures in the library."""
-
 
     @classmethod
     def get_url(cls):
