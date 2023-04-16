@@ -6,8 +6,7 @@ from pydantic import BaseModel
 
 from tibiapy import Vocation
 from tibiapy.models.base import BaseCharacter, BaseHouse, BaseGuild
-from tibiapy.utils import get_tibia_url
-
+from tibiapy.urls import get_world_guilds_url, get_guild_url, get_guild_wars_url
 
 __all__ = (
     'GuildHouse',
@@ -145,23 +144,7 @@ class GuildsSection(BaseModel):
     @property
     def url(self):
         """:class:`str`: Get the URL to this guild section."""
-        return self.get_url(self.world)
-
-    @classmethod
-    def get_url(cls, world):
-        """Get the Tibia.com URL for the guild section of a specific world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's page
-        """
-        return get_tibia_url("community", "guilds", world=world)
+        return get_world_guilds_url(self.world)
 
 
 class GuildWarEntry(BaseModel):
@@ -202,12 +185,12 @@ class GuildWarEntry(BaseModel):
     @property
     def guild_url(self):
         """:class:`str`: The URL to the guild's information page on Tibia.com."""
-        return Guild.get_url(self.guild_name)
+        return get_guild_url(self.guild_name)
 
     @property
     def opponent_guild_url(self):
         """:class:`str`: The URL to the opposing guild's information page on Tibia.com."""
-        return Guild.get_url(self.opponent_name) if self.opponent_name else None
+        return get_guild_url(self.opponent_name) if self.opponent_name else None
 
 
 class GuildWars(BaseModel):
@@ -223,22 +206,4 @@ class GuildWars(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL of this guild's war page on Tibia.com."""
-        return self.get_url(self.name)
-
-    @classmethod
-    def get_url(cls, name):
-        """Get the URL to the guild's war page of a guild with the given name.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the guild.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the guild's war page.
-        """
-        return Guild.get_url_wars(name)
-
-
+        return get_guild_wars_url(self.name)

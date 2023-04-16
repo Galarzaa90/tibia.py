@@ -3,11 +3,11 @@ import json
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, TournamentWorldType
+from tibiapy import InvalidContent
 from tibiapy.enums import PvpType, TransferType, WorldLocation
 from tibiapy.models.world import WorldOverview, WorldEntry, World
-
 from tibiapy.parsers.world import WorldOverviewParser, WorldParser
+from tibiapy.urls import get_world_url
 
 FILE_WORLD_FULL = "world/tibiacom_online.txt"
 FILE_WORLD_FULL_OFFLINE = "world/tibiacom_offline.txt"
@@ -42,7 +42,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(world.battleye_date, datetime.date(2017, 9, 5))
         self.assertFalse(world.experimental)
         self.assertEqual(len(world.online_players), world.online_count)
-        self.assertEqual(World.get_url(world.name), world.url)
+        self.assertEqual(get_world_url(world.name), world.url)
 
         world_json_raw = world.json()
         world_json = json.loads(world_json_raw)
@@ -70,7 +70,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(world.battleye_date, datetime.date(2017, 8, 29))
         self.assertFalse(world.experimental)
         self.assertEqual(len(world.online_players), world.online_count)
-        self.assertEqual(World.get_url(world.name), world.url)
+        self.assertEqual(get_world_url(world.name), world.url)
 
     def test_world_from_content_not_found(self):
         """Testing parsing a world that doesn't exist"""

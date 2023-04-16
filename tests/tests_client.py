@@ -18,12 +18,16 @@ from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_ARCHIVE_RESULTS, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
-from tibiapy import Client, Forbidden, NetworkError, HouseType
-from tibiapy.models import BoardEntry, CharacterBazaar, Character, CMPostArchive, ForumBoard, Guild, GuildsSection, \
-    Highscores, HousesSection, Leaderboard, VocationFilter, Category, House, HouseEntry, GuildEntry, KillStatistics, \
+from tibiapy import Client, Forbidden, NetworkError, HouseType, BazaarType
+from tibiapy.models import BoardEntry, CharacterBazaar, Character, CMPostArchive, ForumBoard, Guild, Highscores, \
+    HousesSection, Leaderboard, VocationFilter, Category, House, HouseEntry, GuildEntry, KillStatistics, \
     World, WorldOverview, Auction, NewsArchive, NewsEntry, News
 from tibiapy.models.creature import CreatureEntry
 from tibiapy.models.event import EventSchedule
+from tibiapy.urls import get_character_url, get_world_guilds_url, get_guild_url, get_house_url, get_world_overview_url, \
+    get_news_archive_url, get_news_url, get_forum_board_url, get_highscores_url, get_kill_statistics_url, \
+    get_event_schedule_url, get_houses_section_url, get_auction_url, get_bazaar_url, get_cm_post_archive_url, \
+    get_leaderboards_url, get_world_url
 
 
 @unittest.skip("asynctest not compatible with latest python versions, replace with native async tests")
@@ -47,19 +51,19 @@ class TestClient(unittest.TestCase, TestCommons):
     @aioresponses()
     async def test_client_handle_errors(self, mock):
         """Testing error handling"""
-        mock.get(WorldOverview.get_url(), status=403)
+        mock.get(get_world_overview_url(), status=403)
         with self.assertRaises(Forbidden):
             await self.client.fetch_world_list()
 
-        mock.get(WorldOverview.get_url(), status=404)
+        mock.get(get_world_overview_url(), status=404)
         with self.assertRaises(NetworkError):
             await self.client.fetch_world_list()
 
-        mock.get(NewsArchive.get_url(), exception=aiohttp.ClientError())
+        mock.get(get_news_archive_url(), exception=aiohttp.ClientError())
         with self.assertRaises(NetworkError):
             await self.client.fetch_world_list()
 
-        mock.post(NewsArchive.get_url(), exception=aiohttp.ClientOSError())
+        mock.post(get_news_archive_url(), exception=aiohttp.ClientOSError())
         with self.assertRaises(NetworkError):
             await self.client.fetch_recent_news(30)
 
@@ -68,7 +72,7 @@ class TestClient(unittest.TestCase, TestCommons):
         """Testing fetching a character"""
         name = "Tschas"
         content = self.load_resource(FILE_CHARACTER_RESOURCE)
-        mock.get(Character.get_url(name), status=200, body=content)
+        mock.get(get_character_url(name), status=200, body=content)
         character = await self.client.fetch_character(name)
 
         self.assertIsInstance(character.data, Character)
@@ -78,7 +82,7 @@ class TestClient(unittest.TestCase, TestCommons):
         """Testing fetching a non existent character"""
         name = "Nezune"
         content = self.load_resource(FILE_CHARACTER_NOT_FOUND)
-        mock.get(Character.get_url(name), status=200, body=content)
+        mock.get(get_character_url(name), status=200, body=content)
         character = await self.client.fetch_character(name)
 
         self.assertIsNone(character.data)
@@ -88,7 +92,7 @@ class TestClient(unittest.TestCase, TestCommons):
         """Testing fetching a guild"""
         name = "Vitam et Mortem"
         content = self.load_resource(FILE_GUILD_FULL)
-        mock.get(Guild.get_url(name), status=200, body=content)
+        mock.get(get_guild_url(name), status=200, body=content)
         guild = await self.client.fetch_guild(name)
 
         self.assertIsInstance(guild.data, Guild)
@@ -98,7 +102,7 @@ class TestClient(unittest.TestCase, TestCommons):
         """Testing fetching a world's guild list"""
         world = "Zuna"
         content = self.load_resource(FILE_GUILD_LIST)
-        mock.get(GuildsSection.get_url(world), status=200, body=content)
+        mock.get(get_world_guilds_url(world), status=200, body=content)
         response = await self.client.fetch_world_guilds(world)
         guilds = response.data.entries
 
@@ -111,7 +115,7 @@ class TestClient(unittest.TestCase, TestCommons):
         category = Category.MAGIC_LEVEL
         vocations = VocationFilter.KNIGHTS
         content = self.load_resource(FILE_HIGHSCORES_FULL)
-        mock.get(Highscores.get_url(world, category, vocations), status=200, body=content)
+        mock.get(get_highscores_url(world, category, vocations), status=200, body=content)
         highscores = await self.client.fetch_highscores_page(world, category, vocations)
 
         self.assertIsInstance(highscores.data, Highscores)
@@ -122,7 +126,7 @@ class TestClient(unittest.TestCase, TestCommons):
         world = "Antica"
         house_id = 5236
         content = self.load_resource(FILE_HOUSE_FULL)
-        mock.get(House.get_url(house_id, world), status=200, body=content)
+        mock.get(get_house_url(world, house_id), status=200, body=content)
         house = await self.client.fetch_house(house_id, world)
 
         self.assertIsInstance(house.data, House)
@@ -133,7 +137,7 @@ class TestClient(unittest.TestCase, TestCommons):
         world = "Antica"
         city = "Edron"
         content = self.load_resource(FILE_HOUSE_LIST)
-        mock.get(HousesSection.get_url(world=world, town=city, house_type=HouseType.HOUSE), status=200, body=content)
+        mock.get(get_houses_section_url(world=world, town=city, house_type=HouseType.HOUSE), status=200, body=content)
         houses = await self.client.fetch_world_houses(world, city)
 
         self.assertIsInstance(houses.data, HousesSection)
@@ -144,7 +148,7 @@ class TestClient(unittest.TestCase, TestCommons):
         """Testing fetching kill statistics"""
         world = "Antica"
         content = self.load_resource(FILE_KILL_STATISTICS_FULL)
-        mock.get(KillStatistics.get_url(world), status=200, body=content)
+        mock.get(get_kill_statistics_url(world), status=200, body=content)
         kill_statistics = await self.client.fetch_kill_statistics(world)
 
         self.assertIsInstance(kill_statistics.data, KillStatistics)
@@ -153,7 +157,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_recent_news(self, mock):
         """Testing fetching recent nows"""
         content = self.load_resource(FILE_NEWS_ARCHIVE_RESULTS)
-        mock.post(NewsArchive.get_url(), status=200, body=content)
+        mock.post(get_news_archive_url(), status=200, body=content)
         recent_news = await self.client.fetch_recent_news(30)
 
         self.assertIsInstance(recent_news.data, NewsArchive)
@@ -171,7 +175,7 @@ class TestClient(unittest.TestCase, TestCommons):
         """Testing fetch news"""
         news_id = 6000
         content = self.load_resource(FILE_NEWS_ARTICLE)
-        mock.get(News.get_url(news_id), status=200, body=content)
+        mock.get(get_news_url(news_id), status=200, body=content)
         news = await self.client.fetch_news(news_id)
 
         self.assertIsInstance(news.data, News)
@@ -181,7 +185,7 @@ class TestClient(unittest.TestCase, TestCommons):
         """Testing fetching a world"""
         name = "Antica"
         content = self.load_resource(FILE_WORLD_FULL)
-        mock.get(World.get_url(name), status=200, body=content)
+        mock.get(get_world_url(name), status=200, body=content)
         world = await self.client.fetch_world(name)
 
         self.assertIsInstance(world.data, World)
@@ -190,7 +194,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_world_list(self, mock):
         """Testing fetching the world list"""
         content = self.load_resource(FILE_WORLD_LIST)
-        mock.get(WorldOverview.get_url(), status=200, body=content)
+        mock.get(get_world_overview_url(), status=200, body=content)
         worlds = await self.client.fetch_world_list()
 
         self.assertIsInstance(worlds.data, WorldOverview)
@@ -210,7 +214,7 @@ class TestClient(unittest.TestCase, TestCommons):
         content = self.load_resource(FILE_CM_POST_ARCHIVE_PAGES)
         start_date = datetime.date.today()-datetime.timedelta(days=40)
         end_date = datetime.date.today()
-        mock.get(CMPostArchive.get_url(start_date, end_date), status=200, body=content)
+        mock.get(get_cm_post_archive_url(start_date, end_date), status=200, body=content)
         cm_post_archive = await self.client.fetch_cm_post_archive(start_date, end_date)
 
         self.assertIsInstance(cm_post_archive.data, CMPostArchive)
@@ -233,7 +237,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_current_auctions(self, mock):
         """Testing fetching the current auctions"""
         content = self.load_resource(FILE_BAZAAR_CURRENT)
-        mock.get(CharacterBazaar.get_current_auctions_url(), status=200, body=content)
+        mock.get(get_bazaar_url(BazaarType.CURRENT), status=200, body=content)
         response = await self.client.fetch_current_auctions()
         self.assertIsInstance(response.data, CharacterBazaar)
 
@@ -246,7 +250,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_auction_history(self, mock):
         """Testing fetching the auction history"""
         content = self.load_resource(FILE_BAZAAR_HISTORY)
-        mock.get(CharacterBazaar.get_auctions_history_url(), status=200, body=content)
+        mock.get(get_bazaar_url(BazaarType.HISTORY), status=200, body=content)
         response = await self.client.fetch_auction_history()
         self.assertIsInstance(response.data, CharacterBazaar)
 
@@ -259,7 +263,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_auction(self, mock):
         """Testing fetching an auction"""
         content = self.load_resource(FILE_AUCTION_FINISHED)
-        mock.get(Auction.get_url(134), status=200, body=content)
+        mock.get(get_auction_url(134), status=200, body=content)
         response = await self.client.fetch_auction(134)
         self.assertIsInstance(response.data, Auction)
 
@@ -272,7 +276,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_event_calendar(self, mock):
         """Testing fetching the auction history"""
         content = self.load_resource(FILE_EVENT_CALENDAR)
-        mock.get(EventSchedule.get_url(), status=200, body=content)
+        mock.get(get_event_schedule_url(), status=200, body=content)
         response = await self.client.fetch_event_schedule()
         self.assertIsInstance(response.data, EventSchedule)
 
@@ -317,7 +321,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_forum_board(self, mock):
         """Testing fetching a forum board"""
         content = self.load_resource(FILE_BOARD_THREAD_LIST)
-        mock.get(BoardEntry.get_url(1), status=200, body=content)
+        mock.get(get_forum_board_url(1), status=200, body=content)
         response = await self.client.fetch_forum_board(1)
         self.assertIsInstance(response.data, ForumBoard)
 
@@ -325,7 +329,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_leaderboards(self, mock):
         """Testing fetching the leaderboards"""
         content = self.load_resource(FILE_LEADERBOARD_CURRENT)
-        mock.get(Leaderboard.get_url("Antica"), status=200, body=content)
+        mock.get(get_leaderboards_url("Antica"), status=200, body=content)
         response = await self.client.fetch_leaderboard("Antica")
         self.assertIsInstance(response.data, Leaderboard)
 

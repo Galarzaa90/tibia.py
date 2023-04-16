@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from tibiapy.utils import get_tibia_url
+from tibiapy.urls import get_creature_url
 
 
 class BossEntry(BaseModel):
@@ -27,17 +27,6 @@ class BoostableBosses(BaseModel):
     bosses: List[BossEntry]
     """The list of boostable bosses."""
 
-    @classmethod
-    def get_url(cls):
-        """Get the URL to the Tibia.com boostable bosses.
-
-        Returns
-        -------
-        :class:`str`:
-            The URL to the Tibia.com library section.
-        """
-        return get_tibia_url("library", "boostablebosses")
-
 
 class CreatureEntry(BaseModel):
     """Represents a creature in the Library section."""
@@ -50,28 +39,13 @@ class CreatureEntry(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL to this creature's details."""
-        return self.get_url(self.identifier)
+        return get_creature_url(self.identifier)
 
     @property
     def image_url(self):
         """:class:`str`: The URL to this creature's image."""
         return f"https://static.tibia.com/images/library/{self.identifier}.gif"
 
-    @classmethod
-    def get_url(cls, identifier):
-        """Get the URL to the creature's detail page on Tibia.com.
-
-        Parameters
-        ----------
-        identifier: :class:`str`
-            The race's internal name.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the detail page.
-        """
-        return get_tibia_url("library", "creatures", race=identifier)
 
 
 class Creature(CreatureEntry):
@@ -110,17 +84,6 @@ class CreaturesSection(BaseModel):
     """The current boosted creature."""
     creatures: List[CreatureEntry]
     """The list of creatures in the library."""
-
-    @classmethod
-    def get_url(cls):
-        """Get the URL to the Tibia.com library section.
-
-        Returns
-        -------
-        :class:`str`:
-            The URL to the Tibia.com library section.
-        """
-        return get_tibia_url("library", "creature")
 
 
 class BoostedCreatures(BaseModel):

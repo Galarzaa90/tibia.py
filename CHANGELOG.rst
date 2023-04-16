@@ -33,6 +33,7 @@ Changelog
     - Renamed ``DisplayOutfit`` to ``OutfitEntry``.
     - Renamed ``DisplayFamiliar`` to ``FamiliarEntry``.
     - Renamed ``page`` to ``current_page``, ``results`` to ``results_count``, and ``fully_fetched`` to ``is_fully_fetched`` in ``ItemSummary``, ``Mounts``, ``Familiars`` and ``Outfits``.
+- Removed ``get_url`` class methods from all models, replaced by functions in the urls package.
 - Fixed ``Character`` account badges not being parsed properly.
 
 

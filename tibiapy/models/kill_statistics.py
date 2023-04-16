@@ -2,7 +2,7 @@ from typing import Dict, List
 
 from pydantic import BaseModel
 
-from tibiapy.utils import get_tibia_url
+from tibiapy.urls import get_kill_statistics_url
 
 
 class RaceEntry(BaseModel):
@@ -33,24 +33,10 @@ class KillStatistics(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL to the kill statistics page on Tibia.com containing the results."""
-        return self.get_url(self.world)
+        return get_kill_statistics_url(self.world)
 
     @property
     def players(self):
         """:class:`RaceEntry`: The kill statistics for players."""
         return self.entries.get("players", RaceEntry())
 
-    @classmethod
-    def get_url(cls, world):
-        """Get the Tibia.com URL of the kill statistics of a world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The game world of the desired kill statistics.
-
-        Returns
-        -------
-        The URL to the Tibia.com kill statistics for this world.
-        """
-        return get_tibia_url("community", "killstatistics", world=world)

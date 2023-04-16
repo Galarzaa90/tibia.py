@@ -5,7 +5,7 @@ from typing import Optional, Set, List
 from pydantic import BaseModel
 
 from tibiapy import NewsCategory, NewsType
-from tibiapy.utils import get_tibia_url
+from tibiapy.urls import get_news_archive_url, get_news_url
 
 __all__ = (
     "News",
@@ -39,23 +39,7 @@ class BaseNews(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL to the Tibia.com page of the news entry."""
-        return self.get_url(self.id)
-
-    @classmethod
-    def get_url(cls, news_id):
-        """Get the Tibia.com URL for a news entry by its id.
-
-        Parameters
-        ------------
-        news_id: :class:`int`
-            The id of the news entry.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the news' page
-        """
-        return get_tibia_url("news", "newsarchive", id=news_id)
+        return get_news_url(self.id)
 
 
 class News(BaseNews):
@@ -73,7 +57,7 @@ class News(BaseNews):
     @property
     def thread_url(self):
         """:class:`str`: The URL to the thread discussing this news entry, if any."""
-        return self.get_url(self.thread_id) if self.thread_id else None
+        return get_news_url(self.thread_id) if self.thread_id else None
 
 
 class NewsEntry(BaseNews):
@@ -104,21 +88,4 @@ class NewsArchive(BaseModel):
 
     @property
     def url(self):
-        return self.get_url()
-
-    @classmethod
-    def get_url(cls):
-        """Get the URL to Tibia.com's news archive page.
-
-        Notes
-        -----
-        It is not possible to perform a search using query parameters.
-        News searches can only be performed using POST requests sending the parameters as form-data.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the news archive page on Tibia.com.
-        """
-        return get_tibia_url("news", "newsarchive")
-    
+        return get_news_archive_url()

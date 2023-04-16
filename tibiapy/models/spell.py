@@ -1,11 +1,12 @@
 """Models related to the spells section in the library."""
 from __future__ import annotations
+
 from typing import List, Optional
 
 from pydantic import BaseModel
 
 from tibiapy import VocationSpellFilter, SpellGroup, SpellType, SpellSorting
-from tibiapy.utils import get_tibia_url
+from tibiapy.urls import get_spells_section_url, get_spell_url
 
 __all__ = (
     'SpellsSection',
@@ -14,11 +15,6 @@ __all__ = (
     'Rune'
 )
 
-
-def to_yes_no(value: Optional[bool]):
-    if value is None:
-        return None
-    return "yes" if value else "no"
 
 
 class Rune(BaseModel):
@@ -65,28 +61,12 @@ class SpellEntry(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL to the spell."""
-        return self.get_url(self.identifier)
+        return get_spell_url(self.identifier)
 
     @property
     def image_url(self):
         """:class:`str`: The URL to this spell's image."""
         return f"https://static.tibia.com/images/library/{self.identifier}.png"
-
-    @classmethod
-    def get_url(cls, identifier):
-        """Get the URL to a spell in the Tibia.com spells section.
-
-        Parameters
-        ----------
-        identifier: :class:`str`
-            The identifier of the spell.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the spell.
-        """
-        return get_tibia_url("library", "spells", spell=identifier.lower())
 
 
 class Spell(SpellEntry):
@@ -135,37 +115,7 @@ class SpellsSection(BaseModel):
 
     @property
     def url(self):
-        return self.get_url(vocation=self.vocation, group=self.group, spell_type=self.spell_type, premium=self.premium,
+        return get_spells_section_url(vocation=self.vocation, group=self.group, spell_type=self.spell_type, premium=self.premium,
                             sort=self.sort_by)
 
-    @classmethod
-    def get_url(cls, *, vocation=None, group=None, spell_type=None, premium=None, sort=None):
-        """Get the URL to the spells section with the desired filtering parameters.
-
-        Parameters
-        ----------
-        vocation: :class:`VocationSpellFilter`, optional
-            The vocation to filter in spells for.
-        group: :class:`SpellGroup`, optional
-            The spell's primary cooldown group.
-        spell_type: :class:`SpellType`, optional
-            The type of spells to show.
-        premium: :class:`bool`, optional
-            The type of premium requirement to filter. :obj:`None` means any premium requirement.
-        sort: :class:`SpellSorting`, optional
-            The field to sort spells by.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the spells section with the provided filtering parameters.
-        """
-        params = {
-            "vocation": vocation.value if vocation else None,
-            "group": group.value if group else None,
-            "type": spell_type.value if spell_type else None,
-            "sort": sort.value if sort else None,
-            "premium": to_yes_no(premium),
-        }
-        return get_tibia_url("library", "spells", **params)
 

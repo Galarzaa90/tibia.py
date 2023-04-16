@@ -8,6 +8,7 @@ from tibiapy.builders.house import HouseBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType
 from tibiapy.models import House, HousesSection, HouseEntry
 from tibiapy.parsers.house import HouseParser, HousesSectionParser
+from tibiapy.urls import get_house_url
 
 FILE_HOUSE_FULL = "house/tibiacom_full.txt"
 FILE_HOUSE_STATUS_TRANSFER = "house/tibiacom_status_transfer.txt"
@@ -31,7 +32,7 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertEqual(house.beds, 1)
         self.assertTrue(house.rent, 715)
         self.assertEqual(house.status, HouseStatus.AUCTIONED)
-        self.assertEqual(house.url, House.get_url(house.id, house.world))
+        self.assertEqual(house.url, get_house_url(house.world, house.id))
         self.assertIsNone(house.owner)
         self.assertIsNone(house.owner_url)
         self.assertIsNotNone(house.highest_bidder)

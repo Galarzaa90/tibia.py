@@ -6,6 +6,8 @@ from pydantic import BaseModel
 from tibiapy import Vocation, ThreadStatus
 from tibiapy.models import GuildMembership
 from tibiapy.models.base import BaseCharacter
+from tibiapy.urls import get_character_url, get_forum_board_url, get_forum_announcement_url, get_forum_thread_url, \
+    get_forum_post_url, get_cm_post_archive_url
 from tibiapy.utils import get_tibia_url
 
 __all__ = (
@@ -46,23 +48,7 @@ class BaseAnnouncement(BaseModel):
     @property
     def url(self):
         """:class:`str` Get the URL to this announcement."""
-        return self.get_url(self.announcement_id)
-
-    @classmethod
-    def get_url(cls, announcement_id):
-        """Get the URL to an announcement with a given ID.
-
-        Parameters
-        ----------
-        announcement_id: :class:`int`
-            The ID of the announcement
-
-        Returns
-        -------
-        :class:`str`
-            The URL of the announcement.
-        """
-        return get_tibia_url("forum", None, action="announcement", announcementid=announcement_id)
+        return get_forum_announcement_url(self.announcement_id)
 
 
 class BaseBoard(BaseModel):
@@ -82,27 +68,7 @@ class BaseBoard(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL of this board."""
-        return self.get_url(self.board_id)
-
-    @classmethod
-    def get_url(cls, board_id, page=1, age=30):
-        """Get the Tibia.com URL to a board with a given id.
-
-        Parameters
-        ----------
-        board_id: :class:`int`
-            The ID of the board.
-        page: :class:`int`
-            The page to go to.
-        age: :class:`int`
-            The age in days of the threads to display.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the board.
-        """
-        return get_tibia_url("forum", None, action="board", boardid=board_id, pagenumber=page, threadage=age)
+        return get_forum_board_url(self.board_id)
 
     @classmethod
     def get_world_boards_url(cls):
@@ -175,23 +141,7 @@ class BasePost(BaseModel):
     @property
     def url(self):
         """:class:`str`: Get the URL to this specific post."""
-        return self.get_url(self.post_id)
-
-    @classmethod
-    def get_url(cls, post_id):
-        """Get the URL to a specific post.
-
-        Parameters
-        ----------
-        post_id: :class:`int`
-            The ID of the desired post.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the post.
-        """
-        return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid=post_id)
+        return get_forum_post_url(self.post_id)
 
 
 class BaseThread(BaseModel):
@@ -209,31 +159,12 @@ class BaseThread(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL to the thread in Tibia.com."""
-        return self.get_url(self.thread_id)
-
-    @classmethod
-    def get_url(cls, thread_id, page=1):
-        """Get the URL to a thread with a given id.
-
-        Parameters
-        ----------
-        thread_id: :class:`int`
-            The id of the desired thread.
-        page: :class:`int`
-            The desired page, by default 1.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the thread.
-        """
-        return get_tibia_url("forum", None, action="thread", threadid=thread_id, pagenumber=page)
+        return get_forum_thread_url(self.thread_id)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.thread_id == other.thread_id
         return False
-
 
 
 
@@ -273,7 +204,7 @@ class CMPostArchive(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL of the CM Post Archive with the current parameters."""
-        return self.get_url(self.start_date, self.end_date, self.page)
+        return get_cm_post_archive_url(self.start_date, self.end_date, self.page)
 
     @property
     def previous_page_url(self):
@@ -300,44 +231,7 @@ class CMPostArchive(BaseModel):
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
-        return self.get_url(self.start_date, self.end_date, page)
-
-    @classmethod
-    def get_url(cls, start_date, end_date, page=1):
-        """Get the URL to the CM Post Archive for the given date range.
-
-        Parameters
-        ----------
-        start_date: :class: `datetime.date`
-            The start date to display.
-        end_date: :class: `datetime.date`
-            The end date to display.
-        page: :class:`int`
-            The desired page to display.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the CM Post Archive
-
-        Raises
-        ------
-        TypeError:
-            Either of the dates is not an instance of :class:`datetime.date`
-        ValueError:
-            If ``start_date`` is more recent than ``end_date``.
-        """
-        if not isinstance(start_date, datetime.date):
-            raise TypeError(f"start_date: expected datetime.date instance, {type(start_date)} found.")
-        if not isinstance(end_date, datetime.date):
-            raise TypeError(f"start_date: expected datetime.date instance, {type(start_date)} found.")
-        if end_date < start_date:
-            raise ValueError("start_date can't be more recent than end_date.")
-        if page < 1:
-            raise ValueError("page must be 1 or greater.")
-        return get_tibia_url("forum", "forum", action="cm_post_archive", startday=start_date.day,
-                             startmonth=start_date.month, startyear=start_date.year, endday=end_date.day,
-                             endmonth=end_date.month, endyear=end_date.year, currentpage=page)
+        return get_cm_post_archive_url(self.start_date, self.end_date, page)
 
 
 class ForumEmoticon(BaseModel):
@@ -366,7 +260,7 @@ class LastPost(BasePost):
     @property
     def author_url(self):
         """:class:`str`: The URL to the author's character information page."""
-        return BaseCharacter.get_url(self.author)
+        return get_character_url(self.author)
 
 
 
@@ -511,7 +405,7 @@ class ForumBoard(BaseBoard):
     @property
     def url(self):
         """:class:`str`: The URL of this board."""
-        return self.get_url(self.board_id, self.current_page, self.age)
+        return get_forum_board_url(self.board_id, self.current_page, self.age)
 
     @property
     def previous_page_url(self):
@@ -538,7 +432,7 @@ class ForumBoard(BaseBoard):
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
-        return self.get_url(self.board_id, page, self.age)
+        return get_forum_board_url(self.board_id, page, self.age)
 
 
 class ForumPost(BasePost):
@@ -600,7 +494,7 @@ class ForumThread(BaseThread):
     @property
     def url(self):
         """:class:`str`: The URL of this thread and current page."""
-        return self.get_url(self.thread_id, self.current_page)
+        return get_forum_thread_url(self.thread_id, self.current_page)
 
     @property
     def previous_page_url(self):
@@ -615,12 +509,12 @@ class ForumThread(BaseThread):
     @property
     def previous_thread_url(self):
         """:class:`str`: The URL to the previous topic of the board, if there's any."""
-        return self.get_url(self.previous_topic_number) if self.previous_topic_number else None
+        return get_forum_thread_url(self.previous_topic_number) if self.previous_topic_number else None
 
     @property
     def next_thread_url(self):
         """:class:`str`: The URL to the next topic of the board, if there's any."""
-        return self.get_url(self.next_topic_number) if self.next_topic_number else None
+        return get_forum_thread_url(self.next_topic_number) if self.next_topic_number else None
 
     def get_page_url(self, page):
         """Get the URL to a given page of the board.
@@ -637,4 +531,4 @@ class ForumThread(BaseThread):
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
-        return self.get_url(self.thread_id, page)
+        return get_forum_thread_url(self.thread_id, page)

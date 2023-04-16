@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
-from tibiapy.utils import get_tibia_url
+from tibiapy.urls import get_event_schedule_url
 
 
 class EventEntry(BaseModel):
@@ -48,7 +48,7 @@ class EventSchedule(BaseModel):
     @property
     def url(self):
         """:class:`str`: Get the URL to the event calendar with the current parameters."""
-        return self.get_url(self.month, self.year)
+        return get_event_schedule_url(self.month, self.year)
 
     def get_events_on(self, date):
         """Get a list of events that are active during the specified desired_date.
@@ -74,28 +74,3 @@ class EventSchedule(BaseModel):
             return start <= desired_date <= end
 
         return [e for e in self.events if is_between(e.start_date, e.end_date, date)]
-
-    @classmethod
-    def get_url(cls, month=None, year=None):
-        """Get the URL to the Event Schedule or Event Calendar on Tibia.com.
-
-        Notes
-        -----
-        If no parameters are passed, it will show the calendar for the current month and year.
-
-        Tibia.com limits the dates that the calendar displays, passing a month and year far from the current ones may
-        result in the response being for the current month and year instead.
-
-        Parameters
-        ----------
-        month: :class:`int`, optional
-            The desired month.
-        year: :class:`int`, optional
-            The desired year.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the calendar with the given parameters.
-        """
-        return get_tibia_url("news", "eventcalendar", calendarmonth=month, calendaryear=year)

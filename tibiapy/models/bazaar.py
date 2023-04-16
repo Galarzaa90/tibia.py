@@ -7,9 +7,8 @@ from pydantic import BaseModel
 from tibiapy import PvpTypeFilter, BattlEyeTypeFilter, VocationAuctionFilter, SkillFilter, AuctionSearchType, \
     AuctionOrderBy, AuctionOrder, BazaarType, Vocation, Sex, BidType, AuctionStatus
 from tibiapy.models import PaginatedWithUrl
-from tibiapy.models.base import BaseCharacter
 from tibiapy.models.pagination import AjaxPaginator
-from tibiapy.utils import get_tibia_url
+from tibiapy.urls import get_character_url, get_auction_url, get_bazaar_url
 
 __all__ = (
     'AchievementEntry',
@@ -493,28 +492,12 @@ class Auction(BaseModel):
     @property
     def character_url(self):
         """:class:`str`: The URL of the character's information page on Tibia.com."""
-        return BaseCharacter.get_url(self.name)
+        return get_character_url(self.name)
 
     @property
     def url(self):
         """:class:`str`: The URL to this auction's detail page on Tibia.com."""
-        return self.get_url(self.auction_id)
-
-    @classmethod
-    def get_url(cls, auction_id):
-        """Get the URL to the Tibia.com detail page of an auction with a given id.
-
-        Parameters
-        ----------
-        auction_id: :class:`int`
-            The ID of the auction.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the auction's detail page.
-        """
-        return get_tibia_url("charactertrade", "currentcharactertrades", page="details", auctionid=auction_id)
+        return get_auction_url(self.auction_id)
 
 
 class CharacterBazaar(PaginatedWithUrl[Auction]):
@@ -531,43 +514,4 @@ class CharacterBazaar(PaginatedWithUrl[Auction]):
     @property
     def url(self):
         """:class:`str`: Get the URL to the bazaar."""
-        return self.get_auctions_history_url(self.current_page) if self.type == BazaarType.HISTORY else \
-            self.get_current_auctions_url(self.current_page, self.filters)
-
-    @classmethod
-    def get_current_auctions_url(cls, page=1, filters=None):
-        """Get the URL to the list of current auctions in Tibia.com.
-
-        Parameters
-        ----------
-        page: :class:`int`
-            The page to show the URL for.
-        filters: :class:`AuctionFilters`
-            The filtering criteria to use.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the current auctions section in Tibia.com
-        """
-        filters = filters or AuctionFilters()
-        return get_tibia_url("charactertrade", "currentcharactertrades", currentpage=page, **filters.query_params)
-
-    @classmethod
-    def get_auctions_history_url(cls, page=1, filters=None):
-        """Get the URL to the auction history in Tibia.com.
-
-        Parameters
-        ----------
-        page: :class:`int`
-            The page to show the URL for.
-        filters: :class:`AuctionFilters`
-            The filtering criteria to use.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the auction history section in Tibia.com
-        """
-        filters = filters or AuctionFilters()
-        return get_tibia_url("charactertrade", "pastcharactertrades", currentpage=page, **filters.query_params)
+        return get_bazaar_url(self.type, self.current_page, self.filters)

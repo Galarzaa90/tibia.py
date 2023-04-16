@@ -1,11 +1,11 @@
 import datetime
-from typing import List, Optional, Dict
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 from tibiapy import HouseStatus, HouseType, HouseOrder, Sex
-from tibiapy.models.base import HouseWithId, BaseCharacter
-from tibiapy.utils import get_tibia_url
+from tibiapy.models.base import HouseWithId
+from tibiapy.urls import get_character_url, get_houses_section_url
 
 __all__ = (
     'HouseEntry',
@@ -74,17 +74,17 @@ class House(HouseWithId):
     @property
     def owner_url(self):
         """:class:`str`: The URL to the Tibia.com page of the house's owner, if applicable."""
-        return BaseCharacter.get_url(self.owner) if self.owner is not None else None
+        return get_character_url(self.owner) if self.owner is not None else None
 
     @property
     def transferee_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
-        return BaseCharacter.get_url(self.transferee) if self.transferee is not None else None
+        return get_character_url(self.transferee) if self.transferee is not None else None
 
     @property
     def highest_bidder_url(self):
         """:class:`str`: The URL to the Tibia.com page of the character with the highest bid, if applicable."""
-        return BaseCharacter.get_url(self.highest_bidder) if self.highest_bidder is not None else None
+        return get_character_url(self.highest_bidder) if self.highest_bidder is not None else None
 
 
 class HousesSection(BaseModel):
@@ -110,64 +110,7 @@ class HousesSection(BaseModel):
     @property
     def url(self):
         """:class:`str`: Get the URL to the houses section with the current parameters."""
-        return self.get_url(self.world, self.town, self.house_type, self.status, self.order)
-
-    @classmethod
-    def _get_query_params(cls, world, town, house_type, status=None, order=None) -> Dict[str, str]:
-        """Build the query parameters for a house search.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The world to search for houses in.
-        town: :class:`str`
-            The town to search houses in.
-        house_type: :class:`HouseType`
-            The type of houses to filter.
-        status: :class:`HouseStatus`, optional
-            The status of the house to filter. If undefined, all status will be included.
-        order: :class:`HouseOrder`
-            The field to order houses by.
-
-        Returns
-        -------
-        :class:`dict`
-            The query parameters representing for a house search.
-        """
-        params = {
-            "world": world,
-            "town": town,
-            "type": house_type.plural if house_type else None,
-            "state": status.value if status else None,
-            "order": order.value if order else None,
-        }
-        return {k: v for k, v in params.items() if v is not None}
-
-    @classmethod
-    def get_url(cls, world, town, house_type, status=None, order=None):
-        """Get the URL to the house list on Tibia.com with the specified filters.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The world to search in.
-        town: :class:`str`
-            The town to show results for.
-        house_type: :class:`HouseType`
-            The type of houses to show.
-        status: :class:`HouseStatus`
-            The status of the houses to show.
-        order: :class:`HouseOrder`
-            The sorting parameter to use for the results.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the list matching the parameters.
-        """
-        query = cls._get_query_params(world, town, house_type, status, order)
-        return get_tibia_url("community", "houses", **query)
-
+        return get_houses_section_url(self.world, self.town, self.house_type, self.status, self.order)
 
 
 

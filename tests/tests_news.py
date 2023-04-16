@@ -6,6 +6,7 @@ from tibiapy import InvalidContent
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.models.news import NewsEntry, NewsArchive, News
 from tibiapy.parsers.news import NewsArchiveParser, NewsParser
+from tibiapy.urls import get_news_url
 
 FILE_NEWS_ARCHIVE_INITIAL = "news/news_archive_initial.txt"
 FILE_NEWS_ARCHIVE_RESULTS = "news/news_archive_results.txt"
@@ -48,7 +49,7 @@ class TestNews(TestCommons, unittest.TestCase):
         self.assertIsInstance(latest_news.type, NewsType)
         self.assertIsInstance(latest_news.date, datetime.date)
         self.assertIsNotNone(latest_news.url)
-        self.assertEqual(latest_news.url, NewsEntry.get_url(latest_news.id))
+        self.assertEqual(latest_news.url, get_news_url(latest_news.id))
 
     def test_news_archive_parser_from_content_empty(self):
         """Testing parsing a news article that doesn't exist"""

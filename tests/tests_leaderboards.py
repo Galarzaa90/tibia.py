@@ -2,8 +2,8 @@ import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.models import Leaderboard
 from tibiapy.parsers.leaderboard import LeaderboardParser
+from tibiapy.urls import get_leaderboards_url
 
 FILE_LEADERBOARD_CURRENT = "leaderboards/tibiacom_current_rotation.txt"
 
@@ -39,6 +39,6 @@ class TestLeaderboards(TestCommons, unittest.TestCase):
 
     def test_leaderboard_get_url_invalid_page(self):
         with self.assertRaises(ValueError):
-            Leaderboard.get_url("Antica", page=0)
+            get_leaderboards_url("Antica", page=0)
 
     # endregion

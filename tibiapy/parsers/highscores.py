@@ -8,7 +8,7 @@ from tibiapy.enums import Category, VocationFilter, PvpTypeFilter, \
     BattlEyeHighscoresFilter
 from tibiapy.errors import InvalidContent
 from tibiapy.models import LoyaltyHighscoresEntry, HighscoresEntry
-from tibiapy.utils import get_tibia_url, parse_form_data, parse_tibiacom_content, try_enum, parse_integer
+from tibiapy.utils import parse_form_data, parse_tibiacom_content, try_enum, parse_integer
 
 __all__ = (
     "HighscoresParser",
@@ -63,35 +63,6 @@ class HighscoresParser:
         cls._parse_entries_table(builder, entries_table)
         return builder.build()
 
-    @classmethod
-    def get_url(cls, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
-                battleye_type=None, pvp_types=None):
-        """Get the Tibia.com URL of the highscores for the given parameters.
-
-        Parameters
-        ----------
-        world: :class:`str`, optional
-            The game world of the desired highscores. If no world is passed, ALL worlds are shown.
-        category: :class:`Category`
-            The desired highscores category.
-        vocation: :class:`VocationFilter`
-            The vocation filter to apply. By default all vocations will be shown.
-        page: :class:`int`
-            The page of highscores to show.
-        battleye_type: :class:`BattlEyeHighscoresFilter`, optional
-            The battleEye filters to use.
-        pvp_types: :class:`list` of :class:`PvpTypeFilter`, optional
-            The list of PvP types to filter the results for.
-
-        Returns
-        -------
-        The URL to the Tibia.com highscores.
-        """
-        pvp_types = pvp_types or []
-        pvp_params = [("worldtypes[]", p.value) for p in pvp_types]
-        return get_tibia_url("community", "highscores", *pvp_params, world=world, category=category.value,
-                             profession=vocation.value, currentpage=page,
-                             beprotection=battleye_type.value if battleye_type else None)
 
     # region Private methods
     @classmethod

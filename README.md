@@ -45,7 +45,7 @@ import tibiapy
 import aiohttp
 
 async def get_character(name):
-    url = tibiapy.Character.get_url(name)
+    url = tibiapy.urls.get_character_url(name)
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
@@ -57,7 +57,7 @@ async def get_character(name):
 import requests
 
 def get_character_sync(name):
-    url = tibiapy.Character.get_url(name)
+    url = tibiapy.urls.get_character_url(name)
     
     r = requests.get(url)
     content = r.text

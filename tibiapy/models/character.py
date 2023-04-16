@@ -5,8 +5,8 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
-from tibiapy import Sex, Vocation, AccountStatus
-from tibiapy.models.base import BaseCharacter, HouseWithId, BaseGuild
+from tibiapy import Sex, Vocation
+from tibiapy.models.base import BaseCharacter, HouseWithId
 
 __all__ = (
     'AccountBadge',
@@ -20,6 +20,8 @@ __all__ = (
     'OtherCharacter',
     'Character',
 )
+
+from tibiapy.urls import get_character_url, get_guild_url
 
 
 class AccountBadge(BaseModel):
@@ -92,7 +94,7 @@ class Killer(BaseModel):
     @property
     def url(self):
         """:class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable."""
-        return Character.get_url(self.name) if self.player else None
+        return get_character_url(self.name) if self.player else None
 
 
 class Death(BaseModel):
@@ -235,7 +237,7 @@ class Character(BaseCharacter):
     @property
     def guild_url(self) -> Optional[str]:
         """:class:`str`, optional: The character's rank in the guild they belong to, or :obj:`None`."""
-        return BaseGuild.get_url(self.guild_membership.name) if self.guild_membership else None
+        return get_guild_url(self.guild_membership.name) if self.guild_membership else None
 
     @property
     def hidden(self) -> bool:
@@ -245,5 +247,5 @@ class Character(BaseCharacter):
     @property
     def married_to_url(self) -> Optional[str]:
         """:class:`str`, optional: The URL to the husband/spouse information page on Tibia.com, if applicable."""
-        return self.get_url(self.married_to) if self.married_to else None
+        return get_character_url(self.married_to) if self.married_to else None
     # endregion

@@ -5,8 +5,7 @@ from pydantic import BaseModel
 
 from tibiapy.models import BaseCharacter
 from tibiapy.models.pagination import PaginatedWithUrl
-from tibiapy.utils import get_tibia_url
-
+from tibiapy.urls import get_leaderboards_url
 
 __all__ = (
     'LeaderboardEntry',
@@ -53,7 +52,7 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
     @property
     def url(self):
         """:class:`str`: The URL to the current leaderboard."""
-        return self.get_url(self.world, self.rotation.rotation_id, self.current_page)
+        return get_leaderboards_url(self.world, self.rotation.rotation_id, self.current_page)
 
     def get_page_url(self, page):
         """Get the URL of the leaderboard at a specific page, with the current date parameters.
@@ -73,31 +72,4 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
         ValueError
             If the specified page is zer or less.
         """
-        return self.get_url(self.world, self.rotation.rotation_id, page)
-
-    @classmethod
-    def get_url(cls, world, rotation_id=None, page=1):
-        """Get the URL to the leaderboards of a world.
-
-        Parameters
-        ----------
-        world: :class:`str`
-            The desired world.
-        rotation_id: :class:`int`
-            The ID of the desired rotation. If undefined, the current rotation is shown.
-        page: :class:`int`
-            The desired page. By default, the first page is returned.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the leaderboard with the desired parameters.
-
-        Raises
-        ------
-        ValueError
-            If the specified page is zer or less.
-        """
-        if page <= 0:
-            raise ValueError("page must be 1 or greater")
-        return get_tibia_url("community", "leaderboards", world=world, rotation=rotation_id, currentpage=page)
+        return get_leaderboards_url(self.world, self.rotation.rotation_id, page)

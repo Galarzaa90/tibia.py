@@ -195,6 +195,10 @@ class BazaarType(str, Enum):
     CURRENT = "Current Auctions"
     HISTORY = "Auction History"
 
+    @property
+    def subtopic(self):
+        return "currentcharactertrades" if self == self.CURRENT else "pastcharactertrades"
+
 
 class BidType(str, Enum):
     """The possible bid types for an auction."""

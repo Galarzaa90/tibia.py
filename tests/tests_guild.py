@@ -2,11 +2,12 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import  InvalidContent
+from tibiapy import InvalidContent
 from tibiapy.builders.guild import GuildBuilder
-from tibiapy.models import Guild, GuildWars, GuildsSection
+from tibiapy.models import Guild, GuildWars
 from tibiapy.models.guild import GuildHouse
 from tibiapy.parsers.guild import GuildParser, GuildWarsParser, GuildsSectionParser
+from tibiapy.urls import get_world_guilds_url, get_guild_url, get_guild_wars_url
 
 FILE_GUILD_FULL = "guild/tibiacom_full.txt"
 FILE_GUILD_NOT_FOUND = "guild/tibiacom_not_found.txt"
@@ -32,8 +33,8 @@ class TestsGuild(TestCommons, unittest.TestCase):
         content = self.load_resource(FILE_GUILD_FULL)
         guild = GuildParser.from_content(content)
         self.assertIsInstance(guild, Guild, "Guild should be a Guild object.")
-        self.assertEqual(guild.url, Guild.get_url(guild.name))
-        self.assertEqual(guild.url_wars, Guild.get_url_wars(guild.name))
+        self.assertEqual(guild.url, get_guild_url(guild.name))
+        self.assertEqual(guild.url_wars, get_guild_wars_url(guild.name))
         self.assertTrue(guild.active, "Guild should be active")
         self.assertIsInstance(guild.founded, datetime.date, "Guild founded date should be an instance of datetime.date")
         self.assertTrue(guild.open_applications, "Guild applications should be open")
@@ -149,7 +150,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertEqual(7, len(guilds_section.active_guilds))
         self.assertEqual(1, len(guilds_section.in_formation_guilds))
         self.assertEqual(55, len(guilds_section.available_worlds))
-        self.assertEqual(GuildsSection.get_url(guilds_section.world),guilds_section.url)
+        self.assertEqual(get_world_guilds_url(guilds_section.world), guilds_section.url)
         self.assertEqual("Zuna", guilds[0].world)
         self.assertTrue(guilds[0].active)
         self.assertFalse(guilds[-1].active)

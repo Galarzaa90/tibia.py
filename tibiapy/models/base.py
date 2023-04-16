@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
-from tibiapy.utils import get_tibia_url
+from tibiapy.urls import get_character_url, get_guild_url, get_house_url, get_guild_wars_url
 
 
 class BaseCharacter(BaseModel):
@@ -18,23 +18,7 @@ class BaseCharacter(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL of the character's information page on Tibia.com."""
-        return self.get_url(self.name)
-
-    @classmethod
-    def get_url(cls, name):
-        """Get the Tibia.com URL for a given character name.
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the character.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the character's page.
-        """
-        return get_tibia_url("community", "characters", name=name)
+        return get_character_url(self.name)
 
 
 class BaseGuild(BaseModel):
@@ -51,7 +35,7 @@ class BaseGuild(BaseModel):
     @property
     def url(self):
         """:class:`str`: The URL to the guild's information page on Tibia.com."""
-        return self.get_url(self.name)
+        return get_guild_url(self.name)
 
     @property
     def url_wars(self):
@@ -59,41 +43,8 @@ class BaseGuild(BaseModel):
 
         .. versionadded:: 3.0.0
         """
-        return self.get_url_wars(self.name)
+        return get_guild_wars_url(self.name)
 
-    @classmethod
-    def get_url(cls, name):
-        """Get the Tibia.com URL for a given guild name.
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the guild.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the guild's page.
-        """
-        return get_tibia_url("community", "guilds", page="view", GuildName=name)
-
-    @classmethod
-    def get_url_wars(cls, name):
-        """Get the Tibia.com URL for the guild wars of a guild with a given name.
-
-        .. versionadded:: 3.0.0
-
-        Parameters
-        ------------
-        name: :class:`str`
-            The name of the guild.
-
-        Returns
-        --------
-        :class:`str`
-            The URL to the guild's wars page.
-        """
-        return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
 
 
 class BaseHouse(BaseModel):
@@ -116,23 +67,6 @@ class BaseHouse(BaseModel):
             return self.name.lower() == o.name.lower()
         return False
 
-    @classmethod
-    def get_url(cls, house_id, world):
-        """Get the Tibia.com URL for a house with the given id and world.
-
-        Parameters
-        ----------
-        house_id: :class:`int`
-            The internal id of the house.
-        world: :class:`str`
-            The world of the house.
-
-        Returns
-        -------
-        The URL to the house in Tibia.com
-        """
-        return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
-
 
 class HouseWithId(BaseHouse):
     id: int
@@ -149,4 +83,4 @@ class HouseWithId(BaseHouse):
     @property
     def url(self):
         """:class:`str`: The URL to the Tibia.com page of the house."""
-        return self.get_url(self.id, self.world) if self.id and self.world else None
+        return get_house_url(self.world, self.id) if self.id and self.world else None

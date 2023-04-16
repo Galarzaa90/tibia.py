@@ -1,13 +1,13 @@
 import datetime
 import unittest
 
-import tibiapy
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent, ThreadStatus
-from tibiapy.models import BoardEntry, LastPost, ThreadEntry, ForumAnnouncement, CMPostArchive
+from tibiapy.models import BoardEntry, LastPost, ThreadEntry, CMPostArchive
 from tibiapy.models.forum import BasePost
 from tibiapy.parsers.forum import BoardEntryParser, ForumBoardParser, ForumAnnouncementParser, ForumThreadParser, \
     CMPostArchiveParser
+from tibiapy.urls import get_forum_board_url, get_cm_post_archive_url
 
 FILE_WORLD_BOARDS = "forums/tibiacom_section.txt"
 FILE_SECTION_EMPTY_BOARD = "forums/tibiacom_section_empty_board.txt"
@@ -85,7 +85,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(30, len(board.threads))
         self.assertIsNotNone(board.url)
         self.assertIsNotNone(board.next_page_url)
-        self.assertEqual(board.next_page_url, BoardEntry.get_url(board.board_id, board.current_page + 1, board.age))
+        self.assertEqual(board.next_page_url, get_forum_board_url(board.board_id, board.current_page + 1, board.age))
         for i, thread in enumerate(board.threads):
             with self.subTest(i=i):
                 self.assertIsInstance(thread, ThreadEntry)
@@ -311,14 +311,14 @@ class TestForum(TestCommons, unittest.TestCase):
 
     def test_cm_post_archive_get_url_missing_parameter(self):
         with self.assertRaises(TypeError):
-            CMPostArchive.get_url(None, datetime.date.today())
+            get_cm_post_archive_url(None, datetime.date.today())
         with self.assertRaises(TypeError):
-            CMPostArchive.get_url(datetime.date.today(), None)
+            get_cm_post_archive_url(datetime.date.today(), None)
 
     def test_cm_post_archive_get_url_invalid_dates(self):
         with self.assertRaises(ValueError):
-            CMPostArchive.get_url(datetime.date.today(), datetime.date.today()-datetime.timedelta(days=20))
+            get_cm_post_archive_url(datetime.date.today(), datetime.date.today()-datetime.timedelta(days=20))
 
     def test_cm_post_archive_get_url_invalid_page(self):
         with self.assertRaises(ValueError):
-            CMPostArchive.get_url(datetime.date.today()-datetime.timedelta(days=20), datetime.date.today(), -2)
+            get_cm_post_archive_url(datetime.date.today()-datetime.timedelta(days=20), datetime.date.today(), -2)

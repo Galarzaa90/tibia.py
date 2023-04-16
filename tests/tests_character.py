@@ -3,9 +3,9 @@ import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.enums import AccountStatus
-from tibiapy.models import Character, Death, Killer, AccountBadge, CharacterHouse
+from tibiapy.models import Death, Killer, AccountBadge, CharacterHouse
 from tibiapy.parsers.character import CharacterParser
+from tibiapy.urls import get_character_url
 from tibiapy.utils import parse_tibia_datetime
 
 FILE_CHARACTER_RESOURCE = "character/tibiacom_full.txt"
@@ -47,7 +47,7 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertIsNotNone(character.deaths)
         self.assertEqual(0, character.deaths.__len__())
         self.assertEqual(parse_tibia_datetime("Apr 16 2023, 00:43:29 CEST"), character.last_login)
-        self.assertEqual(character.url, Character.get_url(character.name))
+        self.assertEqual(character.url, get_character_url(character.name))
         self.assertEqual(5, len(character.other_characters))
         self.assertFalse(character.hidden)
 

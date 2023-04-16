@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from tibiapy import WorldLocation, PvpType, TransferType, BattlEyeType
 from tibiapy.models import OnlineCharacter, BaseModel
-from tibiapy.utils import get_tibia_url
+from tibiapy.urls import get_world_url
 
 
 class BaseWorld(BaseModel):
@@ -14,23 +14,7 @@ class BaseWorld(BaseModel):
     @property
     def url(self):
         """:class:`str`: URL to the world's information page on Tibia.com."""
-        return self.get_url(self.name)
-
-    @classmethod
-    def get_url(cls, name):
-        """Get the URL to the World's information page on Tibia.com.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the world.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the world's information page.
-        """
-        return get_tibia_url("community", "worlds", world=name.title())
+        return get_world_url(self.name)
 
 
 class World(BaseWorld):
@@ -130,14 +114,3 @@ class WorldOverview(BaseModel):
     def total_online(self):
         """:class:`int`: Total players online across all worlds."""
         return sum(w.online_count for w in self.worlds)
-
-    @classmethod
-    def get_url(cls):
-        """Get the URL to the World Overview page in Tibia.com.
-
-        Returns
-        -------
-        :class:`str`
-            The URL to the World Overview's page.
-        """
-        return get_tibia_url("community", "worlds")
