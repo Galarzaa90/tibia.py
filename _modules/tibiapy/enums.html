@@ -238,7 +238,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The possible bazaar types.&quot;&quot;&quot;</span>
 
     <span class="n">CURRENT</span> <span class="o">=</span> <span class="s2">&quot;Current Auctions&quot;</span>
-    <span class="n">HISTORY</span> <span class="o">=</span> <span class="s2">&quot;Auction History&quot;</span></div>
+    <span class="n">HISTORY</span> <span class="o">=</span> <span class="s2">&quot;Auction History&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">subtopic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;currentcharactertrades&quot;</span> <span class="k">if</span> <span class="bp">self</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">CURRENT</span> <span class="k">else</span> <span class="s2">&quot;pastcharactertrades&quot;</span></div>
 
 
 <div class="viewcode-block" id="BidType"><a class="viewcode-back" href="../../api.html#tibiapy.BidType">[docs]</a><span class="k">class</span> <span class="nc">BidType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
