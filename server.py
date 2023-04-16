@@ -45,6 +45,12 @@ async def get_character(
     return await app.state.client.fetch_character(name)
 
 
+@app.get("/events/{year}/{month}")
+async def get_events_schedule(
+        year: int = Path(...),
+        month: int = Path(...),
+):
+    return await app.state.client.fetch_event_schedule(month, year)
 
 @app.get("/forums/world")
 async def get_world_boards():

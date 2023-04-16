@@ -1,26 +1,28 @@
-from tibiapy.models.event import EventSchedule
+from typing import List
+
+from tibiapy.models.event import EventSchedule, EventEntry
 
 
 class EventScheduleBuilder:
 
-    def __init__(self, **kwargs):
-        self._month = kwargs.get("month")
-        self._year = kwargs.get("year")
-        self._events = kwargs.get("events") or []
+    def __init__(self):
+        self._month = None
+        self._year = None
+        self._events = []
 
-    def month(self, month):
+    def month(self, month: int):
         self._month = month
         return self
 
-    def year(self, year):
+    def year(self, year: int):
         self._year = year
         return self
 
-    def events(self, events):
+    def events(self, events: List[EventEntry]):
         self._events = events
         return self
 
-    def add_event(self, event):
+    def add_event(self, event: EventEntry):
         self._events.append(event)
         return self
 

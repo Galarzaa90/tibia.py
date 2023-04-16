@@ -134,7 +134,7 @@ nonexistent world or a unselected world.
 - [tibiacom_thread_not_found.txt](forums/tibiacom_thread_not_found.txt) - The page for forum thread that doesn't exist.
 
 ## Events resources
-- [tibiacom_calendar.txt](events/tibiacom_calendar.txt) - The content of the event's calendar.
+- [tibiacom_calendar.txt](events/event_schedule.txt) - The content of the event's calendar.
 
 ## Bazaar resources
 - [tibiacom_auction_finished.txt](bazaar/tibiacom_auction_finished.txt) - The content of a finished auction.

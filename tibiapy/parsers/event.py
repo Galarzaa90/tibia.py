@@ -1,15 +1,13 @@
 """Models related to the event schedule section in Tibia.com."""
 
+import datetime
 import re
 import time
-import datetime
+from typing import List
 
-from typing import List, Optional
-
-from tibiapy import abc
 from tibiapy.builders.event import EventScheduleBuilder
 from tibiapy.models.event import EventEntry
-from tibiapy.utils import get_tibia_url, parse_popup, parse_tibiacom_content
+from tibiapy.utils import parse_popup, parse_tibiacom_content
 
 __all__ = (
     'EventScheduleParser',
@@ -19,24 +17,6 @@ month_year_regex = re.compile(r'([A-z]+)\s(\d+)')
 
 
 class EventScheduleParser:
-
-
-    __slots__ = (
-        'month',
-        'year',
-        'events',
-    )
-
-    def __init__(self, month, year, **kwargs):
-        self.month: int = month
-        self.year: int = year
-        self.events: List[EventEntry] = kwargs.get("events", [])
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__} month={self.month} year={self.year}>"
-
-
-
     @classmethod
     def from_content(cls, content):
         """Create an instance of the class from the html content of the event's calendar.
@@ -58,22 +38,22 @@ class EventScheduleParser:
         """
         parsed_content = parse_tibiacom_content(content)
 
-        month_year_div = parsed_content.find("div", {"class": "eventscheduleheaderdateblock"})
+        month_year_div = parsed_content.select_one("div.eventscheduleheaderdateblock")
         month, year = month_year_regex.search(month_year_div.text).groups()
         month = time.strptime(month, "%B").tm_mon
         year = int(year)
 
         builder = EventScheduleBuilder().year(year).month(month)
 
-        events_table = parsed_content.find("table", {"id": "eventscheduletable"})
-        day_cells = events_table.find_all("td")
+        events_table = parsed_content.select_one("#eventscheduletable")
+        day_cells = events_table.select("td")
         # Keep track of events that are ongoing
         ongoing_events = []
         # Keep track of all events present in that day
         ongoing_day = 1
         first_day = True
         for day_cell in day_cells:
-            day_div = day_cell.find("div")
+            day_div = day_cell.select_one("div")
             day = int(day_div.text)
             # The first cells may belong to the previous month
             if ongoing_day < day:
@@ -89,10 +69,10 @@ class EventScheduleParser:
                 year -= 1
             ongoing_day = day + 1
             today_events = []
-            popup_spans = day_cell.find_all('span', attrs={"class": "HelperDivIndicator"})
+            popup_spans = day_cell.select('span.HelperDivIndicator')
             for popup in popup_spans:
                 title, popup_content = parse_popup(popup["onmouseover"])
-                divs = popup_content.find_all("div")
+                divs = popup_content.select("div")
                 # Multiple events can be described in the same popup, they come in pairs, title and content.
                 for title, content in zip(*[iter(d.text for d in divs)] * 2):
                     title = title.replace(":", "")
@@ -116,6 +96,6 @@ class EventScheduleParser:
                     # Remove from ongoing
                     ongoing_events.remove(pending_event)
             first_day = False
-        # Add any leftover ongoing events without a end date, as we don't know when they end.
+        # Add any leftover ongoing events without an end date, as we don't know when they end.
         [builder.add_event(e) for e in ongoing_events]
         return builder.build()

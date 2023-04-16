@@ -5,12 +5,11 @@ from tests.tests_tibiapy import TestCommons
 from tibiapy.models.event import EventSchedule
 from tibiapy.parsers.event import EventScheduleParser
 
-FILE_EVENT_CALENDAR = "events/tibiacom_calendar.txt"
+FILE_EVENT_CALENDAR = "events/event_schedule.txt"
 
 
 class TestEvents(TestCommons, unittest.TestCase):
-    # region Tibia.com Tests
-    def test_event_schedule_from_content(self):
+    def test_event_schedule_parser_from_content(self):
         """Testing parsing the event schedule"""
         content = self.load_resource(FILE_EVENT_CALENDAR)
         calendar = EventScheduleParser.from_content(content)
@@ -23,4 +22,3 @@ class TestEvents(TestCommons, unittest.TestCase):
         events_on_day = calendar.get_events_on(datetime.date(2020, 9, 15))
         self.assertEqual(2, len(events_on_day))
         self.assertEqual(4, events_on_day[0].duration)
-    # endregion
