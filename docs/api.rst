@@ -151,6 +151,9 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :members:
     :undoc-members:
 
+
+.. currentmodule:: tibiapy.models
+
 Characters
 ===========
 The `Character section`_ consists of the :class:`Character` class and its auxiliary classes used to hold its data.
@@ -164,60 +167,51 @@ The entry points for this are:
 
 Character
 ---------
-.. autoclass:: Character
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Character
+   :inherited-members: BaseModel
 
 Auxiliary Classes
 -----------------
 
 AccountBadge
 ~~~~~~~~~~~~
-.. autoclass:: AccountBadge
-   :members:
-   :inherited-members:
+.. autopydantic_model:: AccountBadge
+   :inherited-members: BaseModel
 
 AccountInformation
 ~~~~~~~~~~~~~~~~~~
-.. autoclass:: AccountInformation
-   :members:
-   :inherited-members:
+.. autopydantic_model:: AccountInformation
+   :inherited-members: BaseModel
 
 Achievement
 ~~~~~~~~~~~
-.. autoclass:: Achievement
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Achievement
+   :inherited-members: BaseModel
 
 CharacterHouse
 ~~~~~~~~~~~~~~
-.. autoclass:: CharacterHouse
-   :members:
-   :inherited-members:
+.. autopydantic_model:: CharacterHouse
+   :inherited-members: BaseModel
 
 Death
 ~~~~~
-.. autoclass:: Death
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Death
+   :inherited-members: BaseModel
 
 GuildMembership
 ~~~~~~~~~~~~~~~
-.. autoclass:: GuildMembership
-   :members:
-   :inherited-members:
+.. autopydantic_model:: GuildMembership
+   :inherited-members: BaseModel
 
 Killer
 ~~~~~~
-.. autoclass:: Killer
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Killer
+   :inherited-members: BaseModel
 
 OtherCharacter
 ~~~~~~~~~~~~~~
-.. autoclass:: OtherCharacter
-   :members:
-   :inherited-members:
+.. autopydantic_model:: OtherCharacter
+   :inherited-members: BaseModel
 
 Worlds
 ======
@@ -228,27 +222,23 @@ the :class:`World` class contains the details of a single world.
 
 WorldOverview
 -------------
-.. autoclass:: WorldOverview
-   :members:
-   :inherited-members:
+.. autopydantic_model:: WorldOverview
+   :inherited-members: BaseModel
 
 WorldEntry
 -----------
-.. autoclass:: WorldEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: WorldEntry
+   :inherited-members: BaseModel
 
 World
 -----
-.. autoclass:: World
-   :members:
-   :inherited-members:
+.. autopydantic_model:: World
+   :inherited-members: BaseModel
 
 OnlineCharacter
 ---------------
-.. autoclass:: OnlineCharacter
-   :members:
-   :inherited-members:
+.. autopydantic_model:: OnlineCharacter
+   :inherited-members: BaseModel
 
 Guilds
 ======
@@ -259,53 +249,45 @@ previewed information in the guild list of the :class:`GuildsSection`.
 
 GuildsSection
 -------------
-.. autoclass:: GuildsSection
-   :members:
-   :inherited-members:
+.. autopydantic_model:: GuildsSection
+   :inherited-members: BaseModel
 
 Guild
 -----
-.. autoclass:: Guild
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Guild
+   :inherited-members: BaseModel
 
 GuildEntry
 ----------
-.. autoclass:: GuildEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: GuildEntry
+   :inherited-members: BaseModel
 
 Auxiliary Classes
 -----------------
 GuildInvite
 ~~~~~~~~~~~
-.. autoclass:: GuildInvite
-   :members:
-   :inherited-members:
+.. autopydantic_model:: GuildInvite
+   :inherited-members: BaseModel
 
 GuildHouse
 ~~~~~~~~~~
-.. autoclass:: GuildHouse
-   :members:
-   :inherited-members:
+.. autopydantic_model:: GuildHouse
+   :inherited-members: BaseModel
 
 GuildMember
 ~~~~~~~~~~~
-.. autoclass:: GuildMember
-   :members:
-   :inherited-members:
+.. autopydantic_model:: GuildMember
+   :inherited-members: BaseModel
 
 GuildWars
 ~~~~~~~~~
-.. autoclass:: GuildWars
-   :members:
-   :inherited-members:
+.. autopydantic_model:: GuildWars
+   :inherited-members: BaseModel
 
 GuildWarEntry
 ~~~~~~~~~~~~~
-.. autoclass:: GuildWarEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: GuildWarEntry
+   :inherited-members: BaseModel
 
 Highscores
 ==========
@@ -315,21 +297,18 @@ Models related to `Tibia.com's Highscores section`_.
 
 Highscores
 ----------
-.. autoclass:: Highscores
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Highscores
+   :inherited-members: BaseModel
 
 HighscoresEntry
 ---------------
-.. autoclass:: HighscoresEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: HighscoresEntry
+   :inherited-members: BaseModel
 
 LoyaltyHighscoresEntry
 ----------------------
-.. autoclass:: LoyaltyHighscoresEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: LoyaltyHighscoresEntry
+   :inherited-members: BaseModel
 
 Houses
 ======
@@ -339,21 +318,18 @@ Models related to `Tibia.com's Houses section`_.
 
 HousesSection
 -------------
-.. autoclass:: HousesSection
-   :members:
-   :inherited-members:
+.. autopydantic_model:: HousesSection
+   :inherited-members: BaseModel
 
 House
 -----
-.. autoclass:: House
-   :members:
-   :inherited-members:
+.. autopydantic_model:: House
+   :inherited-members: BaseModel
 
 HouseEntry
 ----------
-.. autoclass:: HouseEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: HouseEntry
+   :inherited-members: BaseModel
 
 Leaderboard
 ===========
@@ -363,76 +339,21 @@ Models related to `Tibia.com's Leaderboard section`_.
 
 Leaderboard
 -----------
-.. autoclass:: Leaderboard
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Leaderboard
+   :inherited-members: BaseModel
 
 Auxiliary Classes
 -----------------
 
 LeaderboardRotation
 ~~~~~~~~~~~~~~~~~~~
-.. autoclass:: LeaderboardRotation
-   :members:
-   :inherited-members:
+.. autopydantic_model:: LeaderboardRotation
+   :inherited-members: BaseModel
 
 LeaderboardEntry
 ~~~~~~~~~~~~~~~~
-.. autoclass:: LeaderboardEntry
-   :members:
-   :inherited-members:
-
-Tournaments
-===========
-Models related to `Tibia.com's Tournaments section`_.
-
-.. _Tibia.com's Tournaments section: https://www.tibia.com/community/?subtopic=tournament
-
-Tournament
-----------
-.. autoclass:: Tournament
-   :members:
-   :inherited-members:
-
-TournamentLeaderboard
----------------------
-.. autoclass:: TournamentLeaderboard
-   :members:
-   :inherited-members:
-
-Auxiliary Classes
------------------
-
-TournamentEntry
-~~~~~~~~~~~~~~~
-.. autoclass:: TournamentEntry
-   :members:
-   :inherited-members:
-
-TournamentLeaderboardEntry
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. autoclass:: TournamentLeaderboardEntry
-   :members:
-   :inherited-members:
-
-RewardEntry
-~~~~~~~~~~~
-.. autoclass:: RewardEntry
-   :members:
-   :inherited-members:
-
-
-RuleSet
-~~~~~~~
-.. autoclass:: RuleSet
-   :members:
-   :inherited-members:
-
-ScoreSet
-~~~~~~~~
-.. autoclass:: ScoreSet
-   :members:
-   :inherited-members:
+.. autopydantic_model:: LeaderboardEntry
+   :inherited-members: BaseModel
 
 Forums
 ======
@@ -442,77 +363,65 @@ Models related to `Tibia.com's Forum section`_.
 
 CMPostArchive
 -------------
-.. autoclass:: CMPostArchive
-   :members:
-   :inherited-members:
+.. autopydantic_model:: CMPostArchive
+   :inherited-members: BaseModel
 
 ForumAnnouncement
 -----------------
-.. autoclass:: ForumAnnouncement
-    :members:
-    :inherited-members:
+.. autopydantic_model:: ForumAnnouncement
+    :inherited-members: BaseModel
 
 ForumBoard
 ----------
-.. autoclass:: ForumBoard
-    :members:
-    :inherited-members:
+.. autopydantic_model:: ForumBoard
+    :inherited-members: BaseModel
 
 ForumPost
 ---------
-.. autoclass:: ForumPost
-    :members:
-    :inherited-members:
+.. autopydantic_model:: ForumPost
+    :inherited-members: BaseModel
 
 ForumThread
 -----------
-.. autoclass:: ForumThread
-    :members:
-    :inherited-members:
+.. autopydantic_model:: ForumThread
+    :inherited-members: BaseModel
 
 AnnouncementEntry
 ------------------
-.. autoclass:: AnnouncementEntry
-    :members:
-    :inherited-members:
+.. autopydantic_model:: AnnouncementEntry
+    :inherited-members: BaseModel
 
 BoardEntry
 ----------
-.. autoclass:: BoardEntry
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BoardEntry
+    :inherited-members: BaseModel
 
 ThreadEntry
 -----------
-.. autoclass:: ThreadEntry
-    :members:
-    :inherited-members:
+.. autopydantic_model:: ThreadEntry
+    :inherited-members: BaseModel
 
 Auxiliary Classes
 -----------------
 CMPost
 ~~~~~~
-.. autoclass:: CMPost
-   :members:
-   :inherited-members:
+.. autopydantic_model:: CMPost
+   :inherited-members: BaseModel
 
 ForumAuthor
 ~~~~~~~~~~~
-.. autoclass:: ForumAuthor
-    :members:
-    :inherited-members:
+.. autopydantic_model:: ForumAuthor
+    :inherited-members: BaseModel
 
 ForumEmoticon
 ~~~~~~~~~~~~~
-.. autoclass:: ForumEmoticon
-    :members:
-    :inherited-members:
+.. autopydantic_model:: ForumEmoticon
+    :inherited-members: BaseModel
 
 LastPost
 ~~~~~~~~
-.. autoclass:: LastPost
-    :members:
-    :inherited-members:
+.. autopydantic_model:: LastPost
+    :inherited-members: BaseModel
 
 
 News
@@ -524,33 +433,28 @@ Models related to `Tibia.com's News section`_. This also contains the `Event Cal
 
 NewsArchive
 -----------
-.. autoclass:: NewsArchive
-   :members:
-   :inherited-members:
+.. autopydantic_model:: NewsArchive
+   :inherited-members: BaseModel
 
 News
 ---------
-.. autoclass:: News
-   :members:
-   :inherited-members:
+.. autopydantic_model:: News
+   :inherited-members: BaseModel
 
 NewsEntry
 -----------
-.. autoclass:: NewsEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: NewsEntry
+   :inherited-members: BaseModel
 
 EventSchedule
 -------------
-.. autoclass:: EventSchedule
-   :members:
-   :inherited-members:
+.. autopydantic_model:: EventSchedule
+   :inherited-members: BaseModel
 
 EventEntry
 -------------
-.. autoclass:: EventEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: EventEntry
+   :inherited-members: BaseModel
 
 Bazaar
 ======
@@ -560,194 +464,169 @@ Models related to `Tibia.com's Bazaar section`_.
 
 CharacterBazaar
 ---------------
-.. autoclass:: CharacterBazaar
-   :members:
-   :inherited-members:
-
-AuctionEntry
-------------
-.. autoclass:: AuctionEntry
-    :members:
-    :inherited-members:
+.. autopydantic_model:: CharacterBazaar
+   :inherited-members: BaseModel
 
 Auction
--------
-.. autoclass:: Auction
-   :members:
-   :inherited-members:
+------------
+.. autopydantic_model:: Auction
+    :inherited-members: BaseModel
+
+AuctionDetails
+--------------
+.. autopydantic_model:: AuctionDetails
+   :inherited-members: BaseModel
 
 Auxiliary Classes
 -----------------
 
 AchievementEntry
 ~~~~~~~~~~~~~~~~
-.. autoclass:: AchievementEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: AchievementEntry
+   :inherited-members: BaseModel
 
 AuctionFilters
 ~~~~~~~~~~~~~~
-.. autoclass:: AuctionFilters
-   :members:
-   :inherited-members:
+.. autopydantic_model:: AuctionFilters
+   :inherited-members: BaseModel
 
 
 BestiaryEntry
 ~~~~~~~~~~~~~
-.. autoclass:: BestiaryEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: BestiaryEntry
+   :inherited-members: BaseModel
 
 BlessingEntry
 ~~~~~~~~~~~~~
-.. autoclass:: BlessingEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: BlessingEntry
+   :inherited-members: BaseModel
 
 CharmsEntry
 ~~~~~~~~~~~
-.. autoclass:: CharmEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: CharmEntry
+   :inherited-members: BaseModel
 
-DisplayFamiliar
-~~~~~~~~~~~~~~~
-.. autoclass:: DisplayFamiliar
-   :members:
-   :inherited-members:
-
-DisplayItem
-~~~~~~~~~~~
-.. autoclass:: DisplayItem
-   :members:
-   :inherited-members:
-
-DisplayMount
-~~~~~~~~~~~~
-.. autoclass:: DisplayMount
-   :members:
-   :inherited-members:
-
-DisplayOutfit
+FamiliarEntry
 ~~~~~~~~~~~~~
-.. autoclass:: DisplayOutfit
-   :members:
-   :inherited-members:
+.. autopydantic_model:: FamiliarEntry
+   :inherited-members: BaseModel
+
+ItemEntry
+~~~~~~~~~
+.. autopydantic_model:: ItemEntry
+   :inherited-members: BaseModel
+
+MountEntry
+~~~~~~~~~~
+.. autopydantic_model:: MountEntry
+   :inherited-members: BaseModel
+
+OutfitEntry
+~~~~~~~~~~~
+.. autopydantic_model:: OutfitEntry
+   :inherited-members: BaseModel
 
 Familiars
 ~~~~~~~~~
-.. autoclass:: Familiars
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Familiars
+   :inherited-members: BaseModel
 
 ItemSummary
 ~~~~~~~~~~~
-.. autoclass:: ItemSummary
-   :members:
-   :inherited-members:
+.. autopydantic_model:: ItemSummary
+   :inherited-members: BaseModel
 
 Mounts
 ~~~~~~~~~~~
-.. autoclass:: Mounts
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Mounts
+   :inherited-members: BaseModel
 
 OutfitImage
 ~~~~~~~~~~~
-.. autoclass:: OutfitImage
-   :members:
-   :inherited-members:
+.. autopydantic_model:: OutfitImage
+   :inherited-members: BaseModel
 
 Outfits
 ~~~~~~~
-.. autoclass:: Outfits
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Outfits
+   :inherited-members: BaseModel
 
 SalesArgument
 ~~~~~~~~~~~~~~
-.. autoclass:: SalesArgument
-   :members:
-   :inherited-members:
+.. autopydantic_model:: SalesArgument
+   :inherited-members: BaseModel
 
 SkillEntry
 ~~~~~~~~~~
-.. autoclass:: SkillEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: SkillEntry
+   :inherited-members: BaseModel
 
 Kill Statistics
 ===============
 
 KillStatistics
 --------------
-.. autoclass:: KillStatistics
-   :members:
-   :inherited-members:
+.. autopydantic_model:: KillStatistics
+   :inherited-members: BaseModel
 
 RaceEntry
 ---------
-.. autoclass:: RaceEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: RaceEntry
+   :inherited-members: BaseModel
 
 Library
 =======
 
 CreaturesSection
 ----------------
-.. autoclass:: CreaturesSection
-   :members:
-   :inherited-members:
+.. autopydantic_model:: CreaturesSection
+   :inherited-members: BaseModel
 
 Creature
 --------
-.. autoclass:: Creature
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Creature
+   :inherited-members: BaseModel
 
 CreatureEntry
 -------------
-.. autoclass:: CreatureEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: CreatureEntry
+   :inherited-members: BaseModel
 
 BoostableBosses
 ----------------
-.. autoclass:: BoostableBosses
-   :members:
-   :inherited-members:
+.. autopydantic_model:: BoostableBosses
+   :inherited-members: BaseModel
 
 BoostedCreatures
 ----------------
-.. autoclass:: BoostedCreatures
-   :members:
-   :inherited-members:
+.. autopydantic_model:: BoostedCreatures
+   :inherited-members: BaseModel
 
 BossEntry
 -------------
-.. autoclass:: BossEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: BossEntry
+   :inherited-members: BaseModel
 
 
 SpellsSection
 -------------
-.. autoclass:: SpellsSection
-   :members:
-   :inherited-members:
+.. autopydantic_model:: SpellsSection
+   :inherited-members: BaseModel
 
 Spell
 -----
-.. autoclass:: Spell
-   :members:
-   :inherited-members:
+.. autopydantic_model:: Spell
+   :inherited-members: BaseModel
+
+Rune
+----------
+.. autopydantic_model:: Rune
+   :inherited-members: BaseModel
 
 SpellEntry
 ----------
-.. autoclass:: SpellEntry
-   :members:
-   :inherited-members:
+.. autopydantic_model:: SpellEntry
+   :inherited-members: BaseModel
 
 Base Classes
 ============
@@ -756,56 +635,43 @@ The following classes are not meant to be used or instantiated, but are document
 They implement methods and properties that can be inherited by other classes to implement their functionality.
 
 
-.. autoclass:: tibiapy.abc.BaseAnnouncement
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BaseAnnouncement
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.BaseBoard
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BaseBoard
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.BaseCharacter
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BaseCharacter
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.BaseGuild
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BaseGuild
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.BaseHouse
-    :members:
-    :inherited-members:
+.. autopydantic_model:: tibiapy.base.BaseHouse
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.HouseWithId
-    :members:
-    :inherited-members:
+.. autopydantic_model:: HouseWithId
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.BaseNews
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BaseNews
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.BasePost
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BasePost
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.BaseThread
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BaseThread
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.BaseTournament
-    :members:
-    :inherited-members:
 
-.. autoclass:: tibiapy.abc.BaseWorld
-    :members:
-    :inherited-members:
+.. autopydantic_model:: BaseWorld
+    :inherited-members: BaseModel
 
-.. autoclass:: tibiapy.abc.Serializable
-    :members:
-    :inherited-members:
+
 
 Exceptions
 ==========
+.. currentmodule:: tibiapy
+
 .. autoclass:: TibiapyException
 
 .. autoclass:: InvalidContent

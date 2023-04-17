@@ -73,7 +73,7 @@ class Highscores(PaginatedWithUrl[HighscoresEntry]):
         return get_highscores_url(self.world, self.category, self.vocation, self.current_page, self.battleye_filter,
                             self.pvp_types_filter)
 
-    def get_page_url(self, page):
+    def get_page_url(self, page: int) -> str:
         """Get the URL to a specific page for the current highscores.
 
         Parameters

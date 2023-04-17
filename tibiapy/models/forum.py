@@ -11,18 +11,22 @@ from tibiapy.urls import get_character_url, get_forum_board_url, get_forum_annou
 from tibiapy.utils import get_tibia_url
 
 __all__ = (
+    'AnnouncementEntry',
+    'BaseAnnouncement',
+    'BaseBoard',
+    'BasePost',
+    'BaseThread',
+    'BoardEntry',
     'CMPost',
     'CMPostArchive',
-    'ForumEmoticon',
-    'LastPost',
-    'ForumAuthor',
-    'AnnouncementEntry',
-    'BoardEntry',
-    'ThreadEntry',
     'ForumAnnouncement',
+    'ForumAuthor',
     'ForumBoard',
+    'ForumEmoticon',
     'ForumPost',
     'ForumThread',
+    'LastPost',
+    'ThreadEntry',
 )
 
 

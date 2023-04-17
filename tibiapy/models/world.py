@@ -12,8 +12,8 @@ class BaseWorld(BaseModel):
     """The name of the world."""
 
     @property
-    def url(self):
-        """:class:`str`: URL to the world's information page on Tibia.com."""
+    def url(self) -> str:
+        """URL to the world's information page on Tibia.com."""
         return get_world_url(self.name)
 
 
@@ -49,8 +49,8 @@ class World(BaseWorld):
     """A list of characters currently online in the server."""
 
     @property
-    def battleye_protected(self):
-        """:class:`bool`: Whether the server is currently protected with BattlEye or not.
+    def battleye_protected(self) -> bool:
+        """Whether the server is currently protected with BattlEye or not.
 
         .. versionchanged:: 4.0.0
             Now a calculated property instead of a field.
@@ -58,13 +58,13 @@ class World(BaseWorld):
         return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
 
     @property
-    def creation_year(self):
-        """:class:`int`: Returns the year when the world was created."""
+    def creation_year(self) -> int:
+        """Returns the year when the world was created."""
         return int(self.creation_date.split("-")[0]) if self.creation_date else None
 
     @property
-    def creation_month(self):
-        """:class:`int`: Returns the month when the world was created."""
+    def creation_month(self) -> int:
+        """Returns the month when the world was created."""
         return int(self.creation_date.split("-")[1]) if self.creation_date else None
 
 
@@ -91,8 +91,8 @@ class WorldEntry(BaseWorld):
     """Whether only premium account players are allowed to play in this server."""
 
     @property
-    def battleye_protected(self):
-        """:class:`bool`: Whether the server is currently protected with BattlEye or not.
+    def battleye_protected(self) -> bool:
+        """Whether the server is currently protected with BattlEye or not.
 
         .. versionchanged:: 4.0.0
             Now a calculated property instead of a field.
@@ -111,6 +111,6 @@ class WorldOverview(BaseModel):
     """List of worlds, with limited info."""
 
     @property
-    def total_online(self):
-        """:class:`int`: Total players online across all worlds."""
+    def total_online(self) -> int:
+        """Total players online across all worlds."""
         return sum(w.online_count for w in self.worlds)

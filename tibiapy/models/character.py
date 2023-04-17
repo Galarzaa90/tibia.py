@@ -38,14 +38,7 @@ class AccountBadge(BaseModel):
 class AccountInformation(BaseModel):
     """Contains the information of a character's account.
 
-    This is only visible if the character is not marked as hidden.Attributes
-    ----------
-    created: :class:`datetime.datetime`
-        The date when the account was created.
-    position: :class:`str`, optional
-        The special position of this account, if any.
-    loyalty_title: :class:`str`, optional
-        The loyalty title of the account, if any.
+    This is only visible if the character is not marked as hidden.
     """
 
     created: datetime.datetime
@@ -92,8 +85,8 @@ class Killer(BaseModel):
     """If the killer was traded after this death happened."""
 
     @property
-    def url(self):
-        """:class:`str`, optional: The URL of the character’s information page on Tibia.com, if applicable."""
+    def url(self) -> Optional[str]:
+        """The URL of the character’s information page on Tibia.com, if applicable."""
         return get_character_url(self.name) if self.player else None
 
 
@@ -110,13 +103,13 @@ class Death(BaseModel):
     """The time at which the death occurred."""
 
     @property
-    def by_player(self):
-        """:class:`bool`: Whether the kill involves other characters."""
+    def by_player(self) -> bool:
+        """Whether the kill involves other characters."""
         return any(k.player for k in self.killers)
 
     @property
-    def killer(self):
-        """:class:`Killer`: The first killer in the list.
+    def killer(self) -> Killer:
+        """The first killer in the list.
 
         This is usually the killer that gave the killing blow.
         """
@@ -221,31 +214,31 @@ class Character(BaseCharacter):
     # region Properties
     @property
     def deleted(self) -> bool:
-        """:class:`bool`: Whether the character is scheduled for deletion or not."""
+        """Whether the character is scheduled for deletion or not."""
         return self.deletion_date is not None
 
     @property
     def guild_name(self) -> Optional[str]:
-        """:class:`str`, optional: The name of the guild the character belongs to, or :obj:`None`."""
+        """The name of the guild the character belongs to, or :obj:`None`."""
         return self.guild_membership.name if self.guild_membership else None
 
     @property
     def guild_rank(self) -> Optional[str]:
-        """:class:`str`, optional: The character's rank in the guild they belong to, or :obj:`None`."""
+        """The character's rank in the guild they belong to, or :obj:`None`."""
         return self.guild_membership.rank if self.guild_membership else None
 
     @property
     def guild_url(self) -> Optional[str]:
-        """:class:`str`, optional: The character's rank in the guild they belong to, or :obj:`None`."""
+        """The character's rank in the guild they belong to, or :obj:`None`."""
         return get_guild_url(self.guild_membership.name) if self.guild_membership else None
 
     @property
     def hidden(self) -> bool:
-        """:class:`bool`: Whether this is a hidden character or not."""
+        """Whether this is a hidden character or not."""
         return len(self.other_characters) == 0
 
     @property
     def married_to_url(self) -> Optional[str]:
-        """:class:`str`, optional: The URL to the husband/spouse information page on Tibia.com, if applicable."""
+        """The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return get_character_url(self.married_to) if self.married_to else None
     # endregion

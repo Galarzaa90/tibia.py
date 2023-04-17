@@ -72,18 +72,18 @@ class House(HouseWithId):
     """The date when the auction will end."""
 
     @property
-    def owner_url(self):
-        """:class:`str`: The URL to the Tibia.com page of the house's owner, if applicable."""
+    def owner_url(self) -> Optional[str]:
+        """The URL to the Tibia.com page of the house's owner, if applicable."""
         return get_character_url(self.owner) if self.owner is not None else None
 
     @property
-    def transferee_url(self):
-        """:class:`str`: The URL to the Tibia.com page of the character receiving the house, if applicable."""
+    def transferee_url(self) -> Optional[str]:
+        """The URL to the Tibia.com page of the character receiving the house, if applicable."""
         return get_character_url(self.transferee) if self.transferee is not None else None
 
     @property
-    def highest_bidder_url(self):
-        """:class:`str`: The URL to the Tibia.com page of the character with the highest bid, if applicable."""
+    def highest_bidder_url(self) -> Optional[str]:
+        """The URL to the Tibia.com page of the character with the highest bid, if applicable."""
         return get_character_url(self.highest_bidder) if self.highest_bidder is not None else None
 
 
@@ -108,8 +108,8 @@ class HousesSection(BaseModel):
     """The list of available towns to choose from."""
 
     @property
-    def url(self):
-        """:class:`str`: Get the URL to the houses section with the current parameters."""
+    def url(self) -> str:
+        """Get the URL to the houses section with the current parameters."""
         return get_houses_section_url(self.world, self.town, self.house_type, self.status, self.order)
 
 

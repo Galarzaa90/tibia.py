@@ -50,8 +50,8 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
     """How long ago was the currently displayed data updated. Only available for the current rotation."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL to the current leaderboard."""
+    def url(self) -> str:
+        """The URL to the current leaderboard."""
         return get_leaderboards_url(self.world, self.rotation.rotation_id, self.current_page)
 
     def get_page_url(self, page):

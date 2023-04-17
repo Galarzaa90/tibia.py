@@ -41,6 +41,7 @@ with open('README.md') as f:
 extras_require = {
     'docs': [
         'sphinx',
+        'autodoc-pydantic',
     ],
     'test': [
         'asynctest',

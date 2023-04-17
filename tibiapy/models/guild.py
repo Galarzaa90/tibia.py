@@ -132,18 +132,18 @@ class GuildsSection(BaseModel):
     """The list of worlds available for selection."""
 
     @property
-    def active_guilds(self):
-        """:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are active."""
+    def active_guilds(self) -> List[GuildEntry]:
+        """Get a list of the guilds that are active."""
         return [g for g in self.entries if g.active]
 
     @property
-    def in_formation_guilds(self):
-        """:class:`list` of :class:`GuildEntry`: Get a list of the guilds that are in course of formation."""
+    def in_formation_guilds(self) -> List[GuildEntry]:
+        """Get a list of the guilds that are in course of formation."""
         return [g for g in self.entries if not g.active]
 
     @property
-    def url(self):
-        """:class:`str`: Get the URL to this guild section."""
+    def url(self) -> str:
+        """Get the URL to this guild section."""
         return get_world_guilds_url(self.world)
 
 
@@ -183,13 +183,13 @@ class GuildWarEntry(BaseModel):
     """Whether the losing guild surrendered or not."""
 
     @property
-    def guild_url(self):
-        """:class:`str`: The URL to the guild's information page on Tibia.com."""
+    def guild_url(self) -> str:
+        """The URL to the guild's information page on Tibia.com."""
         return get_guild_url(self.guild_name)
 
     @property
-    def opponent_guild_url(self):
-        """:class:`str`: The URL to the opposing guild's information page on Tibia.com."""
+    def opponent_guild_url(self) -> Optional[str]:
+        """The URL to the opposing guild's information page on Tibia.com."""
         return get_guild_url(self.opponent_name) if self.opponent_name else None
 
 
@@ -204,6 +204,6 @@ class GuildWars(BaseModel):
     """The previous wars the guild has been involved in."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL of this guild's war page on Tibia.com."""
+    def url(self) -> str:
+        """The URL of this guild's war page on Tibia.com."""
         return get_guild_wars_url(self.name)

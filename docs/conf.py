@@ -5,8 +5,8 @@
 # This file does only contain a selection of the most common options. For a
 # full list see the documentation:
 # http://www.sphinx-doc.org/en/master/config
-import re
 import os
+import re
 import sys
 
 
@@ -56,7 +56,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
-    'sphinx.ext.coverage'
+    'sphinx.ext.coverage',
+    'sphinxcontrib.autodoc_pydantic',
+
 ]
 
 # Add any paths that contain templates here, relative to this directory.

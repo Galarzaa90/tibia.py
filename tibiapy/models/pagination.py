@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import TypeVar, Generic, List
+from typing import TypeVar, Generic, List, Optional
 
 from pydantic.generics import GenericModel
 
@@ -20,15 +20,18 @@ class Paginated(GenericModel, Generic[T]):
 class PaginatedWithUrl(Paginated[T], Generic[T], ABC):
 
     @property
-    def next_page_url(self):
+    def next_page_url(self) -> Optional[str]:
+        """The URL to the next page of the results, if available."""
         return None if self.current_page == self.total_pages else self.get_page_url(self.current_page + 1)
 
     @property
-    def previous_page_url(self):
+    def previous_page_url(self) -> Optional[str]:
+        """The URL to the previous page of the results, if available."""
         return None if self.current_page == 1 else self.get_page_url(self.current_page - 1)
 
     @abstractmethod
     def get_page_url(self, page) -> str:
+        """The URL to a specific page of the results."""
         ...
 
 
