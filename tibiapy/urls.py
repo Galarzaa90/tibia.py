@@ -169,6 +169,7 @@ def get_forum_post_url(post_id):
 def get_highscores_url(world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
                        battleye_type=None, pvp_types=None):
     """Get the Tibia.com URL of the highscores for the given parameters.
+
     Parameters
     ----------
     world: :class:`str`, optional
@@ -183,6 +184,7 @@ def get_highscores_url(world=None, category=Category.EXPERIENCE, vocation=Vocati
         The battleEye filters to use.
     pvp_types: :class:`list` of :class:`PvpTypeFilter`, optional
         The list of PvP types to filter the results for.
+
     Returns
     -------
     The URL to the Tibia.com highscores.

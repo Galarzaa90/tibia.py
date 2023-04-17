@@ -689,3 +689,9 @@ Utility functions
 .. automodule:: tibiapy.utils
    :members:
 
+URL functions
+==================
+
+.. automodule:: tibiapy.urls
+   :members:
+

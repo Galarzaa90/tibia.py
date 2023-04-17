@@ -6,8 +6,7 @@ from pydantic import BaseModel
 
 from tibiapy import PvpTypeFilter, BattlEyeTypeFilter, VocationAuctionFilter, SkillFilter, AuctionSearchType, \
     AuctionOrderBy, AuctionOrder, BazaarType, Vocation, Sex, BidType, AuctionStatus
-from tibiapy.models import PaginatedWithUrl
-from tibiapy.models.pagination import AjaxPaginator
+from tibiapy.models.pagination import AjaxPaginator, PaginatedWithUrl
 from tibiapy.urls import get_character_url, get_auction_url, get_bazaar_url
 
 __all__ = (
