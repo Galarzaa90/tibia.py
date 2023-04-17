@@ -59,6 +59,20 @@
 <span class="p">)</span>
 
 <div class="viewcode-block" id="BaseCharacter"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseCharacter">[docs]</a><span class="k">class</span> <span class="nc">BaseCharacter</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all character classes.</span>
+
+<span class="sd">    The following implement this class:</span>
+
+<span class="sd">    - :class:`.Character`</span>
+<span class="sd">    - :class:`.GuildInvite`</span>
+<span class="sd">    - :class:`.GuildMember`</span>
+<span class="sd">    - :class:`.HighscoresEntry`</span>
+<span class="sd">    - :class:`.TournamentLeaderboardEntry`</span>
+<span class="sd">    - :class:`.OnlineCharacter`</span>
+<span class="sd">    - :class:`.OtherCharacter`</span>
+<span class="sd">    - :class:`.Auction`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the character.&quot;&quot;&quot;</span>
 
@@ -75,7 +89,14 @@
 
 
 <div class="viewcode-block" id="BaseGuild"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseGuild">[docs]</a><span class="k">class</span> <span class="nc">BaseGuild</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Guild classes.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Guild classes.</span>
+
+<span class="sd">    The following implement this class:</span>
+
+<span class="sd">    - :class:`.Guild`</span>
+<span class="sd">    - :class:`.GuildMembership`</span>
+<span class="sd">    - :class:`.GuildEntry`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the guild.&quot;&quot;&quot;</span>
@@ -121,6 +142,7 @@
 
 
 <div class="viewcode-block" id="HouseWithId"><a class="viewcode-back" href="../../../api.html#tibiapy.models.HouseWithId">[docs]</a><span class="k">class</span> <span class="nc">HouseWithId</span><span class="p">(</span><span class="n">BaseHouse</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base classes for houses with an ID.&quot;&quot;&quot;</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the house. This is used on the website to identify houses.&quot;&quot;&quot;</span>
     <span class="n">world</span><span class="p">:</span> <span class="nb">str</span>

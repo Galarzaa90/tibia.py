@@ -105,13 +105,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the spell requires a premium account to learn and use it.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the spell.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the spell.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_spell_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">image_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to this spell&#39;s image.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">image_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to this spell&#39;s image.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://static.tibia.com/images/library/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">.png&quot;</span></div>
 
 
@@ -160,7 +160,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The spells matching the selected filters.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the spells section in Tibia.com.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_spells_section_url</span><span class="p">(</span><span class="n">vocation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">,</span> <span class="n">spell_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spell_type</span><span class="p">,</span> <span class="n">premium</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">premium</span><span class="p">,</span>
                             <span class="n">sort</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sort_by</span><span class="p">)</span></div>
 

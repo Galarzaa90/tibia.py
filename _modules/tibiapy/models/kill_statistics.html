@@ -77,13 +77,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of worlds available for selection.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the kill statistics page on Tibia.com containing the results.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the kill statistics page on Tibia.com containing the results.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_kill_statistics_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`RaceEntry`: The kill statistics for players.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">players</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RaceEntry</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The kill statistics for players.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="n">RaceEntry</span><span class="p">())</span></div>
 
 </pre></div>

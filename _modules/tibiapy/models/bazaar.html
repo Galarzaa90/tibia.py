@@ -122,8 +122,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of available worlds to select to filter.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">query_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`dict`: The query parameters representing this filter.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">query_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The query parameters representing this filter.&quot;&quot;&quot;</span>
         <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;filter_profession&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s2">&quot;filter_levelrangefrom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_level</span><span class="p">,</span>
@@ -153,8 +153,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The current step to unlock this creature the character is in, where 4 is fully unlocked.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">completed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`bool`: Whether the entry is completed or not.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">completed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the entry is completed or not.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">4</span></div>
 
 
@@ -486,18 +486,18 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The bosstiary progress of the character.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">completed_bestiary_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`list` of :class:`BestiaryEntry`: Get a list of completed bestiary entries.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">completed_bestiary_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of completed bestiary entries.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bestiary_progress</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">completed</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">regular_world_transfer_available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`bool`: Whether regular world transfers are available immediately for this character.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">regular_world_transfer_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether regular world transfers are available immediately for this character.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">regular_world_transfer_available_date</span> <span class="ow">is</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">skills_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;SkillEntry&#39;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`dict` of :class:`str`, :class:`SkillEntry`: A mapping of skills by their name.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">skills_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SkillEntry</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A mapping of skills by their name.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">skill</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">skill</span> <span class="k">for</span> <span class="n">skill</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="p">}</span></div>
 
 
@@ -535,13 +535,13 @@
     <span class="n">details</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionDetails</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">character_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL of the character&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">character_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of the character&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to this auction&#39;s detail page on Tibia.com.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to this auction&#39;s detail page on Tibia.com.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_auction_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auction_id</span><span class="p">)</span></div>
 
 
@@ -557,8 +557,8 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: Get the URL to the bazaar.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to the bazaar.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_bazaar_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">)</span></div>
 </pre></div>
 

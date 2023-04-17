@@ -104,18 +104,18 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">from_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`int`: The starting rank of the provided entries.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">from_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The starting rank of the provided entries.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">else</span> <span class="mi">0</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">to_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`int`: The last rank of the provided entries.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">to_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The last rank of the provided entries.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">else</span> <span class="mi">0</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the highscores page on Tibia.com containing the results.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the highscores page on Tibia.com containing the results.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_highscores_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_filter</span><span class="p">,</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">pvp_types_filter</span><span class="p">)</span>
 

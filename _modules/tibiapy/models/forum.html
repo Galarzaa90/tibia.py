@@ -96,8 +96,8 @@
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str` Get the URL to this announcement.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to this announcement.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_forum_announcement_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">announcement_id</span><span class="p">)</span></div>
 
 
@@ -116,8 +116,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The ID of the board.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL of this board.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of this board.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_forum_board_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board_id</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseBoard.get_world_boards_url"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseBoard.get_world_boards_url">[docs]</a>    <span class="nd">@classmethod</span>
@@ -189,8 +189,8 @@
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: Get the URL to this specific post.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to this specific post.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_forum_post_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">post_id</span><span class="p">)</span></div>
 
 
@@ -252,21 +252,21 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of posts for the selected range.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL of the CM Post Archive with the current parameters.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of the CM Post Archive with the current parameters.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_cm_post_archive_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">previous_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the previous page of the current CM Post Archive results, if there&#39;s any.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">previous_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the previous page of the current CM Post Archive results, if there&#39;s any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">next_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the next page of the current CM Post Archive results, if there&#39;s any.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">next_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the next page of the current CM Post Archive results, if there&#39;s any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_pages</span> <span class="k">else</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="CMPostArchive.get_page_url"><a class="viewcode-back" href="../../../api.html#tibiapy.models.CMPostArchive.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
+<div class="viewcode-block" id="CMPostArchive.get_page_url"><a class="viewcode-back" href="../../../api.html#tibiapy.models.CMPostArchive.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL of the CM Post Archive at a specific page, with the current date parameters.</span>
 
 <span class="sd">        Parameters</span>
@@ -308,8 +308,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the last post&#39;s author was recently traded.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">author_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the author&#39;s character information page.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">author_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the author&#39;s character information page.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">)</span></div>
 
 
@@ -453,18 +453,18 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of threads currently visible.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL of this board.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of this board.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_forum_board_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">previous_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the previous page of the board, if there&#39;s any.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">previous_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the previous page of the board, if there&#39;s any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">next_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the next page of the board, if there&#39;s any.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">next_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the next page of the board, if there&#39;s any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_pages</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="ForumBoard.get_page_url"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ForumBoard.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
@@ -542,28 +542,28 @@
 <span class="sd">    When a post is fetched directly, the thread that contains it is displayed, anchored to the specific post.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL of this thread and current page.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of this thread and current page.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_forum_thread_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">previous_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the previous page of the thread, if there&#39;s any.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">previous_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the previous page of the thread, if there&#39;s any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">next_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the next page of the thread, if there&#39;s any.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">next_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the next page of the thread, if there&#39;s any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_pages</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">previous_thread_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the previous topic of the board, if there&#39;s any.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">previous_thread_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the previous topic of the board, if there&#39;s any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_forum_thread_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">previous_topic_number</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_topic_number</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">next_thread_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the next topic of the board, if there&#39;s any.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">next_thread_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the next topic of the board, if there&#39;s any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_forum_thread_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">next_topic_number</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_topic_number</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="ForumThread.get_page_url"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ForumThread.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
