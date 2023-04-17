@@ -31,12 +31,12 @@ class KillStatistics(BaseModel):
     """The list of worlds available for selection."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL to the kill statistics page on Tibia.com containing the results."""
+    def url(self) -> str:
+        """The URL to the kill statistics page on Tibia.com containing the results."""
         return get_kill_statistics_url(self.world)
 
     @property
-    def players(self):
-        """:class:`RaceEntry`: The kill statistics for players."""
+    def players(self) -> RaceEntry:
+        """The kill statistics for players."""
         return self.entries.get("players", RaceEntry())
 

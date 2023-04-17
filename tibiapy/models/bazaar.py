@@ -76,8 +76,8 @@ class AuctionFilters(BaseModel):
     """The list of available worlds to select to filter."""
 
     @property
-    def query_params(self):
-        """:class:`dict`: The query parameters representing this filter."""
+    def query_params(self) -> Dict[str, str]:
+        """The query parameters representing this filter."""
         params = {
             "filter_profession": self.vocation.value if self.vocation else None,
             "filter_levelrangefrom": self.min_level,
@@ -107,8 +107,8 @@ class BestiaryEntry(BaseModel):
     """The current step to unlock this creature the character is in, where 4 is fully unlocked."""
 
     @property
-    def completed(self):
-        """:class:`bool`: Whether the entry is completed or not."""
+    def completed(self) -> bool:
+        """Whether the entry is completed or not."""
         return self.step == 4
 
 
@@ -440,18 +440,18 @@ class AuctionDetails(BaseModel):
     """The bosstiary progress of the character."""
 
     @property
-    def completed_bestiary_entries(self):
-        """:class:`list` of :class:`BestiaryEntry`: Get a list of completed bestiary entries."""
+    def completed_bestiary_entries(self) -> List[BestiaryEntry]:
+        """Get a list of completed bestiary entries."""
         return [e for e in self.bestiary_progress if e.completed]
 
     @property
-    def regular_world_transfer_available(self):
-        """:class:`bool`: Whether regular world transfers are available immediately for this character."""
+    def regular_world_transfer_available(self) -> bool:
+        """Whether regular world transfers are available immediately for this character."""
         return self.regular_world_transfer_available_date is None
 
     @property
-    def skills_map(self) -> Dict[str, 'SkillEntry']:
-        """:class:`dict` of :class:`str`, :class:`SkillEntry`: A mapping of skills by their name."""
+    def skills_map(self) -> Dict[str, SkillEntry]:
+        """A mapping of skills by their name."""
         return {skill.name: skill for skill in self.skills}
 
 
@@ -489,13 +489,13 @@ class Auction(BaseModel):
     details: Optional[AuctionDetails] = None
 
     @property
-    def character_url(self):
-        """:class:`str`: The URL of the character's information page on Tibia.com."""
+    def character_url(self) -> str:
+        """The URL of the character's information page on Tibia.com."""
         return get_character_url(self.name)
 
     @property
-    def url(self):
-        """:class:`str`: The URL to this auction's detail page on Tibia.com."""
+    def url(self) -> str:
+        """The URL to this auction's detail page on Tibia.com."""
         return get_auction_url(self.auction_id)
 
 
@@ -511,6 +511,6 @@ class CharacterBazaar(PaginatedWithUrl[Auction]):
         raise NotImplementedError
 
     @property
-    def url(self):
-        """:class:`str`: Get the URL to the bazaar."""
+    def url(self) -> str:
+        """Get the URL to the bazaar."""
         return get_bazaar_url(self.type, self.current_page, self.filters)

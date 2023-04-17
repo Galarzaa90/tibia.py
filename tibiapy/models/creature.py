@@ -14,8 +14,8 @@ class BossEntry(BaseModel):
     """The internal name of the boss. Used for images."""
 
     @property
-    def image_url(self):
-        """:class:`str`: The URL to this boss's image."""
+    def image_url(self) -> str:
+        """The URL to this boss's image."""
         return f"https://static.tibia.com/images/library/{self.identifier}.gif"
 
 
@@ -37,13 +37,13 @@ class CreatureEntry(BaseModel):
     """The internal name of the creature's race. Used for links and images."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL to this creature's details."""
+    def url(self) -> str:
+        """The URL to this creature's details."""
         return get_creature_url(self.identifier)
 
     @property
-    def image_url(self):
-        """:class:`str`: The URL to this creature's image."""
+    def image_url(self) -> str:
+        """The URL to this creature's image."""
         return f"https://static.tibia.com/images/library/{self.identifier}.gif"
 
 

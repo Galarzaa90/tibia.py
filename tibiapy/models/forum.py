@@ -50,8 +50,8 @@ class BaseAnnouncement(BaseModel):
         return False
 
     @property
-    def url(self):
-        """:class:`str` Get the URL to this announcement."""
+    def url(self) -> str:
+        """Get the URL to this announcement."""
         return get_forum_announcement_url(self.announcement_id)
 
 
@@ -70,8 +70,8 @@ class BaseBoard(BaseModel):
     """The ID of the board."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL of this board."""
+    def url(self) -> str:
+        """The URL of this board."""
         return get_forum_board_url(self.board_id)
 
     @classmethod
@@ -143,8 +143,8 @@ class BasePost(BaseModel):
         return False
 
     @property
-    def url(self):
-        """:class:`str`: Get the URL to this specific post."""
+    def url(self) -> str:
+        """Get the URL to this specific post."""
         return get_forum_post_url(self.post_id)
 
 
@@ -206,21 +206,21 @@ class CMPostArchive(BaseModel):
     """The list of posts for the selected range."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL of the CM Post Archive with the current parameters."""
+    def url(self) -> str:
+        """The URL of the CM Post Archive with the current parameters."""
         return get_cm_post_archive_url(self.start_date, self.end_date, self.page)
 
     @property
-    def previous_page_url(self):
-        """:class:`str`: The URL to the previous page of the current CM Post Archive results, if there's any."""
+    def previous_page_url(self) -> str:
+        """The URL to the previous page of the current CM Post Archive results, if there's any."""
         return self.get_page_url(self.page - 1) if self.page > 1 else None
 
     @property
-    def next_page_url(self):
-        """:class:`str`: The URL to the next page of the current CM Post Archive results, if there's any."""
+    def next_page_url(self) -> str:
+        """The URL to the next page of the current CM Post Archive results, if there's any."""
         return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
 
-    def get_page_url(self, page):
+    def get_page_url(self, page) -> str:
         """Get the URL of the CM Post Archive at a specific page, with the current date parameters.
 
         Parameters
@@ -262,8 +262,8 @@ class LastPost(BasePost):
     """Whether the last post's author was recently traded."""
 
     @property
-    def author_url(self):
-        """:class:`str`: The URL to the author's character information page."""
+    def author_url(self) -> str:
+        """The URL to the author's character information page."""
         return get_character_url(self.author)
 
 
@@ -407,18 +407,18 @@ class ForumBoard(BaseBoard):
     """The list of threads currently visible."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL of this board."""
+    def url(self) -> str:
+        """The URL of this board."""
         return get_forum_board_url(self.board_id, self.current_page, self.age)
 
     @property
-    def previous_page_url(self):
-        """:class:`str`: The URL to the previous page of the board, if there's any."""
+    def previous_page_url(self) -> str:
+        """The URL to the previous page of the board, if there's any."""
         return self.get_page_url(self.current_page - 1) if self.current_page > 1 else None
 
     @property
-    def next_page_url(self):
-        """:class:`str`: The URL to the next page of the board, if there's any."""
+    def next_page_url(self) -> str:
+        """The URL to the next page of the board, if there's any."""
         return self.get_page_url(self.current_page + 1) if self.current_page < self.total_pages else None
 
     def get_page_url(self, page):
@@ -496,28 +496,28 @@ class ForumThread(BaseThread):
     When a post is fetched directly, the thread that contains it is displayed, anchored to the specific post."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL of this thread and current page."""
+    def url(self) -> str:
+        """The URL of this thread and current page."""
         return get_forum_thread_url(self.thread_id, self.current_page)
 
     @property
-    def previous_page_url(self):
-        """:class:`str`: The URL to the previous page of the thread, if there's any."""
+    def previous_page_url(self) -> str:
+        """The URL to the previous page of the thread, if there's any."""
         return self.get_page_url(self.current_page - 1) if self.current_page > 1 else None
 
     @property
-    def next_page_url(self):
-        """:class:`str`: The URL to the next page of the thread, if there's any."""
+    def next_page_url(self) -> str:
+        """The URL to the next page of the thread, if there's any."""
         return self.get_page_url(self.current_page + 1) if self.current_page < self.total_pages else None
 
     @property
-    def previous_thread_url(self):
-        """:class:`str`: The URL to the previous topic of the board, if there's any."""
+    def previous_thread_url(self) -> str:
+        """The URL to the previous topic of the board, if there's any."""
         return get_forum_thread_url(self.previous_topic_number) if self.previous_topic_number else None
 
     @property
-    def next_thread_url(self):
-        """:class:`str`: The URL to the next topic of the board, if there's any."""
+    def next_thread_url(self) -> str:
+        """The URL to the next topic of the board, if there's any."""
         return get_forum_thread_url(self.next_topic_number) if self.next_topic_number else None
 
     def get_page_url(self, page):

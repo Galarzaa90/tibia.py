@@ -13,6 +13,20 @@ __all__ = (
 )
 
 class BaseCharacter(BaseModel):
+    """Base class for all character classes.
+
+    The following implement this class:
+
+    - :class:`.Character`
+    - :class:`.GuildInvite`
+    - :class:`.GuildMember`
+    - :class:`.HighscoresEntry`
+    - :class:`.TournamentLeaderboardEntry`
+    - :class:`.OnlineCharacter`
+    - :class:`.OtherCharacter`
+    - :class:`.Auction`
+    """
+
     name: str
     """The name of the character."""
 
@@ -29,7 +43,14 @@ class BaseCharacter(BaseModel):
 
 
 class BaseGuild(BaseModel):
-    """Base class for Guild classes."""
+    """Base class for Guild classes.
+
+    The following implement this class:
+
+    - :class:`.Guild`
+    - :class:`.GuildMembership`
+    - :class:`.GuildEntry`
+    """
 
     name: str
     """The name of the guild."""
@@ -75,6 +96,7 @@ class BaseHouse(BaseModel):
 
 
 class HouseWithId(BaseHouse):
+    """Base classes for houses with an ID."""
     id: int
     """The internal ID of the house. This is used on the website to identify houses."""
     world: str

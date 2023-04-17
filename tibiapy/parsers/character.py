@@ -3,8 +3,6 @@ import re
 from collections import OrderedDict
 from typing import List, TYPE_CHECKING
 
-from bs4 import Tag
-
 from tibiapy.builders.character import CharacterBuilder
 from tibiapy.enums import AccountStatus, Sex, Vocation
 from tibiapy.errors import InvalidContent
@@ -129,7 +127,7 @@ class CharacterParser:
         return achievements
 
     @classmethod
-    def _parse_badges(cls, rows: List[Tag]):
+    def _parse_badges(cls, rows: List[bs4.Tag]):
         """Parse the character's displayed badges.
 
         Parameters
@@ -230,7 +228,7 @@ class CharacterParser:
             builder.unlocked_titles(unlocked)
 
     @classmethod
-    def _parse_house_column(cls, builder: CharacterBuilder, column: Tag):
+    def _parse_house_column(cls, builder: CharacterBuilder, column: bs4.Tag):
         house_text = clean_text(column)
         m = house_regexp.search(house_text)
         paid_until = m.group(1)
@@ -248,7 +246,7 @@ class CharacterParser:
         )
 
     @classmethod
-    def _parse_guild_column(cls, builder: CharacterBuilder, column: Tag):
+    def _parse_guild_column(cls, builder: CharacterBuilder, column: bs4.Tag):
         guild_link = column.select_one('a')
         value = clean_text(column)
         rank = value.split("of the")[0]

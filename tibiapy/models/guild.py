@@ -83,28 +83,28 @@ class Guild(BaseGuild):
     """List of invited characters."""
 
     @property
-    def member_count(self):
-        """:class:`int`: The number of members in the guild."""
+    def member_count(self) -> int:
+        """The number of members in the guild."""
         return len(self.members)
 
     @property
-    def online_count(self):
-        """:class:`int`: The number of online members in the guild."""
+    def online_count(self) -> int:
+        """The number of online members in the guild."""
         return len(self.online_members)
 
     @property
-    def online_members(self):
-        """:class:`list` of :class:`GuildMember`: List of currently online members."""
+    def online_members(self) -> List[GuildMember]:
+        """List of currently online members."""
         return list(filter(lambda m: m.online, self.members))
 
     @property
     def ranks(self) -> List[str]:
-        """:class:`list` of :class:`str`: Ranks in their hierarchical order."""
+        """Ranks in their hierarchical order."""
         return list(OrderedDict.fromkeys((m.rank for m in self.members)))
 
     @property
-    def members_by_rank(self) -> Dict[str, List['GuildMember']]:
-        """:class:`dict`: Get a mapping of members, grouped by their guild rank."""
+    def members_by_rank(self) -> Dict[str, List[GuildMember]]:
+        """Get a mapping of members, grouped by their guild rank."""
         rank_dict = defaultdict(list)
         [rank_dict[m.rank].append(m) for m in self.members]
         return dict(rank_dict)

@@ -59,13 +59,13 @@ class SpellEntry(BaseModel):
     """Whether the spell requires a premium account to learn and use it."""
 
     @property
-    def url(self):
-        """:class:`str`: The URL to the spell."""
+    def url(self) -> str:
+        """The URL to the spell."""
         return get_spell_url(self.identifier)
 
     @property
-    def image_url(self):
-        """:class:`str`: The URL to this spell's image."""
+    def image_url(self) -> str:
+        """The URL to this spell's image."""
         return f"https://static.tibia.com/images/library/{self.identifier}.png"
 
 
@@ -114,7 +114,8 @@ class SpellsSection(BaseModel):
     """The spells matching the selected filters."""
 
     @property
-    def url(self):
+    def url(self) -> str:
+        """The URL to the spells section in Tibia.com."""
         return get_spells_section_url(vocation=self.vocation, group=self.group, spell_type=self.spell_type, premium=self.premium,
                             sort=self.sort_by)
 

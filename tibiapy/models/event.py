@@ -25,8 +25,8 @@ class EventEntry(BaseModel):
         return self.title == other.title
 
     @property
-    def duration(self):
-        """:class:`int`: The number of days this event will be active for."""
+    def duration(self) -> int:
+        """The number of days this event will be active for."""
         return (self.end_date - self.start_date + datetime.timedelta(days=1)).days \
             if (self.end_date and self.start_date) else None
 
@@ -46,11 +46,11 @@ class EventSchedule(BaseModel):
     It might include some events from the previous and next months as well."""
 
     @property
-    def url(self):
-        """:class:`str`: Get the URL to the event calendar with the current parameters."""
+    def url(self) -> str:
+        """Get the URL to the event calendar with the current parameters."""
         return get_event_schedule_url(self.month, self.year)
 
-    def get_events_on(self, date):
+    def get_events_on(self, date: datetime.date) -> List[EventEntry]:
         """Get a list of events that are active during the specified desired_date.
 
         Parameters

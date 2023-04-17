@@ -87,5 +87,6 @@ class NewsArchive(BaseModel):
     """The news matching the provided parameters."""
 
     @property
-    def url(self):
+    def url(self) -> str:
+        """Get the URL to the News Archive in Tibia.com."""
         return get_news_archive_url()

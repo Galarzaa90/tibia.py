@@ -58,18 +58,18 @@ class Highscores(PaginatedWithUrl[HighscoresEntry]):
 
 
     @property
-    def from_rank(self):
-        """:class:`int`: The starting rank of the provided entries."""
+    def from_rank(self) -> int:
+        """The starting rank of the provided entries."""
         return self.entries[0].rank if self.entries else 0
 
     @property
-    def to_rank(self):
-        """:class:`int`: The last rank of the provided entries."""
+    def to_rank(self) -> int:
+        """The last rank of the provided entries."""
         return self.entries[-1].rank if self.entries else 0
 
     @property
-    def url(self):
-        """:class:`str`: The URL to the highscores page on Tibia.com containing the results."""
+    def url(self) -> str:
+        """The URL to the highscores page on Tibia.com containing the results."""
         return get_highscores_url(self.world, self.category, self.vocation, self.current_page, self.battleye_filter,
                             self.pvp_types_filter)
 
