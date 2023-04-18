@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from tibiapy import Vocation, ThreadStatus
 from tibiapy.models import GuildMembership
 from tibiapy.models.base import BaseCharacter
+from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.urls import get_character_url, get_forum_board_url, get_forum_announcement_url, get_forum_thread_url, \
     get_forum_post_url, get_cm_post_archive_url
 from tibiapy.utils import get_tibia_url
@@ -185,40 +186,22 @@ class CMPost(BasePost):
     """The title of the thread where the post is."""
 
 
-class CMPostArchive(BaseModel):
+class CMPostArchive(PaginatedWithUrl[CMPost]):
     """Represents the CM Post Archive.
 
     The CM Post Archive is a collection of posts made in the forum by community managers.
     """
-
-
     start_date: datetime.date
     """The start date of the displayed posts."""
     end_date: datetime.date
     """The end date of the displayed posts."""
-    page: int
-    """The currently displayed page."""
-    total_pages: int
-    """The number of pages available."""
-    results_count: int
-    """The total number of results available in the selected date range."""
-    posts: List[CMPost] = []
+    entries: List[CMPost] = []
     """The list of posts for the selected range."""
 
     @property
     def url(self) -> str:
         """The URL of the CM Post Archive with the current parameters."""
-        return get_cm_post_archive_url(self.start_date, self.end_date, self.page)
-
-    @property
-    def previous_page_url(self) -> str:
-        """The URL to the previous page of the current CM Post Archive results, if there's any."""
-        return self.get_page_url(self.page - 1) if self.page > 1 else None
-
-    @property
-    def next_page_url(self) -> str:
-        """The URL to the next page of the current CM Post Archive results, if there's any."""
-        return self.get_page_url(self.page + 1) if self.page < self.total_pages else None
+        return get_cm_post_archive_url(self.start_date, self.end_date, self.current_page)
 
     def get_page_url(self, page) -> str:
         """Get the URL of the CM Post Archive at a specific page, with the current date parameters.

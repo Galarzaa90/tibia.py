@@ -647,7 +647,7 @@ They implement methods and properties that can be inherited by other classes to 
 .. autopydantic_model:: BaseGuild
     :inherited-members: BaseModel
 
-.. autopydantic_model:: tibiapy.base.BaseHouse
+.. autopydantic_model:: BaseHouse
     :inherited-members: BaseModel
 
 .. autopydantic_model:: HouseWithId

@@ -4,7 +4,7 @@ import datetime
 import json
 import logging
 import time
-import typing
+from typing import TypeVar, Generic, Optional
 
 import aiohttp
 import aiohttp_socks
@@ -16,7 +16,7 @@ from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCat
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
-    CharacterBazaar, Auction
+    CharacterBazaar, Auction, AuctionFilters
 from tibiapy.models.creature import BoostedCreatures, BoostableBosses, CreaturesSection, Creature
 from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
@@ -52,12 +52,12 @@ __all__ = (
 # This limit is not sent anywhere, so there's no way to automate it.
 CACHE_LIMIT = 300
 
-T = typing.TypeVar('T')
+T = TypeVar('T')
 
 log = logging.getLogger("tibiapy")
 
 
-class TibiaResponse(GenericModel, typing.Generic[T]):
+class TibiaResponse(GenericModel, Generic[T]):
     """Represents a response from Tibia.com."""
 
     timestamp: datetime.datetime
@@ -289,7 +289,8 @@ class Client:
     # endregion
 
     # region Bazaar
-    async def fetch_current_auctions(self, page=1, filters=None, *, test=False):
+    async def fetch_current_auctions(self, page: int = 1, filters: AuctionFilters = None, *,
+                                     test=False) -> TibiaResponse[CharacterBazaar]:
         """Fetch the current auctions in the bazaar.
 
         .. versionadded:: 3.3.0
@@ -298,8 +299,10 @@ class Client:
         ----------
         page: :class:`int`
             The desired page to display.
-        filters: :class:`AuctionFilters`
+        filters: :class:`.AuctionFilters`
             The filtering criteria to use.
+        test: :class:`bool`
+            Whether to fetch from the test website or not.
 
         Returns
         -------
@@ -324,7 +327,8 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, current_auctions, parsing_time)
 
-    async def fetch_auction_history(self, page=1, filters=None, *, test=False):
+    async def fetch_auction_history(self, page: int = 1, filters: AuctionFilters = None, *,
+                                    test=False) -> TibiaResponse[CharacterBazaar]:
         """Fetch the auction history of the bazaar.
 
         .. versionadded:: 3.3.0
@@ -361,8 +365,8 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, auction_history, parsing_time)
 
-    async def fetch_auction(self, auction_id, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
-                            fetch_familiars=False, skip_details=False, test=False):
+    async def fetch_auction(self, auction_id: int, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
+                            fetch_familiars=False, skip_details=False, test=False) -> TibiaResponse[Optional[Auction]]:
         """Fetch an auction by its ID.
 
         .. versionadded:: 3.3.0
@@ -372,12 +376,14 @@ class Client:
         auction_id: :class:`int`
             The ID of the auction.
         fetch_items: :class:`bool`
-            Whether to fetch all of the character's items. By default only the first page is fetched.
+            Whether to fetch all the character's items. By default, only the first page is fetched.
         fetch_mounts: :class:`bool`
-            Whether to fetch all of the character's mounts. By default only the first page is fetched.
+            Whether to fetch all the character's mounts. By default, only the first page is fetched.
         fetch_outfits: :class:`bool`
-            Whether to fetch all of the character's outfits. By default only the first page is fetched.
-        skip_details: :class:`bool`, optional
+            Whether to fetch all the character's outfits. By default, only the first page is fetched.
+        fetch_familiars: :class:`bool`
+            Whether to fetch all the character's outfits. By default, only the first page is fetched.
+        skip_details: :class:`bool`
             Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
 
             This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
@@ -422,7 +428,8 @@ class Client:
 
     # endregion
 
-    async def fetch_cm_post_archive(self, start_date, end_date, page=1, *, test=False):
+    async def fetch_cm_post_archive(self, start_date: datetime.datetime, end_date: datetime.datetime, page=1, *,
+                                    test=False) -> TibiaResponse[CMPostArchive]:
         """Fetch the CM post archive.
 
         .. versionadded:: 3.0.0

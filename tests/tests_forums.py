@@ -254,7 +254,7 @@ class TestForum(TestCommons, unittest.TestCase):
 
         self.assertIsNotNone(cm_post_archive)
         self.assertEqual(0, cm_post_archive.results_count)
-        self.assertEqual(1, cm_post_archive.page)
+        self.assertEqual(1, cm_post_archive.current_page)
         self.assertEqual(1, cm_post_archive.total_pages)
 
     def test_cm_post_archive_from_content_no_pages(self):
@@ -264,11 +264,11 @@ class TestForum(TestCommons, unittest.TestCase):
 
         self.assertIsNotNone(cm_post_archive)
         self.assertEqual(5, cm_post_archive.results_count)
-        self.assertEqual(1, cm_post_archive.page)
+        self.assertEqual(1, cm_post_archive.current_page)
         self.assertEqual(1, cm_post_archive.total_pages)
-        self.assertEqual(cm_post_archive.results_count, len(cm_post_archive.posts))
+        self.assertEqual(cm_post_archive.results_count, len(cm_post_archive.entries))
 
-        post = cm_post_archive.posts[0]
+        post = cm_post_archive.entries[0]
         self.assertIsInstance(post, BasePost)
         self.assertEqual('Auditorium (English Only)', post.board)
         self.assertEqual(38974254, post.post_id)
@@ -281,9 +281,9 @@ class TestForum(TestCommons, unittest.TestCase):
 
         self.assertIsNotNone(cm_post_archive)
         self.assertEqual(0, cm_post_archive.results_count)
-        self.assertEqual(1, cm_post_archive.page)
+        self.assertEqual(1, cm_post_archive.current_page)
         self.assertEqual(1, cm_post_archive.total_pages)
-        self.assertEqual(cm_post_archive.results_count, len(cm_post_archive.posts))
+        self.assertEqual(cm_post_archive.results_count, len(cm_post_archive.entries))
 
     def test_cm_post_archive_from_content_pages(self):
         content = self.load_resource(FILE_CM_POST_ARCHIVE_PAGES)
@@ -295,9 +295,9 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertIsNotNone(cm_post_archive.previous_page_url)
         self.assertIsNone(cm_post_archive.next_page_url)
         self.assertEqual(8370, cm_post_archive.results_count)
-        self.assertEqual(168, cm_post_archive.page)
+        self.assertEqual(168, cm_post_archive.current_page)
         self.assertEqual(168, cm_post_archive.total_pages)
-        self.assertEqual(20, len(cm_post_archive.posts))
+        self.assertEqual(20, len(cm_post_archive.entries))
 
     def test_cm_post_archive_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)

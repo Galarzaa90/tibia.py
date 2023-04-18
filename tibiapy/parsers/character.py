@@ -1,10 +1,12 @@
 """Models related to the Tibia.com character page."""
+from __future__ import annotations
+
 import re
 from collections import OrderedDict
 from typing import List, TYPE_CHECKING
 
 from tibiapy.builders.character import CharacterBuilder
-from tibiapy.enums import AccountStatus, Sex, Vocation
+from tibiapy.enums import Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.models import Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, Killer, \
     Death, GuildMembership, CharacterHouse

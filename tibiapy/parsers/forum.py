@@ -4,12 +4,12 @@ import re
 
 import bs4
 
-from tibiapy import abc, errors
+from tibiapy import errors
 from tibiapy.builders.forum import CMPostArchiveBuilder, ForumAnnouncementBuilder, ForumBoardBuilder, ForumThreadBuilder
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
 from tibiapy.models.forum import CMPost, ForumAuthor, AnnouncementEntry, ForumEmoticon, LastPost, ThreadEntry, \
-    ForumPost, BoardEntry
+    ForumPost, BoardEntry, CMPostArchive
 from tibiapy.utils import (
     convert_line_breaks, parse_form_data, parse_integer, parse_link_info, parse_pagination,
     parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content, parse_tibiacom_tables, split_list,
@@ -39,7 +39,7 @@ signature_separator = "________________"
 class CMPostArchiveParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> CMPostArchive:
         """Parse the content of the CM Post Archive page from Tibia.com.
 
         Parameters
@@ -90,7 +90,7 @@ class CMPostArchiveParser:
             post_link_tag = link_column.select_one("a")
             post_link = parse_link_info(post_link_tag)
             post_id = int(post_link["query"]["postid"])
-            builder.add_post(CMPost(date=date, board=board, thread_title=thread, post_id=post_id))
+            builder.add_entry(CMPost(date=date, board=board, thread_title=thread, post_id=post_id))
         if not rows:
             return builder.build()
         pages_column, results_column = inner_table_rows[-1].select("div")
@@ -102,7 +102,7 @@ class CMPostArchiveParser:
             if not page:
                 total_pages += 1
                 page = total_pages
-            builder.page(page).total_pages(total_pages)
+            builder.current_page(page).total_pages(total_pages)
 
         builder.results_count(int(results_column.text.split(":")[-1]))
         return builder.build()

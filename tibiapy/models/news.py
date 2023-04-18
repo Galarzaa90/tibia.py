@@ -8,6 +8,7 @@ from tibiapy import NewsCategory, NewsType
 from tibiapy.urls import get_news_archive_url, get_news_url
 
 __all__ = (
+    "BaseNews",
     "News",
     "NewsArchive",
     "NewsEntry"

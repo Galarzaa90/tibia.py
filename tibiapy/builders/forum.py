@@ -2,13 +2,13 @@ from tibiapy.models.forum import CMPostArchive, CMPost, ForumAnnouncement, Forum
 
 
 class CMPostArchiveBuilder:
-    def __init__(self, **kwargs):
-        self._start_date = kwargs.get("start_date")
-        self._end_date = kwargs.get("end_date")
-        self._page = kwargs.get("page") or 1
-        self._total_pages = kwargs.get("total_pages") or 1
-        self._results_count = kwargs.get("results_count") or 0
-        self._posts = kwargs.get("posts") or []
+    def __init__(self):
+        self._start_date = None
+        self._end_date = None
+        self._current_page = 1
+        self._total_pages = 1
+        self._results_count = 0
+        self._entries = []
 
     def start_date(self, start_date):
         self._start_date = start_date
@@ -18,8 +18,8 @@ class CMPostArchiveBuilder:
         self._end_date = end_date
         return self
 
-    def page(self, page):
-        self._page = page
+    def current_page(self, current_page):
+        self._current_page = current_page
         return self
 
     def total_pages(self, total_pages):
@@ -30,22 +30,22 @@ class CMPostArchiveBuilder:
         self._results_count = results_count
         return self
 
-    def posts(self, posts):
-        self._posts = posts
+    def entries(self, entries):
+        self._entries = entries
         return self
 
-    def add_post(self, post):
-        self._posts.append(post)
+    def add_entry(self, entry):
+        self._entries.append(entry)
         return self
 
     def build(self):
         return CMPostArchive(
             start_date=self._start_date,
             end_date=self._end_date,
-            page=self._page,
+            current_page=self._current_page,
             total_pages=self._total_pages,
             results_count=self._results_count,
-            posts=self._posts,
+            entries=self._entries,
         )
 
 
