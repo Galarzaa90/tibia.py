@@ -120,7 +120,7 @@
         <span class="k">return</span> <span class="n">get_guild_wars_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
-<span class="k">class</span> <span class="nc">BaseHouse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseHouse"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseHouse">[docs]</a><span class="k">class</span> <span class="nc">BaseHouse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all house classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -138,7 +138,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Two houses are considered equal if their names are equal.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="HouseWithId"><a class="viewcode-back" href="../../../api.html#tibiapy.models.HouseWithId">[docs]</a><span class="k">class</span> <span class="nc">HouseWithId</span><span class="p">(</span><span class="n">BaseHouse</span><span class="p">):</span>

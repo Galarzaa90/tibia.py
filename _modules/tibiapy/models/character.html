@@ -52,7 +52,7 @@
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models.base</span> <span class="kn">import</span> <span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">HouseWithId</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models.base</span> <span class="kn">import</span> <span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">HouseWithId</span><span class="p">,</span> <span class="n">BaseGuild</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s1">&#39;AccountBadge&#39;</span><span class="p">,</span>
@@ -96,6 +96,8 @@
 
 
 <div class="viewcode-block" id="Achievement"><a class="viewcode-back" href="../../../api.html#tibiapy.models.Achievement">[docs]</a><span class="k">class</span> <span class="nc">Achievement</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an achievement listed on a character’s page.&quot;&quot;&quot;</span>
+
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the achievement.&quot;&quot;&quot;</span>
     <span class="n">grade</span><span class="p">:</span> <span class="nb">int</span>
@@ -162,9 +164,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="GuildMembership"><a class="viewcode-back" href="../../../api.html#tibiapy.models.GuildMembership">[docs]</a><span class="k">class</span> <span class="nc">GuildMembership</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the guild.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="GuildMembership"><a class="viewcode-back" href="../../../api.html#tibiapy.models.GuildMembership">[docs]</a><span class="k">class</span> <span class="nc">GuildMembership</span><span class="p">(</span><span class="n">BaseGuild</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The guild information of a character.&quot;&quot;&quot;</span>
+
     <span class="n">rank</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the rank the member has.&quot;&quot;&quot;</span>
     <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -173,11 +175,11 @@
 
 <div class="viewcode-block" id="OnlineCharacter"><a class="viewcode-back" href="../../../api.html#tibiapy.models.OnlineCharacter">[docs]</a><span class="k">class</span> <span class="nc">OnlineCharacter</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An online character in the world&#39;s page.&quot;&quot;&quot;</span>
+
     <span class="n">vocation</span><span class="p">:</span> <span class="n">Vocation</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The vocation of the character.&quot;&quot;&quot;</span>
     <span class="n">level</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The level of the character.&quot;&quot;&quot;</span></div>
-
 
 
 <div class="viewcode-block" id="OtherCharacter"><a class="viewcode-back" href="../../../api.html#tibiapy.models.OtherCharacter">[docs]</a><span class="k">class</span> <span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
@@ -207,7 +209,7 @@
     <span class="n">deletion_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise.&quot;&quot;&quot;</span>
     <span class="n">former_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Previous names of the character.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Previous names of the character in the last 6 months..&quot;&quot;&quot;</span>
     <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s selected title, if any.&quot;&quot;&quot;</span>
     <span class="n">unlocked_titles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>

@@ -54,13 +54,14 @@
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_news_archive_url</span><span class="p">,</span> <span class="n">get_news_url</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;BaseNews&quot;</span><span class="p">,</span>
     <span class="s2">&quot;News&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NewsArchive&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NewsEntry&quot;</span>
 <span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">BaseNews</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseNews"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseNews">[docs]</a><span class="k">class</span> <span class="nc">BaseNews</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all news classes.</span>
 
 <span class="sd">    Implements the :py:attr:`id` attribute and common properties.</span>
@@ -85,7 +86,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;:class:`str`: The URL to the Tibia.com page of the news entry.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_news_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">get_news_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="News"><a class="viewcode-back" href="../../../api.html#tibiapy.models.News">[docs]</a><span class="k">class</span> <span class="nc">News</span><span class="p">(</span><span class="n">BaseNews</span><span class="p">):</span>
