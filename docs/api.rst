@@ -666,6 +666,16 @@ They implement methods and properties that can be inherited by other classes to 
 .. autopydantic_model:: BaseWorld
     :inherited-members: BaseModel
 
+.. currentmodule:: tibiapy.models.pagination
+
+.. autopydantic_model:: Paginated
+    :inherited-members: BaseModel
+
+.. autopydantic_model:: PaginatedWithUrl
+    :inherited-members: BaseModel
+
+.. autopydantic_model:: AjaxPaginator
+    :inherited-members: BaseModel
 
 
 Exceptions

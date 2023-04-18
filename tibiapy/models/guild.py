@@ -124,6 +124,8 @@ class GuildEntry(BaseGuild):
 
 
 class GuildsSection(BaseModel):
+    """The guilds section in Tibia.com."""
+
     world: Optional[str] = None
     """The name of the world. If :obj:`None`, the section belongs to a world that doesn't exist."""
     entries: List[GuildEntry] = []

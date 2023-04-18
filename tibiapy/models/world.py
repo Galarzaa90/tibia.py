@@ -69,8 +69,8 @@ class World(BaseWorld):
 
 
 class WorldEntry(BaseWorld):
-    name: str
-    """The name of the world."""
+    """Represents a game server listed in the World Overview section."""
+
     online: bool
     """Whether the world is currently online."""
     online_count: int

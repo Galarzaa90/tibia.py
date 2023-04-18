@@ -7,6 +7,8 @@ T = TypeVar('T')
 
 
 class Paginated(GenericModel, Generic[T]):
+    """An entity made of multiple pages."""
+
     current_page: int = 1
     """The currently viewed page."""
     total_pages: int = 1
@@ -18,6 +20,7 @@ class Paginated(GenericModel, Generic[T]):
 
 
 class PaginatedWithUrl(Paginated[T], Generic[T], ABC):
+    """An entity made of multiple pages with URLs."""
 
     @property
     def next_page_url(self) -> Optional[str]:
@@ -36,4 +39,7 @@ class PaginatedWithUrl(Paginated[T], Generic[T], ABC):
 
 
 class AjaxPaginator(Paginated[T], Generic[T]):
+    """A paginator that can be fetched via AJAX requests."""
+
     is_fully_fetched: bool = False
+    """Whether this result set was fully fetched or not."""

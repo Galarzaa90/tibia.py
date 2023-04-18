@@ -6,7 +6,7 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 from tibiapy import Sex, Vocation
-from tibiapy.models.base import BaseCharacter, HouseWithId
+from tibiapy.models.base import BaseCharacter, HouseWithId, BaseGuild
 
 __all__ = (
     'AccountBadge',
@@ -50,6 +50,8 @@ class AccountInformation(BaseModel):
 
 
 class Achievement(BaseModel):
+    """Represents an achievement listed on a character’s page."""
+
     name: str
     """The name of the achievement."""
     grade: int
@@ -116,9 +118,9 @@ class Death(BaseModel):
         return self.killers[0] if self.killers else None
 
 
-class GuildMembership(BaseModel):
-    name: str
-    """The name of the guild."""
+class GuildMembership(BaseGuild):
+    """The guild information of a character."""
+
     rank: str
     """The name of the rank the member has."""
     title: Optional[str] = None
@@ -127,11 +129,11 @@ class GuildMembership(BaseModel):
 
 class OnlineCharacter(BaseCharacter):
     """An online character in the world's page."""
+
     vocation: Vocation
     """The vocation of the character."""
     level: int
     """The level of the character."""
-
 
 
 class OtherCharacter(BaseCharacter):
@@ -161,7 +163,7 @@ class Character(BaseCharacter):
     deletion_date: Optional[datetime.datetime] = None
     """The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise."""
     former_names: List[str] = []
-    """Previous names of the character."""
+    """Previous names of the character in the last 6 months.."""
     title: Optional[str] = None
     """The character's selected title, if any."""
     unlocked_titles: int = 0
