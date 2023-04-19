@@ -60,11 +60,11 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all model classes.&quot;&quot;&quot;</span>
 
     <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
-        <span class="n">json_encoders</span> <span class="o">=</span> <span class="p">{</span><span class="n">BattlEyeType</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">}</span></div>
+        <span class="n">json_encoders</span> <span class="o">=</span> <span class="p">{</span><span class="n">BattlEyeType</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="BaseCharacter"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseCharacter">[docs]</a><span class="k">class</span> <span class="nc">BaseCharacter</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>

@@ -52,48 +52,41 @@
 <span class="kn">from</span> <span class="nn">tibiapy.models.base</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_world_url</span>
 
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;BaseWorld&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;World&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;WorldEntry&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;WorldOverview&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
 
 <div class="viewcode-block" id="BaseWorld"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseWorld">[docs]</a><span class="k">class</span> <span class="nc">BaseWorld</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all World classes.&quot;&quot;&quot;</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the world.&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;URL to the world&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_world_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="World"><a class="viewcode-back" href="../../../api.html#tibiapy.models.World">[docs]</a><span class="k">class</span> <span class="nc">World</span><span class="p">(</span><span class="n">BaseWorld</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a Tibia game server.&quot;&quot;&quot;</span>
     <span class="n">online</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the world is online or not.&quot;&quot;&quot;</span>
     <span class="n">online_count</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of currently online players in the world.&quot;&quot;&quot;</span>
-    <span class="n">record_count</span><span class="p">:</span> <span class="nb">int</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The server&#39;s online players record.&quot;&quot;&quot;</span>
-    <span class="n">record_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the online record was achieved.&quot;&quot;&quot;</span>
-    <span class="n">creation_date</span><span class="p">:</span> <span class="nb">str</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The month and year the world was created. In YYYY-MM format.&quot;&quot;&quot;</span>
     <span class="n">location</span><span class="p">:</span> <span class="n">WorldLocation</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The physical location of the game servers.&quot;&quot;&quot;</span>
     <span class="n">pvp_type</span><span class="p">:</span> <span class="n">PvpType</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of PvP in the world.&quot;&quot;&quot;</span>
-    <span class="n">premium_only</span><span class="p">:</span> <span class="nb">bool</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether only premium account players are allowed to play in this server.&quot;&quot;&quot;</span>
     <span class="n">transfer_type</span><span class="p">:</span> <span class="n">TransferType</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of transfer restrictions this world has.&quot;&quot;&quot;</span>
-    <span class="n">world_quest_titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;List of world quest titles the server has achieved.&quot;&quot;&quot;</span>
+    <span class="n">premium_only</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether only premium account players are allowed to play in this server.&quot;&quot;&quot;</span>
     <span class="n">battleye_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when BattlEye was added to this world.&quot;&quot;&quot;</span>
-    <span class="n">battleye_type</span><span class="p">:</span> <span class="n">BattlEyeType</span> <span class="o">=</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">UNPROTECTED</span>
+    <span class="n">battleye_type</span><span class="p">:</span> <span class="n">BattlEyeType</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of BattlEye protection this world has.&quot;&quot;&quot;</span>
-    <span class="n">experimental</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">experimental</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the world is experimental or not.&quot;&quot;&quot;</span>
-    <span class="n">online_players</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OnlineCharacter</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of characters currently online in the server.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;URL to the world&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_world_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">battleye_protected</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -102,7 +95,22 @@
 <span class="sd">        .. versionchanged:: 4.0.0</span>
 <span class="sd">            Now a calculated property instead of a field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">UNPROTECTED</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">UNPROTECTED</span></div>
+
+
+<div class="viewcode-block" id="World"><a class="viewcode-back" href="../../../api.html#tibiapy.models.World">[docs]</a><span class="k">class</span> <span class="nc">World</span><span class="p">(</span><span class="n">BaseWorld</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a Tibia game server.&quot;&quot;&quot;</span>
+
+    <span class="n">record_count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The server&#39;s online players record.&quot;&quot;&quot;</span>
+    <span class="n">record_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the online record was achieved.&quot;&quot;&quot;</span>
+    <span class="n">creation_date</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The month and year the world was created. In YYYY-MM format.&quot;&quot;&quot;</span>
+    <span class="n">world_quest_titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List of world quest titles the server has achieved.&quot;&quot;&quot;</span>
+    <span class="n">online_players</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OnlineCharacter</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of characters currently online in the server.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">creation_year</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -117,34 +125,7 @@
 
 <div class="viewcode-block" id="WorldEntry"><a class="viewcode-back" href="../../../api.html#tibiapy.models.WorldEntry">[docs]</a><span class="k">class</span> <span class="nc">WorldEntry</span><span class="p">(</span><span class="n">BaseWorld</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a game server listed in the World Overview section.&quot;&quot;&quot;</span>
-
-    <span class="n">online</span><span class="p">:</span> <span class="nb">bool</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the world is currently online.&quot;&quot;&quot;</span>
-    <span class="n">online_count</span><span class="p">:</span> <span class="nb">int</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of currently online players in the world.&quot;&quot;&quot;</span>
-    <span class="n">location</span><span class="p">:</span> <span class="n">WorldLocation</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The physical location of the game servers.&quot;&quot;&quot;</span>
-    <span class="n">pvp_type</span><span class="p">:</span> <span class="n">PvpType</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of PvP in the world.&quot;&quot;&quot;</span>
-    <span class="n">transfer_type</span><span class="p">:</span> <span class="n">TransferType</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of transfer restrictions this world has.&quot;&quot;&quot;</span>
-    <span class="n">battleye_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when BattlEye was added to this world.&quot;&quot;&quot;</span>
-    <span class="n">battleye_type</span><span class="p">:</span> <span class="n">BattlEyeType</span> <span class="o">=</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">UNPROTECTED</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of BattlEye protection this world has.&quot;&quot;&quot;</span>
-    <span class="n">experimental</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the world is experimental or not.&quot;&quot;&quot;</span>
-    <span class="n">premium_only</span><span class="p">:</span> <span class="nb">bool</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether only premium account players are allowed to play in this server.&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">battleye_protected</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the server is currently protected with BattlEye or not.</span>
-
-<span class="sd">        .. versionchanged:: 4.0.0</span>
-<span class="sd">            Now a calculated property instead of a field.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">UNPROTECTED</span></div>
+    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="WorldOverview"><a class="viewcode-back" href="../../../api.html#tibiapy.models.WorldOverview">[docs]</a><span class="k">class</span> <span class="nc">WorldOverview</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
