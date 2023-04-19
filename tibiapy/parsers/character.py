@@ -8,7 +8,7 @@ from typing import List, TYPE_CHECKING
 from tibiapy.builders.character import CharacterBuilder
 from tibiapy.enums import Sex, Vocation
 from tibiapy.errors import InvalidContent
-from tibiapy.models import Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, Killer, \
+from tibiapy.models import Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, DeathParticipant, \
     Death, GuildMembership, CharacterHouse
 from tibiapy.utils import (parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list,
                            try_enum, parse_link_info, clean_text, parse_integer)
@@ -322,7 +322,7 @@ class CharacterParser:
         if m := death_summon.search(name):
             summon = clean_text(m.group("summon"))
             name = clean_text(m.group("name"))
-        return Killer(name=name, player=player, summon=summon, traded=traded)
+        return DeathParticipant(name=name, player=player, summon=summon, traded=traded)
 
     @classmethod
     def _parse_other_characters(cls, rows):

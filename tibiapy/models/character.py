@@ -12,13 +12,13 @@ __all__ = (
     'AccountBadge',
     'AccountInformation',
     'Achievement',
+    'Character',
     'CharacterHouse',
-    'Killer',
     'Death',
+    'DeathParticipant',
     'GuildMembership',
     'OnlineCharacter',
     'OtherCharacter',
-    'Character',
 )
 
 from tibiapy.urls import get_character_url, get_guild_url
@@ -69,10 +69,10 @@ class CharacterHouse(HouseWithId):
     """The date the last paid rent is due."""
 
 
-class Killer(BaseModel):
-    """Represents a killer.
+class DeathParticipant(BaseModel):
+    """A creature or player that participated in a death, either as a killer o as an assistant.
 
-    A killer can be:
+    A participant can be:
 
     a) A creature.
     b) A character.
@@ -97,9 +97,9 @@ class Death(BaseModel):
 
     level: int
     """The level at which the death occurred."""
-    killers: List[Killer]
+    killers: List[DeathParticipant]
     """A list of all the killers involved."""
-    assists: List[Killer]
+    assists: List[DeathParticipant]
     """A list of characters that were involved, without dealing damage."""
     time: datetime.datetime
     """The time at which the death occurred."""
@@ -110,7 +110,7 @@ class Death(BaseModel):
         return any(k.player for k in self.killers)
 
     @property
-    def killer(self) -> Killer:
+    def killer(self) -> DeathParticipant:
         """The first killer in the list.
 
         This is usually the killer that gave the killing blow.

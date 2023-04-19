@@ -3,7 +3,7 @@ import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.models import Death, Killer, AccountBadge, CharacterHouse
+from tibiapy.models import Death, DeathParticipant, AccountBadge, CharacterHouse
 from tibiapy.parsers.character import CharacterParser
 from tibiapy.urls import get_character_url
 from tibiapy.utils import parse_tibia_datetime
@@ -185,8 +185,8 @@ class TestCharacter(TestCommons, unittest.TestCase):
         """Testing different death types"""
         assisted_suicide = Death(level=280,
                                  killers=[
-                                     Killer(name="Galarzaa", player=True, summon=None, traded=False),
-                                     Killer(name="a pixy", player=False, summon=None, traded=False)
+                                     DeathParticipant(name="Galarzaa", player=True, summon=None, traded=False),
+                                     DeathParticipant(name="a pixy", player=False, summon=None, traded=False)
                                  ],
                                  assists=[],
                                  time=datetime.datetime.now())
@@ -195,8 +195,8 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
         spawn_invasion = Death(level=270,
                                killers=[
-                                   Killer(name="a demon", player=False, summon=None, traded=False),
-                                   Killer(name="Nezune", player=True, summon=None, traded=False)
+                                   DeathParticipant(name="a demon", player=False, summon=None, traded=False),
+                                   DeathParticipant(name="Nezune", player=True, summon=None, traded=False)
                                ],
                                assists=[],
                                time=datetime.datetime.now())
