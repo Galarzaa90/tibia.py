@@ -2643,9 +2643,9 @@ without bids.</p>
 <span class="w">            </span><span class="s2">&quot;secret&quot;</span>
 <span class="w">         </span><span class="p">]</span>
 <span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;Killer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Killer&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Represents a killer.\n\nA killer can be:\n\na) A creature.\nb) A character.\nc) A creature summoned by a character.&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;DeathParticipant&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeathParticipant&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A creature or player that participated in a death, either as a killer o as an assistant.\n\nA participant can be:\n\na) A creature.\nb) A character.\nc) A creature summoned by a character.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2684,14 +2684,14 @@ without bids.</p>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Killers&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                  </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/Killer&quot;</span>
+<span class="w">                  </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/DeathParticipant&quot;</span>
 <span class="w">               </span><span class="p">}</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;assists&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Assists&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                  </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/Killer&quot;</span>
+<span class="w">                  </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/DeathParticipant&quot;</span>
 <span class="w">               </span><span class="p">}</span>
 <span class="w">            </span><span class="p">},</span>
 <span class="w">            </span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2780,7 +2780,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3255,7 +3255,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3327,14 +3327,14 @@ without bids.</p>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Killers&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/Killer&quot;</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/DeathParticipant&quot;</span>
 <span class="w">         </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;assists&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Assists&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/Killer&quot;</span>
+<span class="w">            </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/definitions/DeathParticipant&quot;</span>
 <span class="w">         </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;time&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3350,9 +3350,9 @@ without bids.</p>
 <span class="w">      </span><span class="s2">&quot;time&quot;</span>
 <span class="w">   </span><span class="p">],</span>
 <span class="w">   </span><span class="nt">&quot;definitions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;Killer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Killer&quot;</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Represents a killer.\n\nA killer can be:\n\na) A creature.\nb) A character.\nc) A creature summoned by a character.&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;DeathParticipant&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeathParticipant&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A creature or player that participated in a death, either as a killer o as an assistant.\n\nA participant can be:\n\na) A creature.\nb) A character.\nc) A creature summoned by a character.&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3385,8 +3385,8 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">assists</span> <span class="pre">(List[tibiapy.models.character.Killer])</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">killers</span> <span class="pre">(List[tibiapy.models.character.Killer])</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">assists</span> <span class="pre">(List[tibiapy.models.character.DeathParticipant])</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">killers</span> <span class="pre">(List[tibiapy.models.character.DeathParticipant])</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">level</span> <span class="pre">(int)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">time</span> <span class="pre">(datetime.datetime)</span></code></p></li>
 </ul>
@@ -3394,13 +3394,13 @@ without bids.</p>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="tibiapy.models.Death.assists">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assists</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.Killer" title="tibiapy.models.character.Killer"><span class="pre">Killer</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.Death.assists" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assists</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.DeathParticipant" title="tibiapy.models.character.DeathParticipant"><span class="pre">DeathParticipant</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.Death.assists" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of characters that were involved, without dealing damage.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="tibiapy.models.Death.killers">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">killers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.Killer" title="tibiapy.models.character.Killer"><span class="pre">Killer</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.Death.killers" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">killers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.DeathParticipant" title="tibiapy.models.character.DeathParticipant"><span class="pre">DeathParticipant</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.Death.killers" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of all the killers involved.</p>
 </dd></dl>
 
@@ -3424,7 +3424,7 @@ without bids.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="tibiapy.models.Death.killer">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">killer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tibiapy.models.Killer" title="tibiapy.models.character.Killer"><span class="pre">Killer</span></a></em><a class="headerlink" href="#tibiapy.models.Death.killer" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">killer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tibiapy.models.DeathParticipant" title="tibiapy.models.character.DeathParticipant"><span class="pre">DeathParticipant</span></a></em><a class="headerlink" href="#tibiapy.models.Death.killer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The first killer in the list.</p>
 <p>This is usually the killer that gave the killing blow.</p>
 </dd></dl>
@@ -3467,7 +3467,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3514,13 +3514,13 @@ without bids.</p>
 </dd></dl>
 
 </section>
-<section id="killer">
-<h4>Killer<a class="headerlink" href="#killer" title="Permalink to this heading">¶</a></h4>
+<section id="deathparticipant">
+<h4>DeathParticipant<a class="headerlink" href="#deathparticipant" title="Permalink to this heading">¶</a></h4>
 <dl class="py class pydantic_model">
-<dt class="sig sig-object py" id="tibiapy.models.Killer">
-<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tibiapy.models.</span></span><span class="sig-name descname"><span class="pre">Killer</span></span><a class="reference internal" href="_modules/tibiapy/models/character.html#Killer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.models.Killer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a killer.</p>
-<p>A killer can be:</p>
+<dt class="sig sig-object py" id="tibiapy.models.DeathParticipant">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tibiapy.models.</span></span><span class="sig-name descname"><span class="pre">DeathParticipant</span></span><a class="reference internal" href="_modules/tibiapy/models/character.html#DeathParticipant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.models.DeathParticipant" title="Permalink to this definition">¶</a></dt>
+<dd><p>A creature or player that participated in a death, either as a killer o as an assistant.</p>
+<p>A participant can be:</p>
 <ol class="loweralpha simple">
 <li><p>A creature.</p></li>
 <li><p>A character.</p></li>
@@ -3528,8 +3528,8 @@ without bids.</p>
 </ol>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Killer&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Represents a killer.\n\nA killer can be:\n\na) A creature.\nb) A character.\nc) A creature summoned by a character.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DeathParticipant&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;A creature or player that participated in a death, either as a killer o as an assistant.\n\nA participant can be:\n\na) A creature.\nb) A character.\nc) A creature summoned by a character.&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3568,32 +3568,32 @@ without bids.</p>
 </dd>
 </dl>
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="tibiapy.models.Killer.name">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.Killer.name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="tibiapy.models.DeathParticipant.name">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.DeathParticipant.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the killer. In the case of summons, the name belongs to the owner.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="tibiapy.models.Killer.player">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">player</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.Killer.player" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="tibiapy.models.DeathParticipant.player">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">player</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.DeathParticipant.player" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether the killer is a player or not.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="tibiapy.models.Killer.summon">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">summon</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tibiapy.models.Killer.summon" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="tibiapy.models.DeathParticipant.summon">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">summon</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#tibiapy.models.DeathParticipant.summon" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the summoned creature, if applicable.</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="tibiapy.models.Killer.traded">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traded</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.Killer.traded" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="tibiapy.models.DeathParticipant.traded">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">traded</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#tibiapy.models.DeathParticipant.traded" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the killer was traded after this death happened.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="tibiapy.models.Killer.url">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#tibiapy.models.Killer.url" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="tibiapy.models.DeathParticipant.url">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></em><a class="headerlink" href="#tibiapy.models.DeathParticipant.url" title="Permalink to this definition">¶</a></dt>
 <dd><p>The URL of the character’s information page on Tibia.com, if applicable.</p>
 </dd></dl>
 
@@ -3656,7 +3656,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3871,7 +3871,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4024,7 +4024,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4306,7 +4306,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4502,7 +4502,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4860,7 +4860,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5059,7 +5059,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5154,7 +5154,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5218,7 +5218,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5316,7 +5316,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6108,7 +6108,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6241,7 +6241,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6668,7 +6668,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6924,7 +6924,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -7347,7 +7347,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -9514,7 +9514,7 @@ They cannot be replied to and they show no view counts.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -16602,7 +16602,7 @@ character features in the auction listing.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 </dl>
@@ -16877,7 +16877,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -16930,7 +16930,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -16993,7 +16993,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17044,7 +17044,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17283,7 +17283,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7fa972f05c10&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0037086b80&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>

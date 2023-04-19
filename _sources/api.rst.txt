@@ -200,9 +200,9 @@ GuildMembership
 .. autopydantic_model:: GuildMembership
    :inherited-members: BaseModel
 
-Killer
-~~~~~~
-.. autopydantic_model:: Killer
+DeathParticipant
+~~~~~~~~~~~~~~~~
+.. autopydantic_model:: DeathParticipant
    :inherited-members: BaseModel
 
 OtherCharacter

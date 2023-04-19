@@ -58,13 +58,13 @@
     <span class="s1">&#39;AccountBadge&#39;</span><span class="p">,</span>
     <span class="s1">&#39;AccountInformation&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Achievement&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Character&#39;</span><span class="p">,</span>
     <span class="s1">&#39;CharacterHouse&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Killer&#39;</span><span class="p">,</span>
     <span class="s1">&#39;Death&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;DeathParticipant&#39;</span><span class="p">,</span>
     <span class="s1">&#39;GuildMembership&#39;</span><span class="p">,</span>
     <span class="s1">&#39;OnlineCharacter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;OtherCharacter&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Character&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_character_url</span><span class="p">,</span> <span class="n">get_guild_url</span>
@@ -115,10 +115,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The date the last paid rent is due.&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="Killer"><a class="viewcode-back" href="../../../api.html#tibiapy.models.Killer">[docs]</a><span class="k">class</span> <span class="nc">Killer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a killer.</span>
+<div class="viewcode-block" id="DeathParticipant"><a class="viewcode-back" href="../../../api.html#tibiapy.models.DeathParticipant">[docs]</a><span class="k">class</span> <span class="nc">DeathParticipant</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A creature or player that participated in a death, either as a killer o as an assistant.</span>
 
-<span class="sd">    A killer can be:</span>
+<span class="sd">    A participant can be:</span>
 
 <span class="sd">    a) A creature.</span>
 <span class="sd">    b) A character.</span>
@@ -143,9 +143,9 @@
 
     <span class="n">level</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The level at which the death occurred.&quot;&quot;&quot;</span>
-    <span class="n">killers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Killer</span><span class="p">]</span>
+    <span class="n">killers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DeathParticipant</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of all the killers involved.&quot;&quot;&quot;</span>
-    <span class="n">assists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Killer</span><span class="p">]</span>
+    <span class="n">assists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DeathParticipant</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of characters that were involved, without dealing damage.&quot;&quot;&quot;</span>
     <span class="n">time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The time at which the death occurred.&quot;&quot;&quot;</span>
@@ -156,7 +156,7 @@
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">player</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">killer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Killer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">killer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeathParticipant</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The first killer in the list.</span>
 
 <span class="sd">        This is usually the killer that gave the killing blow.</span>
