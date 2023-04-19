@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from tibiapy import errors
 from tibiapy.builders.leaderboard import LeaderboardBuilder
-from tibiapy.models.leaderboards import LeaderboardEntry, LeaderboardRotation, Leaderboard
+from tibiapy.models.leaderboard import LeaderboardEntry, LeaderboardRotation, Leaderboard
 from tibiapy.utils import parse_pagination, parse_tibia_datetime, parse_tibiacom_content, \
     parse_form_data_new
 
@@ -55,10 +55,10 @@ class LeaderboardParser:
                 if value == form_data.values["rotation"]:
                     current_rotation = rotation
                 rotations.append(rotation)
-            builder = LeaderboardBuilder()\
-                .world(current_world)\
-                .rotation(current_rotation)\
-                .available_worlds([w for w in form_data.available_options["world"].values() if w])\
+            builder = LeaderboardBuilder() \
+                .world(current_world) \
+                .rotation(current_rotation) \
+                .available_worlds([w for w in form_data.available_options["world"].values() if w]) \
                 .available_rotations(rotations)
             if current_rotation and current_rotation.current:
                 last_update_table = tables[2]
@@ -80,4 +80,3 @@ class LeaderboardParser:
             cols = [c.text for c in columns_raw]
             rank, name, points = cols
             builder.add_entry(LeaderboardEntry(rank=int(rank.replace(".", "")), name=name, drome_level=int(points)))
-

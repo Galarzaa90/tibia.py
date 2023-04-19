@@ -37,8 +37,8 @@ class KillStatisticsParser:
             form = parsed_content.select_one("form")
             data = parse_form_data(form, include_options=True)
             form_data = parse_form_data_new(form)
-            builder = KillStatisticsBuilder()\
-                .world(data["world"])\
+            builder = KillStatisticsBuilder() \
+                .world(data["world"]) \
                 .available_worlds(list(form_data.available_options["world"].values()))
             if not entries_table:
                 entries_table = parsed_content.select_one("table.Table3")
@@ -63,5 +63,3 @@ class KillStatisticsParser:
             return builder.build()
         except (AttributeError, KeyError) as e:
             raise InvalidContent("content does not belong to a Tibia.com kill statistics page.", e) from e
-
-

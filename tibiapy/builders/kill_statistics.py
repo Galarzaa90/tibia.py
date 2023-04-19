@@ -4,29 +4,29 @@ from tibiapy.models import RaceEntry, KillStatistics
 
 
 class KillStatisticsBuilder:
-    def __init__(self, **kwargs):
-        self._world = kwargs.get("world")
-        self._entries = kwargs.get("entries") or {}
-        self._total = kwargs.get("total")
-        self._available_worlds = kwargs.get("available_worlds")
+    def __init__(self):
+        self._world = None
+        self._entries = {}
+        self._total = None
+        self._available_worlds = None
 
-    def world(self, world: str) -> 'KillStatisticsBuilder':
+    def world(self, world: str):
         self._world = world
         return self
 
-    def entries(self, entries: List[RaceEntry]) -> 'KillStatisticsBuilder':
+    def entries(self, entries: List[RaceEntry]):
         self._entries = entries
         return self
 
-    def set_entry(self, name: str, entry: RaceEntry) -> 'KillStatisticsBuilder':
+    def set_entry(self, name: str, entry: RaceEntry):
         self._entries[name] = entry
         return self
 
-    def total(self, total: RaceEntry) -> 'KillStatisticsBuilder':
+    def total(self, total: RaceEntry):
         self._total = total
         return self
 
-    def available_worlds(self, available_worlds: List[str]) -> 'KillStatisticsBuilder':
+    def available_worlds(self, available_worlds: List[str]):
         self._available_worlds = available_worlds
         return self
 

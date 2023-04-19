@@ -1,8 +1,12 @@
-import datetime
-from typing import Collection, List, Optional
+from __future__ import annotations
 
-from tibiapy import NewsType, NewsCategory
+import datetime
+from typing import Collection, List, Optional, TYPE_CHECKING
+
 from tibiapy.models import NewsEntry, NewsArchive, News
+
+if TYPE_CHECKING:
+    from tibiapy import NewsType, NewsCategory
 
 
 class NewsArchiveBuilder:

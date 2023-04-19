@@ -8,13 +8,13 @@ from tibiapy.urls import get_kill_statistics_url
 class RaceEntry(BaseModel):
     """Represents the statistics of a race."""
 
-    last_day_killed: int = 0
+    last_day_killed: int
     """Number of creatures of this race killed in the last day."""
-    last_day_players_killed: int = 0
+    last_day_players_killed: int
     """Number of players killed by this race in the last day."""
-    last_week_killed: int = 0
+    last_week_killed: int
     """Number of creatures of this race killed in the last week."""
-    last_week_players_killed: int = 0
+    last_week_players_killed: int
     """Number of players killed by this race in the last week."""
 
 
@@ -38,5 +38,6 @@ class KillStatistics(BaseModel):
     @property
     def players(self) -> RaceEntry:
         """The kill statistics for players."""
-        return self.entries.get("players", RaceEntry())
+        return self.entries.get("players", RaceEntry(last_week_players_killed=0, last_week_killed=0,
+                                                     last_day_players_killed=0, last_day_killed=0))
 

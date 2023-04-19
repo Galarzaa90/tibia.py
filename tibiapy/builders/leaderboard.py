@@ -1,58 +1,58 @@
 import datetime
 from typing import List, Optional
 
-from tibiapy.models.leaderboards import LeaderboardRotation, LeaderboardEntry, Leaderboard
+from tibiapy.models.leaderboard import LeaderboardRotation, LeaderboardEntry, Leaderboard
 
 
 class LeaderboardBuilder:
-    def __init__(self, **kwargs):
-        self._world = kwargs.get("world")
-        self._available_worlds = kwargs.get("available_worlds")
-        self._rotation = kwargs.get("rotation")
-        self._available_rotations = kwargs.get("available_rotations")
-        self._entries = kwargs.get("entries") or []
-        self._last_update = kwargs.get("last_update")
-        self._current_page = kwargs.get("current_page")
-        self._total_pages = kwargs.get("total_pages")
-        self._results_count = kwargs.get("results_count")
+    def __init__(self):
+        self._world = None
+        self._available_worlds = None
+        self._rotation = None
+        self._available_rotations = None
+        self._entries = []
+        self._last_update = None
+        self._current_page = None
+        self._total_pages = None
+        self._results_count = None
 
-    def world(self, world: str) -> 'LeaderboardBuilder':
+    def world(self, world: str):
         self._world = world
         return self
 
-    def available_worlds(self, available_worlds: List[str]) -> 'LeaderboardBuilder':
+    def available_worlds(self, available_worlds: List[str]):
         self._available_worlds = available_worlds
         return self
 
-    def rotation(self, rotation: LeaderboardRotation) -> 'LeaderboardBuilder':
+    def rotation(self, rotation: LeaderboardRotation):
         self._rotation = rotation
         return self
 
-    def available_rotations(self, available_rotations: List[LeaderboardRotation]) -> 'LeaderboardBuilder':
+    def available_rotations(self, available_rotations: List[LeaderboardRotation]):
         self._available_rotations = available_rotations
         return self
 
-    def entries(self, entries: List[LeaderboardEntry]) -> 'LeaderboardBuilder':
+    def entries(self, entries: List[LeaderboardEntry]):
         self._entries = entries
         return self
 
-    def add_entry(self, entry: LeaderboardEntry) -> 'LeaderboardBuilder':
+    def add_entry(self, entry: LeaderboardEntry):
         self._entries.append(entry)
         return self
 
-    def last_update(self, last_update: Optional[datetime.timedelta]) -> 'LeaderboardBuilder':
+    def last_update(self, last_update: Optional[datetime.timedelta]):
         self._last_update = last_update
         return self
 
-    def current_page(self, current_page: int) -> 'LeaderboardBuilder':
+    def current_page(self, current_page: int):
         self._current_page = current_page
         return self
 
-    def total_pages(self, total_pages: int) -> 'LeaderboardBuilder':
+    def total_pages(self, total_pages: int):
         self._total_pages = total_pages
         return self
 
-    def results_count(self, results_count: int) -> 'LeaderboardBuilder':
+    def results_count(self, results_count: int):
         self._results_count = results_count
         return self
 
@@ -72,20 +72,20 @@ class LeaderboardBuilder:
 
 class LeaderboardEntryBuilder:
 
-    def __init__(self, **kwargs):
-        self._name = kwargs.get("name")
-        self._rank = kwargs.get("rank")
-        self._drome_level = kwargs.get("drome_level")
+    def __init__(self):
+        self._name = None
+        self._rank = None
+        self._drome_level = None
 
-    def name(self, name: str) -> 'LeaderboardEntryBuilder':
+    def name(self, name: str):
         self._name = name
         return self
 
-    def rank(self, rank: int) -> 'LeaderboardEntryBuilder':
+    def rank(self, rank: int):
         self._rank = rank
         return self
 
-    def drome_level(self, drome_level: int) -> 'LeaderboardEntryBuilder':
+    def drome_level(self, drome_level: int):
         self._drome_level = drome_level
         return self
 
