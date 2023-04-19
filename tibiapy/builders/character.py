@@ -1,4 +1,14 @@
+from __future__ import annotations
+
+import datetime
+from typing import Optional, List, TYPE_CHECKING
+
 from tibiapy.models import Character
+
+if TYPE_CHECKING:
+    from tibiapy import Sex, Vocation
+    from tibiapy.models import CharacterHouse, GuildMembership, AccountBadge, Achievement, Death, AccountInformation, \
+        OtherCharacter
 
 
 class CharacterBuilder:
@@ -31,115 +41,115 @@ class CharacterBuilder:
         self._account_information = None
         self._other_characters = []
 
-    def name(self, name):
+    def name(self, name: str):
         self._name = name
         return self
 
-    def traded(self, traded):
+    def traded(self, traded: bool):
         self._traded = traded
         return self
 
-    def deletion_date(self, deletion_date):
+    def deletion_date(self, deletion_date: Optional[datetime.datetime]):
         self._deletion_date = deletion_date
         return self
 
-    def former_names(self, former_names):
+    def former_names(self, former_names: List[str]):
         self._former_names = former_names
         return self
 
-    def title(self, title):
+    def title(self, title: Optional[str]):
         self._title = title
         return self
 
-    def unlocked_titles(self, unlocked_titles):
+    def unlocked_titles(self, unlocked_titles: int):
         self._unlocked_titles = unlocked_titles
         return self
 
-    def sex(self, sex):
+    def sex(self, sex: Sex):
         self._sex = sex
         return self
 
-    def vocation(self, vocation):
+    def vocation(self, vocation: Vocation):
         self._vocation = vocation
         return self
 
-    def level(self, level):
+    def level(self, level: int):
         self._level = level
         return self
 
-    def achievement_points(self, achievement_points):
+    def achievement_points(self, achievement_points: int):
         self._achievement_points = achievement_points
         return self
 
-    def world(self, world):
+    def world(self, world: str):
         self._world = world
         return self
 
-    def former_world(self, former_world):
+    def former_world(self, former_world: Optional[str]):
         self._former_world = former_world
         return self
 
-    def residence(self, residence):
+    def residence(self, residence: str):
         self._residence = residence
         return self
 
-    def married_to(self, married_to):
+    def married_to(self, married_to: Optional[str]):
         self._married_to = married_to
         return self
 
-    def houses(self, houses):
+    def houses(self, houses: List[CharacterHouse]):
         self._houses = houses
         return self
 
-    def add_house(self, house):
+    def add_house(self, house: CharacterHouse):
         self._houses.append(house)
         return self
 
-    def guild_membership(self, guild_membership):
+    def guild_membership(self, guild_membership: Optional[GuildMembership]):
         self._guild_membership = guild_membership
         return self
 
-    def last_login(self, last_login):
+    def last_login(self, last_login: Optional[datetime.datetime]):
         self._last_login = last_login
         return self
 
-    def position(self, position):
+    def position(self, position: Optional[str]):
         self._position = position
         return self
 
-    def comment(self, comment):
+    def comment(self, comment: Optional[str]):
         self._comment = comment
         return self
 
-    def is_premium(self, is_premium):
+    def is_premium(self, is_premium: bool):
         self._is_premium = is_premium
         return self
 
-    def account_badges(self, account_badges):
+    def account_badges(self, account_badges: List[AccountBadge]):
         self._account_badges = account_badges
         return self
 
-    def achievements(self, achievements):
+    def achievements(self, achievements: List[Achievement]):
         self._achievements = achievements
         return self
 
-    def deaths(self, deaths):
+    def deaths(self, deaths: List[Death]):
         self._deaths = deaths
         return self
 
-    def add_death(self, death):
+    def add_death(self, death: Death):
         self._deaths.append(death)
         return self
 
-    def deaths_truncated(self, deaths_truncated):
+    def deaths_truncated(self, deaths_truncated: bool):
         self._deaths_truncated = deaths_truncated
         return self
 
-    def account_information(self, account_information):
+    def account_information(self, account_information: Optional[AccountInformation]):
         self._account_information = account_information
         return self
 
-    def other_characters(self, other_characters):
+    def other_characters(self, other_characters: List[OtherCharacter]):
         self._other_characters = other_characters
         return self
 

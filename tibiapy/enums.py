@@ -2,7 +2,6 @@
 from enum import Enum, Flag, IntEnum
 
 __all__ = (
-    'AccountStatus',
     'AuctionOrder',
     'AuctionOrderBy',
     'AuctionStatus',
@@ -54,13 +53,6 @@ class NumericEnum(IntEnum):
             return try_enum(cls, v)
         except KeyError:
             raise ValueError('invalid value')
-
-
-class AccountStatus(str, Enum):
-    """Possible account statuses."""
-
-    FREE_ACCOUNT = "Free Account"
-    PREMIUM_ACCOUNT = "Premium Account"
 
 
 class AuctionOrder(NumericEnum):

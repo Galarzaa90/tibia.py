@@ -67,7 +67,9 @@ class AuctionFilters(BaseModel):
     max_skill_level: Optional[int] = None
     """The maximum skill level of the selected :attr:`skill` to display."""
     order_by: Optional[AuctionOrderBy] = None
+    """The column or value to order by."""
     order: Optional[AuctionOrder] = None
+    """The ordering direction for the results."""
     search_string: Optional[str] = None
     """The search term to filter out auctions."""
     search_type: Optional[AuctionSearchType] = None
@@ -487,6 +489,7 @@ class Auction(BaseModel):
     status: AuctionStatus
     """The current status of the auction."""
     details: Optional[AuctionDetails] = None
+    """The auction's details."""
 
     @property
     def character_url(self) -> str:
@@ -508,9 +511,9 @@ class CharacterBazaar(PaginatedWithUrl[Auction]):
     """The currently set filtering options."""
 
     def get_page_url(self, page) -> str:
-        raise NotImplementedError
+        return get_bazaar_url(self.type, page, self.filters)
 
     @property
     def url(self) -> str:
-        """Get the URL to the bazaar."""
+        """The URL to the Character Bazaar with the current parameters."""
         return get_bazaar_url(self.type, self.current_page, self.filters)

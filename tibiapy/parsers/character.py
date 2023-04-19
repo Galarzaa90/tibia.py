@@ -268,14 +268,12 @@ class CharacterParser:
             if len(cols) != 2:
                 builder.deaths_truncated(True)
                 break
-            death_time_str = cols[0].text.replace("\xa0", " ").strip()
-            death_time = parse_tibia_datetime(death_time_str)
-            death = str(cols[1])
-            if not (death_info := death_regexp.search(death)):
+            date_column, desc_column = cols
+            death_time = parse_tibia_datetime(date_column.text)
+            if not (death_info := death_regexp.search(str(desc_column))):
                 continue
             level = int(death_info.group("level"))
             killers_desc = death_info.group("killers")
-            death = Death(level=level, time=death_time)
             assists_name_list = []
             # Check if the killers list contains assists
             if assist_match := death_assisted.search(killers_desc):
@@ -285,16 +283,14 @@ class CharacterParser:
                 assists_desc = assist_match.group("assists")
                 assists_name_list = link_search.findall(assists_desc)
             killers_name_list = split_list(killers_desc)
-            for killer in killers_name_list:
-                killer = killer.replace("\xa0", " ")
-                killer_dict = cls._parse_killer(killer)
-                death.killers.append(Killer(**killer_dict))
-            for assist in assists_name_list:
-                # Extract names from character links in assists list.
-                assist = assist.replace("\xa0", " ")
-                assist_dict = cls._parse_killer(assist)
-                death.assists.append(Killer(**assist_dict))
-            builder.add_death(death)
+            killers_list = [cls._parse_killer(k) for k in killers_name_list]
+            assists_list = [cls._parse_killer(k) for k in assists_name_list]
+            builder.add_death(Death(
+                level=level,
+                killers=killers_list,
+                assists=assists_list,
+                time=death_time
+            ))
 
     @classmethod
     def _parse_killer(cls, killer):
@@ -310,7 +306,7 @@ class CharacterParser:
         :class:`dict`: A dictionary containing the killer's info.
         """
         # If the killer contains a link, it is a player.
-        name = killer
+        name = clean_text(killer)
         player = False
         traded = False
         summon = None
@@ -320,13 +316,13 @@ class CharacterParser:
             player = True
         if "href" in killer:
             m = link_content.search(killer)
-            name = m.group(1)
+            name = clean_text(m.group(1))
             player = True
         # Check if it contains a summon.
         if m := death_summon.search(name):
-            summon = m.group("summon").replace('\xa0', ' ').strip()
-            name = m.group("name").replace('\xa0', ' ').strip()
-        return {"name": name, "player": player, "summon": summon, "traded": traded}
+            summon = clean_text(m.group("summon"))
+            name = clean_text(m.group("name"))
+        return Killer(name=name, player=player, summon=summon, traded=traded)
 
     @classmethod
     def _parse_other_characters(cls, rows):

@@ -2,7 +2,8 @@ import datetime
 from typing import List, Optional
 
 from tibiapy import WorldLocation, PvpType, TransferType, BattlEyeType
-from tibiapy.models import OnlineCharacter, BaseModel
+from tibiapy.models import OnlineCharacter
+from tibiapy.models.base import BaseModel
 from tibiapy.urls import get_world_url
 
 

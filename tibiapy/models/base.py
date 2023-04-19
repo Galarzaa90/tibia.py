@@ -1,8 +1,9 @@
 """Base classes shared by various models."""
 from __future__ import annotations
 
-from pydantic import BaseModel
+import pydantic
 
+from tibiapy import BattlEyeType
 from tibiapy.urls import get_character_url, get_guild_url, get_house_url, get_guild_wars_url
 
 __all__ = (
@@ -11,6 +12,14 @@ __all__ = (
     'BaseHouse',
     'HouseWithId',
 )
+
+
+class BaseModel(pydantic.BaseModel):
+    """Base class for all model classes."""
+
+    class Config:
+        json_encoders = {BattlEyeType: lambda g: g.name}
+
 
 class BaseCharacter(BaseModel):
     """Base class for all character classes.

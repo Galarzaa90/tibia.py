@@ -16,8 +16,12 @@ from tibiapy.errors import InvalidContent
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)\s?k*$')
 
 
-def clean_text(tag: bs4.Tag):
-    return tag.text.replace("\xa0", " ").strip()
+def clean_text(tag: Union[bs4.Tag, str]):
+    if isinstance(tag, bs4.Tag):
+        text = tag.text
+    else:
+        text = tag
+    return text.replace("\xa0", " ").strip()
 
 
 def convert_line_breaks(element):
@@ -298,7 +302,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
         The represented datetime, in UTC (timezone aware).
     """
     try:
-        datetime_str = datetime_str.replace(",", "").replace("&#160;", " ").strip()
+        datetime_str = datetime_str.replace(",", "").replace("&#160;", " ").replace("\xa0", " ").strip()
         # Extracting timezone
         tz = datetime_str[-4:].strip()
 

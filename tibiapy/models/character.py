@@ -43,9 +43,9 @@ class AccountInformation(BaseModel):
 
     created: datetime.datetime
     """The date when the account was created."""
-    position: Optional[str] = None
+    position: Optional[str]
     """The special position of this account, if any."""
-    loyalty_title: Optional[str] = None
+    loyalty_title: Optional[str]
     """The loyalty title of the account, if any"""
 
 
@@ -56,7 +56,7 @@ class Achievement(BaseModel):
     """The name of the achievement."""
     grade: int
     """The grade of the achievement, also known as stars."""
-    secret: bool = False
+    secret: bool
     """Whether the achievement is secret or not."""
 
 
@@ -81,9 +81,9 @@ class Killer(BaseModel):
     """The name of the killer. In the case of summons, the name belongs to the owner."""
     player: bool
     """Whether the killer is a player or not."""
-    summon: Optional[str] = None
+    summon: Optional[str]
     """The name of the summoned creature, if applicable."""
-    traded: bool = False
+    traded: bool
     """If the killer was traded after this death happened."""
 
     @property
@@ -97,9 +97,9 @@ class Death(BaseModel):
 
     level: int
     """The level at which the death occurred."""
-    killers: List[Killer] = []
+    killers: List[Killer]
     """A list of all the killers involved."""
-    assists: List[Killer] = []
+    assists: List[Killer]
     """A list of characters that were involved, without dealing damage."""
     time: datetime.datetime
     """The time at which the death occurred."""
@@ -123,7 +123,7 @@ class GuildMembership(BaseGuild):
 
     rank: str
     """The name of the rank the member has."""
-    title: Optional[str] = None
+    title: Optional[str]
     """The title of the member in the guild. This is only available for characters in the forums section."""
 
 
@@ -158,13 +158,13 @@ class OtherCharacter(BaseCharacter):
 class Character(BaseCharacter):
     """A full character from Tibia.com, obtained from its character page."""
 
-    traded: bool = False
+    traded: bool
     """If the character was traded in the last 6 months."""
-    deletion_date: Optional[datetime.datetime] = None
+    deletion_date: Optional[datetime.datetime]
     """The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise."""
-    former_names: List[str] = []
+    former_names: List[str]
     """Previous names of the character in the last 6 months.."""
-    title: Optional[str] = None
+    title: Optional[str]
     """The character's selected title, if any."""
     unlocked_titles: int = 0
     """The number of titles the character has unlocked."""
@@ -178,37 +178,37 @@ class Character(BaseCharacter):
     """The total of achievement points the character has."""
     world: str
     """The character's current world."""
-    former_world: Optional[str] = None
+    former_world: Optional[str]
     """The previous world the character was in, in the last 6 months."""
     residence: str
     """The current hometown of the character."""
-    married_to: Optional[str] = None
+    married_to: Optional[str]
     """The name of the character's spouse. It will be :obj:`None` if not married."""
-    houses: List[CharacterHouse] = []
+    houses: List[CharacterHouse]
     """The houses currently owned by the character."""
-    guild_membership: Optional[GuildMembership] = None
+    guild_membership: Optional[GuildMembership]
     """The guild the character is a member of. It will be :obj:`None` if the character is not in a guild."""
-    last_login: Optional[datetime.datetime] = None
+    last_login: Optional[datetime.datetime]
     """The last time the character logged in. It will be :obj:`None` if the character has never logged in."""
-    position: Optional[str] = None
+    position: Optional[str]
     """The position of the character (e.g. CipSoft Member), if any."""
-    comment: Optional[str] = None
+    comment: Optional[str]
     """The displayed comment."""
-    is_premium: bool = False
+    is_premium: bool
     """Whether the character's account is Premium or Free."""
-    account_badges: List[AccountBadge] = []
+    account_badges: List[AccountBadge]
     """The displayed account badges."""
-    achievements: List[Achievement] = []
+    achievements: List[Achievement]
     """The achievements chosen to be displayed."""
-    deaths: List[Death] = []
+    deaths: List[Death]
     """The character's recent deaths."""
-    deaths_truncated: bool = False
+    deaths_truncated: bool
     """Whether the character's deaths are truncated or not.
 
     In some cases, there are more deaths in the last 30 days than what can be displayed."""
-    account_information: Optional[AccountInformation] = None
+    account_information: Optional[AccountInformation]
     """The character's account information. If the character is hidden, this will be :obj:`None`."""
-    other_characters: List[OtherCharacter] = []
+    other_characters: List[OtherCharacter]
     """Other characters in the same account.
 
     It will be empty if the character is hidden, otherwise, it will contain at least the character itself."""

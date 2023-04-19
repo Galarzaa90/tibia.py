@@ -1,5 +1,3 @@
-import pydantic
-
 from tibiapy.models.base import *
 from tibiapy.models.bazaar import *
 from tibiapy.models.character import *
@@ -16,7 +14,3 @@ from tibiapy.models.spell import *
 from tibiapy.models.world import *
 
 
-class BaseModel(pydantic.BaseModel):
-
-    class Config:
-        json_encoders = {BattlEyeType: lambda g: g.name}

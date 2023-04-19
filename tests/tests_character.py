@@ -184,13 +184,21 @@ class TestCharacter(TestCommons, unittest.TestCase):
     def test_death_types(self):
         """Testing different death types"""
         assisted_suicide = Death(level=280,
-                                 killers=[Killer(name="Galarzaa", player=True), Killer(name="a pixy", player=False)],
+                                 killers=[
+                                     Killer(name="Galarzaa", player=True, summon=None, traded=False),
+                                     Killer(name="a pixy", player=False, summon=None, traded=False)
+                                 ],
+                                 assists=[],
                                  time=datetime.datetime.now())
         self.assertEqual(assisted_suicide.killer, assisted_suicide.killers[0])
         self.assertTrue(assisted_suicide.by_player)
 
         spawn_invasion = Death(level=270,
-                               killers=[Killer(name="a demon", player=False), Killer(name="Nezune", player=True)],
+                               killers=[
+                                   Killer(name="a demon", player=False, summon=None, traded=False),
+                                   Killer(name="Nezune", player=True, summon=None, traded=False)
+                               ],
+                               assists=[],
                                time=datetime.datetime.now())
         self.assertEqual(spawn_invasion.killer, spawn_invasion.killers[0])
         self.assertIsNone(spawn_invasion.killer.url)
