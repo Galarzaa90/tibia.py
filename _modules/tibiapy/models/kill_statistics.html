@@ -54,13 +54,13 @@
 <div class="viewcode-block" id="RaceEntry"><a class="viewcode-back" href="../../../api.html#tibiapy.models.RaceEntry">[docs]</a><span class="k">class</span> <span class="nc">RaceEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents the statistics of a race.&quot;&quot;&quot;</span>
 
-    <span class="n">last_day_killed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">last_day_killed</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of creatures of this race killed in the last day.&quot;&quot;&quot;</span>
-    <span class="n">last_day_players_killed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">last_day_players_killed</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of players killed by this race in the last day.&quot;&quot;&quot;</span>
-    <span class="n">last_week_killed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">last_week_killed</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of creatures of this race killed in the last week.&quot;&quot;&quot;</span>
-    <span class="n">last_week_players_killed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">last_week_players_killed</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of players killed by this race in the last week.&quot;&quot;&quot;</span></div>
 
 
@@ -84,7 +84,8 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">players</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RaceEntry</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The kill statistics for players.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="n">RaceEntry</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;players&quot;</span><span class="p">,</span> <span class="n">RaceEntry</span><span class="p">(</span><span class="n">last_week_players_killed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">last_week_killed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                     <span class="n">last_day_players_killed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">last_day_killed</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span></div>
 
 </pre></div>
 
