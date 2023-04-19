@@ -4,12 +4,11 @@ import urllib.parse
 
 import bs4
 
-from tibiapy import abc
 from tibiapy.builders.news import NewsArchiveBuilder, NewsBuilder
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.errors import InvalidContent
 from tibiapy.models.news import NewsArchive, News, NewsEntry
-from tibiapy.utils import (parse_form_data, parse_tibia_date,
+from tibiapy.utils import (parse_tibia_date,
                            parse_tibiacom_content, parse_tibiacom_tables,
                            try_enum, parse_link_info, parse_form_data_new, clean_text)
 

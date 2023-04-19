@@ -33,13 +33,11 @@ class BaseNews(BaseModel):
 
     def __eq__(self, o: object) -> bool:
         """Two news articles are considered equal if their names or ids are equal."""
-        if isinstance(o, self.__class__):
-            return self.id == o.id
-        return False
+        return self.id == o.id if isinstance(o, self.__class__) else False
 
     @property
-    def url(self):
-        """:class:`str`: The URL to the Tibia.com page of the news entry."""
+    def url(self) -> str:
+        """The URL to the Tibia.com page of the news entry."""
         return get_news_url(self.id)
 
 
@@ -56,8 +54,8 @@ class News(BaseNews):
     """The thread id of the designated discussion thread for this entry."""
 
     @property
-    def thread_url(self):
-        """:class:`str`: The URL to the thread discussing this news entry, if any."""
+    def thread_url(self) -> str:
+        """The URL to the thread discussing this news entry, if any."""
         return get_news_url(self.thread_id) if self.thread_id else None
 
 
