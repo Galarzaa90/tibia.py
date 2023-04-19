@@ -47,8 +47,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;Base classes shared by various models.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">import</span> <span class="nn">pydantic</span>
 
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">BattlEyeType</span>
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_character_url</span><span class="p">,</span> <span class="n">get_guild_url</span><span class="p">,</span> <span class="n">get_house_url</span><span class="p">,</span> <span class="n">get_guild_wars_url</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -57,6 +58,14 @@
     <span class="s1">&#39;BaseHouse&#39;</span><span class="p">,</span>
     <span class="s1">&#39;HouseWithId&#39;</span><span class="p">,</span>
 <span class="p">)</span>
+
+
+<div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all model classes.&quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+        <span class="n">json_encoders</span> <span class="o">=</span> <span class="p">{</span><span class="n">BattlEyeType</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">}</span></div>
+
 
 <div class="viewcode-block" id="BaseCharacter"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseCharacter">[docs]</a><span class="k">class</span> <span class="nc">BaseCharacter</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all character classes.</span>

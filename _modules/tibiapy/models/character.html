@@ -89,9 +89,9 @@
 
     <span class="n">created</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the account was created.&quot;&quot;&quot;</span>
-    <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The special position of this account, if any.&quot;&quot;&quot;</span>
-    <span class="n">loyalty_title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">loyalty_title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The loyalty title of the account, if any&quot;&quot;&quot;</span></div>
 
 
@@ -102,7 +102,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the achievement.&quot;&quot;&quot;</span>
     <span class="n">grade</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The grade of the achievement, also known as stars.&quot;&quot;&quot;</span>
-    <span class="n">secret</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">secret</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the achievement is secret or not.&quot;&quot;&quot;</span></div>
 
 
@@ -127,9 +127,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the killer. In the case of summons, the name belongs to the owner.&quot;&quot;&quot;</span>
     <span class="n">player</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the killer is a player or not.&quot;&quot;&quot;</span>
-    <span class="n">summon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">summon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the summoned creature, if applicable.&quot;&quot;&quot;</span>
-    <span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;If the killer was traded after this death happened.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -143,9 +143,9 @@
 
     <span class="n">level</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The level at which the death occurred.&quot;&quot;&quot;</span>
-    <span class="n">killers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Killer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">killers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Killer</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of all the killers involved.&quot;&quot;&quot;</span>
-    <span class="n">assists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Killer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">assists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Killer</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of characters that were involved, without dealing damage.&quot;&quot;&quot;</span>
     <span class="n">time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The time at which the death occurred.&quot;&quot;&quot;</span>
@@ -169,7 +169,7 @@
 
     <span class="n">rank</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the rank the member has.&quot;&quot;&quot;</span>
-    <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The title of the member in the guild. This is only available for characters in the forums section.&quot;&quot;&quot;</span></div>
 
 
@@ -204,13 +204,13 @@
 <div class="viewcode-block" id="Character"><a class="viewcode-back" href="../../../api.html#tibiapy.models.Character">[docs]</a><span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A full character from Tibia.com, obtained from its character page.&quot;&quot;&quot;</span>
 
-    <span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">traded</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;If the character was traded in the last 6 months.&quot;&quot;&quot;</span>
-    <span class="n">deletion_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">deletion_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise.&quot;&quot;&quot;</span>
-    <span class="n">former_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">former_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Previous names of the character in the last 6 months..&quot;&quot;&quot;</span>
-    <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s selected title, if any.&quot;&quot;&quot;</span>
     <span class="n">unlocked_titles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of titles the character has unlocked.&quot;&quot;&quot;</span>
@@ -224,37 +224,37 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The total of achievement points the character has.&quot;&quot;&quot;</span>
     <span class="n">world</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s current world.&quot;&quot;&quot;</span>
-    <span class="n">former_world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">former_world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The previous world the character was in, in the last 6 months.&quot;&quot;&quot;</span>
     <span class="n">residence</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The current hometown of the character.&quot;&quot;&quot;</span>
-    <span class="n">married_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">married_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the character&#39;s spouse. It will be :obj:`None` if not married.&quot;&quot;&quot;</span>
-    <span class="n">houses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CharacterHouse</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">houses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CharacterHouse</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The houses currently owned by the character.&quot;&quot;&quot;</span>
-    <span class="n">guild_membership</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GuildMembership</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">guild_membership</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GuildMembership</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The guild the character is a member of. It will be :obj:`None` if the character is not in a guild.&quot;&quot;&quot;</span>
-    <span class="n">last_login</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">last_login</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The last time the character logged in. It will be :obj:`None` if the character has never logged in.&quot;&quot;&quot;</span>
-    <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The position of the character (e.g. CipSoft Member), if any.&quot;&quot;&quot;</span>
-    <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The displayed comment.&quot;&quot;&quot;</span>
-    <span class="n">is_premium</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">is_premium</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the character&#39;s account is Premium or Free.&quot;&quot;&quot;</span>
-    <span class="n">account_badges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AccountBadge</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">account_badges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AccountBadge</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The displayed account badges.&quot;&quot;&quot;</span>
-    <span class="n">achievements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Achievement</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">achievements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Achievement</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The achievements chosen to be displayed.&quot;&quot;&quot;</span>
-    <span class="n">deaths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Death</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">deaths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Death</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s recent deaths.&quot;&quot;&quot;</span>
-    <span class="n">deaths_truncated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">deaths_truncated</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the character&#39;s deaths are truncated or not.</span>
 
 <span class="sd">    In some cases, there are more deaths in the last 30 days than what can be displayed.&quot;&quot;&quot;</span>
-    <span class="n">account_information</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AccountInformation</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">account_information</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AccountInformation</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s account information. If the character is hidden, this will be :obj:`None`.&quot;&quot;&quot;</span>
-    <span class="n">other_characters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OtherCharacter</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">other_characters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OtherCharacter</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Other characters in the same account.</span>
 
 <span class="sd">    It will be empty if the character is hidden, otherwise, it will contain at least the character itself.&quot;&quot;&quot;</span>

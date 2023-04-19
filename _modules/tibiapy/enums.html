@@ -48,7 +48,6 @@
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">IntEnum</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">&#39;AccountStatus&#39;</span><span class="p">,</span>
     <span class="s1">&#39;AuctionOrder&#39;</span><span class="p">,</span>
     <span class="s1">&#39;AuctionOrderBy&#39;</span><span class="p">,</span>
     <span class="s1">&#39;AuctionStatus&#39;</span><span class="p">,</span>
@@ -100,13 +99,6 @@
             <span class="k">return</span> <span class="n">try_enum</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid value&#39;</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="AccountStatus"><a class="viewcode-back" href="../../api.html#tibiapy.AccountStatus">[docs]</a><span class="k">class</span> <span class="nc">AccountStatus</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Possible account statuses.&quot;&quot;&quot;</span>
-
-    <span class="n">FREE_ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;Free Account&quot;</span>
-    <span class="n">PREMIUM_ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;Premium Account&quot;</span></div>
 
 
 <div class="viewcode-block" id="AuctionOrder"><a class="viewcode-back" href="../../api.html#tibiapy.AuctionOrder">[docs]</a><span class="k">class</span> <span class="nc">AuctionOrder</span><span class="p">(</span><span class="n">NumericEnum</span><span class="p">):</span>

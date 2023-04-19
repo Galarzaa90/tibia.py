@@ -23,9 +23,6 @@ Enumerations are provided for various values in order to avoid depending on stri
 
 Many of these enumerations correspond to available options in forms in Tibia.com
 
-.. autoclass:: AccountStatus
-    :members:
-    :undoc-members:
 
 .. autoclass:: AuctionOrder
     :members:
@@ -634,6 +631,9 @@ The following classes are not meant to be used or instantiated, but are document
 
 They implement methods and properties that can be inherited by other classes to implement their functionality.
 
+
+.. autopydantic_model:: BaseModel
+    :inherited-members:
 
 .. autopydantic_model:: BaseAnnouncement
     :inherited-members: BaseModel
