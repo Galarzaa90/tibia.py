@@ -151,8 +151,8 @@ class ForumAnnouncementBuilder:
 
 
 class _BaseBoardBuilder:
-    def __init__(self, **kwargs):
-        self._board_id = kwargs.get("board_id") or 0
+    def __init__(self):
+        self._board_id = 0
 
     def board_id(self, board_id: int):
         self._board_id = board_id
@@ -160,15 +160,16 @@ class _BaseBoardBuilder:
 
 
 class ForumBoardBuilder(_BaseBoardBuilder):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._name = kwargs.get("name")
-        self._section = kwargs.get("section")
-        self._current_page = kwargs.get("current_page") or 0
-        self._total_pages = kwargs.get("total_pages") or 0
-        self._age = kwargs.get("age") or 0
-        self._announcements = kwargs.get("announcements") or []
-        self._threads = kwargs.get("threads") or []
+    def __init__(self):
+        super().__init__()
+        self._name = None
+        self._section = None
+        self._section_id = None
+        self._current_page = 1
+        self._total_pages = 1
+        self._age = 0
+        self._announcements = []
+        self._entries = []
 
     def name(self, name):
         self._name = name
@@ -176,6 +177,10 @@ class ForumBoardBuilder(_BaseBoardBuilder):
 
     def section(self, section):
         self._section = section
+        return self
+
+    def section_id(self, section_id):
+        self._section_id = section_id
         return self
 
     def current_page(self, current_page):
@@ -198,12 +203,12 @@ class ForumBoardBuilder(_BaseBoardBuilder):
         self._announcements.append(announcement)
         return self
 
-    def threads(self, threads):
-        self._threads = threads
+    def entries(self, entries):
+        self._entries = entries
         return self
 
-    def add_thread(self, thread):
-        self._threads.append(thread)
+    def add_entry(self, entry):
+        self._entries.append(entry)
         return self
 
     def build(self):
@@ -211,11 +216,12 @@ class ForumBoardBuilder(_BaseBoardBuilder):
             board_id=self._board_id,
             name=self._name,
             section=self._section,
+            section_id=self._section_id,
             current_page=self._current_page,
             total_pages=self._total_pages,
             age=self._age,
             announcements=self._announcements,
-            threads=self._threads,
+            entries=self._entries,
         )
 
 

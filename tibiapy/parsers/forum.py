@@ -362,8 +362,10 @@ class ForumBoardParser:
 
         header_text = forum_breadcrumbs.text.strip()
         section, name = split_list(header_text, "|", "|")
+        link_info = parse_link_info(forum_breadcrumbs.select_one("a"))
+        section_id = int(link_info["query"]["sectionid"])
 
-        builder = ForumBoardBuilder().name(name).section(section)
+        builder = ForumBoardBuilder().name(name).section(section).section_id(section_id)
 
         forms = parsed_content.select("form")
         post_age_form = forms[0]
@@ -383,7 +385,7 @@ class ForumBoardParser:
             entry = cls._parse_thread_row(columns)
             if "ClassifiedProposal" in thread_row.attrs.get("class"):
                 entry.golden_frame = True
-            builder.add_thread(entry)
+            builder.add_entry(entry)
 
         if len(tables) > 1:
             announcement_rows = tables[0].select("tr")
@@ -466,15 +468,26 @@ class ForumBoardParser:
         last_post_column = columns[6]
         last_post = LastPostParser._parse_column(last_post_column)
 
+        author_link = columns[3].select_one("a")
         traded = False
         if "(traded)" in thread_starter:
             traded = True
             thread_starter = thread_starter.replace("(traded)", "").strip()
 
-        entry = ThreadEntry(title=title, thread_id=thread_id, thread_starter=thread_starter, replies=replies,
-                            views=views, last_post=last_post, emoticon=emoticon, status=status, total_pages=pages,
-                            status_icon=status_icon, thread_starter_traded=traded)
-        return entry
+        return ThreadEntry(
+            title=title,
+            thread_id=thread_id,
+            thread_starter=thread_starter,
+            replies=replies,
+            views=views,
+            last_post=last_post,
+            emoticon=emoticon,
+            status=status,
+            total_pages=pages,
+            status_icon=status_icon,
+            thread_starter_traded=traded,
+            thread_starter_deleted=author_link is None and not traded,
+        )
 
     # endregion
 

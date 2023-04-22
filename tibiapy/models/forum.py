@@ -326,11 +326,13 @@ class ThreadEntry(BaseThread):
     """The character that started the thread."""
     thread_starter_traded: bool
     """Whether the thread starter was recently traded or not."""
+    thread_starter_deleted: bool
+    """Whether the thread starter was recently deleted or not."""
     replies: int
     """The number of replies."""
     views: int
     """The number of views."""
-    last_post: Optional[LastPost] = None
+    last_post: Optional[LastPost]
     """The information of the last post made in this board."""
     status: ThreadStatus
     """The status of the thread."""
@@ -376,40 +378,23 @@ class ForumAnnouncement(BaseAnnouncement):
     """The end date of the announcement."""
 
 
-class ForumBoard(BaseBoard):
+class ForumBoard(PaginatedWithUrl[ThreadEntry], BaseBoard):
     """Represents a forum's board."""
 
     name: str
     """The name of the board."""
     section: str
     """The section of the board."""
-    current_page: int
-    """The current page being viewed."""
-    total_pages: int
-    """The number of pages the board has for the current display range."""
+    section_id: int
+    """The internal ID of the section the board belongs to."""
     age: int
     """The maximum age of the displayed threads, in days.
 
     -1 means all threads will be shown."""
     announcements: List[AnnouncementEntry]
     """The list of announcements currently visible."""
-    threads: List[ThreadEntry]
+    entries: List[ThreadEntry]
     """The list of threads currently visible."""
-
-    @property
-    def url(self) -> str:
-        """The URL of this board."""
-        return get_forum_board_url(self.board_id, self.current_page, self.age)
-
-    @property
-    def previous_page_url(self) -> str:
-        """The URL to the previous page of the board, if there's any."""
-        return self.get_page_url(self.current_page - 1) if self.current_page > 1 else None
-
-    @property
-    def next_page_url(self) -> str:
-        """The URL to the next page of the board, if there's any."""
-        return self.get_page_url(self.current_page + 1) if self.current_page < self.total_pages else None
 
     def get_page_url(self, page):
         """Get the URL to a given page of the board.

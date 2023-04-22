@@ -86,11 +86,11 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(1, board.current_page)
         self.assertEqual(2, board.total_pages)
         self.assertEqual(25, board.board_id)
-        self.assertEqual(30, len(board.threads))
+        self.assertEqual(30, len(board.entries))
         self.assertIsNotNone(board.url)
         self.assertIsNotNone(board.next_page_url)
         self.assertEqual(board.next_page_url, get_forum_board_url(board.board_id, board.current_page + 1, board.age))
-        for i, thread in enumerate(board.threads):
+        for i, thread in enumerate(board.entries):
             with self.subTest(i=i):
                 self.assertIsInstance(thread, ThreadEntry)
                 self.assertIsNotNone(thread.title)
@@ -120,7 +120,7 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(1, board.current_page)
         self.assertEqual(1, board.total_pages)
         self.assertEqual(11, board.board_id)
-        self.assertEqual(0, len(board.threads))
+        self.assertEqual(0, len(board.entries))
         self.assertIsNone(board.next_page_url)
         self.assertIsNone(board.previous_page_url)
 
@@ -137,7 +137,7 @@ class TestForum(TestCommons, unittest.TestCase):
 
         self.assertEqual("Antica", board.name)
         self.assertEqual("World Boards", board.section)
-        self.assertEqual([], board.threads)
+        self.assertEqual([], board.entries)
         self.assertEqual(0, board.board_id)
 
     def test_forum_board_from_content_golden_frame(self):
@@ -147,10 +147,10 @@ class TestForum(TestCommons, unittest.TestCase):
 
         self.assertEqual("Proposals (English Only)", board.name)
         self.assertEqual("Community Boards", board.section)
-        self.assertEqual(30, len(board.threads))
+        self.assertEqual(30, len(board.entries))
         self.assertEqual(5, len(board.announcements))
         self.assertEqual(1893, board.total_pages)
-        for i, thread in enumerate(board.threads):
+        for i, thread in enumerate(board.entries):
             with self.subTest(i=i):
                 self.assertTrue(thread.golden_frame)
                 self.assertTrue(thread.status & ThreadStatus.HOT)
