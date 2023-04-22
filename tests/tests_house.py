@@ -45,7 +45,7 @@ class TestsHouse(TestCommons, unittest.TestCase):
 
     def test_house_from_content_transferred(self):
         """Testing parsing a house being transferred"""
-        house = HouseBuilder(name="Name")
+        house = HouseBuilder().name("Name")
         content = self.load_resource(FILE_HOUSE_STATUS_TRANSFER)
         HouseParser._parse_status(house, content)
         self.assertEqual(house._status, HouseStatus.RENTED)
@@ -56,7 +56,7 @@ class TestsHouse(TestCommons, unittest.TestCase):
 
     def test_house_parse_status_rented(self):
         """Testing parsing a rented status"""
-        house = HouseBuilder(name="Name")
+        house = HouseBuilder().name("Name")
         content = self.load_resource(FILE_HOUSE_STATUS_RENTED)
         HouseParser._parse_status(house, content)
         self.assertEqual(house._status, HouseStatus.RENTED)
@@ -65,7 +65,7 @@ class TestsHouse(TestCommons, unittest.TestCase):
 
     def test_house_parse_status_with_bids(self):
         """Testing parsing a house status with bids"""
-        house = HouseBuilder(name="Name")
+        house = HouseBuilder().name("Name")
         content = self.load_resource(FILE_HOUSE_STATUS_WITH_BIDS)
         HouseParser._parse_status(house, content)
         self.assertEqual(house._status, HouseStatus.AUCTIONED)
@@ -76,7 +76,7 @@ class TestsHouse(TestCommons, unittest.TestCase):
 
     def test_house_parse_status_without_bids(self):
         """Testing parsing the status of a house with no bids"""
-        house = HouseBuilder(name="Name")
+        house = HouseBuilder().name("Name")
         content = self.load_resource(FILE_HOUSE_STATUS_NO_BIDS)
         HouseParser._parse_status(house, content)
         self.assertEqual(house._status, HouseStatus.AUCTIONED)

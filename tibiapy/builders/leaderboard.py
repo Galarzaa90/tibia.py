@@ -1,7 +1,12 @@
-import datetime
-from typing import List, Optional
+from __future__ import annotations
 
-from tibiapy.models.leaderboard import LeaderboardRotation, LeaderboardEntry, Leaderboard
+import datetime
+from typing import List, Optional, TYPE_CHECKING
+
+from tibiapy.models.leaderboard import LeaderboardEntry, Leaderboard
+
+if TYPE_CHECKING:
+    from tibiapy.models.leaderboard import LeaderboardRotation
 
 
 class LeaderboardBuilder:
@@ -90,7 +95,7 @@ class LeaderboardEntryBuilder:
         return self
 
     def build(self):
-        return LeaderboardEntryBuilder(
+        return LeaderboardEntry(
             name=self._name,
             rank=self._rank,
             drome_level=self._drome_level,

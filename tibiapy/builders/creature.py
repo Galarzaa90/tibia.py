@@ -1,17 +1,19 @@
+from typing import List
+
 from tibiapy.models.creature import CreatureEntry, Creature
 
 
 class CreatureEntryBuilder:
 
-    def __init__(self, **kwargs):
-        self._name = kwargs.get("name")
-        self._identifier = kwargs.get("identifier")
+    def __init__(self):
+        self._name = None
+        self._identifier = None
 
-    def name(self, name):
+    def name(self, name: str):
         self._name = name
         return self
 
-    def identifier(self, identifier):
+    def identifier(self, identifier: str):
         self._identifier = identifier
         return self
 
@@ -23,65 +25,65 @@ class CreatureEntryBuilder:
 
 
 class CreatureBuilder:
-    def __init__(self, **kwargs):
-        self._name = kwargs.get("name")
-        self._identifier = kwargs.get("identifier")
-        self._description = kwargs.get("description")
-        self._hitpoints = kwargs.get("hitpoints")
-        self._experience = kwargs.get("experience")
-        self._immune_to = kwargs.get("immune_to") or []
-        self._weak_against = kwargs.get("weak_against") or []
-        self._strong_against = kwargs.get("strong_against") or []
-        self._loot = kwargs.get("loot")
-        self._mana_cost = kwargs.get("mana_cost")
-        self._summonable = kwargs.get("summonable") or False
-        self._convinceable = kwargs.get("convinceable") or False
+    def __init__(self):
+        self._name = None
+        self._identifier = None
+        self._description = None
+        self._hitpoints = None
+        self._experience = None
+        self._immune_to = []
+        self._weak_against = []
+        self._strong_against = []
+        self._loot = None
+        self._mana_cost = None
+        self._summonable = False
+        self._convinceable = False
 
-    def name(self, name):
+    def name(self, name: str):
         self._name = name
         return self
 
-    def identifier(self, identifier):
+    def identifier(self, identifier: str):
         self._identifier = identifier
         return self
 
-    def description(self, description):
+    def description(self, description: str):
         self._description = description
         return self
 
-    def hitpoints(self, hitpoints):
+    def hitpoints(self, hitpoints: int):
         self._hitpoints = hitpoints
         return self
 
-    def experience(self, experience):
+    def experience(self, experience: int):
         self._experience = experience
         return self
 
-    def immune_to(self, immune_to):
+    def immune_to(self, immune_to: List[str]):
         self._immune_to = immune_to
         return self
 
-    def weak_against(self, weak_against):
+    def weak_against(self, weak_against: List[str]):
         self._weak_against = weak_against
         return self
 
-    def strong_against(self, strong_against):
+    def strong_against(self, strong_against: List[str]):
         self._strong_against = strong_against
         return self
 
-    def loot(self, loot):
+    def loot(self, loot: str):
         self._loot = loot
         return self
 
-    def mana_cost(self, mana_cost):
+    def mana_cost(self, mana_cost: int):
         self._mana_cost = mana_cost
         return self
 
-    def summonable(self, summonable):
+    def summonable(self, summonable: bool):
         self._summonable = summonable
         return self
 
-    def convinceable(self, convinceable):
+    def convinceable(self, convinceable: bool):
         self._convinceable = convinceable
         return self
 

@@ -1,13 +1,31 @@
+from __future__ import annotations
+
+import datetime
+from typing import Optional, List, TYPE_CHECKING
+
 from tibiapy.models import GuildEntry, Guild, GuildWars, GuildWarEntry
+
+if TYPE_CHECKING:
+    from tibiapy.models import GuildHouse, GuildMember, GuildInvite
 
 
 class _BaseGuildBuilder:
 
-    def __init__(self, **kwargs):
-        self._name = kwargs.get("name")
+    def __init__(self):
+        self._name = None
+        self._logo_url = None
+        self._description = None
 
-    def name(self, name):
+    def name(self, name: str):
         self._name = name
+        return self
+
+    def logo_url(self, logo_url: str):
+        self._logo_url = logo_url
+        return self
+
+    def description(self, description: Optional[str]):
+        self._description = description
         return self
 
     def build(self):
@@ -16,26 +34,16 @@ class _BaseGuildBuilder:
 
 class GuildEntryBuilder(_BaseGuildBuilder):
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._logo_url = kwargs.get("logo_url")
-        self._description = kwargs.get("description")
-        self._world = kwargs.get("world")
-        self._active = kwargs.get("active")
+    def __init__(self):
+        super().__init__()
+        self._world = None
+        self._active = None
 
-    def logo_url(self, logo_url):
-        self._logo_url = logo_url
-        return self
-
-    def description(self, description):
-        self._description = description
-        return self
-
-    def world(self, world):
+    def world(self, world: str):
         self._world = world
         return self
 
-    def active(self, active):
+    def active(self, active: bool):
         self._active = active
         return self
 
@@ -51,79 +59,71 @@ class GuildEntryBuilder(_BaseGuildBuilder):
 
 class GuildBuilder(_BaseGuildBuilder):
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._logo_url = kwargs.get("logo_url")
-        self._description = kwargs.get("description")
-        self._world = kwargs.get("world")
-        self._active = kwargs.get("active")
-        self._founded = kwargs.get("founded")
-        self._guildhall = kwargs.get("guildhall")
-        self._open_applications = kwargs.get("open_applications") or False
-        self._active_war = kwargs.get("active_war")
-        self._disband_date = kwargs.get("disband_date")
-        self._disband_condition = kwargs.get("disband_condition")
-        self._homepage = kwargs.get("homepage")
-        self._members = kwargs.get("members") or []
-        self._invites = kwargs.get("invites") or []
+    def __init__(self):
+        super().__init__()
+        self._logo_url = None
+        self._description = None
+        self._world = None
+        self._active = None
+        self._founded = None
+        self._guildhall = None
+        self._open_applications = False
+        self._active_war = None
+        self._disband_date = None
+        self._disband_condition = None
+        self._homepage = None
+        self._members = []
+        self._invites = []
 
-    def logo_url(self, logo_url):
-        self._logo_url = logo_url
-        return self
-
-    def description(self, description):
-        self._description = description
-        return self
-
-    def world(self, world):
+    def world(self, world: str):
         self._world = world
         return self
 
-    def active(self, active):
+    def active(self, active: bool):
         self._active = active
         return self
 
-    def guildhall(self, guildhall):
+    def guildhall(self, guildhall: GuildHouse):
         self._guildhall = guildhall
         return self
 
-    def founded(self, founded):
+    def founded(self, founded: datetime.date):
         self._founded = founded
         return self
 
-    def open_applications(self, open_applications):
+    def open_applications(self, open_applications: bool):
         self._open_applications = open_applications
         return self
 
-    def active_war(self, active_war):
+    def active_war(self, active_war: bool):
         self._active_war = active_war
         return self
 
-    def disband_date(self, disband_date):
+    def disband_date(self, disband_date: Optional[datetime.date]):
         self._disband_date = disband_date
         return self
 
-    def disband_condition(self, disband_condition):
+    def disband_condition(self, disband_condition: Optional[str]):
         self._disband_condition = disband_condition
         return self
 
-    def homepage(self, homepage):
+    def homepage(self, homepage: Optional[str]):
         self._homepage = homepage
         return self
 
-    def members(self, members):
+    def members(self, members: List[GuildMember]):
         self._members = members
         return self
 
-    def add_member(self, member):
+    def add_member(self, member: GuildMember):
         self._members.append(member)
         return self
 
-    def invites(self, invites):
+    def invites(self, invites: List[GuildInvite]):
         self._invites = invites
         return self
 
-    def add_invite(self, invite):
+    def add_invite(self, invite: GuildInvite):
         self._invites.append(invite)
         return self
 
@@ -148,20 +148,20 @@ class GuildBuilder(_BaseGuildBuilder):
 
 class GuildWarsBuilder:
 
-    def __init__(self, **kwargs):
-        self._name = kwargs.get("name")
-        self._current = kwargs.get("current")
-        self._history = kwargs.get("history")
+    def __init__(self):
+        self._name = None
+        self._current = None
+        self._history = None
 
-    def name(self, name):
+    def name(self, name: str):
         self._name = name
         return self
 
-    def current(self, current):
+    def current(self, current: Optional[GuildWarEntry]):
         self._current = current
         return self
 
-    def history(self, history):
+    def history(self, history: List[GuildWarEntry]):
         self._history = history
         return self
 
@@ -174,65 +174,65 @@ class GuildWarsBuilder:
 
 
 class GuildWarEntryBuilder:
-    def __init__(self, **kwargs):
-        self._guild_name = kwargs.get("guild_name")
-        self._guild_score = kwargs.get("guild_score")
-        self._guild_fee = kwargs.get("guild_fee")
-        self._opponent_name = kwargs.get("opponent_name")
-        self._opponent_score = kwargs.get("opponent_score")
-        self._opponent_fee = kwargs.get("opponent_fee")
-        self._start_date = kwargs.get("start_date")
-        self._score_limit = kwargs.get("score_limit")
-        self._duration = kwargs.get("duration")
-        self._end_date = kwargs.get("end_date")
-        self._winner = kwargs.get("winner")
-        self._surrender = kwargs.get("surrender") or False
+    def __init__(self):
+        self._guild_name = None
+        self._guild_score = None
+        self._guild_fee = None
+        self._opponent_name = None
+        self._opponent_score = None
+        self._opponent_fee = None
+        self._start_date = None
+        self._score_limit = None
+        self._duration = None
+        self._end_date = None
+        self._winner = None
+        self._surrender = False
 
-    def guild_name(self, guild_name):
+    def guild_name(self, guild_name: str):
         self._guild_name = guild_name
         return self
 
-    def guild_score(self, guild_score):
+    def guild_score(self, guild_score: int):
         self._guild_score = guild_score
         return self
 
-    def guild_fee(self, guild_fee):
+    def guild_fee(self, guild_fee: int):
         self._guild_fee = guild_fee
         return self
 
-    def opponent_name(self, opponent_name):
+    def opponent_name(self, opponent_name: Optional[str]):
         self._opponent_name = opponent_name
         return self
 
-    def opponent_score(self, opponent_score):
+    def opponent_score(self, opponent_score: int):
         self._opponent_score = opponent_score
         return self
 
-    def opponent_fee(self, opponent_fee):
+    def opponent_fee(self, opponent_fee: int):
         self._opponent_fee = opponent_fee
         return self
 
-    def start_date(self, start_date):
+    def start_date(self, start_date: Optional[datetime.date]):
         self._start_date = start_date
         return self
 
-    def score_limit(self, score_limit):
+    def score_limit(self, score_limit: int):
         self._score_limit = score_limit
         return self
 
-    def duration(self, duration):
+    def duration(self, duration: Optional[datetime.timedelta]):
         self._duration = duration
         return self
 
-    def end_date(self, end_date):
+    def end_date(self, end_date: Optional[datetime.date]):
         self._end_date = end_date
         return self
 
-    def winner(self, winner):
+    def winner(self, winner: Optional[str]):
         self._winner = winner
         return self
 
-    def surrender(self, surrender):
+    def surrender(self, surrender: bool):
         self._surrender = surrender
         return self
 

@@ -16,6 +16,7 @@ __all__ = (
     "WorldOverviewBuilder"
 )
 
+
 class WorldEntryBuilder:
     def __init__(self):
         self._name = None
@@ -57,7 +58,6 @@ class WorldEntryBuilder:
         self._transfer_type = transfer_type
         return self
 
-
     def battleye_date(self, battleye_date: Optional[datetime.datetime]):
         self._battleye_date = battleye_date
         return self
@@ -93,6 +93,7 @@ class WorldBuilder(WorldEntryBuilder):
         self._creation_date = None
         self._online_players = []
         self._world_quest_titles = []
+
     def record_count(self, record_count: int):
         self._record_count = record_count
         return self
@@ -141,12 +142,11 @@ class WorldBuilder(WorldEntryBuilder):
         )
 
 
-
 class WorldOverviewBuilder:
-    def __init__(self, **kwargs) -> None:
-        self._record_count = kwargs.get("record_count")
-        self._record_date = kwargs.get("record_date")
-        self._worlds = kwargs.get("worlds")
+    def __init__(self) -> None:
+        self._record_count = None
+        self._record_date = None
+        self._worlds = []
 
     def record_count(self, record_count: int):
         self._record_count = record_count

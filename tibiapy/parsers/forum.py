@@ -10,7 +10,7 @@ from tibiapy.builders.forum import CMPostArchiveBuilder, ForumAnnouncementBuilde
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
 from tibiapy.models.forum import CMPost, ForumAuthor, AnnouncementEntry, ForumEmoticon, LastPost, ThreadEntry, \
-    ForumPost, BoardEntry, CMPostArchive, ForumSection
+    ForumPost, BoardEntry, CMPostArchive, ForumSection, ForumThread
 from tibiapy.utils import (
     convert_line_breaks, parse_form_data, parse_integer, parse_link_info, parse_pagination,
     parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content, split_list,
@@ -496,7 +496,7 @@ class ForumBoardParser:
 class ForumThreadParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> ForumThread:
         """Create an instance of the class from the html content of the thread's page.
 
         Parameters
@@ -523,9 +523,14 @@ class ForumThreadParser:
             return None
 
         header_text = forum_breadcrumbs.text.strip()
+        section_link, board_link = (parse_link_info(t) for t in forum_breadcrumbs.select("a"))
         section, board, partial_title = split_list(header_text, "|", "|")
 
-        builder = ForumThreadBuilder().section(section).board(board)
+        builder = ForumThreadBuilder()\
+            .section(section)\
+            .section_id(int(section_link["query"]["sectionid"]))\
+            .board_id(int(board_link["query"]["boardid"]))\
+            .board(board)
         forum_title_container = parsed_content.select_one("div.ForumTitleText")
         if not forum_title_container:
             builder.title(partial_title)
@@ -566,7 +571,7 @@ class ForumThreadParser:
         post_containers = posts_table.select("div.PostBody")
         for post_container in post_containers:
             post = cls._parse_post_table(post_container, offset)
-            builder.add_post(post)
+            builder.add_entry(post)
         return builder.build()
 
     # endregion

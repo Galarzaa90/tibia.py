@@ -226,18 +226,20 @@ class ForumBoardBuilder(_BaseBoardBuilder):
 
 
 class ForumThreadBuilder:
-    def __init__(self, **kwargs):
-        self._title = kwargs.get("title")
-        self._thread_id = kwargs.get("thread_id") or 0
-        self._board = kwargs.get("board")
-        self._section = kwargs.get("section")
-        self._previous_topic_number = kwargs.get("previous_topic_number") or 0
-        self._next_topic_number = kwargs.get("next_topic_number") or 0
-        self._total_pages = kwargs.get("total_pages") or 1
-        self._current_page = kwargs.get("current_page") or 1
-        self._posts = kwargs.get("posts") or []
-        self._golden_frame = kwargs.get("golden_frame") or False
-        self._anchored_post = kwargs.get("anchored_post")
+    def __init__(self):
+        self._title = None
+        self._thread_id = 0
+        self._board = None
+        self._board_id = None
+        self._section = None
+        self._section_id = None
+        self._previous_topic_number = None
+        self._next_topic_number = None
+        self._total_pages = 1
+        self._current_page = 1
+        self._entries = []
+        self._golden_frame = False
+        self._anchored_post = None
 
     def title(self, title):
         self._title = title
@@ -251,8 +253,16 @@ class ForumThreadBuilder:
         self._board = board
         return self
 
+    def board_id(self, board_id):
+        self._board_id = board_id
+        return self
+
     def section(self, section):
         self._section = section
+        return self
+
+    def section_id(self, section_id):
+        self._section_id = section_id
         return self
 
     def previous_topic_number(self, previous_topic_number):
@@ -271,8 +281,8 @@ class ForumThreadBuilder:
         self._current_page = current_page
         return self
 
-    def posts(self, posts):
-        self._posts = posts
+    def entries(self, entries):
+        self._entries = entries
         return self
 
     def golden_frame(self, golden_frame):
@@ -283,8 +293,8 @@ class ForumThreadBuilder:
         self._anchored_post = anchored_post
         return self
 
-    def add_post(self, post):
-        self._posts.append(post)
+    def add_entry(self, entry):
+        self._entries.append(entry)
         return self
 
     def build(self):
@@ -292,12 +302,14 @@ class ForumThreadBuilder:
             title=self._title,
             thread_id=self._thread_id,
             board=self._board,
+            board_id=self._board_id,
             section=self._section,
+            section_id=self._section_id,
             previous_topic_number=self._previous_topic_number,
             next_topic_number=self._next_topic_number,
             total_pages=self._total_pages,
             current_page=self._current_page,
-            posts=self._posts,
+            entries=self._entries,
             golden_frame=self._golden_frame,
             anchored_post=self._anchored_post,
         )

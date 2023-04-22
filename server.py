@@ -115,6 +115,7 @@ async def get_forum_section(
 ):
     return await app.state.client.fetch_forum_section(section_id)
 
+
 @app.get("/forums/boards/{board_id}")
 async def get_forum_board(
         board_id: int = Path(...),
@@ -122,6 +123,15 @@ async def get_forum_board(
         age: int = Query(30),
 ):
     return await app.state.client.fetch_forum_board(board_id=board_id, page=page, age=age)
+
+
+@app.get("/forums/threads/{thread_id}")
+async def get_forum_board(
+        thread_id: int = Path(...),
+        page: int = Query(1),
+):
+    return await app.state.client.fetch_forum_thread(thread_id=thread_id, page=page)
+
 
 
 @app.get("/guilds/{name}")

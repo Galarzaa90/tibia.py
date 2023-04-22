@@ -1,6 +1,11 @@
-from typing import List
+from __future__ import annotations
 
-from tibiapy.models.event import EventSchedule, EventEntry
+from typing import List, TYPE_CHECKING
+
+from tibiapy.models.event import EventSchedule
+
+if TYPE_CHECKING:
+    from tibiapy.models.event import EventEntry
 
 
 class EventScheduleBuilder:

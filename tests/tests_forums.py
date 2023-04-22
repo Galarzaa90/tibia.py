@@ -203,14 +203,14 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(4797838, thread.next_topic_number)
         self.assertEqual(1, thread.current_page)
         self.assertEqual(9, thread.total_pages)
-        self.assertEqual(20, len(thread.posts))
+        self.assertEqual(20, len(thread.entries))
         self.assertIsNotNone(thread.url)
         self.assertIsNone(thread.previous_page_url)
         self.assertIsNotNone(thread.next_page_url)
         self.assertIsNotNone(thread.previous_thread_url)
         self.assertIsNotNone(thread.next_thread_url)
 
-        post = thread.posts[0]
+        post = thread.entries[0]
         self.assertEqual("Skerio", post.author.name)
         self.assertEqual("Olima", post.author.world)
         self.assertEqual("Community Manager", post.author.position)
@@ -232,11 +232,11 @@ class TestForum(TestCommons, unittest.TestCase):
         self.assertEqual(0, thread.thread_id)
         self.assertEqual('Auditorium (English Only)', thread.board)
         self.assertEqual('Community Boards', thread.section)
-        self.assertEqual(0, thread.previous_topic_number)
-        self.assertEqual(0, thread.next_topic_number)
+        self.assertIsNone(thread.previous_topic_number)
+        self.assertIsNone(thread.next_topic_number)
         self.assertEqual(1, thread.current_page)
         self.assertEqual(1, thread.total_pages)
-        self.assertEqual(0, len(thread.posts))
+        self.assertEqual(0, len(thread.entries))
 
     def test_forum_thread_from_content_not_found(self):
         content = self.load_resource(FILE_THREAD_NOT_FOUND)

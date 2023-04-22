@@ -440,26 +440,24 @@ class ForumPost(BasePost):
     golden_frame: bool = False
 
 
-class ForumThread(BaseThread):
+class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
     """Represents a forum thread."""
 
     title: str
     """The title of the thread."""
-    thread_id: int
-    """The thread's number."""
     board: str
     """The board this thread belongs to."""
+    board_id: int
+    """The ID of the board this thread belongs to."""
     section: str
     """The board section this thread belongs to."""
-    previous_topic_number: int
+    section_id: int
+    """The ID of the board section this thread belongs to."""
+    previous_topic_number: Optional[int]
     """The number of the previous topic."""
-    next_topic_number: int
+    next_topic_number: Optional[int]
     """The number of the next topic."""
-    total_pages: int
-    """The number of total_pages this thread has."""
-    current_page: int
-    """The page being viewed."""
-    posts: List[ForumPost] = []
+    entries: List[ForumPost] = []
     """The list of posts the thread has."""
     golden_frame: bool = False
     """Whether the thread has a golden frame or not.
@@ -469,21 +467,6 @@ class ForumThread(BaseThread):
     """The post where the page is anchored to, if any.
 
     When a post is fetched directly, the thread that contains it is displayed, anchored to the specific post."""
-
-    @property
-    def url(self) -> str:
-        """The URL of this thread and current page."""
-        return get_forum_thread_url(self.thread_id, self.current_page)
-
-    @property
-    def previous_page_url(self) -> str:
-        """The URL to the previous page of the thread, if there's any."""
-        return self.get_page_url(self.current_page - 1) if self.current_page > 1 else None
-
-    @property
-    def next_page_url(self) -> str:
-        """The URL to the next page of the thread, if there's any."""
-        return self.get_page_url(self.current_page + 1) if self.current_page < self.total_pages else None
 
     @property
     def previous_thread_url(self) -> str:

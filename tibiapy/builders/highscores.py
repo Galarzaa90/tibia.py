@@ -1,67 +1,75 @@
+from __future__ import annotations
+
+import datetime
+from typing import List, TYPE_CHECKING
+
 from tibiapy.models import Highscores
+
+if TYPE_CHECKING:
+    from tibiapy import Category, VocationFilter, BattlEyeHighscoresFilter, PvpTypeFilter
+    from tibiapy.models import HighscoresEntry
 
 
 class HighscoresBuilder:
 
-    def __init__(self, **kwargs):
-        self._world = kwargs.get("world")
-        self._category = kwargs.get("category")
-        self._vocation = kwargs.get("vocation")
-        self._battleye_filter = kwargs.get("battleye_filter")
-        self._pvp_types_filter = kwargs.get("pvp_types_filter")
-        self._current_page = kwargs.get("current_page")
-        self._total_pages = kwargs.get("total_pages")
-        self._results_count = kwargs.get("results_count")
-        self._last_updated = kwargs.get("last_updated")
-        self._entries = kwargs.get("entries") or []
-        self._available_worlds = kwargs.get("available_worlds")
+    def __init__(self):
+        self._world = None
+        self._category = None
+        self._vocation = None
+        self._battleye_filter = None
+        self._pvp_types_filter = None
+        self._current_page = None
+        self._total_pages = None
+        self._results_count = None
+        self._last_updated = None
+        self._entries = []
+        self._available_worlds = None
 
-    def world(self, world) -> 'HighscoresBuilder':
+    def world(self, world: str):
         self._world = world
         return self
 
-    def category(self, category) -> 'HighscoresBuilder':
+    def category(self, category: Category):
         self._category = category
         return self
 
-    def vocation(self, vocation) -> 'HighscoresBuilder':
+    def vocation(self, vocation: VocationFilter):
         self._vocation = vocation
         return self
 
-    def battleye_filter(self, battleye_filter) -> 'HighscoresBuilder':
+    def battleye_filter(self, battleye_filter: BattlEyeHighscoresFilter):
         self._battleye_filter = battleye_filter
         return self
 
-    def pvp_types_filter(self, pvp_types_filter) -> 'HighscoresBuilder':
+    def pvp_types_filter(self, pvp_types_filter: PvpTypeFilter):
         self._pvp_types_filter = pvp_types_filter
         return self
 
-    def current_page(self, current_page) -> 'HighscoresBuilder':
+    def current_page(self, current_page: int):
         self._current_page = current_page
         return self
 
-    def total_pages(self, total_pages) -> 'HighscoresBuilder':
+    def total_pages(self, total_pages: int):
         self._total_pages = total_pages
         return self
 
-    def results_count(self, results_count) -> 'HighscoresBuilder':
+    def results_count(self, results_count: int):
         self._results_count = results_count
         return self
 
-    def last_updated(self, last_updated) -> 'HighscoresBuilder':
+    def last_updated(self, last_updated: datetime.timedelta):
         self._last_updated = last_updated
         return self
 
-
-    def entries(self, entries) -> 'HighscoresBuilder':
+    def entries(self, entries: List[HighscoresEntry]):
         self._entries = entries
         return self
 
-    def add_entry(self, entry) -> 'HighscoresBuilder':
+    def add_entry(self, entry: HighscoresEntry):
         self._entries.append(entry)
         return self
 
-    def available_worlds(self, available_worlds) -> 'HighscoresBuilder':
+    def available_worlds(self, available_worlds: List[str]):
         self._available_worlds = available_worlds
         return self
 
@@ -72,7 +80,7 @@ class HighscoresBuilder:
             vocation=self._vocation,
             battleye_filter=self._battleye_filter,
             pvp_types_filter=self._pvp_types_filter,
-           current_page=self._current_page,
+            current_page=self._current_page,
             total_pages=self._total_pages,
             results_count=self._results_count,
             last_updated=self._last_updated,

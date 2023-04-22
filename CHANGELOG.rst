@@ -36,7 +36,9 @@ Changelog
     - Renamed ``CMPostArchive.page`` and ``CMPostArchive.posts`` to ``current_page`` and ``entries`` respectively.
     - Renamed ``Killer``to ``DeathParticipant``
     - Renamed ``ForumBoard.threads`` to ``entries``.
+    - Renamed ``ForumThread.posts`` to ``entries``.
     - Added ``thread_starter_deleted`` to ``ThreadEntry``.
+    - ``ForumThread.previous_topic_number`` and ``ForumThread.next_topic_number`` may be ``None`` instead of ``0``.
 - Added `ForumSection`` model and its respective parser, to fetch a list of board entries.
 - Removed ``get_url`` class methods from all models, replaced by functions in the urls package.
 - Fixed ``Character`` account badges not being parsed properly.
