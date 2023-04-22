@@ -372,11 +372,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character that started the thread.&quot;&quot;&quot;</span>
     <span class="n">thread_starter_traded</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the thread starter was recently traded or not.&quot;&quot;&quot;</span>
+    <span class="n">thread_starter_deleted</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the thread starter was recently deleted or not.&quot;&quot;&quot;</span>
     <span class="n">replies</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of replies.&quot;&quot;&quot;</span>
     <span class="n">views</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of views.&quot;&quot;&quot;</span>
-    <span class="n">last_post</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LastPost</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">last_post</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LastPost</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The information of the last post made in this board.&quot;&quot;&quot;</span>
     <span class="n">status</span><span class="p">:</span> <span class="n">ThreadStatus</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The status of the thread.&quot;&quot;&quot;</span>
@@ -422,40 +424,23 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The end date of the announcement.&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="ForumBoard"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ForumBoard">[docs]</a><span class="k">class</span> <span class="nc">ForumBoard</span><span class="p">(</span><span class="n">BaseBoard</span><span class="p">):</span>
+<div class="viewcode-block" id="ForumBoard"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ForumBoard">[docs]</a><span class="k">class</span> <span class="nc">ForumBoard</span><span class="p">(</span><span class="n">PaginatedWithUrl</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">],</span> <span class="n">BaseBoard</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a forum&#39;s board.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the board.&quot;&quot;&quot;</span>
     <span class="n">section</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The section of the board.&quot;&quot;&quot;</span>
-    <span class="n">current_page</span><span class="p">:</span> <span class="nb">int</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current page being viewed.&quot;&quot;&quot;</span>
-    <span class="n">total_pages</span><span class="p">:</span> <span class="nb">int</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of pages the board has for the current display range.&quot;&quot;&quot;</span>
+    <span class="n">section_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the section the board belongs to.&quot;&quot;&quot;</span>
     <span class="n">age</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum age of the displayed threads, in days.</span>
 
 <span class="sd">    -1 means all threads will be shown.&quot;&quot;&quot;</span>
     <span class="n">announcements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AnnouncementEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of announcements currently visible.&quot;&quot;&quot;</span>
-    <span class="n">threads</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">]</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of threads currently visible.&quot;&quot;&quot;</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of this board.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_forum_board_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">board_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">previous_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the previous page of the board, if there&#39;s any.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">next_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the next page of the board, if there&#39;s any.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_pages</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="ForumBoard.get_page_url"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ForumBoard.get_page_url">[docs]</a>    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to a given page of the board.</span>
