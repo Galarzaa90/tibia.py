@@ -556,7 +556,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">caption</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;table has no caption&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">content_table</span> <span class="o">:=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="n">selector</span><span class="p">):</span>
-            <span class="n">output</span><span class="p">[</span><span class="n">caption</span><span class="o">.</span><span class="n">text</span><span class="p">]</span> <span class="o">=</span> <span class="n">content_table</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">clean_text</span><span class="p">(</span><span class="n">caption</span><span class="p">)]</span> <span class="o">=</span> <span class="n">content_table</span>
     <span class="k">return</span> <span class="n">output</span>
 
 

@@ -54,7 +54,7 @@
 <span class="kn">from</span> <span class="nn">tibiapy.models.base</span> <span class="kn">import</span> <span class="n">BaseCharacter</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.pagination</span> <span class="kn">import</span> <span class="n">PaginatedWithUrl</span>
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_character_url</span><span class="p">,</span> <span class="n">get_forum_board_url</span><span class="p">,</span> <span class="n">get_forum_announcement_url</span><span class="p">,</span> <span class="n">get_forum_thread_url</span><span class="p">,</span> \
-    <span class="n">get_forum_post_url</span><span class="p">,</span> <span class="n">get_cm_post_archive_url</span>
+    <span class="n">get_forum_post_url</span><span class="p">,</span> <span class="n">get_cm_post_archive_url</span><span class="p">,</span> <span class="n">get_forum_section_url</span>
 <span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">get_tibia_url</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -71,6 +71,7 @@
     <span class="s1">&#39;ForumBoard&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ForumEmoticon&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ForumPost&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ForumSection&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ForumThread&#39;</span><span class="p">,</span>
     <span class="s1">&#39;LastPost&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ThreadEntry&#39;</span><span class="p">,</span>
@@ -167,9 +168,7 @@
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Two boards are considered equal if their ids are equal.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">board_id</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">board_id</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">board_id</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">board_id</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="BasePost"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BasePost">[docs]</a><span class="k">class</span> <span class="nc">BasePost</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -216,7 +215,6 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">thread_id</span>
         <span class="k">return</span> <span class="kc">False</span></div>
-
 
 
 <div class="viewcode-block" id="CMPost"><a class="viewcode-back" href="../../../api.html#tibiapy.models.CMPost">[docs]</a><span class="k">class</span> <span class="nc">CMPost</span><span class="p">(</span><span class="n">BasePost</span><span class="p">):</span>
@@ -296,8 +294,6 @@
         <span class="k">return</span> <span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">)</span></div>
 
 
-
-
 <div class="viewcode-block" id="ForumAuthor"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ForumAuthor">[docs]</a><span class="k">class</span> <span class="nc">ForumAuthor</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a post&#39;s author.&quot;&quot;&quot;</span>
 
@@ -354,6 +350,17 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The information of the last post made in this board.&quot;&quot;&quot;</span></div>
 
 
+<span class="k">class</span> <span class="nc">ForumSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">section_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the section.&quot;&quot;&quot;</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BoardEntry</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The boards in the forum section.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_forum_section_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section_id</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="ThreadEntry"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ThreadEntry">[docs]</a><span class="k">class</span> <span class="nc">ThreadEntry</span><span class="p">(</span><span class="n">BaseThread</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a thread in a forum board.&quot;&quot;&quot;</span>
 
@@ -389,7 +396,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a forum announcement.</span>
 
 <span class="sd">    These are a special kind of thread that are shown at the top of boards.</span>
-<span class="sd">    They cannot be replied to and they show no view counts.</span>
+<span class="sd">    They cannot be replied to, and they show no view counts.</span>
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
