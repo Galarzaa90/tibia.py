@@ -4,9 +4,9 @@ import unittest
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent, ThreadStatus
 from tibiapy.models import BoardEntry, LastPost, ThreadEntry, CMPostArchive
-from tibiapy.models.forum import BasePost
-from tibiapy.parsers.forum import BoardEntryParser, ForumBoardParser, ForumAnnouncementParser, ForumThreadParser, \
-    CMPostArchiveParser
+from tibiapy.models.forum import BasePost, ForumSection
+from tibiapy.parsers.forum import ForumBoardParser, ForumAnnouncementParser, ForumThreadParser, \
+    CMPostArchiveParser, ForumSectionParser
 from tibiapy.urls import get_forum_board_url, get_cm_post_archive_url
 
 FILE_WORLD_BOARDS = "forums/tibiacom_section.txt"
@@ -28,13 +28,14 @@ FILE_CM_POST_ARCHIVE_PAGES = "forums/tibiacom_cmpostarchive_pages.txt"
 
 
 class TestForum(TestCommons, unittest.TestCase):
-    def test_listed_board_list_from_content_world_boards(self):
+    def test_forum_section_parser_from_content_world_boards(self):
         content = self.load_resource(FILE_WORLD_BOARDS)
 
-        boards = BoardEntryParser.list_from_content(content)
+        forum_section = ForumSectionParser.from_content(content)
 
-        self.assertEqual(82, len(boards))
-        for i, board in enumerate(boards):
+        self.assertEqual(2, forum_section.section_id)
+        self.assertEqual(82, len(forum_section.entries))
+        for i, board in enumerate(forum_section.entries):
             with self.subTest(i=i):
                 self.assertIsInstance(board, BoardEntry)
                 self.assertIsNotNone(board.name)
@@ -43,13 +44,14 @@ class TestForum(TestCommons, unittest.TestCase):
                 self.assertGreater(board.threads, 0)
                 self.assertIsInstance(board.last_post, LastPost)
 
-    def test_listed_board_list_from_content_empty_board(self):
+    def test_forum_section_parser_from_content_empty_board(self):
         content = self.load_resource(FILE_SECTION_EMPTY_BOARD)
 
-        boards = BoardEntryParser.list_from_content(content)
+        forum_section = ForumSectionParser.from_content(content)
 
-        self.assertEqual(84, len(boards))
-        for i, board in enumerate(boards):
+        self.assertEqual(3, forum_section.section_id)
+        self.assertEqual(84, len(forum_section.entries))
+        for i, board in enumerate(forum_section.entries):
             with self.subTest(i=i):
                 self.assertIsInstance(board, BoardEntry)
                 self.assertIsNotNone(board.name)
@@ -58,18 +60,20 @@ class TestForum(TestCommons, unittest.TestCase):
                 self.assertGreaterEqual(board.threads, 0)
                 self.assertIsNotNone(board.url)
 
-    def test_listed_board_list_from_content_empty_section(self):
+    def test_forum_section_parser_from_content_empty_section(self):
         content = self.load_resource(FILE_SECTION_EMPTY)
 
-        boards = BoardEntryParser.list_from_content(content)
+        forum_section = ForumSectionParser.from_content(content)
 
-        self.assertIsInstance(boards, list)
+        self.assertEqual(10, forum_section.section_id)
+        self.assertIsInstance(forum_section, ForumSection)
+        self.assertEqual(0, len(forum_section.entries))
 
-    def test_listed_board_list_from_content_unrelated_section(self):
+    def test_forum_section_parser_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
-            BoardEntryParser.list_from_content(content)
+            ForumSectionParser.from_content(content)
 
     def test_forum_board_from_content(self):
         content = self.load_resource(FILE_BOARD_THREAD_LIST)

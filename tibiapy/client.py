@@ -26,8 +26,8 @@ from tibiapy.parsers.character import CharacterParser
 from tibiapy.parsers.creature import BoostedCreaturesParser, BoostableBossesParser, CreaturesSectionParser, \
     CreatureParser
 from tibiapy.parsers.event import EventScheduleParser
-from tibiapy.parsers.forum import CMPostArchiveParser, BoardEntryParser, ForumBoardParser, ForumThreadParser, \
-    ForumAnnouncementParser
+from tibiapy.parsers.forum import CMPostArchiveParser, ForumBoardParser, ForumThreadParser, \
+    ForumAnnouncementParser, ForumSectionParser
 from tibiapy.parsers.guild import GuildParser, GuildWarsParser, GuildsSectionParser
 from tibiapy.parsers.highscores import HighscoresParser
 from tibiapy.parsers.house import HouseParser, HousesSectionParser
@@ -40,7 +40,8 @@ from tibiapy.urls import get_character_url, get_world_guilds_url, get_guild_url,
     get_news_archive_url, get_news_url, get_forum_board_url, get_forum_announcement_url, get_forum_thread_url, \
     get_highscores_url, get_kill_statistics_url, get_forum_post_url, get_event_schedule_url, get_houses_section_url, \
     get_auction_url, get_bazaar_url, get_cm_post_archive_url, get_leaderboards_url, get_creatures_section_url, \
-    get_creature_url, get_boostable_bosses_url, get_spells_section_url, get_spell_url, get_world_url, get_guild_wars_url
+    get_creature_url, get_boostable_bosses_url, get_spells_section_url, get_spell_url, get_world_url, \
+    get_guild_wars_url, get_forum_section_url
 
 __all__ = (
     "TibiaResponse",
@@ -508,6 +509,13 @@ class Client:
         return TibiaResponse.from_raw(response, calendar, parsing_time)
 
     # region Forums
+    async def fetch_forum_section(self, section_id: int, *, test=False):
+        response = await self._request("GET", get_forum_section_url(section_id), test=test)
+        start_time = time.perf_counter()
+        section = ForumSectionParser.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse.from_raw(response, section, parsing_time)
+
     async def fetch_forum_community_boards(self, *, test=False):
         """Fetch the forum's community boards.
 
@@ -533,7 +541,7 @@ class Client:
         """
         response = await self._request("GET", BoardEntry.get_community_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = BoardEntryParser.list_from_content(response.content)
+        boards = ForumSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boards, parsing_time)
 
@@ -562,7 +570,7 @@ class Client:
         """
         response = await self._request("GET", BoardEntry.get_support_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = BoardEntryParser.list_from_content(response.content)
+        boards = ForumSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boards, parsing_time)
 
@@ -591,7 +599,7 @@ class Client:
         """
         response = await self._request("GET", BoardEntry.get_world_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = BoardEntryParser.list_from_content(response.content)
+        boards = ForumSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boards, parsing_time)
 
@@ -620,7 +628,7 @@ class Client:
         """
         response = await self._request("GET", BoardEntry.get_trade_boards_url(), test=test)
         start_time = time.perf_counter()
-        boards = BoardEntryParser.list_from_content(response.content)
+        boards = ForumSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boards, parsing_time)
 

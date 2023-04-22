@@ -109,6 +109,12 @@ async def get_support_boards():
     return await app.state.client.fetch_forum_support_boards()
 
 
+@app.get("/forums/sections/{section_id}")
+async def get_forum_section(
+        section_id: int = Path(...)
+):
+    return await app.state.client.fetch_forum_section(section_id)
+
 @app.get("/forums/boards/{board_id}")
 async def get_forum_board(
         board_id: int = Path(...),

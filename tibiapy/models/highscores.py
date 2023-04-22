@@ -56,7 +56,6 @@ class Highscores(PaginatedWithUrl[HighscoresEntry]):
     """The worlds available for selection."""
 
 
-
     @property
     def from_rank(self) -> int:
         """The starting rank of the provided entries."""
@@ -71,7 +70,7 @@ class Highscores(PaginatedWithUrl[HighscoresEntry]):
     def url(self) -> str:
         """The URL to the highscores page on Tibia.com containing the results."""
         return get_highscores_url(self.world, self.category, self.vocation, self.current_page, self.battleye_filter,
-                            self.pvp_types_filter)
+                                  self.pvp_types_filter)
 
     def get_page_url(self, page: int) -> str:
         """Get the URL to a specific page for the current highscores.

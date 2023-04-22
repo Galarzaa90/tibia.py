@@ -510,7 +510,7 @@ def parse_tables_map(parsed_content: bs4.BeautifulSoup, selector = "div.TableCon
         if not caption:
             raise InvalidContent("table has no caption")
         if content_table := table.select_one(selector):
-            output[caption.text] = content_table
+            output[clean_text(caption)] = content_table
     return output
 
 

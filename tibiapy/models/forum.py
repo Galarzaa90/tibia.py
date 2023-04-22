@@ -8,7 +8,7 @@ from tibiapy.models import GuildMembership
 from tibiapy.models.base import BaseCharacter
 from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.urls import get_character_url, get_forum_board_url, get_forum_announcement_url, get_forum_thread_url, \
-    get_forum_post_url, get_cm_post_archive_url
+    get_forum_post_url, get_cm_post_archive_url, get_forum_section_url
 from tibiapy.utils import get_tibia_url
 
 __all__ = (
@@ -25,6 +25,7 @@ __all__ = (
     'ForumBoard',
     'ForumEmoticon',
     'ForumPost',
+    'ForumSection',
     'ForumThread',
     'LastPost',
     'ThreadEntry',
@@ -121,9 +122,7 @@ class BaseBoard(BaseModel):
 
     def __eq__(self, o: object) -> bool:
         """Two boards are considered equal if their ids are equal."""
-        if isinstance(o, self.__class__):
-            return self.board_id == o.board_id
-        return False
+        return self.board_id == o.board_id if isinstance(o, self.__class__) else False
 
 
 class BasePost(BaseModel):
@@ -170,7 +169,6 @@ class BaseThread(BaseModel):
         if isinstance(other, self.__class__):
             return self.thread_id == other.thread_id
         return False
-
 
 
 class CMPost(BasePost):
@@ -250,8 +248,6 @@ class LastPost(BasePost):
         return get_character_url(self.author)
 
 
-
-
 class ForumAuthor(BaseCharacter):
     """Represents a post's author."""
 
@@ -308,6 +304,17 @@ class BoardEntry(BaseBoard):
     """The information of the last post made in this board."""
 
 
+class ForumSection(BaseModel):
+    section_id: int
+    """The internal ID of the section."""
+    entries: List[BoardEntry]
+    """The boards in the forum section."""
+
+    @property
+    def url(self):
+        return get_forum_section_url(self.section_id)
+
+
 class ThreadEntry(BaseThread):
     """Represents a thread in a forum board."""
 
@@ -343,7 +350,7 @@ class ForumAnnouncement(BaseAnnouncement):
     """Represents a forum announcement.
 
     These are a special kind of thread that are shown at the top of boards.
-    They cannot be replied to and they show no view counts.
+    They cannot be replied to, and they show no view counts.
 
 
     """

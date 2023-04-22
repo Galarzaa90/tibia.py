@@ -1,29 +1,31 @@
 """Events related to the forum section."""
 import datetime
 import re
+import urllib.parse
 
 import bs4
 
-from tibiapy import errors
+from tibiapy import errors, InvalidContent
 from tibiapy.builders.forum import CMPostArchiveBuilder, ForumAnnouncementBuilder, ForumBoardBuilder, ForumThreadBuilder
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
 from tibiapy.models.forum import CMPost, ForumAuthor, AnnouncementEntry, ForumEmoticon, LastPost, ThreadEntry, \
-    ForumPost, BoardEntry, CMPostArchive
+    ForumPost, BoardEntry, CMPostArchive, ForumSection
 from tibiapy.utils import (
     convert_line_breaks, parse_form_data, parse_integer, parse_link_info, parse_pagination,
-    parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content, parse_tibiacom_tables, split_list,
-    try_enum)
+    parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content, split_list,
+    try_enum, parse_tables_map)
 
 __all__ = (
     'CMPostArchiveParser',
     'ForumAnnouncementParser',
     'ForumBoardParser',
+    'ForumSectionParser',
     'ForumThreadParser',
 )
 
 timezone_regex = re.compile(r'times are (CES?T)')
-filename_regex = re.compile(r'([\w_]+.gif)')
+filename_regex = re.compile(r'(\w+.gif)')
 pages_regex = re.compile(r'\(Pages[^)]+\)')
 
 author_info_regex = re.compile(r'Inhabitant of (\w+)\nVocation: ([\w\s]+)\nLevel: (\d+)')
@@ -62,7 +64,7 @@ class CMPostArchiveParser:
         form = parsed_content.select_one("form")
         try:
             start_month_selector, start_day_selector, start_year_selector, \
-            end_month_selector, end_day_selector, end_year_selector = form.select("select")
+                end_month_selector, end_day_selector, end_year_selector = form.select("select")
             start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
         except (AttributeError, ValueError) as e:
@@ -95,8 +97,7 @@ class CMPostArchiveParser:
             return builder.build()
         pages_column, results_column = inner_table_rows[-1].select("div")
         page_links = pages_column.select("a")
-        listed_pages = [int(p.text) for p in page_links]
-        if listed_pages:
+        if listed_pages := [int(p.text) for p in page_links]:
             page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
             total_pages = max(int(page_links[-1].text), page)
             if not page:
@@ -139,6 +140,64 @@ class CMPostArchiveParser:
             return None
     # endregion
 
+
+class ForumSectionParser:
+
+    @classmethod
+    def from_content(cls, content):
+        parsed_content = parse_tibiacom_content(content)
+        tables = parse_tables_map(parsed_content)
+        if "Boards" not in tables:
+            raise InvalidContent("Boards table not found.")
+        rows = tables["Boards"].select("table.TableContent > tr:not(.LabelH)")
+        section_link = parse_link_info(parsed_content.select_one("p.ForumWelcome > a"))
+        redirect = section_link["query"]["redirect"]
+        redirect_qs = urllib.parse.parse_qs(urllib.parse.urlparse(redirect).query)
+        section_id = redirect_qs["sectionid"][0]
+        time_label = parsed_content.select_one("div.CurrentTime")
+        offset = 2 if "CEST" in time_label.text else 1
+        boards = [board for row in rows if (board := cls._parse_board_row(row, offset)) is not None]
+        return ForumSection(section_id=section_id, entries=boards)
+
+    @classmethod
+    def _parse_board_row(cls, board_row, offset=1):
+        """Parse a row containing a board and extracts its information.
+
+        Parameters
+        ----------
+        board_row: :class:`bs4.Tag`
+            The row's parsed content.
+        offset: :class:`int`
+            Since the displayed dates do not contain information, it is neccessary to extract the used timezone from
+            somewhere else and pass it to this method to adjust them accordingly.
+
+        Returns
+        -------
+        :class:`BoardEntry`
+            The board contained in this row.
+        """
+        columns = board_row.select("td")
+        # Second Column: Name and description
+        if len(columns) < 5:
+            return None
+        name_column = columns[1]
+        board_link_tag = name_column.select_one("a")
+        description_tag = name_column.select_one("font")
+        description = description_tag.text
+        board_link = parse_link_info(board_link_tag)
+        name = board_link["text"]
+        board_id = int(board_link["query"]["boardid"])
+        # Third Column: Post count
+        posts_column = columns[2]
+        posts = parse_integer(posts_column.text)
+        # Fourth Column: View count
+        threads_column = columns[3]
+        threads = parse_integer(threads_column.text)
+        # Fifth Column: Last post information
+        last_post_column = columns[4]
+        last_post = LastPostParser._parse_column(last_post_column, offset)
+        return BoardEntry(name=name, board_id=board_id, description=description, posts=posts, threads=threads,
+                          last_post=last_post)
 
 class ForumAnnouncementParser:
 
@@ -255,8 +314,7 @@ class ForumAuthorParser:
         guild_info = char_info.select_one("font.ff_smallinfo")
         convert_line_breaks(char_info)
         char_info_text = char_info.text
-        info_match = author_info_regex.search(char_info_text)
-        if info_match:
+        if info_match := author_info_regex.search(char_info_text):
             author.world = info_match.group(1)
             author.vocation = try_enum(Vocation, info_match.group(2))
             author.level = int(info_match.group(3))
@@ -612,89 +670,3 @@ class LastPostParser:
             traded = True
             deleted = False
         return LastPost(author=author, post_id=post_id, date=last_post_date, deleted=deleted, traded=traded)
-
-
-class BoardEntryParser:
-
-
-    # region Public Methods
-    @classmethod
-    def list_from_content(cls, content):
-        """Parse the content of a board list Tibia.com into a list of boards.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The raw HTML response from the board list.
-
-        Returns
-        -------
-        :class:`list` of :class:`BoardEntry`
-
-        Raises
-        ------
-        InvalidContent`
-            Content is not a board list in Tibia.com
-        """
-        try:
-            parsed_content = parse_tibiacom_content(content)
-            tables = parse_tibiacom_tables(parsed_content)
-            boards_table = tables["Boards"]
-            board_rows = boards_table.select("tr")
-            timezone_row = board_rows[-1]
-            timezone = timezone_regex.search(timezone_row.text).group(1)
-            offset = 1 if timezone == "CET" else 2
-            boards = []
-            for board_row in board_rows[1:-2]:
-                try:
-                    board = cls._parse_board_row(board_row, offset)
-                except (IndexError, AttributeError) as e:
-                    continue
-                else:
-                    boards.append(board)
-            return boards
-        except (TypeError, ValueError, KeyError) as e:
-            raise errors.InvalidContent("content does not belong to a forum section.", e)
-
-    # endregion
-
-    # region Private Methods
-    @classmethod
-    def _parse_board_row(cls, board_row, offset=1):
-        """Parse a row containing a board and extracts its information.
-
-        Parameters
-        ----------
-        board_row: :class:`bs4.Tag`
-            The row's parsed content.
-        offset: :class:`int`
-            Since the displayed dates do not contain information, it is neccessary to extract the used timezone from
-            somewhere else and pass it to this method to adjust them accordingly.
-
-        Returns
-        -------
-        :class:`BoardEntry`
-            The board contained in this row.
-        """
-        columns = board_row.select("td")
-        # Second Column: Name and description
-        name_column = columns[1]
-        board_link_tag = name_column.select_one("a")
-        description_tag = name_column.select_one("font")
-        description = description_tag.text
-        board_link = parse_link_info(board_link_tag)
-        name = board_link["text"]
-        board_id = int(board_link["query"]["boardid"])
-        # Third Column: Post count
-        posts_column = columns[2]
-        posts = parse_integer(posts_column.text)
-        # Fourth Column: View count
-        threads_column = columns[3]
-        threads = parse_integer(threads_column.text)
-        # Fifth Column: Last post information
-        last_post_column = columns[4]
-        last_post = LastPostParser._parse_column(last_post_column, offset)
-        return BoardEntry(name=name, board_id=board_id, description=description, posts=posts, threads=threads,
-                   last_post=last_post)
-    # endregion
-
