@@ -363,6 +363,13 @@ CMPostArchive
 .. autopydantic_model:: CMPostArchive
    :inherited-members: BaseModel
 
+
+ForumSection
+------------
+.. autopydantic_model:: ForumSection
+    :inherited-members: BaseModel
+
+
 ForumAnnouncement
 -----------------
 .. autopydantic_model:: ForumAnnouncement

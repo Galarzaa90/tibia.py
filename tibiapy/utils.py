@@ -40,9 +40,6 @@ def get_rows(table_tag: bs4.Tag):
     return table_tag.select("tr")
 
 
-def get_static_file_url(*path) -> str:
-    return urllib.parse.urljoin("https://static.tibia.com/", "/".join(path))
-
 def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
     """Build a URL to Tibia.com with the given parameters.
 

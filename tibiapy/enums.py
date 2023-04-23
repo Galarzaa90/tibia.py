@@ -1,6 +1,8 @@
 """Enumerations used by models throughout the library."""
 from enum import Enum, Flag, IntEnum
 
+from tibiapy.utils import try_enum
+
 __all__ = (
     'AuctionOrder',
     'AuctionOrderBy',
@@ -35,7 +37,6 @@ __all__ = (
     'WorldLocation',
 )
 
-from tibiapy.utils import get_static_file_url, try_enum
 
 
 class NumericEnum(IntEnum):
@@ -268,10 +269,12 @@ class NewsCategory(str, Enum):
 
     @property
     def big_icon_url(self):
+        from tibiapy.urls import get_static_file_url
         return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_big.gif")
 
     @property
     def small_icon_url(self):
+        from tibiapy.urls import get_static_file_url
         return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_small.gif")
 
 
