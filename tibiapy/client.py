@@ -20,6 +20,7 @@ from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillSta
 from tibiapy.models.creature import BoostedCreatures, BoostableBosses, CreaturesSection, Creature
 from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
+from tibiapy.models.pagination import AjaxPaginator
 from tibiapy.models.world import World, WorldOverview
 from tibiapy.parsers.bazaar import AuctionParser, CharacterBazaarParser
 from tibiapy.parsers.character import CharacterParser
@@ -229,7 +230,7 @@ class Client:
         except UnicodeDecodeError as e:
             raise NetworkError(f'UnicodeDecodeError: {e}', e, time.perf_counter() - init_time)
 
-    async def _fetch_all_pages(self, auction_id, paginator, item_type, *, test=False):
+    async def _fetch_all_pages(self, auction_id, paginator: AjaxPaginator, item_type, *, test=False):
         """Fetch all the pages of an auction paginator.
 
         Parameters
@@ -632,7 +633,7 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boards, parsing_time)
 
-    async def fetch_forum_board(self, board_id, page=1, age=30, *, test=False):
+    async def fetch_forum_board(self, board_id, page=1, age=None, *, test=False):
         """Fetch a forum board with a given id.
 
         .. versionadded:: 3.0.0

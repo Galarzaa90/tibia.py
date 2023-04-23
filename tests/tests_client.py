@@ -5,7 +5,6 @@ import unittest.mock
 import aiohttp
 from aioresponses import aioresponses
 
-import tibiapy
 from tests.tests_bazaar import FILE_BAZAAR_CURRENT, FILE_BAZAAR_HISTORY, FILE_AUCTION_FINISHED
 from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
 from tests.tests_events import FILE_EVENT_CALENDAR
@@ -21,7 +20,7 @@ from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 from tibiapy import Client, Forbidden, NetworkError, HouseType, BazaarType
 from tibiapy.models import BoardEntry, CharacterBazaar, Character, CMPostArchive, ForumBoard, Guild, Highscores, \
     HousesSection, Leaderboard, VocationFilter, Category, House, HouseEntry, GuildEntry, KillStatistics, \
-    World, WorldOverview, Auction, NewsArchive, NewsEntry, News
+    World, WorldOverview, Auction, NewsArchive, NewsEntry, News, ItemSummary, ForumSection
 from tibiapy.models.creature import CreatureEntry
 from tibiapy.models.event import EventSchedule
 from tibiapy.urls import get_character_url, get_world_guilds_url, get_guild_url, get_house_url, get_world_overview_url, \
@@ -30,12 +29,11 @@ from tibiapy.urls import get_character_url, get_world_guilds_url, get_guild_url,
     get_leaderboards_url, get_world_url
 
 
-@unittest.skip("asynctest not compatible with latest python versions, replace with native async tests")
-class TestClient(unittest.TestCase, TestCommons):
+class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     def setUp(self):
         self.client = Client()
 
-    async def tearDown(self):
+    async def asyncTearDown(self):
         await self.client.session.close()
 
     async def test_client_init_pass_session(self):
@@ -203,7 +201,7 @@ class TestClient(unittest.TestCase, TestCommons):
     async def test_client_fetch_boosted_creature(self, mock):
         """Testing fetching the boosted creature"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        mock.get(News.get_list_url(), status=200, body=content)
+        mock.get(get_news_archive_url(), status=200, body=content)
         creature = await self.client.fetch_boosted_creature()
 
         self.assertIsInstance(creature.data, CreatureEntry)
@@ -291,7 +289,7 @@ class TestClient(unittest.TestCase, TestCommons):
         content = self.load_resource(FILE_WORLD_BOARDS)
         mock.get(BoardEntry.get_community_boards_url(), status=200, body=content)
         response = await self.client.fetch_forum_community_boards()
-        self.assertIsInstance(response.data[0], BoardEntry)
+        self.assertIsInstance(response.data, ForumSection)
 
     @aioresponses()
     async def test_client_fetch_forum_trade_boards(self, mock):
@@ -299,7 +297,7 @@ class TestClient(unittest.TestCase, TestCommons):
         content = self.load_resource(FILE_WORLD_BOARDS)
         mock.get(BoardEntry.get_trade_boards_url(), status=200, body=content)
         response = await self.client.fetch_forum_trade_boards()
-        self.assertIsInstance(response.data[0], BoardEntry)
+        self.assertIsInstance(response.data, ForumSection)
 
     @aioresponses()
     async def test_client_fetch_forum_support_boards(self, mock):
@@ -307,7 +305,7 @@ class TestClient(unittest.TestCase, TestCommons):
         content = self.load_resource(FILE_WORLD_BOARDS)
         mock.get(BoardEntry.get_support_boards_url(), status=200, body=content)
         response = await self.client.fetch_forum_support_boards()
-        self.assertIsInstance(response.data[0], BoardEntry)
+        self.assertIsInstance(response.data, ForumSection)
 
     @aioresponses()
     async def test_client_fetch_forum_world_boards(self, mock):
@@ -315,7 +313,7 @@ class TestClient(unittest.TestCase, TestCommons):
         content = self.load_resource(FILE_WORLD_BOARDS)
         mock.get(BoardEntry.get_world_boards_url(), status=200, body=content)
         response = await self.client.fetch_forum_world_boards()
-        self.assertIsInstance(response.data[0], BoardEntry)
+        self.assertIsInstance(response.data, ForumSection)
 
     @aioresponses()
     async def test_client_fetch_forum_board(self, mock):
@@ -333,18 +331,14 @@ class TestClient(unittest.TestCase, TestCommons):
         response = await self.client.fetch_leaderboard("Antica")
         self.assertIsInstance(response.data, Leaderboard)
 
-    @unittest.mock.patch("tibiapy.bazaar.Auction._parse_page_items")
+    @unittest.mock.patch("tibiapy.parsers.bazaar.AuctionParser._parse_page_items")
     @unittest.skipIf(sys.version_info < (3, 8, 0), "AsyncMock was implemented in 3.8")
     async def test_client__fetch_all_pages_success(self, parse_page_items):
         """Testing internal method to fetch all pages of an auction item collection."""
-        paginator = tibiapy.ItemSummary(page=1, total_pages=5)
+        paginator = ItemSummary(page=1, total_pages=5)
         self.client._fetch_ajax_page = unittest.mock.AsyncMock()
 
         await self.client._fetch_all_pages(1, paginator, 1)
 
         self.assertEqual(4, self.client._fetch_ajax_page.await_count)
         self.assertEqual(4, parse_page_items.call_count)
-
-    async def test_client__fetch_all_pages_none_input(self):
-        """Testing internal method to fetch all pages of an auction item collection."""
-        self.assertIsNone(await self.client._fetch_all_pages(1, None, 1))
