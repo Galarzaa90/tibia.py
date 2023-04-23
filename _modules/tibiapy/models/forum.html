@@ -350,7 +350,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The information of the last post made in this board.&quot;&quot;&quot;</span></div>
 
 
-<span class="k">class</span> <span class="nc">ForumSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="ForumSection"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ForumSection">[docs]</a><span class="k">class</span> <span class="nc">ForumSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">section_id</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the section.&quot;&quot;&quot;</span>
     <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BoardEntry</span><span class="p">]</span>
@@ -358,7 +358,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">get_forum_section_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">get_forum_section_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section_id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ThreadEntry"><a class="viewcode-back" href="../../../api.html#tibiapy.models.ThreadEntry">[docs]</a><span class="k">class</span> <span class="nc">ThreadEntry</span><span class="p">(</span><span class="n">BaseThread</span><span class="p">):</span>
@@ -623,7 +623,7 @@
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2021, Allan Galarza.
+    &copy; Copyright 2023, Allan Galarza.
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.
   </div>
   
