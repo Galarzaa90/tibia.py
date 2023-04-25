@@ -1,7 +1,6 @@
 import re
 from typing import TYPE_CHECKING
 
-from tibiapy import abc
 from tibiapy.builders.world import (WorldBuilder, WorldEntryBuilder,
                                     WorldOverviewBuilder)
 from tibiapy.enums import (BattlEyeType, PvpType,

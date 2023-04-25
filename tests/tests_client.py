@@ -51,15 +51,15 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
         """Testing error handling"""
         mock.get(get_world_overview_url(), status=403)
         with self.assertRaises(Forbidden):
-            await self.client.fetch_world_list()
+            await self.client.fetch_world_overview()
 
         mock.get(get_world_overview_url(), status=404)
         with self.assertRaises(NetworkError):
-            await self.client.fetch_world_list()
+            await self.client.fetch_world_overview()
 
         mock.get(get_news_archive_url(), exception=aiohttp.ClientError())
         with self.assertRaises(NetworkError):
-            await self.client.fetch_world_list()
+            await self.client.fetch_world_overview()
 
         mock.post(get_news_archive_url(), exception=aiohttp.ClientOSError())
         with self.assertRaises(NetworkError):
@@ -193,7 +193,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
         """Testing fetching the world list"""
         content = self.load_resource(FILE_WORLD_LIST)
         mock.get(get_world_overview_url(), status=200, body=content)
-        worlds = await self.client.fetch_world_list()
+        worlds = await self.client.fetch_world_overview()
 
         self.assertIsInstance(worlds.data, WorldOverview)
 

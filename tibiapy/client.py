@@ -621,6 +621,86 @@ class Client:
 
     # endregion
 
+    # region Community
+
+    async def fetch_character(self, name: str, *, test=False) -> TibiaResponse[Optional[Character]]:
+        """Fetch a character by its name from Tibia.com.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the character.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`.Character`
+            A response containing the character, if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_character_url(name.strip()), test=test)
+        return response.parse(CharacterParser.from_content)
+
+    async def fetch_world_overview(self, *, test=False) -> TibiaResponse[WorldOverview]:
+        """Fetch the world overview information from Tibia.com.
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`WorldOverview`
+            A response containing the world overview information.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_world_overview_url(), test=test)
+        return response.parse(WorldOverviewParser.from_content)
+
+    async def fetch_world(self, name: str, *, test=False) -> TibiaResponse[Optional[World]]:
+        """Fetch a world from Tibia.com.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the world.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`.World`
+            A response containing the world's information if found, :obj:`None` otherwise.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_world_url(name), test=test)
+        return response.parse(WorldParser.from_content)
+
+    # endregion
+
     async def fetch_cm_post_archive(self, start_date: datetime.datetime, end_date: datetime.datetime, page=1, *,
                                     test=False) -> TibiaResponse[CMPostArchive]:
         """Fetch the CM post archive.
@@ -986,34 +1066,6 @@ class Client:
 
     # endregion
 
-    async def fetch_character(self, name, *, test=False):
-        """Fetch a character by its name from Tibia.com.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the character.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`Character`
-            A response containing the character, if found.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_character_url(name.strip()), test=test)
-        start_time = time.perf_counter()
-        char = CharacterParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, char, parsing_time)
 
     # region Guilds
     async def fetch_guild(self, name, *, test=False):
@@ -1228,34 +1280,6 @@ class Client:
         return TibiaResponse.from_raw(response, leaderboard, parsing_time)
 
     # region Worlds
-    async def fetch_world(self, name, *, test=False):
-        """Fetch a world from Tibia.com.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the world.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`World`
-            A response containig the he world's information if found, :obj:`None` otherwise.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_world_url(name), test=test)
-        start_time = time.perf_counter()
-        world = WorldParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, world, parsing_time)
 
     async def fetch_world_houses(self, world, town, house_type=HouseType.HOUSE, status=None, order=None, *, test=False):
         """Fetch the house list of a world and type.
@@ -1333,32 +1357,7 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, guilds, parsing_time)
 
-    async def fetch_world_list(self, *, test=False):
-        """Fetch the world overview information from Tibia.com.
 
-        Parameters
-        ----------
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`WorldOverview`
-            A response containing the world overview information.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_world_overview_url(), test=test)
-        start_time = time.perf_counter()
-        world_overview = WorldOverviewParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, world_overview, parsing_time)
 
     # endregion
 

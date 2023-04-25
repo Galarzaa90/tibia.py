@@ -18,7 +18,7 @@ async def main():
     client = tibiapy.Client()
     try:
         log.info("Fetching world list...")
-        response = await client.fetch_world_list()
+        response = await client.fetch_world_overview()
         assert isinstance(response, tibiapy.TibiaResponse)
         assert isinstance(response.data, tibiapy.WorldOverview)
         log.info(f"{len(response.data.worlds)} worlds found.")

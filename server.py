@@ -106,6 +106,27 @@ async def get_spell(
 
 # endregion
 
+# region Community
+
+
+@app.get("/characters/{name}")
+async def get_character(
+        name: str = Path(...)
+):
+    return await app.state.client.fetch_character(name)
+
+
+@app.get("/worlds")
+async def get_worlds() -> TibiaResponse[WorldOverview]:
+    return await app.state.client.fetch_world_overview()
+
+
+@app.get("/worlds/{name}")
+async def get_world(name: str = Path(...)) -> TibiaResponse[Optional[World]]:
+    return await app.state.client.fetch_world(name)
+
+
+# endregion
 
 @app.get("/cmposts/{start_date}/{end_date}")
 async def get_cm_posts_archive(
@@ -135,12 +156,6 @@ async def get_auction(
                                                 fetch_mounts=fetch_mounts, fetch_outfits=fetch_outfits,
                                                 fetch_familiars=fetch_familiars)
 
-
-@app.get("/characters/{name}")
-async def get_character(
-        name: str = Path(...)
-):
-    return await app.state.client.fetch_character(name)
 
 
 @app.get("/creatures/boosted")
@@ -268,11 +283,5 @@ async def get_leaderboards(
     return await app.state.client.fetch_leaderboard(world=world)
 
 
-@app.get("/worlds")
-async def get_worlds() -> TibiaResponse[WorldOverview]:
-    return await app.state.client.fetch_world_list()
 
 
-@app.get("/worlds/{name}")
-async def get_world(name: str = Path(...)) -> TibiaResponse[Optional[World]]:
-    return await app.state.client.fetch_world(name)

@@ -311,7 +311,7 @@ async def get_leaderboard(request: web.Request):
 
 @routes.get('/worlds')
 async def get_worlds(request: web.Request):
-    response = await app["tibiapy"].fetch_world_list()
+    response = await app["tibiapy"].fetch_world_overview()
     return json_response(response)
 
 
