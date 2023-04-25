@@ -667,6 +667,86 @@
 
     <span class="c1"># endregion</span>
 
+    <span class="c1"># region Community</span>
+
+<div class="viewcode-block" id="Client.fetch_character"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_character">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_character</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Character</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a character by its name from Tibia.com.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the character.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`.Character`</span>
+<span class="sd">            A response containing the character, if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_character_url</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">CharacterParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_world_overview"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_overview">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_overview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">WorldOverview</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the world overview information from Tibia.com.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`WorldOverview`</span>
+<span class="sd">            A response containing the world overview information.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_world_overview_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">WorldOverviewParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_world"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">World</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a world from Tibia.com.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`.World`</span>
+<span class="sd">            A response containing the world&#39;s information if found, :obj:`None` otherwise.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_world_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">WorldParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+    <span class="c1"># endregion</span>
+
 <div class="viewcode-block" id="Client.fetch_cm_post_archive"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_cm_post_archive">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_cm_post_archive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                                     <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CMPostArchive</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the CM post archive.</span>
@@ -1032,34 +1112,6 @@
 
     <span class="c1"># endregion</span>
 
-<div class="viewcode-block" id="Client.fetch_character"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_character">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_character</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a character by its name from Tibia.com.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name: :class:`str`</span>
-<span class="sd">            The name of the character.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`Character`</span>
-<span class="sd">            A response containing the character, if found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_character_url</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">char</span> <span class="o">=</span> <span class="n">CharacterParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
     <span class="c1"># region Guilds</span>
 <div class="viewcode-block" id="Client.fetch_guild"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_guild">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -1274,34 +1326,6 @@
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">leaderboard</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
     <span class="c1"># region Worlds</span>
-<div class="viewcode-block" id="Client.fetch_world"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a world from Tibia.com.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name: :class:`str`</span>
-<span class="sd">            The name of the world.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`World`</span>
-<span class="sd">            A response containig the he world&#39;s information if found, :obj:`None` otherwise.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_world_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">world</span> <span class="o">=</span> <span class="n">WorldParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.fetch_world_houses"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_houses">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_houses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="o">=</span><span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the house list of a world and type.</span>
@@ -1379,32 +1403,7 @@
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">guilds</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.fetch_world_list"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_list">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the world overview information from Tibia.com.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`WorldOverview`</span>
-<span class="sd">            A response containing the world overview information.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_world_overview_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">world_overview</span> <span class="o">=</span> <span class="n">WorldOverviewParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">world_overview</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
     <span class="c1"># endregion</span>
 
@@ -1631,7 +1630,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2023, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1.
   </div>
   
   </body>

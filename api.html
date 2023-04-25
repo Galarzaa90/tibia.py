@@ -404,6 +404,84 @@ Note that if a session is passed, the SOCKS proxy won’t be used and must be ap
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_character">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_character</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.Character" title="tibiapy.models.Character"><span class="pre">Character</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_character"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_character" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a character by its name from Tibia.com.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A response containing the character, if found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.Character" title="tibiapy.models.Character"><code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_world_overview">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_world_overview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.WorldOverview" title="tibiapy.models.WorldOverview"><span class="pre">WorldOverview</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world_overview"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_world_overview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the world overview information from Tibia.com.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A response containing the world overview information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">WorldOverview</span></code></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_world">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_world</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.World" title="tibiapy.models.World"><span class="pre">World</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_world" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a world from Tibia.com.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A response containing the world’s information if found, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.models.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="tibiapy.Client.fetch_cm_post_archive">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_cm_post_archive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.11)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.11)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CMPostArchive" title="tibiapy.models.CMPostArchive"><span class="pre">CMPostArchive</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_cm_post_archive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_cm_post_archive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch the CM post archive.</p>
@@ -727,33 +805,6 @@ Note that if a session is passed, the SOCKS proxy won’t be used and must be ap
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_character">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_character</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_character"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_character" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch a character by its name from Tibia.com.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the character.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A response containing the character, if found.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">Character</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="tibiapy.Client.fetch_guild">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_guild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_guild"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_guild" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a guild by its name from Tibia.com.</p>
@@ -936,33 +987,6 @@ guild doesn’t exist.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_world">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_world</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_world" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch a world from Tibia.com.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the world.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A response containig the he world’s information if found, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> otherwise.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="tibiapy.Client.fetch_world_houses">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_world_houses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">town</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">house_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">HouseType.HOUSE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world_houses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_world_houses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch the house list of a world and type.</p>
@@ -1017,30 +1041,6 @@ If the world attribute is set, but the list is empty, it just means the world ha
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">GuildsSection</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_world_list">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_world_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_world_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_world_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch the world overview information from Tibia.com.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A response containing the world overview information.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">WorldOverview</span></code></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -2785,7 +2785,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3260,7 +3260,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3472,7 +3472,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3661,7 +3661,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3872,7 +3872,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4021,7 +4021,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4299,7 +4299,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4495,7 +4495,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4853,7 +4853,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5052,7 +5052,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5147,7 +5147,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5211,7 +5211,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5309,7 +5309,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6101,7 +6101,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6234,7 +6234,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6661,7 +6661,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6917,7 +6917,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -7340,7 +7340,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -9718,7 +9718,7 @@ They cannot be replied to, and they show no view counts.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17061,7 +17061,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17114,7 +17114,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17177,7 +17177,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17228,7 +17228,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17547,7 +17547,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f3cd9632a60&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -19272,7 +19272,7 @@ result in the response being for the current month and year instead.</p>
     </div>
   <div class="footer">
     &copy; Copyright 2023, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.0.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.1.
   </div>
   
   </body>
