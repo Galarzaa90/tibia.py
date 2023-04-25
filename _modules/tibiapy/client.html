@@ -58,7 +58,7 @@
 
 <span class="kn">import</span> <span class="nn">tibiapy</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> \
-    <span class="n">NewsType</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">NumericEnum</span><span class="p">,</span> <span class="n">BazaarType</span>
+    <span class="n">NewsType</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">NumericEnum</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">SpellVocationFilter</span><span class="p">,</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellSorting</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">Character</span><span class="p">,</span> <span class="n">SpellsSection</span><span class="p">,</span> <span class="n">Spell</span><span class="p">,</span> <span class="n">Leaderboard</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">HousesSection</span><span class="p">,</span> \
     <span class="n">Highscores</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">GuildWars</span><span class="p">,</span> <span class="n">GuildsSection</span><span class="p">,</span> <span class="n">CMPostArchive</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="p">,</span> <span class="n">ForumBoard</span><span class="p">,</span> <span class="n">ForumThread</span><span class="p">,</span> <span class="n">ForumAnnouncement</span><span class="p">,</span> \
@@ -274,11 +274,11 @@
                 <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="k">return</span> <span class="n">response</span>
         <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
         <span class="k">except</span> <span class="n">aiohttp_socks</span><span class="o">.</span><span class="n">SocksConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aiohttp_socks.SocksConnectionError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aiohttp_socks.SocksConnectionError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
         <span class="k">except</span> <span class="ne">UnicodeDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;UnicodeDecodeError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;UnicodeDecodeError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_fetch_all_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">,</span> <span class="n">paginator</span><span class="p">:</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">item_type</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch all the pages of an auction paginator.</span>
@@ -298,6 +298,7 @@
         <span class="k">while</span> <span class="n">current_page</span> <span class="o">&lt;=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">total_pages</span><span class="p">:</span>
             <span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_ajax_page</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">item_type</span><span class="p">,</span> <span class="n">current_page</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
+                <span class="c1"># noinspection PyProtectedMember</span>
                 <span class="n">entries</span> <span class="o">=</span> <span class="n">AuctionParser</span><span class="o">.</span><span class="n">_parse_page_items</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">paginator</span><span class="p">)</span>
                 <span class="n">paginator</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span>
             <span class="n">current_page</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -415,8 +416,9 @@
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="n">get_news_archive_url</span><span class="p">(),</span> <span class="n">form_data</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">NewsArchiveParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.fetch_recent_news"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_recent_news">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_recent_news</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">categories</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                                <span class="n">types</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">NewsArchive</span><span class="p">]:</span>
+<div class="viewcode-block" id="Client.fetch_news_archive_by_days"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_news_archive_by_days">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news_archive_by_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">categories</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                         <span class="n">types</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span>
+        <span class="n">NewsArchive</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch all the published news in the last specified days.</span>
 
 <span class="sd">        This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.</span>
@@ -521,7 +523,7 @@
 
     <span class="c1"># region Library</span>
 
-<div class="viewcode-block" id="Client.fetch_library_creatures"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_library_creatures">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_library_creatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CreaturesSection</span><span class="p">]:</span>
+<div class="viewcode-block" id="Client.fetch_creatures"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_creatures">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_creatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CreaturesSection</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the creatures from the library section.</span>
 
 <span class="sd">        .. versionadded:: 4.0.0</span>
@@ -574,6 +576,94 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_creature_url</span><span class="p">(</span><span class="n">identifier</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">CreatureParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_boostable_bosses"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boostable_bosses">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boostable_bosses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">BoostableBosses</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the boostable bosses from the library section.</span>
+
+<span class="sd">        .. versionadded:: 4.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`,BoostableBosses`</span>
+<span class="sd">            The creature&#39;s section in Tibia.com</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_boostable_bosses_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">BoostableBossesParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_spells"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_spells">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_spells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">vocation</span><span class="p">:</span> <span class="n">SpellVocationFilter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">SpellGroup</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="n">spell_type</span><span class="p">:</span> <span class="n">SpellType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">premium</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="n">sort</span><span class="p">:</span> <span class="n">SpellSorting</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">SpellsSection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the spells section.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        vocation: :class:`.SpellVocationFilter`, optional</span>
+<span class="sd">            The vocation to filter in spells for.</span>
+<span class="sd">        group: :class:`.SpellGroup`, optional</span>
+<span class="sd">            The spell&#39;s primary cooldown group.</span>
+<span class="sd">        spell_type: :class:`.SpellType`, optional</span>
+<span class="sd">            The type of spells to show.</span>
+<span class="sd">        premium: :class:`bool`, optional</span>
+<span class="sd">            The type of premium requirement to filter. :obj:`None` means any premium requirement.</span>
+<span class="sd">        sort: :class:`.SpellSorting`, optional</span>
+<span class="sd">            The field to sort spells by.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`SpellsSection`</span>
+<span class="sd">            The spells section with the results.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_spells_section_url</span><span class="p">(</span><span class="n">vocation</span><span class="o">=</span><span class="n">vocation</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
+                                                                     <span class="n">spell_type</span><span class="o">=</span><span class="n">spell_type</span><span class="p">,</span> <span class="n">premium</span><span class="o">=</span><span class="n">premium</span><span class="p">,</span>
+                                                                     <span class="n">sort</span><span class="o">=</span><span class="n">sort</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">SpellsSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_spell"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_spell">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_spell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Spell</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a spell by its identifier.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        identifier: :class:`str`</span>
+<span class="sd">            The spell&#39;s identifier. This is usually the name of the spell in lowercase and with no spaces.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`.Spell`</span>
+<span class="sd">            The spell if found, :obj:`None` otherwise.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_spell_url</span><span class="p">(</span><span class="n">identifier</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">SpellParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
 
     <span class="c1"># endregion</span>
 
@@ -937,35 +1027,6 @@
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_news_archive_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBossesParser</span><span class="o">.</span><span class="n">boosted_boss_from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_library_bosses"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_library_bosses">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_library_bosses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the bosses from the library section.</span>
-
-<span class="sd">        .. versionadded:: 4.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`BoostableBosses`</span>
-<span class="sd">            The creature&#39;s section in Tibia.com</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_boostable_bosses_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBossesParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
@@ -1344,75 +1405,6 @@
         <span class="n">world_overview</span> <span class="o">=</span> <span class="n">WorldOverviewParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">world_overview</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-    <span class="c1"># endregion</span>
-
-    <span class="c1"># region Spells</span>
-<div class="viewcode-block" id="Client.fetch_spells"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_spells">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_spells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spell_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">premium</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the spells section.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        vocation: :class:`SpellVocationFilter`, optional</span>
-<span class="sd">            The vocation to filter in spells for.</span>
-<span class="sd">        group: :class:`SpellGroup`, optional</span>
-<span class="sd">            The spell&#39;s primary cooldown group.</span>
-<span class="sd">        spell_type: :class:`SpellType`, optional</span>
-<span class="sd">            The type of spells to show.</span>
-<span class="sd">        premium: :class:`bool`, optional</span>
-<span class="sd">            The type of premium requirement to filter. :obj:`None` means any premium requirement.</span>
-<span class="sd">        sort: :class:`SpellSorting`, optional</span>
-<span class="sd">            The field to sort spells by.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`SpellsSection`</span>
-<span class="sd">            The spells section with the results.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_spells_section_url</span><span class="p">(</span><span class="n">vocation</span><span class="o">=</span><span class="n">vocation</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
-                                                                     <span class="n">spell_type</span><span class="o">=</span><span class="n">spell_type</span><span class="p">,</span> <span class="n">premium</span><span class="o">=</span><span class="n">premium</span><span class="p">,</span>
-                                                                     <span class="n">sort</span><span class="o">=</span><span class="n">sort</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">spells</span> <span class="o">=</span> <span class="n">SpellsSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">spells</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_spell"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_spell">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_spell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a spell by its identifier.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        identifier: :class:`str`</span>
-<span class="sd">            The spell&#39;s identifier. This is usually the name of the spell in lowercase and with no spaces.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`Spell`</span>
-<span class="sd">            The spell if found, :obj:`None` otherwise.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_spell_url</span><span class="p">(</span><span class="n">identifier</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">spells</span> <span class="o">=</span> <span class="n">SpellParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">spells</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
     <span class="c1"># endregion</span>
 

@@ -170,8 +170,8 @@ Note that if a session is passed, the SOCKS proxy won’t be used and must be ap
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_recent_news">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_recent_news</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.NewsCategory" title="tibiapy.enums.NewsCategory"><span class="pre">NewsCategory</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.NewsType" title="tibiapy.enums.NewsType"><span class="pre">NewsType</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.NewsArchive" title="tibiapy.models.NewsArchive"><span class="pre">NewsArchive</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_recent_news"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_recent_news" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_news_archive_by_days">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_news_archive_by_days</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.NewsCategory" title="tibiapy.enums.NewsCategory"><span class="pre">NewsCategory</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.NewsType" title="tibiapy.enums.NewsType"><span class="pre">NewsType</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.NewsArchive" title="tibiapy.models.NewsArchive"><span class="pre">NewsArchive</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_news_archive_by_days"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_news_archive_by_days" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch all the published news in the last specified days.</p>
 <p>This is a shortcut for <a class="reference internal" href="#tibiapy.Client.fetch_news_archive" title="tibiapy.Client.fetch_news_archive"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetch_news_archive()</span></code></a>, to handle dates more easily.</p>
 <div class="versionchanged">
@@ -263,8 +263,8 @@ Note that if a session is passed, the SOCKS proxy won’t be used and must be ap
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_library_creatures">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_library_creatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CreaturesSection" title="tibiapy.models.CreaturesSection"><span class="pre">CreaturesSection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_library_creatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_library_creatures" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_creatures">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_creatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CreaturesSection" title="tibiapy.models.CreaturesSection"><span class="pre">CreaturesSection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_creatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_creatures" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch the creatures from the library section.</p>
 <div class="versionadded">
 <p><span class="versionmodified added">New in version 4.0.0.</span></p>
@@ -308,6 +308,90 @@ Note that if a session is passed, the SOCKS proxy won’t be used and must be ap
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.Creature" title="tibiapy.models.Creature"><code class="xref py py-class docutils literal notranslate"><span class="pre">Creature</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_boostable_bosses">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_boostable_bosses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.BoostableBosses" title="tibiapy.models.BoostableBosses"><span class="pre">BoostableBosses</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_boostable_bosses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_boostable_bosses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the boostable bosses from the library section.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 4.0.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The creature’s section in Tibia.com</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">,BoostableBosses</span></code></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_spells">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_spells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tibiapy.SpellVocationFilter" title="tibiapy.enums.SpellVocationFilter"><span class="pre">SpellVocationFilter</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tibiapy.SpellGroup" title="tibiapy.enums.SpellGroup"><span class="pre">SpellGroup</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spell_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tibiapy.SpellType" title="tibiapy.enums.SpellType"><span class="pre">SpellType</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">premium</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tibiapy.SpellSorting" title="tibiapy.enums.SpellSorting"><span class="pre">SpellSorting</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.SpellsSection" title="tibiapy.models.SpellsSection"><span class="pre">SpellsSection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_spells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_spells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the spells section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vocation</strong> (<a class="reference internal" href="#tibiapy.SpellVocationFilter" title="tibiapy.SpellVocationFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpellVocationFilter</span></code></a>, optional) – The vocation to filter in spells for.</p></li>
+<li><p><strong>group</strong> (<a class="reference internal" href="#tibiapy.SpellGroup" title="tibiapy.SpellGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpellGroup</span></code></a>, optional) – The spell’s primary cooldown group.</p></li>
+<li><p><strong>spell_type</strong> (<a class="reference internal" href="#tibiapy.SpellType" title="tibiapy.SpellType"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpellType</span></code></a>, optional) – The type of spells to show.</p></li>
+<li><p><strong>premium</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – The type of premium requirement to filter. <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> means any premium requirement.</p></li>
+<li><p><strong>sort</strong> (<a class="reference internal" href="#tibiapy.SpellSorting" title="tibiapy.SpellSorting"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpellSorting</span></code></a>, optional) – The field to sort spells by.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The spells section with the results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">SpellsSection</span></code></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_spell">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_spell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.Spell" title="tibiapy.models.Spell"><span class="pre">Spell</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_spell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_spell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a spell by its identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The spell’s identifier. This is usually the name of the spell in lowercase and with no spaces.</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The spell if found, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.Spell" title="tibiapy.models.Spell"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spell</span></code></a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -643,33 +727,6 @@ Note that if a session is passed, the SOCKS proxy won’t be used and must be ap
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_library_bosses">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_library_bosses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_library_bosses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_library_bosses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch the bosses from the library section.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 4.0.0.</span></p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The creature’s section in Tibia.com</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">BoostableBosses</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="tibiapy.Client.fetch_character">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_character</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_character"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_character" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a character by its name from Tibia.com.</p>
@@ -984,63 +1041,6 @@ If the world attribute is set, but the list is empty, it just means the world ha
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">WorldOverview</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_spells">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_spells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spell_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">premium</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_spells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_spells" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch the spells section.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>vocation</strong> (<a class="reference internal" href="#tibiapy.SpellVocationFilter" title="tibiapy.SpellVocationFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpellVocationFilter</span></code></a>, optional) – The vocation to filter in spells for.</p></li>
-<li><p><strong>group</strong> (<a class="reference internal" href="#tibiapy.SpellGroup" title="tibiapy.SpellGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpellGroup</span></code></a>, optional) – The spell’s primary cooldown group.</p></li>
-<li><p><strong>spell_type</strong> (<a class="reference internal" href="#tibiapy.SpellType" title="tibiapy.SpellType"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpellType</span></code></a>, optional) – The type of spells to show.</p></li>
-<li><p><strong>premium</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – The type of premium requirement to filter. <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> means any premium requirement.</p></li>
-<li><p><strong>sort</strong> (<a class="reference internal" href="#tibiapy.SpellSorting" title="tibiapy.SpellSorting"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpellSorting</span></code></a>, optional) – The field to sort spells by.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The spells section with the results.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">SpellsSection</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_spell">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_spell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_spell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_spell" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch a spell by its identifier.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The spell’s identifier. This is usually the name of the spell in lowercase and with no spaces.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The spell if found, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> otherwise.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">Spell</span></code></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -2785,7 +2785,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3260,7 +3260,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3472,7 +3472,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3661,7 +3661,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3872,7 +3872,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4021,7 +4021,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4299,7 +4299,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4495,7 +4495,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4853,7 +4853,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5052,7 +5052,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5147,7 +5147,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5211,7 +5211,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5309,7 +5309,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6101,7 +6101,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6234,7 +6234,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6661,7 +6661,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6917,7 +6917,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -7340,7 +7340,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -9718,7 +9718,7 @@ They cannot be replied to, and they show no view counts.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17061,7 +17061,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17114,7 +17114,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17177,7 +17177,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17228,7 +17228,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17547,7 +17547,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f0f1ee57ee0&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
