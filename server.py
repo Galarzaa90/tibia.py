@@ -48,7 +48,7 @@ async def get_news_archive_by_days(
         types: Set[NewsType] = Query(None, alias="type"),
         categories: Set[NewsCategory] = Query(None, alias="category"),
 ):
-    return await app.state.client.fetch_recent_news(days, categories, types)
+    return await app.state.client.fetch_news_archive_by_days(days, categories, types)
 
 
 @app.get("/news/{news_id}")
@@ -70,14 +70,41 @@ async def get_events_schedule(
 
 # region Library
 
-@app.get("/creatures")
+@app.get("/library/creatures")
 async def get_creatures():
-    return await app.state.client.fetch_library_creatures()
+    return await app.state.client.fetch_creatures()
 
 
-@app.get("/creatures/{identifier}")
+@app.get("/library/creatures/{identifier}")
 async def get_creature(identifier: str = Path(...)):
     return await app.state.client.fetch_creature(identifier)
+
+
+@app.get("/library/bosses")
+async def get_bosses():
+    return await app.state.client.fetch_boostable_bosses()
+
+
+@app.get("/library/spells")
+async def get_spells(
+        vocation: SpellVocationFilter = Query(None),
+        group: SpellGroup = Query(None),
+        type: SpellType = Query(None),
+        premium: bool = Query(None),
+        sort: SpellSorting = Query(None),
+) -> TibiaResponse[SpellsSection]:
+    return await app.state.client.fetch_spells(vocation=vocation, group=group, spell_type=type, premium=premium,
+                                               sort=sort)
+
+
+@app.get("/library/spells/{identifier}")
+async def get_spell(
+        identifier: str = Path(...)
+) -> TibiaResponse[Optional[Spell]]:
+    return await app.state.client.fetch_spell(identifier)
+
+
+# endregion
 
 
 @app.get("/cmposts/{start_date}/{end_date}")
@@ -119,11 +146,6 @@ async def get_character(
 @app.get("/creatures/boosted")
 async def get_boosted_creature():
     return await app.state.client.fetch_boosted_creature()
-
-
-@app.get("/bosses")
-async def get_bosses():
-    return await app.state.client.fetch_library_bosses()
 
 
 @app.get("/bosses/boosted")
@@ -244,25 +266,6 @@ async def get_leaderboards(
         world: str = Path(...)
 ):
     return await app.state.client.fetch_leaderboard(world=world)
-
-
-@app.get("/spells")
-async def get_spells(
-        vocation: SpellVocationFilter = Query(None),
-        group: SpellGroup = Query(None),
-        type: SpellType = Query(None),
-        premium: bool = Query(None),
-        sort: SpellSorting = Query(None),
-) -> TibiaResponse[SpellsSection]:
-    return await app.state.client.fetch_spells(vocation=vocation, group=group, spell_type=type, premium=premium,
-                                               sort=sort)
-
-
-@app.get("/spells/{identifier}")
-async def get_spell(
-        identifier: str = Path(...)
-) -> TibiaResponse[Optional[Spell]]:
-    return await app.state.client.fetch_spell(identifier)
 
 
 @app.get("/worlds")

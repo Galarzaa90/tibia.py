@@ -98,7 +98,7 @@ async def get_auction(request: web.Request):
 
 @routes.get('/creatures')
 async def get_library_creatures(request: web.Request):
-    response = await app["tibiapy"].fetch_library_creatures()
+    response = await app["tibiapy"].fetch_creatures()
     return json_response(response)
 
 
@@ -122,7 +122,7 @@ async def get_boosted_creatures(request: web.Request):
 
 @routes.get('/bosses')
 async def get_library_bosses(request: web.Request):
-    response = await app["tibiapy"].fetch_library_bosses()
+    response = await app["tibiapy"].fetch_boostable_bosses()
     return json_response(response)
 
 
@@ -330,7 +330,7 @@ async def get_recent_news(request: web.Request):
         days = int(days)
     else:
         days = 30
-    response = await app["tibiapy"].fetch_recent_news(days)
+    response = await app["tibiapy"].fetch_news_archive_by_days(days)
     return json_response(response)
 
 

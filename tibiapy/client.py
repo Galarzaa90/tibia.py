@@ -12,7 +12,7 @@ from pydantic.generics import GenericModel
 
 import tibiapy
 from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HouseType, NewsCategory, \
-    NewsType, HighscoresProfession, NumericEnum, BazaarType
+    NewsType, HighscoresProfession, NumericEnum, BazaarType, SpellVocationFilter, SpellGroup, SpellType, SpellSorting
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
@@ -228,11 +228,11 @@ class Client:
                 response.content = await resp.text()
                 return response
         except aiohttp.ClientError as e:
-            raise NetworkError(f"aiohttp.ClientError: {e}", e, time.perf_counter() - init_time)
+            raise NetworkError(f"aiohttp.ClientError: {e}", e, time.perf_counter() - init_time) from e
         except aiohttp_socks.SocksConnectionError as e:
-            raise NetworkError(f"aiohttp_socks.SocksConnectionError: {e}", e, time.perf_counter() - init_time)
+            raise NetworkError(f"aiohttp_socks.SocksConnectionError: {e}", e, time.perf_counter() - init_time) from e
         except UnicodeDecodeError as e:
-            raise NetworkError(f'UnicodeDecodeError: {e}', e, time.perf_counter() - init_time)
+            raise NetworkError(f'UnicodeDecodeError: {e}', e, time.perf_counter() - init_time) from e
 
     async def _fetch_all_pages(self, auction_id, paginator: AjaxPaginator, item_type, *, test=False):
         """Fetch all the pages of an auction paginator.
@@ -252,6 +252,7 @@ class Client:
         while current_page <= paginator.total_pages:
             content = await self._fetch_ajax_page(auction_id, item_type, current_page, test=test)
             if content:
+                # noinspection PyProtectedMember
                 entries = AuctionParser._parse_page_items(content, paginator)
                 paginator.entries.extend(entries)
             current_page += 1
@@ -369,8 +370,9 @@ class Client:
         response = await self._request("POST", get_news_archive_url(), form_data, test=test)
         return response.parse(NewsArchiveParser.from_content)
 
-    async def fetch_recent_news(self, days=30, categories: Collection[NewsCategory] = None,
-                                types: Collection[NewsType] = None, *, test=False) -> TibiaResponse[NewsArchive]:
+    async def fetch_news_archive_by_days(self, days=30, categories: Collection[NewsCategory] = None,
+                                         types: Collection[NewsType] = None, *, test=False) -> TibiaResponse[
+        NewsArchive]:
         """Fetch all the published news in the last specified days.
 
         This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.
@@ -475,7 +477,7 @@ class Client:
 
     # region Library
 
-    async def fetch_library_creatures(self, *, test=False) -> TibiaResponse[CreaturesSection]:
+    async def fetch_creatures(self, *, test=False) -> TibiaResponse[CreaturesSection]:
         """Fetch the creatures from the library section.
 
         .. versionadded:: 4.0.0
@@ -528,6 +530,94 @@ class Client:
         """
         response = await self._request("GET", get_creature_url(identifier), test=test)
         return response.parse(CreatureParser.from_content)
+
+    async def fetch_boostable_bosses(self, *, test=False) -> TibiaResponse[BoostableBosses]:
+        """Fetch the boostable bosses from the library section.
+
+        .. versionadded:: 4.0.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`,BoostableBosses`
+            The creature's section in Tibia.com
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_boostable_bosses_url(), test=test)
+        return response.parse(BoostableBossesParser.from_content)
+
+    async def fetch_spells(self, *, vocation: SpellVocationFilter = None, group: SpellGroup = None,
+                           spell_type: SpellType = None, premium: bool = None,
+                           sort: SpellSorting = None, test=False) -> TibiaResponse[SpellsSection]:
+        """Fetch the spells section.
+
+        Parameters
+        ----------
+        vocation: :class:`.SpellVocationFilter`, optional
+            The vocation to filter in spells for.
+        group: :class:`.SpellGroup`, optional
+            The spell's primary cooldown group.
+        spell_type: :class:`.SpellType`, optional
+            The type of spells to show.
+        premium: :class:`bool`, optional
+            The type of premium requirement to filter. :obj:`None` means any premium requirement.
+        sort: :class:`.SpellSorting`, optional
+            The field to sort spells by.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`SpellsSection`
+            The spells section with the results.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_spells_section_url(vocation=vocation, group=group,
+                                                                     spell_type=spell_type, premium=premium,
+                                                                     sort=sort), test=test)
+        return response.parse(SpellsSectionParser.from_content)
+
+    async def fetch_spell(self, identifier: str, *, test=False) -> TibiaResponse[Optional[Spell]]:
+        """Fetch a spell by its identifier.
+
+        Parameters
+        ----------
+        identifier: :class:`str`
+            The spell's identifier. This is usually the name of the spell in lowercase and with no spaces.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`.Spell`
+            The spell if found, :obj:`None` otherwise.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_spell_url(identifier), test=test)
+        return response.parse(SpellParser.from_content)
 
     # endregion
 
@@ -891,35 +981,6 @@ class Client:
         response = await self._request("GET", get_news_archive_url(), test=test)
         start_time = time.perf_counter()
         boosted_creature = BoostableBossesParser.boosted_boss_from_header(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
-
-    async def fetch_library_bosses(self, *, test=False):
-        """Fetch the bosses from the library section.
-
-        .. versionadded:: 4.0.0
-
-        Parameters
-        ----------
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`BoostableBosses`
-            The creature's section in Tibia.com
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_boostable_bosses_url(), test=test)
-        start_time = time.perf_counter()
-        boosted_creature = BoostableBossesParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
 
@@ -1298,75 +1359,6 @@ class Client:
         world_overview = WorldOverviewParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, world_overview, parsing_time)
-
-    # endregion
-
-    # region Spells
-    async def fetch_spells(self, *, vocation=None, group=None, spell_type=None, premium=None, sort=None, test=False):
-        """Fetch the spells section.
-
-        Parameters
-        ----------
-        vocation: :class:`SpellVocationFilter`, optional
-            The vocation to filter in spells for.
-        group: :class:`SpellGroup`, optional
-            The spell's primary cooldown group.
-        spell_type: :class:`SpellType`, optional
-            The type of spells to show.
-        premium: :class:`bool`, optional
-            The type of premium requirement to filter. :obj:`None` means any premium requirement.
-        sort: :class:`SpellSorting`, optional
-            The field to sort spells by.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`SpellsSection`
-            The spells section with the results.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_spells_section_url(vocation=vocation, group=group,
-                                                                     spell_type=spell_type, premium=premium,
-                                                                     sort=sort), test=test)
-        start_time = time.perf_counter()
-        spells = SpellsSectionParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, spells, parsing_time)
-
-    async def fetch_spell(self, identifier, *, test=False):
-        """Fetch a spell by its identifier.
-
-        Parameters
-        ----------
-        identifier: :class:`str`
-            The spell's identifier. This is usually the name of the spell in lowercase and with no spaces.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`Spell`
-            The spell if found, :obj:`None` otherwise.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_spell_url(identifier), test=test)
-        start_time = time.perf_counter()
-        spells = SpellParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, spells, parsing_time)
 
     # endregion
 

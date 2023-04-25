@@ -63,7 +63,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
 
         mock.post(get_news_archive_url(), exception=aiohttp.ClientOSError())
         with self.assertRaises(NetworkError):
-            await self.client.fetch_recent_news(30)
+            await self.client.fetch_news_archive_by_days(30)
 
     @aioresponses()
     async def test_client_fetch_character(self, mock):
@@ -156,7 +156,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
         """Testing fetching recent nows"""
         content = self.load_resource(FILE_NEWS_ARCHIVE_RESULTS)
         mock.post(get_news_archive_url(), status=200, body=content)
-        recent_news = await self.client.fetch_recent_news(30)
+        recent_news = await self.client.fetch_news_archive_by_days(30)
 
         self.assertIsInstance(recent_news.data, NewsArchive)
         self.assertIsInstance(recent_news.data.entries[0], NewsEntry)

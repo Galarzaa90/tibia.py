@@ -2,7 +2,7 @@
 import logging
 import re
 import urllib.parse
-from typing import Dict, Type
+from typing import Dict
 
 import bs4
 
@@ -608,7 +608,7 @@ class AuctionParser:
         return familiar
 
     @classmethod
-    def _parse_page_items(cls, content, paginator: Type[AjaxPaginator]):
+    def _parse_page_items(cls, content, paginator: AjaxPaginator):
         parsed_content = parse_tibiacom_content(content, builder='html5lib')
         item_boxes = parsed_content.select("div.CVIcon")
         entries = []
