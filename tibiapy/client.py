@@ -4,7 +4,7 @@ import datetime
 import json
 import logging
 import time
-from typing import TypeVar, Generic, Optional
+from typing import TypeVar, Generic, Optional, Callable, Collection
 
 import aiohttp
 import aiohttp_socks
@@ -17,7 +17,7 @@ from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
     CharacterBazaar, Auction, AuctionFilters
-from tibiapy.models.creature import BoostedCreatures, BoostableBosses, CreaturesSection, Creature
+from tibiapy.models.creature import BoostedCreatures, BoostableBosses, CreaturesSection, Creature, CreatureEntry
 from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.pagination import AjaxPaginator
@@ -48,7 +48,6 @@ __all__ = (
     "TibiaResponse",
     "Client",
 )
-
 
 # Tibia.com's cache for the community section is 5 minutes.
 # This limit is not sent anywhere, so there's no way to automate it.
@@ -87,7 +86,7 @@ class TibiaResponse(GenericModel, Generic[T]):
     def seconds_left(self):
         """:class:`int`: The time left in seconds for this response's cache to expire."""
         return self.time_left.seconds
-    
+
     @classmethod
     def from_raw(cls, raw_response, data: T, parsing_time=None):
         return cls(
@@ -103,21 +102,26 @@ class TibiaResponse(GenericModel, Generic[T]):
         json_encoders = {NumericEnum: lambda g: g.name}
 
 
-class RawResponse:
+class _RawResponse:
     def __init__(self, response: aiohttp.ClientResponse, fetching_time: float):
         self.timestamp = datetime.datetime.now(datetime.timezone.utc)
         self.fetching_time = fetching_time
+        self.url = response.url
         self.cached = response.headers.get("CF-Cache-Status") == "HIT"
         age = response.headers.get("Age")
-        if age is not None and age.isnumeric():
-            self.age = int(age)
-        else:
-            self.age = 0
+        self.age = int(age) if age is not None and age.isnumeric() else 0
         self.content = None
 
     def __repr__(self):
         return f"<{self.__class__.__name__} timestamp={self.timestamp!r} fetching_time={self.fetching_time!r} " \
                f"cached={self.cached!r} age={self.age!r}>"
+
+    def parse(self, parser: Callable[[str], T]) -> TibiaResponse[T]:
+        start_time = time.perf_counter()
+        data = parser(self.content)
+        parsing_time = time.perf_counter() - start_time
+        log.info("%s | PARSE | %dms", self.url, int(parsing_time * 1000))
+        return TibiaResponse.from_raw(self, data, parsing_time)
 
 
 class Client:
@@ -158,7 +162,7 @@ class Client:
     async def _initialize_session(self, proxy_url=None):
         """Initialize the aiohttp session object."""
         headers = {
-            'User-Agent': "Tibia.py/%s (+https://github.com/Galarzaa90/tibia.py)" % tibiapy.__version__,
+            'User-Agent': f"Tibia.py/{tibiapy.__version__} (+https://github.com/Galarzaa90/tibia.py)",
             'Accept-Encoding': "deflate, gzip",
         }
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
@@ -197,7 +201,7 @@ class Client:
 
         Returns
         -------
-        :class:`RawResponse`
+        :class:`_RawResponse`
             The raw response obtained from the server.
 
         Raises
@@ -214,13 +218,13 @@ class Client:
         init_time = time.perf_counter()
         try:
             async with self.session.request(method, url, data=data, headers=headers) as resp:
-                diff_time = time.perf_counter()-init_time
+                diff_time = time.perf_counter() - init_time
                 if "maintenance.tibia.com" in str(resp.url):
                     log.info("%s | %s | %s %s | maintenance.tibia.com", url, resp.method, resp.status, resp.reason)
                     raise SiteMaintenanceError("Tibia.com is down for maintenance.")
                 log.info("%s | %s | %s %s | %dms", url, resp.method, resp.status, resp.reason, int(diff_time * 1000))
                 self._handle_status(resp.status, diff_time)
-                response = RawResponse(resp, diff_time)
+                response = _RawResponse(resp, diff_time)
                 response.content = await resp.text()
                 return response
         except aiohttp.ClientError as e:
@@ -290,64 +294,24 @@ class Client:
 
     # endregion
 
-    # region Bazaar
-    async def fetch_current_auctions(self, page: int = 1, filters: AuctionFilters = None, *,
-                                     test=False) -> TibiaResponse[CharacterBazaar]:
-        """Fetch the current auctions in the bazaar.
+    # region Front Page
 
-        .. versionadded:: 3.3.0
+    async def fetch_boosted_creature(self, *, test=False) -> TibiaResponse[CreatureEntry]:
+        """Fetch today's boosted creature.
 
-        Parameters
-        ----------
-        page: :class:`int`
-            The desired page to display.
-        filters: :class:`.AuctionFilters`
-            The filtering criteria to use.
-        test: :class:`bool`
-            Whether to fetch from the test website or not.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`CharacterBazaar`
-            The current auctions.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        ValueError
-            If the page number is not 1 or greater.
-        """
-        if page <= 0:
-            raise ValueError('page must be 1 or greater.')
-        response = await self._request("GET", get_bazaar_url(BazaarType.CURRENT, page, filters), test=test)
-        start_time = time.perf_counter()
-        current_auctions = CharacterBazaarParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, current_auctions, parsing_time)
-
-    async def fetch_auction_history(self, page: int = 1, filters: AuctionFilters = None, *,
-                                    test=False) -> TibiaResponse[CharacterBazaar]:
-        """Fetch the auction history of the bazaar.
-
-        .. versionadded:: 3.3.0
+        .. versionadded:: 2.1.0
+        .. versionchanged:: 4.0.0
+            The return type of the data returned was changed to :class:`CreatureEntry`, previous type was removed.
 
         Parameters
         ----------
-        page: :class:`int`
-            The page to display.
-        filters: :class:`AuctionFilters`
-            The filtering criteria to use.
         test: :class:`bool`
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`CharacterBazaar`
-            The character bazaar containing the auction history.
+        :class:`TibiaResponse` of :class:`.CreatureEntry`
+            The boosted creature of the day.
 
         Raises
         ------
@@ -356,47 +320,141 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
-        ValueError
-            If the page number is not 1 or greater.
         """
-        if page <= 0:
-            raise ValueError('page must be 1 or greater.')
-        response = await self._request("GET", get_bazaar_url(BazaarType.HISTORY, page, filters), test=test)
-        start_time = time.perf_counter()
-        auction_history = CharacterBazaarParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, auction_history, parsing_time)
+        response = await self._request("GET", get_news_archive_url(), test=test)
+        return response.parse(CreaturesSectionParser.boosted_creature_from_header)
 
-    async def fetch_auction(self, auction_id: int, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
-                            fetch_familiars=False, skip_details=False, test=False) -> TibiaResponse[Optional[Auction]]:
-        """Fetch an auction by its ID.
+    # endregion
 
-        .. versionadded:: 3.3.0
+    # region News
+    async def fetch_news_archive(self, start_date: datetime.date, end_date: datetime.date,
+                                 categories: Collection[NewsCategory] = None, types: Collection[NewsType] = None,
+                                 *, test=False) -> TibiaResponse[NewsArchive]:
+        """Fetch news from the archive meeting the search criteria.
+
+        .. versionchanged:: 5.0.0
+            The data attribute of the response contains an instance of :class:`NewsArchive` instead.
 
         Parameters
         ----------
-        auction_id: :class:`int`
-            The ID of the auction.
-        fetch_items: :class:`bool`
-            Whether to fetch all the character's items. By default, only the first page is fetched.
-        fetch_mounts: :class:`bool`
-            Whether to fetch all the character's mounts. By default, only the first page is fetched.
-        fetch_outfits: :class:`bool`
-            Whether to fetch all the character's outfits. By default, only the first page is fetched.
-        fetch_familiars: :class:`bool`
-            Whether to fetch all the character's outfits. By default, only the first page is fetched.
-        skip_details: :class:`bool`
-            Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
-
-            This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
-            parsing time.
+        start_date: :class:`datetime.date`
+            The beginning date to search dates in.
+        end_date: :class:`datetime.date`
+            The end date to search dates in.
+        categories: `list` of :class:`NewsCategory`
+            The allowed categories to show. If left blank, all categories will be searched.
+        types : `list` of :class:`NewsType`
+            The allowed news types to show. if unused, all types will be searched.
         test: :class:`bool`
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`Auction`
-            The auction matching the ID if found.
+        :class:`TibiaResponse` of :class:`.NewsArchive`
+            The news meeting the search criteria.
+
+        Raises
+        ------
+        ValueError:
+            If ``begin_date`` is more recent than ``to_date``.
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        if start_date > end_date:
+            raise ValueError("start_date can't be more recent than end_date")
+        form_data = NewsArchiveParser.get_form_data(start_date, end_date, categories, types)
+        response = await self._request("POST", get_news_archive_url(), form_data, test=test)
+        return response.parse(NewsArchiveParser.from_content)
+
+    async def fetch_recent_news(self, days=30, categories: Collection[NewsCategory] = None,
+                                types: Collection[NewsType] = None, *, test=False) -> TibiaResponse[NewsArchive]:
+        """Fetch all the published news in the last specified days.
+
+        This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.
+
+        .. versionchanged:: 5.0.0
+            The data attribute of the response contains an instance of :class:`NewsArchive` instead.
+
+        Parameters
+        ----------
+        days: :class:`int`
+            The number of days to search, by default 30.
+        categories: `list` of :class:`NewsCategory`
+            The allowed categories to show. If left blank, all categories will be searched.
+        types : `list` of :class:`NewsType`
+            The allowed news types to show. if unused, all types will be searched.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`.NewsArchive`
+            The news posted in the last specified days.
+
+        Raises
+        ------
+        ValueError:
+            If ``days`` is lesser than zero.
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        if days < 0:
+            raise ValueError("days must be zero or higher")
+        end = datetime.date.today()
+        begin = end - datetime.timedelta(days=days)
+        return await self.fetch_news_archive(begin, end, categories, types, test=test)
+
+    async def fetch_news(self, news_id: int, *, test=False) -> TibiaResponse[Optional[News]]:
+        """Fetch a news entry by its id from Tibia.com.
+
+        Parameters
+        ----------
+        news_id: :class:`int`
+            The ID of the news entry.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`.News`
+            The news entry if found, :obj:`None` otherwise.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_news_url(news_id), test=test)
+        return response.parse(lambda r: NewsParser.from_content(r, news_id))
+
+    async def fetch_event_schedule(self, month: int = None, year: int = None, *,
+                                   test=False) -> TibiaResponse[EventSchedule]:
+        """Fetch the event calendar. By default, it gets the events for the current month.
+
+        .. versionadded:: 3.0.0
+
+        Parameters
+        ----------
+        month: :class:`int`
+            The month of the events to display.
+        year: :class:`int`
+            The year of the events to display.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`EventSchedule`
+            The event calendar.
 
         Raises
         ------
@@ -406,27 +464,70 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         ValueError
-            If the auction id is not 1 or greater.
+            If only one of year or month are defined.
         """
-        if auction_id <= 0:
-            raise ValueError('auction_id must be 1 or greater.')
-        response = await self._request("GET", get_auction_url(auction_id), test=test)
-        start_time = time.perf_counter()
-        auction = AuctionParser.from_content(response.content, auction_id, skip_details)
-        parsing_time = time.perf_counter() - start_time
-        if auction and not skip_details:
-            if fetch_items:
-                await self._fetch_all_pages(auction_id, auction.details.items, 0, test=test)
-                await self._fetch_all_pages(auction_id, auction.details.store_items, 1, test=test)
-            if fetch_mounts:
-                await self._fetch_all_pages(auction_id, auction.details.mounts, 2, test=test)
-                await self._fetch_all_pages(auction_id, auction.details.store_mounts, 3, test=test)
-            if fetch_outfits:
-                await self._fetch_all_pages(auction_id, auction.details.outfits, 4, test=test)
-                await self._fetch_all_pages(auction_id, auction.details.store_outfits, 5, test=test)
-            if fetch_familiars:
-                await self._fetch_all_pages(auction_id, auction.details.outfits, 6, test=test)
-        return TibiaResponse.from_raw(response, auction, parsing_time)
+        if (year is None and month is not None) or (year is not None and month is None):
+            raise ValueError("both year and month must be defined or neither must be defined.")
+        response = await self._request("GET", get_event_schedule_url(month, year), test=test)
+        return response.parse(EventScheduleParser.from_content)
+
+    # endregion
+
+    # region Library
+
+    async def fetch_library_creatures(self, *, test=False) -> TibiaResponse[CreaturesSection]:
+        """Fetch the creatures from the library section.
+
+        .. versionadded:: 4.0.0
+
+        Parameters
+        ----------
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`.CreaturesSection`
+            The creature's section in Tibia.com
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_creatures_section_url(), test=test)
+        return response.parse(CreaturesSectionParser.from_content)
+
+    async def fetch_creature(self, identifier: str, *, test=False) -> TibiaResponse[Optional[Creature]]:
+        """Fetch a creature's information from the Tibia.com library.
+
+        .. versionadded:: 4.0.0
+
+        Parameters
+        ----------
+        identifier: :class:`str`
+            The internal name of the race.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`.Creature`
+            The creature's section in Tibia.com
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_creature_url(identifier), test=test)
+        return response.parse(CreatureParser.from_content)
 
     # endregion
 
@@ -467,47 +568,7 @@ class Client:
         if page <= 0:
             raise ValueError("page cannot be lower than 1.")
         response = await self._request("GET", get_cm_post_archive_url(start_date, end_date, page), test=test)
-        start_time = time.perf_counter()
-        cm_post_archive = CMPostArchiveParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, cm_post_archive, parsing_time)
-
-    async def fetch_event_schedule(self, month=None, year=None, *, test=False):
-        """Fetch the event calendar. By default, it gets the events for the current month.
-
-        .. versionadded:: 3.0.0
-
-        Parameters
-        ----------
-        month: :class:`int`
-            The month of the events to display.
-        year: :class:`int`
-            The year of the events to display.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`EventSchedule`
-            The event calendar.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        ValueError
-            If only one of year or month are defined.
-        """
-        if (year is None and month is not None) or (year is not None and month is None):
-            raise ValueError("both year and month must be defined or neither must be defined.")
-        response = await self._request("GET", get_event_schedule_url(month, year), test=test)
-        start_time = time.perf_counter()
-        calendar = EventScheduleParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, calendar, parsing_time)
+        return response.parse(CMPostArchiveParser.from_content)
 
     # region Forums
     async def fetch_forum_section(self, section_id: int, *, test=False):
@@ -864,100 +925,6 @@ class Client:
 
     # endregion
 
-    # region Creatures
-    async def fetch_boosted_creature(self, *, test=False):
-        """Fetch today's boosted creature.
-
-        .. versionadded:: 2.1.0
-        .. versionchanged:: 4.0.0
-            The return type of the data returned was changed to :class:`Creature`, previous type was removed.
-
-        Parameters
-        ----------
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`CreatureEntry`
-            The boosted creature of the day.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_news_archive_url(), test=test)
-        start_time = time.perf_counter()
-        boosted_creature = CreaturesSectionParser.boosted_creature_from_header(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
-
-    async def fetch_library_creatures(self, *, test=False):
-        """Fetch the creatures from the library section.
-
-        .. versionadded:: 4.0.0
-
-        Parameters
-        ----------
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`CreaturesSection`
-            The creature's section in Tibia.com
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_creatures_section_url(), test=test)
-        start_time = time.perf_counter()
-        boosted_creature = CreaturesSectionParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
-
-    async def fetch_creature(self, identifier, *, test=False):
-        """Fetch a creature's information from the Tibia.com library.
-
-        .. versionadded:: 4.0.0
-
-        Parameters
-        ----------
-        identifier: :class:`str`
-            The internal name of the race.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`Creature`
-            The creature's section in Tibia.com
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_creature_url(identifier), test=test)
-        start_time = time.perf_counter()
-        boosted_creature = CreatureParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, boosted_creature, parsing_time)
-
-    # endregion
-
     async def fetch_character(self, name, *, test=False):
         """Fetch a character by its name from Tibia.com.
 
@@ -1084,7 +1051,8 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, house, parsing_time)
 
-    async def fetch_highscores_page(self, world=None, category=HighscoresCategory.EXPERIENCE, vocation=HighscoresProfession.ALL, page=1,
+    async def fetch_highscores_page(self, world=None, category=HighscoresCategory.EXPERIENCE,
+                                    vocation=HighscoresProfession.ALL, page=1,
                                     battleye_type=None, pvp_types=None, *, test=False):
         """Fetch a single highscores page from Tibia.com.
 
@@ -1333,116 +1301,6 @@ class Client:
 
     # endregion
 
-    # region News
-    async def fetch_news_archive(self, start_date, end_date, categories=None, types=None, *, test=False):
-        """Fetch news from the archive meeting the search criteria.
-
-        .. versionchanged:: 5.0.0
-            The data attribute of the response contains an instance of :class:`NewsArchive` instead.
-
-        Parameters
-        ----------
-        start_date: :class:`datetime.date`
-            The beginning date to search dates in.
-        end_date: :class:`datetime.date`
-            The end date to search dates in.
-        categories: `list` of :class:`NewsCategory`
-            The allowed categories to show. If left blank, all categories will be searched.
-        types : `list` of :class:`NewsType`
-            The allowed news types to show. if unused, all types will be searched.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`NewsArchive`
-            The news meeting the search criteria.
-
-        Raises
-        ------
-        ValueError:
-            If ``begin_date`` is more recent than ``to_date``.
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        if start_date > end_date:
-            raise ValueError("start_date can't be more recent than end_date")
-        form_data = NewsArchiveParser.get_form_data(start_date, end_date, categories, types)
-        response = await self._request("POST", get_news_archive_url(), form_data, test=test)
-        start_time = time.perf_counter()
-        news = NewsArchiveParser.from_content(response.content)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, news, parsing_time)
-
-    async def fetch_recent_news(self, days=30, categories=None, types=None, *, test=False):
-        """Fetch all the published news in the last specified days.
-
-        This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.
-
-        .. versionchanged:: 5.0.0
-            The data attribute of the response contains an instance of :class:`NewsArchive` instead.
-
-        Parameters
-        ----------
-        days: :class:`int`
-            The number of days to search, by default 30.
-        categories: `list` of :class:`NewsCategory`
-            The allowed categories to show. If left blank, all categories will be searched.
-        types : `list` of :class:`NewsType`
-            The allowed news types to show. if unused, all types will be searched.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`NewsArchive`
-            The news posted in the last specified days.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        end = datetime.date.today()
-        begin = end - datetime.timedelta(days=days)
-        return await self.fetch_news_archive(begin, end, categories, types, test=test)
-
-    async def fetch_news(self, news_id, *, test=False):
-        """Fetch a news entry by its id from Tibia.com.
-
-        Parameters
-        ----------
-        news_id: :class:`int`
-            The id of the news entry.
-        test: :class:`bool`
-            Whether to request the test website instead.
-
-        Returns
-        -------
-        :class:`TibiaResponse` of :class:`News`
-            The news entry if found, :obj:`None` otherwise.
-
-        Raises
-        ------
-        Forbidden
-            If a 403 Forbidden error was returned.
-            This usually means that Tibia.com is rate-limiting the client because of too many requests.
-        NetworkError
-            If there's any connection errors during the request.
-        """
-        response = await self._request("GET", get_news_url(news_id), test=test)
-        start_time = time.perf_counter()
-        news = NewsParser.from_content(response.content, news_id)
-        parsing_time = time.perf_counter() - start_time
-        return TibiaResponse.from_raw(response, news, parsing_time)
-    # endregion
-
     # region Spells
     async def fetch_spells(self, *, vocation=None, group=None, spell_type=None, premium=None, sort=None, test=False):
         """Fetch the spells section.
@@ -1474,8 +1332,8 @@ class Client:
             If there's any connection errors during the request.
         """
         response = await self._request("GET", get_spells_section_url(vocation=vocation, group=group,
-                                                                    spell_type=spell_type, premium=premium,
-                                                                    sort=sort), test=test)
+                                                                     spell_type=spell_type, premium=premium,
+                                                                     sort=sort), test=test)
         start_time = time.perf_counter()
         spells = SpellsSectionParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
@@ -1509,4 +1367,145 @@ class Client:
         spells = SpellParser.from_content(response.content)
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, spells, parsing_time)
+
+    # endregion
+
+    # region Bazaar
+    async def fetch_current_auctions(self, page: int = 1, filters: AuctionFilters = None, *,
+                                     test=False) -> TibiaResponse[CharacterBazaar]:
+        """Fetch the current auctions in the bazaar.
+
+        .. versionadded:: 3.3.0
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The desired page to display.
+        filters: :class:`.AuctionFilters`
+            The filtering criteria to use.
+        test: :class:`bool`
+            Whether to fetch from the test website or not.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`CharacterBazaar`
+            The current auctions.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        ValueError
+            If the page number is not 1 or greater.
+        """
+        if page <= 0:
+            raise ValueError('page must be 1 or greater.')
+        response = await self._request("GET", get_bazaar_url(BazaarType.CURRENT, page, filters), test=test)
+        start_time = time.perf_counter()
+        current_auctions = CharacterBazaarParser.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse.from_raw(response, current_auctions, parsing_time)
+
+    async def fetch_auction_history(self, page: int = 1, filters: AuctionFilters = None, *,
+                                    test=False) -> TibiaResponse[CharacterBazaar]:
+        """Fetch the auction history of the bazaar.
+
+        .. versionadded:: 3.3.0
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The page to display.
+        filters: :class:`AuctionFilters`
+            The filtering criteria to use.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`CharacterBazaar`
+            The character bazaar containing the auction history.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        ValueError
+            If the page number is not 1 or greater.
+        """
+        if page <= 0:
+            raise ValueError('page must be 1 or greater.')
+        response = await self._request("GET", get_bazaar_url(BazaarType.HISTORY, page, filters), test=test)
+        start_time = time.perf_counter()
+        auction_history = CharacterBazaarParser.from_content(response.content)
+        parsing_time = time.perf_counter() - start_time
+        return TibiaResponse.from_raw(response, auction_history, parsing_time)
+
+    async def fetch_auction(self, auction_id: int, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
+                            fetch_familiars=False, skip_details=False, test=False) -> TibiaResponse[Optional[Auction]]:
+        """Fetch an auction by its ID.
+
+        .. versionadded:: 3.3.0
+
+        Parameters
+        ----------
+        auction_id: :class:`int`
+            The ID of the auction.
+        fetch_items: :class:`bool`
+            Whether to fetch all the character's items. By default, only the first page is fetched.
+        fetch_mounts: :class:`bool`
+            Whether to fetch all the character's mounts. By default, only the first page is fetched.
+        fetch_outfits: :class:`bool`
+            Whether to fetch all the character's outfits. By default, only the first page is fetched.
+        fetch_familiars: :class:`bool`
+            Whether to fetch all the character's outfits. By default, only the first page is fetched.
+        skip_details: :class:`bool`
+            Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
+
+            This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
+            parsing time.
+        test: :class:`bool`
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        :class:`TibiaResponse` of :class:`Auction`
+            The auction matching the ID if found.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        ValueError
+            If the auction id is not 1 or greater.
+        """
+        if auction_id <= 0:
+            raise ValueError('auction_id must be 1 or greater.')
+        response = await self._request("GET", get_auction_url(auction_id), test=test)
+        start_time = time.perf_counter()
+        auction = AuctionParser.from_content(response.content, auction_id, skip_details)
+        parsing_time = time.perf_counter() - start_time
+        if auction and not skip_details:
+            if fetch_items:
+                await self._fetch_all_pages(auction_id, auction.details.items, 0, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.store_items, 1, test=test)
+            if fetch_mounts:
+                await self._fetch_all_pages(auction_id, auction.details.mounts, 2, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.store_mounts, 3, test=test)
+            if fetch_outfits:
+                await self._fetch_all_pages(auction_id, auction.details.outfits, 4, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.store_outfits, 5, test=test)
+            if fetch_familiars:
+                await self._fetch_all_pages(auction_id, auction.details.outfits, 6, test=test)
+        return TibiaResponse.from_raw(response, auction, parsing_time)
+
     # endregion

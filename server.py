@@ -1,3 +1,4 @@
+import datetime
 import logging
 from contextlib import asynccontextmanager
 from typing import Optional, Set, List
@@ -9,7 +10,7 @@ from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, Ti
     HouseStatus, HouseOrder, HouseType, HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, \
     AuctionPvpTypeFilter
 from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores
-from tibiapy.models.news import NewsArchive, News
+from tibiapy.models.news import News
 
 logging_formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
 console_handler = logging.StreamHandler()
@@ -27,6 +28,64 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/news/{start_date}/{end_date}")
+async def get_news_archive(
+        start_date: datetime.date = Path(...),
+        end_date: datetime.date = Path(...),
+        types: Set[NewsType] = Query(None, alias="type"),
+        categories: Set[NewsCategory] = Query(None, alias="category"),
+):
+    return await app.state.client.fetch_news_archive(start_date, end_date, categories, types)
+
+
+# region News
+
+@app.get("/news")
+async def get_news_archive_by_days(
+        days: int = Query(30),
+        types: Set[NewsType] = Query(None, alias="type"),
+        categories: Set[NewsCategory] = Query(None, alias="category"),
+):
+    return await app.state.client.fetch_recent_news(days, categories, types)
+
+
+@app.get("/news/{news_id}")
+async def get_news_article(
+        news_id: int = Path(...)
+) -> TibiaResponse[Optional[News]]:
+    return await app.state.client.fetch_news(news_id=news_id)
+
+
+@app.get("/events/{year}/{month}")
+async def get_events_schedule(
+        year: int = Path(...),
+        month: int = Path(...),
+):
+    return await app.state.client.fetch_event_schedule(month, year)
+
+
+# endregion
+
+# region Library
+
+@app.get("/creatures")
+async def get_creatures():
+    return await app.state.client.fetch_library_creatures()
+
+
+@app.get("/creatures/{identifier}")
+async def get_creature(identifier: str = Path(...)):
+    return await app.state.client.fetch_creature(identifier)
+
+
+@app.get("/cmposts/{start_date}/{end_date}")
+async def get_cm_posts_archive(
+        start_date: datetime.date = Path(...),
+        end_date: datetime.date = Path(...),
+):
+    return await app.state.client.fetch_cm_post_archive(start_date, end_date)
 
 
 @app.get("/auctions")
@@ -57,31 +116,13 @@ async def get_character(
     return await app.state.client.fetch_character(name)
 
 
-@app.get("/events/{year}/{month}")
-async def get_events_schedule(
-        year: int = Path(...),
-        month: int = Path(...),
-):
-    return await app.state.client.fetch_event_schedule(month, year)
-
-
-@app.get("/creatures")
-async def get_creatures():
-    return await app.state.client.fetch_library_creatures()
-
-
 @app.get("/creatures/boosted")
 async def get_boosted_creature():
     return await app.state.client.fetch_boosted_creature()
 
 
-@app.get("/creatures/{identifier}")
-async def get_creature(identifier: str = Path(...)):
-    return await app.state.client.fetch_creature(identifier)
-
-
 @app.get("/bosses")
-async def get_creatures():
+async def get_bosses():
     return await app.state.client.fetch_library_bosses()
 
 
@@ -132,7 +173,6 @@ async def get_forum_board(
         page: int = Query(1),
 ):
     return await app.state.client.fetch_forum_thread(thread_id=thread_id, page=page)
-
 
 
 @app.get("/guilds/{name}")
@@ -204,22 +244,6 @@ async def get_leaderboards(
         world: str = Path(...)
 ):
     return await app.state.client.fetch_leaderboard(world=world)
-
-
-@app.get("/news/recent/{days}")
-async def get_recent_news(
-        days: int = Path(...),
-        types: Set[NewsType] = Query(None, alias="type"),
-        categories: Set[NewsCategory] = Query(None, alias="category"),
-) -> TibiaResponse[NewsArchive]:
-    return await app.state.client.fetch_recent_news(days=days, types=types, categories=categories)
-
-
-@app.get("/news/{news_id}")
-async def get_news_article(
-        news_id: int = Path(...)
-) -> TibiaResponse[Optional[News]]:
-    return await app.state.client.fetch_news(news_id=news_id)
 
 
 @app.get("/spells")
