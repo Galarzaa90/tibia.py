@@ -39,9 +39,18 @@ Changelog
     - Renamed ``ForumThread.posts`` to ``entries``.
     - Added ``thread_starter_deleted`` to ``ThreadEntry``.
     - ``ForumThread.previous_topic_number`` and ``ForumThread.next_topic_number`` may be ``None`` instead of ``0``.
+- Renamed ``Category`` to ``HighscoresCategory``.
+- Renamed ``BattlEyeTypeFilter`` to ``AuctionBattlEyeFilter``.
+- Renamed ``VocationFilter`` to ``HighscoresProfession``.
+- Renamed ``BattlEyeHighscoresFilter`` to ``HighscoresBattlEyeType``.
+- Renamed ``VocationAuctionFilter`` to ``AuctionVocationFilter``.
+- Renamed ``VocationSpellFilter`` to ``SpellVocationFilter``.
+- Renamed ``PvpTypeFilter`` to ``AuctionPvpTypeFilter``.
+- Renamed ``SkillFilter`` to ``AuctionSkillFilter``.
 - Added `ForumSection`` model and its respective parser, to fetch a list of board entries.
 - Removed ``get_url`` class methods from all models, replaced by functions in the urls package.
 - Fixed ``Character`` account badges not being parsed properly.
+
 
 
 .. v5.6.0

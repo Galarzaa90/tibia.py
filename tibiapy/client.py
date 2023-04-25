@@ -11,8 +11,8 @@ import aiohttp_socks
 from pydantic.generics import GenericModel
 
 import tibiapy
-from tibiapy.enums import BattlEyeHighscoresFilter, Category, HouseType, NewsCategory, \
-    NewsType, VocationFilter, NumericEnum, BazaarType
+from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HouseType, NewsCategory, \
+    NewsType, HighscoresProfession, NumericEnum, BazaarType
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, ForumAnnouncement, \
@@ -1084,7 +1084,7 @@ class Client:
         parsing_time = time.perf_counter() - start_time
         return TibiaResponse.from_raw(response, house, parsing_time)
 
-    async def fetch_highscores_page(self, world=None, category=Category.EXPERIENCE, vocation=VocationFilter.ALL, page=1,
+    async def fetch_highscores_page(self, world=None, category=HighscoresCategory.EXPERIENCE, vocation=HighscoresProfession.ALL, page=1,
                                     battleye_type=None, pvp_types=None, *, test=False):
         """Fetch a single highscores page from Tibia.com.
 
@@ -1096,15 +1096,15 @@ class Client:
         ----------
         world: :class:`str`
             The world to search the highscores in.
-        category: :class:`Category`
+        category: :class:`HighscoresCategory`
             The highscores category to search, by default Experience.
-        vocation: :class:`VocationFilter`
+        vocation: :class:`HighscoresProfession`
             The vocation filter to use. No filter used by default.
         page: :class:`int`
             The page to fetch, by default the first page is fetched.
         battleye_type: :class:`BattlEyeFilter`
             The type of BattlEye protection to display results from.
-        pvp_types: :class:`list` of :class:`PvpTypeFilter`
+        pvp_types: :class:`list` of :class:`AuctionPvpTypeFilter`
             The list of PvP types to filter the results for.
         test: :class:`bool`
             Whether to request the test website instead.
@@ -1125,7 +1125,7 @@ class Client:
             If an invalid filter combination is passed.
         """
         pvp_types = pvp_types or []
-        if world is not None and ((battleye_type and battleye_type != BattlEyeHighscoresFilter.ANY_WORLD) or pvp_types):
+        if world is not None and ((battleye_type and battleye_type != HighscoresBattlEyeType.ANY_WORLD) or pvp_types):
             raise ValueError("BattleEye and PvP type filters can only be used when fetching all worlds.")
         response = await self._request("GET", get_highscores_url(world, category, vocation, page, battleye_type,
                                                                  pvp_types), test=test)
@@ -1449,7 +1449,7 @@ class Client:
 
         Parameters
         ----------
-        vocation: :class:`VocationSpellFilter`, optional
+        vocation: :class:`SpellVocationFilter`, optional
             The vocation to filter in spells for.
         group: :class:`SpellGroup`, optional
             The spell's primary cooldown group.

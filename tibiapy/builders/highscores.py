@@ -6,7 +6,7 @@ from typing import List, TYPE_CHECKING
 from tibiapy.models import Highscores
 
 if TYPE_CHECKING:
-    from tibiapy import Category, VocationFilter, BattlEyeHighscoresFilter, PvpTypeFilter
+    from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, AuctionPvpTypeFilter
     from tibiapy.models import HighscoresEntry
 
 
@@ -29,19 +29,19 @@ class HighscoresBuilder:
         self._world = world
         return self
 
-    def category(self, category: Category):
+    def category(self, category: HighscoresCategory):
         self._category = category
         return self
 
-    def vocation(self, vocation: VocationFilter):
+    def vocation(self, vocation: HighscoresProfession):
         self._vocation = vocation
         return self
 
-    def battleye_filter(self, battleye_filter: BattlEyeHighscoresFilter):
+    def battleye_filter(self, battleye_filter: HighscoresBattlEyeType):
         self._battleye_filter = battleye_filter
         return self
 
-    def pvp_types_filter(self, pvp_types_filter: PvpTypeFilter):
+    def pvp_types_filter(self, pvp_types_filter: AuctionPvpTypeFilter):
         self._pvp_types_filter = pvp_types_filter
         return self
 

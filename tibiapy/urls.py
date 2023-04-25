@@ -4,11 +4,11 @@ import datetime
 import urllib.parse
 from typing import Optional, TYPE_CHECKING
 
-from tibiapy import Category, VocationFilter, BattlEyeHighscoresFilter, PvpTypeFilter
+from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, AuctionPvpTypeFilter
 
 if TYPE_CHECKING:
     from tibiapy.models import AuctionFilters
-    from tibiapy import BazaarType, HouseType, HouseStatus, HouseOrder, VocationSpellFilter, \
+    from tibiapy import BazaarType, HouseType, HouseStatus, HouseOrder, SpellVocationFilter, \
         SpellGroup, SpellType, SpellSorting
 
 
@@ -329,9 +329,9 @@ def get_forum_post_url(post_id):
     return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid=post_id)
 
 
-def get_highscores_url(world: str = None, category: Category = Category.EXPERIENCE,
-                       vocation: VocationFilter = VocationFilter.ALL, page=1,
-                       battleye_type: BattlEyeHighscoresFilter = None, pvp_types: PvpTypeFilter = None
+def get_highscores_url(world: str = None, category: HighscoresCategory = HighscoresCategory.EXPERIENCE,
+                       vocation: HighscoresProfession = HighscoresProfession.ALL, page=1,
+                       battleye_type: HighscoresBattlEyeType = None, pvp_types: AuctionPvpTypeFilter = None
                        ) -> str:
     """Get the Tibia.com URL of the highscores for the given parameters.
 
@@ -339,13 +339,13 @@ def get_highscores_url(world: str = None, category: Category = Category.EXPERIEN
     ----------
     world: :class:`str`, optional
         The game world of the desired highscores. If no world is passed, ALL worlds are shown.
-    category: :class:`.Category`
+    category: :class:`.HighscoresCategory`
         The desired highscores category.
-    vocation: :class:`.VocationFilter`
+    vocation: :class:`.HighscoresProfession`
         The vocation filter to apply. By default, all vocations will be shown.
     page: :class:`int`
         The page of highscores to show.
-    battleye_type: :class:`.BattlEyeHighscoresFilter`, optional
+    battleye_type: :class:`.HighscoresBattlEyeType`, optional
         The battleEye filters to use.
     pvp_types: :class:`list` of :class:`.PvpTypeFilter`, optional
         The list of PvP types to filter the results for.
@@ -578,13 +578,13 @@ def _to_yes_no(value: Optional[bool]):
     return "yes" if value else "no"
 
 
-def get_spells_section_url(vocation: VocationSpellFilter = None, group: SpellGroup = None, spell_type: SpellType = None,
+def get_spells_section_url(vocation: SpellVocationFilter = None, group: SpellGroup = None, spell_type: SpellType = None,
                            premium: Optional[bool] = None, sort: SpellSorting = None):
     """Get the URL to the spells section with the desired filtering parameters.
 
     Parameters
     ----------
-    vocation: :class:`VocationSpellFilter`, optional
+    vocation: :class:`SpellVocationFilter`, optional
         The vocation to filter in spells for.
     group: :class:`SpellGroup`, optional
         The spell's primary cooldown group.

@@ -8,8 +8,9 @@ import bs4
 
 from tibiapy import InvalidContent, Sex, Vocation
 from tibiapy.builders.bazaar import CharacterBazaarBuilder, AuctionBuilder, AuctionDetailsBuilder
-from tibiapy.enums import (AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter,
-                           BazaarType, BidType, PvpTypeFilter, SkillFilter, VocationAuctionFilter)
+from tibiapy.enums import (AuctionOrderDirection, AuctionOrderBy, AuctionSearchType, AuctionStatus,
+                           AuctionBattlEyeFilter,
+                           BazaarType, BidType, AuctionPvpTypeFilter, AuctionSkillFilter, AuctionVocationFilter)
 from tibiapy.models.bazaar import AuctionFilters, ItemEntry, OutfitImage, SalesArgument, \
     SkillEntry, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry, MountEntry, ItemSummary, \
     Mounts, Familiars, Outfits, FamiliarEntry, OutfitEntry, CharacterBazaar, Auction
@@ -48,16 +49,16 @@ class AuctionFiltersParser:
 
         filters.world = data["filter_world"]
         filters.available_worlds = [w for w in data.get("__options__", {}).get("filter_world", []) if "(" not in w]
-        filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(data.get("filter_worldpvptype"), None))
-        filters.battleye = try_enum(BattlEyeTypeFilter, parse_integer(data.get("filter_worldbattleyestate"), None))
-        filters.vocation = try_enum(VocationAuctionFilter, parse_integer(data.get("filter_profession"), None))
+        filters.pvp_type = try_enum(AuctionPvpTypeFilter, parse_integer(data.get("filter_worldpvptype"), None))
+        filters.battleye = try_enum(AuctionBattlEyeFilter, parse_integer(data.get("filter_worldbattleyestate"), None))
+        filters.vocation = try_enum(AuctionVocationFilter, parse_integer(data.get("filter_profession"), None))
         filters.min_level = parse_integer(data.get("filter_levelrangefrom"), None)
         filters.max_level = parse_integer(data.get("filter_levelrangeto"), None)
-        filters.skill = try_enum(SkillFilter, parse_integer(data.get("filter_skillid"), None))
+        filters.skill = try_enum(AuctionSkillFilter, parse_integer(data.get("filter_skillid"), None))
         filters.min_skill_level = parse_integer(data.get("filter_skillrangefrom"), None)
         filters.max_skill_level = parse_integer(data.get("filter_skillrangeto"), None)
         filters.order_by = try_enum(AuctionOrderBy, parse_integer(data.get("order_column"), None))
-        filters.order = try_enum(AuctionOrder, parse_integer(data.get("order_direction"), None))
+        filters.order = try_enum(AuctionOrderDirection, parse_integer(data.get("order_direction"), None))
         if len(forms) > 1:
             data_search = parse_form_data(forms[1], include_options=True)
             filters.search_string = data_search.get("searchstring")

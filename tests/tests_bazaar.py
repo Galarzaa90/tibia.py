@@ -2,12 +2,12 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import AuctionOrder, AuctionOrderBy, AuctionSearchType, AuctionStatus, BattlEyeTypeFilter, \
+from tibiapy import AuctionOrderDirection, AuctionOrderBy, AuctionSearchType, AuctionStatus, AuctionBattlEyeFilter, \
     BidType, \
  \
-    InvalidContent, PvpTypeFilter, \
-    Sex, SkillFilter, \
-    Vocation, VocationAuctionFilter
+    InvalidContent, AuctionPvpTypeFilter, \
+    Sex, AuctionSkillFilter, \
+    Vocation, AuctionVocationFilter
 from tibiapy.parsers.bazaar import CharacterBazaarParser, AuctionParser
 
 FILE_BAZAAR_CURRENT_EMPTY = "bazaar/tibiacom_history_empty.txt"
@@ -47,7 +47,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
         self.assertIsNone(bazaar.filters.skill)
         self.assertIsNone(bazaar.filters.min_skill_level)
         self.assertIsNone(bazaar.filters.max_skill_level)
-        self.assertEqual(AuctionOrder.LOWEST_EARLIEST, bazaar.filters.order)
+        self.assertEqual(AuctionOrderDirection.LOWEST_EARLIEST, bazaar.filters.order)
 
     def test_character_bazaar_from_content_current_all_filters_selected(self):
         bazaar = CharacterBazaarParser.from_content(self.load_resource(FILE_BAZAAR_CURRENT_ALL_FILTERS))
@@ -67,16 +67,16 @@ class TestBazaar(TestCommons, unittest.TestCase):
 
         self.assertIsNotNone(bazaar.filters)
         self.assertEqual('Antica', bazaar.filters.world)
-        self.assertEqual(PvpTypeFilter.OPEN_PVP, bazaar.filters.pvp_type)
-        self.assertEqual(BattlEyeTypeFilter.PROTECTED, bazaar.filters.battleye)
-        self.assertEqual(VocationAuctionFilter.KNIGHT, bazaar.filters.vocation)
+        self.assertEqual(AuctionPvpTypeFilter.OPEN_PVP, bazaar.filters.pvp_type)
+        self.assertEqual(AuctionBattlEyeFilter.PROTECTED, bazaar.filters.battleye)
+        self.assertEqual(AuctionVocationFilter.KNIGHT, bazaar.filters.vocation)
         self.assertEqual(1, bazaar.filters.min_level)
         self.assertEqual(1000, bazaar.filters.max_level)
-        self.assertEqual(SkillFilter.MAGIC_LEVEL, bazaar.filters.skill)
+        self.assertEqual(AuctionSkillFilter.MAGIC_LEVEL, bazaar.filters.skill)
         self.assertEqual(1, bazaar.filters.min_skill_level)
         self.assertEqual(50, bazaar.filters.max_skill_level)
         self.assertEqual(AuctionOrderBy.SHIELDING, bazaar.filters.order_by)
-        self.assertEqual(AuctionOrder.HIGHEST_LATEST, bazaar.filters.order)
+        self.assertEqual(AuctionOrderDirection.HIGHEST_LATEST, bazaar.filters.order)
         self.assertEqual(AuctionSearchType.ITEM_WILDCARD, bazaar.filters.search_type)
 
     def test_character_bazaar_from_content_empty(self):

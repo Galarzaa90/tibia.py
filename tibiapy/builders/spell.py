@@ -5,7 +5,7 @@ from typing import Optional, List, TYPE_CHECKING
 from tibiapy.models import SpellEntry, SpellsSection, Spell, Rune
 
 if TYPE_CHECKING:
-    from tibiapy import VocationSpellFilter, SpellGroup, SpellSorting, SpellType
+    from tibiapy import SpellVocationFilter, SpellGroup, SpellSorting, SpellType
 
 
 class SpellSectionBuilder:
@@ -17,7 +17,7 @@ class SpellSectionBuilder:
         self._sort_by = None
         self._entries = []
 
-    def vocation(self, vocation: Optional[VocationSpellFilter]):
+    def vocation(self, vocation: Optional[SpellVocationFilter]):
         self._vocation = vocation
         return self
 
@@ -25,7 +25,7 @@ class SpellSectionBuilder:
         self._group = group
         return self
 
-    def spell_type(self, spell_type: Optional[VocationSpellFilter]):
+    def spell_type(self, spell_type: Optional[SpellVocationFilter]):
         self._spell_type = spell_type
         return self
 

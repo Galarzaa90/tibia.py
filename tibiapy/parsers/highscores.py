@@ -4,8 +4,8 @@ import re
 from collections import OrderedDict
 
 from tibiapy.builders.highscores import HighscoresBuilder
-from tibiapy.enums import Category, VocationFilter, PvpTypeFilter, \
-    BattlEyeHighscoresFilter
+from tibiapy.enums import HighscoresCategory, HighscoresProfession, AuctionPvpTypeFilter, \
+    HighscoresBattlEyeType
 from tibiapy.errors import InvalidContent
 from tibiapy.models import LoyaltyHighscoresEntry, HighscoresEntry
 from tibiapy.utils import parse_form_data, parse_tibiacom_content, try_enum, parse_integer
@@ -108,12 +108,12 @@ class HighscoresParser:
         """
         data = parse_form_data(form, include_options=True)
         builder.world(data["world"] if data.get("world") else None)
-        builder.battleye_filter(try_enum(BattlEyeHighscoresFilter, parse_integer(data.get("beprotection"), None)))
-        builder.category(try_enum(Category, parse_integer(data.get("category"), None)))
-        builder.vocation(try_enum(VocationFilter, parse_integer(data.get("profession"), None), VocationFilter.ALL))
+        builder.battleye_filter(try_enum(HighscoresBattlEyeType, parse_integer(data.get("beprotection"), None)))
+        builder.category(try_enum(HighscoresCategory, parse_integer(data.get("category"), None)))
+        builder.vocation(try_enum(HighscoresProfession, parse_integer(data.get("profession"), None), HighscoresProfession.ALL))
         checkboxes = form.find_all("input", {"type": "checkbox", "checked": "checked"})
         values = [int(c["value"]) for c in checkboxes]
-        builder.pvp_types_filter({try_enum(PvpTypeFilter, v) for v in values})
+        builder.pvp_types_filter({try_enum(AuctionPvpTypeFilter, v) for v in values})
         builder.available_worlds([v for v in data["__options__"]["world"].values() if v])
 
     @classmethod
@@ -153,13 +153,13 @@ class HighscoresParser:
         rank, name, *values = [c.text.replace('\xa0', ' ').strip() for c in cols]
         rank = int(rank)
         extra = None
-        if builder._category == Category.LOYALTY_POINTS:
+        if builder._category == HighscoresCategory.LOYALTY_POINTS:
             extra, vocation, world, level, value = values
         else:
             vocation, world, level, value = values
         value = int(value.replace(',', ''))
         level = int(level)
-        if builder._category == Category.LOYALTY_POINTS:
+        if builder._category == HighscoresCategory.LOYALTY_POINTS:
             entry = LoyaltyHighscoresEntry(rank=rank, name=name, vocation=vocation, world=world, level=level,
                                            value=value, title=extra)
         else:

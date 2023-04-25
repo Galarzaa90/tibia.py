@@ -19,7 +19,7 @@ from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
 from tibiapy import Client, Forbidden, NetworkError, HouseType, BazaarType
 from tibiapy.models import BoardEntry, CharacterBazaar, Character, CMPostArchive, ForumBoard, Guild, Highscores, \
-    HousesSection, Leaderboard, VocationFilter, Category, House, HouseEntry, GuildEntry, KillStatistics, \
+    HousesSection, Leaderboard, HighscoresProfession, HighscoresCategory, House, HouseEntry, GuildEntry, KillStatistics, \
     World, WorldOverview, Auction, NewsArchive, NewsEntry, News, ItemSummary, ForumSection
 from tibiapy.models.creature import CreatureEntry
 from tibiapy.models.event import EventSchedule
@@ -110,8 +110,8 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     async def test_client_fetch_highscores_page(self, mock):
         """Testing fetching a highscores page"""
         world = "Estela"
-        category = Category.MAGIC_LEVEL
-        vocations = VocationFilter.KNIGHTS
+        category = HighscoresCategory.MAGIC_LEVEL
+        vocations = HighscoresProfession.KNIGHTS
         content = self.load_resource(FILE_HIGHSCORES_FULL)
         mock.get(get_highscores_url(world, category, vocations), status=200, body=content)
         highscores = await self.client.fetch_highscores_page(world, category, vocations)

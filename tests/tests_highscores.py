@@ -2,8 +2,8 @@ import datetime
 import unittest
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import Category, InvalidContent, \
-    Vocation, VocationFilter, BattlEyeHighscoresFilter
+from tibiapy import HighscoresCategory, InvalidContent, \
+    Vocation, HighscoresProfession, HighscoresBattlEyeType
 from tibiapy.models import Highscores, HighscoresEntry, LoyaltyHighscoresEntry
 from tibiapy.parsers.highscores import HighscoresParser
 
@@ -23,9 +23,9 @@ class TestHighscores(unittest.TestCase, TestCommons):
         highscores = HighscoresParser.from_content(content)
 
         self.assertEqual("Estela", highscores.world)
-        self.assertEqual(VocationFilter.KNIGHTS, highscores.vocation)
-        self.assertEqual(Category.MAGIC_LEVEL, highscores.category)
-        self.assertEqual(BattlEyeHighscoresFilter.ANY_WORLD, highscores.battleye_filter)
+        self.assertEqual(HighscoresProfession.KNIGHTS, highscores.vocation)
+        self.assertEqual(HighscoresCategory.MAGIC_LEVEL, highscores.category)
+        self.assertEqual(HighscoresBattlEyeType.ANY_WORLD, highscores.battleye_filter)
         self.assertEqual(1983, highscores.results_count)
         self.assertEqual(38, highscores.from_rank)
         self.assertEqual(38, highscores.to_rank)
@@ -52,8 +52,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
         highscores = HighscoresParser.from_content(content)
 
         self.assertEqual(highscores.world, "Gladera")
-        self.assertEqual(highscores.vocation, VocationFilter.PALADINS)
-        self.assertEqual(highscores.category, Category.EXPERIENCE)
+        self.assertEqual(highscores.vocation, HighscoresProfession.PALADINS)
+        self.assertEqual(highscores.category, HighscoresCategory.EXPERIENCE)
         self.assertEqual(highscores.results_count, 1000)
         self.assertEqual(highscores.total_pages, 20)
 
@@ -72,8 +72,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
         highscores = HighscoresParser.from_content(content)
 
         self.assertEqual("Calmera", highscores.world)
-        self.assertEqual(VocationFilter.PALADINS, highscores.vocation)
-        self.assertEqual(Category.LOYALTY_POINTS, highscores.category)
+        self.assertEqual(HighscoresProfession.PALADINS, highscores.vocation)
+        self.assertEqual(HighscoresCategory.LOYALTY_POINTS, highscores.category)
         self.assertEqual(1007, highscores.results_count)
         self.assertEqual(21, highscores.total_pages)
 
@@ -92,9 +92,9 @@ class TestHighscores(unittest.TestCase, TestCommons):
         highscores = HighscoresParser.from_content(content)
 
         self.assertEqual(None, highscores.world)
-        self.assertEqual(VocationFilter.ALL, highscores.vocation)
-        self.assertEqual(Category.EXPERIENCE, highscores.category)
-        self.assertEqual(BattlEyeHighscoresFilter.INITIALLY_PROTECTED, highscores.battleye_filter)
+        self.assertEqual(HighscoresProfession.ALL, highscores.vocation)
+        self.assertEqual(HighscoresCategory.EXPERIENCE, highscores.category)
+        self.assertEqual(HighscoresBattlEyeType.INITIALLY_PROTECTED, highscores.battleye_filter)
         self.assertEqual(1000, highscores.results_count)
         self.assertEqual(1, highscores.from_rank)
         self.assertEqual(50, highscores.to_rank)
@@ -126,8 +126,8 @@ class TestHighscores(unittest.TestCase, TestCommons):
 
         self.assertIsInstance(highscores, Highscores)
         self.assertEqual(highscores.world, "Unica")
-        self.assertEqual(highscores.category, Category.EXPERIENCE)
-        self.assertEqual(highscores.vocation, VocationFilter.ALL)
+        self.assertEqual(highscores.category, HighscoresCategory.EXPERIENCE)
+        self.assertEqual(highscores.vocation, HighscoresProfession.ALL)
         self.assertEqual(highscores.total_pages, 0)
         self.assertEqual(len(highscores.entries), 0)
 

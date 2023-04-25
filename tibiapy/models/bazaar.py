@@ -4,8 +4,9 @@ from typing import Optional, List, Dict, TypeVar, Generic
 
 from pydantic import BaseModel
 
-from tibiapy import PvpTypeFilter, BattlEyeTypeFilter, VocationAuctionFilter, SkillFilter, AuctionSearchType, \
-    AuctionOrderBy, AuctionOrder, BazaarType, Vocation, Sex, BidType, AuctionStatus
+from tibiapy import AuctionPvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, \
+    AuctionSearchType, \
+    AuctionOrderBy, AuctionOrderDirection, BazaarType, Vocation, Sex, BidType, AuctionStatus
 from tibiapy.models.pagination import AjaxPaginator, PaginatedWithUrl
 from tibiapy.urls import get_character_url, get_auction_url, get_bazaar_url
 
@@ -50,17 +51,17 @@ class AuctionFilters(BaseModel):
 
     world: Optional[str] = None
     """The character's world to show characters for."""
-    pvp_type: Optional[PvpTypeFilter] = None
+    pvp_type: Optional[AuctionPvpTypeFilter] = None
     """The PvP type of the character's worlds to show."""
-    battleye: Optional[BattlEyeTypeFilter] = None
+    battleye: Optional[AuctionBattlEyeFilter] = None
     """The type of BattlEye protection of the character's worlds to show."""
-    vocation: Optional[VocationAuctionFilter] = None
+    vocation: Optional[AuctionVocationFilter] = None
     """The character vocation to show results for."""
     min_level: Optional[int] = None
     """The minimum level to display."""
     max_level: Optional[int] = None
     """The maximum level to display."""
-    skill: Optional[SkillFilter] = None
+    skill: Optional[AuctionSkillFilter] = None
     """The skill to filter by its level range."""
     min_skill_level: Optional[int] = None
     """The minimum skill level of the selected :attr:`skill` to display."""
@@ -68,7 +69,7 @@ class AuctionFilters(BaseModel):
     """The maximum skill level of the selected :attr:`skill` to display."""
     order_by: Optional[AuctionOrderBy] = None
     """The column or value to order by."""
-    order: Optional[AuctionOrder] = None
+    order: Optional[AuctionOrderDirection] = None
     """The ordering direction for the results."""
     search_string: Optional[str] = None
     """The search term to filter out auctions."""

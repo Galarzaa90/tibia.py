@@ -5,8 +5,9 @@ from typing import Optional, Set, List
 from fastapi import FastAPI, Path, Query
 
 import tibiapy
-from tibiapy import VocationSpellFilter, SpellGroup, SpellType, SpellSorting, TibiaResponse, NewsType, NewsCategory, \
-    HouseStatus, HouseOrder, HouseType, Category, VocationFilter, BattlEyeHighscoresFilter, PvpTypeFilter
+from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, TibiaResponse, NewsType, NewsCategory, \
+    HouseStatus, HouseOrder, HouseType, HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, \
+    AuctionPvpTypeFilter
 from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores
 from tibiapy.models.news import NewsArchive, News
 
@@ -159,10 +160,10 @@ async def get_world_guilds(
 async def get_highscores(
         world: str = Path(...),
         page: int = Query(1),
-        category: Category = Query(Category.EXPERIENCE),
-        vocation: VocationFilter = Query(VocationFilter.ALL),
-        battleye: BattlEyeHighscoresFilter = Query(None),
-        pvp_types: List[PvpTypeFilter] = Query([], alias="pvp"),
+        category: HighscoresCategory = Query(HighscoresCategory.EXPERIENCE),
+        vocation: HighscoresProfession = Query(HighscoresProfession.ALL),
+        battleye: HighscoresBattlEyeType = Query(None),
+        pvp_types: List[AuctionPvpTypeFilter] = Query([], alias="pvp"),
 ) -> TibiaResponse[Highscores]:
     if world.lower() in ("global", "all"):
         world = None
@@ -223,7 +224,7 @@ async def get_news_article(
 
 @app.get("/spells")
 async def get_spells(
-        vocation: VocationSpellFilter = Query(None),
+        vocation: SpellVocationFilter = Query(None),
         group: SpellGroup = Query(None),
         type: SpellType = Query(None),
         premium: bool = Query(None),

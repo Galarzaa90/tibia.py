@@ -1,7 +1,6 @@
 import datetime
 import unittest
 
-import tibiapy
 from tests.tests_tibiapy import TestCommons
 from tibiapy import enums, utils
 from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_money
@@ -96,13 +95,13 @@ class TestUtils(TestCommons, unittest.TestCase):
         self.assertEqual(utils.try_enum(enums.Sex, "male"), enums.Sex.MALE)
         self.assertEqual(utils.try_enum(enums.TransferType, "", enums.TransferType.REGULAR), enums.TransferType.REGULAR)
         self.assertEqual(utils.try_enum(enums.WorldLocation, enums.WorldLocation.EUROPE), enums.WorldLocation.EUROPE)
-        self.assertEqual(utils.try_enum(enums.VocationFilter, 4), enums.VocationFilter.SORCERERS)
-        self.assertEqual(utils.try_enum(enums.Category, "FISHING"), enums.Category.FISHING)
+        self.assertEqual(utils.try_enum(enums.HighscoresProfession, 4), enums.HighscoresProfession.SORCERERS)
+        self.assertEqual(utils.try_enum(enums.HighscoresCategory, "FISHING"), enums.HighscoresCategory.FISHING)
 
     def test_enum_str(self):
-        self.assertEqual(enums.VocationFilter.from_name("royal paladin"), enums.VocationFilter.PALADINS)
-        self.assertEqual(enums.VocationFilter.from_name("unknown"), enums.VocationFilter.ALL)
-        self.assertIsNone(enums.VocationFilter.from_name("unknown", False))
+        self.assertEqual(enums.HighscoresProfession.from_name("royal paladin"), enums.HighscoresProfession.PALADINS)
+        self.assertEqual(enums.HighscoresProfession.from_name("unknown"), enums.HighscoresProfession.ALL)
+        self.assertIsNone(enums.HighscoresProfession.from_name("unknown", False))
 
     def test_parse_tibia_money(self):
         self.assertEqual(1000, parse_tibia_money("1k"))

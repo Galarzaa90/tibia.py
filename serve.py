@@ -62,16 +62,16 @@ async def get_current_auctions(request: web.Request):
 async def filters_from_query(request):
     filters = tibiapy.AuctionFilters()
     filters.world = request.query.get("world")
-    filters.battleye = try_enum(tibiapy.BattlEyeTypeFilter, request.query.get("battleye"))
-    filters.pvp_type = try_enum(tibiapy.PvpTypeFilter, request.query.get("pvp_type"))
+    filters.battleye = try_enum(tibiapy.AuctionBattlEyeFilter, request.query.get("battleye"))
+    filters.pvp_type = try_enum(tibiapy.AuctionPvpTypeFilter, request.query.get("pvp_type"))
     filters.min_level = tibiapy.utils.parse_integer(request.query.get("min_level"), None)
     filters.max_level = tibiapy.utils.parse_integer(request.query.get("max_level"), None)
-    filters.vocation = try_enum(tibiapy.VocationAuctionFilter, request.query.get("vocation"))
-    filters.skill = try_enum(tibiapy.SkillFilter, request.query.get("skill"))
+    filters.vocation = try_enum(tibiapy.AuctionVocationFilter, request.query.get("vocation"))
+    filters.skill = try_enum(tibiapy.AuctionSkillFilter, request.query.get("skill"))
     filters.min_skill_level = tibiapy.utils.parse_integer(request.query.get("min_skill_level"), None)
     filters.max_skill_level = tibiapy.utils.parse_integer(request.query.get("max_skill_level"), None)
     filters.order_by = try_enum(tibiapy.AuctionOrderBy, request.query.get("order_by"))
-    filters.order = try_enum(tibiapy.AuctionOrder, request.query.get("order"))
+    filters.order = try_enum(tibiapy.AuctionOrderDirection, request.query.get("order"))
     filters.search_string = request.query.get("item")
     return filters
 
@@ -257,13 +257,13 @@ async def get_world_guilds(request: web.Request):
 @routes.get(r'/highscores/{world}')
 async def get_highscores(request: web.Request):
     world = request.match_info['world']
-    category = try_enum(tibiapy.Category, request.query.get("category", "EXPERIENCE").upper(),
-                        tibiapy.Category.EXPERIENCE)
-    vocations = try_enum(tibiapy.VocationFilter, int(request.query.get("vocation", 0)), tibiapy.VocationFilter.ALL)
-    battleye_type = try_enum(tibiapy.BattlEyeHighscoresFilter, int(request.query.get("battleye", -1)))
+    category = try_enum(tibiapy.HighscoresCategory, request.query.get("category", "EXPERIENCE").upper(),
+                        tibiapy.HighscoresCategory.EXPERIENCE)
+    vocations = try_enum(tibiapy.HighscoresProfession, int(request.query.get("vocation", 0)), tibiapy.HighscoresProfession.ALL)
+    battleye_type = try_enum(tibiapy.HighscoresBattlEyeType, int(request.query.get("battleye", -1)))
     page = int(request.query.get("page", 1))
     pvp_params = request.query.getall("pvp", [])
-    pvp_types = [try_enum(tibiapy.PvpTypeFilter, param) for param in pvp_params]
+    pvp_types = [try_enum(tibiapy.AuctionPvpTypeFilter, param) for param in pvp_params]
     pvp_types = [p for p in pvp_types if p is not None]
     if world.lower() == "all":
         world = None
@@ -370,7 +370,7 @@ async def get_tournaments_leaderboard(request: web.Request):
 @routes.get('/spells')
 async def get_spells(request: web.Request):
     spell_type = try_enum(tibiapy.SpellType, request.query.get("type"))
-    vocation = try_enum(tibiapy.VocationSpellFilter, request.query.get("vocation"))
+    vocation = try_enum(tibiapy.SpellVocationFilter, request.query.get("vocation"))
     group = try_enum(tibiapy.SpellGroup, request.query.get("group"))
     sort = try_enum(tibiapy.SpellSorting, request.query.get("sort"))
     premium_str = request.query.get("premium")

@@ -4,39 +4,37 @@ from enum import Enum, Flag, IntEnum
 from tibiapy.utils import try_enum
 
 __all__ = (
-    'AuctionOrder',
+    'AuctionBattlEyeFilter',
     'AuctionOrderBy',
-    'AuctionStatus',
+    'AuctionOrderDirection',
+    'AuctionPvpTypeFilter',
     'AuctionSearchType',
-    'Category',
+    'AuctionSkillFilter',
+    'AuctionStatus',
+    'AuctionVocationFilter',
+    'AvailableForumSection',
     'BattlEyeType',
-    'BattlEyeHighscoresFilter',
-    'BattlEyeTypeFilter',
     'BazaarType',
     'BidType',
+    'HighscoresBattlEyeType',
+    'HighscoresCategory',
+    'HighscoresProfession',
     'HouseOrder',
     'HouseStatus',
     'HouseType',
     'NewsCategory',
     'NewsType',
     'PvpType',
-    'PvpTypeFilter',
     'Sex',
-    'SkillFilter',
     'SpellGroup',
     'SpellSorting',
     'SpellType',
+    'SpellVocationFilter',
     'ThreadStatus',
-    'TournamentWorldType',
-    'TournamentPhase',
     'TransferType',
     'Vocation',
-    'VocationAuctionFilter',
-    'VocationFilter',
-    'VocationSpellFilter',
     'WorldLocation',
 )
-
 
 
 class NumericEnum(IntEnum):
@@ -56,7 +54,28 @@ class NumericEnum(IntEnum):
             raise ValueError('invalid value')
 
 
-class AuctionOrder(NumericEnum):
+class AuctionBattlEyeFilter(NumericEnum):
+    """The possible BattlEye filters that can be used for auctions."""
+
+    INITIALLY_PROTECTED = 1
+    """Worlds protected from the beginning, represented by a green symbol."""
+    PROTECTED = 2
+    """Worlds protected after the world was created, represented by a yellow symbol."""
+    NOT_PROTECTED = 3
+    """Worlds without any BattlEye protection."""
+    YELLOW = PROTECTED
+    """Alias for protected worlds.
+
+    .. versionadded:: 4.0.0
+    """
+    GREEN = INITIALLY_PROTECTED
+    """Alias for initially protected worlds.
+
+    .. versionadded:: 4.0.0
+    """
+
+
+class AuctionOrderDirection(NumericEnum):
     """The possible ordering directions for auctions.
 
     The field or value used for the ordering is defined by :class:`AuctionOrderBy`.
@@ -89,6 +108,16 @@ class AuctionOrderBy(NumericEnum):
     SWORD_FIGHTING = 8
 
 
+class AuctionPvpTypeFilter(NumericEnum):
+    """The possible PVP filters that can be used for auctions."""
+
+    OPEN_PVP = 0
+    OPTIONAL_PVP = 1
+    HARDCORE_PVP = 2
+    RETRO_OPEN_PVP = 3
+    RETRO_HARDCORE_PVP = 4
+
+
 class AuctionSearchType(NumericEnum):
     """The possible search types."""
 
@@ -119,6 +148,37 @@ class AuctionStatus(str, Enum):
     """The auction either finished with no bids or the character was transferred to the new owner already."""
 
 
+class AuctionSkillFilter(NumericEnum):
+    """The different skill filters for auctions."""
+
+    AXE_FIGHTING = 10
+    CLUB_FIGHTING = 9
+    DISTANCE_FIGHTING = 7
+    FISHING = 13
+    FIST_FIGHTING = 11
+    MAGIC_LEVEL = 1
+    SHIELDING = 6
+    SWORD_FIGHTING = 8
+
+
+class AuctionVocationFilter(NumericEnum):
+    """The possible vocation filters for auctions."""
+
+    NONE = 1
+    DRUID = 2
+    KNIGHT = 3
+    PALADIN = 4
+    SORCERER = 5
+
+
+class AvailableForumSection(str, Enum):
+    WORLD_BOARDS = "worldboards"
+    TRADE_BOARDS = "tradeboards"
+    COMMUNITY_BOARDS = "communityboards"
+    SUPPORT_BOARDS = "supportboards"
+    GUILD_BOARDS = "guildboards"
+
+
 class BattlEyeType(NumericEnum):
     """The possible BattlEye statuses a world can have.
 
@@ -135,51 +195,6 @@ class BattlEyeType(NumericEnum):
     """Alias for protected worlds."""
     GREEN = INITIALLY_PROTECTED
     """Alias for initially protected worlds."""
-
-
-class BattlEyeHighscoresFilter(NumericEnum):
-    """The possible BattlEye filters that can be used for highscores."""
-
-    ANY_WORLD = -1
-    """Show all worlds."""
-
-    INITIALLY_PROTECTED = 2
-    """Worlds protected from the beginning, represented by a green symbol."""
-    PROTECTED = 1
-    """Worlds protected after the world was created, represented by a yellow symbol."""
-    UNPROTECTED = 0
-    """Worlds without any BattlEye protection."""
-    YELLOW = PROTECTED
-    """Alias for protected worlds.
-
-    .. versionadded:: 4.0.0
-    """
-    GREEN = INITIALLY_PROTECTED
-    """Alias for initially protected worlds.
-
-    .. versionadded:: 4.0.0
-    """
-
-
-class BattlEyeTypeFilter(NumericEnum):
-    """The possible BattlEye filters that can be used for auctions."""
-
-    INITIALLY_PROTECTED = 1
-    """Worlds protected from the beginning, represented by a green symbol."""
-    PROTECTED = 2
-    """Worlds protected after the world was created, represented by a yellow symbol."""
-    NOT_PROTECTED = 3
-    """Worlds without any BattlEye protection."""
-    YELLOW = PROTECTED
-    """Alias for protected worlds.
-
-    .. versionadded:: 4.0.0
-    """
-    GREEN = INITIALLY_PROTECTED
-    """Alias for initially protected worlds.
-
-    .. versionadded:: 4.0.0
-    """
 
 
 class BazaarType(str, Enum):
@@ -205,7 +220,31 @@ class BidType(str, Enum):
     """The bid that won the auction."""
 
 
-class Category(NumericEnum):
+class HighscoresBattlEyeType(NumericEnum):
+    """The possible BattlEye filters that can be used for highscores."""
+
+    ANY_WORLD = -1
+    """Show all worlds."""
+
+    INITIALLY_PROTECTED = 2
+    """Worlds protected from the beginning, represented by a green symbol."""
+    PROTECTED = 1
+    """Worlds protected after the world was created, represented by a yellow symbol."""
+    UNPROTECTED = 0
+    """Worlds without any BattlEye protection."""
+    YELLOW = PROTECTED
+    """Alias for protected worlds.
+
+    .. versionadded:: 4.0.0
+    """
+    GREEN = INITIALLY_PROTECTED
+    """Alias for initially protected worlds.
+
+    .. versionadded:: 4.0.0
+    """
+
+
+class HighscoresCategory(NumericEnum):
     """The different highscores categories."""
 
     ACHIEVEMENTS = 1
@@ -223,6 +262,44 @@ class Category(NumericEnum):
     MAGIC_LEVEL = 11
     SHIELDING = 12
     SWORD_FIGHTING = 13
+
+
+class HighscoresProfession(NumericEnum):
+    """The vocation filters available for Highscores.
+
+    The numeric values are what the highscores form accepts.
+    """
+
+    ALL = 0
+    NONE = 1
+    KNIGHTS = 2
+    PALADINS = 3
+    SORCERERS = 4
+    DRUIDS = 5
+
+    @classmethod
+    def from_name(cls, name, all_fallback=True):
+        """Get a vocation filter from a vocation's name.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the vocation.
+        all_fallback: :class:`bool`
+            Whether to return :py:attr:`ALL` if no match is found. Otherwise, :obj:`None` will be returned.
+
+        Returns
+        -------
+        HighscoresProfession, optional:
+            The matching vocation filter.
+        """
+        name = name.upper()
+        for vocation in cls:  # type: HighscoresProfession
+            if vocation.name in name or vocation.name[:-1] in name and vocation != cls.ALL:
+                return vocation
+        if all_fallback or name.upper() == "ALL":
+            return cls.ALL
+        return None
 
 
 class HouseOrder(str, Enum):
@@ -289,6 +366,10 @@ class NewsType(str, Enum):
     def filter_name(self):
         return f"filter_{self.value.split(' ')[-1].lower()}"
 
+    @property
+    def filter_value(self):
+        return self.value.split(" ")[-1].lower()
+
 
 class PvpType(str, Enum):
     """The possible PvP types a World can have."""
@@ -300,34 +381,11 @@ class PvpType(str, Enum):
     HARDCORE_PVP = "Hardcore PvP"
 
 
-class PvpTypeFilter(NumericEnum):
-    """The possible PVP filters that can be used for auctions."""
-
-    OPEN_PVP = 0
-    OPTIONAL_PVP = 1
-    HARDCORE_PVP = 2
-    RETRO_OPEN_PVP = 3
-    RETRO_HARDCORE_PVP = 4
-
-
 class Sex(str, Enum):
     """Possible character sexes."""
 
     MALE = "male"
     FEMALE = "female"
-
-
-class SkillFilter(NumericEnum):
-    """The different skill filters for auctions."""
-
-    AXE_FIGHTING = 10
-    CLUB_FIGHTING = 9
-    DISTANCE_FIGHTING = 7
-    FISHING = 13
-    FIST_FIGHTING = 11
-    MAGIC_LEVEL = 1
-    SHIELDING = 6
-    SWORD_FIGHTING = 8
 
 
 class SpellGroup(str, Enum):
@@ -341,13 +399,6 @@ class SpellGroup(str, Enum):
     SUPPORT = "Support"
 
 
-class SpellType(str, Enum):
-    """The possible spell types."""
-
-    INSTANT = "Instant"
-    RUNE = "Rune"
-
-
 class SpellSorting(str, Enum):
     """The different sorting options for the spells section."""
 
@@ -358,6 +409,22 @@ class SpellSorting(str, Enum):
     MANA = "mana"
     PRICE = "price"
     PREMIUM = "premium"
+
+
+class SpellType(str, Enum):
+    """The possible spell types."""
+
+    INSTANT = "Instant"
+    RUNE = "Rune"
+
+
+class SpellVocationFilter(str, Enum):
+    """The possible vocation types to filter out spells."""
+
+    DRUID = "Druid"
+    KNIGHT = "Knight"
+    PALADIN = "Paladin"
+    SORCERER = "Sorcerer"
 
 
 class ThreadStatus(Flag):
@@ -415,21 +482,6 @@ class ThreadStatus(Flag):
         return cls(flags)
 
 
-class TournamentWorldType(str, Enum):
-    """The possible types of tournament worlds."""
-
-    REGULAR = "Regular"
-    RESTRICTED = "Restricted Store"
-
-
-class TournamentPhase(str, Enum):
-    """The possible tournament phases."""
-
-    SIGN_UP = "sign up"
-    RUNNING = "running"
-    ENDED = "ended"
-
-
 class TransferType(str, Enum):
     """The possible special transfer restrictions a world may have."""
 
@@ -451,62 +503,17 @@ class Vocation(str, Enum):
     ROYAL_PALADIN = "Royal Paladin"
     MASTER_SORCERER = "Master Sorcerer"
 
-
-class VocationAuctionFilter(NumericEnum):
-    """The possible vocation filters for auctions."""
-
-    NONE = 1
-    DRUID = 2
-    KNIGHT = 3
-    PALADIN = 4
-    SORCERER = 5
-
-
-class VocationFilter(NumericEnum):
-    """The vocation filters available for Highscores.
-
-    The numeric values are what the highscores form accepts.
-    """
-
-    ALL = 0
-    NONE = 1
-    KNIGHTS = 2
-    PALADINS = 3
-    SORCERERS = 4
-    DRUIDS = 5
-
-    @classmethod
-    def from_name(cls, name, all_fallback=True):
-        """Get a vocation filter from a vocation's name.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the vocation.
-        all_fallback: :class:`bool`
-            Whether to return :py:attr:`ALL` if no match is found. Otherwise, :obj:`None` will be returned.
-
-        Returns
-        -------
-        VocationFilter, optional:
-            The matching vocation filter.
-        """
-        name = name.upper()
-        for vocation in cls:  # type: VocationFilter
-            if vocation.name in name or vocation.name[:-1] in name and vocation != cls.ALL:
-                return vocation
-        if all_fallback or name.upper() == "ALL":
-            return cls.ALL
-        return None
-
-
-class VocationSpellFilter(str, Enum):
-    """The possible vocation types to filter out spells."""
-
-    DRUID = "Druid"
-    KNIGHT = "Knight"
-    PALADIN = "Paladin"
-    SORCERER = "Sorcerer"
+    @property
+    def base(self):
+        if self == self.ELDER_DRUID:
+            return self.DRUID
+        elif self == self.MASTER_SORCERER:
+            return self.SORCERER
+        elif self == self.ROYAL_PALADIN:
+            return self.PALADIN
+        elif self == self.ELITE_KNIGHT:
+            return self.KNIGHT
+        return self
 
 
 class WorldLocation(str, Enum):

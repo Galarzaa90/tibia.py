@@ -23,8 +23,7 @@ Enumerations are provided for various values in order to avoid depending on stri
 
 Many of these enumerations correspond to available options in forms in Tibia.com
 
-
-.. autoclass:: AuctionOrder
+.. autoclass:: AuctionBattlEyeFilter
     :members:
     :undoc-members:
 
@@ -32,7 +31,19 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :members:
     :undoc-members:
 
+.. autoclass:: AuctionOrderDirection
+    :members:
+    :undoc-members:
+
+.. autoclass:: AuctionPvpTypeFilter
+    :members:
+    :undoc-members:
+
 .. autoclass:: AuctionSearchType
+    :members:
+    :undoc-members:
+
+.. autoclass:: AuctionSkillFilter
     :members:
     :undoc-members:
 
@@ -40,15 +51,15 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :members:
     :undoc-members:
 
+.. autoclass:: AuctionVocationFilter
+    :members:
+    :undoc-members:
+
+.. autoclass:: AvailableForumSection
+    :members:
+    :undoc-members:
+
 .. autoclass:: BattlEyeType
-    :members:
-    :undoc-members:
-
-.. autoclass:: BattlEyeHighscoresFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: BattlEyeTypeFilter
     :members:
     :undoc-members:
 
@@ -60,7 +71,15 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :members:
     :undoc-members:
 
-.. autoclass:: Category
+.. autoclass:: HighscoresBattlEyeType
+    :members:
+    :undoc-members:
+
+.. autoclass:: HighscoresCategory
+    :members:
+    :undoc-members:
+
+.. autoclass:: HighscoresProfession
     :members:
     :undoc-members:
 
@@ -84,19 +103,11 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :members:
     :undoc-members:
 
-.. autoclass:: PvpTypeFilter
-    :members:
-    :undoc-members:
-
 .. autoclass:: PvpType
     :members:
     :undoc-members:
 
 .. autoclass:: Sex
-    :members:
-    :undoc-members:
-
-.. autoclass:: SkillFilter
     :members:
     :undoc-members:
 
@@ -112,15 +123,11 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :members:
     :undoc-members:
 
+.. autoclass:: SpellVocationFilter
+    :members:
+    :undoc-members:
+
 .. autoclass:: ThreadStatus
-    :members:
-    :undoc-members:
-
-.. autoclass:: TournamentWorldType
-    :members:
-    :undoc-members:
-
-.. autoclass:: TournamentPhase
     :members:
     :undoc-members:
 
@@ -129,18 +136,6 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :undoc-members:
 
 .. autoclass:: Vocation
-    :members:
-    :undoc-members:
-
-.. autoclass:: VocationAuctionFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: VocationFilter
-    :members:
-    :undoc-members:
-
-.. autoclass:: VocationSpellFilter
     :members:
     :undoc-members:
 

@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from tibiapy import VocationSpellFilter, SpellGroup, SpellType, SpellSorting
+from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting
 from tibiapy.urls import get_spells_section_url, get_spell_url, get_static_file_url
 
 __all__ = (
@@ -98,7 +98,7 @@ class Spell(SpellEntry):
 class SpellsSection(BaseModel):
     """The spells section in Tibia.com."""
 
-    vocation: Optional[VocationSpellFilter]
+    vocation: Optional[SpellVocationFilter]
     """The selected vocation filter. If :obj:`None`, spells for any vocation will be shown."""
     group: Optional[SpellGroup]
     """The selected spell group to display. If :obj:`None`, spells for any group will be shown."""

@@ -7,7 +7,7 @@ import bs4
 
 from tibiapy import errors
 from tibiapy.builders.spell import SpellSectionBuilder, SpellBuilder, RuneBuilder
-from tibiapy.enums import SpellGroup, SpellSorting, SpellType, VocationSpellFilter
+from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
 from tibiapy.models.spell import SpellEntry, Rune, SpellsSection, Spell
 from tibiapy.utils import parse_form_data, parse_integer, parse_tibiacom_content, parse_tibiacom_tables, \
     try_enum, parse_link_info
@@ -71,7 +71,7 @@ class SpellsSectionParser:
                 builder.add_entry(spell)
             form = parsed_content.select_one("form")
             data = parse_form_data(form)
-            builder.vocation(try_enum(VocationSpellFilter, data["vocation"]))
+            builder.vocation(try_enum(SpellVocationFilter, data["vocation"]))
             builder.group(try_enum(SpellGroup, data["group"]))
             builder.premium(try_enum(SpellGroup, data["group"]))
             builder.spell_type(try_enum(SpellType, data["type"]))
