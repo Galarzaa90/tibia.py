@@ -85,7 +85,7 @@
         <li><a href="api.html#tibiapy.models.Character.achievement_points">(tibiapy.models.Character attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.Category.ACHIEVEMENTS">ACHIEVEMENTS (tibiapy.Category attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresCategory.ACHIEVEMENTS">ACHIEVEMENTS (tibiapy.HighscoresCategory attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.achievements">achievements (tibiapy.models.AuctionDetails attribute)</a>
 
@@ -115,7 +115,7 @@
         <li><a href="api.html#tibiapy.TibiaResponse.age">(tibiapy.TibiaResponse attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.VocationFilter.ALL">ALL (tibiapy.VocationFilter attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresProfession.ALL">ALL (tibiapy.HighscoresProfession attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.BlessingEntry.amount">amount (tibiapy.models.BlessingEntry attribute)</a>
 
@@ -137,12 +137,10 @@
       </ul></li>
       <li><a href="api.html#tibiapy.models.ForumBoard.announcements">announcements (tibiapy.models.ForumBoard attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.BattlEyeHighscoresFilter.ANY_WORLD">ANY_WORLD (tibiapy.BattlEyeHighscoresFilter attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresBattlEyeType.ANY_WORLD">ANY_WORLD (tibiapy.HighscoresBattlEyeType attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.Death.assists">assists (tibiapy.models.Death attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#tibiapy.SpellGroup.ATTACK">ATTACK (tibiapy.SpellGroup attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.HouseOrder.AUCTION_END">AUCTION_END (tibiapy.HouseOrder attribute)</a>
@@ -153,19 +151,29 @@
         <li><a href="api.html#tibiapy.models.House.auction_end">(tibiapy.models.House attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#tibiapy.models.Auction.auction_id">auction_id (tibiapy.models.Auction attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.Auction.auction_start">auction_start (tibiapy.models.Auction attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.HouseStatus.AUCTIONED">AUCTIONED (tibiapy.HouseStatus attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionBattlEyeFilter">AuctionBattlEyeFilter (class in tibiapy)</a>
 </li>
-      <li><a href="api.html#tibiapy.AuctionOrder">AuctionOrder (class in tibiapy)</a>
+      <li><a href="api.html#tibiapy.HouseStatus.AUCTIONED">AUCTIONED (tibiapy.HouseStatus attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.AuctionOrderBy">AuctionOrderBy (class in tibiapy)</a>
 </li>
+      <li><a href="api.html#tibiapy.AuctionOrderDirection">AuctionOrderDirection (class in tibiapy)</a>
+</li>
+      <li><a href="api.html#tibiapy.AuctionPvpTypeFilter">AuctionPvpTypeFilter (class in tibiapy)</a>
+</li>
       <li><a href="api.html#tibiapy.AuctionSearchType">AuctionSearchType (class in tibiapy)</a>
 </li>
+      <li><a href="api.html#tibiapy.AuctionSkillFilter">AuctionSkillFilter (class in tibiapy)</a>
+</li>
       <li><a href="api.html#tibiapy.AuctionStatus">AuctionStatus (class in tibiapy)</a>
+</li>
+      <li><a href="api.html#tibiapy.AuctionVocationFilter">AuctionVocationFilter (class in tibiapy)</a>
 </li>
       <li><a href="api.html#tibiapy.models.ForumAnnouncement.author">author (tibiapy.models.ForumAnnouncement attribute)</a>
 
@@ -197,12 +205,14 @@
         <li><a href="api.html#tibiapy.models.Leaderboard.available_worlds">(tibiapy.models.Leaderboard attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api.html#tibiapy.AvailableForumSection">AvailableForumSection (class in tibiapy)</a>
+</li>
       <li><a href="api.html#tibiapy.AuctionOrderBy.AXE_FIGHTING">AXE_FIGHTING (tibiapy.AuctionOrderBy attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.Category.AXE_FIGHTING">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.AXE_FIGHTING">(tibiapy.AuctionSkillFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.SkillFilter.AXE_FIGHTING">(tibiapy.SkillFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresCategory.AXE_FIGHTING">(tibiapy.HighscoresCategory attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -211,6 +221,8 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#tibiapy.Vocation.base">base (tibiapy.Vocation property)</a>
+</li>
       <li><a href="api.html#tibiapy.models.AuctionFilters.battleye">battleye (tibiapy.models.AuctionFilters attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.BaseWorld.battleye_date">battleye_date (tibiapy.models.BaseWorld attribute)</a>
@@ -239,11 +251,7 @@
         <li><a href="api.html#tibiapy.models.WorldEntry.battleye_type">(tibiapy.models.WorldEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.BattlEyeHighscoresFilter">BattlEyeHighscoresFilter (class in tibiapy)</a>
-</li>
       <li><a href="api.html#tibiapy.BattlEyeType">BattlEyeType (class in tibiapy)</a>
-</li>
-      <li><a href="api.html#tibiapy.BattlEyeTypeFilter">BattlEyeTypeFilter (class in tibiapy)</a>
 </li>
       <li><a href="api.html#tibiapy.BazaarType">BazaarType (class in tibiapy)</a>
 </li>
@@ -299,7 +307,7 @@
 </li>
       <li><a href="api.html#tibiapy.models.BoostedCreatures.boss">boss (tibiapy.models.BoostedCreatures attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.Category.BOSS_POINTS">BOSS_POINTS (tibiapy.Category attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresCategory.BOSS_POINTS">BOSS_POINTS (tibiapy.HighscoresCategory attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.boss_points">boss_points (tibiapy.models.AuctionDetails attribute)</a>
 </li>
@@ -323,8 +331,6 @@
 </li>
       <li><a href="api.html#tibiapy.models.NewsArchive.categories">categories (tibiapy.models.NewsArchive attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.Category">Category (class in tibiapy)</a>
-</li>
       <li><a href="api.html#tibiapy.models.BaseNews.category">category (tibiapy.models.BaseNews attribute)</a>
 
       <ul>
@@ -345,7 +351,7 @@
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.charm_expansion">charm_expansion (tibiapy.models.AuctionDetails attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.Category.CHARM_POINTS">CHARM_POINTS (tibiapy.Category attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresCategory.CHARM_POINTS">CHARM_POINTS (tibiapy.HighscoresCategory attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.charms">charms (tibiapy.models.AuctionDetails attribute)</a>
 </li>
@@ -360,14 +366,16 @@
       <li><a href="api.html#tibiapy.AuctionOrderBy.CLUB_FIGHTING">CLUB_FIGHTING (tibiapy.AuctionOrderBy attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.Category.CLUB_FIGHTING">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.CLUB_FIGHTING">(tibiapy.AuctionSkillFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.SkillFilter.CLUB_FIGHTING">(tibiapy.SkillFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresCategory.CLUB_FIGHTING">(tibiapy.HighscoresCategory attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.models.Character.comment">comment (tibiapy.models.Character attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.NewsCategory.COMMUNITY">COMMUNITY (tibiapy.NewsCategory attribute)</a>
+</li>
+      <li><a href="api.html#tibiapy.AvailableForumSection.COMMUNITY_BOARDS">COMMUNITY_BOARDS (tibiapy.AvailableForumSection attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.BestiaryEntry.completed">completed (tibiapy.models.BestiaryEntry property)</a>
 </li>
@@ -538,24 +546,24 @@
       <li><a href="api.html#tibiapy.AuctionOrderBy.DISTANCE_FIGHTING">DISTANCE_FIGHTING (tibiapy.AuctionOrderBy attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.Category.DISTANCE_FIGHTING">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.DISTANCE_FIGHTING">(tibiapy.AuctionSkillFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.SkillFilter.DISTANCE_FIGHTING">(tibiapy.SkillFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresCategory.DISTANCE_FIGHTING">(tibiapy.HighscoresCategory attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.models.LeaderboardEntry.drome_level">drome_level (tibiapy.models.LeaderboardEntry attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.Category.DROME_SCORE">DROME_SCORE (tibiapy.Category attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresCategory.DROME_SCORE">DROME_SCORE (tibiapy.HighscoresCategory attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.Vocation.DRUID">DRUID (tibiapy.Vocation attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionVocationFilter.DRUID">DRUID (tibiapy.AuctionVocationFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.VocationAuctionFilter.DRUID">(tibiapy.VocationAuctionFilter attribute)</a>
+        <li><a href="api.html#tibiapy.SpellVocationFilter.DRUID">(tibiapy.SpellVocationFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.VocationSpellFilter.DRUID">(tibiapy.VocationSpellFilter attribute)</a>
+        <li><a href="api.html#tibiapy.Vocation.DRUID">(tibiapy.Vocation attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.VocationFilter.DRUIDS">DRUIDS (tibiapy.VocationFilter attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresProfession.DRUIDS">DRUIDS (tibiapy.HighscoresProfession attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.EventEntry.duration">duration (tibiapy.models.EventEntry property)</a>
 
@@ -599,8 +607,6 @@
         <li><a href="api.html#tibiapy.models.NewsArchive.end_date">(tibiapy.models.NewsArchive attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.TournamentPhase.ENDED">ENDED (tibiapy.TournamentPhase attribute)</a>
-</li>
       <li><a href="api.html#tibiapy.models.CharacterBazaar.entries">entries (tibiapy.models.CharacterBazaar attribute)</a>
 
       <ul>
@@ -661,7 +667,7 @@
       </ul></li>
       <li><a href="api.html#tibiapy.SpellSorting.EXP_LEVEL">EXP_LEVEL (tibiapy.SpellSorting attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.Category.EXPERIENCE">EXPERIENCE (tibiapy.Category attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresCategory.EXPERIENCE">EXPERIENCE (tibiapy.HighscoresCategory attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.experience">experience (tibiapy.models.AuctionDetails attribute)</a>
 
@@ -741,10 +747,10 @@
 </li>
       <li><a href="api.html#tibiapy.Client.fetch_library_bosses">fetch_library_bosses() (tibiapy.Client method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#tibiapy.Client.fetch_library_creatures">fetch_library_creatures() (tibiapy.Client method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#tibiapy.Client.fetch_news">fetch_news() (tibiapy.Client method)</a>
 </li>
       <li><a href="api.html#tibiapy.Client.fetch_news_archive">fetch_news_archive() (tibiapy.Client method)</a>
@@ -775,6 +781,8 @@
         <li><a href="api.html#tibiapy.NewsType.filter_name">(tibiapy.NewsType property)</a>
 </li>
       </ul></li>
+      <li><a href="api.html#tibiapy.NewsType.filter_value">filter_value (tibiapy.NewsType property)</a>
+</li>
       <li><a href="api.html#tibiapy.models.CharacterBazaar.filters">filters (tibiapy.models.CharacterBazaar attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.AuctionStatus.FINISHED">FINISHED (tibiapy.AuctionStatus attribute)</a>
@@ -782,17 +790,17 @@
       <li><a href="api.html#tibiapy.AuctionOrderBy.FISHING">FISHING (tibiapy.AuctionOrderBy attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.Category.FISHING">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.FISHING">(tibiapy.AuctionSkillFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.SkillFilter.FISHING">(tibiapy.SkillFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresCategory.FISHING">(tibiapy.HighscoresCategory attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.AuctionOrderBy.FIST_FIGHTING">FIST_FIGHTING (tibiapy.AuctionOrderBy attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.Category.FIST_FIGHTING">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.FIST_FIGHTING">(tibiapy.AuctionSkillFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.SkillFilter.FIST_FIGHTING">(tibiapy.SkillFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresCategory.FIST_FIGHTING">(tibiapy.HighscoresCategory attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.Forbidden">Forbidden (class in tibiapy)</a>
@@ -805,7 +813,7 @@
 </li>
       <li><a href="api.html#tibiapy.ThreadStatus.from_icon">from_icon() (tibiapy.ThreadStatus class method)</a>
 </li>
-      <li><a href="api.html#tibiapy.VocationFilter.from_name">from_name() (tibiapy.VocationFilter class method)</a>
+      <li><a href="api.html#tibiapy.HighscoresProfession.from_name">from_name() (tibiapy.HighscoresProfession class method)</a>
 </li>
       <li><a href="api.html#tibiapy.models.BaseModel.from_orm">from_orm() (tibiapy.models.BaseModel class method)</a>
 </li>
@@ -965,16 +973,16 @@
         <li><a href="api.html#tibiapy.models.ThreadEntry.golden_frame">(tibiapy.models.ThreadEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.Category.GOSHNARS_TAINT">GOSHNARS_TAINT (tibiapy.Category attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresCategory.GOSHNARS_TAINT">GOSHNARS_TAINT (tibiapy.HighscoresCategory attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.Achievement.grade">grade (tibiapy.models.Achievement attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.BattlEyeHighscoresFilter.GREEN">GREEN (tibiapy.BattlEyeHighscoresFilter attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionBattlEyeFilter.GREEN">GREEN (tibiapy.AuctionBattlEyeFilter attribute)</a>
 
       <ul>
         <li><a href="api.html#tibiapy.BattlEyeType.GREEN">(tibiapy.BattlEyeType attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.BattlEyeTypeFilter.GREEN">(tibiapy.BattlEyeTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresBattlEyeType.GREEN">(tibiapy.HighscoresBattlEyeType attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.models.Rune.group">group (tibiapy.models.Rune attribute)</a>
@@ -992,6 +1000,8 @@
       <li><a href="api.html#tibiapy.models.Spell.group_secondary">group_secondary (tibiapy.models.Spell attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.ForumAuthor.guild">guild (tibiapy.models.ForumAuthor attribute)</a>
+</li>
+      <li><a href="api.html#tibiapy.AvailableForumSection.GUILD_BOARDS">GUILD_BOARDS (tibiapy.AvailableForumSection attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.GuildWarEntry.guild_fee">guild_fee (tibiapy.models.GuildWarEntry attribute)</a>
 </li>
@@ -1023,10 +1033,10 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#tibiapy.PvpType.HARDCORE_PVP">HARDCORE_PVP (tibiapy.PvpType attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionPvpTypeFilter.HARDCORE_PVP">HARDCORE_PVP (tibiapy.AuctionPvpTypeFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.PvpTypeFilter.HARDCORE_PVP">(tibiapy.PvpTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.PvpType.HARDCORE_PVP">(tibiapy.PvpType attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.SpellGroup.HEALING">HEALING (tibiapy.SpellGroup attribute)</a>
@@ -1043,16 +1053,22 @@
 </li>
       <li><a href="api.html#tibiapy.models.House.highest_bidder_url">highest_bidder_url (tibiapy.models.House property)</a>
 </li>
-      <li><a href="api.html#tibiapy.AuctionOrder.HIGHEST_LATEST">HIGHEST_LATEST (tibiapy.AuctionOrder attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionOrderDirection.HIGHEST_LATEST">HIGHEST_LATEST (tibiapy.AuctionOrderDirection attribute)</a>
+</li>
+      <li><a href="api.html#tibiapy.HighscoresBattlEyeType">HighscoresBattlEyeType (class in tibiapy)</a>
+</li>
+      <li><a href="api.html#tibiapy.HighscoresCategory">HighscoresCategory (class in tibiapy)</a>
+</li>
+      <li><a href="api.html#tibiapy.HighscoresProfession">HighscoresProfession (class in tibiapy)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.hireling_jobs">hireling_jobs (tibiapy.models.AuctionDetails attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.hireling_outfits">hireling_outfits (tibiapy.models.AuctionDetails attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.models.AuctionDetails.hirelings">hirelings (tibiapy.models.AuctionDetails attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#tibiapy.models.AuctionDetails.hirelings">hirelings (tibiapy.models.AuctionDetails attribute)</a>
+</li>
       <li><a href="api.html#tibiapy.BazaarType.HISTORY">HISTORY (tibiapy.BazaarType attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.GuildWars.history">history (tibiapy.models.GuildWars attribute)</a>
@@ -1149,12 +1165,12 @@
 </li>
       <li><a href="api.html#tibiapy.AuctionStatus.IN_PROGRESS">IN_PROGRESS (tibiapy.AuctionStatus attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.BattlEyeHighscoresFilter.INITIALLY_PROTECTED">INITIALLY_PROTECTED (tibiapy.BattlEyeHighscoresFilter attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionBattlEyeFilter.INITIALLY_PROTECTED">INITIALLY_PROTECTED (tibiapy.AuctionBattlEyeFilter attribute)</a>
 
       <ul>
         <li><a href="api.html#tibiapy.BattlEyeType.INITIALLY_PROTECTED">(tibiapy.BattlEyeType attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.BattlEyeTypeFilter.INITIALLY_PROTECTED">(tibiapy.BattlEyeTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresBattlEyeType.INITIALLY_PROTECTED">(tibiapy.HighscoresBattlEyeType attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.SpellType.INSTANT">INSTANT (tibiapy.SpellType attribute)</a>
@@ -1211,15 +1227,15 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#tibiapy.Vocation.KNIGHT">KNIGHT (tibiapy.Vocation attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionVocationFilter.KNIGHT">KNIGHT (tibiapy.AuctionVocationFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.VocationAuctionFilter.KNIGHT">(tibiapy.VocationAuctionFilter attribute)</a>
+        <li><a href="api.html#tibiapy.SpellVocationFilter.KNIGHT">(tibiapy.SpellVocationFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.VocationSpellFilter.KNIGHT">(tibiapy.VocationSpellFilter attribute)</a>
+        <li><a href="api.html#tibiapy.Vocation.KNIGHT">(tibiapy.Vocation attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.VocationFilter.KNIGHTS">KNIGHTS (tibiapy.VocationFilter attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresProfession.KNIGHTS">KNIGHTS (tibiapy.HighscoresProfession attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1287,37 +1303,37 @@
         <li><a href="api.html#tibiapy.models.GuildEntry.logo_url">(tibiapy.models.GuildEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.AuctionOrder.lookup">lookup (tibiapy.AuctionOrder attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionBattlEyeFilter.lookup">lookup (tibiapy.AuctionBattlEyeFilter attribute)</a>
 
       <ul>
         <li><a href="api.html#tibiapy.AuctionOrderBy.lookup">(tibiapy.AuctionOrderBy attribute)</a>
 </li>
+        <li><a href="api.html#tibiapy.AuctionOrderDirection.lookup">(tibiapy.AuctionOrderDirection attribute)</a>
+</li>
+        <li><a href="api.html#tibiapy.AuctionPvpTypeFilter.lookup">(tibiapy.AuctionPvpTypeFilter attribute)</a>
+</li>
         <li><a href="api.html#tibiapy.AuctionSearchType.lookup">(tibiapy.AuctionSearchType attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.BattlEyeHighscoresFilter.lookup">(tibiapy.BattlEyeHighscoresFilter attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.lookup">(tibiapy.AuctionSkillFilter attribute)</a>
+</li>
+        <li><a href="api.html#tibiapy.AuctionVocationFilter.lookup">(tibiapy.AuctionVocationFilter attribute)</a>
 </li>
         <li><a href="api.html#tibiapy.BattlEyeType.lookup">(tibiapy.BattlEyeType attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.BattlEyeTypeFilter.lookup">(tibiapy.BattlEyeTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresBattlEyeType.lookup">(tibiapy.HighscoresBattlEyeType attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.Category.lookup">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresCategory.lookup">(tibiapy.HighscoresCategory attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.PvpTypeFilter.lookup">(tibiapy.PvpTypeFilter attribute)</a>
-</li>
-        <li><a href="api.html#tibiapy.SkillFilter.lookup">(tibiapy.SkillFilter attribute)</a>
-</li>
-        <li><a href="api.html#tibiapy.VocationAuctionFilter.lookup">(tibiapy.VocationAuctionFilter attribute)</a>
-</li>
-        <li><a href="api.html#tibiapy.VocationFilter.lookup">(tibiapy.VocationFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresProfession.lookup">(tibiapy.HighscoresProfession attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.Client.loop">loop (tibiapy.Client attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.Creature.loot">loot (tibiapy.models.Creature attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.AuctionOrder.LOWEST_EARLIEST">LOWEST_EARLIEST (tibiapy.AuctionOrder attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionOrderDirection.LOWEST_EARLIEST">LOWEST_EARLIEST (tibiapy.AuctionOrderDirection attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.Category.LOYALTY_POINTS">LOYALTY_POINTS (tibiapy.Category attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresCategory.LOYALTY_POINTS">LOYALTY_POINTS (tibiapy.HighscoresCategory attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AccountInformation.loyalty_title">loyalty_title (tibiapy.models.AccountInformation attribute)</a>
 </li>
@@ -1330,12 +1346,12 @@
       <li><a href="api.html#tibiapy.AuctionOrderBy.MAGIC_LEVEL">MAGIC_LEVEL (tibiapy.AuctionOrderBy attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.Category.MAGIC_LEVEL">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.MAGIC_LEVEL">(tibiapy.AuctionSkillFilter attribute)</a>
+</li>
+        <li><a href="api.html#tibiapy.HighscoresCategory.MAGIC_LEVEL">(tibiapy.HighscoresCategory attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.models.Rune.magic_level">magic_level (tibiapy.models.Rune attribute)</a>
-</li>
-      <li><a href="api.html#tibiapy.SkillFilter.MAGIC_LEVEL">MAGIC_LEVEL (tibiapy.SkillFilter attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.Rune.magic_type">magic_type (tibiapy.models.Rune attribute)</a>
 
@@ -1540,19 +1556,19 @@
 </li>
       <li><a href="api.html#tibiapy.models.ForumThread.next_topic_number">next_topic_number (tibiapy.models.ForumThread attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.ThreadStatus.NONE">NONE (tibiapy.ThreadStatus attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionVocationFilter.NONE">NONE (tibiapy.AuctionVocationFilter attribute)</a>
 
       <ul>
+        <li><a href="api.html#tibiapy.HighscoresProfession.NONE">(tibiapy.HighscoresProfession attribute)</a>
+</li>
+        <li><a href="api.html#tibiapy.ThreadStatus.NONE">(tibiapy.ThreadStatus attribute)</a>
+</li>
         <li><a href="api.html#tibiapy.Vocation.NONE">(tibiapy.Vocation attribute)</a>
-</li>
-        <li><a href="api.html#tibiapy.VocationAuctionFilter.NONE">(tibiapy.VocationAuctionFilter attribute)</a>
-</li>
-        <li><a href="api.html#tibiapy.VocationFilter.NONE">(tibiapy.VocationFilter attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.WorldLocation.NORTH_AMERICA">NORTH_AMERICA (tibiapy.WorldLocation attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.BattlEyeTypeFilter.NOT_PROTECTED">NOT_PROTECTED (tibiapy.BattlEyeTypeFilter attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionBattlEyeFilter.NOT_PROTECTED">NOT_PROTECTED (tibiapy.AuctionBattlEyeFilter attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1588,10 +1604,10 @@
 </li>
       <li><a href="api.html#tibiapy.models.Guild.open_applications">open_applications (tibiapy.models.Guild attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.PvpType.OPEN_PVP">OPEN_PVP (tibiapy.PvpType attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionPvpTypeFilter.OPEN_PVP">OPEN_PVP (tibiapy.AuctionPvpTypeFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.PvpTypeFilter.OPEN_PVP">(tibiapy.PvpTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.PvpType.OPEN_PVP">(tibiapy.PvpType attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.models.GuildWarEntry.opponent_fee">opponent_fee (tibiapy.models.GuildWarEntry attribute)</a>
@@ -1604,10 +1620,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#tibiapy.models.GuildWarEntry.opponent_score">opponent_score (tibiapy.models.GuildWarEntry attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.PvpType.OPTIONAL_PVP">OPTIONAL_PVP (tibiapy.PvpType attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionPvpTypeFilter.OPTIONAL_PVP">OPTIONAL_PVP (tibiapy.AuctionPvpTypeFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.PvpTypeFilter.OPTIONAL_PVP">(tibiapy.PvpTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.PvpType.OPTIONAL_PVP">(tibiapy.PvpType attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.models.AuctionFilters.order">order (tibiapy.models.AuctionFilters attribute)</a>
@@ -1658,15 +1674,15 @@
         <li><a href="api.html#tibiapy.models.GuildHouse.paid_until_date">(tibiapy.models.GuildHouse attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.Vocation.PALADIN">PALADIN (tibiapy.Vocation attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionVocationFilter.PALADIN">PALADIN (tibiapy.AuctionVocationFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.VocationAuctionFilter.PALADIN">(tibiapy.VocationAuctionFilter attribute)</a>
+        <li><a href="api.html#tibiapy.SpellVocationFilter.PALADIN">(tibiapy.SpellVocationFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.VocationSpellFilter.PALADIN">(tibiapy.VocationSpellFilter attribute)</a>
+        <li><a href="api.html#tibiapy.Vocation.PALADIN">(tibiapy.Vocation attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.VocationFilter.PALADINS">PALADINS (tibiapy.VocationFilter attribute)</a>
+      <li><a href="api.html#tibiapy.HighscoresProfession.PALADINS">PALADINS (tibiapy.HighscoresProfession attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.BaseModel.parse_file">parse_file() (tibiapy.models.BaseModel class method)</a>
 </li>
@@ -1796,12 +1812,12 @@
 </li>
       <li><a href="api.html#tibiapy.models.SkillEntry.progress">progress (tibiapy.models.SkillEntry attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.BattlEyeHighscoresFilter.PROTECTED">PROTECTED (tibiapy.BattlEyeHighscoresFilter attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionBattlEyeFilter.PROTECTED">PROTECTED (tibiapy.AuctionBattlEyeFilter attribute)</a>
 
       <ul>
         <li><a href="api.html#tibiapy.BattlEyeType.PROTECTED">(tibiapy.BattlEyeType attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.BattlEyeTypeFilter.PROTECTED">(tibiapy.BattlEyeTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresBattlEyeType.PROTECTED">(tibiapy.HighscoresBattlEyeType attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.Client.proxy_url">proxy_url (tibiapy.Client attribute)</a>
@@ -1819,8 +1835,6 @@
       <li><a href="api.html#tibiapy.models.Highscores.pvp_types_filter">pvp_types_filter (tibiapy.models.Highscores attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.PvpType">PvpType (class in tibiapy)</a>
-</li>
-      <li><a href="api.html#tibiapy.PvpTypeFilter">PvpTypeFilter (class in tibiapy)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1862,12 +1876,8 @@
         <li><a href="api.html#tibiapy.models.WorldOverview.record_date">(tibiapy.models.WorldOverview attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.TournamentWorldType.REGULAR">REGULAR (tibiapy.TournamentWorldType attribute)</a>
-
-      <ul>
-        <li><a href="api.html#tibiapy.TransferType.REGULAR">(tibiapy.TransferType attribute)</a>
+      <li><a href="api.html#tibiapy.TransferType.REGULAR">REGULAR (tibiapy.TransferType attribute)</a>
 </li>
-      </ul></li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.regular_world_transfer_available">regular_world_transfer_available (tibiapy.models.AuctionDetails property)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.regular_world_transfer_available_date">regular_world_transfer_available_date (tibiapy.models.AuctionDetails attribute)</a>
@@ -1885,8 +1895,6 @@
       <li><a href="api.html#tibiapy.models.ThreadEntry.replies">replies (tibiapy.models.ThreadEntry attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.Character.residence">residence (tibiapy.models.Character attribute)</a>
-</li>
-      <li><a href="api.html#tibiapy.TournamentWorldType.RESTRICTED">RESTRICTED (tibiapy.TournamentWorldType attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.CharacterBazaar.results_count">results_count (tibiapy.models.CharacterBazaar attribute)</a>
 
@@ -1918,16 +1926,16 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#tibiapy.PvpType.RETRO_HARDCORE_PVP">RETRO_HARDCORE_PVP (tibiapy.PvpType attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionPvpTypeFilter.RETRO_HARDCORE_PVP">RETRO_HARDCORE_PVP (tibiapy.AuctionPvpTypeFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.PvpTypeFilter.RETRO_HARDCORE_PVP">(tibiapy.PvpTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.PvpType.RETRO_HARDCORE_PVP">(tibiapy.PvpType attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.PvpType.RETRO_OPEN_PVP">RETRO_OPEN_PVP (tibiapy.PvpType attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionPvpTypeFilter.RETRO_OPEN_PVP">RETRO_OPEN_PVP (tibiapy.AuctionPvpTypeFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.PvpTypeFilter.RETRO_OPEN_PVP">(tibiapy.PvpTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.PvpType.RETRO_OPEN_PVP">(tibiapy.PvpType attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.models.Leaderboard.rotation">rotation (tibiapy.models.Leaderboard attribute)</a>
@@ -1939,8 +1947,6 @@
       <li><a href="api.html#tibiapy.models.Spell.rune">rune (tibiapy.models.Spell attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.SpellType.RUNE">RUNE (tibiapy.SpellType attribute)</a>
-</li>
-      <li><a href="api.html#tibiapy.TournamentPhase.RUNNING">RUNNING (tibiapy.TournamentPhase attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -2009,13 +2015,11 @@
       <li><a href="api.html#tibiapy.AuctionOrderBy.SHIELDING">SHIELDING (tibiapy.AuctionOrderBy attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.Category.SHIELDING">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.SHIELDING">(tibiapy.AuctionSkillFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.SkillFilter.SHIELDING">(tibiapy.SkillFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresCategory.SHIELDING">(tibiapy.HighscoresCategory attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.TournamentPhase.SIGN_UP">SIGN_UP (tibiapy.TournamentPhase attribute)</a>
-</li>
       <li><a href="api.html#tibiapy.models.ForumPost.signature">signature (tibiapy.models.ForumPost attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.SiteMaintenanceError">SiteMaintenanceError (class in tibiapy)</a>
@@ -2030,26 +2034,24 @@
       </ul></li>
       <li><a href="api.html#tibiapy.models.AuctionFilters.skill">skill (tibiapy.models.AuctionFilters attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.SkillFilter">SkillFilter (class in tibiapy)</a>
-</li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.skills">skills (tibiapy.models.AuctionDetails attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.skills_map">skills_map (tibiapy.models.AuctionDetails property)</a>
 </li>
       <li><a href="api.html#tibiapy.NewsCategory.small_icon_url">small_icon_url (tibiapy.NewsCategory property)</a>
 </li>
-      <li><a href="api.html#tibiapy.Vocation.SORCERER">SORCERER (tibiapy.Vocation attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionVocationFilter.SORCERER">SORCERER (tibiapy.AuctionVocationFilter attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.VocationAuctionFilter.SORCERER">(tibiapy.VocationAuctionFilter attribute)</a>
+        <li><a href="api.html#tibiapy.SpellVocationFilter.SORCERER">(tibiapy.SpellVocationFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.VocationSpellFilter.SORCERER">(tibiapy.VocationSpellFilter attribute)</a>
+        <li><a href="api.html#tibiapy.Vocation.SORCERER">(tibiapy.Vocation attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api.html#tibiapy.HighscoresProfession.SORCERERS">SORCERERS (tibiapy.HighscoresProfession attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#tibiapy.VocationFilter.SORCERERS">SORCERERS (tibiapy.VocationFilter attribute)</a>
-</li>
       <li><a href="api.html#tibiapy.models.SpellsSection.sort_by">sort_by (tibiapy.models.SpellsSection attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.models.Spell.soul_points">soul_points (tibiapy.models.Spell attribute)</a>
@@ -2071,6 +2073,8 @@
       <li><a href="api.html#tibiapy.SpellSorting">SpellSorting (class in tibiapy)</a>
 </li>
       <li><a href="api.html#tibiapy.SpellType">SpellType (class in tibiapy)</a>
+</li>
+      <li><a href="api.html#tibiapy.SpellVocationFilter">SpellVocationFilter (class in tibiapy)</a>
 </li>
       <li><a href="api.html#tibiapy.models.AuctionDetails.spent_charm_points">spent_charm_points (tibiapy.models.AuctionDetails attribute)</a>
 </li>
@@ -2128,14 +2132,16 @@
         <li><a href="api.html#tibiapy.SpellGroup.SUPPORT">(tibiapy.SpellGroup attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api.html#tibiapy.AvailableForumSection.SUPPORT_BOARDS">SUPPORT_BOARDS (tibiapy.AvailableForumSection attribute)</a>
+</li>
       <li><a href="api.html#tibiapy.models.GuildWarEntry.surrender">surrender (tibiapy.models.GuildWarEntry attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.AuctionOrderBy.SWORD_FIGHTING">SWORD_FIGHTING (tibiapy.AuctionOrderBy attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.Category.SWORD_FIGHTING">(tibiapy.Category attribute)</a>
+        <li><a href="api.html#tibiapy.AuctionSkillFilter.SWORD_FIGHTING">(tibiapy.AuctionSkillFilter attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.SkillFilter.SWORD_FIGHTING">(tibiapy.SkillFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresCategory.SWORD_FIGHTING">(tibiapy.HighscoresCategory attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -2270,10 +2276,6 @@
         <li><a href="api.html#tibiapy.models.ThreadEntry.total_pages">(tibiapy.models.ThreadEntry attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.TournamentPhase">TournamentPhase (class in tibiapy)</a>
-</li>
-      <li><a href="api.html#tibiapy.TournamentWorldType">TournamentWorldType (class in tibiapy)</a>
-</li>
       <li><a href="api.html#tibiapy.models.CharacterHouse.town">town (tibiapy.models.CharacterHouse attribute)</a>
 
       <ul>
@@ -2282,6 +2284,8 @@
         <li><a href="api.html#tibiapy.models.HousesSection.town">(tibiapy.models.HousesSection attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api.html#tibiapy.AvailableForumSection.TRADE_BOARDS">TRADE_BOARDS (tibiapy.AvailableForumSection attribute)</a>
+</li>
       <li><a href="api.html#tibiapy.models.Character.traded">traded (tibiapy.models.Character attribute)</a>
 
       <ul>
@@ -2342,10 +2346,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#tibiapy.models.Character.unlocked_titles">unlocked_titles (tibiapy.models.Character attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.BattlEyeHighscoresFilter.UNPROTECTED">UNPROTECTED (tibiapy.BattlEyeHighscoresFilter attribute)</a>
+      <li><a href="api.html#tibiapy.BattlEyeType.UNPROTECTED">UNPROTECTED (tibiapy.BattlEyeType attribute)</a>
 
       <ul>
-        <li><a href="api.html#tibiapy.BattlEyeType.UNPROTECTED">(tibiapy.BattlEyeType attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresBattlEyeType.UNPROTECTED">(tibiapy.HighscoresBattlEyeType attribute)</a>
 </li>
       </ul></li>
       <li><a href="api.html#tibiapy.models.BaseModel.update_forward_refs">update_forward_refs() (tibiapy.models.BaseModel class method)</a>
@@ -2518,18 +2522,12 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#tibiapy.VocationAuctionFilter">VocationAuctionFilter (class in tibiapy)</a>
-</li>
-      <li><a href="api.html#tibiapy.VocationFilter">VocationFilter (class in tibiapy)</a>
-</li>
       <li><a href="api.html#tibiapy.models.Rune.vocations">vocations (tibiapy.models.Rune attribute)</a>
 
       <ul>
         <li><a href="api.html#tibiapy.models.Spell.vocations">(tibiapy.models.Spell attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api.html#tibiapy.VocationSpellFilter">VocationSpellFilter (class in tibiapy)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -2588,6 +2586,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#tibiapy.AvailableForumSection.WORLD_BOARDS">WORLD_BOARDS (tibiapy.AvailableForumSection attribute)</a>
+</li>
       <li><a href="api.html#tibiapy.models.World.world_quest_titles">world_quest_titles (tibiapy.models.World attribute)</a>
 </li>
       <li><a href="api.html#tibiapy.WorldLocation">WorldLocation (class in tibiapy)</a>
@@ -2602,12 +2602,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#tibiapy.models.EventSchedule.year">year (tibiapy.models.EventSchedule attribute)</a>
 </li>
-      <li><a href="api.html#tibiapy.BattlEyeHighscoresFilter.YELLOW">YELLOW (tibiapy.BattlEyeHighscoresFilter attribute)</a>
+      <li><a href="api.html#tibiapy.AuctionBattlEyeFilter.YELLOW">YELLOW (tibiapy.AuctionBattlEyeFilter attribute)</a>
 
       <ul>
         <li><a href="api.html#tibiapy.BattlEyeType.YELLOW">(tibiapy.BattlEyeType attribute)</a>
 </li>
-        <li><a href="api.html#tibiapy.BattlEyeTypeFilter.YELLOW">(tibiapy.BattlEyeTypeFilter attribute)</a>
+        <li><a href="api.html#tibiapy.HighscoresBattlEyeType.YELLOW">(tibiapy.HighscoresBattlEyeType attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -2695,7 +2695,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2023, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.0.
   </div>
   
   </body>

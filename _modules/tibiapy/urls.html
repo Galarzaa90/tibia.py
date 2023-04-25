@@ -50,11 +50,11 @@
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">Category</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="p">,</span> <span class="n">BattlEyeHighscoresFilter</span><span class="p">,</span> <span class="n">PvpTypeFilter</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">AuctionPvpTypeFilter</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">AuctionFilters</span>
-    <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">VocationSpellFilter</span><span class="p">,</span> \
+    <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">SpellVocationFilter</span><span class="p">,</span> \
         <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellSorting</span>
 
 
@@ -375,9 +375,9 @@
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;post</span><span class="si">{</span><span class="n">post_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span> <span class="n">postid</span><span class="o">=</span><span class="n">post_id</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_highscores_url"><a class="viewcode-back" href="../../api.html#tibiapy.urls.get_highscores_url">[docs]</a><span class="k">def</span> <span class="nf">get_highscores_url</span><span class="p">(</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="p">:</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span>
-                       <span class="n">vocation</span><span class="p">:</span> <span class="n">VocationFilter</span> <span class="o">=</span> <span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                       <span class="n">battleye_type</span><span class="p">:</span> <span class="n">BattlEyeHighscoresFilter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pvp_types</span><span class="p">:</span> <span class="n">PvpTypeFilter</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="get_highscores_url"><a class="viewcode-back" href="../../api.html#tibiapy.urls.get_highscores_url">[docs]</a><span class="k">def</span> <span class="nf">get_highscores_url</span><span class="p">(</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="p">:</span> <span class="n">HighscoresCategory</span> <span class="o">=</span> <span class="n">HighscoresCategory</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span>
+                       <span class="n">vocation</span><span class="p">:</span> <span class="n">HighscoresProfession</span> <span class="o">=</span> <span class="n">HighscoresProfession</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                       <span class="n">battleye_type</span><span class="p">:</span> <span class="n">HighscoresBattlEyeType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pvp_types</span><span class="p">:</span> <span class="n">AuctionPvpTypeFilter</span> <span class="o">=</span> <span class="kc">None</span>
                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Tibia.com URL of the highscores for the given parameters.</span>
 
@@ -385,13 +385,13 @@
 <span class="sd">    ----------</span>
 <span class="sd">    world: :class:`str`, optional</span>
 <span class="sd">        The game world of the desired highscores. If no world is passed, ALL worlds are shown.</span>
-<span class="sd">    category: :class:`.Category`</span>
+<span class="sd">    category: :class:`.HighscoresCategory`</span>
 <span class="sd">        The desired highscores category.</span>
-<span class="sd">    vocation: :class:`.VocationFilter`</span>
+<span class="sd">    vocation: :class:`.HighscoresProfession`</span>
 <span class="sd">        The vocation filter to apply. By default, all vocations will be shown.</span>
 <span class="sd">    page: :class:`int`</span>
 <span class="sd">        The page of highscores to show.</span>
-<span class="sd">    battleye_type: :class:`.BattlEyeHighscoresFilter`, optional</span>
+<span class="sd">    battleye_type: :class:`.HighscoresBattlEyeType`, optional</span>
 <span class="sd">        The battleEye filters to use.</span>
 <span class="sd">    pvp_types: :class:`list` of :class:`.PvpTypeFilter`, optional</span>
 <span class="sd">        The list of PvP types to filter the results for.</span>
@@ -624,13 +624,13 @@
     <span class="k">return</span> <span class="s2">&quot;yes&quot;</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="s2">&quot;no&quot;</span>
 
 
-<div class="viewcode-block" id="get_spells_section_url"><a class="viewcode-back" href="../../api.html#tibiapy.urls.get_spells_section_url">[docs]</a><span class="k">def</span> <span class="nf">get_spells_section_url</span><span class="p">(</span><span class="n">vocation</span><span class="p">:</span> <span class="n">VocationSpellFilter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">SpellGroup</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spell_type</span><span class="p">:</span> <span class="n">SpellType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="get_spells_section_url"><a class="viewcode-back" href="../../api.html#tibiapy.urls.get_spells_section_url">[docs]</a><span class="k">def</span> <span class="nf">get_spells_section_url</span><span class="p">(</span><span class="n">vocation</span><span class="p">:</span> <span class="n">SpellVocationFilter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">SpellGroup</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spell_type</span><span class="p">:</span> <span class="n">SpellType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">premium</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sort</span><span class="p">:</span> <span class="n">SpellSorting</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the spells section with the desired filtering parameters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    vocation: :class:`VocationSpellFilter`, optional</span>
+<span class="sd">    vocation: :class:`SpellVocationFilter`, optional</span>
 <span class="sd">        The vocation to filter in spells for.</span>
 <span class="sd">    group: :class:`SpellGroup`, optional</span>
 <span class="sd">        The spell&#39;s primary cooldown group.</span>
@@ -754,7 +754,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2023, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.0.
   </div>
   
   </body>

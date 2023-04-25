@@ -57,8 +57,8 @@
 <span class="kn">from</span> <span class="nn">pydantic.generics</span> <span class="kn">import</span> <span class="n">GenericModel</span>
 
 <span class="kn">import</span> <span class="nn">tibiapy</span>
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">BattlEyeHighscoresFilter</span><span class="p">,</span> <span class="n">Category</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> \
-    <span class="n">NewsType</span><span class="p">,</span> <span class="n">VocationFilter</span><span class="p">,</span> <span class="n">NumericEnum</span><span class="p">,</span> <span class="n">BazaarType</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> \
+    <span class="n">NewsType</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">NumericEnum</span><span class="p">,</span> <span class="n">BazaarType</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">Character</span><span class="p">,</span> <span class="n">SpellsSection</span><span class="p">,</span> <span class="n">Spell</span><span class="p">,</span> <span class="n">Leaderboard</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">HousesSection</span><span class="p">,</span> \
     <span class="n">Highscores</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">GuildWars</span><span class="p">,</span> <span class="n">GuildsSection</span><span class="p">,</span> <span class="n">CMPostArchive</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="p">,</span> <span class="n">ForumBoard</span><span class="p">,</span> <span class="n">ForumThread</span><span class="p">,</span> <span class="n">ForumAnnouncement</span><span class="p">,</span> \
@@ -1130,7 +1130,7 @@
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
         <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">house</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.fetch_highscores_page"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_highscores_page">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_highscores_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="n">VocationFilter</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<div class="viewcode-block" id="Client.fetch_highscores_page"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_highscores_page">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_highscores_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">HighscoresCategory</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span> <span class="n">vocation</span><span class="o">=</span><span class="n">HighscoresProfession</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                     <span class="n">battleye_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvp_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a single highscores page from Tibia.com.</span>
 
@@ -1142,15 +1142,15 @@
 <span class="sd">        ----------</span>
 <span class="sd">        world: :class:`str`</span>
 <span class="sd">            The world to search the highscores in.</span>
-<span class="sd">        category: :class:`Category`</span>
+<span class="sd">        category: :class:`HighscoresCategory`</span>
 <span class="sd">            The highscores category to search, by default Experience.</span>
-<span class="sd">        vocation: :class:`VocationFilter`</span>
+<span class="sd">        vocation: :class:`HighscoresProfession`</span>
 <span class="sd">            The vocation filter to use. No filter used by default.</span>
 <span class="sd">        page: :class:`int`</span>
 <span class="sd">            The page to fetch, by default the first page is fetched.</span>
 <span class="sd">        battleye_type: :class:`BattlEyeFilter`</span>
 <span class="sd">            The type of BattlEye protection to display results from.</span>
-<span class="sd">        pvp_types: :class:`list` of :class:`PvpTypeFilter`</span>
+<span class="sd">        pvp_types: :class:`list` of :class:`AuctionPvpTypeFilter`</span>
 <span class="sd">            The list of PvP types to filter the results for.</span>
 <span class="sd">        test: :class:`bool`</span>
 <span class="sd">            Whether to request the test website instead.</span>
@@ -1171,7 +1171,7 @@
 <span class="sd">            If an invalid filter combination is passed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pvp_types</span> <span class="o">=</span> <span class="n">pvp_types</span> <span class="ow">or</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">world</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">((</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">BattlEyeHighscoresFilter</span><span class="o">.</span><span class="n">ANY_WORLD</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pvp_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">world</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">((</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">HighscoresBattlEyeType</span><span class="o">.</span><span class="n">ANY_WORLD</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pvp_types</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;BattleEye and PvP type filters can only be used when fetching all worlds.&quot;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_highscores_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">battleye_type</span><span class="p">,</span>
                                                                  <span class="n">pvp_types</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
@@ -1495,7 +1495,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        vocation: :class:`VocationSpellFilter`, optional</span>
+<span class="sd">        vocation: :class:`SpellVocationFilter`, optional</span>
 <span class="sd">            The vocation to filter in spells for.</span>
 <span class="sd">        group: :class:`SpellGroup`, optional</span>
 <span class="sd">            The spell&#39;s primary cooldown group.</span>
@@ -1640,7 +1640,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2023, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.0.
   </div>
   
   </body>

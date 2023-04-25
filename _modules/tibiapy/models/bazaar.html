@@ -50,8 +50,9 @@
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">BattlEyeTypeFilter</span><span class="p">,</span> <span class="n">VocationAuctionFilter</span><span class="p">,</span> <span class="n">SkillFilter</span><span class="p">,</span> <span class="n">AuctionSearchType</span><span class="p">,</span> \
-    <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionOrder</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">,</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">AuctionStatus</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">AuctionPvpTypeFilter</span><span class="p">,</span> <span class="n">AuctionBattlEyeFilter</span><span class="p">,</span> <span class="n">AuctionVocationFilter</span><span class="p">,</span> <span class="n">AuctionSkillFilter</span><span class="p">,</span> \
+    <span class="n">AuctionSearchType</span><span class="p">,</span> \
+    <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionOrderDirection</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">,</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">AuctionStatus</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.pagination</span> <span class="kn">import</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">PaginatedWithUrl</span>
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_character_url</span><span class="p">,</span> <span class="n">get_auction_url</span><span class="p">,</span> <span class="n">get_bazaar_url</span>
 
@@ -96,17 +97,17 @@
 
     <span class="n">world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s world to show characters for.&quot;&quot;&quot;</span>
-    <span class="n">pvp_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">pvp_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionPvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The PvP type of the character&#39;s worlds to show.&quot;&quot;&quot;</span>
-    <span class="n">battleye</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BattlEyeTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">battleye</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionBattlEyeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of BattlEye protection of the character&#39;s worlds to show.&quot;&quot;&quot;</span>
-    <span class="n">vocation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VocationAuctionFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">vocation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionVocationFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character vocation to show results for.&quot;&quot;&quot;</span>
     <span class="n">min_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The minimum level to display.&quot;&quot;&quot;</span>
     <span class="n">max_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum level to display.&quot;&quot;&quot;</span>
-    <span class="n">skill</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SkillFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">skill</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionSkillFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The skill to filter by its level range.&quot;&quot;&quot;</span>
     <span class="n">min_skill_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The minimum skill level of the selected :attr:`skill` to display.&quot;&quot;&quot;</span>
@@ -114,7 +115,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum skill level of the selected :attr:`skill` to display.&quot;&quot;&quot;</span>
     <span class="n">order_by</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionOrderBy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The column or value to order by.&quot;&quot;&quot;</span>
-    <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionOrder</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionOrderDirection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The ordering direction for the results.&quot;&quot;&quot;</span>
     <span class="n">search_string</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The search term to filter out auctions.&quot;&quot;&quot;</span>
@@ -647,7 +648,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2023, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 6.2.0.
   </div>
   
   </body>
