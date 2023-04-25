@@ -106,103 +106,214 @@ Note that if a session is passed, the SOCKS proxy won’t be used and must be ap
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_current_auctions">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_current_auctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tibiapy.models.AuctionFilters" title="tibiapy.models.bazaar.AuctionFilters"><span class="pre">AuctionFilters</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CharacterBazaar" title="tibiapy.models.CharacterBazaar"><span class="pre">CharacterBazaar</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_current_auctions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_current_auctions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch the current auctions in the bazaar.</p>
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_boosted_creature">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_boosted_creature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CreatureEntry" title="tibiapy.models.CreatureEntry"><span class="pre">CreatureEntry</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_boosted_creature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_boosted_creature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch today’s boosted creature.</p>
 <div class="versionadded">
-<p><span class="versionmodified added">New in version 3.3.0.</span></p>
+<p><span class="versionmodified added">New in version 2.1.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 4.0.0: </span>The return type of the data returned was changed to <code class="xref py py-class docutils literal notranslate"><span class="pre">CreatureEntry</span></code>, previous type was removed.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>page</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The desired page to display.</p></li>
-<li><p><strong>filters</strong> (<a class="reference internal" href="#tibiapy.models.AuctionFilters" title="tibiapy.models.AuctionFilters"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuctionFilters</span></code></a>) – The filtering criteria to use.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch from the test website or not.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The current auctions.</p>
+<dd class="field-even"><p>The boosted creature of the day.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterBazaar</span></code></p>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.CreatureEntry" title="tibiapy.models.CreatureEntry"><code class="xref py py-class docutils literal notranslate"><span class="pre">CreatureEntry</span></code></a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
     This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the page number is not 1 or greater.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_auction_history">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_auction_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tibiapy.models.AuctionFilters" title="tibiapy.models.bazaar.AuctionFilters"><span class="pre">AuctionFilters</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CharacterBazaar" title="tibiapy.models.CharacterBazaar"><span class="pre">CharacterBazaar</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_auction_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_auction_history" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch the auction history of the bazaar.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 3.3.0.</span></p>
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_news_archive">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_news_archive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.11)"><span class="pre">date</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.11)"><span class="pre">date</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.NewsCategory" title="tibiapy.enums.NewsCategory"><span class="pre">NewsCategory</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.NewsType" title="tibiapy.enums.NewsType"><span class="pre">NewsType</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.NewsArchive" title="tibiapy.models.NewsArchive"><span class="pre">NewsArchive</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_news_archive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_news_archive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch news from the archive meeting the search criteria.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 5.0.0: </span>The data attribute of the response contains an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">NewsArchive</span></code> instead.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>page</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The page to display.</p></li>
-<li><p><strong>filters</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">AuctionFilters</span></code>) – The filtering criteria to use.</p></li>
+<li><p><strong>start_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a>) – The beginning date to search dates in.</p></li>
+<li><p><strong>end_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a>) – The end date to search dates in.</p></li>
+<li><p><strong>categories</strong> (<cite>list</cite> of <a class="reference internal" href="#tibiapy.NewsCategory" title="tibiapy.NewsCategory"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsCategory</span></code></a>) – The allowed categories to show. If left blank, all categories will be searched.</p></li>
+<li><p><strong>types</strong> (<cite>list</cite> of <a class="reference internal" href="#tibiapy.NewsType" title="tibiapy.NewsType"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsType</span></code></a>) – The allowed news types to show. if unused, all types will be searched.</p></li>
 <li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The character bazaar containing the auction history.</p>
+<dd class="field-even"><p>The news meeting the search criteria.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterBazaar</span></code></p>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.NewsArchive" title="tibiapy.models.NewsArchive"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsArchive</span></code></a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError:</strong> – If <code class="docutils literal notranslate"><span class="pre">begin_date</span></code> is more recent than <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
     This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the page number is not 1 or greater.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_auction">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_auction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auction_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetch_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetch_mounts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetch_outfits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetch_familiars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_details</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.Auction" title="tibiapy.models.Auction"><span class="pre">Auction</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_auction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_auction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch an auction by its ID.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 3.3.0.</span></p>
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_recent_news">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_recent_news</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.NewsCategory" title="tibiapy.enums.NewsCategory"><span class="pre">NewsCategory</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Collection" title="(in Python v3.11)"><span class="pre">Collection</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.NewsType" title="tibiapy.enums.NewsType"><span class="pre">NewsType</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.NewsArchive" title="tibiapy.models.NewsArchive"><span class="pre">NewsArchive</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_recent_news"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_recent_news" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch all the published news in the last specified days.</p>
+<p>This is a shortcut for <a class="reference internal" href="#tibiapy.Client.fetch_news_archive" title="tibiapy.Client.fetch_news_archive"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetch_news_archive()</span></code></a>, to handle dates more easily.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 5.0.0: </span>The data attribute of the response contains an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">NewsArchive</span></code> instead.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>auction_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The ID of the auction.</p></li>
-<li><p><strong>fetch_items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch all the character’s items. By default, only the first page is fetched.</p></li>
-<li><p><strong>fetch_mounts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch all the character’s mounts. By default, only the first page is fetched.</p></li>
-<li><p><strong>fetch_outfits</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch all the character’s outfits. By default, only the first page is fetched.</p></li>
-<li><p><strong>fetch_familiars</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch all the character’s outfits. By default, only the first page is fetched.</p></li>
-<li><p><strong>skip_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – <p>Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.</p>
-<p>This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
-parsing time.</p>
-</p></li>
+<li><p><strong>days</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of days to search, by default 30.</p></li>
+<li><p><strong>categories</strong> (<cite>list</cite> of <a class="reference internal" href="#tibiapy.NewsCategory" title="tibiapy.NewsCategory"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsCategory</span></code></a>) – The allowed categories to show. If left blank, all categories will be searched.</p></li>
+<li><p><strong>types</strong> (<cite>list</cite> of <a class="reference internal" href="#tibiapy.NewsType" title="tibiapy.NewsType"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsType</span></code></a>) – The allowed news types to show. if unused, all types will be searched.</p></li>
 <li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The auction matching the ID if found.</p>
+<dd class="field-even"><p>The news posted in the last specified days.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">Auction</span></code></p>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.NewsArchive" title="tibiapy.models.NewsArchive"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsArchive</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError:</strong> – If <code class="docutils literal notranslate"><span class="pre">days</span></code> is lesser than zero.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_news">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_news</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">news_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.News" title="tibiapy.models.News"><span class="pre">News</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_news"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_news" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a news entry by its id from Tibia.com.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>news_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The ID of the news entry.</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The news entry if found, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.News" title="tibiapy.models.News"><code class="xref py py-class docutils literal notranslate"><span class="pre">News</span></code></a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
     This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the auction id is not 1 or greater.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_event_schedule">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_event_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">month</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.EventSchedule" title="tibiapy.models.EventSchedule"><span class="pre">EventSchedule</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_event_schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_event_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the event calendar. By default, it gets the events for the current month.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.0.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>month</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The month of the events to display.</p></li>
+<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The year of the events to display.</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The event calendar.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">EventSchedule</span></code></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If only one of year or month are defined.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_library_creatures">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_library_creatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CreaturesSection" title="tibiapy.models.CreaturesSection"><span class="pre">CreaturesSection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_library_creatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_library_creatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the creatures from the library section.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 4.0.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The creature’s section in Tibia.com</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.CreaturesSection" title="tibiapy.models.CreaturesSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">CreaturesSection</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_creature">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_creature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.Creature" title="tibiapy.models.Creature"><span class="pre">Creature</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_creature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_creature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a creature’s information from the Tibia.com library.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 4.0.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The internal name of the race.</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The creature’s section in Tibia.com</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <a class="reference internal" href="#tibiapy.models.Creature" title="tibiapy.models.Creature"><code class="xref py py-class docutils literal notranslate"><span class="pre">Creature</span></code></a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
 </ul>
 </dd>
 </dl>
@@ -236,38 +347,6 @@ parsing time.</p>
     This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the start_date is more recent than the end date or page number is not 1 or greater.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_event_schedule">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_event_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">month</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_event_schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_event_schedule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch the event calendar. By default, it gets the events for the current month.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 3.0.0.</span></p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>month</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The month of the events to display.</p></li>
-<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The year of the events to display.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The event calendar.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">EventSchedule</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If only one of year or month are defined.</p></li>
 </ul>
 </dd>
 </dl>
@@ -579,93 +658,6 @@ parsing time.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">BoostableBosses</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_boosted_creature">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_boosted_creature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_boosted_creature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_boosted_creature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch today’s boosted creature.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 2.1.0.</span></p>
-</div>
-<div class="versionchanged">
-<p><span class="versionmodified changed">Changed in version 4.0.0: </span>The return type of the data returned was changed to <code class="xref py py-class docutils literal notranslate"><span class="pre">Creature</span></code>, previous type was removed.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The boosted creature of the day.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">CreatureEntry</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_library_creatures">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_library_creatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_library_creatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_library_creatures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch the creatures from the library section.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 4.0.0.</span></p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The creature’s section in Tibia.com</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">CreaturesSection</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_creature">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_creature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_creature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_creature" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch a creature’s information from the Tibia.com library.</p>
-<div class="versionadded">
-<p><span class="versionmodified added">New in version 4.0.0.</span></p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The internal name of the race.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The creature’s section in Tibia.com</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">Creature</span></code></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
@@ -1004,100 +996,6 @@ If the world attribute is set, but the list is empty, it just means the world ha
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_news_archive">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_news_archive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_news_archive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_news_archive" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch news from the archive meeting the search criteria.</p>
-<div class="versionchanged">
-<p><span class="versionmodified changed">Changed in version 5.0.0: </span>The data attribute of the response contains an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">NewsArchive</span></code> instead.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a>) – The beginning date to search dates in.</p></li>
-<li><p><strong>end_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime.date</span></code></a>) – The end date to search dates in.</p></li>
-<li><p><strong>categories</strong> (<cite>list</cite> of <a class="reference internal" href="#tibiapy.NewsCategory" title="tibiapy.NewsCategory"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsCategory</span></code></a>) – The allowed categories to show. If left blank, all categories will be searched.</p></li>
-<li><p><strong>types</strong> (<cite>list</cite> of <a class="reference internal" href="#tibiapy.NewsType" title="tibiapy.NewsType"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsType</span></code></a>) – The allowed news types to show. if unused, all types will be searched.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The news meeting the search criteria.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">NewsArchive</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError:</strong> – If <code class="docutils literal notranslate"><span class="pre">begin_date</span></code> is more recent than <code class="docutils literal notranslate"><span class="pre">to_date</span></code>.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_recent_news">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_recent_news</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_recent_news"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_recent_news" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch all the published news in the last specified days.</p>
-<p>This is a shortcut for <a class="reference internal" href="#tibiapy.Client.fetch_news_archive" title="tibiapy.Client.fetch_news_archive"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fetch_news_archive()</span></code></a>, to handle dates more easily.</p>
-<div class="versionchanged">
-<p><span class="versionmodified changed">Changed in version 5.0.0: </span>The data attribute of the response contains an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">NewsArchive</span></code> instead.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>days</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The number of days to search, by default 30.</p></li>
-<li><p><strong>categories</strong> (<cite>list</cite> of <a class="reference internal" href="#tibiapy.NewsCategory" title="tibiapy.NewsCategory"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsCategory</span></code></a>) – The allowed categories to show. If left blank, all categories will be searched.</p></li>
-<li><p><strong>types</strong> (<cite>list</cite> of <a class="reference internal" href="#tibiapy.NewsType" title="tibiapy.NewsType"><code class="xref py py-class docutils literal notranslate"><span class="pre">NewsType</span></code></a>) – The allowed news types to show. if unused, all types will be searched.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The news posted in the last specified days.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">NewsArchive</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="tibiapy.Client.fetch_news">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_news</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">news_id</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_news"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_news" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch a news entry by its id from Tibia.com.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>news_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The id of the news entry.</p></li>
-<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The news entry if found, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> otherwise.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">News</span></code></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
-    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
-<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="tibiapy.Client.fetch_spells">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_spells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vocation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spell_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">premium</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_spells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_spells" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch the spells section.</p>
@@ -1149,6 +1047,109 @@ If the world attribute is set, but the list is empty, it just means the world ha
 <li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
     This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
 <li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_current_auctions">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_current_auctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tibiapy.models.AuctionFilters" title="tibiapy.models.bazaar.AuctionFilters"><span class="pre">AuctionFilters</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CharacterBazaar" title="tibiapy.models.CharacterBazaar"><span class="pre">CharacterBazaar</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_current_auctions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_current_auctions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the current auctions in the bazaar.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.3.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>page</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The desired page to display.</p></li>
+<li><p><strong>filters</strong> (<a class="reference internal" href="#tibiapy.models.AuctionFilters" title="tibiapy.models.AuctionFilters"><code class="xref py py-class docutils literal notranslate"><span class="pre">AuctionFilters</span></code></a>) – The filtering criteria to use.</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch from the test website or not.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The current auctions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterBazaar</span></code></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the page number is not 1 or greater.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_auction_history">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_auction_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tibiapy.models.AuctionFilters" title="tibiapy.models.bazaar.AuctionFilters"><span class="pre">AuctionFilters</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.CharacterBazaar" title="tibiapy.models.CharacterBazaar"><span class="pre">CharacterBazaar</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_auction_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_auction_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the auction history of the bazaar.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.3.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>page</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The page to display.</p></li>
+<li><p><strong>filters</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">AuctionFilters</span></code>) – The filtering criteria to use.</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The character bazaar containing the auction history.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">CharacterBazaar</span></code></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the page number is not 1 or greater.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tibiapy.Client.fetch_auction">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_auction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auction_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetch_items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetch_mounts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetch_outfits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fetch_familiars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_details</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.client.TibiaResponse"><span class="pre">TibiaResponse</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tibiapy.models.Auction" title="tibiapy.models.Auction"><span class="pre">Auction</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/tibiapy/client.html#Client.fetch_auction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client.fetch_auction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch an auction by its ID.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.3.0.</span></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>auction_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The ID of the auction.</p></li>
+<li><p><strong>fetch_items</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch all the character’s items. By default, only the first page is fetched.</p></li>
+<li><p><strong>fetch_mounts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch all the character’s mounts. By default, only the first page is fetched.</p></li>
+<li><p><strong>fetch_outfits</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch all the character’s outfits. By default, only the first page is fetched.</p></li>
+<li><p><strong>fetch_familiars</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to fetch all the character’s outfits. By default, only the first page is fetched.</p></li>
+<li><p><strong>skip_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – <p>Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.</p>
+<p>This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
+parsing time.</p>
+</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to request the test website instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The auction matching the ID if found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tibiapy.TibiaResponse" title="tibiapy.TibiaResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a> of <code class="xref py py-class docutils literal notranslate"><span class="pre">Auction</span></code></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#tibiapy.Forbidden" title="tibiapy.Forbidden"><strong>Forbidden</strong></a> – If a 403 Forbidden error was returned.
+    This usually means that Tibia.com is rate-limiting the client because of too many requests.</p></li>
+<li><p><a class="reference internal" href="#tibiapy.NetworkError" title="tibiapy.NetworkError"><strong>NetworkError</strong></a> – If there’s any connection errors during the request.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the auction id is not 1 or greater.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2784,7 +2785,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3259,7 +3260,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3471,7 +3472,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3660,7 +3661,7 @@ without bids.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -3871,7 +3872,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4020,7 +4021,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4298,7 +4299,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4494,7 +4495,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -4852,7 +4853,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5051,7 +5052,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5146,7 +5147,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5210,7 +5211,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -5308,7 +5309,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6100,7 +6101,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6233,7 +6234,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6660,7 +6661,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -6916,7 +6917,7 @@ war ended.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -7339,7 +7340,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -9717,7 +9718,7 @@ They cannot be replied to, and they show no view counts.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17060,7 +17061,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17113,7 +17114,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17176,7 +17177,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17227,7 +17228,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
@@ -17546,7 +17547,7 @@ the new model: you should trust this data</p></li>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f139ae46ee0&gt;}</em></p></li>
+<li><p><strong>json_encoders</strong>: <em>dict = {&lt;enum ‘BattlEyeType’&gt;: &lt;function BaseModel.Config.&lt;lambda&gt; at 0x7f192ef31e50&gt;}</em></p></li>
 </ul>
 </dd>
 <dt class="field-even">Fields<span class="colon">:</span></dt>
