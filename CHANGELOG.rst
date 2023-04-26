@@ -45,7 +45,6 @@ Changelog
 - Renamed ``BattlEyeHighscoresFilter`` to ``HighscoresBattlEyeType``.
 - Renamed ``VocationAuctionFilter`` to ``AuctionVocationFilter``.
 - Renamed ``VocationSpellFilter`` to ``SpellVocationFilter``.
-- Renamed ``PvpTypeFilter`` to ``AuctionPvpTypeFilter``.
 - Renamed ``SkillFilter`` to ``AuctionSkillFilter``.
 - Added `ForumSection`` model and its respective parser, to fetch a list of board entries.
 - Removed ``get_url`` class methods from all models, replaced by functions in the urls package.

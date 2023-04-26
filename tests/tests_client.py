@@ -136,7 +136,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
         city = "Edron"
         content = self.load_resource(FILE_HOUSE_LIST)
         mock.get(get_houses_section_url(world=world, town=city, house_type=HouseType.HOUSE), status=200, body=content)
-        houses = await self.client.fetch_world_houses(world, city)
+        houses = await self.client.fetch_houses_section(world, city)
 
         self.assertIsInstance(houses.data, HousesSection)
         self.assertIsInstance(houses.data.entries[0], HouseEntry)

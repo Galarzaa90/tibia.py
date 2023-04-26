@@ -11,7 +11,9 @@ from tibiapy.models.creature import CreatureEntry, CreaturesSection, BoostedCrea
 from tibiapy.utils import parse_tibiacom_content, convert_line_breaks
 
 __all__ = (
+    "BoostableBossesParser",
     "BoostedCreaturesParser",
+    "CreatureParser",
     "CreaturesSectionParser",
 )
 

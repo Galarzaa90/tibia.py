@@ -7,7 +7,7 @@ __all__ = (
     'AuctionBattlEyeFilter',
     'AuctionOrderBy',
     'AuctionOrderDirection',
-    'AuctionPvpTypeFilter',
+    'PvpTypeFilter',
     'AuctionSearchType',
     'AuctionSkillFilter',
     'AuctionStatus',
@@ -108,7 +108,7 @@ class AuctionOrderBy(NumericEnum):
     SWORD_FIGHTING = 8
 
 
-class AuctionPvpTypeFilter(NumericEnum):
+class PvpTypeFilter(NumericEnum):
     """The possible PVP filters that can be used for auctions."""
 
     OPEN_PVP = 0

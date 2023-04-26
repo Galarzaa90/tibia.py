@@ -5,7 +5,7 @@ from tests.tests_tibiapy import TestCommons
 from tibiapy import AuctionOrderDirection, AuctionOrderBy, AuctionSearchType, AuctionStatus, AuctionBattlEyeFilter, \
     BidType, \
  \
-    InvalidContent, AuctionPvpTypeFilter, \
+    InvalidContent, PvpTypeFilter, \
     Sex, AuctionSkillFilter, \
     Vocation, AuctionVocationFilter
 from tibiapy.parsers.bazaar import CharacterBazaarParser, AuctionParser
@@ -67,7 +67,7 @@ class TestBazaar(TestCommons, unittest.TestCase):
 
         self.assertIsNotNone(bazaar.filters)
         self.assertEqual('Antica', bazaar.filters.world)
-        self.assertEqual(AuctionPvpTypeFilter.OPEN_PVP, bazaar.filters.pvp_type)
+        self.assertEqual(PvpTypeFilter.OPEN_PVP, bazaar.filters.pvp_type)
         self.assertEqual(AuctionBattlEyeFilter.PROTECTED, bazaar.filters.battleye)
         self.assertEqual(AuctionVocationFilter.KNIGHT, bazaar.filters.vocation)
         self.assertEqual(1, bazaar.filters.min_level)

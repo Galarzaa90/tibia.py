@@ -10,7 +10,7 @@ from tibiapy import InvalidContent, Sex, Vocation
 from tibiapy.builders.bazaar import CharacterBazaarBuilder, AuctionBuilder, AuctionDetailsBuilder
 from tibiapy.enums import (AuctionOrderDirection, AuctionOrderBy, AuctionSearchType, AuctionStatus,
                            AuctionBattlEyeFilter,
-                           BazaarType, BidType, AuctionPvpTypeFilter, AuctionSkillFilter, AuctionVocationFilter)
+                           BazaarType, BidType, PvpTypeFilter, AuctionSkillFilter, AuctionVocationFilter)
 from tibiapy.models.bazaar import AuctionFilters, ItemEntry, OutfitImage, SalesArgument, \
     SkillEntry, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry, MountEntry, ItemSummary, \
     Mounts, Familiars, Outfits, FamiliarEntry, OutfitEntry, CharacterBazaar, Auction
@@ -49,7 +49,7 @@ class AuctionFiltersParser:
 
         filters.world = data["filter_world"]
         filters.available_worlds = [w for w in data.get("__options__", {}).get("filter_world", []) if "(" not in w]
-        filters.pvp_type = try_enum(AuctionPvpTypeFilter, parse_integer(data.get("filter_worldpvptype"), None))
+        filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(data.get("filter_worldpvptype"), None))
         filters.battleye = try_enum(AuctionBattlEyeFilter, parse_integer(data.get("filter_worldbattleyestate"), None))
         filters.vocation = try_enum(AuctionVocationFilter, parse_integer(data.get("filter_profession"), None))
         filters.min_level = parse_integer(data.get("filter_levelrangefrom"), None)

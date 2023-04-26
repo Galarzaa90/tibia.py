@@ -63,7 +63,7 @@ async def filters_from_query(request):
     filters = tibiapy.AuctionFilters()
     filters.world = request.query.get("world")
     filters.battleye = try_enum(tibiapy.AuctionBattlEyeFilter, request.query.get("battleye"))
-    filters.pvp_type = try_enum(tibiapy.AuctionPvpTypeFilter, request.query.get("pvp_type"))
+    filters.pvp_type = try_enum(tibiapy.PvpTypeFilter, request.query.get("pvp_type"))
     filters.min_level = tibiapy.utils.parse_integer(request.query.get("min_level"), None)
     filters.max_level = tibiapy.utils.parse_integer(request.query.get("max_level"), None)
     filters.vocation = try_enum(tibiapy.AuctionVocationFilter, request.query.get("vocation"))
@@ -263,7 +263,7 @@ async def get_highscores(request: web.Request):
     battleye_type = try_enum(tibiapy.HighscoresBattlEyeType, int(request.query.get("battleye", -1)))
     page = int(request.query.get("page", 1))
     pvp_params = request.query.getall("pvp", [])
-    pvp_types = [try_enum(tibiapy.AuctionPvpTypeFilter, param) for param in pvp_params]
+    pvp_types = [try_enum(tibiapy.PvpTypeFilter, param) for param in pvp_params]
     pvp_types = [p for p in pvp_types if p is not None]
     if world.lower() == "all":
         world = None
@@ -278,7 +278,7 @@ async def get_houses(request: web.Request):
     order = try_enum(tibiapy.HouseOrder, request.query.get("order"), tibiapy.HouseOrder.NAME)
     status = try_enum(tibiapy.HouseStatus, request.query.get("status"))
     house_type = try_enum(tibiapy.HouseType, request.query.get("type"), tibiapy.HouseType.HOUSE)
-    response = await app["tibiapy"].fetch_world_houses(world, town, house_type, status, order)
+    response = await app["tibiapy"].fetch_houses_section(world, town, house_type, status, order)
     return json_response(response)
 
 

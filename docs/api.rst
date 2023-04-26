@@ -35,10 +35,6 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :members:
     :undoc-members:
 
-.. autoclass:: AuctionPvpTypeFilter
-    :members:
-    :undoc-members:
-
 .. autoclass:: AuctionSearchType
     :members:
     :undoc-members:
@@ -104,6 +100,10 @@ Many of these enumerations correspond to available options in forms in Tibia.com
     :undoc-members:
 
 .. autoclass:: PvpType
+    :members:
+    :undoc-members:
+
+.. autoclass:: PvpTypeFilter
     :members:
     :undoc-members:
 

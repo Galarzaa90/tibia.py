@@ -4,7 +4,7 @@ from typing import Optional, List, Dict, TypeVar, Generic
 
 from pydantic import BaseModel
 
-from tibiapy import AuctionPvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, \
+from tibiapy import PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, \
     AuctionSearchType, \
     AuctionOrderBy, AuctionOrderDirection, BazaarType, Vocation, Sex, BidType, AuctionStatus
 from tibiapy.models.pagination import AjaxPaginator, PaginatedWithUrl
@@ -51,7 +51,7 @@ class AuctionFilters(BaseModel):
 
     world: Optional[str] = None
     """The character's world to show characters for."""
-    pvp_type: Optional[AuctionPvpTypeFilter] = None
+    pvp_type: Optional[PvpTypeFilter] = None
     """The PvP type of the character's worlds to show."""
     battleye: Optional[AuctionBattlEyeFilter] = None
     """The type of BattlEye protection of the character's worlds to show."""

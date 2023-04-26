@@ -4,7 +4,7 @@ import re
 from collections import OrderedDict
 
 from tibiapy.builders.highscores import HighscoresBuilder
-from tibiapy.enums import HighscoresCategory, HighscoresProfession, AuctionPvpTypeFilter, \
+from tibiapy.enums import HighscoresCategory, HighscoresProfession, PvpTypeFilter, \
     HighscoresBattlEyeType
 from tibiapy.errors import InvalidContent
 from tibiapy.models import LoyaltyHighscoresEntry, HighscoresEntry
@@ -113,7 +113,7 @@ class HighscoresParser:
         builder.vocation(try_enum(HighscoresProfession, parse_integer(data.get("profession"), None), HighscoresProfession.ALL))
         checkboxes = form.find_all("input", {"type": "checkbox", "checked": "checked"})
         values = [int(c["value"]) for c in checkboxes]
-        builder.pvp_types_filter({try_enum(AuctionPvpTypeFilter, v) for v in values})
+        builder.pvp_types_filter({try_enum(PvpTypeFilter, v) for v in values})
         builder.available_worlds([v for v in data["__options__"]["world"].values() if v])
 
     @classmethod

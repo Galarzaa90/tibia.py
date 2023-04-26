@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional, Set
 
-from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, AuctionPvpTypeFilter, Vocation
+from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, PvpTypeFilter, Vocation
 from tibiapy.models.base import BaseCharacter
 from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.urls import get_highscores_url
@@ -46,7 +46,7 @@ class Highscores(PaginatedWithUrl[HighscoresEntry]):
     """The selected BattlEye filter. If :obj:`None`, all worlds will be displayed.
 
     Only applies for global highscores. Only characters from worlds with the matching BattlEye protection will be shown."""
-    pvp_types_filter: Set[AuctionPvpTypeFilter]
+    pvp_types_filter: Set[PvpTypeFilter]
     """The selected PvP types filter. If :obj:`None`, all world will be displayed.
 
     Only applies for global highscores. Only characters from worlds with the matching PvP type will be shown."""

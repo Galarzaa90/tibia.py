@@ -8,7 +8,7 @@ from fastapi import FastAPI, Path, Query
 import tibiapy
 from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, TibiaResponse, NewsType, NewsCategory, \
     HouseStatus, HouseOrder, HouseType, HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, \
-    AuctionPvpTypeFilter
+    PvpTypeFilter
 from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores
 from tibiapy.models.news import News
 
@@ -240,7 +240,7 @@ async def get_highscores(
         category: HighscoresCategory = Query(HighscoresCategory.EXPERIENCE),
         vocation: HighscoresProfession = Query(HighscoresProfession.ALL),
         battleye: HighscoresBattlEyeType = Query(None),
-        pvp_types: List[AuctionPvpTypeFilter] = Query([], alias="pvp"),
+        pvp_types: List[PvpTypeFilter] = Query([], alias="pvp"),
 ) -> TibiaResponse[Highscores]:
     if world.lower() in ("global", "all"):
         world = None
@@ -265,7 +265,7 @@ async def get_houses_section(
         order: HouseOrder = Query(None),
         house_type: HouseType = Query(None, alias="type"),
 ):
-    return await app.state.client.fetch_world_houses(world, town, status=status, order=order, house_type=house_type)
+    return await app.state.client.fetch_houses_section(world, town, status=status, order=order, house_type=house_type)
 
 
 @app.get("/killStatistics/{world}")
