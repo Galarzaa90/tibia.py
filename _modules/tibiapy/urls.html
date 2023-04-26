@@ -50,7 +50,7 @@
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">AuctionPvpTypeFilter</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">PvpTypeFilter</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">AuctionFilters</span>
@@ -377,7 +377,7 @@
 
 <div class="viewcode-block" id="get_highscores_url"><a class="viewcode-back" href="../../api.html#tibiapy.urls.get_highscores_url">[docs]</a><span class="k">def</span> <span class="nf">get_highscores_url</span><span class="p">(</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="p">:</span> <span class="n">HighscoresCategory</span> <span class="o">=</span> <span class="n">HighscoresCategory</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span>
                        <span class="n">vocation</span><span class="p">:</span> <span class="n">HighscoresProfession</span> <span class="o">=</span> <span class="n">HighscoresProfession</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                       <span class="n">battleye_type</span><span class="p">:</span> <span class="n">HighscoresBattlEyeType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pvp_types</span><span class="p">:</span> <span class="n">AuctionPvpTypeFilter</span> <span class="o">=</span> <span class="kc">None</span>
+                       <span class="n">battleye_type</span><span class="p">:</span> <span class="n">HighscoresBattlEyeType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pvp_types</span><span class="p">:</span> <span class="n">PvpTypeFilter</span> <span class="o">=</span> <span class="kc">None</span>
                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Tibia.com URL of the highscores for the given parameters.</span>
 

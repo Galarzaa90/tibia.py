@@ -50,7 +50,7 @@
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">AuctionPvpTypeFilter</span><span class="p">,</span> <span class="n">AuctionBattlEyeFilter</span><span class="p">,</span> <span class="n">AuctionVocationFilter</span><span class="p">,</span> <span class="n">AuctionSkillFilter</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">AuctionBattlEyeFilter</span><span class="p">,</span> <span class="n">AuctionVocationFilter</span><span class="p">,</span> <span class="n">AuctionSkillFilter</span><span class="p">,</span> \
     <span class="n">AuctionSearchType</span><span class="p">,</span> \
     <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionOrderDirection</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">,</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">AuctionStatus</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.pagination</span> <span class="kn">import</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">PaginatedWithUrl</span>
@@ -97,7 +97,7 @@
 
     <span class="n">world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s world to show characters for.&quot;&quot;&quot;</span>
-    <span class="n">pvp_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionPvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">pvp_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The PvP type of the character&#39;s worlds to show.&quot;&quot;&quot;</span>
     <span class="n">battleye</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionBattlEyeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of BattlEye protection of the character&#39;s worlds to show.&quot;&quot;&quot;</span>

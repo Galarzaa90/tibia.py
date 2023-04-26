@@ -50,7 +50,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Collection</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Set</span>
 
 <span class="kn">import</span> <span class="nn">aiohttp</span>
 <span class="kn">import</span> <span class="nn">aiohttp_socks</span>
@@ -58,11 +58,12 @@
 
 <span class="kn">import</span> <span class="nn">tibiapy</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> \
-    <span class="n">NewsType</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">NumericEnum</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">SpellVocationFilter</span><span class="p">,</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellSorting</span>
+    <span class="n">NewsType</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">NumericEnum</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">SpellVocationFilter</span><span class="p">,</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellSorting</span><span class="p">,</span> \
+    <span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseOrder</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">Character</span><span class="p">,</span> <span class="n">SpellsSection</span><span class="p">,</span> <span class="n">Spell</span><span class="p">,</span> <span class="n">Leaderboard</span><span class="p">,</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">HousesSection</span><span class="p">,</span> \
     <span class="n">Highscores</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">GuildWars</span><span class="p">,</span> <span class="n">GuildsSection</span><span class="p">,</span> <span class="n">CMPostArchive</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="p">,</span> <span class="n">ForumBoard</span><span class="p">,</span> <span class="n">ForumThread</span><span class="p">,</span> <span class="n">ForumAnnouncement</span><span class="p">,</span> \
-    <span class="n">CharacterBazaar</span><span class="p">,</span> <span class="n">Auction</span><span class="p">,</span> <span class="n">AuctionFilters</span>
+    <span class="n">CharacterBazaar</span><span class="p">,</span> <span class="n">Auction</span><span class="p">,</span> <span class="n">AuctionFilters</span><span class="p">,</span> <span class="n">ForumSection</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.creature</span> <span class="kn">import</span> <span class="n">BoostedCreatures</span><span class="p">,</span> <span class="n">BoostableBosses</span><span class="p">,</span> <span class="n">CreaturesSection</span><span class="p">,</span> <span class="n">Creature</span><span class="p">,</span> <span class="n">CreatureEntry</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.event</span> <span class="kn">import</span> <span class="n">EventSchedule</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.news</span> <span class="kn">import</span> <span class="n">NewsArchive</span><span class="p">,</span> <span class="n">News</span>
@@ -371,11 +372,64 @@
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_news_archive_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">CreaturesSectionParser</span><span class="o">.</span><span class="n">boosted_creature_from_header</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.fetch_boosted_creature_and_boss"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_creature_and_boss">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_creature_and_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted creature and boss.</span>
+
+<span class="sd">        .. versionadded:: 5.3.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`BoostedCreatures`</span>
+<span class="sd">            The boosted creature and boss of the day.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_news_archive_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">BoostedCreaturesParser</span><span class="o">.</span><span class="n">from_header</span><span class="p">)</span></div>
+
+    <span class="c1"># region Bosses</span>
+<div class="viewcode-block" id="Client.fetch_boosted_boss"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_boss">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted boss.</span>
+
+<span class="sd">        .. versionadded:: 5.3.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`BossEntry`</span>
+<span class="sd">            The boosted boss of the day.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_news_archive_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">BoostableBossesParser</span><span class="o">.</span><span class="n">boosted_boss_from_header</span><span class="p">)</span></div>
+
     <span class="c1"># endregion</span>
 
     <span class="c1"># region News</span>
 <div class="viewcode-block" id="Client.fetch_news_archive"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_news_archive">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news_archive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
-                                 <span class="n">categories</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">types</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">categories</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">types</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                  <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">NewsArchive</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch news from the archive meeting the search criteria.</span>
 
@@ -417,8 +471,8 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">NewsArchiveParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.fetch_news_archive_by_days"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_news_archive_by_days">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news_archive_by_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">categories</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                                         <span class="n">types</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span>
-        <span class="n">NewsArchive</span><span class="p">]:</span>
+                                         <span class="n">types</span><span class="p">:</span> <span class="n">Collection</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                                         <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">NewsArchive</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch all the published news in the last specified days.</span>
 
 <span class="sd">        This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.</span>
@@ -620,6 +674,8 @@
 <span class="sd">            The type of premium requirement to filter. :obj:`None` means any premium requirement.</span>
 <span class="sd">        sort: :class:`.SpellSorting`, optional</span>
 <span class="sd">            The field to sort spells by.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -745,7 +801,537 @@
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_world_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">WorldParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.fetch_highscores_page"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_highscores_page">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_highscores_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">category</span><span class="p">:</span> <span class="n">HighscoresCategory</span> <span class="o">=</span> <span class="n">HighscoresCategory</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span>
+                                    <span class="n">vocation</span><span class="p">:</span> <span class="n">HighscoresProfession</span> <span class="o">=</span> <span class="n">HighscoresProfession</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                                    <span class="n">battleye_type</span><span class="p">:</span> <span class="n">HighscoresBattlEyeType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pvp_types</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">PvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                    <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Highscores</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a single highscores page from Tibia.com.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        It is not possible to use BattlEye or PvPType filters when requesting a specific world.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The world to search the highscores in.</span>
+<span class="sd">        category: :class:`HighscoresCategory`</span>
+<span class="sd">            The highscores category to search, by default Experience.</span>
+<span class="sd">        vocation: :class:`HighscoresProfession`</span>
+<span class="sd">            The vocation filter to use. No filter used by default.</span>
+<span class="sd">        page: :class:`int`</span>
+<span class="sd">            The page to fetch, by default the first page is fetched.</span>
+<span class="sd">        battleye_type: :class:`HighscoresBattlEyeType`</span>
+<span class="sd">            The type of BattlEye protection to display results from.</span>
+<span class="sd">        pvp_types: :class:`list` of :class:`PvpTypeFilter`</span>
+<span class="sd">            The list of PvP types to filter the results for.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`Highscores`</span>
+<span class="sd">            The highscores information or :obj:`None` if not found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If an invalid filter combination is passed or an invalid page is provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pvp_types</span> <span class="o">=</span> <span class="n">pvp_types</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;page must be 1 or higher.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">world</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">((</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">HighscoresBattlEyeType</span><span class="o">.</span><span class="n">ANY_WORLD</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pvp_types</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;BattleEye and PvP type filters can only be used when fetching all worlds.&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_highscores_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">battleye_type</span><span class="p">,</span>
+                                                                 <span class="n">pvp_types</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">HighscoresParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_leaderboard"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_leaderboard">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_leaderboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rotation</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Leaderboard</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the leaderboards for a specific world and rotation.</span>
+
+<span class="sd">        .. versionadded:: 5.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        rotation: :class:`int`</span>
+<span class="sd">            The ID of the rotation. By default, it will get the current rotation.</span>
+<span class="sd">        page: :class:`int`</span>
+<span class="sd">            The page to get.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`Leaderboard`</span>
+<span class="sd">            The leaderboards of the world if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_leaderboards_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">LeaderboardParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_kill_statistics"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_kill_statistics">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_kill_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">KillStatistics</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the kill statistics of a world from Tibia.com.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`KillStatistics`</span>
+<span class="sd">            The kill statistics of the world if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_kill_statistics_url</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">KillStatisticsParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_houses_section"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_houses_section">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_houses_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">town</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">house_type</span><span class="p">:</span> <span class="n">HouseType</span> <span class="o">=</span> <span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">,</span>
+                                   <span class="n">status</span><span class="p">:</span> <span class="n">HouseStatus</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">HouseOrder</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                                   <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">HousesSection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the house list of a world and type.</span>
+
+<span class="sd">        .. versionchanged:: 5.0.0</span>
+<span class="sd">            The data attribute of the response contains an instance of :class:`HousesSection` instead.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        town: :class:`str`</span>
+<span class="sd">            The name of the town.</span>
+<span class="sd">        house_type: :class:`HouseType`</span>
+<span class="sd">            The type of building. House by default.</span>
+<span class="sd">        status: :class:`HouseStatus`, optional</span>
+<span class="sd">            The house status to filter results. By default, no filters will be applied.</span>
+<span class="sd">        order: :class:`HouseOrder`, optional</span>
+<span class="sd">            The ordering to use for the results. By default, they are sorted by name.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`HousesSection`</span>
+<span class="sd">            A response containing the lists of houses meeting the criteria if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_houses_section_url</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="o">=</span><span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="o">=</span><span class="n">house_type</span><span class="p">,</span>
+                                                                     <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">HousesSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_house"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_house">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_house</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">house_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">House</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a house in a specific world by its id.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        house_id: :class:`int`</span>
+<span class="sd">            The house&#39;s internal id.</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world to look for.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`House`</span>
+<span class="sd">            The house if found, :obj:`None` otherwise.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_house_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">house_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">HouseParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_world_guilds"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_guilds">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">GuildsSection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the list of guilds in a world from Tibia.com.</span>
+
+<span class="sd">        If a world that does not exist is passed, the world attribute of the result will be :obj:`None`.</span>
+<span class="sd">        If the world attribute is set, but the list is empty, it just means the world has no guilds.</span>
+
+<span class="sd">        .. versionchanged:: 5.0.0</span>
+<span class="sd">            The data attribute of the response contains an instance of :class:`GuildsSection` instead.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world: :class:`str`</span>
+<span class="sd">            The name of the world.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`GuildsSection`</span>
+<span class="sd">            A response containing the guilds section for the specified world.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_world_guilds_url</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">GuildsSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_guild"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_guild">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Guild</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a guild by its name from Tibia.com.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the guild. The case must match exactly.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`Guild`</span>
+<span class="sd">            A response containing the found guild, if any.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_guild_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">GuildParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_guild_wars"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_guild_wars">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild_wars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">GuildWars</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a guild&#39;s wars by its name from Tibia.com.</span>
+
+<span class="sd">        .. versionadded:: 3.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the guild. The case must match exactly.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`GuildWars`</span>
+<span class="sd">            A response containing the found guild&#39;s wars.</span>
+
+<span class="sd">            If the guild doesn&#39;t exist, the displayed data will show a guild with no wars instead of indicating the</span>
+<span class="sd">            guild doesn&#39;t exist.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_guild_wars_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">GuildWarsParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
     <span class="c1"># endregion</span>
+
+    <span class="c1"># region Forums</span>
+<div class="viewcode-block" id="Client.fetch_forum_section"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_section">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum&#39;s section by its ID.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        section_id: :class:`int`</span>
+<span class="sd">            The ID of the section.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumSection`</span>
+<span class="sd">            The forum section with the provided ID.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_section_url</span><span class="p">(</span><span class="n">section_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_forum_world_boards"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_world_boards">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_world_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s world boards.</span>
+
+<span class="sd">        .. versionadded:: 3.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumSection`</span>
+<span class="sd">            The forum boards in the world section.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_world_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_forum_trade_boards"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_trade_boards">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_trade_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s trade boards.</span>
+
+<span class="sd">        .. versionadded:: 3.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumSection`</span>
+<span class="sd">            The forum boards in the trade section.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_trade_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_forum_community_boards"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_community_boards">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_community_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s community boards.</span>
+
+<span class="sd">        .. versionadded:: 3.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumSection`</span>
+<span class="sd">            The forum boards in the community section.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_community_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_forum_support_boards"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_support_boards">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_support_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s community boards.</span>
+
+<span class="sd">        .. versionadded:: 3.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumSection`</span>
+<span class="sd">            The forum boards in the community section.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_support_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_forum_board"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_board">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_board</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                                <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">ForumBoard</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum board with a given id.</span>
+
+<span class="sd">        .. versionadded:: 3.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        board_id : :class:`int`</span>
+<span class="sd">            The id of the board.</span>
+<span class="sd">        page: :class:`int`</span>
+<span class="sd">            The page number to show.</span>
+<span class="sd">        age: :class:`int`</span>
+<span class="sd">            The maximum age in days of the threads to display.</span>
+
+<span class="sd">            To show threads of all ages, use -1.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumBoard`</span>
+<span class="sd">            A response containing the forum, if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_board_url</span><span class="p">(</span><span class="n">board_id</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">age</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ForumBoardParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_forum_thread"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_thread">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                                 <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumThread</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum thread with a given id.</span>
+
+<span class="sd">        .. versionadded:: 3.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        thread_id : :class:`int`</span>
+<span class="sd">            The id of the thread.</span>
+<span class="sd">        page: :class:`int`</span>
+<span class="sd">            The desired page to display, by default 1.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumThread`</span>
+<span class="sd">            A response containing the forum, if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_thread_url</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ForumThreadParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.fetch_forum_post"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_post">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumThread</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum post with a given id.</span>
+
+<span class="sd">        The thread that contains the post will be returned, containing the desired post in</span>
+<span class="sd">        :py:attr:`ForumThread.anchored_post`.</span>
+
+<span class="sd">        The displayed page will be the page where the post is located.</span>
+
+<span class="sd">        .. versionadded:: 3.1.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        post_id : :class:`int`</span>
+<span class="sd">            The id of the post.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumThread`</span>
+<span class="sd">            A response containing the forum, if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_post_url</span><span class="p">(</span><span class="n">post_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="n">built_response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">ForumThreadParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">built_response</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">built_response</span>
+        <span class="n">built_response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">anchored_post</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">built_response</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">post_id</span> <span class="o">==</span> <span class="n">post_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">built_response</span></div>
+
+<div class="viewcode-block" id="Client.fetch_forum_announcement"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_announcement">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_announcement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum announcement.</span>
+
+<span class="sd">        .. versionadded:: 3.0.0</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        announcement_id: :class:`int`</span>
+<span class="sd">            The id of the desired announcement.</span>
+<span class="sd">        test: :class:`bool`</span>
+<span class="sd">            Whether to request the test website instead.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`TibiaResponse` of :class:`ForumAnnouncement`</span>
+<span class="sd">            The forum announcement, if found.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Forbidden</span>
+<span class="sd">            If a 403 Forbidden error was returned.</span>
+<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
+<span class="sd">        NetworkError</span>
+<span class="sd">            If there&#39;s any connection errors during the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_announcement_url</span><span class="p">(</span><span class="n">announcement_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">ForumAnnouncementParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Client.fetch_cm_post_archive"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_cm_post_archive">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_cm_post_archive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                                     <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CMPostArchive</span><span class="p">]:</span>
@@ -786,628 +1372,9 @@
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_cm_post_archive_url</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">CMPostArchiveParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
 
-    <span class="c1"># region Forums</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_section_url</span><span class="p">(</span><span class="n">section_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">section</span> <span class="o">=</span> <span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Client.fetch_forum_community_boards"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_community_boards">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_community_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s community boards.</span>
-
-<span class="sd">        .. versionadded:: 3.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of list of :class:`BoardEntry`</span>
-<span class="sd">            The forum boards in the community section.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_community_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boards</span> <span class="o">=</span> <span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boards</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_forum_support_boards"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_support_boards">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_support_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s community boards.</span>
-
-<span class="sd">        .. versionadded:: 3.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of list of :class:`BoardEntry`</span>
-<span class="sd">            The forum boards in the community section.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_support_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boards</span> <span class="o">=</span> <span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boards</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_forum_world_boards"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_world_boards">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_world_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s world boards.</span>
-
-<span class="sd">        .. versionadded:: 3.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of list of :class:`BoardEntry`</span>
-<span class="sd">            The forum boards in the world section.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_world_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boards</span> <span class="o">=</span> <span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boards</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_forum_trade_boards"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_trade_boards">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_trade_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s trade boards.</span>
-
-<span class="sd">        .. versionadded:: 3.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of list of :class:`BoardEntry`</span>
-<span class="sd">            The forum boards in the trade section.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="o">.</span><span class="n">get_trade_boards_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boards</span> <span class="o">=</span> <span class="n">ForumSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boards</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_forum_board"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_board">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_board</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board_id</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum board with a given id.</span>
-
-<span class="sd">        .. versionadded:: 3.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        board_id : :class:`int`</span>
-<span class="sd">            The id of the board.</span>
-<span class="sd">        page: :class:`int`</span>
-<span class="sd">            The page number to show.</span>
-<span class="sd">        age: :class:`int`</span>
-<span class="sd">            The maximum age in days of the threads to display.</span>
-
-<span class="sd">            To show threads of all ages, use -1.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`ForumBoard`</span>
-<span class="sd">            A response containing the forum, if found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_board_url</span><span class="p">(</span><span class="n">board_id</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">age</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">board</span> <span class="o">=</span> <span class="n">ForumBoardParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_forum_thread"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_thread">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum thread with a given id.</span>
-
-<span class="sd">        .. versionadded:: 3.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        thread_id : :class:`int`</span>
-<span class="sd">            The id of the thread.</span>
-<span class="sd">        page: :class:`int`</span>
-<span class="sd">            The desired page to display, by default 1.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`ForumThread`</span>
-<span class="sd">            A response containing the forum, if found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_thread_url</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">thread</span> <span class="o">=</span> <span class="n">ForumThreadParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">thread</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_forum_post"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_post">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum post with a given id.</span>
-
-<span class="sd">        The thread that contains the post will be returned, containing the desired post in</span>
-<span class="sd">        :py:attr:`ForumThread.anchored_post`.</span>
-
-<span class="sd">        The displayed page will be the page where the post is located.</span>
-
-<span class="sd">        .. versionadded:: 3.1.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        post_id : :class:`int`</span>
-<span class="sd">            The id of the post.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`ForumThread`</span>
-<span class="sd">            A response containing the forum, if found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_post_url</span><span class="p">(</span><span class="n">post_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">thread</span> <span class="o">=</span> <span class="n">ForumThreadParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">thread</span><span class="p">:</span>
-            <span class="n">thread</span><span class="o">.</span><span class="n">anchored_post</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">thread</span><span class="o">.</span><span class="n">posts</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">post_id</span> <span class="o">==</span> <span class="n">post_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">thread</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_forum_announcement"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_announcement">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_announcement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum announcement.</span>
-
-<span class="sd">        .. versionadded:: 3.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        announcement_id: :class:`int`</span>
-<span class="sd">            The id of the desired announcement.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`ForumAnnouncement`</span>
-<span class="sd">            The forum announcement, if found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_forum_announcement_url</span><span class="p">(</span><span class="n">announcement_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">announcement</span> <span class="o">=</span> <span class="n">ForumAnnouncementParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">announcement</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
     <span class="c1"># endregion</span>
 
-<div class="viewcode-block" id="Client.fetch_boosted_creature_and_boss"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_creature_and_boss">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_creature_and_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted creature and boss.</span>
-
-<span class="sd">        .. versionadded:: 5.3.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`BoostedCreatures`</span>
-<span class="sd">            The boosted creature and boss of the day.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_news_archive_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creatures</span> <span class="o">=</span> <span class="n">BoostedCreaturesParser</span><span class="o">.</span><span class="n">from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creatures</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-    <span class="c1"># region Bosses</span>
-<div class="viewcode-block" id="Client.fetch_boosted_boss"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_boss">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted boss.</span>
-
-<span class="sd">        .. versionadded:: 5.3.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`BossEntry`</span>
-<span class="sd">            The boosted boss of the day.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_news_archive_url</span><span class="p">(),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">boosted_creature</span> <span class="o">=</span> <span class="n">BoostableBossesParser</span><span class="o">.</span><span class="n">boosted_boss_from_header</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">boosted_creature</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-    <span class="c1"># endregion</span>
-
-
-    <span class="c1"># region Guilds</span>
-<div class="viewcode-block" id="Client.fetch_guild"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_guild">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a guild by its name from Tibia.com.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name: :class:`str`</span>
-<span class="sd">            The name of the guild. The case must match exactly.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`Guild`</span>
-<span class="sd">            A response containing the found guild, if any.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_guild_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">guild</span> <span class="o">=</span> <span class="n">GuildParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">guild</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_guild_wars"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_guild_wars">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild_wars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a guild&#39;s wars by its name from Tibia.com.</span>
-
-<span class="sd">        .. versionadded:: 3.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name: :class:`str`</span>
-<span class="sd">            The name of the guild. The case must match exactly.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`GuildWars`</span>
-<span class="sd">            A response containing the found guild&#39;s wars.</span>
-
-<span class="sd">            If the guild doesn&#39;t exist, the displayed data will show a guild with no wars instead of indicating the</span>
-<span class="sd">            guild doesn&#39;t exist.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_guild_wars_url</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">guild_wars</span> <span class="o">=</span> <span class="n">GuildWarsParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">guild_wars</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-    <span class="c1"># endregion</span>
-
-<div class="viewcode-block" id="Client.fetch_house"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_house">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_house</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a house in a specific world by its id.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        house_id: :class:`int`</span>
-<span class="sd">            The house&#39;s internal id.</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The name of the world to look for.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`House`</span>
-<span class="sd">            The house if found, :obj:`None` otherwise.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_house_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">house_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">house</span> <span class="o">=</span> <span class="n">HouseParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">house</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_highscores_page"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_highscores_page">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_highscores_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">HighscoresCategory</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span>
-                                    <span class="n">vocation</span><span class="o">=</span><span class="n">HighscoresProfession</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                    <span class="n">battleye_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pvp_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a single highscores page from Tibia.com.</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        It is not possible to use BattlEye or PvPType filters when requesting a specific world.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The world to search the highscores in.</span>
-<span class="sd">        category: :class:`HighscoresCategory`</span>
-<span class="sd">            The highscores category to search, by default Experience.</span>
-<span class="sd">        vocation: :class:`HighscoresProfession`</span>
-<span class="sd">            The vocation filter to use. No filter used by default.</span>
-<span class="sd">        page: :class:`int`</span>
-<span class="sd">            The page to fetch, by default the first page is fetched.</span>
-<span class="sd">        battleye_type: :class:`BattlEyeFilter`</span>
-<span class="sd">            The type of BattlEye protection to display results from.</span>
-<span class="sd">        pvp_types: :class:`list` of :class:`AuctionPvpTypeFilter`</span>
-<span class="sd">            The list of PvP types to filter the results for.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`Highscores`</span>
-<span class="sd">            The highscores information or :obj:`None` if not found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        ValueError</span>
-<span class="sd">            If an invalid filter combination is passed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pvp_types</span> <span class="o">=</span> <span class="n">pvp_types</span> <span class="ow">or</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">world</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">((</span><span class="n">battleye_type</span> <span class="ow">and</span> <span class="n">battleye_type</span> <span class="o">!=</span> <span class="n">HighscoresBattlEyeType</span><span class="o">.</span><span class="n">ANY_WORLD</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pvp_types</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;BattleEye and PvP type filters can only be used when fetching all worlds.&quot;</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_highscores_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">battleye_type</span><span class="p">,</span>
-                                                                 <span class="n">pvp_types</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">highscores</span> <span class="o">=</span> <span class="n">HighscoresParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">highscores</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_kill_statistics"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_kill_statistics">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_kill_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the kill statistics of a world from Tibia.com.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The name of the world.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`KillStatistics`</span>
-<span class="sd">            The kill statistics of the world if found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_kill_statistics_url</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">kill_statistics</span> <span class="o">=</span> <span class="n">KillStatisticsParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">kill_statistics</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_leaderboard"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_leaderboard">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_leaderboard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the leaderboards for a specific world and rotation.</span>
-
-<span class="sd">        .. versionadded:: 5.0.0</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The name of the world.</span>
-<span class="sd">        rotation: :class:`int`</span>
-<span class="sd">            The ID of the rotation. By default it will get the current rotation.</span>
-<span class="sd">        page: :class:`int`</span>
-<span class="sd">            The page to get.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`Leaderboard`</span>
-<span class="sd">            The leaderboards of the world if found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_leaderboards_url</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">leaderboard</span> <span class="o">=</span> <span class="n">LeaderboardParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">leaderboard</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-    <span class="c1"># region Worlds</span>
-
-<div class="viewcode-block" id="Client.fetch_world_houses"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_houses">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_houses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="o">=</span><span class="n">HouseType</span><span class="o">.</span><span class="n">HOUSE</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the house list of a world and type.</span>
-
-<span class="sd">        .. versionchanged:: 5.0.0</span>
-<span class="sd">            The data attribute of the response contains an instance of :class:`HousesSection` instead.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The name of the world.</span>
-<span class="sd">        town: :class:`str`</span>
-<span class="sd">            The name of the town.</span>
-<span class="sd">        house_type: :class:`HouseType`</span>
-<span class="sd">            The type of building. House by default.</span>
-<span class="sd">        status: :class:`HouseStatus`, optional</span>
-<span class="sd">            The house status to filter results. By default, no filters will be applied.</span>
-<span class="sd">        order: :class:`HouseOrder`, optional</span>
-<span class="sd">            The ordering to use for the results. By default, they are sorted by name.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`HousesSection`</span>
-<span class="sd">            A response containing the lists of houses meeting the criteria if found.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_houses_section_url</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">town</span><span class="o">=</span><span class="n">town</span><span class="p">,</span> <span class="n">house_type</span><span class="o">=</span><span class="n">house_type</span><span class="p">,</span>
-                                                                     <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">world_houses</span> <span class="o">=</span> <span class="n">HousesSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">world_houses</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Client.fetch_world_guilds"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_guilds">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the list of guilds in a world from Tibia.com.</span>
-
-<span class="sd">        If a world that does not exist is passed, the world attribute of the result will be :obj:`None`.</span>
-<span class="sd">        If the world attribute is set, but the list is empty, it just means the world has no guilds.</span>
-
-<span class="sd">        .. versionchanged:: 5.0.0</span>
-<span class="sd">            The data attribute of the response contains an instance of :class:`GuildsSection` instead.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        world: :class:`str`</span>
-<span class="sd">            The name of the world.</span>
-<span class="sd">        test: :class:`bool`</span>
-<span class="sd">            Whether to request the test website instead.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`TibiaResponse` of :class:`GuildsSection`</span>
-<span class="sd">            A response containing the guilds section for the specified world.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        Forbidden</span>
-<span class="sd">            If a 403 Forbidden error was returned.</span>
-<span class="sd">            This usually means that Tibia.com is rate-limiting the client because of too many requests.</span>
-<span class="sd">        NetworkError</span>
-<span class="sd">            If there&#39;s any connection errors during the request.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_world_guilds_url</span><span class="p">(</span><span class="n">world</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">guilds</span> <span class="o">=</span> <span class="n">GuildsSectionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">guilds</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
-
-
-
-    <span class="c1"># endregion</span>
-
-    <span class="c1"># region Bazaar</span>
+    <span class="c1"># region Char Bazaar</span>
 <div class="viewcode-block" id="Client.fetch_current_auctions"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_current_auctions">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_current_auctions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">AuctionFilters</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                                      <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CharacterBazaar</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the current auctions in the bazaar.</span>
@@ -1441,10 +1408,7 @@
         <span class="k">if</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;page must be 1 or greater.&#39;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_bazaar_url</span><span class="p">(</span><span class="n">BazaarType</span><span class="o">.</span><span class="n">CURRENT</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">filters</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">current_auctions</span> <span class="o">=</span> <span class="n">CharacterBazaarParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">current_auctions</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">CharacterBazaarParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.fetch_auction_history"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_auction_history">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_auction_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">AuctionFilters</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                                     <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CharacterBazaar</span><span class="p">]:</span>
@@ -1479,10 +1443,7 @@
         <span class="k">if</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;page must be 1 or greater.&#39;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_bazaar_url</span><span class="p">(</span><span class="n">BazaarType</span><span class="o">.</span><span class="n">HISTORY</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">filters</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">auction_history</span> <span class="o">=</span> <span class="n">CharacterBazaarParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">auction_history</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">CharacterBazaarParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.fetch_auction"><a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_auction">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_auction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">fetch_items</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fetch_mounts</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fetch_outfits</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                             <span class="n">fetch_familiars</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_details</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Auction</span><span class="p">]]:</span>
@@ -1528,9 +1489,10 @@
         <span class="k">if</span> <span class="n">auction_id</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;auction_id must be 1 or greater.&#39;</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">get_auction_url</span><span class="p">(</span><span class="n">auction_id</span><span class="p">),</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
-        <span class="n">auction</span> <span class="o">=</span> <span class="n">AuctionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">,</span> <span class="n">skip_details</span><span class="p">)</span>
-        <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">tibia_response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">AuctionParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">,</span> <span class="n">skip_details</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">tibia_response</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tibia_response</span>
+        <span class="n">auction</span> <span class="o">=</span> <span class="n">tibia_response</span><span class="o">.</span><span class="n">data</span>
         <span class="k">if</span> <span class="n">auction</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">skip_details</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">fetch_items</span><span class="p">:</span>
                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_all_pages</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">auction</span><span class="o">.</span><span class="n">details</span><span class="o">.</span><span class="n">items</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
@@ -1543,7 +1505,7 @@
                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_all_pages</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">auction</span><span class="o">.</span><span class="n">details</span><span class="o">.</span><span class="n">store_outfits</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">fetch_familiars</span><span class="p">:</span>
                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_all_pages</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">auction</span><span class="o">.</span><span class="n">details</span><span class="o">.</span><span class="n">outfits</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">TibiaResponse</span><span class="o">.</span><span class="n">from_raw</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">auction</span><span class="p">,</span> <span class="n">parsing_time</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">tibia_response</span></div></div>
 
     <span class="c1"># endregion</span>
 </pre></div>
