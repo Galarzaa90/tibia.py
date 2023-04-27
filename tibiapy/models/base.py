@@ -7,6 +7,7 @@ from tibiapy import BattlEyeType
 from tibiapy.urls import get_character_url, get_guild_url, get_house_url, get_guild_wars_url
 
 __all__ = (
+    'BaseModel',
     'BaseCharacter',
     'BaseGuild',
     'BaseHouse',

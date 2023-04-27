@@ -2,9 +2,8 @@
 import datetime
 from typing import Optional, Set, List
 
-from pydantic import BaseModel
-
 from tibiapy import NewsCategory, NewsType
+from tibiapy.models import BaseModel
 from tibiapy.urls import get_news_archive_url, get_news_url
 
 __all__ = (

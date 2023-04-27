@@ -1,7 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel
-
+from tibiapy.models import BaseModel
 from tibiapy.urls import get_creature_url
 
 
@@ -45,7 +44,6 @@ class CreatureEntry(BaseModel):
     def image_url(self) -> str:
         """The URL to this creature's image."""
         return f"https://static.tibia.com/images/library/{self.identifier}.gif"
-
 
 
 class Creature(CreatureEntry):

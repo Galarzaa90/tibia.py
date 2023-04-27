@@ -1,8 +1,7 @@
 import datetime
 from typing import Optional, List
 
-from pydantic import BaseModel
-
+from tibiapy.models import BaseModel
 from tibiapy.urls import get_event_schedule_url
 
 

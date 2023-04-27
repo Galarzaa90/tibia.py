@@ -3,10 +3,10 @@ from __future__ import annotations
 import datetime
 from typing import Optional, List
 
-from pydantic import BaseModel
-
 from tibiapy import Sex, Vocation
-from tibiapy.models.base import BaseCharacter, HouseWithId, BaseGuild
+from tibiapy.models.base import BaseCharacter, HouseWithId, BaseGuild, BaseModel
+
+from tibiapy.urls import get_character_url, get_guild_url
 
 __all__ = (
     'AccountBadge',
@@ -20,8 +20,6 @@ __all__ = (
     'OnlineCharacter',
     'OtherCharacter',
 )
-
-from tibiapy.urls import get_character_url, get_guild_url
 
 
 class AccountBadge(BaseModel):

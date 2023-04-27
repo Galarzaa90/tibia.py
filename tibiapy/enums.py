@@ -1,5 +1,7 @@
 """Enumerations used by models throughout the library."""
-from enum import Enum, Flag, IntEnum
+from enum import Enum, Flag, IntEnum, StrEnum
+
+import pydantic.errors
 
 from tibiapy.utils import try_enum
 
@@ -37,6 +39,21 @@ __all__ = (
 )
 
 
+class StringEnum(StrEnum):
+
+    @classmethod
+    def __get_validators__(cls):
+        cls.lookup = {v: k.value for v, k in cls.__members__.items()}
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        e = try_enum(cls, v)
+        if e is None:
+            raise pydantic.errors.EnumMemberError(enum_values=list(cls))
+        return e
+
+
 class NumericEnum(IntEnum):
     def __str__(self):
         return self.name.lower()
@@ -48,10 +65,10 @@ class NumericEnum(IntEnum):
 
     @classmethod
     def validate(cls, v):
-        try:
-            return try_enum(cls, v)
-        except KeyError:
-            raise ValueError('invalid value')
+        e = try_enum(cls, v)
+        if e is None:
+            raise pydantic.errors.EnumMemberError(enum_values=list(cls))
+        return e
 
 
 class AuctionBattlEyeFilter(NumericEnum):
@@ -129,7 +146,7 @@ class AuctionSearchType(NumericEnum):
     """Searches a character's name."""
 
 
-class AuctionStatus(str, Enum):
+class AuctionStatus(StringEnum):
     """The possible values an auction might have."""
 
     IN_PROGRESS = 'in progress'
@@ -171,7 +188,7 @@ class AuctionVocationFilter(NumericEnum):
     SORCERER = 5
 
 
-class AvailableForumSection(str, Enum):
+class AvailableForumSection(StringEnum):
     WORLD_BOARDS = "worldboards"
     TRADE_BOARDS = "tradeboards"
     COMMUNITY_BOARDS = "communityboards"
@@ -197,7 +214,7 @@ class BattlEyeType(NumericEnum):
     """Alias for initially protected worlds."""
 
 
-class BazaarType(str, Enum):
+class BazaarType(StringEnum):
     """The possible bazaar types."""
 
     CURRENT = "Current Auctions"
@@ -208,7 +225,7 @@ class BazaarType(str, Enum):
         return "currentcharactertrades" if self == self.CURRENT else "pastcharactertrades"
 
 
-class BidType(str, Enum):
+class BidType(StringEnum):
     """The possible bid types for an auction."""
 
     MINIMUM = "Minimum Bid"
@@ -302,7 +319,7 @@ class HighscoresProfession(NumericEnum):
         return None
 
 
-class HouseOrder(str, Enum):
+class HouseOrder(StringEnum):
     """The possible ordering methods for house lists in Tibia.com"""
 
     NAME = "name"
@@ -312,14 +329,14 @@ class HouseOrder(str, Enum):
     AUCTION_END = "end"
 
 
-class HouseStatus(str, Enum):
+class HouseStatus(StringEnum):
     """Renting statuses of a house."""
 
     RENTED = "rented"
     AUCTIONED = "auctioned"
 
 
-class HouseType(str, Enum):
+class HouseType(StringEnum):
     """The types of house available."""
 
     HOUSE = "house"
@@ -331,7 +348,7 @@ class HouseType(str, Enum):
         return f"{self.value}s"
 
 
-class NewsCategory(str, Enum):
+class NewsCategory(StringEnum):
     """The different news categories."""
 
     CIPSOFT = "cipsoft"
@@ -355,7 +372,7 @@ class NewsCategory(str, Enum):
         return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_small.gif")
 
 
-class NewsType(str, Enum):
+class NewsType(StringEnum):
     """The different types of new entries."""
 
     NEWS_TICKER = "News Ticker"
@@ -371,7 +388,7 @@ class NewsType(str, Enum):
         return self.value.split(" ")[-1].lower()
 
 
-class PvpType(str, Enum):
+class PvpType(StringEnum):
     """The possible PvP types a World can have."""
 
     OPEN_PVP = "Open PvP"
@@ -381,14 +398,14 @@ class PvpType(str, Enum):
     HARDCORE_PVP = "Hardcore PvP"
 
 
-class Sex(str, Enum):
+class Sex(StringEnum):
     """Possible character sexes."""
 
     MALE = "male"
     FEMALE = "female"
 
 
-class SpellGroup(str, Enum):
+class SpellGroup(StringEnum):
     """The possible cooldown groups.
 
     Note that secondary groups are not enumerated.
@@ -399,7 +416,7 @@ class SpellGroup(str, Enum):
     SUPPORT = "Support"
 
 
-class SpellSorting(str, Enum):
+class SpellSorting(StringEnum):
     """The different sorting options for the spells section."""
 
     NAME = "name"
@@ -411,14 +428,14 @@ class SpellSorting(str, Enum):
     PREMIUM = "premium"
 
 
-class SpellType(str, Enum):
+class SpellType(StringEnum):
     """The possible spell types."""
 
     INSTANT = "Instant"
     RUNE = "Rune"
 
 
-class SpellVocationFilter(str, Enum):
+class SpellVocationFilter(StringEnum):
     """The possible vocation types to filter out spells."""
 
     DRUID = "Druid"
@@ -482,7 +499,7 @@ class ThreadStatus(Flag):
         return cls(flags)
 
 
-class TransferType(str, Enum):
+class TransferType(StringEnum):
     """The possible special transfer restrictions a world may have."""
 
     REGULAR = "regular"  #: No special transfer restrictions
@@ -490,7 +507,7 @@ class TransferType(str, Enum):
     LOCKED = "locked"  #: Can transfer to this world, but can't transfer out of this world.
 
 
-class Vocation(str, Enum):
+class Vocation(StringEnum):
     """The possible vocation types."""
 
     NONE = "None"
@@ -516,7 +533,7 @@ class Vocation(str, Enum):
         return self
 
 
-class WorldLocation(str, Enum):
+class WorldLocation(StringEnum):
     """The possible physical locations for servers."""
 
     EUROPE = "Europe"

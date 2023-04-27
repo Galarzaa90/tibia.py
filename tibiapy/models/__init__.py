@@ -1,4 +1,5 @@
 from tibiapy.models.base import *
+from tibiapy.models.tibia_response import *
 from tibiapy.models.bazaar import *
 from tibiapy.models.character import *
 from tibiapy.models.creature import *

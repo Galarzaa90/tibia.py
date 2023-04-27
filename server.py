@@ -6,10 +6,10 @@ from typing import Optional, Set, List
 from fastapi import FastAPI, Path, Query
 
 import tibiapy
-from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, TibiaResponse, NewsType, NewsCategory, \
+from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, NewsType, NewsCategory, \
     HouseStatus, HouseOrder, HouseType, HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, \
     PvpTypeFilter
-from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores
+from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores, TibiaResponse
 from tibiapy.models.news import News
 
 logging_formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
@@ -249,7 +249,7 @@ async def get_highscores(
                                                         pvp_types=pvp_types)
 
 
-@app.get("/houses/{world}/{house_id}")
+@app.get("/houses/{world}/{house_id:int}")
 async def get_house(
         world: str = Path(...),
         house_id: int = Path(...)
