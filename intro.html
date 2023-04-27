@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Introduction &#8212; Tibia.py 5.6.0 documentation</title>
+    <title>Introduction &#8212; Tibia.py 6.0.0a1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
@@ -33,12 +33,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="api.html" title="API Reference"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Tibia.py"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 5.6.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Tibia.py 6.0.0a1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Introduction</a></li> 
       </ul>
     </div>  
@@ -70,7 +73,7 @@ Dependencies are installed automatically when installing the package.</p>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
 <p>This library is composed of two parts, parsers and an asynchronous request client.</p>
-<p>The asynchronous client (<code class="xref py py-class docutils literal notranslate"><span class="pre">tibiapy.Client</span></code>) contains methods to obtain information from Tibia.com.</p>
+<p>The asynchronous client (<a class="reference internal" href="api.html#tibiapy.Client" title="tibiapy.Client"><code class="xref py py-class docutils literal notranslate"><span class="pre">tibiapy.Client</span></code></a>) contains methods to obtain information from Tibia.com.</p>
 <p>The parsing methods allow you to get Python objects given the HTML content of a page.</p>
 <p>The main models have a <code class="docutils literal notranslate"><span class="pre">get_url</span></code> method that can be used to get their Tibia.com page.
 With the url, the html/json content can be fetched and then passed to their <code class="docutils literal notranslate"><span class="pre">from_content</span></code> methods.</p>
@@ -117,27 +120,27 @@ With the url, the html/json content can be fetched and then passed to their <cod
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=characters">Characters</a></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Character.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_character()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_character" title="tibiapy.Client.fetch_character"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_character()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades">Character Bazaar</a> (Current)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">CharacterBazaar.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_current_auctions()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_current_auctions" title="tibiapy.Client.fetch_current_auctions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_current_auctions()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades">Character Bazaar</a> (History)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">CharacterBazaar.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_auction_history()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_auction_history" title="tibiapy.Client.fetch_auction_history"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_auction_history()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades">Character Bazaar</a> (Detail)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Auction.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_auction()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_auction" title="tibiapy.Client.fetch_auction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_auction()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=characters">Characters</a></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Character.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_character()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_character" title="tibiapy.Client.fetch_character"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_character()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/forum/?subtopic=forum&amp;action=cm_post_archive">CM Post Archive</a></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">CMPostArchive.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_cm_post_archive()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_cm_post_archive" title="tibiapy.Client.fetch_cm_post_archive"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_cm_post_archive()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/library/?subtopic=creatures">Creature Library</a> (List)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">CreaturesSection.from_content()</span></code></p></td>
@@ -145,23 +148,23 @@ With the url, the html/json content can be fetched and then passed to their <cod
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/library/?subtopic=creatures">Creature Library</a> (Individual)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Creature.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_creature()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_creature" title="tibiapy.Client.fetch_creature"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_creature()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/news/?subtopic=eventcalendar">Event Schedule</a></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">EventSchedule.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_event_schedule()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_event_schedule" title="tibiapy.Client.fetch_event_schedule"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_event_schedule()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=guilds">Guilds</a> (Individual)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Guild.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_guild()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_guild" title="tibiapy.Client.fetch_guild"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_guild()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=guilds">Guilds</a> (List)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">GuildsSection.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_world_guilds()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_world_guilds" title="tibiapy.Client.fetch_world_guilds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_world_guilds()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=guilds">Guilds</a> (Wars)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">GuildWars.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_guild_wars()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_guild_wars" title="tibiapy.Client.fetch_guild_wars"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_guild_wars()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><div class="line-block">
 <div class="line"><a class="reference external" href="https://www.tibia.com/community/?subtopic=forum">Forums</a> (Section)</div>
@@ -178,36 +181,36 @@ With the url, the html/json content can be fetched and then passed to their <cod
 </div>
 </td>
 <td><div class="line-block">
-<div class="line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_world_boards()</span></code></div>
-<div class="line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_trade_boards()</span></code></div>
-<div class="line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_community_boards()</span></code></div>
-<div class="line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_support_boards()</span></code></div>
+<div class="line"><a class="reference internal" href="api.html#tibiapy.Client.fetch_forum_world_boards" title="tibiapy.Client.fetch_forum_world_boards"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_world_boards()</span></code></a></div>
+<div class="line"><a class="reference internal" href="api.html#tibiapy.Client.fetch_forum_trade_boards" title="tibiapy.Client.fetch_forum_trade_boards"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_trade_boards()</span></code></a></div>
+<div class="line"><a class="reference internal" href="api.html#tibiapy.Client.fetch_forum_community_boards" title="tibiapy.Client.fetch_forum_community_boards"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_community_boards()</span></code></a></div>
+<div class="line"><a class="reference internal" href="api.html#tibiapy.Client.fetch_forum_support_boards" title="tibiapy.Client.fetch_forum_support_boards"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_support_boards()</span></code></a></div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=forum">Forums</a> (Board)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ForumBoard.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_board()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_forum_board" title="tibiapy.Client.fetch_forum_board"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_board()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=forum">Forums</a> (Announcement)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ForumAnnouncement.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_announcement()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_forum_announcement" title="tibiapy.Client.fetch_forum_announcement"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_announcement()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=forum">Forums</a> (Thread)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ForumThread.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_thread()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_forum_thread" title="tibiapy.Client.fetch_forum_thread"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_forum_thread()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=highscores">Highscores</a></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Highscores.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_highscores_page()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_highscores_page" title="tibiapy.Client.fetch_highscores_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_highscores_page()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=highscores">Highscores</a></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Highscores.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_highscores_page()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_highscores_page" title="tibiapy.Client.fetch_highscores_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_highscores_page()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=houses">Houses</a> (Individual)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">House.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_house()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_house" title="tibiapy.Client.fetch_house"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_house()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=houses">Houses</a> (List)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">HousesSection.from_content()</span></code></p></td>
@@ -215,15 +218,15 @@ With the url, the html/json content can be fetched and then passed to their <cod
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=killstatistics">Kill Statistics</a> (List)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">KillStatistics.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_kill_statistics()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_kill_statistics" title="tibiapy.Client.fetch_kill_statistics"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_kill_statistics()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=leaderboards">Leaderboards</a></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Leaderboard.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_leaderboard()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_leaderboard" title="tibiapy.Client.fetch_leaderboard"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_leaderboard()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/news/?subtopic=newsarchive">News</a> (Individual)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">News.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_news()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_news" title="tibiapy.Client.fetch_news"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_news()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><div class="line-block">
 <div class="line"><a class="reference external" href="https://www.tibia.com/news/?subtopic=newsarchive">News</a> (List)</div>
@@ -236,18 +239,18 @@ With the url, the html/json content can be fetched and then passed to their <cod
 </div>
 </td>
 <td><div class="line-block">
-<div class="line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_news_archive()</span></code></div>
+<div class="line"><a class="reference internal" href="api.html#tibiapy.Client.fetch_news_archive" title="tibiapy.Client.fetch_news_archive"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_news_archive()</span></code></a></div>
 <div class="line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_recent_news()</span></code></div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/library/?subtopic=spells">Spell Library</a> (List)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">SpellsSection.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_spells()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_spells" title="tibiapy.Client.fetch_spells"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_spells()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/library/?subtopic=spells">Spell Library</a> (Individual)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Spell.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_spell()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_spell" title="tibiapy.Client.fetch_spell"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_spell()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=tournament">Tournaments</a></p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tournament.from_content()</span></code></p></td>
@@ -259,7 +262,7 @@ With the url, the html/json content can be fetched and then passed to their <cod
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=worlds">Worlds</a> (Individual)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">World.from_content()</span></code></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_world()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_world" title="tibiapy.Client.fetch_world"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_world()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=worlds">Worlds</a> (List)</p></td>
 <td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">WorldOverview.from_content()</span></code></p></td>
