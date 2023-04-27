@@ -48,6 +48,9 @@ extras_require = {
         'aioresponses',
         'coverage',
     ],
+    'server': [
+        'fastapi'
+    ]
 }
 
 setup(

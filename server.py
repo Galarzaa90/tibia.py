@@ -30,6 +30,11 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+@app.get("/healthcheck")
+async def healthcheck():
+    return 1
+
+
 @app.get("/news/{start_date}/{end_date}")
 async def get_news_archive(
         start_date: datetime.date = Path(...),

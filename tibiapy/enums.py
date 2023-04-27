@@ -1,5 +1,5 @@
 """Enumerations used by models throughout the library."""
-from enum import Enum, Flag, IntEnum, StrEnum
+from enum import Enum, Flag, IntEnum
 
 import pydantic.errors
 
@@ -39,7 +39,7 @@ __all__ = (
 )
 
 
-class StringEnum(StrEnum):
+class StringEnum(str, Enum):
 
     @classmethod
     def __get_validators__(cls):

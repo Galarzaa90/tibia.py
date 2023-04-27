@@ -3,4 +3,4 @@ lxml
 aiohttp
 aiohttp-socks
 html5lib
-pydantic
+pydantic~=1.10
