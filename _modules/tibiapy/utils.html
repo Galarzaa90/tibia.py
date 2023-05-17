@@ -792,6 +792,14 @@
             <span class="n">page</span> <span class="o">=</span> <span class="n">total_pages</span>
     <span class="n">results_count</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">results_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">results_div</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">page</span><span class="p">,</span> <span class="n">total_pages</span><span class="p">,</span> <span class="n">results_count</span></div>
+
+
+<span class="k">def</span> <span class="nf">take_while</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">predicate</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">item</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">break</span>
 </pre></div>
 
             <div class="clearer"></div>
