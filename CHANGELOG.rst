@@ -20,6 +20,7 @@ Changelog
     - Added ``big_icon_url`` and ``small_icon_url`` to ``NewsCategory``
     - ``Leaderboard.page`` renamed to ``current_page``.
     - ``Highscores.page`` renamed to ``current_page``.
+    - ``Highscores.last_updated`` is now a ``datetime`` instead of a ``timedelta``.
     - Removed ``owner``, ``world``, ``status`` and ``type`` from ``GuildHouse``.
     - Removed ``name`` from ``Death``.
     - Removed ``owner``, ``status`` and ``type`` from ``CharacterHouse``.

@@ -1,14 +1,20 @@
 """Models related to the highscores section in Tibia.com."""
+from __future__ import annotations
+
 import datetime
 import re
 from collections import OrderedDict
+from typing import TYPE_CHECKING, Optional
 
 from tibiapy.builders.highscores import HighscoresBuilder
 from tibiapy.enums import HighscoresCategory, HighscoresProfession, PvpTypeFilter, \
     HighscoresBattlEyeType
 from tibiapy.errors import InvalidContent
 from tibiapy.models import LoyaltyHighscoresEntry, HighscoresEntry
-from tibiapy.utils import parse_form_data, parse_tibiacom_content, try_enum, parse_integer
+from tibiapy.utils import parse_form_data, parse_tibiacom_content, try_enum, parse_integer, parse_pagination
+
+if TYPE_CHECKING:
+    from tibiapy.models import Highscores
 
 __all__ = (
     "HighscoresParser",
@@ -24,7 +30,7 @@ class HighscoresParser:
     _ENTRIES_PER_PAGE = 50
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> Optional[Highscores]:
         """Create an instance of the class from the html content of a highscores page.
 
         Notes
@@ -58,7 +64,8 @@ class HighscoresParser:
         cls._parse_filters_table(builder, form)
         if last_update_container := parsed_content.select_one("span.RightArea"):
             m = numeric_pattern.search(last_update_container.text)
-            builder.last_updated(datetime.timedelta(minutes=int(m.group(1))) if m else datetime.timedelta())
+            last_update = datetime.timedelta(minutes=int(m.group(1))) if m else datetime.timedelta()
+            builder.last_updated(datetime.datetime.now(tz=datetime.timezone.utc) - last_update)
         entries_table = tables.get("Highscores")
         cls._parse_entries_table(builder, entries_table)
         return builder.build()
@@ -74,18 +81,9 @@ class HighscoresParser:
         table: :class:`bs4.Tag`
             The table containing the entries.
         """
-        entries = table.find_all("tr")
-        if entries is None:
-            return
-        _, header, *rows = entries
-        info_row = rows.pop()
-        pages_div, results_div = info_row.find_all("div")
-        page_links = pages_div.find_all("a")
-        if listed_pages := [int(p.text) for p in page_links]:
-            page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), listed_pages[-1] + 1)
-            builder.current_page(page)
-            builder.total_pages(max(int(page_links[-1].text), page))
-        builder.results_count(parse_integer(results_pattern.search(results_div.text).group(1)))
+        page, total_pages, results_count = parse_pagination(table.select_one(".PageNavigation"))
+        builder.current_page(page).total_pages(total_pages).results_count(results_count)
+        rows = table.select("tr[style]")
         for row in rows:
             cols_raw = row.find_all('td')
             if "There is currently no data" in cols_raw[0].text:

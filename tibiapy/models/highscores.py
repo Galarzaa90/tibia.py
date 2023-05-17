@@ -50,8 +50,8 @@ class Highscores(PaginatedWithUrl[HighscoresEntry]):
     """The selected PvP types filter. If :obj:`None`, all world will be displayed.
 
     Only applies for global highscores. Only characters from worlds with the matching PvP type will be shown."""
-    last_updated: datetime.timedelta
-    """How long ago were this results updated. The resolution is 1 minute."""
+    last_updated: datetime.datetime
+    """The time when the shown highscores were last updated. The resolution is 1 minute."""
     available_worlds: List[str]
     """The worlds available for selection."""
 

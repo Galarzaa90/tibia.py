@@ -64,17 +64,13 @@ exist.
 doesn't exist.
 
 ## Highscores resources
-- [tibiacom_full.txt](highscores/tibiacom_full.txt) - The content of a correct highscore's page.
-- [tibiacom_empty.txt](highscores/tibiacom_empty.txt) - The content of the highscores page of a nonexistent world.
-- [tibiacom_no_results.txt](highscores/tibiacom_no_results.txt) - The content of the highscores page of a new world (no results shown). _OUTDATED_
-- [tibiacom_experience.txt](highscores/tibiacom_experience.txt) - The content of an experience highscores page.
-- [tibiacom_loyalty.txt](highscores/tibiacom_loyalty.txt) - The content of a loyalty highscores page.
-- [tibiacom_battleye_pvp_filters.txt](highscores/tibiacom_battleye_pvp_filters.txt) - The content of the highscores page using BattlEye and PvP filters.
-- [tibiadata_full.json](highscores/tibiadata_full.json) - A highscores response from TibiaData.
-- [tibiadata_empty.json](highscores/tibiadata_empty.json) - A highscores response from TibiaData of a nonexistent world.
-- [tibiadata_experience.json](highscores/tibiadata_experience.json) - A response containing experience highscores from
-TibiaData.
-- [tibiadata_loyalty.json](highscores/tibiadata_loyalty.json) - A response containing loyalty highscores from TibiaData.
+- [highscores.txt](highscores/highscores.txt) - The content of a correct highscore's page.
+- [highscoresEmpty.txt](highscores/highscoresEmpty.txt) - The content of the highscores page of a nonexistent world.
+- [highscoresNoResults.txt](highscores/highscoresNoResults.txt) - The content of the highscores page of a new world (no results shown). _OUTDATED_
+- [highscoresExperience.txt](highscores/highscoresExperience.txt) - The content of an experience highscores page.
+- [highscoresLoyalty.txt](highscores/highscoresLoyalty.txt) - The content of a loyalty highscores page.
+- [highscoresBattleEyePvpFilters.txt](highscores/highscoresBattleEyePvpFilters.txt) - The content of the highscores page using BattlEye and PvP filters.
+
 
 ## Kill Statistics resources
 - [tibiacom_full.txt](kill_statistics/tibiacom_full.txt) - The content of a correct kill statistics' page.

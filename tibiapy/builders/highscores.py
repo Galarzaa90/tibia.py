@@ -57,7 +57,7 @@ class HighscoresBuilder:
         self._results_count = results_count
         return self
 
-    def last_updated(self, last_updated: datetime.timedelta):
+    def last_updated(self, last_updated: datetime.datetime):
         self._last_updated = last_updated
         return self
 
