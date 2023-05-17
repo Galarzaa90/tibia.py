@@ -1,6 +1,9 @@
 [run]
 include =
     tibiapy/*.py
+    tibiapy/parsers/*.py
+    tibiapy/models/*.py
+    tibiapy/builders/*.py
 
 [report]
 exclude_lines =
@@ -12,3 +15,4 @@ exclude_lines =
     def __lt__
     def __gt__
     return NotImplemented
+    if TYPE_CHECKING:

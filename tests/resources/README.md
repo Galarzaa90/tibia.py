@@ -1,25 +1,20 @@
 # Resources
-This directory and its subdirectories contain extracts from Tibia.com and TibiaData.com responses,
+This directory and its subdirectories contain extracts from Tibia.com,
 trying to cover as many scenarios possible, to be used in unit tests.
 
 ## Character resources
-- [tibiacom_deaths_complex.txt](character/tibiacom_deaths_complex.txt) - A character with many types of deaths, such as 
-deaths by summons, players, assisted deaths, etcetera.
-- [tibiacom_deletion.txt](character/tibiacom_deletion.txt) - A character scheduled for deletion.
-- [tibiacom_former_names.txt](character/tibiacom_former_names.txt) - A character with former names.
-- [tibiacom_full.txt](character/tibiacom_full.txt) - A full character response.
-- [tibiacom_not_found.txt](character/tibiacom_not_found.txt) - A character not found page.
-- [tibiacom_title_badges.txt](character/tibiacom_title_badges.txt) - A character with unlocked titles and badges.
-- [tibiacom_no_badges_selected.txt](character/tibiacom_no_badges_selected.txt) - A character with no selected badges.
-- [tibiacom_multiple_houses.txt](character/tibiacom_multiple_houses.txt) - A character with two houses.
-- [tibiacom_truncated_deaths.txt](character/tibiacom_truncated_deaths.txt) - A character with too many deaths to be displayed.
-- [tibiadata.json](character/tibiadata.json) - A character on TibiaData, also showing Pvp deaths with assists.
-- [tibiadata_deleted.json](character/tibiadata_deleted.json) - A character scheduled for deletion on TibiaData.
-- [tibiadata_not_found.json](character/tibiadata_not_found.json) - The response of a character not found on TibiaData.
-- [tibiadata_unhidden.json](character/tibiadata_unhidden.json) - A character with visible account information and 
-other characters on TibiaData.
-- [tibiadata_deaths_summon.json](character/tibiadata_deaths_summon.json) - A character with deaths by summons on 
-TibiaData.
+- [character.txt](character/character.txt) - A full character response.
+- [characterTraded.txt](character/characterTraded.txt) - A character that was traded and is also visible.
+- [characterWithComplexDeaths.txt](character/characterWithComplexDeaths.txt) - A character with many types of deaths, such as deaths by summons, players, assisted deaths, etcetera.
+- [characterDeletionScheduled.txt](character/characterDeletionScheduled.txt) - A character scheduled for deletion.
+- [characterFormerNames.txt](character/characterFormerNames.txt) - A character with former names.
+- [characterNotFound.txt](character/characterNotFound.txt) - A character not found page.
+- [characterWithTitleAndBadges.txt](character/characterWithTitleAndBadges.txt) - A character with unlocked titles and badges.
+- [characterNoBadgesSelected.txt](character/characterNoBadgesSelected.txt) - A character with no selected badges.
+- [characterMultipleHouses.txt](character/characterMultipleHouses.txt) - A character with two houses.
+- [characterTruncatedDeaths.txt](character/characterTruncatedDeaths.txt) - A character with too many deaths to be displayed.
+- [characterSpecialPosition.txt](character/characterSpecialPosition.txt) - A character with a special position.
+
 
 ## Guild resources
 - [tibiacom_full.txt](guild/tibiacom_full.txt) - The content of a guild's page.

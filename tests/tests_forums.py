@@ -10,7 +10,7 @@ from tibiapy.parsers.forum import ForumBoardParser, ForumAnnouncementParser, For
 from tibiapy.urls import get_forum_board_url, get_cm_post_archive_url
 
 FILE_WORLD_BOARDS = "forums/tibiacom_section.txt"
-FILE_SECTION_EMPTY_BOARD = "forums/tibiacom_section_empty_board.txt"
+FILE_SECTION_EMPTY_BOARD = "forums/forum_section_with_empty_board.txt"
 FILE_SECTION_EMPTY = "forums/tibiacom_section_empty.txt"
 FILE_BOARD_THREAD_LIST = "forums/tibiacom_board.txt"
 FILE_BOARD_EMPTY_THREAD_LIST = "forums/tibiacom_board_empty.txt"
@@ -50,7 +50,7 @@ class TestForum(TestCommons, unittest.TestCase):
         forum_section = ForumSectionParser.from_content(content)
 
         self.assertEqual(3, forum_section.section_id)
-        self.assertEqual(84, len(forum_section.entries))
+        self.assertEqual(90, len(forum_section.entries))
         for i, board in enumerate(forum_section.entries):
             with self.subTest(i=i):
                 self.assertIsInstance(board, BoardEntry)
