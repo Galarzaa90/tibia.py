@@ -1,6 +1,0 @@
-<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
-<div id="GuildInformationContainer">The guild was founded on Gladera on May&#160;18&#160;2018.<BR>
-It is currently active.<BR>
-Guild is opened for applications.<BR>
-</div>
-</div>

@@ -17,26 +17,14 @@ trying to cover as many scenarios possible, to be used in unit tests.
 
 
 ## Guild resources
-- [tibiacom_full.txt](guild/tibiacom_full.txt) - The content of a guild's page.
-- [tibiacom_war.txt](guild/tibiacom_war.txt) - The content of a guild's page for a guild with an active war.
-- [tibiacom_info_complete.txt](guild/tibiacom_info_complete.txt) - An extract of the information container of a guild
-with description, guildhall and homepage.
-- [tibiacom_info_disbanding.txt](guild/tibiacom_info_disbanding.txt) - An extract of the information container of a
-guild with a disband condition
-- [tibiacom_info_formation.txt](guild/tibiacom_info_formation.txt) - An extract of the information container of a guild
-still in formation.
-- [tibiacom_info_minimum.txt](guild/tibiacom_info_minimum.txt) - An extract of the information container of a guild
-with the bare minimum (no description, no guildhall, no homepage)
-- [tibiacom_list.txt](guild/tibiacom_list.txt) - The guild list of a world.
-- [tibiacom_list_not_found.txt](guild/tibiacom_list_not_found.txt) - The guild list of a world that doesn't exist.
-- [tibiacom_not_found.txt](guild/tibiacom_not_found.txt) - The page shown for a guild that doesn't exist.
-- [tibiadata.json](guild/tibiadata.json) - A guild on TibiaData, without disband information and no invites.
-- [tibiadata_disbanding.json](guild/tibiadata_disbanding.json) - A guild on TibiaData with a disband condition.
-- [tibiadata_invited.json](guild/tibiadata_invited.json) - A guild on TibiaData with pending invites.
-- [tibiadata_not_found.json](guild/tibiadata_not_found.json) - The response of a guild not found on TibiaData.
-- [tibiadata_list.json](guild/tibiadata_list.json) - The guild list of a world on TibiaData.
-- [tibiadata_list_not_found.json](guild/tibiadata_list_not_found.json) - The guild list of a world that doesn't exist on
- TibiaData
+- [guild.txt](guild/guild.txt) - The content of a guild's page.
+- [guildAtWar.txt](guild/guildAtWar.txt) - The content of a guild's page for a guild with an active war.
+- [guildDisbanding.txt](guild/guildDisbanding.txt) - A guild that is set to be disbanded.
+- [guildFormation.txt](guild/guildFormation.txt) - A guild still in formation.
+- [guildMinimumInfo.txt](guild/guildMinimumInfo.txt) - A guild with the bare minimum (no description, no guildhall, no homepage)
+- [guildsSection.txt](guild/guildsSection.txt) - The guild list of a world.
+- [guildsSectionNotFound.txt](guild/guildsSectionNotFound.txt) - The guild list of a world that doesn't exist.
+- [guildNotFound.txt](guild/guildNotFound.txt) - The page shown for a guild that doesn't exist.
  
 ### War resources
 

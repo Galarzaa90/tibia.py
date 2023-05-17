@@ -747,3 +747,11 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
             page = total_pages
     results_count = parse_integer(results_pattern.search(results_div.text).group(1))
     return page, total_pages, results_count
+
+
+def take_while(iterable, predicate):
+    for item in iterable:
+        if predicate(item):
+            yield item
+        else:
+            break

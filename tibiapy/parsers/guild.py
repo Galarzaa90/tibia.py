@@ -1,13 +1,19 @@
 """Models related to the guilds section in Tibia.com."""
+from __future__ import annotations
+
 import datetime
 import re
+from typing import Optional, TYPE_CHECKING
 
 import bs4
 
 from tibiapy.builders.guild import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContent
 from tibiapy.models import GuildEntry, GuildsSection, GuildMember, GuildInvite, GuildWarEntry, GuildHouse
-from tibiapy.utils import (parse_form_data, parse_tibia_date, parse_tibiacom_content)
+from tibiapy.utils import (parse_form_data, parse_tibia_date, parse_tibiacom_content, clean_text)
+
+if TYPE_CHECKING:
+    from tibiapy.models import Guild
 
 __all__ = (
     "GuildParser",
@@ -97,7 +103,7 @@ class GuildsSectionParser:
 class GuildParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> Optional[Guild]:
         """Create an instance of the class from the HTML content of the guild's page.
 
         Parameters
@@ -187,7 +193,7 @@ class GuildParser:
         """
         if m := disband_regex.search(info_container.text):
             builder.disband_condition(m.group(2))
-            builder.disband_date(parse_tibia_date(m.group(1).replace("\xa0", " ")))
+            builder.disband_date(parse_tibia_date(clean_text(m.group(1))))
 
     @classmethod
     def _parse_guild_guildhall(cls, builder, info_container):
@@ -214,6 +220,8 @@ class GuildParser:
         """
         if m := homepage_regex.search(info_container.text):
             builder.homepage(m.group(1))
+        if link := info_container.select_one("a"):
+            builder.homepage(link["href"])
 
     @classmethod
     def _parse_guild_info(cls, builder, info_container):

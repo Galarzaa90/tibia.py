@@ -19,6 +19,8 @@ __all__ = (
     'GuildWars'
 )
 
+from tibiapy.utils import take_while
+
 
 class GuildMember(BaseCharacter):
     """Represents a guild member."""
@@ -71,7 +73,7 @@ class Guild(BaseGuild):
     """Whether applications are open or not."""
     active_war: bool
     """Whether the guild is currently in an active war or not."""
-    disband_date: Optional[datetime.datetime]
+    disband_date: Optional[datetime.date]
     """The date when the guild will be disbanded if the condition hasn't been meet."""
     disband_condition: Optional[str]
     """The reason why the guild will get disbanded."""
@@ -101,6 +103,19 @@ class Guild(BaseGuild):
     def ranks(self) -> List[str]:
         """Ranks in their hierarchical order."""
         return list(OrderedDict.fromkeys((m.rank for m in self.members)))
+
+    @property
+    def leader(self) -> GuildMember:
+        """Get the leader of the guild."""
+        return self.members[0]
+
+    @property
+    def vice_leaders(self) -> List[GuildMember]:
+        """The vice leader of the guilds."""
+        if len(self.members) <= 1:
+            return []
+        return list(take_while(self.members[1:], lambda m: m.rank == self.members[1].rank))
+
 
     @property
     def members_by_rank(self) -> Dict[str, List[GuildMember]]:

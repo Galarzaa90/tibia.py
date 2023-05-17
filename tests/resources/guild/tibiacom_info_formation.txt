@@ -1,6 +1,0 @@
-<div class="BoxContent" style="background-image:url(https://ssl-static-tibia.akamaized.net/images/global/content/scroll.gif);">
-<div id="GuildInformationContainer">The guild was founded on Gladera on Aug&#160;13&#160;2018.<BR>
-It is still in course of formation.<BR>
-Guild is opened for applications.<BR>
-<B>It will be disbanded on Aug&#160;16&#160;2018 if there are still less than four vice leaders or an insufficient amount of premium accounts in the leading ranks by then.</B><BR>
-</div>
