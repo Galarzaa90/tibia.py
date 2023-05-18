@@ -28,9 +28,9 @@ trying to cover as many scenarios possible, to be used in unit tests.
  
 ### War resources
 
-- [tibiacom_empty.txt](guild/wars/tibiacom_empty.txt) - A guild with no active wars and no war history.
-- [tibiacom_unactive_history.txt](guild/wars/tibiacom_unactive_history.txt) - A guild with no active wars and a previous war (enemy disbanded).
-- [tibiacom_active_history.txt](guild/wars/tibiacom_active_history.txt) - A guild with an active war and two previous wars.
+- [guildWarEmpty.txt](guild/wars/guildWarEmpty.txt) - A guild with no active wars and no war history.
+- [guildWarUnactiveAndHistory.txt](guild/wars/guildWarUnactiveAndHistory.txt) - A guild with no active wars and a previous war (enemy disbanded).
+- [guildWarActiveAndHistory.txt](guild/wars/guildWarActiveAndHistory.txt) - A guild with an active war and two previous wars.
 
 ## House resources
 - [tibiacom_full.txt](house/tibiacom_full.txt) - The content of a house's page

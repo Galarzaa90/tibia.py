@@ -18,9 +18,9 @@ FILE_GUILD_LIST = "guild/guildsSection.txt"
 FILE_GUILD_LIST_NOT_FOUND = "guild/guildsSectionNotFound.txt"
 FILE_GUILD_IN_WAR = "guild/guildAtWar.txt"
 
-FILE_GUILD_WAR_ACTIVE_HISTORY = "guild/wars/tibiacom_active_history.txt"
-FILE_GUILD_WAR_EMPTY = "guild/wars/tibiacom_empty.txt"
-FILE_GUILD_WAR_UNACTIVE_HISTORY = "guild/wars/tibiacom_unactive_history.txt"
+FILE_GUILD_WAR_ACTIVE_HISTORY = "guild/wars/guildWarActiveAndHistory.txt"
+FILE_GUILD_WAR_EMPTY = "guild/wars/guildWarEmpty.txt"
+FILE_GUILD_WAR_UNACTIVE_HISTORY = "guild/wars/guildWarUnactiveAndHistory.txt"
 
 
 class TestsGuild(TestCommons, unittest.TestCase):
@@ -150,19 +150,53 @@ class TestsGuild(TestCommons, unittest.TestCase):
 
 
     # region Guild War Tests
-    def test_guild_wars_from_content_active_history(self):
+    def test_guild_wars_parser_from_content_active_history(self):
         """Testing parsing the guild wars of a guild currently in war and with war history."""
         content = self.load_resource(FILE_GUILD_WAR_ACTIVE_HISTORY)
         guild_wars = GuildWarsParser.from_content(content)
 
         self.assertIsInstance(guild_wars, GuildWars)
-        self.assertEqual("Army Geddon", guild_wars.name)
+        self.assertEqual("Realm Honor", guild_wars.name)
         self.assertIsNotNone(guild_wars.current)
         self.assertEqual(guild_wars.name, guild_wars.current.guild_name)
-        self.assertEqual(178, guild_wars.current.guild_score)
-        self.assertEqual("Willyboiis Boys", guild_wars.current.opponent_name)
-        self.assertEqual(218, guild_wars.current.opponent_score)
+        self.assertEqual(0, guild_wars.current.guild_score)
+        self.assertEqual("Nights Watch", guild_wars.current.opponent_name)
+        self.assertEqual(0, guild_wars.current.opponent_score)
         self.assertEqual(1000, guild_wars.current.score_limit)
+
+        self.assertEqual(15, len(guild_wars.history))
+
+        self.assertEqual(guild_wars.name, guild_wars.history[0].guild_name)
+        self.assertEqual(0, guild_wars.history[0].guild_score)
+        self.assertEqual(None, guild_wars.history[0].opponent_name)
+        self.assertEqual(0, guild_wars.history[0].opponent_score)
+        self.assertEqual(1000, guild_wars.history[0].score_limit)
+        self.assertTrue(guild_wars.history[0].surrender)
+
+        self.assertEqual(guild_wars.name, guild_wars.history[1].guild_name)
+        self.assertEqual(0, guild_wars.history[1].guild_score)
+        self.assertEqual(None, guild_wars.history[1].opponent_name)
+        self.assertEqual(0, guild_wars.history[1].opponent_score)
+        self.assertEqual(1000, guild_wars.history[1].score_limit)
+        self.assertEqual(guild_wars.name, guild_wars.history[1].winner)
+
+    def test_guild_wars_parser_from_content_empty(self):
+        """Testing parsing the guild wars of a guild that has never been in a war"""
+        content = self.load_resource(FILE_GUILD_WAR_EMPTY)
+        guild_wars = GuildWarsParser.from_content(content)
+
+        self.assertEqual("Alliance Of Friends", guild_wars.name)
+        self.assertIsNone(guild_wars.current)
+        self.assertFalse(guild_wars.history)
+
+    def test_guild_wars_parser_from_content_unactive_history(self):
+        """Testing parsing the guild wars of a war currently not in war and with war history."""
+        content = self.load_resource(FILE_GUILD_WAR_UNACTIVE_HISTORY)
+        guild_wars = GuildWarsParser.from_content(content)
+
+        self.assertIsInstance(guild_wars, GuildWars)
+        self.assertEqual("Bald Dwarfs", guild_wars.name)
+        self.assertIsNone(guild_wars.current)
 
         self.assertEqual(2, len(guild_wars.history))
 
@@ -170,41 +204,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertEqual(0, guild_wars.history[0].guild_score)
         self.assertEqual(None, guild_wars.history[0].opponent_name)
         self.assertEqual(0, guild_wars.history[0].opponent_score)
-        self.assertEqual(420, guild_wars.history[0].score_limit)
-        self.assertTrue(guild_wars.history[0].surrender)
-
-        self.assertEqual(guild_wars.name, guild_wars.history[1].guild_name)
-        self.assertEqual(500, guild_wars.history[1].guild_score)
-        self.assertEqual(None, guild_wars.history[1].opponent_name)
-        self.assertEqual(491, guild_wars.history[1].opponent_score)
-        self.assertEqual(500, guild_wars.history[1].score_limit)
-        self.assertEqual(guild_wars.name, guild_wars.history[1].winner)
-
-    def test_guild_wars_from_content_empty(self):
-        """Testing parsing the guild wars of a guild that has never been in a war"""
-        content = self.load_resource(FILE_GUILD_WAR_EMPTY)
-        guild_wars = GuildWarsParser.from_content(content)
-
-        self.assertEqual("Redd Alliance", guild_wars.name)
-        self.assertIsNone(guild_wars.current)
-        self.assertFalse(guild_wars.history)
-
-    def test_guild_wars_from_content_unactive_history(self):
-        """Testing parsing the guild wars of a war currently not in war and with war history."""
-        content = self.load_resource(FILE_GUILD_WAR_UNACTIVE_HISTORY)
-        guild_wars = GuildWarsParser.from_content(content)
-
-        self.assertIsInstance(guild_wars, GuildWars)
-        self.assertEqual("Dinastia de Perrones", guild_wars.name)
-        self.assertIsNone(guild_wars.current)
-
-        self.assertEqual(1, len(guild_wars.history))
-
-        self.assertEqual(guild_wars.name, guild_wars.history[0].guild_name)
-        self.assertEqual(0, guild_wars.history[0].guild_score)
-        self.assertEqual(None, guild_wars.history[0].opponent_name)
-        self.assertEqual(0, guild_wars.history[0].opponent_score)
-        self.assertEqual(1000, guild_wars.history[0].score_limit)
+        self.assertEqual(100, guild_wars.history[0].score_limit)
         self.assertTrue(guild_wars.history[0].surrender)
 
     # endregion
