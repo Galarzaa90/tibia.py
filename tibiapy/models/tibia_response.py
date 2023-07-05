@@ -1,9 +1,8 @@
 import datetime
 from typing import Generic, TypeVar
 
-from pydantic.generics import GenericModel
-
 from tibiapy.enums import NumericEnum
+from pydantic import BaseModel, ConfigDict
 
 __all__ = (
     "TibiaResponse",
@@ -16,7 +15,7 @@ T = TypeVar('T')
 CACHE_LIMIT = 300
 
 
-class TibiaResponse(GenericModel, Generic[T]):
+class TibiaResponse(BaseModel, Generic[T]):
     """Represents a response from Tibia.com."""
 
     timestamp: datetime.datetime
@@ -55,7 +54,7 @@ class TibiaResponse(GenericModel, Generic[T]):
             parsing_time=parsing_time,
             data=data
         )
-
-    class Config:
-        json_encoders = {NumericEnum: lambda g: g.name}
+    # TODO[pydantic]: The following keys were removed: `json_encoders`.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+    model_config = ConfigDict(json_encoders={NumericEnum: lambda g: g.name})
 

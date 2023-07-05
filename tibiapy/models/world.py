@@ -30,7 +30,7 @@ class BaseWorld(BaseModel):
     """The type of transfer restrictions this world has."""
     premium_only: bool
     """Whether only premium account players are allowed to play in this server."""
-    battleye_date: Optional[datetime.date]
+    battleye_date: Optional[datetime.date] = None
     """The date when BattlEye was added to this world."""
     battleye_type: BattlEyeType
     """The type of BattlEye protection this world has."""

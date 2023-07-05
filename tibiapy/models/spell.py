@@ -27,11 +27,11 @@ class Rune(BaseModel):
     """The cooldown group of the rune."""
     exp_level: int
     """The experience level required to use the rune."""
-    mana: Optional[int]
+    mana: Optional[int] = None
     """The amount of mana needed to use the rune. It will be :obj:`None` if not applicable."""
     magic_level: int
     """The magic level required to use the rune."""
-    magic_type: Optional[str]
+    magic_type: Optional[str] = None
     """The type of magic of this rune. Influenced by specialized magic level attributes."""
 
 
@@ -48,9 +48,9 @@ class SpellEntry(BaseModel):
     """The cooldown group of the spell."""
     spell_type: SpellType
     """The type of the spell"""
-    exp_level: Optional[int]
+    exp_level: Optional[int] = None
     """The required level to cast the spell."""
-    mana: Optional[int]
+    mana: Optional[int] = None
     """The mana required to use the spell. If :obj:`None`, the mana cost is variable."""
     price: int
     """The price in gold coins to learn the spell."""
@@ -77,34 +77,34 @@ class Spell(SpellEntry):
     """The vocations that can use this spell."""
     cooldown: int
     """The individual cooldown of this spell in seconds."""
-    cooldown_group: Optional[int]
+    cooldown_group: Optional[int] = None
     """The group cooldown of this spell in seconds."""
-    group_secondary: Optional[str]
+    group_secondary: Optional[str] = None
     """The secondary cooldown group of this spell, if any."""
-    cooldown_group_secondary: Optional[int]
+    cooldown_group_secondary: Optional[int] = None
     """The secondary cooldown of this spell in seconds."""
-    soul_points: Optional[int]
+    soul_points: Optional[int] = None
     """The number of soul points consumed by this spell. It will be :obj:`None` if not applicable."""
-    amount: Optional[int]
+    amount: Optional[int] = None
     """The amount of objects created by this spell. It will be :obj:`None` if not applicable."""
-    magic_type: Optional[str]
+    magic_type: Optional[str] = None
     """The type of magic of this spell. Influenced by specialized magic level attributes."""
     cities: List[str]
     """The cities where this spell can be learned."""
-    rune: Optional[Rune]
+    rune: Optional[Rune] = None
     """Information of the rune created by this spell, if applicable."""
 
 
 class SpellsSection(BaseModel):
     """The spells section in Tibia.com."""
 
-    vocation: Optional[SpellVocationFilter]
+    vocation: Optional[SpellVocationFilter] = None
     """The selected vocation filter. If :obj:`None`, spells for any vocation will be shown."""
-    group: Optional[SpellGroup]
+    group: Optional[SpellGroup] = None
     """The selected spell group to display. If :obj:`None`, spells for any group will be shown."""
-    spell_type: Optional[SpellType]
+    spell_type: Optional[SpellType] = None
     """The selected spell type to display. If :obj:`None`, spells for any type will be shown."""
-    premium: Optional[bool]
+    premium: Optional[bool] = None
     """The premium status to filter in. :obj:`True` to show only premium spells,
         :obj:`False` to show free account spells and :obj:`None` will show any spells."""
     sort_by: SpellSorting

@@ -1,12 +1,11 @@
 from abc import abstractmethod, ABC
 from typing import TypeVar, Generic, List, Optional
-
-from pydantic.generics import GenericModel
+from pydantic import BaseModel
 
 T = TypeVar('T')
 
 
-class Paginated(GenericModel, Generic[T]):
+class Paginated(BaseModel, Generic[T]):
     """An entity made of multiple pages."""
 
     current_page: int = 1

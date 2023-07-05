@@ -159,7 +159,7 @@ class ItemEntry(DisplayImage):
     """The URL to the item's image."""
     name: str
     """The item's name."""
-    description: Optional[str]
+    description: Optional[str] = None
     """The item's description, if any."""
     count: int = 1
     """The item's count."""

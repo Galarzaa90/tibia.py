@@ -300,7 +300,7 @@ class BoardEntry(BaseBoard):
     """The number of posts in this board."""
     threads: int
     """The number of threads in this board."""
-    last_post: Optional[LastPost]
+    last_post: Optional[LastPost] = None
     """The information of the last post made in this board."""
 
 
@@ -332,13 +332,13 @@ class ThreadEntry(BaseThread):
     """The number of replies."""
     views: int
     """The number of views."""
-    last_post: Optional[LastPost]
+    last_post: Optional[LastPost] = None
     """The information of the last post made in this board."""
     status: ThreadStatus
     """The status of the thread."""
     status_icon: str
     """The URL of the icon displayed as status."""
-    emoticon: Optional[ForumEmoticon]
+    emoticon: Optional[ForumEmoticon] = None
     """The emoticon used for the thread."""
     total_pages: int
     """The number of pages the thread has."""
@@ -421,7 +421,7 @@ class ForumPost(BasePost):
     """The author of the post."""
     emoticon: Optional[ForumEmoticon] = None
     """The emoticon selected for the post."""
-    title: Optional[str]
+    title: Optional[str] = None
     """The title of the post."""
     content: str
     """The content of the post."""
@@ -431,9 +431,9 @@ class ForumPost(BasePost):
     """The id of the post."""
     posted_date: datetime.datetime
     """The date when the post was made."""
-    edited_date: Optional[datetime.datetime]
+    edited_date: Optional[datetime.datetime] = None
     """The date when the post was last edited, if applicable."""
-    edited_by: Optional[str]
+    edited_by: Optional[str] = None
     """The character that edited the post.
 
     This is usually the same author, but in some occasions staff members edit the posts of others."""
@@ -453,9 +453,9 @@ class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
     """The board section this thread belongs to."""
     section_id: int
     """The ID of the board section this thread belongs to."""
-    previous_topic_number: Optional[int]
+    previous_topic_number: Optional[int] = None
     """The number of the previous topic."""
-    next_topic_number: Optional[int]
+    next_topic_number: Optional[int] = None
     """The number of the next topic."""
     entries: List[ForumPost] = []
     """The list of posts the thread has."""

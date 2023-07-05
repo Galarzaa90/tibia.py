@@ -49,7 +49,8 @@ extras_require = {
         'coverage',
     ],
     'server': [
-        'fastapi'
+        'fastapi==0.100.0-beta3',
+        'uvicorn',
     ]
 }
 

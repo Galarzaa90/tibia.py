@@ -41,9 +41,9 @@ class AccountInformation(BaseModel):
 
     created: datetime.datetime
     """The date when the account was created."""
-    position: Optional[str]
+    position: Optional[str] = None
     """The special position of this account, if any."""
-    loyalty_title: Optional[str]
+    loyalty_title: Optional[str] = None
     """The loyalty title of the account, if any"""
 
 
@@ -79,7 +79,7 @@ class DeathParticipant(BaseModel):
     """The name of the killer. In the case of summons, the name belongs to the owner."""
     player: bool
     """Whether the killer is a player or not."""
-    summon: Optional[str]
+    summon: Optional[str] = None
     """The name of the summoned creature, if applicable."""
     traded: bool
     """If the killer was traded after this death happened."""
@@ -121,7 +121,7 @@ class GuildMembership(BaseGuild):
 
     rank: str
     """The name of the rank the member has."""
-    title: Optional[str]
+    title: Optional[str] = None
     """The title of the member in the guild. This is only available for characters in the forums section."""
 
 
@@ -149,7 +149,7 @@ class OtherCharacter(BaseCharacter):
     """Whether the character has been traded recently or not."""
     main: bool
     """Whether this is the main character or not."""
-    position: Optional[str]
+    position: Optional[str] = None
     """The character's official position, if any."""
 
 
@@ -158,11 +158,11 @@ class Character(BaseCharacter):
 
     traded: bool
     """If the character was traded in the last 6 months."""
-    deletion_date: Optional[datetime.datetime]
+    deletion_date: Optional[datetime.datetime] = None
     """The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise."""
     former_names: List[str]
     """Previous names of the character in the last 6 months.."""
-    title: Optional[str]
+    title: Optional[str] = None
     """The character's selected title, if any."""
     unlocked_titles: int = 0
     """The number of titles the character has unlocked."""
@@ -176,21 +176,21 @@ class Character(BaseCharacter):
     """The total of achievement points the character has."""
     world: str
     """The character's current world."""
-    former_world: Optional[str]
+    former_world: Optional[str] = None
     """The previous world the character was in, in the last 6 months."""
     residence: str
     """The current hometown of the character."""
-    married_to: Optional[str]
+    married_to: Optional[str] = None
     """The name of the character's spouse. It will be :obj:`None` if not married."""
     houses: List[CharacterHouse]
     """The houses currently owned by the character."""
-    guild_membership: Optional[GuildMembership]
+    guild_membership: Optional[GuildMembership] = None
     """The guild the character is a member of. It will be :obj:`None` if the character is not in a guild."""
-    last_login: Optional[datetime.datetime]
+    last_login: Optional[datetime.datetime] = None
     """The last time the character logged in. It will be :obj:`None` if the character has never logged in."""
-    position: Optional[str]
+    position: Optional[str] = None
     """The position of the character (e.g. CipSoft Member), if any."""
-    comment: Optional[str]
+    comment: Optional[str] = None
     """The displayed comment."""
     is_premium: bool
     """Whether the character's account is Premium or Free."""
@@ -204,7 +204,7 @@ class Character(BaseCharacter):
     """Whether the character's deaths are truncated or not.
 
     In some cases, there are more deaths in the last 30 days than what can be displayed."""
-    account_information: Optional[AccountInformation]
+    account_information: Optional[AccountInformation] = None
     """The character's account information. If the character is hidden, this will be :obj:`None`."""
     other_characters: List[OtherCharacter]
     """Other characters in the same account.

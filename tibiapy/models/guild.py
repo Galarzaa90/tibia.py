@@ -73,11 +73,11 @@ class Guild(BaseGuild):
     """Whether applications are open or not."""
     active_war: bool
     """Whether the guild is currently in an active war or not."""
-    disband_date: Optional[datetime.date]
+    disband_date: Optional[datetime.date] = None
     """The date when the guild will be disbanded if the condition hasn't been meet."""
-    disband_condition: Optional[str]
+    disband_condition: Optional[str] = None
     """The reason why the guild will get disbanded."""
-    homepage: Optional[str]
+    homepage: Optional[str] = None
     """The guild's homepage, if any."""
     members: List[GuildMember]
     """List of guild members."""
@@ -130,7 +130,7 @@ class GuildEntry(BaseGuild):
 
     logo_url: str
     """The URL to the guild's logo."""
-    description: Optional[str]
+    description: Optional[str] = None
     """The description of the guild."""
     world: str
     """The world this guild belongs to."""

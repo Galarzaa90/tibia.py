@@ -5,6 +5,7 @@ import pydantic
 
 from tibiapy import BattlEyeType
 from tibiapy.urls import get_character_url, get_guild_url, get_house_url, get_guild_wars_url
+from pydantic import ConfigDict
 
 __all__ = (
     'BaseModel',
@@ -17,9 +18,9 @@ __all__ = (
 
 class BaseModel(pydantic.BaseModel):
     """Base class for all model classes."""
-
-    class Config:
-        json_encoders = {BattlEyeType: lambda g: g.name}
+    # TODO[pydantic]: The following keys were removed: `json_encoders`.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+    model_config = ConfigDict(json_encoders={BattlEyeType: lambda g: g.name})
 
 
 class BaseCharacter(BaseModel):
