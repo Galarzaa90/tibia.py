@@ -1,8 +1,7 @@
 import datetime
 from typing import Generic, TypeVar
 
-from tibiapy.enums import NumericEnum
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 __all__ = (
     "TibiaResponse",
@@ -54,7 +53,3 @@ class TibiaResponse(BaseModel, Generic[T]):
             parsing_time=parsing_time,
             data=data
         )
-    # TODO[pydantic]: The following keys were removed: `json_encoders`.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
-    model_config = ConfigDict(json_encoders={NumericEnum: lambda g: g.name})
-

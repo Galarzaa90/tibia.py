@@ -14,6 +14,7 @@ def get_version(package):
     return re.search("__version__ = ['\"]([^'\"]+)['\"]", init_py).group(1)
 
 
+import pathlib
 version = get_version("tibiapy")
 if version.endswith(('a', 'b', 'rc')):
     # append version identifier based on commit count
@@ -35,8 +36,7 @@ if version.endswith(('a', 'b', 'rc')):
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
-with open('README.md') as f:
-    readme = f.read()
+readme = pathlib.Path('README.md').read_text()
 
 extras_require = {
     'docs': [
@@ -49,7 +49,7 @@ extras_require = {
         'coverage',
     ],
     'server': [
-        'fastapi==0.100.0-beta3',
+        'fastapi~=0.100',
         'uvicorn',
     ]
 }

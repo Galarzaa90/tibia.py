@@ -1,4 +1,6 @@
 """Exceptions thrown by tibia.py."""
+from enum import Enum
+from typing import Type, Any
 
 
 class TibiapyException(Exception):
@@ -59,3 +61,18 @@ class SiteMaintenanceError(NetworkError):
 
     When Tibia.com is under maintenance, all sections of the website redirect to maintenance.tibia.com.
     """
+
+
+class EnumValueError(ValueError):
+
+    def __init__(self, enum: Type[Enum], value: Any) -> None:
+        self.enum = enum
+        super().__init__(f"{value!r} is not a valid value for {enum.__name__}. Expected names ({self.names}) or values ({self.values})")
+
+    @property
+    def names(self):
+        return ", ".join(e.name for e in self.enum)
+
+    @property
+    def values(self):
+        return ", ".join(str(e.value) for e in self.enum)

@@ -1,8 +1,12 @@
 """Enumerations used by models throughout the library."""
 from enum import Enum, Flag, IntEnum
+from typing import Any
 
-import pydantic.errors
+from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
+from pydantic.json_schema import JsonSchemaValue
+from pydantic_core import core_schema, CoreSchema
 
+from tibiapy.errors import EnumValueError
 from tibiapy.utils import try_enum
 
 __all__ = (
@@ -42,16 +46,23 @@ __all__ = (
 class StringEnum(str, Enum):
 
     @classmethod
-    def __get_validators__(cls):
-        cls.lookup = {v: k.value for v, k in cls.__members__.items()}
-        yield cls.validate
-
-    @classmethod
     def validate(cls, v):
         e = try_enum(cls, v)
         if e is None:
-            raise pydantic.errors.EnumMemberError(enum_values=list(cls))
+            raise EnumValueError(cls, v)
         return e
+
+    @classmethod
+    def __get_pydantic_core_schema__(cls, _source_type: Any, _handler: GetCoreSchemaHandler) -> CoreSchema:
+        return core_schema.no_info_after_validator_function(
+            lambda x: cls.validate(x),
+            core_schema.str_schema(),
+            serialization=core_schema.plain_serializer_function_ser_schema(lambda x: x.name),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, _handler: GetJsonSchemaHandler) -> JsonSchemaValue:
+        return {'enum': [m.name for m in cls], 'type': 'string'}
 
 
 class NumericEnum(IntEnum):
@@ -59,16 +70,23 @@ class NumericEnum(IntEnum):
         return self.name.lower()
 
     @classmethod
-    def __get_validators__(cls):
-        cls.lookup = {v: k.value for v, k in cls.__members__.items()}
-        yield cls.validate
-
-    @classmethod
     def validate(cls, v):
         e = try_enum(cls, v)
         if e is None:
-            raise pydantic.errors.EnumMemberError(enum_values=list(cls))
+            raise EnumValueError(cls, v)
         return e
+    @classmethod
+    def __get_pydantic_core_schema__(cls, _source_type: Any, _handler: GetCoreSchemaHandler) -> CoreSchema:
+        return core_schema.no_info_after_validator_function(
+            lambda x: cls.validate(x),
+            core_schema.any_schema(),
+            serialization=core_schema.plain_serializer_function_ser_schema(lambda x: x.name),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, _handler: GetJsonSchemaHandler) -> JsonSchemaValue:
+        return {'enum': [m.name for m in cls], 'type': 'string'}
+
 
 
 class AuctionBattlEyeFilter(NumericEnum):
