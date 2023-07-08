@@ -69,7 +69,7 @@ class CMPostArchiveParser:
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
         except (AttributeError, ValueError) as e:
             raise errors.InvalidContent("content does not belong to the CM Post Archive in Tibia.com", e)
-        builder = CMPostArchiveBuilder().start_date(start_date).end_date(end_date)
+        builder = CMPostArchiveBuilder().from_date(start_date).to_date(end_date)
         table = parsed_content.select_one("table.Table3")
         if not table:
             return builder.build()
@@ -264,7 +264,7 @@ class ForumAnnouncementParser:
         builder.content(announcement_content)
 
         start_date, end_date = (parse_tibia_forum_datetime(date, offset) for date in dates)
-        builder.start_date(start_date).end_date(end_date)
+        builder.from_date(start_date).to_date(end_date)
         return builder.build()
 
 

@@ -470,14 +470,14 @@ def get_bazaar_url(type: BazaarType, page: int = 1, filters: AuctionFilters = No
     return get_tibia_url("charactertrade", type.subtopic, currentpage=page, **query_params)
 
 
-def get_cm_post_archive_url(start_date: datetime.datetime, end_date: datetime.datetime, page=1):
+def get_cm_post_archive_url(from_date: datetime.date, to_date: datetime.date, page=1):
     """Get the URL to the CM Post Archive for the given date range.
 
     Parameters
     ----------
-    start_date: :class: `datetime.date`
+    from_date: :class: `datetime.date`
         The start date to display.
-    end_date: :class: `datetime.date`
+    to_date: :class: `datetime.date`
         The end date to display.
     page: :class:`int`
         The desired page to display.
@@ -494,17 +494,17 @@ def get_cm_post_archive_url(start_date: datetime.datetime, end_date: datetime.da
     ValueError:
         If ``start_date`` is more recent than ``end_date``.
     """
-    if not isinstance(start_date, datetime.date):
-        raise TypeError(f"start_date: expected datetime.date instance, {type(start_date)} found.")
-    if not isinstance(end_date, datetime.date):
-        raise TypeError(f"start_date: expected datetime.date instance, {type(start_date)} found.")
-    if end_date < start_date:
+    if not isinstance(from_date, datetime.date):
+        raise TypeError(f"start_date: expected datetime.date instance, {type(from_date)} found.")
+    if not isinstance(to_date, datetime.date):
+        raise TypeError(f"start_date: expected datetime.date instance, {type(from_date)} found.")
+    if to_date < from_date:
         raise ValueError("start_date can't be more recent than end_date.")
     if page < 1:
         raise ValueError("page must be 1 or greater.")
-    return get_tibia_url("forum", "forum", action="cm_post_archive", startday=start_date.day,
-                         startmonth=start_date.month, startyear=start_date.year, endday=end_date.day,
-                         endmonth=end_date.month, endyear=end_date.year, currentpage=page)
+    return get_tibia_url("forum", "forum", action="cm_post_archive", startday=from_date.day,
+                         startmonth=from_date.month, startyear=from_date.year, endday=to_date.day,
+                         endmonth=to_date.month, endyear=to_date.year, currentpage=page)
 
 
 def get_leaderboards_url(world: str, rotation_id: int = None, page: int = 1) -> str:

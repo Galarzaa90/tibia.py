@@ -3,19 +3,19 @@ from tibiapy.models.forum import CMPostArchive, CMPost, ForumAnnouncement, Forum
 
 class CMPostArchiveBuilder:
     def __init__(self):
-        self._start_date = None
-        self._end_date = None
+        self._from_date = None
+        self._to_date = None
         self._current_page = 1
         self._total_pages = 1
         self._results_count = 0
         self._entries = []
 
-    def start_date(self, start_date):
-        self._start_date = start_date
+    def from_date(self, from_date):
+        self._from_date = from_date
         return self
 
-    def end_date(self, end_date):
-        self._end_date = end_date
+    def to_date(self, to_date):
+        self._to_date = to_date
         return self
 
     def current_page(self, current_page):
@@ -40,8 +40,8 @@ class CMPostArchiveBuilder:
 
     def build(self):
         return CMPostArchive(
-            start_date=self._start_date,
-            end_date=self._end_date,
+            from_date=self._from_date,
+            to_date=self._to_date,
             current_page=self._current_page,
             total_pages=self._total_pages,
             results_count=self._results_count,
@@ -82,17 +82,17 @@ class CMPostBuilder:
 
 
 class ForumAnnouncementBuilder:
-    def __init__(self, **kwargs):
-        self._announcement_id = kwargs.get("announcement_id")
-        self._board = kwargs.get("board")
-        self._section = kwargs.get("section")
-        self._board_id = kwargs.get("board_id")
-        self._section_id = kwargs.get("section_id")
-        self._author = kwargs.get("author")
-        self._title = kwargs.get("title")
-        self._content = kwargs.get("content")
-        self._start_date = kwargs.get("start_date")
-        self._end_date = kwargs.get("end_date")
+    def __init__(self):
+        self._announcement_id = None
+        self._board = None
+        self._section = None
+        self._board_id = None
+        self._section_id = None
+        self._author = None
+        self._title = None
+        self._content = None
+        self._from_date = None
+        self._to_date = None
 
     def announcement_id(self, announcement_id):
         self._announcement_id = announcement_id
@@ -126,12 +126,12 @@ class ForumAnnouncementBuilder:
         self._content = content
         return self
 
-    def start_date(self, start_date):
-        self._start_date = start_date
+    def from_date(self, from_date):
+        self._from_date = from_date
         return self
 
-    def end_date(self, end_date):
-        self._end_date = end_date
+    def to_date(self, to_date):
+        self._to_date = to_date
         return self
 
 
@@ -145,8 +145,8 @@ class ForumAnnouncementBuilder:
             author=self._author,
             title=self._title,
             content=self._content,
-            start_date=self._start_date,
-            end_date=self._end_date,
+            start_date=self._from_date,
+            end_date=self._to_date,
         )
 
 

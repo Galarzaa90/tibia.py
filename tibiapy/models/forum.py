@@ -189,9 +189,9 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
 
     The CM Post Archive is a collection of posts made in the forum by community managers.
     """
-    start_date: datetime.date
+    from_date: datetime.date
     """The start date of the displayed posts."""
-    end_date: datetime.date
+    to_date: datetime.date
     """The end date of the displayed posts."""
     entries: List[CMPost] = []
     """The list of posts for the selected range."""
@@ -199,7 +199,7 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
     @property
     def url(self) -> str:
         """The URL of the CM Post Archive with the current parameters."""
-        return get_cm_post_archive_url(self.start_date, self.end_date, self.current_page)
+        return get_cm_post_archive_url(self.from_date, self.to_date, self.current_page)
 
     def get_page_url(self, page) -> str:
         """Get the URL of the CM Post Archive at a specific page, with the current date parameters.
@@ -216,7 +216,7 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
-        return get_cm_post_archive_url(self.start_date, self.end_date, page)
+        return get_cm_post_archive_url(self.from_date, self.to_date, page)
 
 
 class ForumEmoticon(BaseModel):

@@ -25,8 +25,8 @@ class TestNews(TestCommons, unittest.TestCase):
         news_archive = NewsArchiveParser.from_content(content)
 
         self.assertIsInstance(news_archive, NewsArchive)
-        self.assertEqual(datetime.date(2023, 3, 16), news_archive.start_date)
-        self.assertEqual(datetime.date(2023, 4, 15), news_archive.end_date)
+        self.assertEqual(datetime.date(2023, 3, 16), news_archive.from_date)
+        self.assertEqual(datetime.date(2023, 4, 15), news_archive.to_date)
         self.assertEqual(3, len(news_archive.types))
         self.assertEqual(5, len(news_archive.categories))
 
@@ -36,8 +36,8 @@ class TestNews(TestCommons, unittest.TestCase):
 
         news_archive = NewsArchiveParser.from_content(content)
 
-        self.assertEqual(datetime.date(2019, 3, 25), news_archive.start_date)
-        self.assertEqual(datetime.date(2019, 5, 25), news_archive.end_date)
+        self.assertEqual(datetime.date(2019, 3, 25), news_archive.from_date)
+        self.assertEqual(datetime.date(2019, 5, 25), news_archive.to_date)
         self.assertEqual(3, len(news_archive.types))
         self.assertEqual(5, len(news_archive.categories))
         news_list = news_archive.entries
@@ -47,7 +47,7 @@ class TestNews(TestCommons, unittest.TestCase):
         self.assertIsInstance(latest_news.id, int)
         self.assertIsInstance(latest_news.category, NewsCategory)
         self.assertIsInstance(latest_news.type, NewsType)
-        self.assertIsInstance(latest_news.date, datetime.date)
+        self.assertIsInstance(latest_news.published_on, datetime.date)
         self.assertIsNotNone(latest_news.url)
         self.assertEqual(latest_news.url, get_news_url(latest_news.id))
 
@@ -57,8 +57,8 @@ class TestNews(TestCommons, unittest.TestCase):
 
         news_archive = NewsArchiveParser.from_content(content)
 
-        self.assertEqual(datetime.date(2023, 4, 13), news_archive.start_date)
-        self.assertEqual(datetime.date(2023, 4, 15), news_archive.end_date)
+        self.assertEqual(datetime.date(2023, 4, 13), news_archive.from_date)
+        self.assertEqual(datetime.date(2023, 4, 15), news_archive.to_date)
         self.assertEqual(1, len(news_archive.types))
         self.assertEqual(5, len(news_archive.categories))
         self.assertEqual(0, len(news_archive.entries))
@@ -70,8 +70,8 @@ class TestNews(TestCommons, unittest.TestCase):
         news_archive = NewsArchiveParser.from_content(content)
 
         self.assertIsInstance(news_archive, NewsArchive)
-        self.assertEqual(datetime.date(2019, 3, 25), news_archive.start_date)
-        self.assertEqual(datetime.date(2018, 5, 25), news_archive.end_date)
+        self.assertEqual(datetime.date(2019, 3, 25), news_archive.from_date)
+        self.assertEqual(datetime.date(2018, 5, 25), news_archive.to_date)
         self.assertEqual(3, len(news_archive.types))
         self.assertEqual(5, len(news_archive.categories))
         self.assertEqual(0, len(news_archive.entries))
@@ -101,7 +101,7 @@ class TestNews(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(news, News)
         self.assertEqual(news.category, NewsCategory.TECHNICAL_ISSUES)
-        self.assertIsInstance(news.date, datetime.date)
+        self.assertIsInstance(news.published_on, datetime.date)
         self.assertEqual(news.title, "News Ticker")
         self.assertIsNone(news.thread_id)
 
@@ -112,7 +112,7 @@ class TestNews(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(news, News)
         self.assertEqual(news.category, NewsCategory.DEVELOPMENT)
-        self.assertIsInstance(news.date, datetime.date)
+        self.assertIsInstance(news.published_on, datetime.date)
         self.assertEqual(news.title, "Sign Up for the VANGUARD Tournament")
         self.assertEqual(news.thread_id, 4725194)
 

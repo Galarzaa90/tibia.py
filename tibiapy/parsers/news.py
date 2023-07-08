@@ -105,11 +105,11 @@ class NewsArchiveParser:
     @classmethod
     def _parse_filter_table(cls, builder: NewsArchiveBuilder, form: bs4.Tag):
         form_data = parse_form_data_new(form)
-        builder.start_date(datetime.date(
+        builder.from_date(datetime.date(
             int(form_data.values["filter_begin_year"]),
             int(form_data.values["filter_begin_month"]),
             int(form_data.values["filter_begin_day"]),
-        )).end_date(
+        )).to_date(
             datetime.date(
                 int(form_data.values["filter_end_year"]),
                 int(form_data.values["filter_end_month"]),
@@ -138,7 +138,7 @@ class NewsArchiveParser:
         title = cols_raw[2].text
         news_link = parse_link_info(cols_raw[2].select_one('a'))
         news_id = int(news_link["query"]["id"])
-        return NewsEntry(id=news_id, title=title, type=news_type, category=category, date=date)
+        return NewsEntry(id=news_id, title=title, type=news_type, category=category, published_on=date)
 
 
 class NewsParser:
@@ -185,7 +185,7 @@ class NewsParser:
             builder.title(clean_text(title_div))
             date_div = headline.select_one("div.NewsHeadlineDate")
             date_str = clean_text(date_div).replace('-', '').strip()
-            builder.date(parse_tibia_date(date_str))
+            builder.published_on(parse_tibia_date(date_str))
 
             # Read the page's content.
             content_table = parsed_content.select_one("table")

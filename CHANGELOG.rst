@@ -34,12 +34,20 @@ Changelog
     - Renamed ``DisplayOutfit`` to ``OutfitEntry``.
     - Renamed ``DisplayFamiliar`` to ``FamiliarEntry``.
     - Renamed ``page`` to ``current_page``, ``results`` to ``results_count``, and ``fully_fetched`` to ``is_fully_fetched`` in ``ItemSummary``, ``Mounts``, ``Familiars`` and ``Outfits``.
-    - Renamed ``CMPostArchive.page`` and ``CMPostArchive.posts`` to ``current_page`` and ``entries`` respectively.
+    - Renamed ``CMPostArchive`` attributes:
+        - ``start_date`` to ``from_date``
+        - ``end_date`` to ``to_date``
+        - ``page`` to ``current_page``
+        - ``posts`` to ``entries``
     - Renamed ``Killer``to ``DeathParticipant``
     - Renamed ``ForumBoard.threads`` to ``entries``.
     - Renamed ``ForumThread.posts`` to ``entries``.
     - Added ``thread_starter_deleted`` to ``ThreadEntry``.
     - ``ForumThread.previous_topic_number`` and ``ForumThread.next_topic_number`` may be ``None`` instead of ``0``.
+    - Renamed ``News`` attributes:
+        - ``start_date`` to ``from_date``
+        - ``end_date`` to ``to_date``
+        - ``date`` to ``published_on``
 - Renamed ``Category`` to ``HighscoresCategory``.
 - Renamed ``BattlEyeTypeFilter`` to ``AuctionBattlEyeFilter``.
 - Renamed ``VocationFilter`` to ``HighscoresProfession``.

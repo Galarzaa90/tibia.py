@@ -11,18 +11,18 @@ if TYPE_CHECKING:
 
 class NewsArchiveBuilder:
     def __init__(self):
-        self._start_date = None
-        self._end_date = None
+        self._from_date = None
+        self._to_date = None
         self._types = set()
         self._categories = set()
         self._entries = []
 
-    def start_date(self, start_date: datetime.date):
-        self._start_date = start_date
+    def from_date(self, from_date: datetime.date):
+        self._from_date = from_date
         return self
 
-    def end_date(self, end_date: datetime.date):
-        self._end_date = end_date
+    def to_date(self, to_date: datetime.date):
+        self._to_date = to_date
         return self
 
     def types(self, types: Collection[NewsType]):
@@ -51,8 +51,8 @@ class NewsArchiveBuilder:
 
     def build(self):
         return NewsArchive(
-            start_date=self._start_date,
-            end_date=self._end_date,
+            from_date=self._from_date,
+            to_date=self._to_date,
             types=self._types,
             categories=self._categories,
             entries=self._entries,
@@ -64,7 +64,7 @@ class NewsBuilder:
         self._id = None
         self._category = None
         self._title = None
-        self._date = None
+        self._published_on = None
         self._content = None
         self._thread_id = None
 
@@ -80,8 +80,8 @@ class NewsBuilder:
         self._title = title
         return self
 
-    def date(self, date: datetime.date):
-        self._date = date
+    def published_on(self, published_on: datetime.date):
+        self._published_on = published_on
         return self
 
     def content(self, content: str):
@@ -97,7 +97,7 @@ class NewsBuilder:
             id=self._id,
             category=self._category,
             title=self._title,
-            date=self._date,
+            published_on=self._published_on,
             content=self._content,
             thread_id=self._thread_id,
         )

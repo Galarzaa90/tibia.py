@@ -45,7 +45,7 @@ class News(BaseNews):
 
     title: str
     """The title of the news entry."""
-    date: datetime.date
+    published_on: datetime.date
     """The date when the news were published."""
     content: str
     """The raw html content of the entry."""
@@ -64,7 +64,7 @@ class NewsEntry(BaseNews):
     
     News tickers have a fragment of their content as a title.
     """
-    date: datetime.date
+    published_on: datetime.date
     """The date when the news were published."""
     type: NewsType
     """The type of news of this list entry."""
@@ -73,14 +73,15 @@ class NewsEntry(BaseNews):
 class NewsArchive(BaseModel):
     """A news entry from the news archive."""
 
-    start_date: datetime.date
+    from_date: datetime.date
     """The start date to show news for."""
-    end_date: datetime.date
+    to_date: datetime.date
     """The end date to show news for."""
     types: Set[NewsType]
     """The type of news to show."""
     categories: Set[NewsCategory]
     """The categories to show."""
+
     entries: List[NewsEntry]
     """The news matching the provided parameters."""
 
