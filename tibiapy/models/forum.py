@@ -176,7 +176,7 @@ class CMPost(BasePost):
 
     post_id: int
     """The ID of the post."""
-    date: datetime.date
+    date: datetime.datetime
     """The date when the post was made."""
     board: str
     """The name of the board where the post was made."""
