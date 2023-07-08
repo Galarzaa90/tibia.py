@@ -4,7 +4,7 @@ RUN apt-get update \
     && apt-get clean
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install -r requirements.txt uvicorn
+RUN pip install -r requirements.txt
 
 LABEL maintainer="Allan Galarza <allan.galarza@gmail.com>"
 LABEL org.opencontainers.image.licenses="Apache 2.0"

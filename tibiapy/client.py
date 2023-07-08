@@ -17,7 +17,7 @@ from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, CharacterBazaar, \
     Auction, AuctionFilters, ForumSection, TibiaResponse
-from tibiapy.models.creature import BoostableBosses, CreaturesSection, Creature, CreatureEntry
+from tibiapy.models.creature import BoostableBosses, CreaturesSection, Creature, CreatureEntry, BossEntry
 from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.pagination import AjaxPaginator
@@ -304,7 +304,7 @@ class Client:
         return response.parse(BoostedCreaturesParser.from_header)
 
     # region Bosses
-    async def fetch_boosted_boss(self, *, test=False):
+    async def fetch_boosted_boss(self, *, test=False) -> TibiaResponse[BossEntry]:
         """Fetch today's boosted boss.
 
         .. versionadded:: 5.3.0
@@ -333,7 +333,7 @@ class Client:
     # endregion
 
     # region News
-    async def fetch_news_archive(self, start_date: datetime.date, end_date: datetime.date,
+    async def fetch_news_archive(self, start_date: datetime.date, end_date: datetime.date = None,
                                  categories: Set[NewsCategory] = None, types: Set[NewsType] = None,
                                  *, test=False) -> TibiaResponse[NewsArchive]:
         """Fetch news from the archive meeting the search criteria.
@@ -369,6 +369,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
+        end_date = end_date or datetime.date.today()
         if start_date > end_date:
             raise ValueError("start_date can't be more recent than end_date")
         form_data = NewsArchiveParser.get_form_data(start_date, end_date, categories, types)
