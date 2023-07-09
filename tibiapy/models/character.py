@@ -3,6 +3,8 @@ from __future__ import annotations
 import datetime
 from typing import Optional, List
 
+from pydantic import computed_field
+
 from tibiapy import Sex, Vocation
 from tibiapy.models.base import BaseCharacter, HouseWithId, BaseGuild, BaseModel
 
@@ -212,8 +214,9 @@ class Character(BaseCharacter):
     It will be empty if the character is hidden, otherwise, it will contain at least the character itself."""
 
     # region Properties
+    @computed_field
     @property
-    def deleted(self) -> bool:
+    def scheduled_for_deletion(self) -> bool:
         """Whether the character is scheduled for deletion or not."""
         return self.deletion_date is not None
 
@@ -232,6 +235,7 @@ class Character(BaseCharacter):
         """The character's rank in the guild they belong to, or :obj:`None`."""
         return get_guild_url(self.guild_membership.name) if self.guild_membership else None
 
+    @computed_field
     @property
     def hidden(self) -> bool:
         """Whether this is a hidden character or not."""

@@ -14,10 +14,17 @@ __all__ = (
     'HouseWithId',
 )
 
+def to_camel(string: str) -> str:
+    string_split = string.split("_")
+    return string_split[0] + "".join(word.capitalize() for word in string_split[1:])
+
 
 class BaseModel(pydantic.BaseModel):
     """Base class for all model classes."""
-    model_config = ConfigDict()
+    model_config = ConfigDict(
+        populate_by_name=True,
+        alias_generator=to_camel
+    )
 
 
 class BaseCharacter(BaseModel):

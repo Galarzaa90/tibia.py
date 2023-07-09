@@ -39,7 +39,7 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertIsNotNone(house.highest_bidder_url)
         self.assertEqual(house.highest_bid, 0)
 
-        house_json_raw = house.json()
+        house_json_raw = house.model_dump_json()
         house_json = json.loads(house_json_raw)
         self.assertEqual(house.image_url, house_json["image_url"])
 

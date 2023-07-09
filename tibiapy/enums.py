@@ -57,12 +57,12 @@ class StringEnum(str, Enum):
         return core_schema.no_info_after_validator_function(
             lambda x: cls.validate(x),
             core_schema.str_schema(),
-            serialization=core_schema.plain_serializer_function_ser_schema(lambda x: x.name),
+            serialization=core_schema.plain_serializer_function_ser_schema(lambda x: x.value),
         )
 
     @classmethod
     def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, _handler: GetJsonSchemaHandler) -> JsonSchemaValue:
-        return {'enum': [m.name for m in cls], 'type': 'string'}
+        return {'enum': [m.value for m in cls], 'type': 'string'}
 
 
 class NumericEnum(IntEnum):

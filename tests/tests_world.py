@@ -44,7 +44,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(get_world_url(world.name), world.url)
 
-        world_json_raw = world.json()
+        world_json_raw = world.model_dump_json()
         world_json = json.loads(world_json_raw)
         self.assertEqual(len(world.online_players), len(world_json["online_players"]))
 

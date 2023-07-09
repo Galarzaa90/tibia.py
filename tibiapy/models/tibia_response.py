@@ -1,7 +1,7 @@
 import datetime
 from typing import Generic, TypeVar
 
-from pydantic import BaseModel
+from tibiapy.models.base import BaseModel
 
 __all__ = (
     "TibiaResponse",
