@@ -10,7 +10,7 @@ import bs4
 from tibiapy.builders.guild import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContent
 from tibiapy.models import GuildEntry, GuildsSection, GuildMember, GuildInvite, GuildWarEntry, GuildHouse
-from tibiapy.utils import (parse_form_data, parse_tibia_date, parse_tibiacom_content, clean_text)
+from tibiapy.utils import (parse_form_data, parse_tibia_date, parse_tibiacom_content, clean_text, parse_link_info)
 
 if TYPE_CHECKING:
     from tibiapy.models import Guild
@@ -221,7 +221,11 @@ class GuildParser:
         if m := homepage_regex.search(info_container.text):
             builder.homepage(m.group(1))
         if link := info_container.select_one("a"):
-            builder.homepage(link["href"])
+            link_info = parse_link_info(link)
+            if "target" in link_info["query"]:
+                builder.homepage(link_info["query"]["target"])
+            else:
+                builder.homepage(link_info["url"])
 
     @classmethod
     def _parse_guild_info(cls, builder, info_container):

@@ -1,11 +1,9 @@
 import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel
-
 from tibiapy import Vocation, ThreadStatus
 from tibiapy.models import GuildMembership
-from tibiapy.models.base import BaseCharacter
+from tibiapy.models.base import BaseCharacter, BaseModel
 from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.urls import get_character_url, get_forum_board_url, get_forum_announcement_url, get_forum_thread_url, \
     get_forum_post_url, get_cm_post_archive_url, get_forum_section_url

@@ -2,11 +2,11 @@ import datetime
 from abc import ABC, abstractmethod
 from typing import Optional, List, Dict, TypeVar, Generic
 
-from pydantic import BaseModel
 
 from tibiapy import PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, \
     AuctionSearchType, \
     AuctionOrderBy, AuctionOrderDirection, BazaarType, Vocation, Sex, BidType, AuctionStatus
+from tibiapy.models import BaseModel
 from tibiapy.models.pagination import AjaxPaginator, PaginatedWithUrl
 from tibiapy.urls import get_character_url, get_auction_url, get_bazaar_url
 

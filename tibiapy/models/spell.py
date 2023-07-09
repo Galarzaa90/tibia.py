@@ -3,9 +3,8 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from pydantic import BaseModel
-
 from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting
+from tibiapy.models import BaseModel
 from tibiapy.urls import get_spells_section_url, get_spell_url, get_static_file_url
 
 __all__ = (

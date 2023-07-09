@@ -1,6 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import TypeVar, Generic, List, Optional
-from pydantic import BaseModel
+
+from tibiapy.models import BaseModel
 
 T = TypeVar('T')
 

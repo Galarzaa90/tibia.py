@@ -1,7 +1,6 @@
 from typing import Dict, List
 
-from pydantic import BaseModel
-
+from tibiapy.models import BaseModel
 from tibiapy.urls import get_kill_statistics_url
 
 

@@ -1,10 +1,8 @@
 import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel
-
 from tibiapy import HouseStatus, HouseType, HouseOrder, Sex
-from tibiapy.models.base import HouseWithId
+from tibiapy.models.base import HouseWithId, BaseModel
 from tibiapy.urls import get_character_url, get_houses_section_url
 
 __all__ = (

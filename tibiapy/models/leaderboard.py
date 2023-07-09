@@ -1,9 +1,8 @@
 import datetime
 from typing import List
 
-from pydantic import BaseModel
 
-from tibiapy.models import BaseCharacter
+from tibiapy.models import BaseCharacter, BaseModel
 from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.urls import get_leaderboards_url
 

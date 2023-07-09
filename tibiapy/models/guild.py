@@ -2,10 +2,9 @@ import datetime
 from collections import defaultdict
 from typing import Optional, List, Dict, OrderedDict
 
-from pydantic import BaseModel
 
 from tibiapy import Vocation
-from tibiapy.models.base import BaseCharacter, BaseHouse, BaseGuild
+from tibiapy.models.base import BaseCharacter, BaseHouse, BaseGuild, BaseModel
 from tibiapy.urls import get_world_guilds_url, get_guild_url, get_guild_wars_url
 
 __all__ = (
