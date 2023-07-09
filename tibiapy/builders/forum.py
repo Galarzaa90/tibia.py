@@ -51,17 +51,17 @@ class CMPostArchiveBuilder:
 
 class CMPostBuilder:
     def __init__(self, **kwargs):
-        self._post_id = kwargs.get("post_id")
-        self._date = kwargs.get("date")
-        self._board = kwargs.get("board")
-        self._thread_title = kwargs.get("thread_title")
+        self._post_id = None
+        self._posted_on = None
+        self._board = None
+        self._thread_title = None
 
     def post_id(self, post_id):
         self._post_id = post_id
         return self
 
-    def date(self, date):
-        self._date = date
+    def posted_on(self, posted_on):
+        self._posted_on = posted_on
         return self
 
     def board(self, board):
@@ -75,7 +75,7 @@ class CMPostBuilder:
     def build(self):
         return CMPost(
             post_id=self._post_id,
-            date=self._date,
+            posted_on=self._posted_on,
             board=self._board,
             thread_title=self._thread_title,
         )

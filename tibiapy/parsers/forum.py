@@ -92,7 +92,7 @@ class CMPostArchiveParser:
             post_link_tag = link_column.select_one("a")
             post_link = parse_link_info(post_link_tag)
             post_id = int(post_link["query"]["postid"])
-            builder.add_entry(CMPost(date=date, board=board, thread_title=thread, post_id=post_id))
+            builder.add_entry(CMPost(posted_on=date, board=board, thread_title=thread, post_id=post_id))
         if not rows:
             return builder.build()
         pages_column, results_column = inner_table_rows[-1].select("div")
@@ -687,4 +687,4 @@ class LastPostParser:
             author = author.replace("(traded)", "").strip()
             traded = True
             deleted = False
-        return LastPost(author=author, post_id=post_id, date=last_post_date, deleted=deleted, traded=traded)
+        return LastPost(author=author, post_id=post_id, posted_on=last_post_date, deleted=deleted, traded=traded)

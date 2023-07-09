@@ -52,7 +52,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
             self.assertIsInstance(member.joined, datetime.date)
         for invited in guild.invites:
             self.assertIsNotNone(invited.name)
-            self.assertIsInstance(invited.date, datetime.date)
+            self.assertIsInstance(invited.invited_on, datetime.date)
 
         self.assertEqual("Krisph", guild.leader.name)
         self.assertEqual(10, len(guild.vice_leaders))

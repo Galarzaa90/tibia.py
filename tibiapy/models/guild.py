@@ -40,7 +40,7 @@ class GuildMember(BaseCharacter):
 
 class GuildInvite(BaseCharacter):
     """Represents an invited character."""
-    date: datetime.date
+    invited_on: datetime.date
     """The day when the character was invited."""
 
 

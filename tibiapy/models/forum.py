@@ -174,7 +174,7 @@ class CMPost(BasePost):
 
     post_id: int
     """The ID of the post."""
-    date: datetime.datetime
+    posted_on: datetime.datetime
     """The date when the post was made."""
     board: str
     """The name of the board where the post was made."""
@@ -233,7 +233,7 @@ class LastPost(BasePost):
     """The name of the character that made the last post."""
     post_id: int
     """The internal id of the post."""
-    date: datetime.datetime
+    posted_on: datetime.datetime
     """The date when the last post was made."""
     deleted: bool
     """Whether the last post's author is a character that is already deleted."""

@@ -39,9 +39,12 @@ Changelog
         - ``end_date`` to ``to_date``
         - ``page`` to ``current_page``
         - ``posts`` to ``entries``
+    - Renamed ``CMPost.date``to ``posted_on``
     - Renamed ``Killer``to ``DeathParticipant``
     - Renamed ``ForumBoard.threads`` to ``entries``.
     - Renamed ``ForumThread.posts`` to ``entries``.
+    - Renamed ``GuildInvite.date`` to ``invited_on``.
+    - Renamed ``LastPost.date`` to ``posted_on``.
     - Added ``thread_starter_deleted`` to ``ThreadEntry``.
     - ``ForumThread.previous_topic_number`` and ``ForumThread.next_topic_number`` may be ``None`` instead of ``0``.
     - Renamed ``News`` attributes:

@@ -296,7 +296,7 @@ class GuildParser:
         name, date = values
         if date != "Invitation Date":
             date = parse_tibia_date(date)
-            builder.add_invite(GuildInvite(name=name, date=date))
+            builder.add_invite(GuildInvite(name=name, invited_on=date))
     # endregion
 
 

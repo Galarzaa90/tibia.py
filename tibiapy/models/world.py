@@ -1,6 +1,8 @@
 import datetime
 from typing import List, Optional
 
+from pydantic import computed_field
+
 from tibiapy import WorldLocation, PvpType, TransferType, BattlEyeType
 from tibiapy.models import OnlineCharacter
 from tibiapy.models.base import BaseModel
@@ -42,6 +44,8 @@ class BaseWorld(BaseModel):
         """URL to the world's information page on Tibia.com."""
         return get_world_url(self.name)
 
+
+    @computed_field
     @property
     def battleye_protected(self) -> bool:
         """Whether the server is currently protected with BattlEye or not.
@@ -92,6 +96,7 @@ class WorldOverview(BaseModel):
     worlds: List[WorldEntry] = []
     """List of worlds, with limited info."""
 
+    @computed_field
     @property
     def total_online(self) -> int:
         """Total players online across all worlds."""
