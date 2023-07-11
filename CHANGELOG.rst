@@ -44,6 +44,7 @@ Changelog
         - ``online`` field renamed to ``is_online``
         - ``battleye_date`` field renamed to ``battleye_since``
         - ``premium_only`` field renamed to ``is_premium_only``
+        - ``experimental`` field renamed to ``is_experimental``
         - ``battleye_protected`` property renamed to ``is_battleye_protected``
     - ``OnlineCharacter``:
         - ``world`` field removed.
@@ -105,6 +106,8 @@ Changelog
     - ``AuctionEntry`` renamed to ``Auction``.
     - ``CharacterBazaar``:
         - ``page`` field renamed to ``current_page``.
+    - ``BestiaryEntry``:
+        - ``completed`` property renamed to ``is_completed``.
     - Renamed ``DisplayImage`` to ``ItemEntry``.
     - Renamed ``DisplayMount`` to ``MountEntry``.
     - Renamed ``DisplayOutfit`` to ``OutfitEntry``.

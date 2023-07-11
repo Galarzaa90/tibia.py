@@ -3,7 +3,9 @@ import logging
 from contextlib import asynccontextmanager
 from typing import Optional, Set, List
 
-from fastapi import FastAPI, Path, Query
+from fastapi import FastAPI, Path, Query, Response
+from starlette import status
+from starlette.requests import Request
 
 import tibiapy
 from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, NewsType, NewsCategory, \
@@ -36,6 +38,13 @@ app = FastAPI(
 )
 
 
+def handle_response(response: Response, body):
+    """Change the status code to 404 if no data is returned in the response."""
+    if isinstance(body, TibiaResponse) and body.data is None:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    return body
+
+
 @app.get("/healthcheck", tags=["General"])
 async def healthcheck():
     return True
@@ -50,12 +59,13 @@ CATEGORIES_DESCRIPTION = "The categories of news to display. Leave empty to show
 @app.get("/news/{fromDate}", tags=["News"],
          summary="Get news archive from date")
 async def get_news_archive(
+        response: Response,
         from_date: datetime.date = Path(..., alias="fromDate"),
         types: Set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
         categories: Set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
 ) -> TibiaResponse[NewsArchive]:
     """Show the news archive from a start date to today."""
-    return await app.state.client.fetch_news_archive(from_date, None, categories, types)
+    return handle_response(response, await app.state.client.fetch_news_archive(from_date, None, categories, types))
 
 
 @app.get("/news/{fromDate}/{toDate}", tags=["News"],
@@ -162,13 +172,16 @@ async def get_character(
 
 
 @app.get("/worlds", tags=["Community"])
-async def get_worlds() -> TibiaResponse[WorldOverview]:
-    return await app.state.client.fetch_world_overview()
+async def get_worlds(response: Response) -> TibiaResponse[WorldOverview]:
+    return handle_response(response, await app.state.client.fetch_world_overview())
 
 
 @app.get("/worlds/{name}", tags=["Community"])
-async def get_world(name: str = Path(...)) -> TibiaResponse[Optional[World]]:
-    return await app.state.client.fetch_world(name)
+async def get_world(
+        response: Response,
+        name: str = Path(..., description="The name of the world."),
+) -> TibiaResponse[Optional[World]]:
+    return handle_response(response, await app.state.client.fetch_world(name))
 
 
 @app.get("/guilds/{name}", tags=["Community"])

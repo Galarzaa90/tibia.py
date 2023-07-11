@@ -110,7 +110,7 @@ class BestiaryEntry(BaseModel):
     """The current step to unlock this creature the character is in, where 4 is fully unlocked."""
 
     @property
-    def completed(self) -> bool:
+    def is_completed(self) -> bool:
         """Whether the entry is completed or not."""
         return self.step == 4
 
@@ -445,7 +445,7 @@ class AuctionDetails(BaseModel):
     @property
     def completed_bestiary_entries(self) -> List[BestiaryEntry]:
         """Get a list of completed bestiary entries."""
-        return [e for e in self.bestiary_progress if e.completed]
+        return [e for e in self.bestiary_progress if e.is_completed]
 
     @property
     def regular_world_transfer_available(self) -> bool:

@@ -27,7 +27,7 @@ class WorldEntryBuilder:
         self._transfer_type = TransferType.REGULAR
         self._battleye_since = None
         self._battleye_type = BattlEyeType.UNPROTECTED
-        self._experimental = False
+        self._is_experimental = False
         self._is_premium_only = False
 
     def name(self, name: str):
@@ -66,8 +66,8 @@ class WorldEntryBuilder:
         self._battleye_type = battleye_type
         return self
 
-    def experimental(self, experimental: bool):
-        self._experimental = experimental
+    def is_experimental(self, is_experimental: bool):
+        self._is_experimental = is_experimental
         return self
 
     def build(self):
@@ -81,7 +81,7 @@ class WorldEntryBuilder:
             transfer_type=self._transfer_type,
             battleye_since=self._battleye_since,
             battleye_type=self._battleye_type,
-            experimental=self._experimental,
+            is_experimental=self._is_experimental,
         )
 
 
@@ -137,7 +137,7 @@ class WorldBuilder(WorldEntryBuilder):
             world_quest_titles=self._world_quest_titles,
             battleye_since=self._battleye_since,
             battleye_type=self._battleye_type,
-            experimental=self._experimental,
+            is_experimental=self._is_experimental,
             online_players=self._online_players,
         )
 

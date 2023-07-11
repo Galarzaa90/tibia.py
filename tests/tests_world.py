@@ -40,7 +40,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertTrue(world.is_premium_only)
         self.assertTrue(world.is_battleye_protected)
         self.assertEqual(world.battleye_since, datetime.date(2017, 9, 5))
-        self.assertFalse(world.experimental)
+        self.assertFalse(world.is_experimental)
         self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(get_world_url(world.name), world.url)
 
@@ -68,7 +68,7 @@ class TestWorld(TestCommons, unittest.TestCase):
         self.assertFalse(world.is_premium_only)
         self.assertTrue(world.is_battleye_protected)
         self.assertEqual(world.battleye_since, datetime.date(2017, 8, 29))
-        self.assertFalse(world.experimental)
+        self.assertFalse(world.is_experimental)
         self.assertEqual(len(world.online_players), world.online_count)
         self.assertEqual(get_world_url(world.name), world.url)
 

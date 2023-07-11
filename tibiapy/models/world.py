@@ -36,7 +36,7 @@ class BaseWorld(BaseModel):
     """The date when BattlEye was added to this world."""
     battleye_type: BattlEyeType
     """The type of BattlEye protection this world has."""
-    experimental: bool
+    is_experimental: bool
     """Whether the world is experimental or not."""
 
     @property
