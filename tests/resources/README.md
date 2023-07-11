@@ -72,16 +72,7 @@ nonexistent world or a unselected world.
 - [tibiacom_news.txt](news/news_article.txt) - The content of a news article.
 - [tibiacom_news_ticker.txt](news/news_ticker.txt) - The content of a news ticker.
 
-## Tournament resources
-- [tibiacom_archive.txt](tournaments/tibiacom_archive.txt) - The content of the tournament details for an archived tournament.
-- [tibiacom_leaderboard_current.txt](tournaments/tibiacom_leaderboard_current.txt) - The content of the leaderboards for an active tournament
-- [tibiacom_leaderboard_ended.txt](tournaments/tibiacom_leaderboard_ended.txt) - The content of the tournament leaderboards for a previous tournament.
-- [tibiacom_leaderboard_selector.txt](tournaments/tibiacom_leaderboard_selector.txt) - The content of the tournament leaderboards before selecting any options.
-- [tibiacom_leaderboard_selector.txt](tournaments/tibiacom_leaderboard_selector.txt) - The content of the tournament leaderboards before selecting any options.
-- [tibiacom_not_found.txt](tournaments/tibiacom_not_found.txt) - The content of the tournament section for a tournament that doesn't exist.
-- [tibiacom_sign_up.txt](tournaments/tibiacom_sign_up.txt) - The content for the tournament's page for a upcoming tournament.
-- [tibiacomnot_active.txt](tournaments/tibiacom_not_active.txt) - The content for the tournament's page when there's no running tournament.
- 
+
 ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.
  - [tibiacom_offline.txt](world/tibiacom_offline.txt) - An offline world on Tibia.com.
