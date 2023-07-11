@@ -138,7 +138,7 @@ class SpellBuilder(SpellEntryBuilder):
         self._description = description
         return self
 
-    def vocations(self, vocations: str):
+    def vocations(self, vocations: List[str]):
         self._vocations = vocations
         return self
 
@@ -158,7 +158,7 @@ class SpellBuilder(SpellEntryBuilder):
         self._group_secondary = group_secondary
         return self
 
-    def soul_points(self, soul_points: SpellType):
+    def soul_points(self, soul_points: int):
         self._soul_points = soul_points
         return self
 

@@ -26,7 +26,7 @@ cooldown_pattern = re.compile(
 class SpellsSectionParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> SpellsSection:
         """Parse the content of the spells section.
 
         Parameters
@@ -103,40 +103,40 @@ class SpellParser:
             If content is not the HTML of the spells section.
         """
         parsed_content = parse_tibiacom_content(content)
-        try:
-            tables = parse_tibiacom_tables(parsed_content)
-            title_table = parsed_content.find("table", attrs={"class": False})
-            spell_table = tables["Spell Information"]
-            img = title_table.select_one("img")
-            url = urllib.parse.urlparse(img["src"])
-            filename = os.path.basename(url.path)
-            identifier = str(filename.split(".")[0])
-            next_sibling = title_table.next_sibling
-            description = ""
-            while next_sibling:
-                if isinstance(next_sibling, bs4.Tag):
-                    if next_sibling.name == "br":
-                        description += "\n"
-                    elif next_sibling.name in ["table", "div"]:
-                        break
-                    else:
-                        description += next_sibling.text
-                elif isinstance(next_sibling, bs4.NavigableString):
-                    description += str(next_sibling)
-                next_sibling = next_sibling.next_sibling
-            builder = SpellBuilder().identifier(identifier)
-            cls._parse_spells_table(builder, spell_table)
-            builder.description(description.strip())
-            if "Rune Information" in tables:
-                builder.rune(cls._parse_rune_table(tables["Rune Information"]))
-            return builder.build()
-        except (TypeError, AttributeError, IndexError, KeyError) as e:
-            form = parsed_content.select_one("form")
-            if form:
-                data = parse_form_data(form)
-                if "subtopic=spells" in data.get("__action__"):
-                    return None
-            raise errors.InvalidContent("content is not a spell page", e) from e
+        tables = parse_tibiacom_tables(parsed_content)
+        title_table = parsed_content.find("table", attrs={"class": False})
+        if "Spell Information" not in tables:
+            if "Spells" in tables:
+                return None
+            raise errors.InvalidContent("content is not a spell page.")
+        spell_table = tables["Spell Information"]
+        img = title_table.select_one("img")
+        url = urllib.parse.urlparse(img["src"])
+        filename = os.path.basename(url.path)
+        identifier = str(filename.split(".")[0])
+        builder = SpellBuilder().identifier(identifier)
+        cls._parse_spells_table(builder, spell_table)
+        builder.description(cls._parse_description(title_table))
+        if "Rune Information" in tables:
+            builder.rune(cls._parse_rune_table(tables["Rune Information"]))
+        return builder.build()
+
+    @classmethod
+    def _parse_description(cls, title_table):
+        next_sibling = title_table.next_sibling
+        description = ""
+        while next_sibling:
+            if isinstance(next_sibling, bs4.Tag):
+                if next_sibling.name == "br":
+                    description += "\n"
+                elif next_sibling.name in ["table", "div"]:
+                    break
+                else:
+                    description += next_sibling.text
+            elif isinstance(next_sibling, bs4.NavigableString):
+                description += str(next_sibling)
+            next_sibling = next_sibling.next_sibling
+        return description.strip()
 
     @classmethod
     def _parse_rune_table(cls, table):
@@ -163,7 +163,7 @@ class SpellParser:
             .build()
 
     @classmethod
-    def _parse_spells_table(cls, builder, spell_table):
+    def _parse_spells_table(cls, builder: SpellBuilder, spell_table: bs4.Tag):
         """Parse the table containing spell information.
 
         Parameters

@@ -563,9 +563,13 @@ class Client:
         response = await self._request("GET", get_boostable_bosses_url(), test=test)
         return response.parse(BoostableBossesParser.from_content)
 
-    async def fetch_spells(self, *, vocation: SpellVocationFilter = None, group: SpellGroup = None,
-                           spell_type: SpellType = None, premium: bool = None,
-                           sort: SpellSorting = None, test=False) -> TibiaResponse[SpellsSection]:
+    async def fetch_spells(self, *,
+                           vocation: SpellVocationFilter = None,
+                           group: SpellGroup = None,
+                           spell_type: SpellType = None,
+                           is_premium: bool = None,
+                           sort: SpellSorting = None,
+                           test=False) -> TibiaResponse[SpellsSection]:
         """Fetch the spells section.
 
         Parameters
@@ -576,7 +580,7 @@ class Client:
             The spell's primary cooldown group.
         spell_type: :class:`.SpellType`, optional
             The type of spells to show.
-        premium: :class:`bool`, optional
+        is_premium: :class:`bool`, optional
             The type of premium requirement to filter. :obj:`None` means any premium requirement.
         sort: :class:`.SpellSorting`, optional
             The field to sort spells by.
@@ -597,7 +601,7 @@ class Client:
             If there's any connection errors during the request.
         """
         response = await self._request("GET", get_spells_section_url(vocation=vocation, group=group,
-                                                                     spell_type=spell_type, premium=premium,
+                                                                     spell_type=spell_type, is_premium=is_premium,
                                                                      sort=sort), test=test)
         return response.parse(SpellsSectionParser.from_content)
 

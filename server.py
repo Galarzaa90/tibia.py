@@ -5,7 +5,6 @@ from typing import Optional, Set, List
 
 from fastapi import FastAPI, Path, Query, Response
 from starlette import status
-from starlette.requests import Request
 
 import tibiapy
 from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, NewsType, NewsCategory, \
@@ -142,21 +141,36 @@ async def get_bosses() -> TibiaResponse[BoostableBosses]:
 
 @app.get("/library/spells", tags=["Library"])
 async def get_spells(
-        vocation: SpellVocationFilter = Query(None),
-        group: SpellGroup = Query(None),
-        type: SpellType = Query(None),
-        premium: bool = Query(None),
-        sort: SpellSorting = Query(None),
+        response: Response,
+        vocation: Optional[SpellVocationFilter] = Query(None,
+                                                        description="Only show spells that this vocation can learn."),
+        group: SpellGroup = Query(None, description="Only show spells in this group."),
+        type: SpellType = Query(None, description="Only show spells of this type."),
+        is_premium: bool = Query(None, alias="isPremium",
+                                 description="If true, only show premium spells, "
+                                             "if false, only show free account spells. "
+                                             "Otherwise, show all."),
+        sort: SpellSorting = Query(None, description="The sort order to use."),
 ) -> TibiaResponse[SpellsSection]:
-    return await app.state.client.fetch_spells(vocation=vocation, group=group, spell_type=type, premium=premium,
-                                               sort=sort)
+    return handle_response(
+        response,
+        await app.state.client.fetch_spells(
+            vocation=vocation,
+            group=group,
+            spell_type=type,
+            is_premium=is_premium,
+            sort=sort)
+    )
 
 
 @app.get("/library/spells/{identifier}", tags=["Library"])
 async def get_spell(
-        identifier: str = Path(...)
+        response: Response,
+        identifier: str = Path(...,
+                               description="The spell's identifier. "
+                                           "This is usually the spell's name in lowercase and no spaces."),
 ) -> TibiaResponse[Optional[Spell]]:
-    return await app.state.client.fetch_spell(identifier)
+    return handle_response(response, await app.state.client.fetch_spell(identifier))
 
 
 # endregion

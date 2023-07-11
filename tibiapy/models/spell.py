@@ -121,6 +121,6 @@ class SpellsSection(BaseModel):
             vocation=self.vocation,
             group=self.group,
             spell_type=self.spell_type,
-            premium=self.is_premium,
+            is_premium=self.is_premium,
             sort=self.sort_by
         )

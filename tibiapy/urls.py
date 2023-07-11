@@ -578,8 +578,13 @@ def _to_yes_no(value: Optional[bool]):
     return "yes" if value else "no"
 
 
-def get_spells_section_url(vocation: SpellVocationFilter = None, group: SpellGroup = None, spell_type: SpellType = None,
-                           premium: Optional[bool] = None, sort: SpellSorting = None):
+def get_spells_section_url(
+        vocation: SpellVocationFilter = None,
+        group: SpellGroup = None,
+        spell_type: SpellType = None,
+        is_premium: bool= None,
+        sort: SpellSorting = None
+):
     """Get the URL to the spells section with the desired filtering parameters.
 
     Parameters
@@ -590,7 +595,7 @@ def get_spells_section_url(vocation: SpellVocationFilter = None, group: SpellGro
         The spell's primary cooldown group.
     spell_type: :class:`SpellType`, optional
         The type of spells to show.
-    premium: :class:`bool`, optional
+    is_premium: :class:`bool`, optional
         The type of premium requirement to filter. :obj:`None` means any premium requirement.
     sort: :class:`SpellSorting`, optional
         The field to sort spells by.
@@ -605,7 +610,7 @@ def get_spells_section_url(vocation: SpellVocationFilter = None, group: SpellGro
         "group": group.value if group else None,
         "type": spell_type.value if spell_type else None,
         "sort": sort.value if sort else None,
-        "premium": _to_yes_no(premium),
+        "premium": _to_yes_no(is_premium),
     }
     return get_tibia_url("library", "spells", **params)
 
