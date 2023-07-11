@@ -49,7 +49,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertTrue(guild.ranks)
         for member in guild.members:
             self.assertIsInstance(member.level, int)
-            self.assertIsInstance(member.joined, datetime.date)
+            self.assertIsInstance(member.joined_on, datetime.date)
         for invited in guild.invites:
             self.assertIsNotNone(invited.name)
             self.assertIsInstance(invited.invited_on, datetime.date)
@@ -60,7 +60,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
         self.assertEqual(11, len(guild.members_by_rank['Emperor']))
 
         self.assertIsInstance(guild.guildhall, GuildHouse)
-        self.assertIsInstance(guild.guildhall.paid_until_date, datetime.date)
+        self.assertIsInstance(guild.guildhall.paid_until, datetime.date)
 
     def test_guild_parser_from_content_not_found(self):
         """Testing parsing a non existent guild"""
@@ -157,12 +157,12 @@ class TestsGuild(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(guild_wars, GuildWars)
         self.assertEqual("Realm Honor", guild_wars.name)
-        self.assertIsNotNone(guild_wars.current)
-        self.assertEqual(guild_wars.name, guild_wars.current.guild_name)
-        self.assertEqual(0, guild_wars.current.guild_score)
-        self.assertEqual("Nights Watch", guild_wars.current.opponent_name)
-        self.assertEqual(0, guild_wars.current.opponent_score)
-        self.assertEqual(1000, guild_wars.current.score_limit)
+        self.assertIsNotNone(guild_wars.is_current)
+        self.assertEqual(guild_wars.name, guild_wars.is_current.guild_name)
+        self.assertEqual(0, guild_wars.is_current.guild_score)
+        self.assertEqual("Nights Watch", guild_wars.is_current.opponent_name)
+        self.assertEqual(0, guild_wars.is_current.opponent_score)
+        self.assertEqual(1000, guild_wars.is_current.score_limit)
 
         self.assertEqual(15, len(guild_wars.history))
 
@@ -186,7 +186,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
         guild_wars = GuildWarsParser.from_content(content)
 
         self.assertEqual("Alliance Of Friends", guild_wars.name)
-        self.assertIsNone(guild_wars.current)
+        self.assertIsNone(guild_wars.is_current)
         self.assertFalse(guild_wars.history)
 
     def test_guild_wars_parser_from_content_unactive_history(self):
@@ -196,7 +196,7 @@ class TestsGuild(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(guild_wars, GuildWars)
         self.assertEqual("Bald Dwarfs", guild_wars.name)
-        self.assertIsNone(guild_wars.current)
+        self.assertIsNone(guild_wars.is_current)
 
         self.assertEqual(2, len(guild_wars.history))
 

@@ -46,7 +46,7 @@ class TestSpell(TestCommons, unittest.TestCase):
         self.assertIn("Thais", spell.cities)
         self.assertIn("Yalahar", spell.cities)
         self.assertIn("Edron", spell.cities)
-        self.assertFalse(spell.premium)
+        self.assertFalse(spell.is_premium)
         self.assertEqual("Chameleon Rune", spell.rune.name)
         self.assertIn("Knight", spell.rune.vocations)
         self.assertEqual("Support", spell.rune.group.value)
@@ -74,7 +74,7 @@ class TestSpell(TestCommons, unittest.TestCase):
         self.assertEqual(200, spell.mana)
         self.assertEqual(6000, spell.price)
         self.assertIn("Edron", spell.cities)
-        self.assertTrue(spell.premium)
+        self.assertTrue(spell.is_premium)
 
     def test_spells_from_content_unknown_spell(self):
         """Testing parsing an unknown spell

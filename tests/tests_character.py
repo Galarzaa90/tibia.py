@@ -51,7 +51,7 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual(parse_tibia_datetime("Apr 16 2023, 00:43:29 CEST"), character.last_login)
         self.assertEqual(character.url, get_character_url(character.name))
         self.assertEqual(5, len(character.other_characters))
-        self.assertFalse(character.hidden)
+        self.assertFalse(character.is_hidden)
 
         # Badges
         self.assertEqual(8, len(character.account_badges))
@@ -73,10 +73,10 @@ class TestCharacter(TestCommons, unittest.TestCase):
 
         self.assertIsInstance(char, Character)
         self.assertEqual("King Dragotz", char.name)
-        self.assertTrue(char.traded)
+        self.assertTrue(char.is_traded)
         char_in_other = char.other_characters[0]
         self.assertEqual("King Dragotz", char_in_other.name)
-        self.assertTrue(char_in_other.traded)
+        self.assertTrue(char_in_other.is_traded)
 
     def test_character_parser_from_content_with_former_names(self):
         """Testing parsing a character that has former names"""
@@ -130,13 +130,13 @@ class TestCharacter(TestCommons, unittest.TestCase):
         self.assertEqual(0, len(death3.assists))
         self.assertEqual("a paladin familiar", death3.killers[-1].summon)
         self.assertEqual("Alloy Hat", death3.killers[-1].name)
-        self.assertTrue(death3.killers[-1].traded)
+        self.assertTrue(death3.killers[-1].is_traded)
 
         self.assertIsInstance(death4, Death)
         self.assertEqual(12, len(death4.killers))
         self.assertEqual(0, len(death4.assists))
         self.assertEqual("Cliff Lee Burton", death4.killers[-1].name)
-        self.assertTrue(death4.killers[-1].traded)
+        self.assertTrue(death4.killers[-1].is_traded)
 
     def test_character_parserparser_from_content_badges_and_title(self):
         """Testing parsing a character with account badges and a title"""
@@ -198,21 +198,21 @@ class TestCharacter(TestCommons, unittest.TestCase):
         """Testing different death types"""
         assisted_suicide = Death(level=280,
                                  killers=[
-                                     DeathParticipant(name="Galarzaa", player=True, summon=None, traded=False),
-                                     DeathParticipant(name="a pixy", player=False, summon=None, traded=False)
+                                     DeathParticipant(name="Galarzaa", is_player=True, summon=None, is_traded=False),
+                                     DeathParticipant(name="a pixy", is_player=False, summon=None, is_traded=False)
                                  ],
                                  assists=[],
                                  time=datetime.datetime.now())
         self.assertEqual(assisted_suicide.killer, assisted_suicide.killers[0])
-        self.assertTrue(assisted_suicide.by_player)
+        self.assertTrue(assisted_suicide.is_by_player)
 
         spawn_invasion = Death(level=270,
                                killers=[
-                                   DeathParticipant(name="a demon", player=False, summon=None, traded=False),
-                                   DeathParticipant(name="Nezune", player=True, summon=None, traded=False)
+                                   DeathParticipant(name="a demon", is_player=False, summon=None, is_traded=False),
+                                   DeathParticipant(name="Nezune", is_player=True, summon=None, is_traded=False)
                                ],
                                assists=[],
                                time=datetime.datetime.now())
         self.assertEqual(spawn_invasion.killer, spawn_invasion.killers[0])
         self.assertIsNone(spawn_invasion.killer.url)
-        self.assertTrue(spawn_invasion.by_player)
+        self.assertTrue(spawn_invasion.is_by_player)

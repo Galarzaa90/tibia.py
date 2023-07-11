@@ -39,7 +39,7 @@ class AchievementEntry(BaseModel):
 
     name: str
     """The name of the achievement."""
-    secret: bool
+    is_secret: bool
     """Whether the achievement is secret or not."""
 
 

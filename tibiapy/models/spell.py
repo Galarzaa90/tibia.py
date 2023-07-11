@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from typing import List, Optional
 
+from pydantic import computed_field
+
 from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting
 from tibiapy.models import BaseModel
 from tibiapy.urls import get_spells_section_url, get_spell_url, get_static_file_url
@@ -53,7 +55,7 @@ class SpellEntry(BaseModel):
     """The mana required to use the spell. If :obj:`None`, the mana cost is variable."""
     price: int
     """The price in gold coins to learn the spell."""
-    premium: bool
+    is_premium: bool
     """Whether the spell requires a premium account to learn and use it."""
 
     @property
@@ -61,6 +63,7 @@ class SpellEntry(BaseModel):
         """The URL to the spell."""
         return get_spell_url(self.identifier)
 
+    @computed_field
     @property
     def image_url(self) -> str:
         """The URL to this spell's image."""
@@ -103,7 +106,7 @@ class SpellsSection(BaseModel):
     """The selected spell group to display. If :obj:`None`, spells for any group will be shown."""
     spell_type: Optional[SpellType] = None
     """The selected spell type to display. If :obj:`None`, spells for any type will be shown."""
-    premium: Optional[bool] = None
+    is_premium: Optional[bool] = None
     """The premium status to filter in. :obj:`True` to show only premium spells,
         :obj:`False` to show free account spells and :obj:`None` will show any spells."""
     sort_by: SpellSorting
@@ -118,6 +121,6 @@ class SpellsSection(BaseModel):
             vocation=self.vocation,
             group=self.group,
             spell_type=self.spell_type,
-            premium=self.premium,
+            premium=self.is_premium,
             sort=self.sort_by
         )

@@ -2,6 +2,7 @@ import datetime
 from collections import defaultdict
 from typing import Optional, List, Dict, OrderedDict
 
+from pydantic import computed_field
 
 from tibiapy import Vocation
 from tibiapy.models.base import BaseCharacter, BaseHouse, BaseGuild, BaseModel
@@ -32,9 +33,9 @@ class GuildMember(BaseCharacter):
     """The member's level."""
     vocation: Vocation
     """The member's vocation."""
-    joined: datetime.date
+    joined_on: datetime.date
     """The day the member joined the guild."""
-    online: bool
+    is_online: bool
     """Whether the member is online or not."""
 
 
@@ -49,7 +50,7 @@ class GuildHouse(BaseHouse):
 
     By limitation of Tibia.com, the ID of the guildhall is not available."""
 
-    paid_until_date: datetime.date
+    paid_until: datetime.date
     """The date the last paid rent is due."""
 
 
@@ -83,11 +84,13 @@ class Guild(BaseGuild):
     invites: List[GuildInvite]
     """List of invited characters."""
 
+    @computed_field
     @property
     def member_count(self) -> int:
         """The number of members in the guild."""
         return len(self.members)
 
+    @computed_field
     @property
     def online_count(self) -> int:
         """The number of online members in the guild."""
@@ -96,8 +99,9 @@ class Guild(BaseGuild):
     @property
     def online_members(self) -> List[GuildMember]:
         """List of currently online members."""
-        return list(filter(lambda m: m.online, self.members))
+        return list(filter(lambda m: m.is_online, self.members))
 
+    @computed_field
     @property
     def ranks(self) -> List[str]:
         """Ranks in their hierarchical order."""
@@ -214,7 +218,7 @@ class GuildWars(BaseModel):
 
     name: Optional[str] = None
     """The name of the guild."""
-    current: Optional[GuildWarEntry] = None
+    is_current: Optional[GuildWarEntry] = None
     """The current war the guild is involved in."""
     history: List[GuildWarEntry]
     """The previous wars the guild has been involved in."""

@@ -56,7 +56,7 @@ class Achievement(BaseModel):
     """The name of the achievement."""
     grade: int
     """The grade of the achievement, also known as stars."""
-    secret: bool
+    is_secret: bool
     """Whether the achievement is secret or not."""
 
 
@@ -65,7 +65,7 @@ class CharacterHouse(HouseWithId):
 
     town: str
     """The town where the city is located in."""
-    paid_until_date: datetime.date
+    paid_until: datetime.date
     """The date the last paid rent is due."""
 
 
@@ -79,17 +79,17 @@ class DeathParticipant(BaseModel):
     c) A creature summoned by a character."""
     name: str
     """The name of the killer. In the case of summons, the name belongs to the owner."""
-    player: bool
+    is_player: bool
     """Whether the killer is a player or not."""
     summon: Optional[str] = None
     """The name of the summoned creature, if applicable."""
-    traded: bool
+    is_traded: bool
     """If the killer was traded after this death happened."""
 
     @property
     def url(self) -> Optional[str]:
         """The URL of the character’s information page on Tibia.com, if applicable."""
-        return get_character_url(self.name) if self.player else None
+        return get_character_url(self.name) if self.is_player else None
 
 
 class Death(BaseModel):
@@ -105,9 +105,9 @@ class Death(BaseModel):
     """The time at which the death occurred."""
 
     @property
-    def by_player(self) -> bool:
+    def is_by_player(self) -> bool:
         """Whether the kill involves other characters."""
-        return any(k.player for k in self.killers)
+        return any(k.is_player for k in self.killers)
 
     @property
     def killer(self) -> DeathParticipant:
@@ -143,13 +143,13 @@ class OtherCharacter(BaseCharacter):
 
     world: str
     """The name of the world."""
-    online: bool
+    is_online: bool
     """Whether the character is online or not."""
-    deleted: bool
+    is_deleted: bool
     """Whether the character is scheduled for deletion or not."""
-    traded: bool
+    is_traded: bool
     """Whether the character has been traded recently or not."""
-    main: bool
+    is_main: bool
     """Whether this is the main character or not."""
     position: Optional[str] = None
     """The character's official position, if any."""
@@ -158,7 +158,7 @@ class OtherCharacter(BaseCharacter):
 class Character(BaseCharacter):
     """A full character from Tibia.com, obtained from its character page."""
 
-    traded: bool
+    is_traded: bool
     """If the character was traded in the last 6 months."""
     deletion_date: Optional[datetime.datetime] = None
     """The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise."""
@@ -216,7 +216,7 @@ class Character(BaseCharacter):
     # region Properties
     @computed_field
     @property
-    def scheduled_for_deletion(self) -> bool:
+    def is_scheduled_for_deletion(self) -> bool:
         """Whether the character is scheduled for deletion or not."""
         return self.deletion_date is not None
 
@@ -237,7 +237,7 @@ class Character(BaseCharacter):
 
     @computed_field
     @property
-    def hidden(self) -> bool:
+    def is_hidden(self) -> bool:
         """Whether this is a hidden character or not."""
         return len(self.other_characters) == 0
 

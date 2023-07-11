@@ -406,7 +406,7 @@ class AuctionParser:
             if "more entries" in text:
                 continue
             secret = col.select_one("img") is not None
-            achievements.append(AchievementEntry(name=text, secret=secret))
+            achievements.append(AchievementEntry(name=text, is_secret=secret))
         builder.achievements(achievements)
 
     @classmethod

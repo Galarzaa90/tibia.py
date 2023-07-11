@@ -23,7 +23,7 @@ class LeaderboardEntry(BaseCharacter):
 class LeaderboardRotation(BaseModel):
     rotation_id: int
     """The internal ID of the rotation."""
-    current: bool
+    is_current: bool
     """Whether this is the currently running rotation or not."""
     end_date: datetime.datetime
     """The date and time when this rotation ends."""

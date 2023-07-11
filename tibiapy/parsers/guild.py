@@ -165,7 +165,7 @@ class GuildParser:
             title = m.group(2)
         joined = parse_tibia_date(joined)
         builder.add_member(GuildMember(name=name.strip(), rank=rank.strip(), title=title, level=int(level),
-                                       vocation=vocation, joined=joined, online=status == "online"))
+                                       vocation=vocation, joined_on=joined, is_online=status == "online"))
 
     @classmethod
     def _parse_application_info(cls, builder, info_container):
@@ -207,7 +207,7 @@ class GuildParser:
         """
         if m := guildhall_regex.search(info_container.text):
             paid_until = parse_tibia_date(m.group("date").replace("\xa0", " "))
-            builder.guildhall(GuildHouse(name=m.group("name"), paid_until_date=paid_until))
+            builder.guildhall(GuildHouse(name=m.group("name"), paid_until=paid_until))
 
     @classmethod
     def _parse_guild_homepage(cls, builder, info_container):

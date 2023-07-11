@@ -1,6 +1,8 @@
 import datetime
 from typing import Generic, TypeVar
 
+from pydantic import computed_field
+
 from tibiapy.models.base import BaseModel
 
 __all__ = (
@@ -30,11 +32,10 @@ class TibiaResponse(BaseModel, Generic[T]):
     data: T
     """The data contained in the response."""
 
+    @computed_field
     @property
-    def time_left(self):
+    def time_left(self) -> datetime.timedelta:
         """:class:`datetime.timedelta`: The time left for the cache of this response to expire."""
-        if not self.age:
-            return datetime.timedelta()
         return (datetime.timedelta(seconds=CACHE_LIMIT - self.age)
                 - (datetime.datetime.now(datetime.timezone.utc) - self.timestamp))
 

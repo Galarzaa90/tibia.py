@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from pydantic import computed_field
+
 from tibiapy.models import BaseModel
 from tibiapy.urls import get_creature_url
 
@@ -12,6 +14,7 @@ class BossEntry(BaseModel):
     identifier: str
     """The internal name of the boss. Used for images."""
 
+    @computed_field
     @property
     def image_url(self) -> str:
         """The URL to this boss's image."""
@@ -40,6 +43,7 @@ class CreatureEntry(BaseModel):
         """The URL to this creature's details."""
         return get_creature_url(self.identifier)
 
+    @computed_field
     @property
     def image_url(self) -> str:
         """The URL to this creature's image."""

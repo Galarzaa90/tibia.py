@@ -20,7 +20,7 @@ class BaseWorld(BaseModel):
     """Base class for all World classes."""
     name: str
     """The name of the world."""
-    online: bool
+    is_online: bool
     """Whether the world is online or not."""
     online_count: int
     """The number of currently online players in the world."""
@@ -30,9 +30,9 @@ class BaseWorld(BaseModel):
     """The type of PvP in the world."""
     transfer_type: TransferType
     """The type of transfer restrictions this world has."""
-    premium_only: bool
+    is_premium_only: bool
     """Whether only premium account players are allowed to play in this server."""
-    battleye_date: Optional[datetime.date] = None
+    battleye_since: Optional[datetime.date] = None
     """The date when BattlEye was added to this world."""
     battleye_type: BattlEyeType
     """The type of BattlEye protection this world has."""
@@ -47,7 +47,7 @@ class BaseWorld(BaseModel):
 
     @computed_field
     @property
-    def battleye_protected(self) -> bool:
+    def is_battleye_protected(self) -> bool:
         """Whether the server is currently protected with BattlEye or not.
 
         .. versionchanged:: 4.0.0

@@ -333,7 +333,7 @@ class Client:
     # endregion
 
     # region News
-    async def fetch_news_archive(self, start_date: datetime.date, end_date: datetime.date = None,
+    async def fetch_news_archive(self, from_date: datetime.date, to_date: datetime.date = None,
                                  categories: Set[NewsCategory] = None, types: Set[NewsType] = None,
                                  *, test=False) -> TibiaResponse[NewsArchive]:
         """Fetch news from the archive meeting the search criteria.
@@ -343,13 +343,13 @@ class Client:
 
         Parameters
         ----------
-        start_date: :class:`datetime.date`
+        from_date: :class:`datetime.date`
             The beginning date to search dates in.
-        end_date: :class:`datetime.date`
+        to_date: :class:`datetime.date`
             The end date to search dates in.
-        categories: `list` of :class:`NewsCategory`
+        categories: `set` of :class:`NewsCategory`
             The allowed categories to show. If left blank, all categories will be searched.
-        types : `list` of :class:`NewsType`
+        types : `set` of :class:`NewsType`
             The allowed news types to show. if unused, all types will be searched.
         test: :class:`bool`
             Whether to request the test website instead.
@@ -369,10 +369,10 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        end_date = end_date or datetime.date.today()
-        if start_date > end_date:
+        to_date = to_date or datetime.date.today()
+        if from_date > to_date:
             raise ValueError("start_date can't be more recent than end_date")
-        form_data = NewsArchiveParser.get_form_data(start_date, end_date, categories, types)
+        form_data = NewsArchiveParser.get_form_data(from_date, to_date, categories, types)
         response = await self._request("POST", get_news_archive_url(), form_data, test=test)
         return response.parse(NewsArchiveParser.from_content)
 

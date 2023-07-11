@@ -67,7 +67,7 @@ class SpellsSectionParser:
                 price = parse_integer(cols_text[5], 0)
                 premium = "yes" in cols_text[6]
                 spell = SpellEntry(name=name.strip(), words=words.strip(), spell_type=spell_type, exp_level=level,
-                                   group=group, mana=mana, premium=premium, price=price, identifier=identifier)
+                                   group=group, mana=mana, is_premium=premium, price=price, identifier=identifier)
                 builder.add_entry(spell)
             form = parsed_content.select_one("form")
             data = parse_form_data(form)
@@ -179,7 +179,7 @@ class SpellParser:
         attrs = cls._parse_table_attributes(spell_table)
         builder.name(attrs["name"])
         builder.words(attrs["formula"])
-        builder.premium("yes" in attrs["premium"])
+        builder.is_premium("yes" in attrs["premium"])
         builder.exp_level(parse_integer(attrs["exp_lvl"], None))
         builder.vocations([s.strip() for s in attrs["vocation"].split(",")])
         builder.cities([s.strip() for s in attrs["city"].split(",")])

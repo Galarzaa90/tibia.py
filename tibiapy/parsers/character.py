@@ -125,7 +125,7 @@ class CharacterParser:
             secret = False
             if secret_image:
                 secret = True
-            achievements.append(Achievement(name=name, grade=grade, secret=secret))
+            achievements.append(Achievement(name=name, grade=grade, is_secret=secret))
         return achievements
 
     @classmethod
@@ -242,7 +242,7 @@ class CharacterParser:
                 id=house_link["query"]["houseid"],
                 name=house_link["text"],
                 town=house_link["query"]["town"],
-                paid_until_date=paid_until_date,
+                paid_until=paid_until_date,
                 world=house_link["query"]["world"]
             )
         )
@@ -322,7 +322,7 @@ class CharacterParser:
         if m := death_summon.search(name):
             summon = clean_text(m.group("summon"))
             name = clean_text(m.group("name"))
-        return DeathParticipant(name=name, player=player, summon=summon, traded=traded)
+        return DeathParticipant(name=name, is_player=player, summon=summon, is_traded=traded)
 
     @classmethod
     def _parse_other_characters(cls, rows):
@@ -353,9 +353,9 @@ class CharacterParser:
             position = None
             if "CipSoft Member" in status:
                 position = "CipSoft Member"
-            other_characters.append(OtherCharacter(name=name, world=world, online="online" in status,
-                                                   deleted="deleted" in status, main=main, position=position,
-                                                   traded=traded))
+            other_characters.append(OtherCharacter(name=name, world=world, is_online="online" in status,
+                                                   is_deleted="deleted" in status, is_main=main, position=position,
+                                                   is_traded=traded))
         return other_characters
 
 

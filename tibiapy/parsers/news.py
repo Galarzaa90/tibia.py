@@ -31,9 +31,9 @@ class NewsArchiveParser:
             The beginning date to search dates in.
         end_date: :class:`datetime.date`
             The end date to search dates in.
-        categories: `list` of :class:`NewsCategory`
+        categories: `set` of :class:`NewsCategory`
             The allowed categories to show. If left blank, all categories will be searched.
-        types: `list` of :class:`NewsType`
+        types: `set` of :class:`NewsType`
             The allowed news types to show. if unused, all types will be searched.
 
         Returns

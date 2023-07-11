@@ -294,7 +294,7 @@ class ForumAuthorParser:
                 name = name.replace("(traded)", "").strip()
                 deleted = False
                 traded = True
-            return ForumAuthor(name=name, deleted=deleted, traded=traded)
+            return ForumAuthor(name=name, is_author_deleted=deleted, is_author_traded=traded)
         author = ForumAuthor(name=char_link.text)
         char_info = character_info_container.select_one("font.ff_infotext")
         position_info = character_info_container.select_one("font.ff_smallinfo")
@@ -687,4 +687,4 @@ class LastPostParser:
             author = author.replace("(traded)", "").strip()
             traded = True
             deleted = False
-        return LastPost(author=author, post_id=post_id, posted_on=last_post_date, deleted=deleted, traded=traded)
+        return LastPost(author=author, post_id=post_id, posted_on=last_post_date, is_author_deleted=deleted, is_author_traded=traded)

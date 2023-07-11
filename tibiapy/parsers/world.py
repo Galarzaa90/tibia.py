@@ -79,7 +79,7 @@ class WorldParser:
             field, value = cols
             field = field.replace(":", "")
             if field == "Status":
-                builder.online("online" in value.lower())
+                builder.is_online("online" in value.lower())
             elif field == "Players Online":
                 builder.online_count(parse_integer(value))
             elif field == "Online Record":
@@ -91,7 +91,7 @@ class WorldParser:
             elif field == "PvP Type":
                 builder.pvp_type(try_enum(PvpType, value))
             elif field == "Premium Type":
-                builder.premium_only(True)
+                builder.is_premium_only(True)
             elif field == "Transfer Type":
                 builder.transfer_type(try_enum(TransferType, value, TransferType.REGULAR))
             elif field == "World Quest Titles":
@@ -128,10 +128,10 @@ class WorldParser:
         """
         if m := battleye_regexp.search(battleye_string):
             battleye_date = parse_tibia_full_date(m.group(1))
-            builder.battleye_date(battleye_date)\
+            builder.battleye_since(battleye_date)\
                 .battleye_type(BattlEyeType.PROTECTED if battleye_date else BattlEyeType.INITIALLY_PROTECTED)
         else:
-            builder.battleye_date(None)\
+            builder.battleye_since(None)\
                 .battleye_type(BattlEyeType.UNPROTECTED)
 
 
@@ -193,13 +193,13 @@ class WorldOverviewParser:
                        .location(location)
                        .pvp_type(pvp)
                        .online_count(online_count)
-                       .online(online))
+                       .is_online(online))
             # Check Battleye icon to get information
             battleye_icon = cols[4].select_one("span.HelperDivIndicator")
             if battleye_icon is not None:
                 if m := battleye_regexp.search(battleye_icon["onmouseover"]):
                     battleye_date = parse_tibia_full_date(m.group(1))
-                    builder.battleye_date(battleye_date).battleye_type(BattlEyeType.PROTECTED if battleye_date else BattlEyeType.INITIALLY_PROTECTED)
+                    builder.battleye_since(battleye_date).battleye_type(BattlEyeType.PROTECTED if battleye_date else BattlEyeType.INITIALLY_PROTECTED)
             additional_info = cols[5].text.strip()
             cls._parse_additional_info(builder, additional_info)
             worlds.append(builder.build())
@@ -214,7 +214,7 @@ class WorldOverviewParser:
         else:
             builder.transfer_type(TransferType.REGULAR)
         builder.experimental("experimental" in additional_info)
-        builder.premium_only("premium" in additional_info)
+        builder.is_premium_only("premium" in additional_info)
 
     @classmethod
     def _parse_worlds_tables(cls, tables):

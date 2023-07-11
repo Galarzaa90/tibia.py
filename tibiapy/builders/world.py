@@ -20,22 +20,22 @@ __all__ = (
 class WorldEntryBuilder:
     def __init__(self):
         self._name = None
-        self._online = None
+        self._is_online = None
         self._location = None
         self._pvp_type = None
         self._online_count = 0
         self._transfer_type = TransferType.REGULAR
-        self._battleye_date = None
+        self._battleye_since = None
         self._battleye_type = BattlEyeType.UNPROTECTED
         self._experimental = False
-        self._premium_only = False
+        self._is_premium_only = False
 
     def name(self, name: str):
         self._name = name
         return self
 
-    def online(self, online: bool):
-        self._online = online
+    def is_online(self, is_online: bool):
+        self._is_online = is_online
         return self
 
     def online_count(self, online_count: int):
@@ -50,16 +50,16 @@ class WorldEntryBuilder:
         self._pvp_type = pvp_type
         return self
 
-    def premium_only(self, premium_only: bool):
-        self._premium_only = premium_only
+    def is_premium_only(self, is_premium_only: bool):
+        self._is_premium_only = is_premium_only
         return self
 
     def transfer_type(self, transfer_type: TransferType):
         self._transfer_type = transfer_type
         return self
 
-    def battleye_date(self, battleye_date: Optional[datetime.datetime]):
-        self._battleye_date = battleye_date
+    def battleye_since(self, battleye_since: Optional[datetime.datetime]):
+        self._battleye_since = battleye_since
         return self
 
     def battleye_type(self, battleye_type: BattlEyeType):
@@ -73,13 +73,13 @@ class WorldEntryBuilder:
     def build(self):
         return WorldEntry(
             name=self._name,
-            online=self._online,
+            is_online=self._is_online,
             online_count=self._online_count,
             location=self._location,
             pvp_type=self._pvp_type,
-            premium_only=self._premium_only,
+            is_premium_only=self._is_premium_only,
             transfer_type=self._transfer_type,
-            battleye_date=self._battleye_date,
+            battleye_since=self._battleye_since,
             battleye_type=self._battleye_type,
             experimental=self._experimental,
         )
@@ -125,17 +125,17 @@ class WorldBuilder(WorldEntryBuilder):
     def build(self):
         return World(
             name=self._name,
-            online=self._online,
+            is_online=self._is_online,
             online_count=self._online_count,
             record_count=self._record_count,
             record_date=self._record_date,
             creation_date=self._creation_date,
             location=self._location,
             pvp_type=self._pvp_type,
-            premium_only=self._premium_only,
+            is_premium_only=self._is_premium_only,
             transfer_type=self._transfer_type,
             world_quest_titles=self._world_quest_titles,
-            battleye_date=self._battleye_date,
+            battleye_since=self._battleye_since,
             battleye_type=self._battleye_type,
             experimental=self._experimental,
             online_players=self._online_players,

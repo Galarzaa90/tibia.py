@@ -235,9 +235,9 @@ class LastPost(BasePost):
     """The internal id of the post."""
     posted_on: datetime.datetime
     """The date when the last post was made."""
-    deleted: bool
+    is_author_deleted: bool
     """Whether the last post's author is a character that is already deleted."""
-    traded: bool
+    is_author_traded: bool
     """Whether the last post's author was recently traded."""
 
     @property
@@ -265,9 +265,9 @@ class ForumAuthor(BaseCharacter):
     """The guild the author belongs to, if any."""
     posts: Optional[int] = None
     """The number of posts this character has made."""
-    deleted: bool = False
+    is_author_deleted: bool = False
     """Whether the author is deleted or not."""
-    traded: bool = False
+    is_author_traded: bool = False
     """Whether the author is traded or not."""
 
 

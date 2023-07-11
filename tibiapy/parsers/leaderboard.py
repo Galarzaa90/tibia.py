@@ -51,7 +51,7 @@ class LeaderboardParser:
                     label = "".join(rotation_end_pattern.findall(label))
                     current = True
                 rotation_end = parse_tibia_datetime(label)
-                rotation = LeaderboardRotation(rotation_id=int(value), end_date=rotation_end, current=current)
+                rotation = LeaderboardRotation(rotation_id=int(value), end_date=rotation_end, is_current=current)
                 if value == form_data.values["rotation"]:
                     current_rotation = rotation
                 rotations.append(rotation)
@@ -60,7 +60,7 @@ class LeaderboardParser:
                 .rotation(current_rotation) \
                 .available_worlds([w for w in form_data.available_options["world"].values() if w]) \
                 .available_rotations(rotations)
-            if current_rotation and current_rotation.current:
+            if current_rotation and current_rotation.is_current:
                 last_update_table = tables[2]
                 if numbers := re.findall(r'(\d+)', last_update_table.text):
                     builder.last_update(datetime.timedelta(minutes=int(numbers[0])))

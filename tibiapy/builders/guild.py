@@ -169,7 +169,7 @@ class GuildWarsBuilder:
         return GuildWars(
             name=self._name,
             history=self._history,
-            current=self._current,
+            is_current=self._current,
         )
 
 

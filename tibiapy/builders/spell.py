@@ -50,7 +50,7 @@ class SpellSectionBuilder:
             vocation=self._vocation,
             group=self._group,
             spell_type=self._spell_type,
-            premium=self._premium,
+            is_premium=self._premium,
             sort_by=self._sort_by,
             entries=self._entries
         )
@@ -66,7 +66,7 @@ class SpellEntryBuilder:
         self._exp_level = None
         self._mana = None
         self._price = None
-        self._premium = None
+        self._is_premium = None
 
     def identifier(self, identifier: str):
         self._identifier = identifier
@@ -100,8 +100,8 @@ class SpellEntryBuilder:
         self._price = price
         return self
 
-    def premium(self, premium: bool):
-        self._premium = premium
+    def is_premium(self, is_premium: bool):
+        self._is_premium = is_premium
         return self
 
     def build(self):
@@ -114,7 +114,7 @@ class SpellEntryBuilder:
             exp_level=self._exp_level,
             mana=self._mana,
             price=self._price,
-            premium=self._premium,
+            is_premium=self._is_premium,
         )
 
 
@@ -199,7 +199,7 @@ class SpellBuilder(SpellEntryBuilder):
             magic_type=self._magic_type,
             cities=self._cities,
             rune=self._rune,
-            premium=self._premium,
+            is_premium=self._is_premium,
         )
 
 

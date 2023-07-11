@@ -156,7 +156,7 @@ class CharacterBuilder:
     def build(self):
         return Character(
             name=self._name,
-            traded=self._traded,
+            is_traded=self._traded,
             deletion_date=self._deletion_date,
             former_names=self._former_names,
             title=self._title,
