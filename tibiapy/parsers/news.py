@@ -65,7 +65,7 @@ class NewsArchiveParser:
         return data
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> NewsArchive:
         """Get a list of news from the HTML content of the news search page.
 
         Parameters
@@ -145,7 +145,7 @@ class NewsParser:
     """Represents a news entry."""
 
     @classmethod
-    def from_content(cls, content, news_id=0):
+    def from_content(cls, content: str, news_id=0) -> News:
         """Get a news entry by its HTML content from Tibia.com.
 
         Notes

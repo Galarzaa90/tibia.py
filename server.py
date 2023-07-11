@@ -51,15 +51,26 @@ async def healthcheck():
 
 # region News
 
+FROM_DESCRIPTION = "Only show articles published on this date or after."
+TO_DESCRIPTION = "Only show articles published on this date or before."
 TYPES_DESCRIPTION = "The types of news to display. Leave empty to show any."
 CATEGORIES_DESCRIPTION = "The categories of news to display. Leave empty to show any."
+
+
+@app.get("/news/{news_id:int}", tags=["News"])
+async def get_news_article(
+        response: Response,
+        news_id: int = Path(...)
+) -> TibiaResponse[Optional[News]]:
+    return handle_response(response, await app.state.client.fetch_news(news_id=news_id))
+
 
 
 @app.get("/news/{fromDate}", tags=["News"],
          summary="Get news archive from date")
 async def get_news_archive(
         response: Response,
-        from_date: datetime.date = Path(..., alias="fromDate"),
+        from_date: datetime.date = Path(..., alias="fromDate", description=FROM_DESCRIPTION),
         types: Set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
         categories: Set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
 ) -> TibiaResponse[NewsArchive]:
@@ -70,29 +81,24 @@ async def get_news_archive(
 @app.get("/news/{fromDate}/{toDate}", tags=["News"],
          summary="Get news archive between dates")
 async def get_news_archive(
-        from_date: datetime.date = Path(..., alias="fromDate"),
-        to_date: datetime.date = Path(..., alias="toDate"),
+        response: Response,
+        from_date: datetime.date = Path(..., alias="fromDate", description=FROM_DESCRIPTION),
+        to_date: datetime.date = Path(..., alias="toDate", description=TO_DESCRIPTION),
         types: Set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
         categories: Set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
 ) -> TibiaResponse[NewsArchive]:
     """Show the news archive for a specific date period."""
-    return await app.state.client.fetch_news_archive(from_date, to_date, categories, types)
+    return handle_response(response, await app.state.client.fetch_news_archive(from_date, to_date, categories, types))
 
 
 @app.get("/news", tags=["News"])
 async def get_news_archive_by_days(
+        response: Response,
         days: int = Query(30),
         types: Set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
         categories: Set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
 ) -> TibiaResponse[NewsArchive]:
-    return await app.state.client.fetch_news_archive_by_days(days, categories, types)
-
-
-@app.get("/news/{news_id}", tags=["News"])
-async def get_news_article(
-        news_id: int = Path(...)
-) -> TibiaResponse[Optional[News]]:
-    return await app.state.client.fetch_news(news_id=news_id)
+    return handle_response(response, await app.state.client.fetch_news_archive_by_days(days, categories, types))
 
 
 @app.get("/events/", tags=["News"])
