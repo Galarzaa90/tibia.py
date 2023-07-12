@@ -65,7 +65,6 @@ async def get_news_article(
     return handle_response(response, await app.state.client.fetch_news(news_id=news_id))
 
 
-
 @app.get("/news/{fromDate}", tags=["News"],
          summary="Get news archive from date")
 async def get_news_archive(
@@ -234,7 +233,7 @@ async def get_highscores(
         battleye: HighscoresBattlEyeType = Query(None),
         pvp_types: List[PvpTypeFilter] = Query([], alias="pvp"),
 ) -> TibiaResponse[Highscores]:
-    if world.lower() in ("global", "all"):
+    if world.lower() in {"global", "all"}:
         world = None
     return await app.state.client.fetch_highscores_page(world, category, page=page, vocation=vocation,
                                                         battleye_type=battleye,
@@ -269,10 +268,19 @@ async def get_kill_statistics(
 
 
 @app.get("/leaderboards/{world}", tags=["Community"])
-async def get_leaderboards(
-        world: str = Path(...)
+async def get_leaderboard(
+        response: Response,
+        world: str = Path(..., description="The world to see the leaderboard of."),
+        page: int = Query(1, description="The page to display."),
+        rotation_id: int = Query(None, alias="rotationId",
+                                 description="The ID of the rotation to see, leave empty to see latest.\n"
+                                             "Note that it's only possible to see the current and previous rotations."),
 ) -> TibiaResponse[Optional[Leaderboard]]:
-    return await app.state.client.fetch_leaderboard(world=world)
+    """Show the latest Tibiadrome rotation's leaderboard."""
+    return handle_response(
+        response,
+        await app.state.client.fetch_leaderboard(world=world, rotation=rotation_id, page=page)
+    )
 
 
 # endregion

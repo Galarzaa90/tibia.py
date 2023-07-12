@@ -65,6 +65,10 @@ Changelog
     - ``Leaderboard``:
         - ``current`` field renamed to ``is_current``.
         - ``page`` field renamed to ``current_page``.
+        - ``last_update`` field removed.
+        - ``last_updated``field added, a datetime of when was the last update.
+    - ``LeaderboardEntry``:
+        - ``name`` field might be ``None`` if characte is deleted.
     - ``Highscores``:
         - ``.page`` field renamed to ``current_page``.
         - ``last_updated`` field is now a ``datetime`` instead of a ``timedelta``.

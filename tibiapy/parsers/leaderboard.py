@@ -3,13 +3,13 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from tibiapy import errors
 from tibiapy.builders.leaderboard import LeaderboardBuilder
 from tibiapy.models.leaderboard import LeaderboardEntry, LeaderboardRotation, Leaderboard
 from tibiapy.utils import parse_pagination, parse_tibia_datetime, parse_tibiacom_content, \
-    parse_form_data_new
+    parse_form_data_new, parse_integer
 
 if TYPE_CHECKING:
     from bs4 import Tag
@@ -20,11 +20,10 @@ __all__ = (
 
 rotation_end_pattern = re.compile(r"ends on ([^)]+)")
 
-
 class LeaderboardParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> Optional[Leaderboard]:
         """Parse the content of the leaderboards page.
 
         Parameters
@@ -35,14 +34,17 @@ class LeaderboardParser:
         Returns
         -------
         :class:`Leaderboard`
-            The ledaerboard if found.
+            The leaderboard, if found.
         """
+        now = datetime.datetime.now(datetime.timezone.utc)
         try:
             parsed_content = parse_tibiacom_content(content)
             tables = parsed_content.select("table.TableContent")
             form = parsed_content.select_one("form")
             form_data = parse_form_data_new(form)
             current_world = form_data.values["world"]
+            if current_world is None:
+                return None
             current_rotation = None
             rotations = []
             for label, value in form_data.available_options["rotation"].items():
@@ -63,7 +65,7 @@ class LeaderboardParser:
             if current_rotation and current_rotation.is_current:
                 last_update_table = tables[2]
                 if numbers := re.findall(r'(\d+)', last_update_table.text):
-                    builder.last_update(datetime.timedelta(minutes=int(numbers[0])))
+                    builder.last_updated(now - datetime.timedelta(minutes=int(numbers[0])))
             cls._parse_entries(builder, tables[-1])
             pagination_block = parsed_content.select_one("small")
             pages, total, count = parse_pagination(pagination_block) if pagination_block else (0, 0, 0)
@@ -76,7 +78,11 @@ class LeaderboardParser:
     def _parse_entries(cls, builder: LeaderboardBuilder, entries_table: Tag):
         entries_rows = entries_table.select("tr[style]")
         for row in entries_rows:
-            columns_raw = row.select("td")
-            cols = [c.text for c in columns_raw]
-            rank, name, points = cols
-            builder.add_entry(LeaderboardEntry(rank=int(rank.replace(".", "")), name=name, drome_level=int(points)))
+            columns = row.select("td")
+            if len(columns) != 3:
+                continue
+            rank = parse_integer(columns[0].text.replace(".", ""))
+            points = parse_integer(columns[2].text)
+            name_link = columns[1].select_one("a")
+            name = name_link.text if name_link else None
+            builder.add_entry(LeaderboardEntry(rank=rank, drome_level=points, name=name))

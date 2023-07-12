@@ -1,0 +1,202 @@
+<div class="BoxContent" style="background-image:url(https://static.tibia.com/images/global/content/scroll.gif);">
+   <div class="TableContainer">
+      <div class="CaptionContainer">
+         <div class="CaptionInnerContainer">
+            <span class="CaptionEdgeLeftTop" style="background-image:url(https://static.tibia.com/images/global/content/box-frame-edge.gif);"></span> <span class="CaptionEdgeRightTop" style="background-image:url(https://static.tibia.com/images/global/content/box-frame-edge.gif);"></span> <span class="CaptionBorderTop" style="background-image:url(https://static.tibia.com/images/global/content/table-headline-border.gif);"></span> <span class="CaptionVerticalLeft" style="background-image:url(https://static.tibia.com/images/global/content/box-frame-vertical.gif);"></span>
+            <div class="Text">Tibiadrome Leaderboards</div>
+            <span class="CaptionVerticalRight" style="background-image:url(https://static.tibia.com/images/global/content/box-frame-vertical.gif);"></span> <span class="CaptionBorderBottom" style="background-image:url(https://static.tibia.com/images/global/content/table-headline-border.gif);"></span> <span class="CaptionEdgeLeftBottom" style="background-image:url(https://static.tibia.com/images/global/content/box-frame-edge.gif);"></span> <span class="CaptionEdgeRightBottom" style="background-image:url(https://static.tibia.com/images/global/content/box-frame-edge.gif);"></span>
+         </div>
+      </div>
+      <table class="Table3" cellpadding="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <td>
+                  <div class="TableScrollbarWrapper">
+                     <div class="TableScrollbarContainer"> </div>
+                  </div>
+                  <div class="InnerTableContainer">
+                     <table style="width:100%;">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <div class="TableContentContainer">
+                                    <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                                       <tbody>
+                                          <tr>
+                                             <td>Here you can check the ranking of single players in the Tibiadrome. Once you have selected the game world, you will be able to choose a specific time frame.</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <div class="TableContentContainer">
+                                    <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                                       <tbody>
+                                          <tr>
+                                             <td>
+                                                <form method="post" action="" style="margin: 0px; padding: 0px;">
+                                                   <input type="hidden" name="currentpage" value="1">
+                                                   <table style="width: 100%;">
+                                                      <tbody>
+                                                         <tr>
+                                                            <td style="width: 50%; border: none;">
+                                                               <select name="world" class="Width100Percent" onchange="this.form.submit();">
+                                                                  <option value="">--- please select a world ---</option>
+                                                                  <option value="Adra">Adra</option>
+                                                                  <option value="Alumbra">Alumbra</option>
+                                                                  <option value="Antica">Antica</option>
+                                                                  <option value="Ardera">Ardera</option>
+                                                                  <option value="Astera">Astera</option>
+                                                                  <option value="Axera">Axera</option>
+                                                                  <option value="Bastia">Bastia</option>
+                                                                  <option value="Batabra">Batabra</option>
+                                                                  <option value="Belobra">Belobra</option>
+                                                                  <option value="Bombra">Bombra</option>
+                                                                  <option value="Bona">Bona</option>
+                                                                  <option value="Cadebra">Cadebra</option>
+                                                                  <option value="Calmera">Calmera</option>
+                                                                  <option value="Castela">Castela</option>
+                                                                  <option value="Celebra">Celebra</option>
+                                                                  <option value="Celesta">Celesta</option>
+                                                                  <option value="Collabra">Collabra</option>
+                                                                  <option value="Damora">Damora</option>
+                                                                  <option value="Descubra">Descubra</option>
+                                                                  <option value="Dia">Dia</option>
+                                                                  <option value="Dibra">Dibra</option>
+                                                                  <option value="Epoca">Epoca</option>
+                                                                  <option value="Esmera">Esmera</option>
+                                                                  <option value="Etebra">Etebra</option>
+                                                                  <option value="Famosa">Famosa</option>
+                                                                  <option value="Fera">Fera</option>
+                                                                  <option value="Ferobra">Ferobra</option>
+                                                                  <option value="Firmera">Firmera</option>
+                                                                  <option value="Gentebra">Gentebra</option>
+                                                                  <option value="Gladera">Gladera</option>
+                                                                  <option value="Gravitera">Gravitera</option>
+                                                                  <option value="Harmonia">Harmonia</option>
+                                                                  <option value="Havera">Havera</option>
+                                                                  <option value="Honbra">Honbra</option>
+                                                                  <option value="Illusera">Illusera</option>
+                                                                  <option value="Impulsa">Impulsa</option>
+                                                                  <option value="Inabra">Inabra</option>
+                                                                  <option value="Issobra">Issobra</option>
+                                                                  <option value="Jacabra">Jacabra</option>
+                                                                  <option value="Kalibra">Kalibra</option>
+                                                                  <option value="Kardera">Kardera</option>
+                                                                  <option value="Karna">Karna</option>
+                                                                  <option value="Libertabra">Libertabra</option>
+                                                                  <option value="Lobera">Lobera</option>
+                                                                  <option value="Luminera">Luminera</option>
+                                                                  <option value="Lutabra">Lutabra</option>
+                                                                  <option value="Marbera" selected="selected">Marbera</option>
+                                                                  <option value="Marcia">Marcia</option>
+                                                                  <option value="Menera">Menera</option>
+                                                                  <option value="Monza">Monza</option>
+                                                                  <option value="Mudabra">Mudabra</option>
+                                                                  <option value="Mykera">Mykera</option>
+                                                                  <option value="Nadora">Nadora</option>
+                                                                  <option value="Nefera">Nefera</option>
+                                                                  <option value="Nossobra">Nossobra</option>
+                                                                  <option value="Ocebra">Ocebra</option>
+                                                                  <option value="Olima">Olima</option>
+                                                                  <option value="Ombra">Ombra</option>
+                                                                  <option value="Optera">Optera</option>
+                                                                  <option value="Ousabra">Ousabra</option>
+                                                                  <option value="Pacera">Pacera</option>
+                                                                  <option value="Peloria">Peloria</option>
+                                                                  <option value="Premia">Premia</option>
+                                                                  <option value="Quelibra">Quelibra</option>
+                                                                  <option value="Quintera">Quintera</option>
+                                                                  <option value="Refugia">Refugia</option>
+                                                                  <option value="Reinobra">Reinobra</option>
+                                                                  <option value="Seanera">Seanera</option>
+                                                                  <option value="Secura">Secura</option>
+                                                                  <option value="Serdebra">Serdebra</option>
+                                                                  <option value="Solidera">Solidera</option>
+                                                                  <option value="Suna">Suna</option>
+                                                                  <option value="Syrena">Syrena</option>
+                                                                  <option value="Talera">Talera</option>
+                                                                  <option value="Tembra">Tembra</option>
+                                                                  <option value="Thyria">Thyria</option>
+                                                                  <option value="Trona">Trona</option>
+                                                                  <option value="Utobra">Utobra</option>
+                                                                  <option value="Venebra">Venebra</option>
+                                                                  <option value="Versa">Versa</option>
+                                                                  <option value="Visabra">Visabra</option>
+                                                                  <option value="Vitera">Vitera</option>
+                                                                  <option value="Vunira">Vunira</option>
+                                                                  <option value="Wintera">Wintera</option>
+                                                                  <option value="Wizera">Wizera</option>
+                                                                  <option value="Xandebra">Xandebra</option>
+                                                                  <option value="Yonabra">Yonabra</option>
+                                                                  <option value="Zenobra">Zenobra</option>
+                                                                  <option value="Zuna">Zuna</option>
+                                                                  <option value="Zunera">Zunera</option>
+                                                               </select>
+                                                            </td>
+                                                         </tr>
+                                                      </tbody>
+                                                   </table>
+                                                   <table style="width: 100%;">
+                                                      <tbody>
+                                                         <tr>
+                                                            <td style="width: 33%; border: none;">
+                                                               <select name="rotation" class="Width100Percent" onchange="this.form.submit();">
+                                                                  <option value="52" selected="selected">Current rotation (ends on Jul&nbsp;12&nbsp;2023,&nbsp;10:00:00&nbsp;CEST)</option>
+                                                                  <option value="51">Jun&nbsp;28&nbsp;2023,&nbsp;10:00:00&nbsp;CEST</option>
+                                                               </select>
+                                                            </td>
+                                                         </tr>
+                                                      </tbody>
+                                                   </table>
+                                                </form>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <div class="TableContentContainer">
+                                    <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                                       <tbody>
+                                          <tr>
+                                             <td>Last update: 24 minutes ago.</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                           <tr>
+                              <td>
+                                 <div class="TableContentContainer">
+                                    <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                                       <tbody>
+                                          <tr class="LabelH">
+                                             <td>Rank</td>
+                                             <td style="width: 90%;">Name</td>
+                                             <td style="text-align: right;">Drome Level</td>
+                                          </tr>
+                                          <tr style="background-color:#F1E0C6;">
+                                             <td colspan="3">No results yet.</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+</div>

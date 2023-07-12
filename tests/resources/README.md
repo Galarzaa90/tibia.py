@@ -72,6 +72,11 @@ nonexistent world or a unselected world.
 - [tibiacom_news.txt](news/news_article.txt) - The content of a news article.
 - [tibiacom_news_ticker.txt](news/news_ticker.txt) - The content of a news ticker.
 
+## Leaderboard resources
+- [leaderboardCurrentRotation.txt](leaderboards/leaderboardCurrentRotation.txt) - The leaderboard page for the current rotation of a world.
+- [leaderboardDeletedCharacter.txt](leaderboards/leaderboardDeletedCharacter.txt) - A leaderboad containing a deleted character.
+- [leaderboardEmpty.txt](leaderboards/leaderboardEmpty.txt) - The leaderboard page for a world with no entries.
+- [leaderboardNotFound.txt](leaderboards/leaderboardNotFound.txt) - The leaderboard page for a world that doesn't exist.
 
 ## World resources
  - [tibiacom_online.txt](world/tibiacom_online.txt) - An online world on Tibia.com.

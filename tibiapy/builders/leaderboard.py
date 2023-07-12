@@ -16,7 +16,7 @@ class LeaderboardBuilder:
         self._rotation = None
         self._available_rotations = None
         self._entries = []
-        self._last_update = None
+        self._last_updated = None
         self._current_page = None
         self._total_pages = None
         self._results_count = None
@@ -45,8 +45,8 @@ class LeaderboardBuilder:
         self._entries.append(entry)
         return self
 
-    def last_update(self, last_update: Optional[datetime.timedelta]):
-        self._last_update = last_update
+    def last_updated(self, last_updated: Optional[datetime.datetime]):
+        self._last_updated = last_updated
         return self
 
     def current_page(self, current_page: int):
@@ -68,7 +68,7 @@ class LeaderboardBuilder:
             rotation=self._rotation,
             available_rotations=self._available_rotations,
             entries=self._entries,
-            last_update=self._last_update,
+            last_updated=self._last_updated,
             current_page=self._current_page,
             total_pages=self._total_pages,
             results_count=self._results_count,
