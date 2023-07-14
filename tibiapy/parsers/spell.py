@@ -1,16 +1,20 @@
+from __future__ import annotations
+
 import os
 import re
 import urllib.parse
-from typing import Dict, Optional
+from typing import Dict, Optional, TYPE_CHECKING
 
 import bs4
 
 from tibiapy import errors
-from tibiapy.builders.spell import SpellSectionBuilder, SpellBuilder, RuneBuilder
+from tibiapy.builders.spell import SpellSectionBuilder, SpellBuilder, RuneBuilder, SpellEntryBuilder
 from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
-from tibiapy.models.spell import SpellEntry, Rune, SpellsSection, Spell
-from tibiapy.utils import parse_form_data, parse_integer, parse_tibiacom_content, parse_tibiacom_tables, \
-    try_enum, parse_link_info
+from tibiapy.utils import (parse_form_data, parse_integer, parse_tibiacom_content, parse_tibiacom_tables,
+                           try_enum, parse_link_info)
+
+if TYPE_CHECKING:
+    from tibiapy.models.spell import Rune, Spell, SpellsSection
 
 __all__ = (
     'SpellsSectionParser',
@@ -24,6 +28,7 @@ cooldown_pattern = re.compile(
 
 
 class SpellsSectionParser:
+    """Parses Tibia.com content from the Spells Section."""
 
     @classmethod
     def from_content(cls, content: str) -> SpellsSection:
@@ -66,8 +71,16 @@ class SpellsSectionParser:
                 mana = parse_integer(cols_text[4], None)
                 price = parse_integer(cols_text[5], 0)
                 premium = "yes" in cols_text[6]
-                spell = SpellEntry(name=name.strip(), words=words.strip(), spell_type=spell_type, exp_level=level,
-                                   group=group, mana=mana, is_premium=premium, price=price, identifier=identifier)
+                spell = (SpellEntryBuilder()
+                         .name(name.strip())
+                         .words(words.strip())
+                         .spell_type(spell_type)
+                         .exp_level(level)
+                         .group(group)
+                         .mana(mana)
+                         .is_premium(premium)
+                         .price(price)
+                         .identifier(identifier)).build()
                 builder.add_entry(spell)
             form = parsed_content.select_one("form")
             data = parse_form_data(form)
@@ -83,6 +96,8 @@ class SpellsSectionParser:
 
 
 class SpellParser:
+    """Parses Tibia.com from a spell's information page."""
+
     @classmethod
     def from_content(cls, content) -> Optional[Spell]:
         """Parse the content of a spells page.
@@ -131,15 +146,13 @@ class SpellParser:
                     description += "\n"
                 elif next_sibling.name in ["table", "div"]:
                     break
-                else:
-                    description += next_sibling.text
-            elif isinstance(next_sibling, bs4.NavigableString):
-                description += str(next_sibling)
+            else:
+                description += next_sibling.text
             next_sibling = next_sibling.next_sibling
         return description.strip()
 
     @classmethod
-    def _parse_rune_table(cls, table):
+    def _parse_rune_table(cls, table) -> Rune:
         """Parse the rune information table.
 
         Parameters
@@ -153,14 +166,14 @@ class SpellParser:
             The rune described in the table.
         """
         attrs = cls._parse_table_attributes(table)
-        return RuneBuilder().name(attrs["name"])\
-            .group(try_enum(SpellGroup, attrs["group"]))\
-            .vocations([v.strip() for v in attrs["vocation"].split(",")])\
-            .magic_type(attrs.get("magic_type"))\
-            .magic_level(parse_integer(attrs.get("mag_lvl"), 0))\
-            .exp_level(parse_integer(attrs.get("exp_lvl"), 0))\
-            .mana(parse_integer(attrs.get("mana"), None))\
-            .build()
+        return (RuneBuilder().name(attrs["name"])
+                .group(try_enum(SpellGroup, attrs["group"]))
+                .vocations([v.strip() for v in attrs["vocation"].split(",")])
+                .magic_type(attrs.get("magic_type"))
+                .magic_level(parse_integer(attrs.get("mag_lvl"), 0))
+                .exp_level(parse_integer(attrs.get("exp_lvl"), 0))
+                .mana(parse_integer(attrs.get("mana"), None))
+                .build())
 
     @classmethod
     def _parse_spells_table(cls, builder: SpellBuilder, spell_table: bs4.Tag):

@@ -13,7 +13,7 @@ __all__ = (
     'SpellsSection',
     'Spell',
     'SpellEntry',
-    'Rune'
+    'Rune',
 )
 
 
@@ -122,5 +122,5 @@ class SpellsSection(BaseModel):
             group=self.group,
             spell_type=self.spell_type,
             is_premium=self.is_premium,
-            sort=self.sort_by
+            sort=self.sort_by,
         )

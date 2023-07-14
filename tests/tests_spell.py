@@ -1,59 +1,78 @@
-import unittest
-
 import tibiapy
 from tests.tests_tibiapy import TestCommons
 from tibiapy.parsers.spell import SpellsSectionParser, SpellParser
 
-FILE_SPELLS_SECTION = "library/spell_list_default.txt"
-FILE_SPELL_RUNE = "library/spell_rune.txt"
-FILE_SPELL_SECONDARY_GROUP = "library/spell_secondary_group.txt"
+FILE_SPELLS_SECTION = "spells/spellsSectionDefault.txt"
+FILE_SPELLS_SECTION_EMPTY = "spells/spellsSectionEmpty.txt"
+FILE_SPELL_RUNE = "spells/spellWithRune.txt"
+FILE_SPELL_SECONDARY_GROUP = "spells/spellWithSecondaryGroup.txt"
 
 
-class TestSpell(TestCommons, unittest.TestCase):
-    # region Tibia.com Tests
-    def test_spells_section_from_content(self):
+class TestSpell(TestCommons,):
+    # region Spells Section Tests
+    
+    def test_spells_section_parser_from_content(self):
         """Testing parsing a boosted creature"""
         content = self.load_resource(FILE_SPELLS_SECTION)
+
         spells_section = SpellsSectionParser.from_content(content)
 
         self.assertIsNotNone(spells_section)
-        self.assertEqual(141, len(spells_section.entries))
+        self.assertIsNotNone(spells_section.url)
+        self.assertSizeEquals(spells_section.entries, 152)
 
-    def test_spells_section_from_content_unrelated_section(self):
+
+    def test_spells_section_parser_from_content_no_results(self):
+        """Testing parsing a boosted creature"""
+        content = self.load_resource(FILE_SPELLS_SECTION_EMPTY)
+
+        spells_section = SpellsSectionParser.from_content(content)
+
+        self.assertIsEmpty(spells_section.entries)
+
+    def test_spells_section_parser_from_content_unrelated_section(self):
         """Testing parsing a boosted creature"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(tibiapy.InvalidContent):
-            spells_section = SpellsSectionParser.from_content(content)
 
-    def test_spell_from_content_rune(self):
+        with self.assertRaises(tibiapy.InvalidContent):
+            SpellsSectionParser.from_content(content)
+            
+    # endregion
+    
+    # region Spells Tests
+
+    def test_spell_parser_from_content_rune(self):
         """Testing parsing a rune spell."""
         content = self.load_resource(FILE_SPELL_RUNE)
+
         spell = SpellParser.from_content(content)
 
         self.assertIsNotNone(spell)
-        self.assertEqual("Chameleon Rune", spell.name)
-        self.assertEqual("adevo ina", spell.words)
-        self.assertIn("Druid", spell.vocations)
+        self.assertIsNotNone(spell.url)
+        self.assertIsNotNone(spell.image_url)
+        self.assertEqual("Sudden Death Rune", spell.name)
+        self.assertEqual("adori gran mort", spell.words)
+        self.assertIn("Sorcerer", spell.vocations)
         self.assertEqual("Support", spell.group.value)
         self.assertEqual("Rune", spell.spell_type.value)
         self.assertEqual(2, spell.cooldown)
         self.assertEqual(2, spell.cooldown_group)
-        self.assertEqual(2, spell.soul_points)
-        self.assertEqual(1, spell.amount)
-        self.assertEqual(27, spell.exp_level)
-        self.assertEqual(600, spell.mana)
-        self.assertEqual(1300, spell.price)
-        self.assertIn("Thais", spell.cities)
+        self.assertEqual(5, spell.soul_points)
+        self.assertEqual(3, spell.amount)
+        self.assertEqual(45, spell.exp_level)
+        self.assertEqual(985, spell.mana)
+        self.assertEqual(3000, spell.price)
         self.assertIn("Yalahar", spell.cities)
         self.assertIn("Edron", spell.cities)
         self.assertFalse(spell.is_premium)
-        self.assertEqual("Chameleon Rune", spell.rune.name)
+        self.assertEqual("Sudden Death Rune", spell.rune.name)
         self.assertIn("Knight", spell.rune.vocations)
-        self.assertEqual("Support", spell.rune.group.value)
-        self.assertEqual(27, spell.rune.exp_level)
-        self.assertEqual(4, spell.rune.magic_level)
+        self.assertEqual("Attack", spell.rune.group.value)
+        self.assertEqual("Death", spell.rune.magic_type)
+        self.assertEqual(45, spell.rune.exp_level)
+        self.assertEqual(15, spell.rune.magic_level)
 
-    def test_spell_from_content_secondary_group(self):
+    def test_spell_parser_from_content_secondary_group(self):
         """Testing parsing a spell with a secondary group."""
         content = self.load_resource(FILE_SPELL_SECONDARY_GROUP)
         spell = SpellParser.from_content(content)
@@ -89,6 +108,6 @@ class TestSpell(TestCommons, unittest.TestCase):
         """Testing parsing a boosted creature"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(tibiapy.InvalidContent):
-            spell = SpellParser.from_content(content)
+            SpellParser.from_content(content)
 
     # endregion

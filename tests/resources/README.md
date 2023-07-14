@@ -115,6 +115,12 @@ nonexistent world or a unselected world.
 - [tibiacom_history_empty.txt](bazaar/tibiacom_history_empty.txt) - The content of the auction history page with no entries.
 
  
+## Spells resources
+- [spellsSectionDefault.txt](spells/spellsSectionDefault.txt) - The spells section with all results (no filters used).
+- [spellsSectionEmpty.txt](spells/spellsSectionEmpty.txt) - The spells section with empty results (due to filter combination).
+- [spellWithSecondaryGroup.txt](spells/spellWithSecondaryGroup.txt) - A spell with a secondary cooldown group.
+- [spellWithRune.txt](spells/spellWithRune.txt) - A spell that produces a rune.
+
  ## Other resources
  - [tibiacom_about.txt](tibiacom_about.txt) - The 'About Tibia' section on Tibia.com, used to provide invalid content 
  for tests.
