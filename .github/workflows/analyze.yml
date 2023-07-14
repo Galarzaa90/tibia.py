@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🚚
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.5.3
         with:
           fetch-depth: 1
       - name: Set up Python 🐍
-        uses: actions/setup-python@v4.5.0
+        uses: actions/setup-python@v4.7.0
         with:
           python-version: 3.9
       - name: Install dependencies ⚙️
@@ -47,15 +47,15 @@ jobs:
     needs: build
     steps:
       - name: Checkout 🚚
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.5.3
         with:
           fetch-depth: 0
       - name: Download reports 📥
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v2.1.1
         with:
           name: reports
       - name: SonarCloud Scan ☁️
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@v1.9.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
     needs: build
     steps:
       - name: Download reports 📥
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v2.1.1
         with:
           name: reports
       - name: Upload to Codecov ☂️
