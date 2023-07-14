@@ -3,7 +3,6 @@ include =
     tibiapy/*.py
     tibiapy/parsers/*.py
     tibiapy/models/*.py
-    tibiapy/builders/*.py
 
 [report]
 exclude_lines =

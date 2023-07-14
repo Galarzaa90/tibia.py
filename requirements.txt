@@ -1,6 +1,6 @@
-beautifulsoup4
-lxml
-aiohttp
+beautifulsoup4>=4.0
+lxml>=4.3.5
+aiohttp>=3.8
 aiohttp-socks
-html5lib
+html5lib>=1.1
 pydantic~=2.0

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import re
 from typing import TYPE_CHECKING, Optional, List
 
@@ -7,13 +8,14 @@ from tibiapy.builders.world import (WorldBuilder, WorldEntryBuilder,
 from tibiapy.enums import (BattlEyeType, PvpType,
                            TransferType, WorldLocation)
 from tibiapy.errors import InvalidContent
-from tibiapy.models import OnlineCharacter, World, WorldOverview, WorldEntry
+from tibiapy.models import OnlineCharacter, WorldEntry
 from tibiapy.utils import (parse_integer, parse_tibia_datetime,
                            parse_tibia_full_date, parse_tibiacom_content,
                            try_enum, parse_tables_map, get_rows, clean_text)
 
 if TYPE_CHECKING:
     import bs4
+    from tibiapy.models import World, WorldOverview
 
 __all__ = (
     "WorldParser",
@@ -139,6 +141,8 @@ class WorldParser:
 
 
 class WorldOverviewParser:
+    """Parses Tibia.com content from the World Overview section."""
+
     @classmethod
     def from_content(cls, content: str) -> WorldOverview:
         """Parse the content of the World Overview section from Tibia.com into an object of this class.
@@ -201,7 +205,8 @@ class WorldOverviewParser:
             if battleye_icon is not None:
                 if m := battleye_regexp.search(battleye_icon["onmouseover"]):
                     battleye_date = parse_tibia_full_date(m.group(1))
-                    builder.battleye_since(battleye_date).battleye_type(BattlEyeType.PROTECTED if battleye_date else BattlEyeType.INITIALLY_PROTECTED)
+                    builder.battleye_since(battleye_date).battleye_type(BattlEyeType.PROTECTED if battleye_date
+                                                                        else BattlEyeType.INITIALLY_PROTECTED)
             additional_info = cols[5].text.strip()
             cls._parse_additional_info(builder, additional_info)
             worlds.append(builder.build())

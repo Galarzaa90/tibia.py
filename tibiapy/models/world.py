@@ -18,6 +18,7 @@ __all__ = (
 
 class BaseWorld(BaseModel):
     """Base class for all World classes."""
+
     name: str
     """The name of the world."""
     is_online: bool
@@ -43,7 +44,6 @@ class BaseWorld(BaseModel):
     def url(self) -> str:
         """URL to the world's information page on Tibia.com."""
         return get_world_url(self.name)
-
 
     @computed_field
     @property
@@ -83,6 +83,7 @@ class World(BaseWorld):
 
 class WorldEntry(BaseWorld):
     """Represents a game server listed in the World Overview section."""
+
     pass
 
 
