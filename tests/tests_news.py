@@ -7,13 +7,13 @@ from tibiapy.models.news import NewsEntry, NewsArchive, News
 from tibiapy.parsers.news import NewsArchiveParser, NewsParser
 from tibiapy.urls import get_news_url
 
-FILE_NEWS_ARCHIVE_INITIAL = "news/news_archive_initial.txt"
-FILE_NEWS_ARCHIVE_RESULTS = "news/news_archive_results.txt"
-FILE_NEWS_ARCHIVE_EMPTY = "news/news_archive_empty.txt"
-FILE_NEWS_ARCHIVE_ERROR = "news/news_archive_error.txt"
-FILE_NEWS_NOT_FOUND = "news/news_not_found.txt"
-FILE_NEWS_ARTICLE = "news/news_article.txt"
-FILE_NEWS_TICKER = "news/news_ticker.txt"
+FILE_NEWS_ARCHIVE_INITIAL = "news/newsArchiveInitial.txt"
+FILE_NEWS_ARCHIVE_RESULTS_FILTERED = "news/newsArchiveWithFilters.txt"
+FILE_NEWS_ARCHIVE_EMPTY = "news/newsArchiveEmpty.txt"
+FILE_NEWS_ARCHIVE_ERROR = "news/newsArchiveError.txt"
+FILE_NEWS_NOT_FOUND = "news/newsNotFound.txt"
+FILE_NEWS_ARTICLE = "news/newsArticle.txt"
+FILE_NEWS_TICKER = "news/newsTicker.txt"
 
 
 class TestNews(TestCommons):
@@ -26,21 +26,21 @@ class TestNews(TestCommons):
         self.assertIsInstance(news_archive, NewsArchive)
         self.assertEqual(datetime.date(2023, 3, 16), news_archive.from_date)
         self.assertEqual(datetime.date(2023, 4, 15), news_archive.to_date)
-        self.assertEqual(3, len(news_archive.types))
-        self.assertEqual(5, len(news_archive.categories))
+        self.assertSizeEquals(news_archive.types, 3)
+        self.assertSizeEquals(news_archive.categories, 5)
 
-    def test_news_archive_parser_from_content_with_results(self):
+    def test_news_archive_parser_from_content_with_results_filtered(self):
         """Testing parsing the news archive with results."""
-        content = self.load_resource(FILE_NEWS_ARCHIVE_RESULTS)
+        content = self.load_resource(FILE_NEWS_ARCHIVE_RESULTS_FILTERED)
 
         news_archive = NewsArchiveParser.from_content(content)
 
         self.assertEqual(datetime.date(2019, 3, 25), news_archive.from_date)
         self.assertEqual(datetime.date(2019, 5, 25), news_archive.to_date)
-        self.assertEqual(3, len(news_archive.types))
-        self.assertEqual(5, len(news_archive.categories))
+        self.assertSizeEquals(news_archive.types, 3)
+        self.assertSizeEquals(news_archive.categories, 5)
         news_list = news_archive.entries
-        self.assertGreater(len(news_list), 0)
+        self.assertIsNotEmpty(news_list)
         latest_news = news_list[0]
         self.assertIsInstance(latest_news, NewsEntry)
         self.assertIsInstance(latest_news.id, int)
@@ -58,9 +58,7 @@ class TestNews(TestCommons):
 
         self.assertEqual(datetime.date(2023, 4, 13), news_archive.from_date)
         self.assertEqual(datetime.date(2023, 4, 15), news_archive.to_date)
-        self.assertEqual(1, len(news_archive.types))
-        self.assertEqual(5, len(news_archive.categories))
-        self.assertEqual(0, len(news_archive.entries))
+        self.assertIsEmpty(news_archive.entries)
 
     def test_news_archive_parser_from_content_error(self):
         """Testing parsing the news archive resulting in an error message."""
@@ -71,9 +69,7 @@ class TestNews(TestCommons):
         self.assertIsInstance(news_archive, NewsArchive)
         self.assertEqual(datetime.date(2019, 3, 25), news_archive.from_date)
         self.assertEqual(datetime.date(2018, 5, 25), news_archive.to_date)
-        self.assertEqual(3, len(news_archive.types))
-        self.assertEqual(5, len(news_archive.categories))
-        self.assertEqual(0, len(news_archive.entries))
+        self.assertIsEmpty(news_archive.entries)
 
     def test_news_archive_parser_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
@@ -81,10 +77,12 @@ class TestNews(TestCommons):
         with self.assertRaises(InvalidContent):
             NewsArchiveParser.from_content(content)
 
-    def test_news_parser_from_content_empty(self):
+    def test_news_parser_from_content_not_found(self):
         """Testing parsing an empty news article"""
         content = self.load_resource(FILE_NEWS_NOT_FOUND)
+
         news = NewsParser.from_content(content)
+
         self.assertIsNone(news)
 
     def test_news_parser_from_content_unrelated(self):

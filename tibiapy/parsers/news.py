@@ -1,6 +1,7 @@
 import datetime
 import re
 import urllib.parse
+from typing import Optional
 
 import bs4
 
@@ -21,6 +22,8 @@ ICON_PATTERN = re.compile(r"newsicon_([^_]+)_(?:small|big)")
 
 
 class NewsArchiveParser:
+    """Parse Tibia.com content from the news archive section."""
+
     @classmethod
     def get_form_data(cls, start_date, end_date, categories=None, types=None):
         """Get the form data attributes to search news with specific parameters.
@@ -114,7 +117,7 @@ class NewsArchiveParser:
                 int(form_data.values["filter_end_year"]),
                 int(form_data.values["filter_end_month"]),
                 int(form_data.values["filter_end_day"]),
-            )
+            ),
         )
         for news_type in NewsType:
             if news_type.filter_name in form_data.values_multiple:
@@ -145,7 +148,7 @@ class NewsParser:
     """Represents a news entry."""
 
     @classmethod
-    def from_content(cls, content: str, news_id=0) -> News:
+    def from_content(cls, content: str, news_id=0) -> Optional[News]:
         """Get a news entry by its HTML content from Tibia.com.
 
         Notes

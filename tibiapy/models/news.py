@@ -10,7 +10,7 @@ __all__ = (
     "BaseNews",
     "News",
     "NewsArchive",
-    "NewsEntry"
+    "NewsEntry",
 )
 
 
@@ -41,7 +41,7 @@ class BaseNews(BaseModel):
 
 
 class News(BaseNews):
-    """Represents a news entry."""
+    """Represents a news article."""
 
     title: str
     """The title of the news entry."""
@@ -59,9 +59,11 @@ class News(BaseNews):
 
 
 class NewsEntry(BaseNews):
+    """Represents a news article listed in the News Archive."""
+
     title: str
     """The title of the news entry.
-    
+
     News tickers have a fragment of their content as a title.
     """
     published_on: datetime.date

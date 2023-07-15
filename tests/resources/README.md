@@ -66,11 +66,12 @@ doesn't exist.
 nonexistent world or a unselected world.
 
 ## News resources
-- [tibiacom_list.txt](news/news_archive_results.txt) - The content of the news search page with results.
-- [tibiacom_list_empty.txt](news/news_archive_empty.txt) - The content of the news search page with no results.
-- [tibiacom_list_error.txt](news/news_archive_error.txt) - The content of the news search page with an error.
-- [tibiacom_news.txt](news/news_article.txt) - The content of a news article.
-- [tibiacom_news_ticker.txt](news/news_ticker.txt) - The content of a news ticker.
+- [newsArchiveInitial.txt](news/newsArchiveInitial.txt) - The content of the news search page with results and default filters.
+- [newsArchiveWithFilters.txt](news/newsArchiveWithFilters.txt) - The content of the news search page with results using filters.
+- [newsArchiveEmpty.txt](news/newsArchiveEmpty.txt) - The content of the news search page with no results.
+- [newsArchiveError.txt](news/newsArchiveError.txt) - The content of the news search page with an error.
+- [newsArticle.txt](news/newsArticle.txt) - The content of a news article.
+- [newsTicker.txt](news/newsTicker.txt) - The content of a news ticker.
 
 ## Leaderboard resources
 - [leaderboardCurrentRotation.txt](leaderboards/leaderboardCurrentRotation.txt) - The leaderboard page for the current rotation of a world.

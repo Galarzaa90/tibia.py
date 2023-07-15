@@ -14,7 +14,7 @@ from tests.tests_highscores import FILE_HIGHSCORES_FULL
 from tests.tests_house import FILE_HOUSE_FULL, FILE_HOUSE_LIST
 from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
-from tests.tests_news import FILE_NEWS_ARCHIVE_RESULTS, FILE_NEWS_ARTICLE
+from tests.tests_news import FILE_NEWS_ARCHIVE_RESULTS_FILTERED, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_ONLINE, FILE_WORLD_OVERVIEW_ONLINE
 from tibiapy import Client, Forbidden, NetworkError, HouseType, BazaarType
@@ -154,7 +154,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     @aioresponses()
     async def test_client_fetch_recent_news(self, mock):
         """Testing fetching recent nows"""
-        content = self.load_resource(FILE_NEWS_ARCHIVE_RESULTS)
+        content = self.load_resource(FILE_NEWS_ARCHIVE_RESULTS_FILTERED)
         mock.post(get_news_archive_url(), status=200, body=content)
         recent_news = await self.client.fetch_news_archive_by_days(30)
 
