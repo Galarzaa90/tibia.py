@@ -2,9 +2,12 @@
 import datetime
 import re
 
+import bs4
+
 from tibiapy.builders.house import HousesSectionBuilder, HouseEntryBuilder, HouseBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
+from tibiapy.models import HousesSection
 from tibiapy.utils import parse_tibia_datetime, parse_tibia_money, \
     parse_tibiacom_content, parse_tibiacom_tables, try_enum, parse_form_data_new
 
@@ -35,7 +38,7 @@ list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<ti
 class HousesSectionParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> HousesSection:
         """Parse the content of a house list from Tibia.com into a list of houses.
 
         Parameters
@@ -89,7 +92,7 @@ class HousesSectionParser:
             raise InvalidContent("content does not belong to a Tibia.com house list", e) from e
 
     @classmethod
-    def _parse_filters(cls, builder, form):
+    def _parse_filters(cls, builder: HousesSectionBuilder, form: bs4.Tag):
         form_data = parse_form_data_new(form)
         builder.available_worlds(list(form_data.available_options["world"].values()))
         builder.available_towns(list(form_data.available_options["town"].values()))

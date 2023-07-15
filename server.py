@@ -240,21 +240,22 @@ async def get_highscores(
                                                         pvp_types=pvp_types)
 
 
-@app.get("/houses/{world}/{house_id:int}", tags=["Community"])
+@app.get("/houses/{world}/{houseId:int}", tags=["Community"])
 async def get_house(
-        world: str = Path(...),
-        house_id: int = Path(...)
+        response: Response,
+        world: str = Path(..., description="The world where the house is located."),
+        house_id: int = Path(..., alias="houseId", description="The ID of the house.")
 ) -> TibiaResponse[Optional[House]]:
-    return await app.state.client.fetch_house(house_id, world)
+    return handle_response(response, await app.state.client.fetch_house(house_id, world))
 
 
 @app.get("/houses/{world}/{town}", tags=["Community"])
 async def get_houses_section(
-        world: str = Path(...),
-        town: str = Path(...),
-        status: HouseStatus = Query(None),
-        order: HouseOrder = Query(None),
-        house_type: HouseType = Query(None, alias="type"),
+        world: str = Path(..., description="The world to search in."),
+        town: str = Path(..., description="The game town to search in."),
+        status: HouseStatus = Query(None, description="The house status to filter houses by. Empty will show any."),
+        order: HouseOrder = Query(None, description="The field or value to order results by."),
+        house_type: HouseType = Query(None, alias="type", description="The type of house to show."),
 ) -> TibiaResponse[Optional[HousesSection]]:
     return await app.state.client.fetch_houses_section(world, town, status=status, order=order, house_type=house_type)
 

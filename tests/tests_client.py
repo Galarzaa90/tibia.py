@@ -16,7 +16,7 @@ from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_ARCHIVE_RESULTS, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
-from tests.tests_world import FILE_WORLD_FULL, FILE_WORLD_LIST
+from tests.tests_world import FILE_WORLD_ONLINE, FILE_WORLD_OVERVIEW_ONLINE
 from tibiapy import Client, Forbidden, NetworkError, HouseType, BazaarType
 from tibiapy.models import BoardEntry, CharacterBazaar, Character, CMPostArchive, ForumBoard, Guild, Highscores, \
     HousesSection, Leaderboard, HighscoresProfession, HighscoresCategory, House, HouseEntry, GuildEntry, KillStatistics, \
@@ -182,7 +182,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     async def test_client_fetch_world(self, mock):
         """Testing fetching a world"""
         name = "Antica"
-        content = self.load_resource(FILE_WORLD_FULL)
+        content = self.load_resource(FILE_WORLD_ONLINE)
         mock.get(get_world_url(name), status=200, body=content)
         world = await self.client.fetch_world(name)
 
@@ -191,7 +191,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     @aioresponses()
     async def test_client_fetch_world_list(self, mock):
         """Testing fetching the world list"""
-        content = self.load_resource(FILE_WORLD_LIST)
+        content = self.load_resource(FILE_WORLD_OVERVIEW_ONLINE)
         mock.get(get_world_overview_url(), status=200, body=content)
         worlds = await self.client.fetch_world_overview()
 

@@ -1,5 +1,3 @@
-import unittest
-
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
 from tibiapy.models.creature import CreatureEntry
@@ -11,7 +9,7 @@ FILE_CREATURE_ELEMENTAL_RESISTANCES = "library/creature_elemental_resistances.tx
 FILE_BOOSTABLE_BOSSES = "library/boss_list.txt"
 
 
-class TestCreature(TestCommons, unittest.TestCase):
+class TestCreature(TestCommons):
     def test_creatures_section_from_boosted_creature_header_content(self):
         """Testing parsing the boosted creture from any tibia.com page."""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)

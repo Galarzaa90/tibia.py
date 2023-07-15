@@ -1,5 +1,4 @@
 import datetime
-import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
@@ -17,7 +16,7 @@ FILE_NEWS_ARTICLE = "news/news_article.txt"
 FILE_NEWS_TICKER = "news/news_ticker.txt"
 
 
-class TestNews(TestCommons, unittest.TestCase):
+class TestNews(TestCommons):
     def test_news_archive_parser_from_content_initial(self):
         """Test parsing the news archive initial page."""
         content = self.load_resource(FILE_NEWS_ARCHIVE_INITIAL)

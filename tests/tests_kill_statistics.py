@@ -1,5 +1,3 @@
-import unittest
-
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
 from tibiapy.parsers.kill_statistics import KillStatisticsParser
@@ -8,7 +6,7 @@ FILE_KILL_STATISTICS_FULL = "kill_statistics/tibiacom_full.txt"
 FILE_KILL_STATISTICS_EMPTY = "kill_statistics/tibiacom_empty.txt"
 
 
-class TestHighscores(TestCommons, unittest.TestCase):
+class TestHighscores(TestCommons):
     # region Tibia.com Tests
     def test_kill_statistics_from_content(self):
         """Testing parsing kill statistics"""

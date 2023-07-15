@@ -1,5 +1,4 @@
 import datetime
-import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import AuctionOrderDirection, AuctionOrderBy, AuctionSearchType, AuctionStatus, AuctionBattlEyeFilter, \
@@ -19,7 +18,7 @@ FILE_AUCTION_UPGRADED_ITEMS = "bazaar/tibiacom_auction_upgraded_items.txt"
 FILE_AUCTION_NOT_FOUND = "bazaar/tibiacom_auction_not_found.txt"
 
 
-class TestBazaar(TestCommons, unittest.TestCase):
+class TestBazaar(TestCommons):
     def test_character_bazaar_from_content_current_no_filters_selected(self):
         bazaar = CharacterBazaarParser.from_content(self.load_resource(FILE_BAZAAR_CURRENT))
 

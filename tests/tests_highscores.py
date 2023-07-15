@@ -1,6 +1,3 @@
-import datetime
-import unittest
-
 from tests.tests_tibiapy import TestCommons
 from tibiapy import HighscoresCategory, InvalidContent, \
     Vocation, HighscoresProfession, HighscoresBattlEyeType
@@ -15,7 +12,7 @@ FILE_HIGHSCORES_EMPTY = "highscores/highscoresEmpty.txt"
 FILE_HIGHSCORES_NO_RESULTS = "highscores/highscoresNoResults.txt"
 
 
-class TestHighscores(unittest.TestCase, TestCommons):
+class TestHighscores(TestCommons):
     # region Tibia.com Tests
     def test_highscores_parser_from_content(self):
         """Testing parsing Highscores"""

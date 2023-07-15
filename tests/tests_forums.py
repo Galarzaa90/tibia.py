@@ -1,5 +1,4 @@
 import datetime
-import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent, ThreadStatus
@@ -27,7 +26,7 @@ FILE_CM_POST_ARCHIVE_NO_RESULTS = "forums/tibiacom_cmpostarchive_no_results.txt"
 FILE_CM_POST_ARCHIVE_PAGES = "forums/tibiacom_cmpostarchive_pages.txt"
 
 
-class TestForum(TestCommons, unittest.TestCase):
+class TestForum(TestCommons):
     def test_forum_section_parser_from_content_world_boards(self):
         content = self.load_resource(FILE_WORLD_BOARDS)
 

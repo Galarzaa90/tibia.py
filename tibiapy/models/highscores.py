@@ -1,6 +1,8 @@
 import datetime
 from typing import List, Optional, Set
 
+from pydantic import SerializeAsAny
+
 from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, PvpTypeFilter, Vocation
 from tibiapy.models.base import BaseCharacter
 from tibiapy.models.pagination import PaginatedWithUrl
@@ -33,7 +35,7 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
     """The character's loyalty title."""
 
 
-class Highscores(PaginatedWithUrl[HighscoresEntry]):
+class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
     """Represents the highscores of a world."""
 
     world:  Optional[str] = None

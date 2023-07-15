@@ -1,6 +1,5 @@
 import datetime
 import json
-import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
@@ -21,7 +20,7 @@ FILE_HOUSE_LIST_NOT_FOUND = "house/tibiacom_list_not_found.txt"
 FILE_HOUSE_LIST_EMPTY = "house/tibiacom_list_empty.txt"
 
 
-class TestsHouse(TestCommons, unittest.TestCase):
+class TestsHouse(TestCommons):
     def test_house_from_content(self):
         """Testing parsing a house"""
         content = self.load_resource(FILE_HOUSE_FULL)
@@ -95,7 +94,7 @@ class TestsHouse(TestCommons, unittest.TestCase):
         with self.assertRaises(InvalidContent):
             HouseParser.from_content(content)
 
-    def test_house_section_from_content(self):
+    def test_houses_section_parser_from_content(self):
         """Testing parsing the house list of a world and city"""
         content = self.load_resource(FILE_HOUSE_LIST)
         house_results = HousesSectionParser.from_content(content)
@@ -118,7 +117,7 @@ class TestsHouse(TestCommons, unittest.TestCase):
 
         self.assertEqual(houses[25].status, HouseStatus.RENTED)
 
-    def test_house_section_from_content_empty(self):
+    def test_houses_section_parser_from_content_empty(self):
         """Testing parsing an empty house list"""
         content = self.load_resource(FILE_HOUSE_LIST_EMPTY)
         house_results = HousesSectionParser.from_content(content)
@@ -129,16 +128,17 @@ class TestsHouse(TestCommons, unittest.TestCase):
         self.assertEqual(HouseStatus.AUCTIONED, house_results.status)
         self.assertEqual(HouseType.GUILDHALL, house_results.house_type)
         self.assertEqual(HouseOrder.RENT, house_results.order)
-        self.assertEqual(len(house_results.entries), 0)
+        self.assertIsEmpty(house_results.entries)
 
-    def test_house_section_from_content_not_found(self):
+
+    def test_houses_section_parser_from_content_not_found(self):
         """Testing parsing an empty house list"""
         content = self.load_resource(FILE_HOUSE_LIST_NOT_FOUND)
         results = HousesSectionParser.from_content(content)
         self.assertIsInstance(results, HousesSection)
-        self.assertEqual(0, len(results.entries))
+        self.assertIsEmpty(results.entries)
 
-    def test_house_section_from_content_unrelated(self):
+    def test_houses_section_parser_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):

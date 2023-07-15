@@ -1,11 +1,9 @@
-import unittest
-
 from tests.tests_tibiapy import TestCommons
 from tibiapy.enums import *
 from tibiapy.models import AuctionFilters
 
 
-class TestEnums(TestCommons, unittest.TestCase):
+class TestEnums(TestCommons):
 
     def test_numeric_enum_serialization(self):
         filters = AuctionFilters(battleye=AuctionBattlEyeFilter.INITIALLY_PROTECTED)

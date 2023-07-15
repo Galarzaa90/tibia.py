@@ -1,5 +1,4 @@
 import datetime
-import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy.models.event import EventSchedule
@@ -9,7 +8,7 @@ from tibiapy.urls import get_event_schedule_url
 FILE_EVENT_CALENDAR = "events/event_schedule.txt"
 
 
-class TestEvents(TestCommons, unittest.TestCase):
+class TestEvents(TestCommons):
     def test_event_schedule_parser_from_content(self):
         """Testing parsing the event schedule"""
         content = self.load_resource(FILE_EVENT_CALENDAR)

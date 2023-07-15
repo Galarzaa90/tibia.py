@@ -73,7 +73,7 @@ class HighscoresParser:
 
     # region Private methods
     @classmethod
-    def _parse_entries_table(cls, builder, table):
+    def _parse_entries_table(cls, builder: HighscoresBuilder, table):
         """Parse the table containing the highscore entries.
 
         Parameters

@@ -1,5 +1,4 @@
 import datetime
-import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import enums, utils
@@ -15,7 +14,7 @@ TIBIA_FULL_DATE = "July 23, 2015"
 TIBIA_DATE_INVALID = "8 Nov 2018"
 
 
-class TestUtils(TestCommons, unittest.TestCase):
+class TestUtils(TestCommons):
 
     def test_parse_tibia_datetime(self):
         time = utils.parse_tibia_datetime(TIBIA_DATETIME_CEST)

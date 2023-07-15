@@ -1,5 +1,3 @@
-import unittest
-
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
 from tibiapy.parsers.leaderboard import LeaderboardParser
@@ -11,7 +9,7 @@ FILE_LEADERBOARD_NOT_FOUND = "leaderboards/leaderboardNotFound.txt"
 FILE_LEADERBOARD_EMPTY = "leaderboards/leaderboardEmpty.txt"
 
 
-class TestLeaderboards(TestCommons, unittest.TestCase):
+class TestLeaderboards(TestCommons):
     # region Leaderboard Tests
     def test_leaderboard_parser_from_content(self):
         """Testing parsing a leaderboard's page"""

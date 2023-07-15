@@ -1,5 +1,4 @@
 import datetime
-import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
@@ -23,7 +22,7 @@ FILE_GUILD_WAR_EMPTY = "guild/wars/guildWarEmpty.txt"
 FILE_GUILD_WAR_UNACTIVE_HISTORY = "guild/wars/guildWarUnactiveAndHistory.txt"
 
 
-class TestsGuild(TestCommons, unittest.TestCase):
+class TestsGuild(TestCommons):
     def setUp(self):
         self.guild = GuildBuilder()
 

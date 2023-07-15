@@ -1,9 +1,8 @@
 import datetime
-import unittest
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.models import Death, DeathParticipant, AccountBadge, CharacterHouse, Character
+from tibiapy.models import Death, DeathParticipant, AccountBadge, Character
 from tibiapy.parsers.character import CharacterParser
 from tibiapy.urls import get_character_url
 from tibiapy.utils import parse_tibia_datetime
@@ -22,7 +21,7 @@ FILE_CHARACTER_MULTIPLE_HOUSES = "character/characterMultipleHouses.txt"
 FILE_CHARACTER_TRUNCATED_DEATHS = "character/characterTruncatedDeaths.txt"
 
 
-class TestCharacter(TestCommons, unittest.TestCase):
+class TestCharacter(TestCommons):
     def _compare_character(self, mock_character, character):
         self.assertEqual(mock_character.name, character.name)
         self.assertEqual(mock_character.world, character.world)
