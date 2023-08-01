@@ -7,6 +7,14 @@ Changelog
     Try to always use the latest version.
 
 
+
+.. v5.6.1
+
+5.6.1 (2023-08-01)
+==================
+- Fixed parsing for world's creation date.
+
+
 .. v5.6.0
 
 5.6.0 (2023-02-17)

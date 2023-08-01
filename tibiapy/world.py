@@ -1,4 +1,5 @@
 """Models related to the worlds section in Tibia.com."""
+import datetime
 import re
 from collections import OrderedDict
 from typing import List, TYPE_CHECKING
@@ -332,13 +333,9 @@ class World(abc.BaseWorld, abc.Serializable):
         self._parse_battleye_status(world_info.pop("battleye_status"))
         self.premium_only = "premium_type" in world_info
 
-        month, year = world_info.pop("creation_date").split("/")
-        month = int(month)
-        year = int(year)
-        if year > 90:
-            year += 1900
-        else:
-            year += 2000
+        creation_date = datetime.datetime.strptime(world_info.pop("creation_date"), "%B %Y")
+        month = creation_date.month
+        year = creation_date.year
         self.creation_date = f"{year:d}-{month:02d}"
 
         for k, v in world_info.items():
