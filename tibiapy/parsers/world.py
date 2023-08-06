@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 import re
 from typing import TYPE_CHECKING, Optional, List
 
@@ -114,10 +115,8 @@ class WorldParser:
 
     @classmethod
     def _parse_creation_date(cls, builder: WorldBuilder, value: str):
-        month, year = value.split("/")
-        month = int(month)
-        year = int(year)
-        year += 1900 if year > 90 else 2000
+        parsed_date = datetime.datetime.strptime(value, "%B %Y")
+        year, month = parsed_date.year, parsed_date.month
         builder.creation_date(f"{year:d}-{month:02d}")
 
     @classmethod

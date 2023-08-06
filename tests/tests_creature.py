@@ -97,9 +97,8 @@ class TestCreature(TestCommons):
         self.assertIsNotNone(bosses.boosted_boss.image_url)
         self.assertEqual(88, len(bosses.bosses))
         for boss in bosses.bosses:
-            with self.subTest(name=boss.name):
-                self.assertIsInstance(boss.name, str)
-                self.assertIsInstance(boss.identifier, str)
+            self.assertIsInstance(boss.name, str)
+            self.assertIsInstance(boss.identifier, str)
 
     def test_boostable_bosses_from_content_invalid_content(self):
         """Testing parsing the creatures section from an invalid section"""
