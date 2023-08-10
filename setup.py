@@ -41,7 +41,7 @@ readme = pathlib.Path('README.md').read_text()
 extras_require = {
     'docs': [
         'sphinx',
-        'autodoc-pydantic',
+        'autodoc-pydantic>=2.0.0',
     ],
     'test': [
         'asynctest',
@@ -49,7 +49,7 @@ extras_require = {
         'coverage',
     ],
     'server': [
-        'fastapi~=0.100',
+        'fastapi~=0.101',
         'uvicorn',
     ]
 }

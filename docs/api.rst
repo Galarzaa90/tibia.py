@@ -14,8 +14,8 @@ Client
 .. autoclass:: Client
     :members:
 
-.. autoclass:: TibiaResponse
-    :members:
+.. autopydantic_model:: tibiapy.models.TibiaResponse
+   :inherited-members: BaseModel
 
 Enumerations
 ============

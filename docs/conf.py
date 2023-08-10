@@ -105,7 +105,8 @@ html_theme_options = {
     'github_repo': 'tibia.py',
     'github_type': 'star',
     'fixed_sidebar': True,
-    'travis_button': True,
+    'codecov_button': True,
+    'travis_button': False,
     'donate_url': 'https://beerpay.io/Galarzaa90/tibia.py'
 }
 
@@ -196,6 +197,6 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'https://docs.python.org/': None,
+    'python': ('https://docs.python.org/3', None),
     'aiohttp': ('https://aiohttp.readthedocs.io/en/stable/', None),
 }
