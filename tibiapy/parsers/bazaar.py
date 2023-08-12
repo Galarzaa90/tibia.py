@@ -30,7 +30,7 @@ log = logging.getLogger("tibiapy")
 
 class AuctionFiltersParser:
     @classmethod
-    def _parse_filter_table(cls, table):
+    def parse_from_table(cls, table: bs4.Tag) -> AuctionFilters:
         """Parse the filters table to extract its values.
 
         Parameters
@@ -68,7 +68,7 @@ class AuctionFiltersParser:
 
 class CharacterBazaarParser:
     @classmethod
-    def from_content(cls, content) -> CharacterBazaar:
+    def from_content(cls, content: str) -> CharacterBazaar:
         """Get the bazaar's information and list of auctions from Tibia.com.
 
         Parameters
@@ -95,7 +95,7 @@ class CharacterBazaarParser:
             builder.type(BazaarType.CURRENT if filter_table else BazaarType.HISTORY)
 
             if filter_table:
-                builder.filters(AuctionFiltersParser._parse_filter_table(filter_table))
+                builder.filters(AuctionFiltersParser.parse_from_table(filter_table))
 
             if page_navigation_row := parsed_content.select_one("td.PageNavigation"):
                 page, total_pages, results_count = parse_pagination(page_navigation_row)
@@ -139,15 +139,15 @@ class AuctionParser:
         Raises
         ------
         InvalidContent
-            If the content does not belong to a auction detail's page.
+            If the content does not belong to an auction detail's page.
         """
-        parsed_content = parse_tibiacom_content(content, builder='html5lib' if not skip_details else 'lxml')
+        parsed_content = parse_tibiacom_content(content, builder='lxml' if skip_details else 'html5lib')
         auction_row = parsed_content.select_one("div.Auction")
         if not auction_row:
             if "internal error" in content:
                 return None
             raise InvalidContent("content does not belong to a auction details page in Tibia.com")
-        auction = cls._parse_auction(auction_row)
+        auction = cls._parse_auction(auction_row, auction_id)
         builder = AuctionDetailsBuilder()
         if skip_details:
             return auction
@@ -209,8 +209,7 @@ class AuctionParser:
         """
         header_container = auction_row.select_one("div.AuctionHeader")
         char_name_container = header_container.select_one("div.AuctionCharacterName")
-        char_link = char_name_container.select_one("a")
-        if char_link:
+        if char_link := char_name_container.select_one("a"):
             url = urllib.parse.urlparse(char_link["href"])
             query = urllib.parse.parse_qs(url.query)
             auction_id = int(query["auctionid"][0])
@@ -220,20 +219,17 @@ class AuctionParser:
 
         builder = AuctionBuilder().name(name).auction_id(auction_id)
         char_name_container.replaceWith('')
-        m = char_info_regex.search(header_container.text)
-        if m:
+        if m := char_info_regex.search(header_container.text):
             builder.level(int(m.group(1)))
             builder.vocation(try_enum(Vocation, m.group(2).strip()))
             builder.sex(try_enum(Sex, m.group(3).strip().lower()))
             builder.world(m.group(4))
         outfit_img = auction_row.select_one("img.AuctionOutfitImage")
-        m = id_addon_regex.search(outfit_img["src"])
-        if m:
+        if m := id_addon_regex.search(outfit_img["src"]):
             builder.outfit(OutfitImage(image_url=outfit_img["src"], outfit_id=int(m.group(1)), addons=int(m.group(2))))
         item_boxes = auction_row.select("div.CVIcon")
         for item_box in item_boxes:
-            item = cls._parse_displayed_item(item_box)
-            if item:
+            if item := cls._parse_displayed_item(item_box):
                 builder.add_displayed_item(item)
         dates_containers = auction_row.select_one("div.ShortAuctionData")
         start_date_tag, end_date_tag, *_ = dates_containers.select("div.ShortAuctionDataValue")
@@ -257,8 +253,7 @@ class AuctionParser:
             img = entry.select_one("img")
             img_url = img["src"]
             category_id = 0
-            m = id_regex.search(img_url)
-            if m:
+            if m := id_regex.search(img_url):
                 category_id = parse_integer(m.group(1))
             builder.add_sales_argument(SalesArgument(content=entry.text, category_image=img_url,
                                                      category_id=category_id))

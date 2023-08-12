@@ -12,7 +12,8 @@ from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, Ne
     PvpTypeFilter
 from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores, TibiaResponse, EventSchedule, \
     CreatureEntry, BossEntry, CreaturesSection, Creature, BoostableBosses, Character, Guild, GuildWars, GuildsSection, \
-    House, HousesSection, KillStatistics, Leaderboard, ForumSection, ForumBoard, ForumThread, CharacterBazaar, Auction
+    House, HousesSection, KillStatistics, Leaderboard, ForumSection, ForumBoard, ForumThread, CharacterBazaar, Auction, \
+    AuctionFilters
 from tibiapy.models.news import News, NewsArchive
 
 logging_formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
@@ -336,11 +337,26 @@ async def get_forum_thread(
 
 # region Char Bazaar
 
-@app.get("/auctions", tags=["Char Bazaar"])
+@app.get("/auctions/", tags=["Char Bazaar"])
 async def get_current_auctions(
+        page: int = Query(1),
+        world: str = Query(None, description="Show only auctions from this world."),
+        pvp_type: PvpTypeFilter = Query(None, alias="pvpType",
+                                        description="Show only auctions from characters in worlds of this PvP Type.")
+) -> TibiaResponse[CharacterBazaar]:
+    return await app.state.client.fetch_current_auctions(
+        page,
+        AuctionFilters(
+            world=world,
+            pvp_type=pvp_type
+        ))
+
+
+@app.get("/auctions/history/", tags=["Char Bazaar"])
+async def get_auctions_history(
         page: int = Query(1)
 ) -> TibiaResponse[CharacterBazaar]:
-    return await app.state.client.fetch_current_auctions(page)
+    return await app.state.client.fetch_auction_history(page)
 
 
 @app.get("/auctions/{auction_id}", tags=["Char Bazaar"])

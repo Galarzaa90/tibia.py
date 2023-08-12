@@ -9,17 +9,17 @@ from tibiapy import AuctionOrderDirection, AuctionOrderBy, AuctionSearchType, Au
     Vocation, AuctionVocationFilter
 from tibiapy.parsers.bazaar import CharacterBazaarParser, AuctionParser
 
-FILE_BAZAAR_CURRENT_EMPTY = "bazaar/tibiacom_history_empty.txt"
-FILE_BAZAAR_CURRENT = "bazaar/tibiacom_current.txt"
-FILE_BAZAAR_CURRENT_ALL_FILTERS = "bazaar/tibiacom_current_all_filters.txt"
-FILE_BAZAAR_HISTORY = "bazaar/tibiacom_history.txt"
-FILE_AUCTION_FINISHED = "bazaar/tibiacom_auction_finished.txt"
-FILE_AUCTION_UPGRADED_ITEMS = "bazaar/tibiacom_auction_upgraded_items.txt"
-FILE_AUCTION_NOT_FOUND = "bazaar/tibiacom_auction_not_found.txt"
+FILE_BAZAAR_CURRENT_EMPTY = "bazaar/bazaarHistoryEmpty.txt"
+FILE_BAZAAR_CURRENT = "bazaar/bazaarCurrentAuctions.txt"
+FILE_BAZAAR_CURRENT_ALL_FILTERS = "bazaar/bazaarCurrentAuctionsWithFilters.txt"
+FILE_BAZAAR_HISTORY = "bazaar/bazaarHistory.txt"
+FILE_AUCTION_FINISHED = "bazaar/auctionFinished.txt"
+FILE_AUCTION_UPGRADED_ITEMS = "bazaar/auctionWithUpgradedItems.txt"
+FILE_AUCTION_NOT_FOUND = "bazaar/auctionNotFound.txt"
 
 
 class TestBazaar(TestCommons):
-    def test_character_bazaar_from_content_current_no_filters_selected(self):
+    def test_character_bazaar_parser_from_content_current_no_filters_selected(self):
         bazaar = CharacterBazaarParser.from_content(self.load_resource(FILE_BAZAAR_CURRENT))
 
         self.assertIsNotNone(bazaar)
@@ -48,7 +48,7 @@ class TestBazaar(TestCommons):
         self.assertIsNone(bazaar.filters.max_skill_level)
         self.assertEqual(AuctionOrderDirection.LOWEST_EARLIEST, bazaar.filters.order)
 
-    def test_character_bazaar_from_content_current_all_filters_selected(self):
+    def test_character_bazaar_parser_from_content_current_all_filters_selected(self):
         bazaar = CharacterBazaarParser.from_content(self.load_resource(FILE_BAZAAR_CURRENT_ALL_FILTERS))
 
         self.assertIsNotNone(bazaar)
@@ -78,12 +78,12 @@ class TestBazaar(TestCommons):
         self.assertEqual(AuctionOrderDirection.HIGHEST_LATEST, bazaar.filters.order)
         self.assertEqual(AuctionSearchType.ITEM_WILDCARD, bazaar.filters.search_type)
 
-    def test_character_bazaar_from_content_empty(self):
+    def test_character_bazaar_parser_from_content_empty(self):
         bazaar = CharacterBazaarParser.from_content(self.load_resource(FILE_BAZAAR_CURRENT_EMPTY))
         self.assertIsNotNone(bazaar)
         self.assertFalse(bazaar.entries)
 
-    def test_character_bazaar_from_content_history(self):
+    def test_character_bazaar_parser_from_content_history(self):
         bazaar = CharacterBazaarParser.from_content(self.load_resource(FILE_BAZAAR_HISTORY))
 
         self.assertIsNotNone(bazaar)
@@ -114,7 +114,7 @@ class TestBazaar(TestCommons):
 
         self.assertIsNone(bazaar.filters)
 
-    def test_character_bazaar_from_content_unrelated(self):
+    def test_character_bazaar_parser_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
