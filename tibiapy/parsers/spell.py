@@ -22,9 +22,9 @@ __all__ = (
 )
 
 spell_name = re.compile(r"([^(]+)\(([^)]+)\)")
-group_pattern = re.compile(r"(?P<group>\w+)(?: \(Secondary Group: (?P<secondary>[^)]+))?")
+group_pattern = re.compile(r"(?P<group>\w+)(?:\s?\(Secondary Group: (?P<secondary>[^)]+))?")
 cooldown_pattern = re.compile(
-    r"(?P<cooldown>\d+)s \(Group: (?P<group_cooldown>\d+)s(?: ,Secondary Group: (?P<secondary_group_cooldown>\d+))?")
+    r"(?P<cooldown>\d+)s\s?\(Group: (?P<group_cooldown>\d+)s(?:,\s?Secondary Group: (?P<secondary_group_cooldown>\d+))?")
 
 
 class SpellsSectionParser:

@@ -97,9 +97,9 @@ class TestNews(TestCommons):
         news = NewsParser.from_content(content)
 
         self.assertIsInstance(news, News)
-        self.assertEqual(news.category, NewsCategory.TECHNICAL_ISSUES)
+        self.assertEqual(NewsCategory.DEVELOPMENT, news.category)
         self.assertIsInstance(news.published_on, datetime.date)
-        self.assertEqual(news.title, "News Ticker")
+        self.assertEqual("News Ticker", news.title)
         self.assertIsNone(news.thread_id)
 
     def test_news_parser_from_content_article(self):

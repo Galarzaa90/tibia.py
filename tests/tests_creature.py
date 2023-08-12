@@ -3,10 +3,10 @@ from tibiapy import InvalidContent
 from tibiapy.models.creature import CreatureEntry
 from tibiapy.parsers.creature import CreaturesSectionParser, CreatureParser, BoostableBossesParser
 
-FILE_CREATURE_SECTION = "library/creature_list.txt"
-FILE_CREATURE_CONVINCEABLE = "library/creature_convinceable.txt"
-FILE_CREATURE_ELEMENTAL_RESISTANCES = "library/creature_elemental_resistances.txt"
-FILE_BOOSTABLE_BOSSES = "library/boss_list.txt"
+FILE_CREATURE_SECTION = "library/creatureList.txt"
+FILE_CREATURE_CONVINCEABLE = "library/creatureConvinceable.txt"
+FILE_CREATURE_ELEMENTAL_RESISTANCES = "library/creatureElementalResistances.txt"
+FILE_BOOSTABLE_BOSSES = "library/bossList.txt"
 
 
 class TestCreature(TestCommons):
@@ -30,15 +30,14 @@ class TestCreature(TestCommons):
 
         self.assertIsNotNone(creatures)
         self.assertIsNotNone(creatures.boosted_creature)
-        self.assertEqual("Blood Crab", creatures.boosted_creature.name)
-        self.assertEqual("bloodcrab", creatures.boosted_creature.identifier)
+        self.assertEqual(creatures.boosted_creature.name, "Mooh'tah Warrior")
+        self.assertEqual(creatures.boosted_creature.identifier, "moohtahwarrior")
         self.assertIsNotNone(creatures.boosted_creature.image_url)
         self.assertIsNotNone(creatures.boosted_creature.url)
-        self.assertEqual(536, len(creatures.creatures))
+        self.assertSizeEquals(creatures.creatures, 609)
         for creature in creatures.creatures:
-            with self.subTest(name=creature.name):
-                self.assertIsInstance(creature.name, str)
-                self.assertIsInstance(creature.identifier, str)
+            self.assertIsInstance(creature.name, str)
+            self.assertIsInstance(creature.identifier, str)
 
     def test_creatures_section_from_content_invalid_content(self):
         """Testing parsing the creatures section from an invalid section"""
@@ -51,14 +50,14 @@ class TestCreature(TestCommons):
         creature = CreatureParser.from_content(content)
 
         self.assertIsNotNone(creature)
-        self.assertEqual("Fish", creature.name)
-        self.assertEqual("fish", creature.identifier)
-        self.assertEqual(25, creature.hitpoints)
-        self.assertEqual(0, creature.experience)
-        self.assertEqual(0, creature.mana_cost)
+        self.assertEqual(creature.name, "Fish")
+        self.assertEqual(creature.identifier, "fish")
+        self.assertEqual(creature.hitpoints, 25)
+        self.assertEqual(creature.experience, 0)
+        self.assertEqual(creature.mana_cost, 305)
         self.assertFalse(creature.summonable)
         self.assertTrue(creature.convinceable)
-        self.assertEqual("nothing", creature.loot)
+        self.assertEqual(creature.loot, "nothing")
 
     def test_creature_from_content_elemental_resistances(self):
         content = self.load_resource(FILE_CREATURE_ELEMENTAL_RESISTANCES)
