@@ -3,13 +3,15 @@ import logging
 from contextlib import asynccontextmanager
 from typing import Optional, Set, List
 
-from fastapi import FastAPI, Path, Query, Response
+from fastapi import FastAPI, Path, Query, Response, Depends
 from starlette import status
+from typing_extensions import Annotated
 
 import tibiapy
 from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, NewsType, NewsCategory, \
     HouseStatus, HouseOrder, HouseType, HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, \
-    PvpTypeFilter
+    PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, AuctionOrderBy, \
+    AuctionOrderDirection, AuctionSearchType
 from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores, TibiaResponse, EventSchedule, \
     CreatureEntry, BossEntry, CreaturesSection, Creature, BoostableBosses, Character, Guild, GuildWars, GuildsSection, \
     House, HousesSection, KillStatistics, Leaderboard, ForumSection, ForumBoard, ForumThread, CharacterBazaar, Auction, \
@@ -337,26 +339,62 @@ async def get_forum_thread(
 
 # region Char Bazaar
 
+def auction_filter_parameters(
+        world: str = Query(None, description="Show only auctions from this world."),
+        pvp_type: PvpTypeFilter = Query(None, alias="pvpType",
+                                        description="Show only auctions from characters in worlds of this PvP Type."),
+        battleye: AuctionBattlEyeFilter = Query(
+            None, alias="battleyeType",
+            description="Show only auctions from characters in worlds with this type of BattlEye protection."
+        ),
+        vocation: AuctionVocationFilter = Query(None,
+                                                description="Show only auctions of characters of this vocation."),
+        min_level: int = Query(None, alias="minLevel", min_length=0, description="The minimum level to display."),
+        max_level: int = Query(None, alias="maxLevel", min_length=0, description="The maximum level to display."),
+        skill: AuctionSkillFilter = Query(None, description="The skill to filter by its level range."),
+        min_skill_level: int = Query(None, alias="minSkllLevel", min_length=0,
+                                     description="The minimum skill level to display."),
+        max_skill_level: int = Query(None, alias="maxSkllLevel", min_length=0,
+                                     description="The maximum skill level to display."),
+        order_by: AuctionOrderBy = Query(None, alias="orderBy", description="The column or value to order by."),
+        order: AuctionOrderDirection = Query(None, alias="orderDirection", description="The ordering direction."),
+        search_string: str = Query(None, alias="searchString", description="The search term to filter out auctions."),
+        search_type: AuctionSearchType = Query(None, alias="searchType", description="The type of search to use.")
+):
+    return AuctionFilters(
+        world=world,
+        pvp_type=pvp_type,
+        battleye=battleye,
+        vocation=vocation,
+        min_level=min_level,
+        max_level=max_level,
+        skill=skill,
+        min_skill_level=min_skill_level,
+        max_skill_level=max_skill_level,
+        order_by=order_by,
+        order=order,
+        search_string=search_string,
+        search_type=search_type
+    )
+
+
 @app.get("/auctions/", tags=["Char Bazaar"])
 async def get_current_auctions(
         page: int = Query(1),
-        world: str = Query(None, description="Show only auctions from this world."),
-        pvp_type: PvpTypeFilter = Query(None, alias="pvpType",
-                                        description="Show only auctions from characters in worlds of this PvP Type.")
+        filters: Annotated[AuctionFilters, Depends(auction_filter_parameters)] = None
 ) -> TibiaResponse[CharacterBazaar]:
     return await app.state.client.fetch_current_auctions(
         page,
-        AuctionFilters(
-            world=world,
-            pvp_type=pvp_type
-        ))
+        filters
+    )
 
 
 @app.get("/auctions/history/", tags=["Char Bazaar"])
 async def get_auctions_history(
-        page: int = Query(1)
+        page: int = Query(1),
+        filters: Annotated[AuctionFilters, Depends(auction_filter_parameters)] = None
 ) -> TibiaResponse[CharacterBazaar]:
-    return await app.state.client.fetch_auction_history(page)
+    return await app.state.client.fetch_auction_history(page, filters)
 
 
 @app.get("/auctions/{auction_id}", tags=["Char Bazaar"])
