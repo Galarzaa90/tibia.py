@@ -63,7 +63,7 @@ CATEGORIES_DESCRIPTION = "The categories of news to display. Leave empty to show
 @app.get("/news/{news_id:int}", tags=["News"])
 async def get_news_article(
         response: Response,
-        news_id: int = Path(...)
+        news_id: int = Path(..., description="The ID of the news entry to see.")
 ) -> TibiaResponse[Optional[News]]:
     return handle_response(response, await app.state.client.fetch_news(news_id=news_id))
 
@@ -96,7 +96,7 @@ async def get_news_archive(
 @app.get("/news", tags=["News"])
 async def get_news_archive_by_days(
         response: Response,
-        days: int = Query(30),
+        days: int = Query(30, description="The number of days to look back for news."),
         types: Set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
         categories: Set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
 ) -> TibiaResponse[NewsArchive]:
@@ -112,7 +112,7 @@ async def get_current_events_schedule() -> TibiaResponse[EventSchedule]:
 @app.get("/events/{year}/{month}", tags=["News"])
 async def get_events_schedule(
         year: int = Path(...),
-        month: int = Path(...),
+        month: int = Path(..., ge=1, le=12),
 ) -> TibiaResponse[EventSchedule]:
     """Get the event calendar for a specific year and month."""
     return await app.state.client.fetch_event_schedule(month, year)
@@ -349,12 +349,12 @@ def auction_filter_parameters(
         ),
         vocation: AuctionVocationFilter = Query(None,
                                                 description="Show only auctions of characters of this vocation."),
-        min_level: int = Query(None, alias="minLevel", min_length=0, description="The minimum level to display."),
-        max_level: int = Query(None, alias="maxLevel", min_length=0, description="The maximum level to display."),
+        min_level: int = Query(None, alias="minLevel", ge=0, description="The minimum level to display."),
+        max_level: int = Query(None, alias="maxLevel", ge=0, description="The maximum level to display."),
         skill: AuctionSkillFilter = Query(None, description="The skill to filter by its level range."),
-        min_skill_level: int = Query(None, alias="minSkllLevel", min_length=0,
+        min_skill_level: int = Query(None, alias="minSkllLevel", ge=0,
                                      description="The minimum skill level to display."),
-        max_skill_level: int = Query(None, alias="maxSkllLevel", min_length=0,
+        max_skill_level: int = Query(None, alias="maxSkllLevel", ge=0,
                                      description="The maximum skill level to display."),
         order_by: AuctionOrderBy = Query(None, alias="orderBy", description="The column or value to order by."),
         order: AuctionOrderDirection = Query(None, alias="orderDirection", description="The ordering direction."),
@@ -400,11 +400,12 @@ async def get_auctions_history(
 @app.get("/auctions/{auction_id}", tags=["Char Bazaar"])
 async def get_auction(
         auction_id: int = Path(...),
-        skip_details: bool = Query(False),
-        fetch_items: bool = Query(False),
-        fetch_mounts: bool = Query(False),
-        fetch_outfits: bool = Query(False),
-        fetch_familiars: bool = Query(False),
+        skip_details: bool = Query(False,
+                                   description="Whether to skip the auction details and only fetch the basic information."),
+        fetch_items: bool = Query(False, description="Whether to fetch additional item pages (if available)."),
+        fetch_mounts: bool = Query(False, description="Whether to fetch additional mounts pages (if available)."),
+        fetch_outfits: bool = Query(False, description="Whether to fetch additional outfits pages (if available)."),
+        fetch_familiars: bool = Query(False, description="Whether to fetch additional familiars pages (if available)."),
 ) -> TibiaResponse[Optional[Auction]]:
     return await app.state.client.fetch_auction(auction_id, skip_details=skip_details, fetch_items=fetch_items,
                                                 fetch_mounts=fetch_mounts, fetch_outfits=fetch_outfits,

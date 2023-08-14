@@ -33,23 +33,20 @@ trying to cover as many scenarios possible, to be used in unit tests.
 - [guildWarActiveAndHistory.txt](guild/wars/guildWarActiveAndHistory.txt) - A guild with an active war and two previous wars.
 
 ## House resources
-- [tibiacom_full.txt](house/tibiacom_full.txt) - The content of a house's page
-- [tibiacom_status_no_bids.txt](house/tibiacom_status_no_bids.txt) - The status string of a auction house with no bids.
-- [tibiacom_status_rented.txt](house/tibiacom_status_rented.txt) - The status string of a rented house.
-- [tibiacom_status_transfer.txt](house/tibiacom_status_transfer.txt) - The status string of a rented house that is set
+- [houseRented.txt](house/houseRented.txt) - The content of a house's page
+- [houseStatusNoBids.txt](house/houseStatusNoBids.txt) - The status string of a auction house with no bids.
+- [houseStatusRented.txt](house/houseStatusRented.txt) - The status string of a rented house.
+- [houseStatusTransferred.txt](house/houseStatusTransferred.txt) - The status string of a rented house that is set
  for transfer.
-- [tibiacom_status_with_bids.txt](house/tibiacom_status_with_bids.txt) - The status string of a auctioned house with
+- [houseStatusWithBids.txt](house/houseAuctionedWithBids.txt) - The status string of a auctioned house with
  bids.
-- [tibiacom_not_found.txt](house/tibiacom_not_found.txt) - The content of a page for a house not found.
-- [tibiacom_list.txt](house/tibiacom_list.txt) - The house list of a world.
-- [tibiacom_list_empty.txt](house/tibiacom_list_empty.txt) - The house list of a world, showing no houses.
-- [tibiacom_list_not_found.txt](house/tibiacom_list_not_found.txt) - The house list of a world or town that doesn't 
+- - [houseBeforeMerge.txt](house/houseBeforeMerge.txt) - A house from a world scheduled to be merged.
+- [houseNotFound.txt](house/houseNotFound.txt) - The content of a page for a house not found.
+- [housesSection.txt](house/housesSection.txt) - The house list of a world.
+- [housesSectionEmpty.txt](house/housesSectionEmpty.txt) - The house list of a world, showing no houses.
+- [housesSectionNotFound.txt](house/housesSectionNotFound.txt) - The house list of a world or town that doesn't 
 exist.
-- [tibiadata.json](house/tibiadata.json) - A house on TibiaData.
-- [tibiadata_not_found.json](house/tibiadata_not_found.json) - The TibiaData response for a house that doesn't exist.
-- [tibiadata_list.json](house/tibiadata_list.json) - A house list on TibiaData.
-- [tibiadata_list_not_found.json](house/tibiadata_list_not_found.json) - The TibiaData response for a house list that
-doesn't exist.
+- [housesSectionBeforeMerge.txt](house/housesSectionBeforeMerge.txt) - The houses section of a world that is scheduled to be merged.
 
 ## Highscores resources
 - [highscores.txt](highscores/highscores.txt) - The content of a correct highscore's page.

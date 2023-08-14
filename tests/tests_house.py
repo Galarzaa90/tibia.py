@@ -9,40 +9,39 @@ from tibiapy.models import House, HousesSection, HouseEntry
 from tibiapy.parsers.house import HouseParser, HousesSectionParser
 from tibiapy.urls import get_house_url
 
-FILE_HOUSE_FULL = "house/tibiacom_full.txt"
-FILE_HOUSE_STATUS_TRANSFER = "house/tibiacom_status_transfer.txt"
-FILE_HOUSE_STATUS_NO_BIDS = "house/tibiacom_status_no_bids.txt"
-FILE_HOUSE_STATUS_WITH_BIDS = "house/tibiacom_status_with_bids.txt"
-FILE_HOUSE_STATUS_RENTED = "house/tibiacom_status_rented.txt"
-FILE_HOUSE_NOT_FOUND = "house/tibiacom_not_found.txt"
-FILE_HOUSE_LIST = "house/tibiacom_list.txt"
-FILE_HOUSE_LIST_NOT_FOUND = "house/tibiacom_list_not_found.txt"
-FILE_HOUSE_LIST_EMPTY = "house/tibiacom_list_empty.txt"
+FILE_HOUSE_RENTED = "house/houseRented.txt"
+FILE_HOUSE_STATUS_TRANSFER = "house/houseStatusTransferred.txt"
+FILE_HOUSE_STATUS_NO_BIDS = "house/houseStatusNoBids.txt"
+FILE_HOUSE_STATUS_WITH_BIDS = "house/houseAuctionedWithBids.txt"
+FILE_HOUSE_STATUS_RENTED = "house/houseStatusRented.txt"
+FILE_HOUSE_NOT_FOUND = "house/houseNotFound.txt"
+FILE_HOUSE_LIST = "house/housesSection.txt"
+FILE_HOUSE_LIST_NOT_FOUND = "house/housesSectionNotFound.txt"
+FILE_HOUSE_LIST_EMPTY = "house/housesSectionEmpty.txt"
 
 
 class TestsHouse(TestCommons):
-    def test_house_from_content(self):
+    def test_house_parser_from_content(self):
         """Testing parsing a house"""
-        content = self.load_resource(FILE_HOUSE_FULL)
+        content = self.load_resource(FILE_HOUSE_RENTED)
         house = HouseParser.from_content(content)
 
         self.assertIsInstance(house, House)
-        self.assertEqual(house.name, "Sorcerer's Avenue Labs 2e")
-        self.assertEqual(house.beds, 1)
-        self.assertTrue(house.rent, 715)
-        self.assertEqual(house.status, HouseStatus.AUCTIONED)
+        self.assertEqual("Sorcerer's Avenue Labs 2c", house.name)
+        self.assertEqual(2, house.beds)
+        self.assertTrue(50_000, house.rent)
+        self.assertEqual(HouseStatus.RENTED, house.status)
         self.assertEqual(house.url, get_house_url(house.world, house.id))
-        self.assertIsNone(house.owner)
-        self.assertIsNone(house.owner_url)
-        self.assertIsNotNone(house.highest_bidder)
-        self.assertIsNotNone(house.highest_bidder_url)
-        self.assertEqual(house.highest_bid, 0)
+        self.assertIsNotNone(house.owner)
+        self.assertIsNotNone(house.owner_url)
+        self.assertIsNone(house.highest_bidder)
+        self.assertIsNone(house.highest_bidder_url)
 
         house_json_raw = house.model_dump_json()
         house_json = json.loads(house_json_raw)
         self.assertEqual(house.image_url, house_json["image_url"])
 
-    def test_house_from_content_transferred(self):
+    def test_house_parser_from_content_transferred(self):
         """Testing parsing a house being transferred"""
         house = HouseBuilder().name("Name")
         content = self.load_resource(FILE_HOUSE_STATUS_TRANSFER)
@@ -81,14 +80,14 @@ class TestsHouse(TestCommons):
         self.assertEqual(house._status, HouseStatus.AUCTIONED)
         self.assertIsNone(house._auction_end)
 
-    def test_house_from_content_not_found(self):
+    def test_house_parser_from_content_not_found(self):
         """Testing parsing a house that doesn't exist"""
         content = self.load_resource(FILE_HOUSE_NOT_FOUND)
         house = HouseParser.from_content(content)
 
         self.assertIsNone(house)
 
-    def test_house_from_content_unrelated(self):
+    def test_house_parser_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):

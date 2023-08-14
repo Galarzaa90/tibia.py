@@ -11,7 +11,7 @@ from tests.tests_events import FILE_EVENT_CALENDAR
 from tests.tests_forums import FILE_BOARD_THREAD_LIST, FILE_CM_POST_ARCHIVE_PAGES, FILE_WORLD_BOARDS
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
 from tests.tests_highscores import FILE_HIGHSCORES_FULL
-from tests.tests_house import FILE_HOUSE_FULL, FILE_HOUSE_LIST
+from tests.tests_house import FILE_HOUSE_RENTED, FILE_HOUSE_LIST
 from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_ARCHIVE_RESULTS_FILTERED, FILE_NEWS_ARTICLE
@@ -123,7 +123,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
         """Testing fetching a house"""
         world = "Antica"
         house_id = 5236
-        content = self.load_resource(FILE_HOUSE_FULL)
+        content = self.load_resource(FILE_HOUSE_RENTED)
         mock.get(get_house_url(world, house_id), status=200, body=content)
         house = await self.client.fetch_house(house_id, world)
 
