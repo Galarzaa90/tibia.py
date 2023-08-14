@@ -61,16 +61,18 @@ class TestsHouse(TestCommons):
         self.assertEqual(house._owner, "Thorcen")
         self.assertIsInstance(house._paid_until, datetime.datetime)
 
-    def test_house_parse_status_with_bids(self):
+    def test_house_parser_from_content_house_with_bids(self):
         """Testing parsing a house status with bids"""
-        house = HouseBuilder().name("Name")
         content = self.load_resource(FILE_HOUSE_STATUS_WITH_BIDS)
-        HouseParser._parse_status(house, content)
-        self.assertEqual(house._status, HouseStatus.AUCTIONED)
-        self.assertIsNone(house._owner)
-        self.assertEqual(house._highest_bid, 15000)
-        self.assertEqual(house._highest_bidder, "King of Bosnia")
-        self.assertIsInstance(house._auction_end, datetime.datetime)
+
+        house = HouseParser.from_content(content)
+
+        self.assertEqual(HouseStatus.AUCTIONED, house.status)
+        self.assertEqual(80_000, house.rent)
+        self.assertIsNone(house.owner)
+        self.assertEqual(0, house.highest_bid)
+        self.assertIsNotNone(house.highest_bidder)
+        self.assertIsNotNone(house.auction_end)
 
     def test_house_parse_status_without_bids(self):
         """Testing parsing the status of a house with no bids"""

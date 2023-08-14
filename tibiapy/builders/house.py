@@ -241,4 +241,5 @@ class HouseBuilder(_HouseWithIdBuilder):
             transfer_accepted=self._transfer_accepted,
             highest_bid=self._highest_bid,
             highest_bidder=self._highest_bidder,
+            auction_end=self._auction_end
         )

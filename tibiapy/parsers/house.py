@@ -149,7 +149,7 @@ class HouseParser:
         try:
             parsed_content = parse_tibiacom_content(content)
             image_column, desc_column, *_ = parsed_content.select('td')
-            if "Error" in image_column.text:
+            if "No information" in image_column.text:
                 return None
             image = image_column.select_one('img')
             for br in desc_column.select("br"):
