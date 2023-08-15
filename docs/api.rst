@@ -11,11 +11,11 @@ It is possible to create and edit these objects as desired, but it may lead to u
 Client
 ======
 
-.. autoclass:: Client
-    :members:
-
 .. autopydantic_model:: tibiapy.models.TibiaResponse
    :inherited-members: BaseModel
+
+.. autoclass:: Client
+    :members:
 
 Enumerations
 ============
@@ -152,8 +152,8 @@ The `Character section`_ consists of the :class:`Character` class and its auxili
 
 The entry points for this are:
 
-- :meth:`Character.from_content` - Parsing a character's content.
-- :meth:`Client.fetch_character` - Fetching and parsing a character's content.
+- :meth:`.CharacterParser.from_content` - Parsing a character's content.
+- :meth:`.Client.fetch_character` - Fetching and parsing a character's content.
 
 .. _Character section: https://www.tibia.com/community/?subtopic=characters
 
@@ -664,7 +664,6 @@ They implement methods and properties that can be inherited by other classes to 
 .. autopydantic_model:: BaseThread
     :inherited-members: BaseModel
 
-
 .. autopydantic_model:: BaseWorld
     :inherited-members: BaseModel
 
@@ -681,13 +680,95 @@ They implement methods and properties that can be inherited by other classes to 
 
 Parsers
 =======
+Parsers are used to convert to extract information from the HTML content of pages in Tibia.com.
+
+The majority of users do not need to interact with these classes, but they can be used to provide alternate clients using other network libraries.
+
+Most of the parsers support parsing the page displayed for no results (e.g. trying to parse the page for non-existent world `Fidera <https://www.tibia.com/community/?subtopic=worlds&world=Fidera>`_) by returning :obj:`None` instead of raising an exception.
+Additionally, parsers attempt to detect when the HTML belongs to a different section by raising a :class:`.InvalidContent` exception.
+
 .. currentmodule:: tibiapy
 
-.. autoclass:: tibiapy.parsers.AuctionFiltersParser
+.. autoclass:: tibiapy.parsers.AuctionParser
     :members:
 
 .. autoclass:: tibiapy.parsers.CharacterBazaarParser
     :members:
+
+.. autoclass:: tibiapy.parsers.CharacterParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.BoostableBossesParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.BoostedCreaturesParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.CreatureParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.CreaturesSectionParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.EventScheduleParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.CMPostArchiveParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.ForumAnnouncementParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.ForumBoardParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.ForumSectionParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.ForumThreadParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.GuildParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.GuildsSectionParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.GuildWarsParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.HighscoresParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.HousesSectionParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.HouseParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.KillStatisticsParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.LeaderboardParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.NewsArchiveParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.NewsParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.SpellsSectionParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.SpellParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.WorldParser
+   :members:
+
+.. autoclass:: tibiapy.parsers.WorldOverviewParser
+   :members:
 
 Exceptions
 ==========

@@ -7,14 +7,15 @@ from typing import Dict
 import bs4
 
 from tibiapy import InvalidContent, Sex, Vocation
-from tibiapy.builders.bazaar import CharacterBazaarBuilder, AuctionBuilder, AuctionDetailsBuilder
+from tibiapy.builders import CharacterBazaarBuilder, AuctionBuilder, AuctionDetailsBuilder
 from tibiapy.enums import (AuctionOrderDirection, AuctionOrderBy, AuctionSearchType, AuctionStatus,
                            AuctionBattlEyeFilter,
                            BazaarType, BidType, PvpTypeFilter, AuctionSkillFilter, AuctionVocationFilter)
-from tibiapy.models.bazaar import AuctionFilters, ItemEntry, OutfitImage, SalesArgument, \
-    SkillEntry, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry, MountEntry, ItemSummary, \
-    Mounts, Familiars, Outfits, FamiliarEntry, OutfitEntry, CharacterBazaar, Auction
-from tibiapy.models.pagination import AjaxPaginator
+from tibiapy.models import (AuctionFilters, ItemEntry, OutfitImage, SalesArgument,
+                            SkillEntry, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry, MountEntry,
+                            ItemSummary,
+                            Mounts, Familiars, Outfits, FamiliarEntry, OutfitEntry, CharacterBazaar, Auction,
+                            AjaxPaginator)
 from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, parse_pagination,
                            parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
@@ -29,10 +30,10 @@ tier_regex = re.compile(r"(.*)\s\(tier (\d)\)")
 log = logging.getLogger("tibiapy")
 
 __all__ = (
-    "AuctionFiltersParser",
     "CharacterBazaarParser",
     "AuctionParser"
 )
+
 
 class AuctionFiltersParser:
     @classmethod
@@ -119,18 +120,18 @@ class CharacterBazaarParser:
 class AuctionParser:
 
     @classmethod
-    def from_content(cls, content: str, auction_id=0, skip_details=False):
+    def from_content(cls, content: str, auction_id: int = 0, skip_details: bool = False) -> Auction:
         """Parse an auction detail page from Tibia.com and extracts its data.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the auction detail page in Tibia.com
-        auction_id: :class:`int`, optional
+        auction_id:
             The ID of the auction.
 
             It is not possible to extract the ID from the page's content, so it may be passed to assign it manually.
-        skip_details: :class:`bool`, optional
+        skip_details:
             Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
 
             This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
@@ -138,7 +139,6 @@ class AuctionParser:
 
         Returns
         -------
-        :class:`Auction`
             The auction details if found, :obj:`None` otherwise.
 
         Raises
@@ -433,7 +433,6 @@ class AuctionParser:
             builder.bosstiary_progress(bestiary)
         else:
             builder.bestiary_progress(bestiary)
-
 
     @classmethod
     def _parse_general_table(cls, builder: AuctionDetailsBuilder, table):

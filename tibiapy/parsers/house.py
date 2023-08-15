@@ -1,13 +1,14 @@
 """Models related to the houses section in Tibia.com."""
 import datetime
 import re
+from typing import Optional
 
 import bs4
 
 from tibiapy.builders.house import HousesSectionBuilder, HouseEntryBuilder, HouseBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.models import HousesSection
+from tibiapy.models import HousesSection, House
 from tibiapy.utils import parse_tibia_datetime, parse_tibia_money, \
     parse_tibiacom_content, parse_tibiacom_tables, try_enum, parse_form_data_new
 
@@ -38,22 +39,21 @@ list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<ti
 class HousesSectionParser:
 
     @classmethod
-    def from_content(cls, content) -> HousesSection:
+    def from_content(cls, content: str) -> HousesSection:
         """Parse the content of a house list from Tibia.com into a list of houses.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The raw HTML response from the house list.
 
         Returns
         -------
-        :class:`HouseSection`
             The houses found in the page.
 
         Raises
         ------
-        InvalidContent`
+        InvalidContent
             Content is not the house list from Tibia.com
         """
         try:
@@ -128,17 +128,16 @@ class HouseParser:
 
     # region Public methods
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> Optional[House]:
         """Parse a Tibia.com response into a House object.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             HTML content of the page.
 
         Returns
         -------
-        :class:`House`
             The house contained in the page, or None if the house doesn't exist.
 
         Raises

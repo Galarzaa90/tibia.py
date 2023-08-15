@@ -43,17 +43,16 @@ __all__ = (
 class CharacterParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> Character:
         """Create an instance of the class from the html content of the character's page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`Character`
             The character contained in the page, or None if the character doesn't exist
 
         Raises

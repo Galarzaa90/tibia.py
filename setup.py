@@ -42,6 +42,7 @@ extras_require = {
     'docs': [
         'sphinx',
         'autodoc-pydantic>=2.0.0',
+        'sphinx-autodoc-typehints',
     ],
     'test': [
         'asynctest',

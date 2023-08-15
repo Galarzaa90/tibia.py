@@ -88,7 +88,6 @@ class NumericEnum(IntEnum):
         return {'enum': [m.name for m in cls], 'type': 'string'}
 
 
-
 class AuctionBattlEyeFilter(NumericEnum):
     """The possible BattlEye filters that can be used for auctions."""
 

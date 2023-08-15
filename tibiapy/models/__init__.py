@@ -10,8 +10,7 @@ from tibiapy.models.house import *
 from tibiapy.models.kill_statistics import *
 from tibiapy.models.leaderboard import *
 from tibiapy.models.news import *
+from tibiapy.models.pagination import *
 from tibiapy.models.spell import *
 from tibiapy.models.tibia_response import *
 from tibiapy.models.world import *
-
-

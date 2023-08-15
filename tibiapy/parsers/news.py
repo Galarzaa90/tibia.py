@@ -1,7 +1,7 @@
 import datetime
 import re
 import urllib.parse
-from typing import Optional
+from typing import Optional, Set, Dict, Union
 
 import bs4
 
@@ -25,23 +25,28 @@ class NewsArchiveParser:
     """Parse Tibia.com content from the news archive section."""
 
     @classmethod
-    def get_form_data(cls, start_date, end_date, categories=None, types=None):
+    def get_form_data(
+            cls,
+            start_date: datetime.date,
+            end_date: datetime.date,
+            categories: Set[NewsCategory] = None,
+            types: Set[NewsType] = None
+    ) -> Dict[str, Union[str, int]]:
         """Get the form data attributes to search news with specific parameters.
 
         Parameters
         ----------
-        start_date: :class:`datetime.date`
+        start_date:
             The beginning date to search dates in.
-        end_date: :class:`datetime.date`
+        end_date:
             The end date to search dates in.
-        categories: `set` of :class:`NewsCategory`
+        categories:
             The allowed categories to show. If left blank, all categories will be searched.
-        types: `set` of :class:`NewsType`
+        types:
             The allowed news types to show. if unused, all types will be searched.
 
         Returns
         -------
-        :class:`dict`
             A dictionary with the required form data to search news in the archive.
         """
         if not categories:
@@ -68,17 +73,16 @@ class NewsArchiveParser:
         return data
 
     @classmethod
-    def from_content(cls, content) -> NewsArchive:
+    def from_content(cls, content: str) -> NewsArchive:
         """Get a list of news from the HTML content of the news search page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`NewsArchive`
             The news archive with the news found.
 
         Raises
@@ -145,10 +149,9 @@ class NewsArchiveParser:
 
 
 class NewsParser:
-    """Represents a news entry."""
 
     @classmethod
-    def from_content(cls, content: str, news_id=0) -> Optional[News]:
+    def from_content(cls, content: str, news_id: int =0) -> Optional[News]:
         """Get a news entry by its HTML content from Tibia.com.
 
         Notes
@@ -158,14 +161,13 @@ class NewsParser:
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
-        news_id: :class:`int`, optional
+        news_id:
             The news_id belonging to the content being parsed.
 
         Returns
         -------
-        :class:`News`
             The news article found in the page.
 
         Raises

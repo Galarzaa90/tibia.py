@@ -6,7 +6,7 @@ import time
 from typing import List
 
 from tibiapy.builders.event import EventScheduleBuilder
-from tibiapy.models.event import EventEntry
+from tibiapy.models.event import EventEntry, EventSchedule
 from tibiapy.utils import parse_popup, parse_tibiacom_content
 
 __all__ = (
@@ -18,17 +18,16 @@ month_year_regex = re.compile(r'([A-z]+)\s(\d+)')
 
 class EventScheduleParser:
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> EventSchedule:
         """Create an instance of the class from the html content of the event's calendar.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`EventSchedule`
             The event calendar contained in the page
 
         Raises

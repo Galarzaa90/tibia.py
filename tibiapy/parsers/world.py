@@ -36,12 +36,11 @@ class WorldParser:
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The raw HTML from the server's information page.
 
         Returns
         -------
-        :class:`World`
             The World described in the page, or :obj:`None`.
 
         Raises
@@ -148,12 +147,11 @@ class WorldOverviewParser:
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the World Overview page in Tibia.com
 
         Returns
         -------
-        :class:`WorldOverview`
             An instance of this class containing all the information.
 
         Raises

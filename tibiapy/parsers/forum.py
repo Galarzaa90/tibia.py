@@ -2,6 +2,7 @@
 import datetime
 import re
 import urllib.parse
+from typing import Optional
 
 import bs4
 
@@ -10,7 +11,7 @@ from tibiapy.builders.forum import CMPostArchiveBuilder, ForumAnnouncementBuilde
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
 from tibiapy.models.forum import CMPost, ForumAuthor, AnnouncementEntry, ForumEmoticon, LastPost, ThreadEntry, \
-    ForumPost, BoardEntry, CMPostArchive, ForumSection, ForumThread
+    ForumPost, BoardEntry, CMPostArchive, ForumSection, ForumThread, ForumAnnouncement, ForumBoard
 from tibiapy.utils import (
     convert_line_breaks, parse_form_data, parse_integer, parse_link_info, parse_pagination,
     parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content, split_list,
@@ -41,17 +42,16 @@ signature_separator = "________________"
 class CMPostArchiveParser:
 
     @classmethod
-    def from_content(cls, content) -> CMPostArchive:
+    def from_content(cls, content: str) -> CMPostArchive:
         """Parse the content of the CM Post Archive page from Tibia.com.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the CM Post Archive in Tibia.com
 
         Returns
         -------
-        :class:`CMPostArchive`
             The CM Post archive found in the page.
 
         Raises
@@ -144,7 +144,19 @@ class CMPostArchiveParser:
 class ForumSectionParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> ForumSection:
+        """
+        Parses a forum section from Tibia.com
+
+        Parameters
+        ----------
+        content:
+            The HTML content from Tibia.com
+
+        Returns
+        -------
+            The forum section found in the page.
+        """
         parsed_content = parse_tibiacom_content(content)
         tables = parse_tables_map(parsed_content)
         if "Boards" not in tables:
@@ -199,23 +211,23 @@ class ForumSectionParser:
         return BoardEntry(name=name, board_id=board_id, description=description, posts=posts, threads=threads,
                           last_post=last_post)
 
+
 class ForumAnnouncementParser:
 
     @classmethod
-    def from_content(cls, content, announcement_id=0):
+    def from_content(cls, content: str, announcement_id: int = 0) -> Optional[ForumAnnouncement]:
         """Parse the content of an announcement's page from Tibia.com.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of an announcement in Tibia.com
-        announcement_id: :class:`int`
+        announcement_id:
             The id of the announcement. Since there is no way to obtain the id from the page,
-            the id may be passed to assing.
+            the id may be passed to assign.
 
         Returns
         -------
-        :class:`ForumAnnouncement`
             The announcement contained in the page or :obj:`None` if not found.
 
         Raises
@@ -333,17 +345,16 @@ class ForumAuthorParser:
 
 class ForumBoardParser:
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> Optional[ForumBoard]:
         """Parse the board's HTML content from Tibia.com.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the board.
 
         Returns
         -------
-        :class:`ForumBoard`
             The forum board contained.
 
         Raises
@@ -496,17 +507,16 @@ class ForumBoardParser:
 class ForumThreadParser:
 
     @classmethod
-    def from_content(cls, content) -> ForumThread:
+    def from_content(cls, content: str) -> Optional[ForumThread]:
         """Create an instance of the class from the html content of the thread's page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`ForumThread`
             The thread contained in the page, or None if the thread doesn't exist
 
         Raises

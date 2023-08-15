@@ -16,8 +16,9 @@ from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HouseType,
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
 from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
     Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, CharacterBazaar, \
-    Auction, AuctionFilters, ForumSection, TibiaResponse
-from tibiapy.models.creature import BoostableBosses, CreaturesSection, Creature, CreatureEntry, BossEntry
+    Auction, AuctionFilters, ForumSection, TibiaResponse, ForumAnnouncement
+from tibiapy.models.creature import BoostableBosses, CreaturesSection, Creature, CreatureEntry, BossEntry, \
+    BoostedCreatures
 from tibiapy.models.event import EventSchedule
 from tibiapy.models.news import NewsArchive, News
 from tibiapy.models.pagination import AjaxPaginator
@@ -47,7 +48,6 @@ from tibiapy.urls import get_character_url, get_world_guilds_url, get_guild_url,
 __all__ = (
     "Client",
 )
-
 
 T = TypeVar('T')
 
@@ -135,7 +135,7 @@ class Client:
         else:
             raise NetworkError("Request error, status code: %d" % status_code, fetching_time=fetching_time)
 
-    async def _request(self, method, url, data=None, headers=None, *, test=False):
+    async def _request(self, method, url, data=None, headers=None, *, test: bool = False):
         """Base request, handling possible error statuses.
 
         Parameters
@@ -148,7 +148,7 @@ class Client:
             A mapping representing the form-data to send as part of the request.
         headers: :class:`dict`
             A mapping representing the headers to send as part of the request.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
@@ -186,7 +186,7 @@ class Client:
         except UnicodeDecodeError as e:
             raise NetworkError(f'UnicodeDecodeError: {e}', e, time.perf_counter() - init_time) from e
 
-    async def _fetch_all_pages(self, auction_id, paginator: AjaxPaginator, item_type, *, test=False):
+    async def _fetch_all_pages(self, auction_id, paginator: AjaxPaginator, item_type, *, test: bool = False):
         """Fetch all the pages of an auction paginator.
 
         Parameters
@@ -197,7 +197,7 @@ class Client:
             The paginator object
         item_type: :class:`int`
             The item type.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
         """
         current_page = 2
@@ -210,7 +210,7 @@ class Client:
             current_page += 1
         paginator.is_fully_fetched = True
 
-    async def _fetch_ajax_page(self, auction_id, type_id, page, *, test=False):
+    async def _fetch_ajax_page(self, auction_id, type_id, page, *, test: bool = False):
         """Fetch an ajax page from the paginated summaries in the auction section.
 
         Parameters
@@ -221,7 +221,7 @@ class Client:
             The ID of the type of the catalog to check.
         page: :class:`int`
             The page number to fetch.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
@@ -249,7 +249,7 @@ class Client:
 
     # region Front Page
 
-    async def fetch_boosted_creature(self, *, test=False) -> TibiaResponse[CreatureEntry]:
+    async def fetch_boosted_creature(self, *, test: bool = False) -> TibiaResponse[CreatureEntry]:
         """Fetch today's boosted creature.
 
         .. versionadded:: 2.1.0
@@ -258,12 +258,12 @@ class Client:
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.CreatureEntry`
+        TibiaResponse[CreatureEntry]
             The boosted creature of the day.
 
         Raises
@@ -277,19 +277,19 @@ class Client:
         response = await self._request("GET", get_news_archive_url(), test=test)
         return response.parse(CreaturesSectionParser.boosted_creature_from_header)
 
-    async def fetch_boosted_creature_and_boss(self, *, test=False):
+    async def fetch_boosted_creature_and_boss(self, *, test: bool = False) -> TibiaResponse[BoostedCreatures]:
         """Fetch today's boosted creature and boss.
 
         .. versionadded:: 5.3.0
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`BoostedCreatures`
+        TibiaResponse[BoostedCreatures]
             The boosted creature and boss of the day.
 
         Raises
@@ -304,19 +304,19 @@ class Client:
         return response.parse(BoostedCreaturesParser.from_header)
 
     # region Bosses
-    async def fetch_boosted_boss(self, *, test=False) -> TibiaResponse[BossEntry]:
+    async def fetch_boosted_boss(self, *, test: bool = False) -> TibiaResponse[BossEntry]:
         """Fetch today's boosted boss.
 
         .. versionadded:: 5.3.0
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`BossEntry`
+        TibiaResponse[BossEntry]
             The boosted boss of the day.
 
         Raises
@@ -333,9 +333,15 @@ class Client:
     # endregion
 
     # region News
-    async def fetch_news_archive(self, from_date: datetime.date, to_date: datetime.date = None,
-                                 categories: Set[NewsCategory] = None, types: Set[NewsType] = None,
-                                 *, test=False) -> TibiaResponse[NewsArchive]:
+    async def fetch_news_archive(
+            self,
+            from_date: datetime.date,
+            to_date: datetime.date = None,
+            categories: Set[NewsCategory] = None,
+            types: Set[NewsType] = None,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[NewsArchive]:
         """Fetch news from the archive meeting the search criteria.
 
         .. versionchanged:: 5.0.0
@@ -343,25 +349,25 @@ class Client:
 
         Parameters
         ----------
-        from_date: :class:`datetime.date`
+        from_date:
             The beginning date to search dates in.
-        to_date: :class:`datetime.date`
+        to_date:
             The end date to search dates in.
-        categories: `set` of :class:`NewsCategory`
+        categories:
             The allowed categories to show. If left blank, all categories will be searched.
-        types : `set` of :class:`NewsType`
+        types:
             The allowed news types to show. if unused, all types will be searched.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.NewsArchive`
+        TibiaResponse[NewsArchive]
             The news meeting the search criteria.
 
         Raises
         ------
-        ValueError:
+        :exc:`ValueError`:
             If ``begin_date`` is more recent than ``to_date``.
         Forbidden
             If a 403 Forbidden error was returned.
@@ -376,9 +382,14 @@ class Client:
         response = await self._request("POST", get_news_archive_url(), form_data, test=test)
         return response.parse(NewsArchiveParser.from_content)
 
-    async def fetch_news_archive_by_days(self, days=30, categories: Collection[NewsCategory] = None,
-                                         types: Collection[NewsType] = None, *,
-                                         test=False) -> TibiaResponse[NewsArchive]:
+    async def fetch_news_archive_by_days(
+            self,
+            days: int = 30,
+            categories: Set[NewsCategory] = None,
+            types: Set[NewsType] = None,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[NewsArchive]:
         """Fetch all the published news in the last specified days.
 
         This is a shortcut for :meth:`fetch_news_archive`, to handle dates more easily.
@@ -388,23 +399,23 @@ class Client:
 
         Parameters
         ----------
-        days: :class:`int`
+        days:
             The number of days to search, by default 30.
-        categories: `list` of :class:`NewsCategory`
+        categories:
             The allowed categories to show. If left blank, all categories will be searched.
-        types : `list` of :class:`NewsType`
+        types:
             The allowed news types to show. if unused, all types will be searched.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.NewsArchive`
+        TibiaResponse[NewsArchive]
             The news posted in the last specified days.
 
         Raises
         ------
-        ValueError:
+        :exc:`ValueError`:
             If ``days`` is lesser than zero.
         Forbidden
             If a 403 Forbidden error was returned.
@@ -418,19 +429,19 @@ class Client:
         begin = end - datetime.timedelta(days=days)
         return await self.fetch_news_archive(begin, end, categories, types, test=test)
 
-    async def fetch_news(self, news_id: int, *, test=False) -> TibiaResponse[Optional[News]]:
+    async def fetch_news(self, news_id: int, *, test: bool = False) -> TibiaResponse[Optional[News]]:
         """Fetch a news entry by its id from Tibia.com.
 
         Parameters
         ----------
-        news_id: :class:`int`
+        news_id:
             The ID of the news entry.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.News`
+        TibiaResponse[News]
             The news entry if found, :obj:`None` otherwise.
 
         Raises
@@ -444,24 +455,29 @@ class Client:
         response = await self._request("GET", get_news_url(news_id), test=test)
         return response.parse(lambda r: NewsParser.from_content(r, news_id))
 
-    async def fetch_event_schedule(self, month: int = None, year: int = None, *,
-                                   test=False) -> TibiaResponse[EventSchedule]:
+    async def fetch_event_schedule(
+            self,
+            month: int = None,
+            year: int = None,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[EventSchedule]:
         """Fetch the event calendar. By default, it gets the events for the current month.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        month: :class:`int`
+        month:
             The month of the events to display.
-        year: :class:`int`
+        year:
             The year of the events to display.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`EventSchedule`
+        TibiaResponse[EventSchedule]
             The event calendar.
 
         Raises
@@ -483,19 +499,19 @@ class Client:
 
     # region Library
 
-    async def fetch_creatures(self, *, test=False) -> TibiaResponse[CreaturesSection]:
+    async def fetch_creatures(self, *, test: bool = False) -> TibiaResponse[CreaturesSection]:
         """Fetch the creatures from the library section.
 
         .. versionadded:: 4.0.0
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.CreaturesSection`
+        TibiaResponse[CreaturesSection]
             The creature's section in Tibia.com
 
         Raises
@@ -509,21 +525,21 @@ class Client:
         response = await self._request("GET", get_creatures_section_url(), test=test)
         return response.parse(CreaturesSectionParser.from_content)
 
-    async def fetch_creature(self, identifier: str, *, test=False) -> TibiaResponse[Optional[Creature]]:
+    async def fetch_creature(self, identifier: str, *, test: bool = False) -> TibiaResponse[Optional[Creature]]:
         """Fetch a creature's information from the Tibia.com library.
 
         .. versionadded:: 4.0.0
 
         Parameters
         ----------
-        identifier: :class:`str`
+        identifier:
             The internal name of the race.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.Creature`
+        TibiaResponse[Creature]
             The creature's section in Tibia.com
 
         Raises
@@ -537,14 +553,14 @@ class Client:
         response = await self._request("GET", get_creature_url(identifier), test=test)
         return response.parse(CreatureParser.from_content)
 
-    async def fetch_boostable_bosses(self, *, test=False) -> TibiaResponse[BoostableBosses]:
+    async def fetch_boostable_bosses(self, *, test: bool = False) -> TibiaResponse[BoostableBosses]:
         """Fetch the boostable bosses from the library section.
 
         .. versionadded:: 4.0.0
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
@@ -564,32 +580,32 @@ class Client:
         return response.parse(BoostableBossesParser.from_content)
 
     async def fetch_spells(self, *,
-                           vocation: SpellVocationFilter = None,
-                           group: SpellGroup = None,
-                           spell_type: SpellType = None,
-                           is_premium: bool = None,
-                           sort: SpellSorting = None,
-                           test=False) -> TibiaResponse[SpellsSection]:
+                           vocation: Optional[SpellVocationFilter] = None,
+                           group: Optional[SpellGroup] = None,
+                           spell_type: Optional[SpellType] = None,
+                           is_premium: Optional[bool] = None,
+                           sort: Optional[SpellSorting] = None,
+                           test: bool = False) -> TibiaResponse[SpellsSection]:
         """Fetch the spells section.
 
         Parameters
         ----------
-        vocation: :class:`.SpellVocationFilter`, optional
+        vocation:
             The vocation to filter in spells for.
-        group: :class:`.SpellGroup`, optional
+        group:
             The spell's primary cooldown group.
-        spell_type: :class:`.SpellType`, optional
+        spell_type:
             The type of spells to show.
-        is_premium: :class:`bool`, optional
+        is_premium:
             The type of premium requirement to filter. :obj:`None` means any premium requirement.
-        sort: :class:`.SpellSorting`, optional
+        sort:
             The field to sort spells by.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`SpellsSection`
+        TibiaResponse[SpellsSection]
             The spells section with the results.
 
         Raises
@@ -605,19 +621,19 @@ class Client:
                                                                      sort=sort), test=test)
         return response.parse(SpellsSectionParser.from_content)
 
-    async def fetch_spell(self, identifier: str, *, test=False) -> TibiaResponse[Optional[Spell]]:
+    async def fetch_spell(self, identifier: str, *, test: bool = False) -> TibiaResponse[Optional[Spell]]:
         """Fetch a spell by its identifier.
 
         Parameters
         ----------
-        identifier: :class:`str`
+        identifier:
             The spell's identifier. This is usually the name of the spell in lowercase and with no spaces.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.Spell`
+        TibiaResponse[Optional[Spell]]
             The spell if found, :obj:`None` otherwise.
 
         Raises
@@ -635,19 +651,19 @@ class Client:
 
     # region Community
 
-    async def fetch_character(self, name: str, *, test=False) -> TibiaResponse[Optional[Character]]:
+    async def fetch_character(self, name: str, *, test: bool = False) -> TibiaResponse[Optional[Character]]:
         """Fetch a character by its name from Tibia.com.
 
         Parameters
         ----------
-        name: :class:`str`
+        name:
             The name of the character.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.Character`
+        TibiaResponse[Optional[Character]]
             A response containing the character, if found.
 
         Raises
@@ -661,17 +677,17 @@ class Client:
         response = await self._request("GET", get_character_url(name.strip()), test=test)
         return response.parse(CharacterParser.from_content)
 
-    async def fetch_world_overview(self, *, test=False) -> TibiaResponse[WorldOverview]:
+    async def fetch_world_overview(self, *, test: bool = False) -> TibiaResponse[WorldOverview]:
         """Fetch the world overview information from Tibia.com.
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`WorldOverview`
+        TibiaResponse[WorldOverview]
             A response containing the world overview information.
 
         Raises
@@ -685,19 +701,19 @@ class Client:
         response = await self._request("GET", get_world_overview_url(), test=test)
         return response.parse(WorldOverviewParser.from_content)
 
-    async def fetch_world(self, name: str, *, test=False) -> TibiaResponse[Optional[World]]:
+    async def fetch_world(self, name: str, *, test: bool = False) -> TibiaResponse[Optional[World]]:
         """Fetch a world from Tibia.com.
 
         Parameters
         ----------
         name: :class:`str`
             The name of the world.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`.World`
+        TibiaResponse[Optional[World]]
             A response containing the world's information if found, :obj:`None` otherwise.
 
         Raises
@@ -711,11 +727,17 @@ class Client:
         response = await self._request("GET", get_world_url(name), test=test)
         return response.parse(WorldParser.from_content)
 
-    async def fetch_highscores_page(self, world: str = None,
-                                    category: HighscoresCategory = HighscoresCategory.EXPERIENCE,
-                                    vocation: HighscoresProfession = HighscoresProfession.ALL, page: int = 1,
-                                    battleye_type: HighscoresBattlEyeType = None, pvp_types: Set[PvpTypeFilter] = None,
-                                    *, test=False) -> TibiaResponse[Highscores]:
+    async def fetch_highscores_page(
+            self,
+            world: str = None,
+            category: HighscoresCategory = HighscoresCategory.EXPERIENCE,
+            vocation: HighscoresProfession = HighscoresProfession.ALL,
+            page: int = 1,
+            battleye_type: Optional[HighscoresBattlEyeType] = None,
+            pvp_types: Set[PvpTypeFilter] = None,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[Optional[Highscores]]:
         """Fetch a single highscores page from Tibia.com.
 
         Notes
@@ -724,24 +746,24 @@ class Client:
 
         Parameters
         ----------
-        world: :class:`str`
+        world:
             The world to search the highscores in.
-        category: :class:`HighscoresCategory`
+        category:
             The highscores category to search, by default Experience.
-        vocation: :class:`HighscoresProfession`
+        vocation:
             The vocation filter to use. No filter used by default.
-        page: :class:`int`
+        page:
             The page to fetch, by default the first page is fetched.
-        battleye_type: :class:`HighscoresBattlEyeType`
+        battleye_type:
             The type of BattlEye protection to display results from.
-        pvp_types: :class:`list` of :class:`PvpTypeFilter`
+        pvp_types:
             The list of PvP types to filter the results for.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`Highscores`
+        TibiaResponse[Optional[Highscores]]
             The highscores information or :obj:`None` if not found.
 
         Raises
@@ -763,8 +785,8 @@ class Client:
                                                                  pvp_types), test=test)
         return response.parse(HighscoresParser.from_content)
 
-    async def fetch_leaderboard(self, world: str, rotation: int = None, page=1, *, test=False) \
-            -> TibiaResponse[Leaderboard]:
+    async def fetch_leaderboard(self, world: str, rotation: int = None, page: int = 1, *, test: bool = False) \
+            -> TibiaResponse[Optional[Leaderboard]]:
         """Fetch the leaderboards for a specific world and rotation.
 
         .. versionadded:: 5.0.0
@@ -777,12 +799,12 @@ class Client:
             The ID of the rotation. By default, it will get the current rotation.
         page: :class:`int`
             The page to get.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`Leaderboard`
+        TibiaResponse[Optional[Leaderboard]]
             The leaderboards of the world if found.
 
         Raises
@@ -796,19 +818,24 @@ class Client:
         response = await self._request("GET", get_leaderboards_url(world, rotation, page), test=test)
         return response.parse(LeaderboardParser.from_content)
 
-    async def fetch_kill_statistics(self, world: str, *, test=False) -> TibiaResponse[KillStatistics]:
+    async def fetch_kill_statistics(
+            self,
+            world: str,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[Optional[KillStatistics]]:
         """Fetch the kill statistics of a world from Tibia.com.
 
         Parameters
         ----------
-        world: :class:`str`
+        world:
             The name of the world.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`KillStatistics`
+        TibiaResponse[Optional[KillStatistics]]
             The kill statistics of the world if found.
 
         Raises
@@ -822,9 +849,16 @@ class Client:
         response = await self._request("GET", get_kill_statistics_url(world), test=test)
         return response.parse(KillStatisticsParser.from_content)
 
-    async def fetch_houses_section(self, world: str, town: str, house_type: HouseType = HouseType.HOUSE,
-                                   status: HouseStatus = None, order: HouseOrder = None, *,
-                                   test=False) -> TibiaResponse[HousesSection]:
+    async def fetch_houses_section(
+            self,
+            world: str,
+            town: str,
+            house_type: HouseType = HouseType.HOUSE,
+            status: Optional[HouseStatus] = None,
+            order: Optional[HouseOrder] = None,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[HousesSection]:
         """Fetch the house list of a world and type.
 
         .. versionchanged:: 5.0.0
@@ -832,22 +866,22 @@ class Client:
 
         Parameters
         ----------
-        world: :class:`str`
+        world:
             The name of the world.
-        town: :class:`str`
+        town:
             The name of the town.
-        house_type: :class:`HouseType`
+        house_type:
             The type of building. House by default.
-        status: :class:`HouseStatus`, optional
+        status:
             The house status to filter results. By default, no filters will be applied.
-        order: :class:`HouseOrder`, optional
+        order:
             The ordering to use for the results. By default, they are sorted by name.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`HousesSection`
+        TibiaResponse[HousesSection]
             A response containing the lists of houses meeting the criteria if found.
 
         Raises
@@ -862,21 +896,21 @@ class Client:
                                                                      status=status, order=order), test=test)
         return response.parse(HousesSectionParser.from_content)
 
-    async def fetch_house(self, house_id: int, world: str, *, test=False) -> TibiaResponse[Optional[House]]:
+    async def fetch_house(self, house_id: int, world: str, *, test: bool = False) -> TibiaResponse[Optional[House]]:
         """Fetch a house in a specific world by its id.
 
         Parameters
         ----------
-        house_id: :class:`int`
+        house_id:
             The house's internal id.
-        world: :class:`str`
+        world:
             The name of the world to look for.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`House`
+        TibiaResponse[Optional[House]]
             The house if found, :obj:`None` otherwise.
 
         Raises
@@ -890,7 +924,7 @@ class Client:
         response = await self._request("GET", get_house_url(world, house_id), test=test)
         return response.parse(HouseParser.from_content)
 
-    async def fetch_world_guilds(self, world: str, *, test=False) -> TibiaResponse[GuildsSection]:
+    async def fetch_world_guilds(self, world: str, *, test: bool = False) -> TibiaResponse[GuildsSection]:
         """Fetch the list of guilds in a world from Tibia.com.
 
         If a world that does not exist is passed, the world attribute of the result will be :obj:`None`.
@@ -901,14 +935,14 @@ class Client:
 
         Parameters
         ----------
-        world: :class:`str`
+        world:
             The name of the world.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`GuildsSection`
+        TibiaResponse[GuildsSection]
             A response containing the guilds section for the specified world.
 
         Raises
@@ -922,19 +956,19 @@ class Client:
         response = await self._request("GET", get_world_guilds_url(world), test=test)
         return response.parse(GuildsSectionParser.from_content)
 
-    async def fetch_guild(self, name: str, *, test=False) -> TibiaResponse[Optional[Guild]]:
+    async def fetch_guild(self, name: str, *, test: bool = False) -> TibiaResponse[Optional[Guild]]:
         """Fetch a guild by its name from Tibia.com.
 
         Parameters
         ----------
-        name: :class:`str`
+        name:
             The name of the guild. The case must match exactly.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`Guild`
+        TibiaResponse[Optional[Guild]]
             A response containing the found guild, if any.
 
         Raises
@@ -948,21 +982,21 @@ class Client:
         response = await self._request("GET", get_guild_url(name), test=test)
         return response.parse(GuildParser.from_content)
 
-    async def fetch_guild_wars(self, name: str, *, test=False) -> TibiaResponse[Optional[GuildWars]]:
+    async def fetch_guild_wars(self, name: str, *, test: bool = False) -> TibiaResponse[Optional[GuildWars]]:
         """Fetch a guild's wars by its name from Tibia.com.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        name: :class:`str`
+        name:
             The name of the guild. The case must match exactly.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`GuildWars`
+        TibiaResponse[Optional[GuildWars]]
             A response containing the found guild's wars.
 
             If the guild doesn't exist, the displayed data will show a guild with no wars instead of indicating the
@@ -982,19 +1016,24 @@ class Client:
     # endregion
 
     # region Forums
-    async def fetch_forum_section(self, section_id: int, *, test=False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_section(
+            self,
+            section_id: int,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[Optional[ForumSection]]:
         """Fetch a forum's section by its ID.
 
         Parameters
         ----------
-        section_id: :class:`int`
+        section_id:
             The ID of the section.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumSection`
+        TibiaResponse[Optional[ForumSection]]
             The forum section with the provided ID.
 
         Raises
@@ -1008,19 +1047,19 @@ class Client:
         response = await self._request("GET", get_forum_section_url(section_id), test=test)
         return response.parse(ForumSectionParser.from_content)
 
-    async def fetch_forum_world_boards(self, *, test=False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_world_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
         """Fetch the forum's world boards.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumSection`
+        TibiaResponse[Optional[ForumSection]]
             The forum boards in the world section.
 
         Raises
@@ -1034,19 +1073,19 @@ class Client:
         response = await self._request("GET", BoardEntry.get_world_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
-    async def fetch_forum_trade_boards(self, *, test=False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_trade_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
         """Fetch the forum's trade boards.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumSection`
+        TibiaResponse[Optional[ForumSection]]
             The forum boards in the trade section.
 
         Raises
@@ -1060,19 +1099,19 @@ class Client:
         response = await self._request("GET", BoardEntry.get_trade_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
-    async def fetch_forum_community_boards(self, *, test=False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_community_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
         """Fetch the forum's community boards.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumSection`
+        TibiaResponse[Optional[ForumSection]]
             The forum boards in the community section.
 
         Raises
@@ -1086,19 +1125,19 @@ class Client:
         response = await self._request("GET", BoardEntry.get_community_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
-    async def fetch_forum_support_boards(self, *, test=False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_support_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
         """Fetch the forum's community boards.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumSection`
+        TibiaResponse[Optional[ForumSection]]
             The forum boards in the community section.
 
         Raises
@@ -1113,27 +1152,27 @@ class Client:
         return response.parse(ForumSectionParser.from_content)
 
     async def fetch_forum_board(self, board_id: int, page: int = 1, age: int = None, *,
-                                test=False) -> TibiaResponse[ForumBoard]:
+                                test: bool = False) -> TibiaResponse[Optional[ForumBoard]]:
         """Fetch a forum board with a given id.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        board_id : :class:`int`
+        board_id
             The id of the board.
-        page: :class:`int`
+        page:
             The page number to show.
-        age: :class:`int`
+        age:
             The maximum age in days of the threads to display.
 
             To show threads of all ages, use -1.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumBoard`
+        TibiaResponse[ForumBoard]
             A response containing the forum, if found.
 
         Raises
@@ -1148,23 +1187,23 @@ class Client:
         return response.parse(ForumBoardParser.from_content)
 
     async def fetch_forum_thread(self, thread_id: int, page: int = 1, *,
-                                 test=False) -> TibiaResponse[Optional[ForumThread]]:
+                                 test: bool = False) -> TibiaResponse[Optional[ForumThread]]:
         """Fetch a forum thread with a given id.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        thread_id : :class:`int`
+        thread_id:
             The id of the thread.
-        page: :class:`int`
+        page:
             The desired page to display, by default 1.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumThread`
+        TibiaResponse[Optional[ForumThread]]
             A response containing the forum, if found.
 
         Raises
@@ -1178,7 +1217,7 @@ class Client:
         response = await self._request("GET", get_forum_thread_url(thread_id, page), test=test)
         return response.parse(ForumThreadParser.from_content)
 
-    async def fetch_forum_post(self, post_id: int, *, test=False) -> TibiaResponse[Optional[ForumThread]]:
+    async def fetch_forum_post(self, post_id: int, *, test: bool = False) -> TibiaResponse[Optional[ForumThread]]:
         """Fetch a forum post with a given id.
 
         The thread that contains the post will be returned, containing the desired post in
@@ -1190,14 +1229,14 @@ class Client:
 
         Parameters
         ----------
-        post_id : :class:`int`
+        post_id:
             The id of the post.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumThread`
+        TibiaResponse[Optional[ForumThread]]
             A response containing the forum, if found.
 
         Raises
@@ -1215,21 +1254,26 @@ class Client:
         built_response.data.anchored_post = next((p for p in built_response.data.entries if p.post_id == post_id), None)
         return built_response
 
-    async def fetch_forum_announcement(self, announcement_id, *, test=False):
+    async def fetch_forum_announcement(
+            self,
+            announcement_id: int,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[Optional[ForumAnnouncement]]:
         """Fetch a forum announcement.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        announcement_id: :class:`int`
+        announcement_id:
             The id of the desired announcement.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`ForumAnnouncement`
+        TibiaResponse[Optional[ForumAnnouncement]]
             The forum announcement, if found.
 
         Raises
@@ -1243,26 +1287,32 @@ class Client:
         response = await self._request("GET", get_forum_announcement_url(announcement_id), test=test)
         return response.parse(lambda c: ForumAnnouncementParser.from_content(c, announcement_id))
 
-    async def fetch_cm_post_archive(self, start_date: datetime.datetime, end_date: datetime.datetime, page=1, *,
-                                    test=False) -> TibiaResponse[CMPostArchive]:
+    async def fetch_cm_post_archive(
+            self,
+            start_date: datetime.datetime,
+            end_date: datetime.datetime,
+            page: int = 1,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[CMPostArchive]:
         """Fetch the CM post archive.
 
         .. versionadded:: 3.0.0
 
         Parameters
         ----------
-        start_date: :class: `datetime.date`
+        start_date:
             The start date to display.
-        end_date: :class: `datetime.date`
+        end_date:
             The end date to display.
-        page: :class:`int`
+        page:
             The desired page to display.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`CMPostArchive`
+        TibiaResponse[CMPostArchive]
             The CM Post Archive.
 
         Raises
@@ -1285,24 +1335,29 @@ class Client:
     # endregion
 
     # region Char Bazaar
-    async def fetch_current_auctions(self, page: int = 1, filters: AuctionFilters = None, *,
-                                     test=False) -> TibiaResponse[CharacterBazaar]:
+    async def fetch_current_auctions(
+            self,
+            page: int = 1,
+            filters: Optional[AuctionFilters] = None,
+            *,
+            test: bool = False
+    ) -> TibiaResponse[CharacterBazaar]:
         """Fetch the current auctions in the bazaar.
 
         .. versionadded:: 3.3.0
 
         Parameters
         ----------
-        page: :class:`int`
+        page:
             The desired page to display.
-        filters: :class:`.AuctionFilters`
+        filters:
             The filtering criteria to use.
-        test: :class:`bool`
+        test:
             Whether to fetch from the test website or not.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`CharacterBazaar`
+        TibiaResponse[CharacterBazaar]
             The current auctions.
 
         Raises
@@ -1320,24 +1375,24 @@ class Client:
         response = await self._request("GET", get_bazaar_url(BazaarType.CURRENT, page, filters), test=test)
         return response.parse(CharacterBazaarParser.from_content)
 
-    async def fetch_auction_history(self, page: int = 1, filters: AuctionFilters = None, *,
-                                    test=False) -> TibiaResponse[CharacterBazaar]:
+    async def fetch_auction_history(self, page: int = 1, filters: Optional[AuctionFilters] = None, *,
+                                    test: bool = False) -> TibiaResponse[CharacterBazaar]:
         """Fetch the auction history of the bazaar.
 
         .. versionadded:: 3.3.0
 
         Parameters
         ----------
-        page: :class:`int`
+        page:
             The page to display.
-        filters: :class:`AuctionFilters`
+        filters:
             The filtering criteria to use.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`CharacterBazaar`
+        TibiaResponse[CharacterBazaar]
             The character bazaar containing the auction history.
 
         Raises
@@ -1355,35 +1410,44 @@ class Client:
         response = await self._request("GET", get_bazaar_url(BazaarType.HISTORY, page, filters), test=test)
         return response.parse(CharacterBazaarParser.from_content)
 
-    async def fetch_auction(self, auction_id: int, *, fetch_items=False, fetch_mounts=False, fetch_outfits=False,
-                            fetch_familiars=False, skip_details=False, test=False) -> TibiaResponse[Optional[Auction]]:
+    async def fetch_auction(
+            self,
+            auction_id: int,
+            *,
+            fetch_items: bool = False,
+            fetch_mounts: bool = False,
+            fetch_outfits: bool = False,
+            fetch_familiars: bool = False,
+            skip_details: bool = False,
+            test: bool = False
+    ) -> TibiaResponse[Optional[Auction]]:
         """Fetch an auction by its ID.
 
         .. versionadded:: 3.3.0
 
         Parameters
         ----------
-        auction_id: :class:`int`
+        auction_id:
             The ID of the auction.
-        fetch_items: :class:`bool`
+        fetch_items:
             Whether to fetch all the character's items. By default, only the first page is fetched.
-        fetch_mounts: :class:`bool`
+        fetch_mounts:
             Whether to fetch all the character's mounts. By default, only the first page is fetched.
-        fetch_outfits: :class:`bool`
+        fetch_outfits:
             Whether to fetch all the character's outfits. By default, only the first page is fetched.
-        fetch_familiars: :class:`bool`
+        fetch_familiars:
             Whether to fetch all the character's outfits. By default, only the first page is fetched.
-        skip_details: :class:`bool`
+        skip_details:
             Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
 
             This allows fetching basic information like name, level, vocation, world, bid and status, shaving off some
             parsing time.
-        test: :class:`bool`
+        test:
             Whether to request the test website instead.
 
         Returns
         -------
-        :class:`TibiaResponse` of :class:`Auction`
+        TibiaResponse[Optional[Auction]]
             The auction matching the ID if found.
 
         Raises

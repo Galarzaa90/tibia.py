@@ -20,20 +20,20 @@ __all__ = (
 
 rotation_end_pattern = re.compile(r"ends on ([^)]+)")
 
+
 class LeaderboardParser:
 
     @classmethod
-    def from_content(cls, content) -> Optional[Leaderboard]:
+    def from_content(cls, content: str) -> Optional[Leaderboard]:
         """Parse the content of the leaderboards page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the leaderboards page.
 
         Returns
         -------
-        :class:`Leaderboard`
             The leaderboard, if found.
         """
         now = datetime.datetime.now(datetime.timezone.utc)

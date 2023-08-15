@@ -13,17 +13,16 @@ __all__ = (
 class KillStatisticsParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> KillStatistics:
         """Create an instance of the class from the HTML content of the kill statistics' page.
 
         Parameters
         -----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         ----------
-        :class:`KillStatistics`
             The kill statistics contained in the page or None if it doesn't exist.
 
         Raises

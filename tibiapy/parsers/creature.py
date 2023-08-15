@@ -2,6 +2,7 @@
 import os
 import re
 import urllib.parse
+from typing import Optional
 
 import bs4
 
@@ -41,18 +42,17 @@ class BoostedCreaturesParser:
         return name, identifier
 
     @classmethod
-    def from_header(cls, content: str):
+    def from_header(cls, content: str) -> BoostedCreatures:
         """Parses both boosted creature and boss from the content of any section in Tibia.com
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`BoostedCreatures`
-            The boosted creature an boss.
+            The boosted creature and boss.
 
         Raises
         ------
@@ -69,23 +69,22 @@ class BoostedCreaturesParser:
                 boss=BossEntry(name=boss_name, identifier=boss_identifier)
             )
         except (TypeError, NameError, KeyError) as e:
-            raise InvalidContent("content is not from Tibia.com", e)
+            raise InvalidContent("content is not from Tibia.com", e) from e
 
 
 class BoostableBossesParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> BoostableBosses:
         """Create an instance of the class from the html content of the boostable bosses library's page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`BoostableBosses`
             The Boostable Bosses section.
 
         Raises
@@ -120,17 +119,16 @@ class BoostableBossesParser:
 
 
     @classmethod
-    def boosted_boss_from_header(cls, content):
+    def boosted_boss_from_header(cls, content: str) -> BossEntry:
         """Get the boosted boss from any Tibia.com page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of a Tibia.com page.
 
         Returns
         -------
-        :class:`BossEntry`
             The boosted boss of the day.
 
         Raises
@@ -141,21 +139,19 @@ class BoostableBossesParser:
         return BoostedCreaturesParser.from_header(content).boss
 
 
-
 class CreaturesSectionParser:
 
     @classmethod
-    def boosted_creature_from_header(cls, content):
+    def boosted_creature_from_header(cls, content: str) -> CreatureEntry:
         """Get the boosted creature from any Tibia.com page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of a Tibia.com page.
 
         Returns
         -------
-        :class:`CreatureEntry`
             The boosted creature of the day.
 
         Raises
@@ -166,17 +162,16 @@ class CreaturesSectionParser:
         return BoostedCreaturesParser.from_header(content).creature
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> CreaturesSection:
         """Create an instance of the class from the html content of the creature library's page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`CreaturesSection`
             The creatures section from Tibia.com.
 
         Raises
@@ -214,18 +209,17 @@ class CreatureParser:
     _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
 
     @classmethod
-    def from_content(cls, content) -> Creature:
+    def from_content(cls, content: str) -> Optional[Creature]:
         """Create an instance of the class from the html content of the creature library's page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`Creature`
-            The character contained in the page.
+            The creature contained in the page.
         """
         try:
             parsed_content = parse_tibiacom_content(content)

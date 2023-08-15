@@ -30,7 +30,7 @@ class HighscoresParser:
     _ENTRIES_PER_PAGE = 50
 
     @classmethod
-    def from_content(cls, content) -> Optional[Highscores]:
+    def from_content(cls, content: str) -> Optional[Highscores]:
         """Create an instance of the class from the html content of a highscores page.
 
         Notes
@@ -40,12 +40,11 @@ class HighscoresParser:
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`Highscores`
             The highscores results contained in the page.
 
         Raises

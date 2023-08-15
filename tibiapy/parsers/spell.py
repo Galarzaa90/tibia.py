@@ -14,7 +14,7 @@ from tibiapy.utils import (parse_form_data, parse_integer, parse_tibiacom_conten
                            try_enum, parse_link_info)
 
 if TYPE_CHECKING:
-    from tibiapy.models.spell import Rune, Spell, SpellsSection
+    from tibiapy.models import Rune, Spell, SpellsSection
 
 __all__ = (
     'SpellsSectionParser',
@@ -36,12 +36,11 @@ class SpellsSectionParser:
 
         Parameters
         -----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         ----------
-        :class:`SpellsSection`
             The spells contained and the filtering information.
 
         Raises
@@ -99,17 +98,16 @@ class SpellParser:
     """Parses Tibia.com from a spell's information page."""
 
     @classmethod
-    def from_content(cls, content) -> Optional[Spell]:
+    def from_content(cls, content: str) -> Optional[Spell]:
         """Parse the content of a spells page.
 
         Parameters
         -----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         ----------
-        :class:`Spell`
             The spell data. If the spell doesn't exist, this will be :obj:`None`.
 
         Raises

@@ -57,8 +57,8 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx.ext.coverage',
-    'sphinxcontrib.autodoc_pydantic',
     'sphinx_autodoc_typehints',
+    'sphinxcontrib.autodoc_pydantic',
 
 ]
 

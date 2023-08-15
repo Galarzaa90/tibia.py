@@ -9,7 +9,7 @@ import bs4
 
 from tibiapy.builders.guild import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContent
-from tibiapy.models import GuildEntry, GuildsSection, GuildMember, GuildInvite, GuildWarEntry, GuildHouse
+from tibiapy.models import GuildEntry, GuildsSection, GuildMember, GuildInvite, GuildWarEntry, GuildHouse, GuildWars
 from tibiapy.utils import (parse_form_data, parse_tibia_date, parse_tibiacom_content, clean_text, parse_link_info)
 
 if TYPE_CHECKING:
@@ -53,17 +53,16 @@ war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
 class GuildsSectionParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> Optional[GuildsSection]:
         """Get a list of guilds from the HTML content of the world guilds' page.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
-        :class:`GuildsSection`
             List of guilds in the current world. :obj:`None` if it's the list of a world that doesn't exist.
 
         Raises
@@ -103,17 +102,15 @@ class GuildsSectionParser:
 class GuildParser:
 
     @classmethod
-    def from_content(cls, content) -> Optional[Guild]:
+    def from_content(cls, content: str) -> Optional[Guild]:
         """Create an instance of the class from the HTML content of the guild's page.
 
         Parameters
         -----------
-        content: :class:`str`
             The HTML content of the page.
 
         Returns
         ----------
-        :class:`Guild`
             The guild contained in the page or None if it doesn't exist.
 
         Raises
@@ -303,17 +300,16 @@ class GuildParser:
 class GuildWarsParser:
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content: str) -> GuildWars:
         """Get a guild's war information from Tibia.com's content.
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of a guild's war section in Tibia.com
 
         Returns
         -------
-        :class:`GuildWars`
             The guild's war information.
         """
         try:
@@ -442,4 +438,3 @@ class GuildWarsParser:
             winner = guild_name if guild_score > opponent_score else opposing_name
         builder.opponent_score(opponent_score).guild_score(guild_score).winner(winner)
         return builder.build()
-
