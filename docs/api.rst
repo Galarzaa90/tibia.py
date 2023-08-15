@@ -683,10 +683,10 @@ Parsers
 =======
 .. currentmodule:: tibiapy
 
-.. autoclass:: tibiapy.parsers.bazaar.AuctionFiltersParser
+.. autoclass:: tibiapy.parsers.AuctionFiltersParser
     :members:
 
-.. autoclass:: tibiapy.parsers.bazaar.CharacterBazaarParser
+.. autoclass:: tibiapy.parsers.CharacterBazaarParser
     :members:
 
 Exceptions

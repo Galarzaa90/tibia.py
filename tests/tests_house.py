@@ -48,7 +48,7 @@ class TestsHouse(TestCommons):
         HouseParser._parse_status(house, content)
         self.assertEqual(house._status, HouseStatus.RENTED)
         self.assertEqual(house._owner, "Xenaris mag")
-        self.assertEqual(house._transferee, "Ivarr Bezkosci")
+        self.assertEqual(house._transfer_recipient, "Ivarr Bezkosci")
         self.assertTrue(house._transfer_accepted)
         self.assertEqual(house._transfer_price, 850000)
 

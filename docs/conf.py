@@ -58,6 +58,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.coverage',
     'sphinxcontrib.autodoc_pydantic',
+    'sphinx_autodoc_typehints',
 
 ]
 

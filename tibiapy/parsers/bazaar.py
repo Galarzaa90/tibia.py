@@ -28,6 +28,11 @@ tier_regex = re.compile(r"(.*)\s\(tier (\d)\)")
 
 log = logging.getLogger("tibiapy")
 
+__all__ = (
+    "AuctionFiltersParser",
+    "CharacterBazaarParser",
+    "AuctionParser"
+)
 
 class AuctionFiltersParser:
     @classmethod
@@ -74,12 +79,11 @@ class CharacterBazaarParser:
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the bazaar section at Tibia.com.
 
         Returns
         -------
-        :class:`.CharacterBazaar`
             The character bazaar with the entries found.
         """
         try:
