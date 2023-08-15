@@ -1,3 +1,5 @@
+from typing_extensions import Self
+
 from tibiapy.models.forum import CMPostArchive, CMPost, ForumAnnouncement, ForumBoard, ForumThread
 
 
@@ -10,31 +12,31 @@ class CMPostArchiveBuilder:
         self._results_count = 0
         self._entries = []
 
-    def from_date(self, from_date):
+    def from_date(self, from_date) -> Self:
         self._from_date = from_date
         return self
 
-    def to_date(self, to_date):
+    def to_date(self, to_date) -> Self:
         self._to_date = to_date
         return self
 
-    def current_page(self, current_page):
+    def current_page(self, current_page) -> Self:
         self._current_page = current_page
         return self
 
-    def total_pages(self, total_pages):
+    def total_pages(self, total_pages) -> Self:
         self._total_pages = total_pages
         return self
 
-    def results_count(self, results_count):
+    def results_count(self, results_count) -> Self:
         self._results_count = results_count
         return self
 
-    def entries(self, entries):
+    def entries(self, entries) -> Self:
         self._entries = entries
         return self
 
-    def add_entry(self, entry):
+    def add_entry(self, entry) -> Self:
         self._entries.append(entry)
         return self
 
@@ -50,25 +52,25 @@ class CMPostArchiveBuilder:
 
 
 class CMPostBuilder:
-    def __init__(self, **kwargs):
+    def __init__(self):
         self._post_id = None
         self._posted_on = None
         self._board = None
         self._thread_title = None
 
-    def post_id(self, post_id):
+    def post_id(self, post_id) -> Self:
         self._post_id = post_id
         return self
 
-    def posted_on(self, posted_on):
+    def posted_on(self, posted_on) -> Self:
         self._posted_on = posted_on
         return self
 
-    def board(self, board):
+    def board(self, board) -> Self:
         self._board = board
         return self
 
-    def thread_title(self, thread_title):
+    def thread_title(self, thread_title) -> Self:
         self._thread_title = thread_title
         return self
 
@@ -94,46 +96,45 @@ class ForumAnnouncementBuilder:
         self._from_date = None
         self._to_date = None
 
-    def announcement_id(self, announcement_id):
+    def announcement_id(self, announcement_id) -> Self:
         self._announcement_id = announcement_id
         return self
 
-    def board(self, board):
+    def board(self, board) -> Self:
         self._board = board
         return self
 
-    def section(self, section):
+    def section(self, section) -> Self:
         self._section = section
         return self
 
-    def board_id(self, board_id):
+    def board_id(self, board_id) -> Self:
         self._board_id = board_id
         return self
 
-    def section_id(self, section_id):
+    def section_id(self, section_id) -> Self:
         self._section_id = section_id
         return self
 
-    def author(self, author):
+    def author(self, author) -> Self:
         self._author = author
         return self
 
-    def title(self, title):
+    def title(self, title) -> Self:
         self._title = title
         return self
 
-    def content(self, content):
+    def content(self, content) -> Self:
         self._content = content
         return self
 
-    def from_date(self, from_date):
+    def from_date(self, from_date) -> Self:
         self._from_date = from_date
         return self
 
-    def to_date(self, to_date):
+    def to_date(self, to_date) -> Self:
         self._to_date = to_date
         return self
-
 
     def build(self):
         return ForumAnnouncement(
@@ -154,7 +155,7 @@ class _BaseBoardBuilder:
     def __init__(self):
         self._board_id = 0
 
-    def board_id(self, board_id: int):
+    def board_id(self, board_id: int) -> Self:
         self._board_id = board_id
         return self
 
@@ -171,43 +172,43 @@ class ForumBoardBuilder(_BaseBoardBuilder):
         self._announcements = []
         self._entries = []
 
-    def name(self, name):
+    def name(self, name) -> Self:
         self._name = name
         return self
 
-    def section(self, section):
+    def section(self, section) -> Self:
         self._section = section
         return self
 
-    def section_id(self, section_id):
+    def section_id(self, section_id) -> Self:
         self._section_id = section_id
         return self
 
-    def current_page(self, current_page):
+    def current_page(self, current_page) -> Self:
         self._current_page = current_page
         return self
 
-    def total_pages(self, total_pages):
+    def total_pages(self, total_pages) -> Self:
         self._total_pages = total_pages
         return self
 
-    def age(self, age):
+    def age(self, age) -> Self:
         self._age = age
         return self
 
-    def announcements(self, announcements):
+    def announcements(self, announcements) -> Self:
         self._announcements = announcements
         return self
 
-    def add_announcement(self, announcement):
+    def add_announcement(self, announcement) -> Self:
         self._announcements.append(announcement)
         return self
 
-    def entries(self, entries):
+    def entries(self, entries) -> Self:
         self._entries = entries
         return self
 
-    def add_entry(self, entry):
+    def add_entry(self, entry) -> Self:
         self._entries.append(entry)
         return self
 
@@ -241,59 +242,59 @@ class ForumThreadBuilder:
         self._golden_frame = False
         self._anchored_post = None
 
-    def title(self, title):
+    def title(self, title) -> Self:
         self._title = title
         return self
 
-    def thread_id(self, thread_id):
+    def thread_id(self, thread_id) -> Self:
         self._thread_id = thread_id
         return self
 
-    def board(self, board):
+    def board(self, board) -> Self:
         self._board = board
         return self
 
-    def board_id(self, board_id):
+    def board_id(self, board_id) -> Self:
         self._board_id = board_id
         return self
 
-    def section(self, section):
+    def section(self, section) -> Self:
         self._section = section
         return self
 
-    def section_id(self, section_id):
+    def section_id(self, section_id) -> Self:
         self._section_id = section_id
         return self
 
-    def previous_topic_number(self, previous_topic_number):
+    def previous_topic_number(self, previous_topic_number) -> Self:
         self._previous_topic_number = previous_topic_number
         return self
 
-    def next_topic_number(self, next_topic_number):
+    def next_topic_number(self, next_topic_number) -> Self:
         self._next_topic_number = next_topic_number
         return self
 
-    def total_pages(self, total_pages):
+    def total_pages(self, total_pages) -> Self:
         self._total_pages = total_pages
         return self
 
-    def current_page(self, current_page):
+    def current_page(self, current_page) -> Self:
         self._current_page = current_page
         return self
 
-    def entries(self, entries):
+    def entries(self, entries) -> Self:
         self._entries = entries
         return self
 
-    def golden_frame(self, golden_frame):
+    def golden_frame(self, golden_frame) -> Self:
         self._golden_frame = golden_frame
         return self
 
-    def anchored_post(self, anchored_post):
+    def anchored_post(self, anchored_post) -> Self:
         self._anchored_post = anchored_post
         return self
 
-    def add_entry(self, entry):
+    def add_entry(self, entry) -> Self:
         self._entries.append(entry)
         return self
 

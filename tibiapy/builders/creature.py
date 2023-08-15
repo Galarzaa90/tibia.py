@@ -1,5 +1,7 @@
 from typing import List
 
+from typing_extensions import Self
+
 from tibiapy.models.creature import CreatureEntry, Creature
 
 
@@ -9,11 +11,11 @@ class CreatureEntryBuilder:
         self._name = None
         self._identifier = None
 
-    def name(self, name: str):
+    def name(self, name: str) -> Self:
         self._name = name
         return self
 
-    def identifier(self, identifier: str):
+    def identifier(self, identifier: str) -> Self:
         self._identifier = identifier
         return self
 
@@ -39,51 +41,51 @@ class CreatureBuilder:
         self._summonable = False
         self._convinceable = False
 
-    def name(self, name: str):
+    def name(self, name: str) -> Self:
         self._name = name
         return self
 
-    def identifier(self, identifier: str):
+    def identifier(self, identifier: str) -> Self:
         self._identifier = identifier
         return self
 
-    def description(self, description: str):
+    def description(self, description: str) -> Self:
         self._description = description
         return self
 
-    def hitpoints(self, hitpoints: int):
+    def hitpoints(self, hitpoints: int) -> Self:
         self._hitpoints = hitpoints
         return self
 
-    def experience(self, experience: int):
+    def experience(self, experience: int) -> Self:
         self._experience = experience
         return self
 
-    def immune_to(self, immune_to: List[str]):
+    def immune_to(self, immune_to: List[str]) -> Self:
         self._immune_to = immune_to
         return self
 
-    def weak_against(self, weak_against: List[str]):
+    def weak_against(self, weak_against: List[str]) -> Self:
         self._weak_against = weak_against
         return self
 
-    def strong_against(self, strong_against: List[str]):
+    def strong_against(self, strong_against: List[str]) -> Self:
         self._strong_against = strong_against
         return self
 
-    def loot(self, loot: str):
+    def loot(self, loot: str) -> Self:
         self._loot = loot
         return self
 
-    def mana_cost(self, mana_cost: int):
+    def mana_cost(self, mana_cost: int) -> Self:
         self._mana_cost = mana_cost
         return self
 
-    def summonable(self, summonable: bool):
+    def summonable(self, summonable: bool) -> Self:
         self._summonable = summonable
         return self
 
-    def convinceable(self, convinceable: bool):
+    def convinceable(self, convinceable: bool) -> Self:
         self._convinceable = convinceable
         return self
 

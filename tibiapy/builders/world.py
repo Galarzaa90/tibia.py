@@ -3,6 +3,8 @@ from __future__ import annotations
 import datetime
 from typing import List, Optional, TYPE_CHECKING
 
+from typing_extensions import Self
+
 from tibiapy import TransferType, BattlEyeType
 from tibiapy.models.world import World, WorldEntry, WorldOverview
 
@@ -30,43 +32,43 @@ class WorldEntryBuilder:
         self._is_experimental = False
         self._is_premium_only = False
 
-    def name(self, name: str):
+    def name(self, name: str) -> Self:
         self._name = name
         return self
 
-    def is_online(self, is_online: bool):
+    def is_online(self, is_online: bool) -> Self:
         self._is_online = is_online
         return self
 
-    def online_count(self, online_count: int):
+    def online_count(self, online_count: int) -> Self:
         self._online_count = online_count
         return self
 
-    def location(self, location: WorldLocation):
+    def location(self, location: WorldLocation) -> Self:
         self._location = location
         return self
 
-    def pvp_type(self, pvp_type: PvpType):
+    def pvp_type(self, pvp_type: PvpType) -> Self:
         self._pvp_type = pvp_type
         return self
 
-    def is_premium_only(self, is_premium_only: bool):
+    def is_premium_only(self, is_premium_only: bool) -> Self:
         self._is_premium_only = is_premium_only
         return self
 
-    def transfer_type(self, transfer_type: TransferType):
+    def transfer_type(self, transfer_type: TransferType) -> Self:
         self._transfer_type = transfer_type
         return self
 
-    def battleye_since(self, battleye_since: Optional[datetime.datetime]):
+    def battleye_since(self, battleye_since: Optional[datetime.datetime]) -> Self:
         self._battleye_since = battleye_since
         return self
 
-    def battleye_type(self, battleye_type: BattlEyeType):
+    def battleye_type(self, battleye_type: BattlEyeType) -> Self:
         self._battleye_type = battleye_type
         return self
 
-    def is_experimental(self, is_experimental: bool):
+    def is_experimental(self, is_experimental: bool) -> Self:
         self._is_experimental = is_experimental
         return self
 
@@ -94,31 +96,31 @@ class WorldBuilder(WorldEntryBuilder):
         self._online_players = []
         self._world_quest_titles = []
 
-    def record_count(self, record_count: int):
+    def record_count(self, record_count: int) -> Self:
         self._record_count = record_count
         return self
 
-    def record_date(self, record_date: datetime.datetime):
+    def record_date(self, record_date: datetime.datetime) -> Self:
         self._record_date = record_date
         return self
 
-    def creation_date(self, creation_date: str):
+    def creation_date(self, creation_date: str) -> Self:
         self._creation_date = creation_date
         return self
 
-    def world_quest_titles(self, world_quest_titles: List[str]):
+    def world_quest_titles(self, world_quest_titles: List[str]) -> Self:
         self._world_quest_titles = world_quest_titles
         return self
 
-    def add_world_quest_title(self, world_quest_title: str):
+    def add_world_quest_title(self, world_quest_title: str) -> Self:
         self._world_quest_titles.append(world_quest_title)
         return self
 
-    def online_players(self, online_players: List[OnlineCharacter]):
+    def online_players(self, online_players: List[OnlineCharacter]) -> Self:
         self._online_players = online_players
         return self
 
-    def add_online_player(self, player: OnlineCharacter):
+    def add_online_player(self, player: OnlineCharacter) -> Self:
         self._online_players.append(player)
         return self
 
@@ -148,15 +150,15 @@ class WorldOverviewBuilder:
         self._record_date = None
         self._worlds = []
 
-    def record_count(self, record_count: int):
+    def record_count(self, record_count: int) -> Self:
         self._record_count = record_count
         return self
 
-    def record_date(self, record_date: datetime.datetime):
+    def record_date(self, record_date: datetime.datetime) -> Self:
         self._record_date = record_date
         return self
 
-    def worlds(self, worlds: List[WorldEntry]):
+    def worlds(self, worlds: List[WorldEntry]) -> Self:
         self._worlds = worlds
         return self
 

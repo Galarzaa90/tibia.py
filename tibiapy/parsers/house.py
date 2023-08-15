@@ -204,7 +204,7 @@ class HouseParser:
         if m := transfer_regex.search(status):
             builder.transfer_date(parse_tibia_datetime(m.group("transfer_date")))
             builder.transfer_accepted(m.group("verb") == "will")
-            builder.transferee(m.group("transferee"))
+            builder.transfer_recipient(m.group("transferee"))
             price = m.group("transfer_price")
             builder.transfer_price(int(price) if price is not None else 0)
 

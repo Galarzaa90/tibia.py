@@ -7,7 +7,8 @@ import bs4
 
 from tibiapy.builders.creature import CreatureBuilder
 from tibiapy.errors import InvalidContent
-from tibiapy.models.creature import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses
+from tibiapy.models.creature import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses, \
+    Creature
 from tibiapy.utils import parse_tibiacom_content, convert_line_breaks
 
 __all__ = (
@@ -213,7 +214,7 @@ class CreatureParser:
     _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
 
     @classmethod
-    def from_content(cls, content):
+    def from_content(cls, content) -> Creature:
         """Create an instance of the class from the html content of the creature library's page.
 
         Parameters

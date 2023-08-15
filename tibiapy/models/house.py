@@ -56,7 +56,7 @@ class House(HouseWithId):
     """The date the last paid rent is due."""
     transfer_date: Optional[datetime.datetime] = None
     """The date when the owner will move out of the house, if applicable."""
-    transferee: Optional[str] = None
+    transfer_recipient: Optional[str] = None
     """The character who will receive the house when the owner moves, if applicable."""
     transfer_price: Optional[int] = None
     """The price that will be paid from the transferee to the owner for the house transfer."""
@@ -77,7 +77,7 @@ class House(HouseWithId):
     @property
     def transferee_url(self) -> Optional[str]:
         """The URL to the Tibia.com page of the character receiving the house, if applicable."""
-        return get_character_url(self.transferee) if self.transferee is not None else None
+        return get_character_url(self.transfer_recipient) if self.transfer_recipient is not None else None
 
     @property
     def highest_bidder_url(self) -> Optional[str]:

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import List, TYPE_CHECKING
 
+from typing_extensions import Self
+
 from tibiapy.models import KillStatistics
 
 if TYPE_CHECKING:
@@ -15,27 +17,27 @@ class KillStatisticsBuilder:
         self._total = None
         self._available_worlds = None
 
-    def world(self, world: str):
+    def world(self, world: str) -> Self:
         self._world = world
         return self
 
-    def entries(self, entries: List[RaceEntry]):
+    def entries(self, entries: List[RaceEntry]) -> Self:
         self._entries = entries
         return self
 
-    def set_entry(self, name: str, entry: RaceEntry):
+    def set_entry(self, name: str, entry: RaceEntry) -> Self:
         self._entries[name] = entry
         return self
 
-    def total(self, total: RaceEntry):
+    def total(self, total: RaceEntry) -> Self:
         self._total = total
         return self
 
-    def available_worlds(self, available_worlds: List[str]):
+    def available_worlds(self, available_worlds: List[str]) -> Self:
         self._available_worlds = available_worlds
         return self
 
-    def build(self):
+    def build(self) -> Self:
         return KillStatistics(
             world=self._world,
             entries=self._entries,

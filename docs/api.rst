@@ -679,6 +679,15 @@ They implement methods and properties that can be inherited by other classes to 
 .. autopydantic_model:: AjaxPaginator
     :inherited-members: BaseModel
 
+Parsers
+=======
+.. currentmodule:: tibiapy
+
+.. autoclass:: tibiapy.parsers.bazaar.AuctionFiltersParser
+    :members:
+
+.. autoclass:: tibiapy.parsers.bazaar.CharacterBazaarParser
+    :members:
 
 Exceptions
 ==========

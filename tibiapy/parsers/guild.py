@@ -245,7 +245,7 @@ class GuildParser:
             builder.active("currently active" in m.group("status"))
 
     @classmethod
-    def _parse_logo(cls, builder, parsed_content):
+    def _parse_logo(cls, builder: GuildBuilder, parsed_content):
         """Parse the guild logo and saves it to the instance.
 
         Parameters

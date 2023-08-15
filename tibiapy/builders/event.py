@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import List, TYPE_CHECKING
 
+from typing_extensions import Self
+
 from tibiapy.models.event import EventSchedule
 
 if TYPE_CHECKING:
@@ -15,19 +17,19 @@ class EventScheduleBuilder:
         self._year = None
         self._events = []
 
-    def month(self, month: int):
+    def month(self, month: int) -> Self:
         self._month = month
         return self
 
-    def year(self, year: int):
+    def year(self, year: int) -> Self:
         self._year = year
         return self
 
-    def events(self, events: List[EventEntry]):
+    def events(self, events: List[EventEntry]) -> Self:
         self._events = events
         return self
 
-    def add_event(self, event: EventEntry):
+    def add_event(self, event: EventEntry) -> Self:
         self._events.append(event)
         return self
 

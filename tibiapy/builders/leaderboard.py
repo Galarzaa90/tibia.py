@@ -3,6 +3,8 @@ from __future__ import annotations
 import datetime
 from typing import List, Optional, TYPE_CHECKING
 
+from typing_extensions import Self
+
 from tibiapy.models.leaderboard import LeaderboardEntry, Leaderboard
 
 if TYPE_CHECKING:
@@ -21,43 +23,43 @@ class LeaderboardBuilder:
         self._total_pages = None
         self._results_count = None
 
-    def world(self, world: str):
+    def world(self, world: str) -> Self:
         self._world = world
         return self
 
-    def available_worlds(self, available_worlds: List[str]):
+    def available_worlds(self, available_worlds: List[str]) -> Self:
         self._available_worlds = available_worlds
         return self
 
-    def rotation(self, rotation: LeaderboardRotation):
+    def rotation(self, rotation: LeaderboardRotation) -> Self:
         self._rotation = rotation
         return self
 
-    def available_rotations(self, available_rotations: List[LeaderboardRotation]):
+    def available_rotations(self, available_rotations: List[LeaderboardRotation]) -> Self:
         self._available_rotations = available_rotations
         return self
 
-    def entries(self, entries: List[LeaderboardEntry]):
+    def entries(self, entries: List[LeaderboardEntry]) -> Self:
         self._entries = entries
         return self
 
-    def add_entry(self, entry: LeaderboardEntry):
+    def add_entry(self, entry: LeaderboardEntry) -> Self:
         self._entries.append(entry)
         return self
 
-    def last_updated(self, last_updated: Optional[datetime.datetime]):
+    def last_updated(self, last_updated: Optional[datetime.datetime]) -> Self:
         self._last_updated = last_updated
         return self
 
-    def current_page(self, current_page: int):
+    def current_page(self, current_page: int) -> Self:
         self._current_page = current_page
         return self
 
-    def total_pages(self, total_pages: int):
+    def total_pages(self, total_pages: int) -> Self:
         self._total_pages = total_pages
         return self
 
-    def results_count(self, results_count: int):
+    def results_count(self, results_count: int) -> Self:
         self._results_count = results_count
         return self
 
@@ -82,15 +84,15 @@ class LeaderboardEntryBuilder:
         self._rank = None
         self._drome_level = None
 
-    def name(self, name: str):
+    def name(self, name: str) -> Self:
         self._name = name
         return self
 
-    def rank(self, rank: int):
+    def rank(self, rank: int) -> Self:
         self._rank = rank
         return self
 
-    def drome_level(self, drome_level: int):
+    def drome_level(self, drome_level: int) -> Self:
         self._drome_level = drome_level
         return self
 

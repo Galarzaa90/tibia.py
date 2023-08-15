@@ -3,6 +3,8 @@ from __future__ import annotations
 import datetime
 from typing import List, TYPE_CHECKING
 
+from typing_extensions import Self
+
 from tibiapy.models import Highscores
 
 if TYPE_CHECKING:
@@ -25,51 +27,51 @@ class HighscoresBuilder:
         self._entries = []
         self._available_worlds = None
 
-    def world(self, world: str):
+    def world(self, world: str) -> Self:
         self._world = world
         return self
 
-    def category(self, category: HighscoresCategory):
+    def category(self, category: HighscoresCategory) -> Self:
         self._category = category
         return self
 
-    def vocation(self, vocation: HighscoresProfession):
+    def vocation(self, vocation: HighscoresProfession) -> Self:
         self._vocation = vocation
         return self
 
-    def battleye_filter(self, battleye_filter: HighscoresBattlEyeType):
+    def battleye_filter(self, battleye_filter: HighscoresBattlEyeType) -> Self:
         self._battleye_filter = battleye_filter
         return self
 
-    def pvp_types_filter(self, pvp_types_filter: PvpTypeFilter):
+    def pvp_types_filter(self, pvp_types_filter: PvpTypeFilter) -> Self:
         self._pvp_types_filter = pvp_types_filter
         return self
 
-    def current_page(self, current_page: int):
+    def current_page(self, current_page: int) -> Self:
         self._current_page = current_page
         return self
 
-    def total_pages(self, total_pages: int):
+    def total_pages(self, total_pages: int) -> Self:
         self._total_pages = total_pages
         return self
 
-    def results_count(self, results_count: int):
+    def results_count(self, results_count: int) -> Self:
         self._results_count = results_count
         return self
 
-    def last_updated(self, last_updated: datetime.datetime):
+    def last_updated(self, last_updated: datetime.datetime) -> Self:
         self._last_updated = last_updated
         return self
 
-    def entries(self, entries: List[HighscoresEntry]):
+    def entries(self, entries: List[HighscoresEntry]) -> Self:
         self._entries = entries
         return self
 
-    def add_entry(self, entry: HighscoresEntry):
+    def add_entry(self, entry: HighscoresEntry) -> Self:
         self._entries.append(entry)
         return self
 
-    def available_worlds(self, available_worlds: List[str]):
+    def available_worlds(self, available_worlds: List[str]) -> Self:
         self._available_worlds = available_worlds
         return self
 

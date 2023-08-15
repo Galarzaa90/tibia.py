@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Optional, List, TYPE_CHECKING
 
+from typing_extensions import Self
+
 from tibiapy.models import SpellEntry, SpellsSection, Spell, Rune
 
 if TYPE_CHECKING:
@@ -17,31 +19,31 @@ class SpellSectionBuilder:
         self._sort_by = None
         self._entries = []
 
-    def vocation(self, vocation: Optional[SpellVocationFilter]):
+    def vocation(self, vocation: Optional[SpellVocationFilter]) -> Self:
         self._vocation = vocation
         return self
 
-    def group(self, group: Optional[SpellGroup]):
+    def group(self, group: Optional[SpellGroup]) -> Self:
         self._group = group
         return self
 
-    def spell_type(self, spell_type: Optional[SpellVocationFilter]):
+    def spell_type(self, spell_type: Optional[SpellVocationFilter]) -> Self:
         self._spell_type = spell_type
         return self
 
-    def premium(self, premium: Optional[bool]):
+    def premium(self, premium: Optional[bool]) -> Self:
         self._premium = premium
         return self
 
-    def sort_by(self, sort_by: SpellSorting):
+    def sort_by(self, sort_by: SpellSorting) -> Self:
         self._sort_by = sort_by
         return self
 
-    def entries(self, entries: List[SpellEntry]):
+    def entries(self, entries: List[SpellEntry]) -> Self:
         self._entries = entries
         return self
 
-    def add_entry(self, spell: SpellEntry):
+    def add_entry(self, spell: SpellEntry) -> Self:
         self._entries.append(spell)
         return self
 
@@ -134,47 +136,47 @@ class SpellBuilder(SpellEntryBuilder):
         self._cities = []
         self._rune = None
 
-    def description(self, description: str):
+    def description(self, description: str) -> Self:
         self._description = description
         return self
 
-    def vocations(self, vocations: List[str]):
+    def vocations(self, vocations: List[str]) -> Self:
         self._vocations = vocations
         return self
 
-    def cooldown(self, cooldown: int):
+    def cooldown(self, cooldown: int) -> Self:
         self._cooldown = cooldown
         return self
 
-    def cooldown_group(self, cooldown_group: Optional[int]):
+    def cooldown_group(self, cooldown_group: Optional[int]) -> Self:
         self._cooldown_group = cooldown_group
         return self
 
-    def cooldown_group_secondary(self, cooldown_group_secondary: Optional[int]):
+    def cooldown_group_secondary(self, cooldown_group_secondary: Optional[int]) -> Self:
         self._cooldown_group_secondary = cooldown_group_secondary
         return self
 
-    def group_secondary(self, group_secondary: SpellGroup):
+    def group_secondary(self, group_secondary: SpellGroup) -> Self:
         self._group_secondary = group_secondary
         return self
 
-    def soul_points(self, soul_points: int):
+    def soul_points(self, soul_points: int) -> Self:
         self._soul_points = soul_points
         return self
 
-    def amount(self, amount: int):
+    def amount(self, amount: int) -> Self:
         self._amount = amount
         return self
 
-    def magic_type(self, magic_type: Optional[int]):
+    def magic_type(self, magic_type: Optional[int]) -> Self:
         self._magic_type = magic_type
         return self
 
-    def cities(self, cities: List[str]):
+    def cities(self, cities: List[str]) -> Self:
         self._cities = cities
         return self
 
-    def rune(self, rune: Rune):
+    def rune(self, rune: Rune) -> Self:
         self._rune = rune
         return self
 
@@ -213,31 +215,31 @@ class RuneBuilder:
         self._magic_level = None
         self._magic_type = None
 
-    def name(self, name: str):
+    def name(self, name: str) -> Self:
         self._name = name
         return self
 
-    def vocations(self, vocations: List[str]):
+    def vocations(self, vocations: List[str]) -> Self:
         self._vocations = vocations
         return self
 
-    def group(self, group: SpellGroup):
+    def group(self, group: SpellGroup) -> Self:
         self._group = group
         return self
 
-    def exp_level(self, exp_level: int):
+    def exp_level(self, exp_level: int) -> Self:
         self._exp_level = exp_level
         return self
 
-    def mana(self, mana: Optional[int]):
+    def mana(self, mana: Optional[int]) -> Self:
         self._mana = mana
         return self
 
-    def magic_level(self, magic_level: int):
+    def magic_level(self, magic_level: int) -> Self:
         self._magic_level = magic_level
         return self
 
-    def magic_type(self, magic_type: Optional[str]):
+    def magic_type(self, magic_type: Optional[str]) -> Self:
         self._magic_type = magic_type
         return self
 

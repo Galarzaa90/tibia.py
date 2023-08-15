@@ -153,7 +153,7 @@ class HouseBuilder(_HouseWithIdBuilder):
         self._owner_sex = None
         self._paid_until = None
         self._transfer_date = None
-        self._transferee = None
+        self._transfer_recipient = None
         self._transfer_price = None
         self._transfer_accepted = None
         self._highest_bid = None
@@ -200,8 +200,8 @@ class HouseBuilder(_HouseWithIdBuilder):
         self._transfer_date = transfer_date
         return self
 
-    def transferee(self, transferee: Optional[str]):
-        self._transferee = transferee
+    def transfer_recipient(self, transfer_recipient: Optional[str]):
+        self._transfer_recipient = transfer_recipient
         return self
 
     def transfer_price(self, transfer_price: Optional[int]):

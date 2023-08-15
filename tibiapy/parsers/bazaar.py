@@ -28,6 +28,7 @@ tier_regex = re.compile(r"(.*)\s\(tier (\d)\)")
 
 log = logging.getLogger("tibiapy")
 
+
 class AuctionFiltersParser:
     @classmethod
     def parse_from_table(cls, table: bs4.Tag) -> AuctionFilters:
@@ -35,12 +36,12 @@ class AuctionFiltersParser:
 
         Parameters
         ----------
-        table: :class:`bs4.Tag`
+        table:
             The table containing the filters.
 
         Returns
         -------
-        :class:`AuctionFilters`
+        :class:`.AuctionFilters`
             The currently applied filters.
         """
         filters = AuctionFilters()
@@ -78,7 +79,7 @@ class CharacterBazaarParser:
 
         Returns
         -------
-        :class:`CharacterBazaar`
+        :class:`.CharacterBazaar`
             The character bazaar with the entries found.
         """
         try:
@@ -114,7 +115,7 @@ class CharacterBazaarParser:
 class AuctionParser:
 
     @classmethod
-    def from_content(cls, content, auction_id=0, skip_details=False):
+    def from_content(cls, content: str, auction_id=0, skip_details=False):
         """Parse an auction detail page from Tibia.com and extracts its data.
 
         Parameters
@@ -192,7 +193,7 @@ class AuctionParser:
         return auction
 
     @classmethod
-    def _parse_auction(cls, auction_row, auction_id=0) -> Auction:
+    def _parse_auction(cls, auction_row: bs4.Tag, auction_id=0) -> Auction:
         """Parse an auction's table, extracting its data.
 
         Parameters
@@ -260,7 +261,7 @@ class AuctionParser:
         return builder.build()
 
     @classmethod
-    def _parse_tables(cls, parsed_content) -> Dict[str, bs4.Tag]:
+    def _parse_tables(cls, parsed_content: bs4.Tag) -> Dict[str, bs4.Tag]:
         """Parse the character details tables.
 
         Parameters
@@ -277,7 +278,7 @@ class AuctionParser:
         return {table["id"]: table for table in details_tables}
 
     @classmethod
-    def _parse_data_table(cls, table) -> Dict[str, str]:
+    def _parse_data_table(cls, table: bs4.Tag) -> Dict[str, str]:
         """Parse a simple data table into a key value mapping.
 
         Parameters
@@ -300,7 +301,7 @@ class AuctionParser:
         return data
 
     @classmethod
-    def _parse_skills_table(cls, builder, table):
+    def _parse_skills_table(cls, builder: AuctionDetailsBuilder, table):
         """Parse the skills table.
 
         Parameters
@@ -319,7 +320,7 @@ class AuctionParser:
         builder.skills(skills)
 
     @classmethod
-    def _parse_blessings_table(cls, builder, table):
+    def _parse_blessings_table(cls, builder: AuctionDetailsBuilder, table):
         """Parse the blessings table.
 
         Parameters
@@ -338,7 +339,7 @@ class AuctionParser:
         builder.blessings(blessings)
 
     @classmethod
-    def _parse_single_column_table(cls, table):
+    def _parse_single_column_table(cls, table: bs4.Tag):
         """Parse a table with a single column into an array.
 
         Parameters
@@ -363,7 +364,7 @@ class AuctionParser:
         return ret
 
     @classmethod
-    def _parse_charms_table(cls, builder, table):
+    def _parse_charms_table(cls, builder: AuctionDetailsBuilder, table):
         """Parse the charms table and extracts its information.
 
         Parameters
@@ -384,7 +385,7 @@ class AuctionParser:
         builder.charms(charms)
 
     @classmethod
-    def _parse_achievements_table(cls, builder, table):
+    def _parse_achievements_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag):
         """Parse the achievements table and extracts its information.
 
         Parameters
@@ -405,12 +406,12 @@ class AuctionParser:
         builder.achievements(achievements)
 
     @classmethod
-    def _parse_bestiary_table(cls, builder, table, bosstiary=False):
+    def _parse_bestiary_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag, bosstiary=False):
         """Parse the bestiary table and extracts its information.
 
         Parameters
         ----------
-        table: :class:`bs4.Tag`
+        table:
             The table containing the bestiary information.
         """
         table_content = table.select_one("table.TableContent")
@@ -431,7 +432,7 @@ class AuctionParser:
 
 
     @classmethod
-    def _parse_general_table(cls, builder, table):
+    def _parse_general_table(cls, builder: AuctionDetailsBuilder, table):
         """Parse the general information table and assigns its values.
 
         Parameters

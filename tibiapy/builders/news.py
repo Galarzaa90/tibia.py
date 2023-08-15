@@ -3,6 +3,8 @@ from __future__ import annotations
 import datetime
 from typing import Collection, List, Optional, TYPE_CHECKING
 
+from typing_extensions import Self
+
 from tibiapy.models import NewsEntry, NewsArchive, News
 
 if TYPE_CHECKING:
@@ -17,35 +19,35 @@ class NewsArchiveBuilder:
         self._categories = set()
         self._entries = []
 
-    def from_date(self, from_date: datetime.date):
+    def from_date(self, from_date: datetime.date) -> Self:
         self._from_date = from_date
         return self
 
-    def to_date(self, to_date: datetime.date):
+    def to_date(self, to_date: datetime.date) -> Self:
         self._to_date = to_date
         return self
 
-    def types(self, types: Collection[NewsType]):
+    def types(self, types: Collection[NewsType]) -> Self:
         self._types = set(types)
         return self
 
-    def add_type(self, type: NewsType):
+    def add_type(self, type: NewsType) -> Self:
         self._types.add(type)
         return self
 
-    def categories(self, categories: Collection[NewsCategory]):
+    def categories(self, categories: Collection[NewsCategory]) -> Self:
         self._categories = set(categories)
         return self
 
-    def add_category(self, category: NewsCategory):
+    def add_category(self, category: NewsCategory) -> Self:
         self._categories.add(category)
         return self
 
-    def entries(self, entries: List[NewsEntry]):
+    def entries(self, entries: List[NewsEntry]) -> Self:
         self._entries = entries
         return self
 
-    def add_entry(self, entry: NewsEntry):
+    def add_entry(self, entry: NewsEntry) -> Self:
         self._entries.append(entry)
         return self
 
@@ -68,27 +70,27 @@ class NewsBuilder:
         self._content = None
         self._thread_id = None
 
-    def id(self, id: int):
+    def id(self, id: int) -> Self:
         self._id = id
         return self
 
-    def category(self, category: NewsCategory):
+    def category(self, category: NewsCategory) -> Self:
         self._category = category
         return self
 
-    def title(self, title: str):
+    def title(self, title: str) -> Self:
         self._title = title
         return self
 
-    def published_on(self, published_on: datetime.date):
+    def published_on(self, published_on: datetime.date) -> Self:
         self._published_on = published_on
         return self
 
-    def content(self, content: str):
+    def content(self, content: str) -> Self:
         self._content = content
         return self
 
-    def thread_id(self, thread_id: Optional[int]):
+    def thread_id(self, thread_id: Optional[int]) -> Self:
         self._thread_id = thread_id
         return self
 

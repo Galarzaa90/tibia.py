@@ -3,6 +3,8 @@ from __future__ import annotations
 import datetime
 from typing import List, Optional, TYPE_CHECKING
 
+from typing_extensions import Self
+
 from tibiapy.models import CharacterBazaar, Auction
 from tibiapy.models.bazaar import AuctionDetails
 
@@ -22,31 +24,31 @@ class CharacterBazaarBuilder:
         self._type = None
         self._filters = None
 
-    def current_page(self, current_page: int):
+    def current_page(self, current_page: int) -> Self:
         self._current_page = current_page
         return self
 
-    def total_pages(self, total_pages: int):
+    def total_pages(self, total_pages: int) -> Self:
         self._total_pages = total_pages
         return self
 
-    def results_count(self, results_count: int):
+    def results_count(self, results_count: int) -> Self:
         self._results_count = results_count
         return self
 
-    def entries(self, entries: List[Auction]):
+    def entries(self, entries: List[Auction]) -> Self:
         self._entries = entries
         return self
 
-    def add_entry(self, entry: Auction):
+    def add_entry(self, entry: Auction) -> Self:
         self._entries.append(entry)
         return self
 
-    def type(self, type: BazaarType):
+    def type(self, type: BazaarType) -> Self:
         self._type = type
         return self
 
-    def filters(self, filters: AuctionFilters):
+    def filters(self, filters: AuctionFilters) -> Self:
         self._filters = filters
         return self
 
@@ -78,67 +80,67 @@ class AuctionBuilder:
         self._bid_type = None
         self._status = None
 
-    def auction_id(self, auction_id: int):
+    def auction_id(self, auction_id: int) -> Self:
         self._auction_id = auction_id
         return self
 
-    def name(self, name: str):
+    def name(self, name: str) -> Self:
         self._name = name
         return self
 
-    def level(self, level: int):
+    def level(self, level: int) -> Self:
         self._level = level
         return self
 
-    def world(self, world: str):
+    def world(self, world: str) -> Self:
         self._world = world
         return self
 
-    def vocation(self, vocation: Vocation):
+    def vocation(self, vocation: Vocation) -> Self:
         self._vocation = vocation
         return self
 
-    def sex(self, sex: Sex):
+    def sex(self, sex: Sex) -> Self:
         self._sex = sex
         return self
 
-    def outfit(self, outfit: OutfitImage):
+    def outfit(self, outfit: OutfitImage) -> Self:
         self._outfit = outfit
         return self
 
-    def displayed_items(self, displayed_items: List[ItemEntry]):
+    def displayed_items(self, displayed_items: List[ItemEntry]) -> Self:
         self._displayed_items = displayed_items
         return self
 
-    def add_displayed_item(self, displayed_item: ItemEntry):
+    def add_displayed_item(self, displayed_item: ItemEntry) -> Self:
         self._displayed_items.append(displayed_item)
         return self
 
-    def sales_arguments(self, sales_arguments: List[SalesArgument]):
+    def sales_arguments(self, sales_arguments: List[SalesArgument]) -> Self:
         self._sales_arguments = sales_arguments
         return self
 
-    def add_sales_argument(self, sales_argument: SalesArgument):
+    def add_sales_argument(self, sales_argument: SalesArgument) -> Self:
         self._sales_arguments.append(sales_argument)
         return self
 
-    def auction_start(self, auction_start: datetime.datetime):
+    def auction_start(self, auction_start: datetime.datetime) -> Self:
         self._auction_start = auction_start
         return self
 
-    def auction_end(self, auction_end: datetime.datetime):
+    def auction_end(self, auction_end: datetime.datetime) -> Self:
         self._auction_end = auction_end
         return self
 
-    def bid(self, bid: int):
+    def bid(self, bid: int) -> Self:
         self._bid = bid
         return self
 
-    def bid_type(self, bid_type: BidType):
+    def bid_type(self, bid_type: BidType) -> Self:
         self._bid_type = bid_type
         return self
 
-    def status(self, status: AuctionStatus):
+    def status(self, status: AuctionStatus) -> Self:
         self._status = status
         return self
 
@@ -209,179 +211,180 @@ class AuctionDetailsBuilder:
         self._bestiary_progress = None
         self._bosstiary_progress = None
 
-    def hit_points(self, hit_points: int):
+    def hit_points(self, hit_points: int) -> Self:
         self._hit_points = hit_points
         return self
 
-    def mana(self, mana: int):
+    def mana(self, mana: int) -> Self:
         self._mana = mana
         return self
 
-    def capacity(self, capacity: int):
+    def capacity(self, capacity: int) -> Self:
         self._capacity = capacity
         return self
 
-    def speed(self, speed: int):
+    def speed(self, speed: int) -> Self:
         self._speed = speed
         return self
 
-    def blessings_count(self, blessings_count: int):
+    def blessings_count(self, blessings_count: int) -> Self:
         self._blessings_count = blessings_count
         return self
 
-    def mounts_count(self, mounts_count: int):
+    def mounts_count(self, mounts_count: int) -> Self:
         self._mounts_count = mounts_count
         return self
 
-    def outfits_count(self, outfits_count: int):
+    def outfits_count(self, outfits_count: int) -> Self:
         self._outfits_count = outfits_count
         return self
 
-    def titles_count(self, titles_count: int):
+    def titles_count(self, titles_count: int) -> Self:
         self._titles_count = titles_count
         return self
 
-    def skills(self, skills: List[SkillEntry]):
+    def skills(self, skills: List[SkillEntry]) -> Self:
         self._skills = skills
         return self
 
-    def creation_date(self, creation_date: datetime.datetime):
+    def creation_date(self, creation_date: datetime.datetime) -> Self:
         self._creation_date = creation_date
         return self
 
-    def experience(self, experience: int):
+    def experience(self, experience: int) -> Self:
         self._experience = experience
         return self
 
-    def gold(self, gold: int):
+    def gold(self, gold: int) -> Self:
         self._gold = gold
         return self
 
-    def achievement_points(self, achievement_points: int):
+    def achievement_points(self, achievement_points: int) -> Self:
         self._achievement_points = achievement_points
         return self
 
-    def regular_world_transfer_available_date(self, regular_world_transfer_available_date: Optional[datetime.datetime]):
+    def regular_world_transfer_available_date(self, regular_world_transfer_available_date: Optional[
+        datetime.datetime]) -> Self:
         self._regular_world_transfer_available_date = regular_world_transfer_available_date
         return self
 
-    def charm_expansion(self, charm_expansion: bool):
+    def charm_expansion(self, charm_expansion: bool) -> Self:
         self._charm_expansion = charm_expansion
         return self
 
-    def available_charm_points(self, available_charm_points: int):
+    def available_charm_points(self, available_charm_points: int) -> Self:
         self._available_charm_points = available_charm_points
         return self
 
-    def spent_charm_points(self, spent_charm_points: int):
+    def spent_charm_points(self, spent_charm_points: int) -> Self:
         self._spent_charm_points = spent_charm_points
         return self
 
-    def prey_wildcards(self, prey_wildcards: int):
+    def prey_wildcards(self, prey_wildcards: int) -> Self:
         self._prey_wildcards = prey_wildcards
         return self
 
-    def daily_reward_streak(self, daily_reward_streak: int):
+    def daily_reward_streak(self, daily_reward_streak: int) -> Self:
         self._daily_reward_streak = daily_reward_streak
         return self
 
-    def hunting_task_points(self, hunting_task_points: int):
+    def hunting_task_points(self, hunting_task_points: int) -> Self:
         self._hunting_task_points = hunting_task_points
         return self
 
-    def permanent_hunting_task_slots(self, permanent_hunting_task_slots: int):
+    def permanent_hunting_task_slots(self, permanent_hunting_task_slots: int) -> Self:
         self._permanent_hunting_task_slots = permanent_hunting_task_slots
         return self
 
-    def permanent_prey_slots(self, permanent_prey_slots: int):
+    def permanent_prey_slots(self, permanent_prey_slots: int) -> Self:
         self._permanent_prey_slots = permanent_prey_slots
         return self
 
-    def hirelings(self, hirelings: int):
+    def hirelings(self, hirelings: int) -> Self:
         self._hirelings = hirelings
         return self
 
-    def hireling_jobs(self, hireling_jobs: int):
+    def hireling_jobs(self, hireling_jobs: int) -> Self:
         self._hireling_jobs = hireling_jobs
         return self
 
-    def hireling_outfits(self, hireling_outfits: int):
+    def hireling_outfits(self, hireling_outfits: int) -> Self:
         self._hireling_outfits = hireling_outfits
         return self
 
-    def exalted_dust(self, exalted_dust: int):
+    def exalted_dust(self, exalted_dust: int) -> Self:
         self._exalted_dust = exalted_dust
         return self
 
-    def exalted_dust_limit(self, exalted_dust_limit: int):
+    def exalted_dust_limit(self, exalted_dust_limit: int) -> Self:
         self._exalted_dust_limit = exalted_dust_limit
         return self
 
-    def boss_points(self, boss_points: int):
+    def boss_points(self, boss_points: int) -> Self:
         self._boss_points = boss_points
         return self
 
-    def items(self, items: ItemSummary):
+    def items(self, items: ItemSummary) -> Self:
         self._items = items
         return self
 
-    def store_items(self, store_items: ItemSummary):
+    def store_items(self, store_items: ItemSummary) -> Self:
         self._store_items = store_items
         return self
 
-    def mounts(self, mounts: Mounts):
+    def mounts(self, mounts: Mounts) -> Self:
         self._mounts = mounts
         return self
 
-    def store_mounts(self, store_mounts: Mounts):
+    def store_mounts(self, store_mounts: Mounts) -> Self:
         self._store_mounts = store_mounts
         return self
 
-    def outfits(self, outfits: Outfits):
+    def outfits(self, outfits: Outfits) -> Self:
         self._outfits = outfits
         return self
 
-    def store_outfits(self, store_outfits: Outfits):
+    def store_outfits(self, store_outfits: Outfits) -> Self:
         self._store_outfits = store_outfits
         return self
 
-    def familiars(self, familiars: Familiars):
+    def familiars(self, familiars: Familiars) -> Self:
         self._familiars = familiars
         return self
 
-    def blessings(self, blessings: List[BlessingEntry]):
+    def blessings(self, blessings: List[BlessingEntry]) -> Self:
         self._blessings = blessings
         return self
 
-    def imbuements(self, imbuements: List[str]):
+    def imbuements(self, imbuements: List[str]) -> Self:
         self._imbuements = imbuements
         return self
 
-    def charms(self, charms: List[CharmEntry]):
+    def charms(self, charms: List[CharmEntry]) -> Self:
         self._charms = charms
         return self
 
-    def completed_cyclopedia_map_areas(self, completed_cyclopedia_map_areas: List[str]):
+    def completed_cyclopedia_map_areas(self, completed_cyclopedia_map_areas: List[str]) -> Self:
         self._completed_cyclopedia_map_areas = completed_cyclopedia_map_areas
         return self
 
-    def completed_quest_lines(self, completed_quest_lines: List[str]):
+    def completed_quest_lines(self, completed_quest_lines: List[str]) -> Self:
         self._completed_quest_lines = completed_quest_lines
         return self
 
-    def titles(self, titles: List[str]):
+    def titles(self, titles: List[str]) -> Self:
         self._titles = titles
         return self
 
-    def achievements(self, achievements: List[AchievementEntry]):
+    def achievements(self, achievements: List[AchievementEntry]) -> Self:
         self._achievements = achievements
         return self
 
-    def bestiary_progress(self, bestiary_progress: List[BestiaryEntry]):
+    def bestiary_progress(self, bestiary_progress: List[BestiaryEntry]) -> Self:
         self._bestiary_progress = bestiary_progress
         return self
 
-    def bosstiary_progress(self, bosstiary_progress: List[BestiaryEntry]):
+    def bosstiary_progress(self, bosstiary_progress: List[BestiaryEntry]) -> Self:
         self._bosstiary_progress = bosstiary_progress
         return self
 
