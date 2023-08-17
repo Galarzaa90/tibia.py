@@ -262,13 +262,13 @@ class TestBazaar(TestCommons):
         self.assertEqual(BidType.MINIMUM, auction.bid_type)
         self.assertEqual(AuctionStatus.FINISHED, auction.status)
 
-    def _test_auction_details_from_content_with_upgraded_items(self):
+    def test_auction_details_from_content_with_upgraded_items(self):
         auction = AuctionParser.from_content(self.load_resource(FILE_AUCTION_UPGRADED_ITEMS))
 
         self.assertIsNotNone(auction)
 
         self.assertEqual(1, auction.displayed_items[0].tier)
-        self.assertEqual(1, auction.items.entries[1].tier)
+        self.assertEqual(1, auction.details.items.entries[1].tier)
 
 
     def test_auction_details_from_content_not_found(self):

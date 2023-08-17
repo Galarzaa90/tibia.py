@@ -21,10 +21,10 @@ from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, 
 
 results_pattern = re.compile(r'Results: (\d+)')
 char_info_regex = re.compile(r'Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| World: (\w+)')
-id_addon_regex = re.compile(r'(\d+)_(\d)\.gif')
-id_regex = re.compile(r'(\d+).(?:gif|png)')
+id_addon_regex = re.compile(r'(\d{1,4})_(\d)\.gif$')
+id_regex = re.compile(r'(\d{1,5}).(?:gif|png)$')
 description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
-amount_regex = re.compile(r'([\d,]+)x')
+amount_regex = re.compile(r'([\d,]{1,9})x')
 tier_regex = re.compile(r"(.*)\s\(tier (\d)\)")
 
 log = logging.getLogger("tibiapy")

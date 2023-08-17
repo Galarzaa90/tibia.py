@@ -74,49 +74,6 @@ class BaseBoard(BaseModel):
         """The URL of this board."""
         return get_forum_board_url(self.board_id)
 
-    @classmethod
-    def get_world_boards_url(cls):
-        """Get the URL to the World Boards section in Tibia.com.
-
-        Returns
-        -------
-        :class:`str`:
-            The URL to the World Boards.
-        """
-        return get_tibia_url("forum", "worldboards")
-
-    @classmethod
-    def get_trade_boards_url(cls):
-        """Get the URL to the Trade Boards section in Tibia.com.
-
-        Returns
-        -------
-        :class:`str`:
-            The URL to the Trade Boards.
-        """
-        return get_tibia_url("forum", "tradeboards")
-
-    @classmethod
-    def get_community_boards_url(cls):
-        """Get the URL to the Community Boards section in Tibia.com.
-
-        Returns
-        -------
-        :class:`str`:
-            The URL to the Community Boards.
-        """
-        return get_tibia_url("forum", "communityboards")
-
-    @classmethod
-    def get_support_boards_url(cls):
-        """Get the URL to the Support Boards section in Tibia.com.
-
-        Returns
-        -------
-        :class:`str`:
-            The URL to the Support Boards.
-        """
-        return get_tibia_url("forum", "supportboards")
 
     def __eq__(self, o: object) -> bool:
         """Two boards are considered equal if their ids are equal."""

@@ -257,6 +257,50 @@ def get_forum_section_url_by_name(section_name: str) -> str:
     return get_tibia_url("forum", section_name)
 
 
+def get_world_boards_url():
+    """Get the URL to the World Boards section in Tibia.com.
+
+    Returns
+    -------
+    :class:`str`:
+        The URL to the World Boards.
+    """
+    return get_tibia_url("forum", "worldboards")
+
+
+def get_trade_boards_url():
+    """Get the URL to the Trade Boards section in Tibia.com.
+
+    Returns
+    -------
+    :class:`str`:
+        The URL to the Trade Boards.
+    """
+    return get_tibia_url("forum", "tradeboards")
+
+
+def get_community_boards_url():
+    """Get the URL to the Community Boards section in Tibia.com.
+
+    Returns
+    -------
+    :class:`str`:
+        The URL to the Community Boards.
+    """
+    return get_tibia_url("forum", "communityboards")
+
+
+def get_support_boards_url():
+    """Get the URL to the Support Boards section in Tibia.com.
+
+    Returns
+    -------
+    :class:`str`:
+        The URL to the Support Boards.
+    """
+    return get_tibia_url("forum", "supportboards")
+
+
 def get_forum_board_url(board_id: int, page: int = 1, thread_age: int = None) -> str:
     """Get the URL to a forum board.
 

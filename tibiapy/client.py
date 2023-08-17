@@ -1,49 +1,46 @@
 """Asynchronous Tibia.com client."""
+from __future__ import annotations
+
 import asyncio
 import datetime
 import json
 import logging
 import time
-from typing import TypeVar, Optional, Callable, Collection, Set
+from typing import Callable, Optional, Set, TYPE_CHECKING, TypeVar
 
 import aiohttp
 import aiohttp_socks
 
 import tibiapy
-from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HouseType, NewsCategory, \
-    NewsType, HighscoresProfession, BazaarType, SpellVocationFilter, SpellGroup, SpellType, SpellSorting, \
-    PvpTypeFilter, HouseStatus, HouseOrder
+from tibiapy.enums import (BazaarType, HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, HouseOrder,
+                           HouseStatus, HouseType, NewsCategory, NewsType, PvpTypeFilter, SpellGroup, SpellSorting,
+                           SpellType, SpellVocationFilter)
 from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
-from tibiapy.models import Character, SpellsSection, Spell, Leaderboard, KillStatistics, House, HousesSection, \
-    Highscores, Guild, GuildWars, GuildsSection, CMPostArchive, BoardEntry, ForumBoard, ForumThread, CharacterBazaar, \
-    Auction, AuctionFilters, ForumSection, TibiaResponse, ForumAnnouncement
-from tibiapy.models.creature import BoostableBosses, CreaturesSection, Creature, CreatureEntry, BossEntry, \
-    BoostedCreatures
-from tibiapy.models.event import EventSchedule
-from tibiapy.models.news import NewsArchive, News
-from tibiapy.models.pagination import AjaxPaginator
-from tibiapy.models.world import World, WorldOverview
-from tibiapy.parsers.bazaar import AuctionParser, CharacterBazaarParser
-from tibiapy.parsers.character import CharacterParser
-from tibiapy.parsers.creature import BoostedCreaturesParser, BoostableBossesParser, CreaturesSectionParser, \
-    CreatureParser
-from tibiapy.parsers.event import EventScheduleParser
-from tibiapy.parsers.forum import CMPostArchiveParser, ForumBoardParser, ForumThreadParser, \
-    ForumAnnouncementParser, ForumSectionParser
-from tibiapy.parsers.guild import GuildParser, GuildWarsParser, GuildsSectionParser
-from tibiapy.parsers.highscores import HighscoresParser
-from tibiapy.parsers.house import HouseParser, HousesSectionParser
-from tibiapy.parsers.kill_statistics import KillStatisticsParser
-from tibiapy.parsers.leaderboard import LeaderboardParser
-from tibiapy.parsers.news import NewsArchiveParser, NewsParser
-from tibiapy.parsers.spell import SpellsSectionParser, SpellParser
-from tibiapy.parsers.world import WorldParser, WorldOverviewParser
-from tibiapy.urls import get_character_url, get_world_guilds_url, get_guild_url, get_house_url, get_world_overview_url, \
-    get_news_archive_url, get_news_url, get_forum_board_url, get_forum_announcement_url, get_forum_thread_url, \
-    get_highscores_url, get_kill_statistics_url, get_forum_post_url, get_event_schedule_url, get_houses_section_url, \
-    get_auction_url, get_bazaar_url, get_cm_post_archive_url, get_leaderboards_url, get_creatures_section_url, \
-    get_creature_url, get_boostable_bosses_url, get_spells_section_url, get_spell_url, get_world_url, \
-    get_guild_wars_url, get_forum_section_url
+from tibiapy.models import TibiaResponse
+from tibiapy.parsers import (
+    AuctionParser, BoostableBossesParser, BoostedCreaturesParser, CMPostArchiveParser, CharacterBazaarParser,
+    CharacterParser, CreatureParser, CreaturesSectionParser, EventScheduleParser, ForumAnnouncementParser,
+    ForumBoardParser, ForumSectionParser, ForumThreadParser, GuildParser, GuildWarsParser, GuildsSectionParser,
+    HighscoresParser, HouseParser, HousesSectionParser, KillStatisticsParser, LeaderboardParser, NewsArchiveParser,
+    NewsParser, SpellParser, SpellsSectionParser, WorldOverviewParser, WorldParser
+)
+from tibiapy.urls import (
+    get_auction_url, get_bazaar_url, get_boostable_bosses_url, get_character_url, get_cm_post_archive_url,
+    get_community_boards_url, get_creature_url, get_creatures_section_url, get_event_schedule_url,
+    get_forum_announcement_url, get_forum_board_url, get_forum_post_url, get_forum_section_url, get_forum_thread_url,
+    get_guild_url, get_guild_wars_url, get_highscores_url, get_house_url, get_houses_section_url,
+    get_kill_statistics_url, get_leaderboards_url, get_news_archive_url, get_news_url, get_spell_url,
+    get_spells_section_url, get_support_boards_url, get_trade_boards_url, get_world_boards_url, get_world_guilds_url,
+    get_world_overview_url, get_world_url
+)
+
+if TYPE_CHECKING:
+    from tibiapy.models import (
+        AjaxPaginator, Auction, AuctionFilters, BoostableBosses, BoostedCreatures, BossEntry, CMPostArchive, Character,
+        CharacterBazaar, Creature, CreatureEntry, CreaturesSection, EventSchedule, ForumAnnouncement, ForumBoard,
+        ForumSection, ForumThread, Guild, GuildWars, GuildsSection, Highscores, House, HousesSection, KillStatistics,
+        Leaderboard, News, NewsArchive, Spell, SpellsSection, World, WorldOverview
+    )
 
 __all__ = (
     "Client",
@@ -1070,7 +1067,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", BoardEntry.get_world_boards_url(), test=test)
+        response = await self._request("GET", get_world_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
     async def fetch_forum_trade_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
@@ -1096,7 +1093,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", BoardEntry.get_trade_boards_url(), test=test)
+        response = await self._request("GET", get_trade_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
     async def fetch_forum_community_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
@@ -1122,7 +1119,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", BoardEntry.get_community_boards_url(), test=test)
+        response = await self._request("GET", get_community_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
     async def fetch_forum_support_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
@@ -1148,7 +1145,7 @@ class Client:
         NetworkError
             If there's any connection errors during the request.
         """
-        response = await self._request("GET", BoardEntry.get_support_boards_url(), test=test)
+        response = await self._request("GET", get_support_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
     async def fetch_forum_board(self, board_id: int, page: int = 1, age: int = None, *,

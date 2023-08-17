@@ -23,7 +23,10 @@ from tibiapy.models import BoardEntry, CharacterBazaar, Character, CMPostArchive
     World, WorldOverview, Auction, NewsArchive, NewsEntry, News, ItemSummary, ForumSection
 from tibiapy.models.creature import CreatureEntry
 from tibiapy.models.event import EventSchedule
-from tibiapy.urls import get_character_url, get_world_guilds_url, get_guild_url, get_house_url, get_world_overview_url, \
+from tibiapy.urls import get_character_url, get_community_boards_url, get_support_boards_url, get_trade_boards_url, \
+    get_world_boards_url, get_world_guilds_url, \
+    get_guild_url, get_house_url, \
+    get_world_overview_url, \
     get_news_archive_url, get_news_url, get_forum_board_url, get_highscores_url, get_kill_statistics_url, \
     get_event_schedule_url, get_houses_section_url, get_auction_url, get_bazaar_url, get_cm_post_archive_url, \
     get_leaderboards_url, get_world_url
@@ -287,7 +290,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     async def test_client_fetch_forum_community_boards(self, mock):
         """Testing fetching the community boards"""
         content = self.load_resource(FILE_WORLD_BOARDS)
-        mock.get(BoardEntry.get_community_boards_url(), status=200, body=content)
+        mock.get(get_community_boards_url(), status=200, body=content)
         response = await self.client.fetch_forum_community_boards()
         self.assertIsInstance(response.data, ForumSection)
 
@@ -295,7 +298,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     async def test_client_fetch_forum_trade_boards(self, mock):
         """Testing fetching the trade boards"""
         content = self.load_resource(FILE_WORLD_BOARDS)
-        mock.get(BoardEntry.get_trade_boards_url(), status=200, body=content)
+        mock.get(get_trade_boards_url(), status=200, body=content)
         response = await self.client.fetch_forum_trade_boards()
         self.assertIsInstance(response.data, ForumSection)
 
@@ -303,7 +306,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     async def test_client_fetch_forum_support_boards(self, mock):
         """Testing fetching the support boards"""
         content = self.load_resource(FILE_WORLD_BOARDS)
-        mock.get(BoardEntry.get_support_boards_url(), status=200, body=content)
+        mock.get(get_support_boards_url(), status=200, body=content)
         response = await self.client.fetch_forum_support_boards()
         self.assertIsInstance(response.data, ForumSection)
 
@@ -311,7 +314,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     async def test_client_fetch_forum_world_boards(self, mock):
         """Testing fetching the world boards"""
         content = self.load_resource(FILE_WORLD_BOARDS)
-        mock.get(BoardEntry.get_world_boards_url(), status=200, body=content)
+        mock.get(get_world_boards_url(), status=200, body=content)
         response = await self.client.fetch_forum_world_boards()
         self.assertIsInstance(response.data, ForumSection)
 

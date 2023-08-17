@@ -5,7 +5,7 @@ import re
 from collections import OrderedDict
 from typing import List, TYPE_CHECKING
 
-from tibiapy.builders.character import CharacterBuilder
+from tibiapy.builders import CharacterBuilder
 from tibiapy.enums import Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.models import Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, DeathParticipant, \

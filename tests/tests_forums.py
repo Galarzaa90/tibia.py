@@ -102,12 +102,6 @@ class TestForum(TestCommons):
         with self.assertRaises(ValueError):
             board.get_page_url(-1)
 
-    def test_board_section_urls(self):
-        self.assertIsNotNone(BoardEntry.get_community_boards_url())
-        self.assertIsNotNone(BoardEntry.get_support_boards_url())
-        self.assertIsNotNone(BoardEntry.get_world_boards_url())
-        self.assertIsNotNone(BoardEntry.get_trade_boards_url())
-
     def test_forum_board_from_content_empty_threads(self):
         content = self.load_resource(FILE_BOARD_EMPTY_THREAD_LIST)
 

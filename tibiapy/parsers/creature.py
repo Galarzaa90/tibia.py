@@ -6,9 +6,9 @@ from typing import Optional
 
 import bs4
 
-from tibiapy.builders.creature import CreatureBuilder
+from tibiapy.builders import CreatureBuilder
 from tibiapy.errors import InvalidContent
-from tibiapy.models.creature import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses, \
+from tibiapy.models import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses, \
     Creature
 from tibiapy.utils import parse_tibiacom_content, convert_line_breaks
 
@@ -20,7 +20,6 @@ __all__ = (
 )
 
 BOOSTED_ALT = re.compile("Today's boosted \w+: ")
-
 
 HP_PATTERN = re.compile(r"have (\d+) hitpoints")
 EXP_PATTERN = re.compile(r"yield (\d+) experience")
@@ -117,7 +116,6 @@ class BoostableBossesParser:
         except (AttributeError, ValueError) as e:
             raise InvalidContent("content is not the boosted boss's library", e)
 
-
     @classmethod
     def boosted_boss_from_header(cls, content: str) -> BossEntry:
         """Get the boosted boss from any Tibia.com page.
@@ -205,7 +203,6 @@ class CreaturesSectionParser:
 
 
 class CreatureParser:
-
     _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
 
     @classmethod
@@ -295,7 +292,6 @@ class CreatureParser:
                 builder.convinceable(True)
             if "cannot be convinced" in hp_text:
                 builder.summonable(True)
-
 
     @classmethod
     def _parse_elements(cls, text):
