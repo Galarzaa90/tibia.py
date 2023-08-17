@@ -2,7 +2,7 @@
 import logging
 import re
 import urllib.parse
-from typing import Dict
+from typing import Dict, Optional
 
 import bs4
 
@@ -120,7 +120,7 @@ class CharacterBazaarParser:
 class AuctionParser:
 
     @classmethod
-    def from_content(cls, content: str, auction_id: int = 0, skip_details: bool = False) -> Auction:
+    def from_content(cls, content: str, auction_id: int = 0, skip_details: bool = False) -> Optional[Auction]:
         """Parse an auction detail page from Tibia.com and extracts its data.
 
         Parameters
@@ -494,6 +494,9 @@ class AuctionParser:
         if len(content_containers) >= 10:
             boss_data = cls._parse_data_table(content_containers[9])
             builder.boss_points(parse_integer(boss_data.get("boss_points", "")))
+        if len(content_containers) >= 11:
+            bonus_promotion_data = cls._parse_data_table(content_containers[10])
+            builder.bonus_promotion_points(parse_integer(bonus_promotion_data.get("bonus_promotion_points", "")))
 
     @classmethod
     def _parse_items_table(cls, table: bs4.Tag):

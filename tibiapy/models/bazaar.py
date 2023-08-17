@@ -409,6 +409,8 @@ class AuctionDetails(BaseModel):
     """The dust limit of the character."""
     boss_points: int
     """The boss points of the character."""
+    bonus_promotion_points: int
+    """The bonus promotion points of the character."""
     items: ItemSummary
     """The items the character has across inventory, depot and item stash."""
     store_items: ItemSummary

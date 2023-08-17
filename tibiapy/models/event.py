@@ -1,6 +1,8 @@
 import datetime
 from typing import Optional, List
 
+from pydantic.color import Color
+
 from tibiapy.models import BaseModel
 from tibiapy.urls import get_event_schedule_url
 
@@ -20,7 +22,7 @@ class EventEntry(BaseModel):
     
     If the event is continuing on the next month, this will be :obj:`None`."""
 
-    color: Optional[str] = None
+    color: Optional[Color] = None
     """The displayed color of the event."""
 
     def __eq__(self, other):

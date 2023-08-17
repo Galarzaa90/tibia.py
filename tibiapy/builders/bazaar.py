@@ -194,6 +194,7 @@ class AuctionDetailsBuilder:
         self._exalted_dust = None
         self._exalted_dust_limit = None
         self._boss_points = None
+        self._bonus_promotion_points = None
         self._items = None
         self._store_items = None
         self._mounts = None
@@ -324,6 +325,10 @@ class AuctionDetailsBuilder:
         self._boss_points = boss_points
         return self
 
+    def bonus_promotion_points(self, bonus_promotion_points: int) -> Self:
+        self._bonus_promotion_points = bonus_promotion_points
+        return self
+
     def items(self, items: ItemSummary) -> Self:
         self._items = items
         return self
@@ -418,6 +423,7 @@ class AuctionDetailsBuilder:
             exalted_dust=self._exalted_dust,
             exalted_dust_limit=self._exalted_dust_limit,
             boss_points=self._boss_points,
+            bonus_promotion_points=self._bonus_promotion_points,
             items=self._items,
             store_items=self._store_items,
             mounts=self._mounts,
