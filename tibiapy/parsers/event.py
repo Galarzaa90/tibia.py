@@ -98,19 +98,37 @@ class EventScheduleParser:
         return month, year
 
     @classmethod
+    def parse_inline_style(cls, style_content):
+        attrs = style_content.split(";")
+        values = {}
+        for attr in attrs:
+            if not attr.strip():
+                continue
+            key, value = attr.split(":")
+            values[key.strip()] = value.strip()
+        return values
+
+    @classmethod
     def process_day_cell(cls, day_cell: bs4.Tag) -> Tuple[int, List[EventEntry]]:
         day_div = day_cell.select_one("div")
         day = int(day_div.text)
         today_events = []
 
         for popup in day_cell.select('span.HelperDivIndicator'):
+            colored_blocks = popup.select("div:not([class])")
+            event_colors = {}
+            for block in colored_blocks:
+                style_values = cls.parse_inline_style(block.get("style"))
+                block_title = block.text.replace("*", "")
+                event_colors[block_title] = style_values["background"]
+                pass
             title, popup_content = parse_popup(popup["onmouseover"])
             divs = popup_content.select("div")
             # Multiple events can be described in the same popup, they come in pairs, title and content.
             for title, content in zip(*[iter(d.text for d in divs)] * 2):
                 title = title.replace(":", "")
                 content = content.replace("• ", "")
-                event = EventEntry(title=title, description=content)
+                event = EventEntry(title=title, description=content, color=event_colors.get(title))
                 today_events.append(event)
 
         return day, today_events

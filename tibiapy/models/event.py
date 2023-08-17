@@ -20,6 +20,9 @@ class EventEntry(BaseModel):
     
     If the event is continuing on the next month, this will be :obj:`None`."""
 
+    color: Optional[str] = None
+    """The displayed color of the event."""
+
     def __eq__(self, other):
         return self.title == other.title
 
