@@ -37,7 +37,7 @@ class KillStatisticsBuilder:
         self._available_worlds = available_worlds
         return self
 
-    def build(self) -> Self:
+    def build(self):
         return KillStatistics(
             world=self._world,
             entries=self._entries,

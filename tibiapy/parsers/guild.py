@@ -9,8 +9,8 @@ import bs4
 
 from tibiapy.builders.guild import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContent
-from tibiapy.models import GuildEntry, GuildsSection, GuildMember, GuildInvite, GuildWarEntry, GuildHouse, GuildWars
-from tibiapy.utils import (parse_form_data, parse_tibia_date, parse_tibiacom_content, clean_text, parse_link_info)
+from tibiapy.models import GuildEntry, GuildHouse, GuildInvite, GuildMember, GuildWarEntry, GuildWars, GuildsSection
+from tibiapy.utils import (clean_text, parse_form_data, parse_link_info, parse_tibia_date, parse_tibiacom_content)
 
 if TYPE_CHECKING:
     from tibiapy.models import Guild
@@ -73,9 +73,9 @@ class GuildsSectionParser:
         try:
             parsed_content = parse_tibiacom_content(content)
             form = parsed_content.select_one("form")
-            data = parse_form_data(form, include_options=True)
-            selected_world = data["world"] or None
-            available_worlds = [w for w in data["__options__"]["world"].values() if w]
+            data = parse_form_data(form)
+            selected_world = data.values["world"] or None
+            available_worlds = [w for w in data.available_options["world"].values() if w]
             guilds = GuildsSection(world=selected_world, available_worlds=available_worlds)
         except (AttributeError, KeyError) as e:
             raise InvalidContent("Content does not belong to world guild list.", e) from e

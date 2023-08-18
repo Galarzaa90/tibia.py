@@ -1,9 +1,10 @@
 """Models related to the kill statistics section in Tibia.com."""
+from typing import Optional
 
 from tibiapy.builders.kill_statistics import KillStatisticsBuilder
 from tibiapy.errors import InvalidContent
 from tibiapy.models import KillStatistics, RaceEntry
-from tibiapy.utils import parse_form_data, parse_tibiacom_content, parse_form_data_new
+from tibiapy.utils import parse_form_data, parse_tibiacom_content
 
 __all__ = (
     "KillStatisticsParser",
@@ -13,7 +14,7 @@ __all__ = (
 class KillStatisticsParser:
 
     @classmethod
-    def from_content(cls, content: str) -> KillStatistics:
+    def from_content(cls, content: str) -> Optional[KillStatistics]:
         """Create an instance of the class from the HTML content of the kill statistics' page.
 
         Parameters
@@ -34,10 +35,9 @@ class KillStatisticsParser:
             parsed_content = parse_tibiacom_content(content)
             entries_table = parsed_content.find('table', attrs={'border': '0', 'cellpadding': '3'})
             form = parsed_content.select_one("form")
-            data = parse_form_data(form, include_options=True)
-            form_data = parse_form_data_new(form)
+            form_data = parse_form_data(form)
             builder = KillStatisticsBuilder() \
-                .world(data["world"]) \
+                .world(form_data.values["world"]) \
                 .available_worlds(list(form_data.available_options["world"].values()))
             if not entries_table:
                 entries_table = parsed_content.select_one("table.Table3")

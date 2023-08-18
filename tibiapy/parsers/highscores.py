@@ -4,14 +4,13 @@ from __future__ import annotations
 import datetime
 import re
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Optional
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy.builders.highscores import HighscoresBuilder
-from tibiapy.enums import HighscoresCategory, HighscoresProfession, PvpTypeFilter, \
-    HighscoresBattlEyeType
+from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, PvpTypeFilter
 from tibiapy.errors import InvalidContent
-from tibiapy.models import LoyaltyHighscoresEntry, HighscoresEntry
-from tibiapy.utils import parse_form_data, parse_tibiacom_content, try_enum, parse_integer, parse_pagination
+from tibiapy.models import HighscoresEntry, LoyaltyHighscoresEntry
+from tibiapy.utils import parse_form_data, parse_integer, parse_pagination, parse_tibiacom_content, try_enum
 
 if TYPE_CHECKING:
     from tibiapy.models import Highscores
@@ -103,15 +102,13 @@ class HighscoresParser:
         form: :class:`bs4.Tag`
             The table containing the filters.
         """
-        data = parse_form_data(form, include_options=True)
-        builder.world(data["world"] if data.get("world") else None)
-        builder.battleye_filter(try_enum(HighscoresBattlEyeType, parse_integer(data.get("beprotection"), None)))
-        builder.category(try_enum(HighscoresCategory, parse_integer(data.get("category"), None)))
-        builder.vocation(try_enum(HighscoresProfession, parse_integer(data.get("profession"), None), HighscoresProfession.ALL))
-        checkboxes = form.find_all("input", {"type": "checkbox", "checked": "checked"})
-        values = [int(c["value"]) for c in checkboxes]
-        builder.pvp_types_filter({try_enum(PvpTypeFilter, v) for v in values})
-        builder.available_worlds([v for v in data["__options__"]["world"].values() if v])
+        data = parse_form_data(form)
+        builder.world(data.values["world"] if data.values.get("world") else None)
+        builder.battleye_filter(try_enum(HighscoresBattlEyeType, parse_integer(data.values.get("beprotection"), None)))
+        builder.category(try_enum(HighscoresCategory, parse_integer(data.values.get("category"), None)))
+        builder.vocation(try_enum(HighscoresProfession, parse_integer(data.values.get("profession"), None), HighscoresProfession.ALL))
+        builder.pvp_types_filter({try_enum(PvpTypeFilter, int(v)) for v in data.values_multiple["worldtypes[]"]})
+        builder.available_worlds([v for v in data.available_options["world"].values() if v])
 
     @classmethod
     def _parse_tables(cls, parsed_content):

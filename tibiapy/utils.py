@@ -16,6 +16,9 @@ from tibiapy.errors import InvalidContent
 TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)\s?k*$')
 
 
+T = TypeVar('T')
+D = TypeVar('D')
+
 def clean_text(tag: Union[bs4.Tag, str]):
     if isinstance(tag, bs4.Tag):
         text = tag.text
@@ -40,133 +43,39 @@ def get_rows(table_tag: bs4.Tag):
     return table_tag.select("tr")
 
 
-def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
-    """Build a URL to Tibia.com with the given parameters.
-
-    Parameters
-    ----------
-    section: :class:`str`
-        The desired section (e.g. community, abouttibia, manual, library)
-    subtopic: :class:`str`, optional
-        The desired subtopic (e.g. characters, guilds, houses, etc)
-    anchor: :class:`str`
-        A link anchor to add to the link.
-    args:
-        A list of key-value pairs to add as query parameters.
-        This allows passing multiple parameters with the same name.
-    kwargs:
-        Additional parameters to pass to the url as query parameters (e.g name, world, houseid, etc)
-    test: :class:`bool`
-        Whether to use the test website or not.
-
-    Returns
-    -------
-    :class:`str`
-        The generated Tibia.com URL.
-
-    Examples
-    --------
-    >>> get_tibia_url("community", "houses", page="view", houseid=55302, world="Gladera")
-    https://www.tibia.com/community/?subtopic=houses&page=view&houseid=55302&world=Gladera
-
-    You can also build a dictionary and pass it like:
-
-    >>> params = {'world': "Gladera"}
-    >>> get_tibia_url("community", "worlds", **params)
-    https://www.tibia.com/community/?subtopic=worlds&world=Gladera
-    """
-    base_url = "www.tibia.com" if not test else "www.test.tibia.com"
-    url = f"https://{base_url}/{section}/?"
-    params = OrderedDict(subtopic=subtopic) if subtopic else OrderedDict()
-    if kwargs:
-        for key, value in kwargs.items():
-            if isinstance(value, str):
-                value = value.encode('iso-8859-1')
-            if value is None:
-                continue
-            params[key] = value
-    url += urllib.parse.urlencode(params)
-    if args:
-        url += "&"
-        url += urllib.parse.urlencode(args)
-    if anchor:
-        url += f"#{anchor}"
-    return url
-
-
-def parse_form_data(form: bs4.Tag, include_options=True):
-    """Parse the currently selected values in a form.
-
-    This should correspond to all the data the form would send if submitted.
-
-    Parameters
-    ----------
-    form: :class:`bs4.Tag`
-        A form tag.
-    include_options: :class:`bool`
-        Whether to also include listings of all the possible options.
-        These will be nested inside the __options__ parameter of the resulting dictionary.
-
-    Returns
-    -------
-    :class:`dict`
-        A dictionary containing all the data.
-    """
-    data = {}
-    if "action" in form.attrs:
-        data["__action__"] = form.attrs["action"]
-    if "method" in form.attrs:
-        data["__method__"] = form.attrs["method"]
-    text_inputs = form.find_all("input", {"type": "text"})
-    data.update({field.attrs.get("name"): field.attrs.get("value") for field in text_inputs})
-    selects = form.find_all("select")
-    if include_options:
-        data["__options__"] = {}
-    for select in selects:
-        name = select.attrs.get("name")
-        selected_option = select.find("option", {"selected": True})
-        if include_options:
-            options = select.find_all("option")
-            data["__options__"][name] = {opt.text: opt.attrs.get("value") for opt in options}
-        data[name] = selected_option.attrs.get("value") if selected_option else None
-    checkboxes = form.find_all("input", {"type": "checkbox", "checked": True})
-    data.update({field.attrs.get("name"): field.attrs.get("value") for field in checkboxes})
-    # Parse Radios
-    all_radios = form.find_all("input", {"type": "radio"})
-    for name, _radios in itertools.groupby(all_radios, key=lambda t: t.attrs["name"]):
-        radios = list(_radios)
-        selected_radio = next((r for r in radios if r.attrs.get("checked") is not None), None)
-        if include_options:
-            data["__options__"][name] = {str(r.next_sibling).strip(): r.attrs["value"] for r in radios}
-        data[name] = selected_radio.attrs["value"] if selected_radio else None
-    return data
-
-
 class FormData(BaseModel):
+    """Represents data in a HTML form."""
+
     values: Dict[str, str] = {}
+    """The values in the form.
+    
+    This contains text fields, select fields and radios.
+    """
     values_multiple: Dict[str, List[str]] = defaultdict(list)
+    """The selected values in the form of inputs that allow multiple selections.
+    
+    This contains the values of check boxes."""
     available_options: Dict[str, Dict[str, str]] = defaultdict(dict)
+    """The available options in select fields, radios and check boxes."""
     action: Optional[str] = None
+    """The form's action URL."""
     method: Optional[str] = None
+    """The form's method."""
 
 
-def parse_form_data_new(form: bs4.Tag):
+def parse_form_data(form: bs4.Tag):
     """Parse the currently selected values in a form.
 
     This should correspond to all the data the form would send if submitted.
 
     Parameters
     ----------
-    form: :class:`bs4.Tag`
+    form:
         A form tag.
-    include_options: :class:`bool`
-        Whether to also include listings of all the possible options.
-        These will be nested inside the __options__ parameter of the resulting dictionary.
 
     Returns
     -------
-    :class:`FormData`
-        A dictionary containing all the data.
+        The values and data of the form.
     """
     form_data = FormData()
     if "action" in form.attrs:
@@ -559,10 +468,6 @@ def parse_tibiacom_tables(parsed_content) -> Dict[str, bs4.Tag]:
             continue
         tables[text_tag.text.strip()] = table
     return tables
-
-
-T = TypeVar('T')
-D = TypeVar('D')
 
 
 def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:

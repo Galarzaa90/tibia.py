@@ -6,16 +6,15 @@ from typing import Optional
 
 import bs4
 
-from tibiapy import errors, InvalidContent
+from tibiapy import InvalidContent, errors
 from tibiapy.builders.forum import CMPostArchiveBuilder, ForumAnnouncementBuilder, ForumBoardBuilder, ForumThreadBuilder
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
-from tibiapy.models.forum import CMPost, ForumAuthor, AnnouncementEntry, ForumEmoticon, LastPost, ThreadEntry, \
-    ForumPost, BoardEntry, CMPostArchive, ForumSection, ForumThread, ForumAnnouncement, ForumBoard
-from tibiapy.utils import (
-    convert_line_breaks, parse_form_data, parse_integer, parse_link_info, parse_pagination,
-    parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content, split_list,
-    try_enum, parse_tables_map)
+from tibiapy.models.forum import AnnouncementEntry, BoardEntry, CMPost, CMPostArchive, ForumAnnouncement, ForumAuthor, \
+    ForumBoard, ForumEmoticon, ForumPost, ForumSection, ForumThread, LastPost, ThreadEntry
+from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, parse_link_info, parse_pagination,
+                           parse_tables_map, parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content,
+                           split_list, try_enum)
 
 __all__ = (
     'CMPostArchiveParser',
@@ -169,7 +168,7 @@ class ForumSectionParser:
         time_label = parsed_content.select_one("div.CurrentTime")
         offset = 2 if "CEST" in time_label.text else 1
         boards = [board for row in rows if (board := cls._parse_board_row(row, offset)) is not None]
-        return ForumSection(section_id=section_id, entries=boards)
+        return ForumSection(section_id=int(section_id), entries=boards)
 
     @classmethod
     def _parse_board_row(cls, board_row, offset=1):
@@ -381,8 +380,8 @@ class ForumBoardParser:
         forms = parsed_content.select("form")
         post_age_form = forms[0]
         data = parse_form_data(post_age_form)
-        if "threadage" in data:
-            builder.age(parse_integer(data["threadage"]))
+        if "threadage" in data.values:
+            builder.age(parse_integer(data.values["threadage"]))
         else:
             return builder.build()
         pagination_block = parsed_content.select_one("small")
@@ -413,7 +412,7 @@ class ForumBoardParser:
         if len(forms) > 2:
             board_selector_form = forms[2]
             data = parse_form_data(board_selector_form)
-            builder.board_id(parse_integer(data["boardid"]))
+            builder.board_id(parse_integer(data.values["boardid"]))
         return builder.build()
 
     # endregion
@@ -503,7 +502,6 @@ class ForumBoardParser:
     # endregion
 
 
-
 class ForumThreadParser:
 
     @classmethod
@@ -556,7 +554,7 @@ class ForumThreadParser:
         builder.current_page(pages)
         builder.total_pages(total)
 
-        posts_table = parsed_content.select_one("table.TableContent", attrs={"class": "TableContent"})
+        posts_table = parsed_content.select_one("table.TableContent")
 
         thread_info_container = posts_table.select_one("div.ForumPostHeader")
         thread_info_text_container = thread_info_container.select_one("div.ForumPostHeaderText")

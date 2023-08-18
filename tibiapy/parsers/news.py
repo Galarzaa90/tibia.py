@@ -11,7 +11,7 @@ from tibiapy.errors import InvalidContent
 from tibiapy.models.news import NewsArchive, News, NewsEntry
 from tibiapy.utils import (parse_tibia_date,
                            parse_tibiacom_content, parse_tibiacom_tables,
-                           try_enum, parse_link_info, parse_form_data_new, clean_text)
+                           try_enum, parse_link_info, parse_form_data, clean_text)
 
 __all__ = (
     "NewsParser",
@@ -111,7 +111,7 @@ class NewsArchiveParser:
 
     @classmethod
     def _parse_filter_table(cls, builder: NewsArchiveBuilder, form: bs4.Tag):
-        form_data = parse_form_data_new(form)
+        form_data = parse_form_data(form)
         builder.from_date(datetime.date(
             int(form_data.values["filter_begin_year"]),
             int(form_data.values["filter_begin_month"]),
@@ -123,10 +123,10 @@ class NewsArchiveParser:
                 int(form_data.values["filter_end_day"]),
             ),
         )
-        for news_type in NewsType:
+        for news_type in NewsType:  # type: NewsType
             if news_type.filter_name in form_data.values_multiple:
                 builder.add_type(news_type)
-        for category in NewsCategory:
+        for category in NewsCategory:  # type: NewsCategory
             if category.filter_name in form_data.values_multiple:
                 builder.add_category(category)
 

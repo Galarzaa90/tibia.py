@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime
 import urllib.parse
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, Set, TYPE_CHECKING
 
 from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, PvpTypeFilter
 
@@ -373,30 +373,33 @@ def get_forum_post_url(post_id):
     return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid=post_id)
 
 
-def get_highscores_url(world: str = None, category: HighscoresCategory = HighscoresCategory.EXPERIENCE,
-                       vocation: HighscoresProfession = HighscoresProfession.ALL, page=1,
-                       battleye_type: HighscoresBattlEyeType = None, pvp_types: PvpTypeFilter = None
-                       ) -> str:
+def get_highscores_url(
+        world: str = None,
+        category: HighscoresCategory = HighscoresCategory.EXPERIENCE,
+        vocation: HighscoresProfession = HighscoresProfession.ALL,
+        page=1,
+        battleye_type: HighscoresBattlEyeType = None,
+        pvp_types: Set[PvpTypeFilter] = None
+) -> str:
     """Get the Tibia.com URL of the highscores for the given parameters.
 
     Parameters
     ----------
-    world: :class:`str`, optional
+    world:
         The game world of the desired highscores. If no world is passed, ALL worlds are shown.
-    category: :class:`.HighscoresCategory`
+    category:
         The desired highscores category.
-    vocation: :class:`.HighscoresProfession`
+    vocation:
         The vocation filter to apply. By default, all vocations will be shown.
-    page: :class:`int`
+    page:
         The page of highscores to show.
-    battleye_type: :class:`.HighscoresBattlEyeType`, optional
+    battleye_type:
         The battleEye filters to use.
-    pvp_types: :class:`list` of :class:`.PvpTypeFilter`, optional
+    pvp_types:
         The list of PvP types to filter the results for.
 
     Returns
     -------
-    :class:`str`
         The URL to the Tibia.com highscores.
     """
     pvp_types = pvp_types or []
@@ -626,7 +629,7 @@ def get_spells_section_url(
         vocation: SpellVocationFilter = None,
         group: SpellGroup = None,
         spell_type: SpellType = None,
-        is_premium: bool= None,
+        is_premium: bool = None,
         sort: SpellSorting = None
 ):
     """Get the URL to the spells section with the desired filtering parameters.

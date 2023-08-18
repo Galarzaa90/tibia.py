@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 from collections import OrderedDict
-from typing import List, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 from tibiapy.builders import CharacterBuilder
 from tibiapy.enums import Sex, Vocation
@@ -43,7 +43,7 @@ __all__ = (
 class CharacterParser:
 
     @classmethod
-    def from_content(cls, content: str) -> Character:
+    def from_content(cls, content: str) -> Optional[Character]:
         """Create an instance of the class from the html content of the character's page.
 
         Parameters

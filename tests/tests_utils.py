@@ -2,7 +2,8 @@ import datetime
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import enums, utils
-from tibiapy.utils import get_tibia_url, parse_integer, parse_tibia_money
+from tibiapy.utils import parse_integer, parse_tibia_money
+from tibiapy.urls import get_tibia_url
 
 TIBIA_DATETIME_CEST = "Jul 10 2018, 07:13:32 CEST"
 TIBIA_DATETIME_CET = "Jan 10 2018, 07:13:32 CET"

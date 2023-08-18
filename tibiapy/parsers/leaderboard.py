@@ -9,7 +9,7 @@ from tibiapy import errors
 from tibiapy.builders.leaderboard import LeaderboardBuilder
 from tibiapy.models.leaderboard import LeaderboardEntry, LeaderboardRotation, Leaderboard
 from tibiapy.utils import parse_pagination, parse_tibia_datetime, parse_tibiacom_content, \
-    parse_form_data_new, parse_integer
+    parse_form_data, parse_integer
 
 if TYPE_CHECKING:
     from bs4 import Tag
@@ -41,7 +41,7 @@ class LeaderboardParser:
             parsed_content = parse_tibiacom_content(content)
             tables = parsed_content.select("table.TableContent")
             form = parsed_content.select_one("form")
-            form_data = parse_form_data_new(form)
+            form_data = parse_form_data(form)
             current_world = form_data.values["world"]
             if current_world is None:
                 return None

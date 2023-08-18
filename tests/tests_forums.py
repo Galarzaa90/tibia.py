@@ -35,13 +35,12 @@ class TestForum(TestCommons):
         self.assertEqual(2, forum_section.section_id)
         self.assertEqual(82, len(forum_section.entries))
         for i, board in enumerate(forum_section.entries):
-            with self.subTest(i=i):
-                self.assertIsInstance(board, BoardEntry)
-                self.assertIsNotNone(board.name)
-                self.assertGreater(board.board_id, 0)
-                self.assertGreater(board.posts, 0)
-                self.assertGreater(board.threads, 0)
-                self.assertIsInstance(board.last_post, LastPost)
+            self.assertIsInstance(board, BoardEntry)
+            self.assertIsNotNone(board.name)
+            self.assertGreater(board.board_id, 0)
+            self.assertGreater(board.posts, 0)
+            self.assertGreater(board.threads, 0)
+            self.assertIsInstance(board.last_post, LastPost)
 
     def test_forum_section_parser_from_content_empty_board(self):
         content = self.load_resource(FILE_SECTION_EMPTY_BOARD)
@@ -51,13 +50,12 @@ class TestForum(TestCommons):
         self.assertEqual(3, forum_section.section_id)
         self.assertEqual(90, len(forum_section.entries))
         for i, board in enumerate(forum_section.entries):
-            with self.subTest(i=i):
-                self.assertIsInstance(board, BoardEntry)
-                self.assertIsNotNone(board.name)
-                self.assertGreater(board.board_id, 0)
-                self.assertGreaterEqual(board.posts, 0)
-                self.assertGreaterEqual(board.threads, 0)
-                self.assertIsNotNone(board.url)
+            self.assertIsInstance(board, BoardEntry)
+            self.assertIsNotNone(board.name)
+            self.assertGreater(board.board_id, 0)
+            self.assertGreaterEqual(board.posts, 0)
+            self.assertGreaterEqual(board.threads, 0)
+            self.assertIsNotNone(board.url)
 
     def test_forum_section_parser_from_content_empty_section(self):
         content = self.load_resource(FILE_SECTION_EMPTY)
@@ -90,14 +88,13 @@ class TestForum(TestCommons):
         self.assertIsNotNone(board.next_page_url)
         self.assertEqual(board.next_page_url, get_forum_board_url(board.board_id, board.current_page + 1, board.age))
         for i, thread in enumerate(board.entries):
-            with self.subTest(i=i):
-                self.assertIsInstance(thread, ThreadEntry)
-                self.assertIsNotNone(thread.title)
-                self.assertGreater(thread.thread_id, 0)
-                self.assertGreaterEqual(thread.views, 0)
-                self.assertGreaterEqual(thread.replies, 0)
-                self.assertIsInstance(thread.last_post, LastPost)
-                self.assertIsNotNone(thread.last_post.author_url)
+            self.assertIsInstance(thread, ThreadEntry)
+            self.assertIsNotNone(thread.title)
+            self.assertGreater(thread.thread_id, 0)
+            self.assertGreaterEqual(thread.views, 0)
+            self.assertGreaterEqual(thread.replies, 0)
+            self.assertIsInstance(thread.last_post, LastPost)
+            self.assertIsNotNone(thread.last_post.author_url)
 
         with self.assertRaises(ValueError):
             board.get_page_url(-1)
@@ -144,11 +141,10 @@ class TestForum(TestCommons):
         self.assertEqual(5, len(board.announcements))
         self.assertEqual(1893, board.total_pages)
         for i, thread in enumerate(board.entries):
-            with self.subTest(i=i):
-                self.assertTrue(thread.golden_frame)
-                self.assertTrue(thread.status & ThreadStatus.HOT)
-                self.assertTrue(thread.status & ThreadStatus.CLOSED)
-                self.assertIsNotNone(thread.url)
+            self.assertTrue(thread.golden_frame)
+            self.assertTrue(thread.status & ThreadStatus.HOT)
+            self.assertTrue(thread.status & ThreadStatus.CLOSED)
+            self.assertIsNotNone(thread.url)
 
     def test_forum_announcement_from_content(self):
         content = self.load_resource(FILE_ANNOUNCEMENT)

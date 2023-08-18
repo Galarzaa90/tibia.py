@@ -10,7 +10,7 @@ from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
 from tibiapy.models import HousesSection, House
 from tibiapy.utils import parse_tibia_datetime, parse_tibia_money, \
-    parse_tibiacom_content, parse_tibiacom_tables, try_enum, parse_form_data_new
+    parse_tibiacom_content, parse_tibiacom_tables, try_enum, parse_form_data
 
 __all__ = (
     "HousesSectionParser",
@@ -93,7 +93,7 @@ class HousesSectionParser:
 
     @classmethod
     def _parse_filters(cls, builder: HousesSectionBuilder, form: bs4.Tag):
-        form_data = parse_form_data_new(form)
+        form_data = parse_form_data(form)
         builder.available_worlds(list(form_data.available_options["world"].values()))
         builder.available_towns(list(form_data.available_options["town"].values()))
         builder.world(form_data.values["world"])

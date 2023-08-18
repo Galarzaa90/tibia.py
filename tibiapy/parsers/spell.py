@@ -8,10 +8,10 @@ from typing import Dict, Optional, TYPE_CHECKING
 import bs4
 
 from tibiapy import errors
-from tibiapy.builders.spell import SpellSectionBuilder, SpellBuilder, RuneBuilder, SpellEntryBuilder
+from tibiapy.builders.spell import RuneBuilder, SpellBuilder, SpellEntryBuilder, SpellSectionBuilder
 from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
-from tibiapy.utils import (parse_form_data, parse_integer, parse_tibiacom_content, parse_tibiacom_tables,
-                           try_enum, parse_link_info)
+from tibiapy.utils import (parse_form_data, parse_integer, parse_link_info, parse_tibiacom_content,
+                           parse_tibiacom_tables, try_enum)
 
 if TYPE_CHECKING:
     from tibiapy.models import Rune, Spell, SpellsSection
@@ -83,12 +83,12 @@ class SpellsSectionParser:
                 builder.add_entry(spell)
             form = parsed_content.select_one("form")
             data = parse_form_data(form)
-            builder.vocation(try_enum(SpellVocationFilter, data["vocation"]))
-            builder.group(try_enum(SpellGroup, data["group"]))
-            builder.premium(try_enum(SpellGroup, data["group"]))
-            builder.spell_type(try_enum(SpellType, data["type"]))
-            builder.sort_by(try_enum(SpellSorting, data["sort"]))
-            builder.premium("yes" in data["premium"] if data["premium"] else None)
+            builder.vocation(try_enum(SpellVocationFilter, data.values["vocation"]))
+            builder.group(try_enum(SpellGroup, data.values["group"]))
+            builder.premium(try_enum(SpellGroup, data.values["group"]))
+            builder.spell_type(try_enum(SpellType, data.values["type"]))
+            builder.sort_by(try_enum(SpellSorting, data.values["sort"]))
+            builder.premium("yes" in data.values["premium"] if data.values["premium"] else None)
             return builder.build()
         except (AttributeError, TypeError, KeyError) as e:
             raise errors.InvalidContent("content does not belong to the Spells section", e) from e
