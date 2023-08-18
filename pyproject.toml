@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["tibiapy"]
+
+[project]
+name = "tibia.py"
+dynamic = ["version", "dependencies", "optional-dependencies"]
+authors = [
+    { name = "Galarzaa90", email = "allan.galarza@gmail.com" }
+]
+license = { text = 'Apache 2.0' }
+description = "API that parses website content into python data."
+requires-python = '>=3.8'
+readme = "README.md"
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: Apache Software License',
+    'Natural Language :: English',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Topic :: Games/Entertainment :: Role-Playing',
+    'Topic :: Internet',
+    'Topic :: Software Development',
+    'Topic :: Software Development :: Libraries',
+    'Topic :: Text Processing :: Markup :: HTML',
+    'Topic :: Utilities',
+    'Typing :: Typed',
+]
+
+[project.urls]
+"Homepage" = "https://tibiapy.readthedocs.io/"
+"Documentation" = "https://tibiapy.readthedocs.io/"
+"Repository" = "https://github.com/Galarzaa90/tibia.py"
+"Changelog" = "https://tibiapy.readthedocs.io/en/latest/changelog.html"
+"GitHub: Issues" = "https://github.com/Galarzaa90/tibia.py/issues"
+"Coverage: Codecov" = "https://app.codecov.io/gh/Galarzaa90/tibia.py"
+"Docker Hub: Repo" = "https://hub.docker.com/repository/docker/galarzaa90/tibia.py"
+"SonarCloud" = "https://sonarcloud.io/dashboard?id=Galarzaa90_tibia.py"
+
+[tool.setuptools.dynamic]
+version = { attr = "tibiapy.__version__" }
+dependencies = { file = ["requirements.txt"] }
+optional-dependencies = { dev = { file = ["requirements-docs.txt"] }, server = { file = ["requirements-server.txt"] }, testing = { file = ["requirements-testing.txt"] } }

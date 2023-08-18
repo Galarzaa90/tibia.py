@@ -20,7 +20,7 @@ jobs:
           python -m pip install wheel twine
       - name: Build Package 📦
         run: |
-          python setup.py bdist_wheel sdist
+          python -m build
       - name: Publish to PyPi 🚀
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

@@ -27,7 +27,7 @@ build:
   script:
     - pip install -U -e .
     - pip install wheel
-    - python setup.py sdist bdist_wheel
+    - python python -m build
   artifacts:
     name: tibia.py-dist
     paths:
@@ -49,7 +49,7 @@ coverage:
   stage: test
   script:
     - pip install -U -e .[test]
-    - coverage run setup.py test
+    - coverage run -m unittest discover
     - coverage report
     - coverage html
     - coverage xml
