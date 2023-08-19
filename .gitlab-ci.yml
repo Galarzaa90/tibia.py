@@ -25,9 +25,7 @@ cache:
 build:
   stage: build
   script:
-    - pip install -U -e .
-    - pip install wheel
-    - python python -m build
+    - python -m build
   artifacts:
     name: tibia.py-dist
     paths:
