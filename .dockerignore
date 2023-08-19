@@ -1,6 +1,6 @@
 *
 !tibiapy
 !server.py
-!setup.cfg
+!pyproject.toml
 !requirements.txt
 !README.md
