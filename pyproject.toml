@@ -50,3 +50,57 @@ classifiers = [
 version = { attr = "tibiapy.__version__" }
 dependencies = { file = ["requirements.txt"] }
 optional-dependencies = { dev = { file = ["requirements-docs.txt"] }, server = { file = ["requirements-server.txt"] }, testing = { file = ["requirements-testing.txt"] } }
+
+
+[tool.coverage.run]
+source = ["tibiapy"]
+relative_files = true
+command_line = "-m unittest discover"
+
+[tool.coverage.report]
+exclude_also = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "def __repr__",
+    "def __eq__",
+    "def __len__",
+    "def __lt__",
+    "def __gt__",
+    "return NotImplemented",
+    "if TYPE_CHECKING:",
+]
+
+
+[tool.flake8]
+max-line-length = 120
+exclude = [
+    "__pycache__",
+    ".git/",
+    "build/",
+    ".idea/",
+    "venv/",
+    "docs/",
+    "logs/",
+    "tests/",
+]
+tee = true
+# Ignore unused imports in __INIT__.py files
+per-file-ignores = [
+    "__init__.py:F401, F403",
+    "serve.py:D103",
+    "**/builders/*:D101",
+]
+count = true
+ignore = ["D100", "D102", "D104", "D105", "D107", "W503", "FS003"]
+rst-roles = [
+    "class,",
+    "py:attr",
+    "obj",
+    "meth",
+    "attr",
+]
+rst-directives = [
+    "versionadded",
+    "versionchanged",
+]
+

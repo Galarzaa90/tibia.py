@@ -9,6 +9,7 @@ flake8-commas
 flake8-comprehensions
 flake8-docstrings
 flake8-html
+flake8-pyproject
 flake8-return
 flake8-rst-docstrings
 flake8-use-fstring
