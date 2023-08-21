@@ -8,8 +8,7 @@ import bs4
 
 from tibiapy.builders import CreatureBuilder
 from tibiapy.errors import InvalidContent
-from tibiapy.models import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses, \
-    Creature
+from tibiapy.models import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses, Creature
 from tibiapy.utils import parse_tibiacom_content, convert_line_breaks
 
 __all__ = (
@@ -19,7 +18,7 @@ __all__ = (
     "CreaturesSectionParser",
 )
 
-BOOSTED_ALT = re.compile("Today's boosted \w+: ")
+BOOSTED_ALT = re.compile(r"Today's boosted \w+: ")
 
 HP_PATTERN = re.compile(r"have (\d+) hitpoints")
 EXP_PATTERN = re.compile(r"yield (\d+) experience")
@@ -31,6 +30,7 @@ MANA_COST = re.compile(r"takes (\d+) mana")
 
 
 class BoostedCreaturesParser:
+    """Parser for boosted creatures and bosses."""
 
     @classmethod
     def _parse_boosted_platform(cls, parsed_content: bs4.BeautifulSoup, tag_id: str):
@@ -42,7 +42,7 @@ class BoostedCreaturesParser:
 
     @classmethod
     def from_header(cls, content: str) -> BoostedCreatures:
-        """Parses both boosted creature and boss from the content of any section in Tibia.com
+        """Parse both boosted creature and boss from the content of any section in Tibia.com.
 
         Parameters
         ----------
@@ -59,19 +59,20 @@ class BoostedCreaturesParser:
             If content is not the HTML of a Tibia.com page.
         """
         try:
-            parsed_content = bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8'), "lxml",
+            parsed_content = bs4.BeautifulSoup(content.replace("ISO-8859-1", "utf-8"), "lxml",
                                                parse_only=bs4.SoupStrainer("div", attrs={"id": "RightArtwork"}))
             creature_name, creature_identifier = cls._parse_boosted_platform(parsed_content, "Monster")
             boss_name, boss_identifier = cls._parse_boosted_platform(parsed_content, "Boss")
             return BoostedCreatures(
                 creature=CreatureEntry(name=creature_name, identifier=creature_identifier),
-                boss=BossEntry(name=boss_name, identifier=boss_identifier)
+                boss=BossEntry(name=boss_name, identifier=boss_identifier),
             )
         except (TypeError, NameError, KeyError) as e:
             raise InvalidContent("content is not from Tibia.com", e) from e
 
 
 class BoostableBossesParser:
+    """Parser for the boostable bosses section of Tibia.com."""
 
     @classmethod
     def from_content(cls, content: str) -> BoostableBosses:
@@ -97,14 +98,15 @@ class BoostableBossesParser:
             boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
             if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
                 raise InvalidContent("content is not from the boostable bosses section.")
+
             boosted_boss_tag = boosted_creature_table.find("b")
             boosted_boss_image = boosted_creature_table.find("img")
             image_url = urllib.parse.urlparse(boosted_boss_image["src"])
             boosted_boss = BossEntry(name=boosted_boss_tag.text,
                                      identifier=os.path.basename(image_url.path).replace(".gif", ""))
 
-            list_table = parsed_content.find("div", style=lambda v: v and 'display: table' in v)
-            entries_container = list_table.find_all("div", style=lambda v: v and 'float: left' in v)
+            list_table = parsed_content.find("div", style=lambda v: v and "display: table" in v)
+            entries_container = list_table.find_all("div", style=lambda v: v and "float: left" in v)
             entries = []
             for entry_container in entries_container:
                 name = entry_container.text.strip()
@@ -112,6 +114,7 @@ class BoostableBossesParser:
                 image_url = urllib.parse.urlparse(image["src"])
                 identifier = os.path.basename(image_url.path).replace(".gif", "")
                 entries.append(BossEntry(name=name, identifier=identifier))
+
             return BoostableBosses(boosted_boss=boosted_boss, bosses=entries)
         except (AttributeError, ValueError) as e:
             raise InvalidContent("content is not the boosted boss's library", e)
@@ -138,6 +141,7 @@ class BoostableBossesParser:
 
 
 class CreaturesSectionParser:
+    """Parser for the creatures section in the library from Tibia.com."""
 
     @classmethod
     def boosted_creature_from_header(cls, content: str) -> CreatureEntry:
@@ -183,13 +187,14 @@ class CreaturesSectionParser:
             boosted_creature_text = boosted_creature_table.select_one("div.Text")
             if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
                 raise InvalidContent("content is not from the creatures section.")
+
             boosted_creature_link = boosted_creature_table.find("a")
             url = urllib.parse.urlparse(boosted_creature_link["href"])
             query = urllib.parse.parse_qs(url.query)
             boosted_creature = CreatureEntry(name=boosted_creature_link.text, identifier=query["race"][0])
 
-            list_table = parsed_content.find("div", style=lambda v: v and 'display: table' in v)
-            entries_container = list_table.find_all("div", style=lambda v: v and 'float: left' in v)
+            list_table = parsed_content.find("div", style=lambda v: v and "display: table" in v)
+            entries_container = list_table.find_all("div", style=lambda v: v and "float: left" in v)
             entries = []
             for entry_container in entries_container:
                 name = entry_container.text.strip()
@@ -197,12 +202,15 @@ class CreaturesSectionParser:
                 url = urllib.parse.urlparse(link["href"])
                 query = urllib.parse.parse_qs(url.query)
                 entries.append(CreatureEntry(name=name, identifier=query["race"][0]))
+
             return CreaturesSection(boosted_creature=boosted_creature, creatures=entries)
         except (AttributeError, ValueError) as e:
             raise InvalidContent("content is not the creature's library", e)
 
 
 class CreatureParser:
+    """Parser for creatures."""
+
     _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
 
     @classmethod
@@ -220,8 +228,9 @@ class CreatureParser:
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            pagination_container, content_container = \
-                parsed_content.find_all("div", style=lambda v: v and 'position: relative' in v)
+            pagination_container, content_container = (
+                parsed_content.find_all("div", style=lambda v: v and "position: relative" in v)
+            )
             title_container, description_container = content_container.find_all("div")
             title = title_container.find("h2")
             name = title.text.strip()
@@ -255,6 +264,7 @@ class CreatureParser:
         """
         if m := EXP_PATTERN.search(exp_text):
             builder.experience(int(m.group(1)))
+
         if m := LOOT_PATTERN.search(exp_text):
             builder.loot(m.group(1))
 
@@ -270,26 +280,34 @@ class CreatureParser:
         m = HP_PATTERN.search(hp_text)
         if m:
             builder.hitpoints(int(m.group(1)))
+
         m = IMMUNE_PATTERN.search(hp_text)
         immune = []
         if m:
             immune.extend(cls._parse_elements(m.group(1)))
+
         if "cannot be paralysed" in hp_text:
             immune.append("paralyze")
+
         if "sense invisible" in hp_text:
             immune.append("invisible")
+
         builder.immune_to(immune)
         if m := WEAK_PATTERN.search(hp_text):
             builder.weak_against(cls._parse_elements(m.group(1)))
+
         if m := STRONG_PATTERN.search(hp_text):
             builder.strong_against(cls._parse_elements(m.group(1)))
+
         if m := MANA_COST.search(hp_text):
             builder.mana_cost(int(m.group(1)))
             if "summon or convince" in hp_text:
                 builder.convinceable(True)
                 builder.summonable(True)
+
             if "cannot be summoned" in hp_text:
                 builder.convinceable(True)
+
             if "cannot be convinced" in hp_text:
                 builder.summonable(True)
 

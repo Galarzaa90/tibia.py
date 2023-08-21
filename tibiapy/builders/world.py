@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-import datetime
 from typing import List, Optional, TYPE_CHECKING
 
-from typing_extensions import Self
-
 from tibiapy import TransferType, BattlEyeType
-from tibiapy.models.world import World, WorldEntry, WorldOverview
+from tibiapy.models import World, WorldEntry, WorldOverview
 
 if TYPE_CHECKING:
     from tibiapy.models import OnlineCharacter
     from tibiapy import WorldLocation, PvpType
+    from typing_extensions import Self
+    import datetime
 
 __all__ = (
     "WorldBuilder",

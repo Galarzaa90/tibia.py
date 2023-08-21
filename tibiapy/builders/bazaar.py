@@ -1,18 +1,17 @@
 from __future__ import annotations
 
-import datetime
+
 from typing import List, Optional, TYPE_CHECKING
 
-from typing_extensions import Self
-
-from tibiapy.models import CharacterBazaar, Auction
+from tibiapy.models import Auction, CharacterBazaar
 from tibiapy.models.bazaar import AuctionDetails
 
 if TYPE_CHECKING:
+    import datetime
+    from typing_extensions import Self
     from tibiapy import BazaarType, Vocation, Sex, BidType, AuctionStatus
-    from tibiapy.models import AuctionFilters
-    from tibiapy.models.bazaar import OutfitImage, ItemEntry, SalesArgument, SkillEntry, ItemSummary, \
-        Mounts, Outfits, Familiars, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry
+    from tibiapy.models import (AuctionFilters, OutfitImage, ItemEntry, SalesArgument, SkillEntry, ItemSummary, Mounts,
+                                Outfits, Familiars, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry)
 
 
 class CharacterBazaarBuilder:
@@ -264,8 +263,10 @@ class AuctionDetailsBuilder:
         self._achievement_points = achievement_points
         return self
 
-    def regular_world_transfer_available_date(self, regular_world_transfer_available_date: Optional[
-        datetime.datetime]) -> Self:
+    def regular_world_transfer_available_date(
+            self,
+            regular_world_transfer_available_date: Optional[datetime.datetime],
+    ) -> Self:
         self._regular_world_transfer_available_date = regular_world_transfer_available_date
         return self
 

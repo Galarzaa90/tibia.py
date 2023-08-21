@@ -22,7 +22,7 @@ from tibiapy.parsers import (
     CharacterParser, CreatureParser, CreaturesSectionParser, EventScheduleParser, ForumAnnouncementParser,
     ForumBoardParser, ForumSectionParser, ForumThreadParser, GuildParser, GuildWarsParser, GuildsSectionParser,
     HighscoresParser, HouseParser, HousesSectionParser, KillStatisticsParser, LeaderboardParser, NewsArchiveParser,
-    NewsParser, SpellParser, SpellsSectionParser, WorldOverviewParser, WorldParser
+    NewsParser, SpellParser, SpellsSectionParser, WorldOverviewParser, WorldParser,
 )
 from tibiapy.urls import (
     get_auction_url, get_bazaar_url, get_boostable_bosses_url, get_character_url, get_cm_post_archive_url,
@@ -31,7 +31,7 @@ from tibiapy.urls import (
     get_guild_url, get_guild_wars_url, get_highscores_url, get_house_url, get_houses_section_url,
     get_kill_statistics_url, get_leaderboards_url, get_news_archive_url, get_news_url, get_spell_url,
     get_spells_section_url, get_support_boards_url, get_trade_boards_url, get_world_boards_url, get_world_guilds_url,
-    get_world_overview_url, get_world_url
+    get_world_overview_url, get_world_url,
 )
 
 if TYPE_CHECKING:
@@ -39,14 +39,14 @@ if TYPE_CHECKING:
         AjaxPaginator, Auction, AuctionFilters, BoostableBosses, BoostedCreatures, BossEntry, CMPostArchive, Character,
         CharacterBazaar, Creature, CreatureEntry, CreaturesSection, EventSchedule, ForumAnnouncement, ForumBoard,
         ForumSection, ForumThread, Guild, GuildWars, GuildsSection, Highscores, House, HousesSection, KillStatistics,
-        Leaderboard, News, NewsArchive, Spell, SpellsSection, World, WorldOverview
+        Leaderboard, News, NewsArchive, Spell, SpellsSection, World, WorldOverview,
     )
 
 __all__ = (
     "Client",
 )
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 log = logging.getLogger("tibiapy")
 
@@ -62,8 +62,8 @@ class _RawResponse:
         self.content = None
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} timestamp={self.timestamp!r} fetching_time={self.fetching_time!r} " \
-               f"cached={self.cached!r} age={self.age!r}>"
+        return (f"<{self.__class__.__name__} timestamp={self.timestamp!r} fetching_time={self.fetching_time!r} "
+                f"cached={self.cached!r} age={self.age!r}>")
 
     def parse(self, parser: Callable[[str], T]) -> TibiaResponse[T]:
         start_time = time.perf_counter()
@@ -97,7 +97,13 @@ class Client:
         Note that if a session is passed, the SOCKS proxy won't be used and must be applied when creating the session.
     """
 
-    def __init__(self, loop=None, session=None, *, proxy_url=None):
+    def __init__(
+            self,
+            loop: asyncio.AbstractEventLoop = None,
+            session: aiohttp.ClientSession = None,
+            *,
+            proxy_url: str = None,
+    ):
         self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if loop is None else loop
         self._session_ready = asyncio.Event()
         if session is not None:
@@ -108,11 +114,11 @@ class Client:
 
     # region Private Methods
 
-    async def _initialize_session(self, proxy_url=None):
+    async def _initialize_session(self, proxy_url: str = None):
         """Initialize the aiohttp session object."""
         headers = {
-            'User-Agent': f"Tibia.py/{tibiapy.__version__} (+https://github.com/Galarzaa90/tibia.py)",
-            'Accept-Encoding': "deflate, gzip",
+            "User-Agent": f"Tibia.py/{tibiapy.__version__} (+https://github.com/Galarzaa90/tibia.py)",
+            "Accept-Encoding": "deflate, gzip",
         }
         connector = aiohttp_socks.SocksConnector.from_url(proxy_url) if proxy_url else None
         self.session: aiohttp.ClientSession = aiohttp.ClientSession(
@@ -123,17 +129,18 @@ class Client:
         self._session_ready.set()
 
     @classmethod
-    def _handle_status(cls, status_code: int, fetching_time=0.0):
+    def _handle_status(cls, status_code: int, fetching_time: float = 0.0):
         """Handle error status codes, raising exceptions if necessary."""
         if status_code < 400:
             return
+
         if status_code == 403:
             raise Forbidden("403 Forbidden: Might be getting rate-limited", fetching_time=fetching_time)
-        else:
-            raise NetworkError("Request error, status code: %d" % status_code, fetching_time=fetching_time)
+
+        raise NetworkError(f"Request error, status code: {status_code:d}", fetching_time=fetching_time)
 
     async def _request(self, method, url, data=None, headers=None, *, test: bool = False):
-        """Base request, handling possible error statuses.
+        """Perform the HTTP request, handling possible error statuses.
 
         Parameters
         ----------
@@ -164,6 +171,7 @@ class Client:
         await self._session_ready.wait()
         if test:
             url = url.replace("www.tibia.com", "www.test.tibia.com")
+
         init_time = time.perf_counter()
         try:
             async with self.session.request(method, url, data=data, headers=headers) as resp:
@@ -171,6 +179,7 @@ class Client:
                 if "maintenance.tibia.com" in str(resp.url):
                     log.info("%s | %s | %s %s | maintenance.tibia.com", url, resp.method, resp.status, resp.reason)
                     raise SiteMaintenanceError("Tibia.com is down for maintenance.")
+
                 log.info("%s | %s | %s %s | %dms", url, resp.method, resp.status, resp.reason, int(diff_time * 1000))
                 self._handle_status(resp.status, diff_time)
                 response = _RawResponse(resp, diff_time)
@@ -181,9 +190,9 @@ class Client:
         except aiohttp_socks.SocksConnectionError as e:
             raise NetworkError(f"aiohttp_socks.SocksConnectionError: {e}", e, time.perf_counter() - init_time) from e
         except UnicodeDecodeError as e:
-            raise NetworkError(f'UnicodeDecodeError: {e}', e, time.perf_counter() - init_time) from e
+            raise NetworkError(f"UnicodeDecodeError: {e}", e, time.perf_counter() - init_time) from e
 
-    async def _fetch_all_pages(self, auction_id, paginator: AjaxPaginator, item_type, *, test: bool = False):
+    async def _fetch_all_pages(self, auction_id: int, paginator: AjaxPaginator, item_type, *, test: bool = False):
         """Fetch all the pages of an auction paginator.
 
         Parameters
@@ -204,7 +213,9 @@ class Client:
                 # noinspection PyProtectedMember
                 entries = AuctionParser._parse_page_items(content, paginator)
                 paginator.entries.extend(entries)
+
             current_page += 1
+
         paginator.is_fully_fetched = True
 
     async def _fetch_ajax_page(self, auction_id, type_id, page, *, test: bool = False):
@@ -227,18 +238,20 @@ class Client:
             The HTML content of the obtained page.
         """
         headers = {"x-requested-with": "XMLHttpRequest"}
-        page_response = await self._request("GET", f"https://www.tibia.com/websiteservices/handle_charactertrades.php?"
-                                                   f"auctionid={auction_id}&"
-                                                   f"type={type_id}&"
-                                                   f"currentpage={page}",
-                                            headers=headers,
-                                            test=test)
+        page_response = await self._request(
+            "GET",
+            f"https://www.tibia.com/websiteservices/handle_charactertrades.php?"
+            f"auctionid={auction_id}&type={type_id}&currentpage={page}",
+            headers=headers,
+            test=test,
+        )
         try:
             data = json.loads(page_response.content.replace("\x0a", " "))
         except json.decoder.JSONDecodeError:
             return None
+
         try:
-            return data['AjaxObjects'][0]['Data']
+            return data["AjaxObjects"][0]["Data"]
         except KeyError:
             return None
 
@@ -337,7 +350,7 @@ class Client:
             categories: Set[NewsCategory] = None,
             types: Set[NewsType] = None,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[NewsArchive]:
         """Fetch news from the archive meeting the search criteria.
 
@@ -375,6 +388,7 @@ class Client:
         to_date = to_date or datetime.date.today()
         if from_date > to_date:
             raise ValueError("start_date can't be more recent than end_date")
+
         form_data = NewsArchiveParser.get_form_data(from_date, to_date, categories, types)
         response = await self._request("POST", get_news_archive_url(), form_data, test=test)
         return response.parse(NewsArchiveParser.from_content)
@@ -385,7 +399,7 @@ class Client:
             categories: Set[NewsCategory] = None,
             types: Set[NewsType] = None,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[NewsArchive]:
         """Fetch all the published news in the last specified days.
 
@@ -422,6 +436,7 @@ class Client:
         """
         if days < 0:
             raise ValueError("days must be zero or higher")
+
         end = datetime.date.today()
         begin = end - datetime.timedelta(days=days)
         return await self.fetch_news_archive(begin, end, categories, types, test=test)
@@ -457,7 +472,7 @@ class Client:
             month: int = None,
             year: int = None,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[EventSchedule]:
         """Fetch the event calendar. By default, it gets the events for the current month.
 
@@ -489,6 +504,7 @@ class Client:
         """
         if (year is None and month is not None) or (year is not None and month is None):
             raise ValueError("both year and month must be defined or neither must be defined.")
+
         response = await self._request("GET", get_event_schedule_url(month, year), test=test)
         return response.parse(EventScheduleParser.from_content)
 
@@ -733,7 +749,7 @@ class Client:
             battleye_type: Optional[HighscoresBattlEyeType] = None,
             pvp_types: Set[PvpTypeFilter] = None,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[Optional[Highscores]]:
         """Fetch a single highscores page from Tibia.com.
 
@@ -776,14 +792,22 @@ class Client:
         pvp_types = pvp_types or []
         if page < 1:
             raise ValueError("page must be 1 or higher.")
+
         if world is not None and ((battleye_type and battleye_type != HighscoresBattlEyeType.ANY_WORLD) or pvp_types):
             raise ValueError("BattleEye and PvP type filters can only be used when fetching all worlds.")
-        response = await self._request("GET", get_highscores_url(world, category, vocation, page, battleye_type,
+
+        response = await self._request("GET", get_highscores_url(world, category,
+                                                                 vocation, page, battleye_type,
                                                                  pvp_types), test=test)
         return response.parse(HighscoresParser.from_content)
 
-    async def fetch_leaderboard(self, world: str, rotation: int = None, page: int = 1, *, test: bool = False) \
-            -> TibiaResponse[Optional[Leaderboard]]:
+    async def fetch_leaderboard(
+            self,
+            world: str,
+            rotation: int = None,
+            page: int = 1,
+            *, test: bool = False,
+    ) -> TibiaResponse[Optional[Leaderboard]]:
         """Fetch the leaderboards for a specific world and rotation.
 
         .. versionadded:: 5.0.0
@@ -819,7 +843,7 @@ class Client:
             self,
             world: str,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[Optional[KillStatistics]]:
         """Fetch the kill statistics of a world from Tibia.com.
 
@@ -854,7 +878,7 @@ class Client:
             status: Optional[HouseStatus] = None,
             order: Optional[HouseOrder] = None,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[HousesSection]:
         """Fetch the house list of a world and type.
 
@@ -1017,7 +1041,7 @@ class Client:
             self,
             section_id: int,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[Optional[ForumSection]]:
         """Fetch a forum's section by its ID.
 
@@ -1248,6 +1272,7 @@ class Client:
         built_response = response.parse(ForumThreadParser.from_content)
         if built_response.data is None:
             return built_response
+
         built_response.data.anchored_post = next((p for p in built_response.data.entries if p.post_id == post_id), None)
         return built_response
 
@@ -1255,7 +1280,7 @@ class Client:
             self,
             announcement_id: int,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[Optional[ForumAnnouncement]]:
         """Fetch a forum announcement.
 
@@ -1290,7 +1315,7 @@ class Client:
             end_date: datetime.datetime,
             page: int = 1,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[CMPostArchive]:
         """Fetch the CM post archive.
 
@@ -1324,8 +1349,10 @@ class Client:
         """
         if start_date > end_date:
             raise ValueError("start_date cannot be more recent than end_date")
+
         if page <= 0:
             raise ValueError("page cannot be lower than 1.")
+
         response = await self._request("GET", get_cm_post_archive_url(start_date, end_date, page), test=test)
         return response.parse(CMPostArchiveParser.from_content)
 
@@ -1337,7 +1364,7 @@ class Client:
             page: int = 1,
             filters: Optional[AuctionFilters] = None,
             *,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[CharacterBazaar]:
         """Fetch the current auctions in the bazaar.
 
@@ -1368,7 +1395,8 @@ class Client:
             If the page number is not 1 or greater.
         """
         if page <= 0:
-            raise ValueError('page must be 1 or greater.')
+            raise ValueError("page must be 1 or greater.")
+
         response = await self._request("GET", get_bazaar_url(BazaarType.CURRENT, page, filters), test=test)
         return response.parse(CharacterBazaarParser.from_content)
 
@@ -1403,7 +1431,8 @@ class Client:
             If the page number is not 1 or greater.
         """
         if page <= 0:
-            raise ValueError('page must be 1 or greater.')
+            raise ValueError("page must be 1 or greater.")
+
         response = await self._request("GET", get_bazaar_url(BazaarType.HISTORY, page, filters), test=test)
         return response.parse(CharacterBazaarParser.from_content)
 
@@ -1416,7 +1445,7 @@ class Client:
             fetch_outfits: bool = False,
             fetch_familiars: bool = False,
             skip_details: bool = False,
-            test: bool = False
+            test: bool = False,
     ) -> TibiaResponse[Optional[Auction]]:
         """Fetch an auction by its ID.
 
@@ -1458,24 +1487,30 @@ class Client:
             If the auction id is not 1 or greater.
         """
         if auction_id <= 0:
-            raise ValueError('auction_id must be 1 or greater.')
+            raise ValueError("auction_id must be 1 or greater.")
+
         response = await self._request("GET", get_auction_url(auction_id), test=test)
         tibia_response = response.parse(lambda c: AuctionParser.from_content(c, auction_id, skip_details))
         if tibia_response.data is None:
             return tibia_response
+
         auction = tibia_response.data
         if auction and not skip_details:
             if fetch_items:
                 await self._fetch_all_pages(auction_id, auction.details.items, 0, test=test)
                 await self._fetch_all_pages(auction_id, auction.details.store_items, 1, test=test)
+
             if fetch_mounts:
                 await self._fetch_all_pages(auction_id, auction.details.mounts, 2, test=test)
                 await self._fetch_all_pages(auction_id, auction.details.store_mounts, 3, test=test)
+
             if fetch_outfits:
                 await self._fetch_all_pages(auction_id, auction.details.outfits, 4, test=test)
                 await self._fetch_all_pages(auction_id, auction.details.store_outfits, 5, test=test)
+
             if fetch_familiars:
                 await self._fetch_all_pages(auction_id, auction.details.outfits, 6, test=test)
+
         return tibia_response
 
     # endregion

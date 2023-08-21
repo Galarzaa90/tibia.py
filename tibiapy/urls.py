@@ -8,8 +8,8 @@ from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEye
 
 if TYPE_CHECKING:
     from tibiapy.models import AuctionFilters
-    from tibiapy import BazaarType, HouseType, HouseStatus, HouseOrder, SpellVocationFilter, \
-        SpellGroup, SpellType, SpellSorting
+    from tibiapy import (BazaarType, HouseType, HouseStatus, HouseOrder, SpellVocationFilter, SpellGroup, SpellType,
+                         SpellSorting)
 
 
 def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
@@ -47,27 +47,32 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwar
     >>> get_tibia_url("community", "worlds", **params)
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
     """
-    base_url = "www.tibia.com" if not test else "www.test.tibia.com"
+    base_url = "www.test.tibia.com" if test else "www.tibia.com"
     url = f"https://{base_url}/{section}/?"
-    params = {'subtopic': subtopic} if subtopic else {}
+    params = {"subtopic": subtopic} if subtopic else {}
     if kwargs:
         for key, value in kwargs.items():
             if isinstance(value, str):
-                value = value.encode('iso-8859-1')
+                value = value.encode("iso-8859-1")
+
             if value is None:
                 continue
+
             params[key] = value
+
     url += urllib.parse.urlencode(params)
     if args:
         url += "&"
         url += urllib.parse.urlencode(args)
+
     if anchor:
         url += f"#{anchor}"
+
     return url
 
 
 def get_static_file_url(*path: str) -> str:
-    """Build a URL to a static file in Tibia.com
+    """Build a URL to a static file in Tibia.com.
 
     Parameters
     ----------
@@ -78,13 +83,12 @@ def get_static_file_url(*path: str) -> str:
     --------
     >>> get_static_file_url("images", "global", "content", "newsicon_community_big.gif")
     https://static.tibia.com/images/global/content/newsicon_community_big.gif
-
     """
     return urllib.parse.urljoin("https://static.tibia.com/", "/".join(path))
 
 
 def get_character_url(name: str) -> str:
-    """Get the URL to a character in Tibia.com
+    """Get the URL to a character in Tibia.com.
 
     Parameters
     ----------
@@ -166,8 +170,7 @@ def get_house_url(world: str, house_id: int) -> str:
 
 
 def get_world_overview_url() -> str:
-    """Get the URL to world overview section in Tibia.com
-
+    """Get the URL to world overview section in Tibia.com.
 
     Returns
     -------
@@ -379,7 +382,7 @@ def get_highscores_url(
         vocation: HighscoresProfession = HighscoresProfession.ALL,
         page=1,
         battleye_type: HighscoresBattlEyeType = None,
-        pvp_types: Set[PvpTypeFilter] = None
+        pvp_types: Set[PvpTypeFilter] = None,
 ) -> str:
     """Get the Tibia.com URL of the highscores for the given parameters.
 
@@ -543,12 +546,16 @@ def get_cm_post_archive_url(from_date: datetime.date, to_date: datetime.date, pa
     """
     if not isinstance(from_date, datetime.date):
         raise TypeError(f"start_date: expected datetime.date instance, {type(from_date)} found.")
+
     if not isinstance(to_date, datetime.date):
         raise TypeError(f"start_date: expected datetime.date instance, {type(from_date)} found.")
+
     if to_date < from_date:
         raise ValueError("start_date can't be more recent than end_date.")
+
     if page < 1:
         raise ValueError("page must be 1 or greater.")
+
     return get_tibia_url("forum", "forum", action="cm_post_archive", startday=from_date.day,
                          startmonth=from_date.month, startyear=from_date.year, endday=to_date.day,
                          endmonth=to_date.month, endyear=to_date.year, currentpage=page)
@@ -578,6 +585,7 @@ def get_leaderboards_url(world: str, rotation_id: int = None, page: int = 1) -> 
     """
     if page <= 0:
         raise ValueError("page must be 1 or greater")
+
     return get_tibia_url("community", "leaderboards", world=world, rotation=rotation_id, currentpage=page)
 
 
@@ -622,6 +630,7 @@ def get_boostable_bosses_url() -> str:
 def _to_yes_no(value: Optional[bool]):
     if value is None:
         return None
+
     return "yes" if value else "no"
 
 
@@ -630,7 +639,7 @@ def get_spells_section_url(
         group: SpellGroup = None,
         spell_type: SpellType = None,
         is_premium: bool = None,
-        sort: SpellSorting = None
+        sort: SpellSorting = None,
 ):
     """Get the URL to the spells section with the desired filtering parameters.
 

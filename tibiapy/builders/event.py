@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from typing import List, TYPE_CHECKING
 
-from typing_extensions import Self
-
 from tibiapy.models.event import EventSchedule
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
     from tibiapy.models.event import EventEntry
 
 

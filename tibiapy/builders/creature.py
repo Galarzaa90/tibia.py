@@ -1,8 +1,10 @@
-from typing import List
-
-from typing_extensions import Self
+from __future__ import annotations
+from typing import List, TYPE_CHECKING
 
 from tibiapy.models.creature import CreatureEntry, Creature
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class CreatureEntryBuilder:

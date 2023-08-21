@@ -29,7 +29,8 @@ class HighscoresEntry(BaseCharacter):
 class LoyaltyHighscoresEntry(HighscoresEntry):
     """Represents an entry for the highscores loyalty points category.
 
-    This is a subclass of :class:`HighscoresEntry`, adding an extra field for title."""
+    This is a subclass of :class:`HighscoresEntry`, adding an extra field for title.
+    """
 
     title: str
     """The character's loyalty title."""
@@ -38,7 +39,7 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
 class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
     """Represents the highscores of a world."""
 
-    world:  Optional[str] = None
+    world: Optional[str] = None
     """The world the highscores belong to. If this is :obj:`None`, the highscores shown are for all worlds."""
     category: HighscoresCategory
     """The selected category to displays the highscores of."""
@@ -47,7 +48,7 @@ class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
     battleye_filter: Optional[HighscoresBattlEyeType]
     """The selected BattlEye filter. If :obj:`None`, all worlds will be displayed.
 
-    Only applies for global highscores. Only characters from worlds with the matching BattlEye protection will be shown."""
+    Only applies for global highscores. Only characters from worlds matching BattlEye protection will be shown."""
     pvp_types_filter: Set[PvpTypeFilter]
     """The selected PvP types filter. If :obj:`None`, all world will be displayed.
 
@@ -56,7 +57,6 @@ class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
     """The time when the shown highscores were last updated. The resolution is 1 minute."""
     available_worlds: List[str]
     """The worlds available for selection."""
-
 
     @property
     def from_rank(self) -> int:
@@ -94,5 +94,6 @@ class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
         """
         if page <= 0:
             raise ValueError("page cannot be less or equals than zero")
-        return get_highscores_url(self.world, self.category, self.vocation, page, self.battleye_filter, self.pvp_types_filter)
 
+        return get_highscores_url(self.world, self.category, self.vocation, page,
+                                  self.battleye_filter, self.pvp_types_filter)

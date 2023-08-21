@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-import datetime
+
 from typing import List, TYPE_CHECKING, Optional
 
 from tibiapy.models.house import HouseEntry, HousesSection, House
 
 if TYPE_CHECKING:
+    import datetime
     from tibiapy import HouseStatus, HouseType, HouseOrder, Sex
 
 
@@ -24,7 +25,7 @@ class HousesSectionBuilder:
         self._world = world
         return self
 
-    def town(self, town:  str):
+    def town(self, town: str):
         self._town = town
         return self
 
@@ -241,5 +242,5 @@ class HouseBuilder(_HouseWithIdBuilder):
             transfer_accepted=self._transfer_accepted,
             highest_bid=self._highest_bid,
             highest_bidder=self._highest_bidder,
-            auction_end=self._auction_end
+            auction_end=self._auction_end,
         )

@@ -10,10 +10,10 @@ from tibiapy.models import BaseModel
 from tibiapy.urls import get_spells_section_url, get_spell_url, get_static_file_url
 
 __all__ = (
-    'SpellsSection',
-    'Spell',
-    'SpellEntry',
-    'Rune',
+    "SpellsSection",
+    "Spell",
+    "SpellEntry",
+    "Rune",
 )
 
 

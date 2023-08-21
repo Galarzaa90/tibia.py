@@ -2,40 +2,37 @@ import datetime
 from abc import ABC, abstractmethod
 from typing import Optional, List, Dict, TypeVar, Generic
 
-
-from tibiapy import PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, \
-    AuctionSearchType, \
-    AuctionOrderBy, AuctionOrderDirection, BazaarType, Vocation, Sex, BidType, AuctionStatus
+from tibiapy import (PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, AuctionSearchType,
+                     AuctionOrderBy, AuctionOrderDirection, BazaarType, Vocation, Sex, BidType, AuctionStatus)
 from tibiapy.models import BaseModel
 from tibiapy.models.pagination import AjaxPaginator, PaginatedWithUrl
 from tibiapy.urls import get_character_url, get_auction_url, get_bazaar_url
 
 __all__ = (
-    'AchievementEntry',
-    'Auction',
-    'AuctionDetails',
-    'AuctionFilters',
-    'BestiaryEntry',
-    'BlessingEntry',
-    'CharacterBazaar',
-    'CharmEntry',
-    'FamiliarEntry',
-    'Familiars',
-    'ItemEntry',
-    'ItemSummary',
-    'MountEntry',
-    'Mounts',
-    'OutfitEntry',
-    'OutfitImage',
-    'Outfits',
-    'SalesArgument',
-    'SkillEntry',
+    "AchievementEntry",
+    "Auction",
+    "AuctionDetails",
+    "AuctionFilters",
+    "BestiaryEntry",
+    "BlessingEntry",
+    "CharacterBazaar",
+    "CharmEntry",
+    "FamiliarEntry",
+    "Familiars",
+    "ItemEntry",
+    "ItemSummary",
+    "MountEntry",
+    "Mounts",
+    "OutfitEntry",
+    "OutfitImage",
+    "Outfits",
+    "SalesArgument",
+    "SkillEntry",
 )
 
 
 class AchievementEntry(BaseModel):
     """An unlocked achievement by the character."""
-
 
     name: str
     """The name of the achievement."""
@@ -46,7 +43,7 @@ class AchievementEntry(BaseModel):
 class AuctionFilters(BaseModel):
     """The auction filters available in the auctions section.
 
-        All attributes are optional.
+    All attributes are optional.
     """
 
     world: Optional[str] = None
@@ -272,8 +269,10 @@ class ItemSummary(AuctionSummary[ItemEntry]):
 
 
 class Mounts(AuctionSummary[MountEntry]):
+    """The mounts the character has unlocked or purchased."""
+
     def get_by_id(self, entry_id):
-        """Get an mount by its mount id.
+        """Get a mount by its mount id.
 
         Parameters
         ----------
@@ -332,6 +331,7 @@ class SalesArgument(BaseModel):
     Sales arguments can be selected when creating an auction, and allow the user to highlight certain
     character features in the auction listing.
     """
+
     category_id: int
     category_image: str
     """The URL to the category icon."""
@@ -341,7 +341,6 @@ class SalesArgument(BaseModel):
 
 class SkillEntry(BaseModel):
     """Represents the character's skills."""
-
 
     name: str
     """The name of the skill."""
@@ -353,6 +352,7 @@ class SkillEntry(BaseModel):
 
 class AuctionDetails(BaseModel):
     """The details of an auction."""
+
     hit_points: int
     """The hit points of the character."""
     mana: int

@@ -1,33 +1,28 @@
 """These are functions used thorough the module that may not be intended for public use."""
 import datetime
-import functools
-import itertools
 import re
 import urllib.parse
-import warnings
-from collections import OrderedDict, defaultdict
-from typing import Dict, Optional, Tuple, Type, TypeVar, Union, List
+from collections import defaultdict
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
 
 import bs4
 from pydantic import BaseModel
 
 from tibiapy.errors import InvalidContent
 
-TIBIA_CASH_PATTERN = re.compile(r'(\d*\.?\d*)\s?k*$')
+TIBIA_CASH_PATTERN = re.compile(r"(\d*\.?\d*)\s?k*$")
+
+T = TypeVar("T")
+D = TypeVar("D")
 
 
-T = TypeVar('T')
-D = TypeVar('D')
-
-def clean_text(tag: Union[bs4.Tag, str]):
-    if isinstance(tag, bs4.Tag):
-        text = tag.text
-    else:
-        text = tag
+def clean_text(tag: Union[bs4.Tag, str]) -> str:
+    """Get the tag's text, removing non-breaking, leading and trailing spaces."""
+    text = tag.text if isinstance(tag, bs4.Tag) else tag
     return text.replace("\xa0", " ").strip()
 
 
-def convert_line_breaks(element):
+def convert_line_breaks(element: bs4.Tag):
     """Convert the <br> tags in a HTML elements to actual line breaks.
 
     Parameters
@@ -40,6 +35,7 @@ def convert_line_breaks(element):
 
 
 def get_rows(table_tag: bs4.Tag):
+    """Get all the row tags inside the container."""
     return table_tag.select("tr")
 
 
@@ -48,12 +44,12 @@ class FormData(BaseModel):
 
     values: Dict[str, str] = {}
     """The values in the form.
-    
+
     This contains text fields, select fields and radios.
     """
     values_multiple: Dict[str, List[str]] = defaultdict(list)
     """The selected values in the form of inputs that allow multiple selections.
-    
+
     This contains the values of check boxes."""
     available_options: Dict[str, Dict[str, str]] = defaultdict(dict)
     """The available options in select fields, radios and check boxes."""
@@ -80,16 +76,20 @@ def parse_form_data(form: bs4.Tag):
     form_data = FormData()
     if "action" in form.attrs:
         form_data.action = form.attrs["action"]
+
     if "method" in form.attrs:
         form_data.method = form.attrs["method"]
+
     for field in form.select("input[type=text], input[type=hidden]"):
         form_data.values[field.attrs.get("name")] = field.attrs.get("value")
+
     for select in form.select("select"):
         name = select.attrs.get("name")
         selected_option = select.select_one("option[selected]")
         options = select.select("option")
         form_data.available_options[name].update({clean_text(opt): opt.attrs.get("value") for opt in options})
         form_data.values[name] = selected_option.attrs.get("value") if selected_option else None
+
     for checkbox in form.select("input[type=checkbox]"):
         name = checkbox.attrs.get("name")
         label = checkbox.parent.text
@@ -97,6 +97,7 @@ def parse_form_data(form: bs4.Tag):
         form_data.available_options[name][label] = value
         if checkbox.has_attr("checked"):
             form_data.values_multiple[name].append(value)
+
     for radio in form.select("input[type=radio]"):
         name = radio.attrs.get("name")
         value = radio.attrs.get("value")
@@ -104,6 +105,7 @@ def parse_form_data(form: bs4.Tag):
         form_data.available_options[name][label] = value
         if radio.has_attr("checked"):
             form_data.values[name] = value
+
     return form_data
 
 
@@ -125,14 +127,15 @@ def parse_integer(number: str, default: Optional[int] = 0):
     """
     if number is None:
         return default
+
     try:
-        number = re.sub(r'[,.]', '', number.strip())
+        number = re.sub(r"[,.]", "", number.strip())
         return int(number)
     except ValueError:
         return default
 
 
-def parse_link_info(link_tag):
+def parse_link_info(link_tag: str):
     """Parse the information of a link tag.
 
     It will parse the link's content, target URL as well as the query parameters where applicable.
@@ -186,10 +189,11 @@ def parse_link_info(link_tag):
                 info["query"][param] = value[0]
             else:
                 info["query"][param] = value
+
     return info
 
 
-def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
+def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
     """Parse date and time from the format used in Tibia.com.
 
     Accepted format:
@@ -233,7 +237,7 @@ def parse_tibia_datetime(datetime_str) -> Optional[datetime.datetime]:
         return None
 
 
-def parse_tibia_date(date_str) -> Optional[datetime.date]:
+def parse_tibia_date(date_str: str) -> Optional[datetime.date]:
     """Parse a date from the format used in Tibia.com.
 
     Accepted format:
@@ -257,7 +261,7 @@ def parse_tibia_date(date_str) -> Optional[datetime.date]:
         return None
 
 
-def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
+def parse_tibia_forum_datetime(datetime_str: str, utc_offset: int = 1) -> datetime.datetime:
     """Parse a date in the format used in the Tibia.com forums.
 
     Accepted format:
@@ -286,7 +290,7 @@ def parse_tibia_forum_datetime(datetime_str, utc_offset=1):
     return t.replace(tzinfo=datetime.timezone.utc)
 
 
-def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
+def parse_tibia_full_date(date_str: str) -> Optional[datetime.date]:
     """Parse a date in the fuller format used in Tibia.com.
 
     Accepted format:
@@ -310,7 +314,7 @@ def parse_tibia_full_date(date_str) -> Optional[datetime.date]:
         return None
 
 
-def parse_number_words(text_num):
+def parse_number_words(text_num: str) -> int:
     """Parse the word representation of a number to a integer.
 
     Parameters
@@ -323,7 +327,6 @@ def parse_number_words(text_num):
     :class:`int`
         The number represented by the string.
     """
-    numwords = {}
     units = [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
         "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
@@ -334,11 +337,13 @@ def parse_number_words(text_num):
 
     scales = ["hundred", "thousand", "million", "billion", "trillion"]
 
-    numwords["and"] = (1, 0)
+    numwords = {"and": (1, 0)}
     for idx, word in enumerate(units):
         numwords[word] = (1, idx)
+
     for idx, word in enumerate(tens):
         numwords[word] = (1, idx * 10)
+
     for idx, word in enumerate(scales):
         numwords[word] = (10 ** (idx * 3 or 2), 0)
 
@@ -357,7 +362,7 @@ def parse_number_words(text_num):
     return result + current
 
 
-def try_datetime(obj) -> Optional[datetime.datetime]:
+def try_datetime(obj: Union[str, datetime]) -> Optional[datetime.datetime]:
     """Attempt to convert an object into a datetime.
 
     If the date format is known, it's recommended to use the corresponding function
@@ -375,12 +380,11 @@ def try_datetime(obj) -> Optional[datetime.datetime]:
     """
     if obj is None:
         return None
-    if isinstance(obj, datetime.datetime):
-        return obj
-    return parse_tibia_datetime(obj)
+
+    return obj if isinstance(obj, datetime.datetime) else parse_tibia_datetime(obj)
 
 
-def try_date(obj) -> Optional[datetime.date]:
+def try_date(obj: Union[str, datetime.datetime, datetime.date]) -> Optional[datetime.date]:
     """Attempt to convert an object into a date.
 
     If the date format is known, it's recommended to use the corresponding function
@@ -398,29 +402,42 @@ def try_date(obj) -> Optional[datetime.date]:
     """
     if obj is None:
         return None
+
     if isinstance(obj, datetime.datetime):
         return obj.date()
+
     if isinstance(obj, datetime.date):
         return obj
+
     res = parse_tibia_date(obj)
-    if res is not None:
-        return res
-    return parse_tibia_full_date(obj)
+    return res if res is not None else parse_tibia_full_date(obj)
 
 
-def parse_tables_map(parsed_content: bs4.BeautifulSoup, selector = "div.TableContentContainer") -> Dict[str, bs4.Tag]:
+def parse_tables_map(
+        parsed_content: bs4.BeautifulSoup,
+        selector: str = "div.TableContentContainer",
+) -> Dict[str, bs4.Tag]:
+    """Parse Tibia.com style tables, building a map with their title as key."""
     tables = parsed_content.select("div.TableContainer")
     output = {}
     for table in tables:
         caption = table.select_one("div.Text")
         if not caption:
             raise InvalidContent("table has no caption")
+
         if content_table := table.select_one(selector):
             output[clean_text(caption)] = content_table
+
     return output
 
 
-def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", builder="lxml") -> bs4.BeautifulSoup:
+def parse_tibiacom_content(
+        content: str,
+        *,
+        html_class: str = "BoxContent",
+        tag: str = "div",
+        builder: str = "lxml",
+) -> bs4.BeautifulSoup:
     """Parse HTML content from Tibia.com into a BeautifulSoup object.
 
     Parameters
@@ -440,11 +457,10 @@ def parse_tibiacom_content(content, *, html_class="BoxContent", tag="div", build
         The parsed content.
     """
     strainer = bs4.SoupStrainer(tag, class_=html_class) if builder != "html5lib" else None
-    return bs4.BeautifulSoup(content.replace('ISO-8859-1', 'utf-8', 1), builder, parse_only=strainer)
+    return bs4.BeautifulSoup(content.replace("ISO-8859-1", "utf-8", 1), builder, parse_only=strainer)
 
 
-
-def parse_tibiacom_tables(parsed_content) -> Dict[str, bs4.Tag]:
+def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Tag]:
     """Parse tables from Tibia.com into a mapping by the tables title.
 
     This is used for the table style used in Tibia.com, where a table is wrapped in a container with a title.
@@ -466,11 +482,13 @@ def parse_tibiacom_tables(parsed_content) -> Dict[str, bs4.Tag]:
         table = table_container.find("table", attrs={"class": "TableContent"})
         if not table:
             continue
+
         tables[text_tag.text.strip()] = table
+
     return tables
 
 
-def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
+def try_enum(cls: Type[T], val: Any, default: D = None) -> Union[T, D]:
     """Attempt to convert a value into their enum value.
 
     Parameters
@@ -489,19 +507,21 @@ def try_enum(cls: Type[T], val, default: D = None) -> Union[T, D]:
     """
     if isinstance(val, cls):
         return val
+
     try:
         return cls(val)
     except ValueError:
         try:
             if isinstance(val, str):
                 val = val.upper()
+
             return cls._member_map_[val]
         except KeyError:
             return default
 
 
-def parse_tibia_money(argument):
-    """Parse a string that may contain 'k' as thousand suffix.
+def parse_tibia_money(argument: str) -> int:
+    """Parse a string that may contain 'k' as thousands suffix.
 
     Parameters
     ----------
@@ -515,18 +535,19 @@ def parse_tibia_money(argument):
     """
     try:
         return int(argument)
-    except ValueError:
+    except ValueError as e:
         argument = argument.replace(",", "").strip().lower()
         m = TIBIA_CASH_PATTERN.match(argument)
         if not m or not m.group(1):
-            raise ValueError("not a numeric value")
+            raise ValueError("not a numeric value") from e
+
         num = float(m.group(1))
         k_count = argument.count("k")
         num *= pow(1000, k_count)
         return int(num)
 
 
-def split_list(items, separator=",", last_separator=" and "):
+def split_list(items: str, separator: str = ",", last_separator: str = " and ") -> List[str]:
     """Split a string listing elements into an actual list.
 
     Parameters
@@ -545,43 +566,18 @@ def split_list(items, separator=",", last_separator=" and "):
     """
     if items is None:
         return None
+
     items = items.split(separator)
     last_item = items[-1]
     last_split = last_item.split(last_separator)
     if len(last_split) > 1:
         items[-1] = last_separator.join(last_split[:-1])
         items.append(last_split[-1])
+
     return [e.strip() for e in items]
 
 
-def _recursive_strip(value):  # pragma: no cover
-    if isinstance(value, dict):
-        return {k: _recursive_strip(v) for k, v in value.items()}
-    if isinstance(value, list):
-        return [_recursive_strip(i) for i in value]
-    if isinstance(value, str):
-        return value.strip()
-    return value
-
-
-def deprecated(instead=None):  # pragma: no cover
-    def actual_decorator(func):
-        @functools.wraps(func)
-        def decorated(*args, **kwargs):
-            warnings.simplefilter('always', DeprecationWarning)
-            if instead:
-                fmt = "{0.__name__} is deprecated, use {1} instead."
-            else:
-                fmt = '{0.__name__} is deprecated.'
-
-            warnings.warn(fmt.format(func, instead), stacklevel=3, category=DeprecationWarning)
-            warnings.simplefilter('default', DeprecationWarning)
-            return func(*args, **kwargs)
-        return decorated
-    return actual_decorator
-
-
-def parse_popup(popup_content) -> Tuple[str, bs4.BeautifulSoup]:
+def parse_popup(popup_content: str) -> Tuple[str, bs4.BeautifulSoup]:
     """Parse the information popups used through Tibia.com.
 
     Parameters
@@ -597,17 +593,17 @@ def parse_popup(popup_content) -> Tuple[str, bs4.BeautifulSoup]:
         The parsed HTML content of the popup.
     """
     parts = popup_content.split(",", 2)
-    title = parts[1].replace(r"'", "").strip()
-    html = parts[-1].replace(r"\'", '"').replace(r"'", "").replace(",);", "").replace(", );", "").strip()
-    parsed_html = bs4.BeautifulSoup(html, 'lxml')
+    title = parts[1].replace("'", "").strip()
+    html = parts[-1].replace(r"\'", '"').replace("'", "").replace(",);", "").replace(", );", "").strip()
+    parsed_html = bs4.BeautifulSoup(html, "lxml")
     return title, parsed_html
 
 
-results_pattern = re.compile(r'Results: ([\d,]+)')
-page_pattern = re.compile(r'page=(\d+)')
+results_pattern = re.compile(r"Results: ([\d,]+)")
+page_pattern = re.compile(r"page=(\d+)")
 
 
-def parse_pagination(pagination_block) -> Tuple[int, int, int]:
+def parse_pagination(pagination_block: bs4.Tag) -> Tuple[int, int, int]:
     """Parse a pagination section in Tibia.com and extracts its information.
 
     Parameters
@@ -643,6 +639,7 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
     else:
         last_page_link = page_links[-1]
         total_pages = int(last_page_link.text)
+
     try:
         page = int(current_page_link.text)
     except ValueError:
@@ -650,11 +647,13 @@ def parse_pagination(pagination_block) -> Tuple[int, int, int]:
             page = 1
         else:
             page = total_pages
+
     results_count = parse_integer(results_pattern.search(results_div.text).group(1))
     return page, total_pages, results_count
 
 
-def take_while(iterable, predicate):
+def take_while(iterable: Iterable[T], predicate: Callable[[T], bool]) -> Iterable[T]:
+    """Go through items in an iterable until the predicate function is not True."""
     for item in iterable:
         if predicate(item):
             yield item

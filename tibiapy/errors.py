@@ -1,6 +1,10 @@
 """Exceptions thrown by tibia.py."""
-from enum import Enum
-from typing import Type, Any
+from __future__ import annotations
+
+from typing import Type, Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from enum import Enum
 
 
 class TibiapyException(Exception):
@@ -64,10 +68,13 @@ class SiteMaintenanceError(NetworkError):
 
 
 class EnumValueError(ValueError):
+    """Exception raised when the provided value cannot be converted to an enum."""
 
     def __init__(self, enum: Type[Enum], value: Any) -> None:
         self.enum = enum
-        super().__init__(f"{value!r} is not a valid value for {enum.__name__}. Expected names ({self.names}) or values ({self.values})")
+        super().__init__(
+            f"{value!r} is not a valid value for {enum.__name__}. Expected names ({self.names}) or values ({self.values})",
+        )
 
     @property
     def names(self):

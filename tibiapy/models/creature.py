@@ -22,7 +22,7 @@ class BossEntry(BaseModel):
 
 
 class BoostableBosses(BaseModel):
-    """Represents the boostable bosses section in the Tibia.com library"""
+    """Represents the boostable bosses section in the Tibia.com library."""
 
     boosted_boss: BossEntry
     """The current boosted boss."""

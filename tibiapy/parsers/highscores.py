@@ -19,8 +19,8 @@ __all__ = (
     "HighscoresParser",
 )
 
-results_pattern = re.compile(r'Results: ([\d,]+)')
-numeric_pattern = re.compile(r'(\d+)')
+results_pattern = re.compile(r"Results: ([\d,]+)")
+numeric_pattern = re.compile(r"(\d+)")
 
 
 class HighscoresParser:
@@ -57,17 +57,19 @@ class HighscoresParser:
         if form is None or "Highscores" not in tables:
             if "Error" in tables and "The world doesn't exist!" in tables["Error"].text:
                 return None
+
             raise InvalidContent("content does is not from the highscores section of Tibia.com")
+
         builder = HighscoresBuilder()
         cls._parse_filters_table(builder, form)
         if last_update_container := parsed_content.select_one("span.RightArea"):
             m = numeric_pattern.search(last_update_container.text)
             last_update = datetime.timedelta(minutes=int(m.group(1))) if m else datetime.timedelta()
             builder.last_updated(datetime.datetime.now(tz=datetime.timezone.utc) - last_update)
+
         entries_table = tables.get("Highscores")
         cls._parse_entries_table(builder, entries_table)
         return builder.build()
-
 
     # region Private methods
     @classmethod
@@ -83,13 +85,16 @@ class HighscoresParser:
         builder.current_page(page).total_pages(total_pages).results_count(results_count)
         rows = table.select("tr[style]")
         for row in rows:
-            cols_raw = row.find_all('td')
+            cols_raw = row.find_all("td")
             if "There is currently no data" in cols_raw[0].text:
                 break
+
             if cols_raw[0].text == "Rank":
                 continue
+
             if len(cols_raw) <= 2:
                 break
+
             cls._parse_entry(builder, cols_raw)
 
     @classmethod
@@ -106,7 +111,8 @@ class HighscoresParser:
         builder.world(data.values["world"] if data.values.get("world") else None)
         builder.battleye_filter(try_enum(HighscoresBattlEyeType, parse_integer(data.values.get("beprotection"), None)))
         builder.category(try_enum(HighscoresCategory, parse_integer(data.values.get("category"), None)))
-        builder.vocation(try_enum(HighscoresProfession, parse_integer(data.values.get("profession"), None), HighscoresProfession.ALL))
+        builder.vocation(try_enum(HighscoresProfession, parse_integer(data.values.get("profession"), None),
+                                  HighscoresProfession.ALL))
         builder.pvp_types_filter({try_enum(PvpTypeFilter, int(v)) for v in data.values_multiple["worldtypes[]"]})
         builder.available_worlds([v for v in data.available_options["world"].values() if v])
 
@@ -125,14 +131,15 @@ class HighscoresParser:
         :class:`OrderedDict`[:class:`str`, :class:`bs4.Tag`]
             A dictionary containing all the table rows, with the table headers as keys.
         """
-        tables = parsed_content.find_all('div', attrs={'class': 'TableContainer'})
+        tables = parsed_content.find_all("div", attrs={"class": "TableContainer"})
         output = OrderedDict()
         for table in tables:
-            title = table.find("div", attrs={'class': 'Text'}).text
+            title = table.find("div", attrs={"class": "Text"}).text
             title = title.split("[")[0].strip()
-            title = re.sub(r'Last Update.*', '', title)
-            inner_table = table.find("div", attrs={'class': 'InnerTableContainer'})
+            title = re.sub(r"Last Update.*", "", title)
+            inner_table = table.find("div", attrs={"class": "InnerTableContainer"})
             output[title] = inner_table
+
         return output
 
     @classmethod
@@ -144,20 +151,21 @@ class HighscoresParser:
         cols: :class:`bs4.ResultSet`
             The list of columns for that entry.
         """
-        rank, name, *values = [c.text.replace('\xa0', ' ').strip() for c in cols]
+        rank, name, *values = [c.text.replace("\xa0", " ").strip() for c in cols]
         rank = int(rank)
         extra = None
         if builder._category == HighscoresCategory.LOYALTY_POINTS:
             extra, vocation, world, level, value = values
         else:
             vocation, world, level, value = values
-        value = int(value.replace(',', ''))
+
+        value = int(value.replace(",", ""))
         level = int(level)
         if builder._category == HighscoresCategory.LOYALTY_POINTS:
             entry = LoyaltyHighscoresEntry(rank=rank, name=name, vocation=vocation, world=world, level=level,
                                            value=value, title=extra)
         else:
             entry = HighscoresEntry(rank=rank, name=name, vocation=vocation, world=world, level=level, value=value)
+
         builder.add_entry(entry)
     # endregion
-

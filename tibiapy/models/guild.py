@@ -9,14 +9,14 @@ from tibiapy.models.base import BaseCharacter, BaseHouse, BaseGuild, BaseModel
 from tibiapy.urls import get_world_guilds_url, get_guild_url, get_guild_wars_url
 
 __all__ = (
-    'GuildHouse',
-    'GuildMember',
-    'GuildInvite',
-    'Guild',
-    'GuildEntry',
-    'GuildsSection',
-    'GuildWarEntry',
-    'GuildWars'
+    "GuildHouse",
+    "GuildMember",
+    "GuildInvite",
+    "Guild",
+    "GuildEntry",
+    "GuildsSection",
+    "GuildWarEntry",
+    "GuildWars",
 )
 
 from tibiapy.utils import take_while
@@ -41,6 +41,7 @@ class GuildMember(BaseCharacter):
 
 class GuildInvite(BaseCharacter):
     """Represents an invited character."""
+
     invited_on: datetime.date
     """The day when the character was invited."""
 
@@ -48,7 +49,8 @@ class GuildInvite(BaseCharacter):
 class GuildHouse(BaseHouse):
     """A guildhall owned by a guild.
 
-    By limitation of Tibia.com, the ID of the guildhall is not available."""
+    By limitation of Tibia.com, the ID of the guildhall is not available.
+    """
 
     paid_until: datetime.date
     """The date the last paid rent is due."""
@@ -105,7 +107,7 @@ class Guild(BaseGuild):
     @property
     def ranks(self) -> List[str]:
         """Ranks in their hierarchical order."""
-        return list(OrderedDict.fromkeys((m.rank for m in self.members)))
+        return list(OrderedDict.fromkeys(m.rank for m in self.members))
 
     @property
     def leader(self) -> GuildMember:
@@ -117,8 +119,8 @@ class Guild(BaseGuild):
         """The vice leader of the guilds."""
         if len(self.members) <= 1:
             return []
-        return list(take_while(self.members[1:], lambda m: m.rank == self.members[1].rank))
 
+        return list(take_while(self.members[1:], lambda m: m.rank == self.members[1].rank))
 
     @property
     def members_by_rank(self) -> Dict[str, List[GuildMember]]:

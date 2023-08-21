@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import datetime
 from typing import List, TYPE_CHECKING
-
-from typing_extensions import Self
 
 from tibiapy.models import Highscores
 
 if TYPE_CHECKING:
+    import datetime
+    from typing_extensions import Self
     from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, PvpTypeFilter
     from tibiapy.models import HighscoresEntry
 

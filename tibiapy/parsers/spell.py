@@ -17,14 +17,15 @@ if TYPE_CHECKING:
     from tibiapy.models import Rune, Spell, SpellsSection
 
 __all__ = (
-    'SpellsSectionParser',
-    'SpellParser',
+    "SpellsSectionParser",
+    "SpellParser",
 )
 
 spell_name = re.compile(r"([^(]+)\(([^)]+)\)")
 group_pattern = re.compile(r"(?P<group>\w+)(?:\s?\(Secondary Group: (?P<secondary>[^)]+))?")
 cooldown_pattern = re.compile(
-    r"(?P<cooldown>\d+)s\s?\(Group: (?P<group_cooldown>\d+)s(?:,\s?Secondary Group: (?P<secondary_group_cooldown>\d+))?")
+    r"(?P<cooldown>\d+)s\s?\(Group: (?P<group_cooldown>\d+)s(?:,\s?Secondary Group: (?P<secondary_group_cooldown>\d+))?",
+)
 
 
 class SpellsSectionParser:
@@ -52,12 +53,13 @@ class SpellsSectionParser:
             parsed_content = parse_tibiacom_content(content)
             table_content_container = parsed_content.select_one("div.InnerTableContainer")
             spells_table = table_content_container.find("table", class_=lambda t: t != "TableContent")
-            spell_rows = spells_table.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+            spell_rows = spells_table.find_all("tr", {"bgcolor": ["#D4C0A1", "#F1E0C6"]})
             builder = SpellSectionBuilder()
             for row in spell_rows:
                 columns = row.select("td")
                 if len(columns) != 7:
                     continue
+
                 spell_link = columns[0].select_one("a")
                 link_info = parse_link_info(spell_link)
                 cols_text = [c.text for c in columns]
@@ -81,6 +83,7 @@ class SpellsSectionParser:
                          .price(price)
                          .identifier(identifier)).build()
                 builder.add_entry(spell)
+
             form = parsed_content.select_one("form")
             data = parse_form_data(form)
             builder.vocation(try_enum(SpellVocationFilter, data.values["vocation"]))
@@ -121,7 +124,9 @@ class SpellParser:
         if "Spell Information" not in tables:
             if "Spells" in tables:
                 return None
+
             raise errors.InvalidContent("content is not a spell page.")
+
         spell_table = tables["Spell Information"]
         img = title_table.select_one("img")
         url = urllib.parse.urlparse(img["src"])
@@ -132,6 +137,7 @@ class SpellParser:
         builder.description(cls._parse_description(title_table))
         if "Rune Information" in tables:
             builder.rune(cls._parse_rune_table(tables["Rune Information"]))
+
         return builder.build()
 
     @classmethod
@@ -144,9 +150,12 @@ class SpellParser:
                     description += "\n"
                 elif next_sibling.name in ["table", "div"]:
                     break
+
             else:
                 description += next_sibling.text
+
             next_sibling = next_sibling.next_sibling
+
         return description.strip()
 
     @classmethod
@@ -235,4 +244,5 @@ class SpellParser:
             clean_name = cols_text[0].replace(":", "").replace(" ", "_").lower().strip()
             value = cols_text[1]
             attrs[clean_name] = value
+
         return attrs

@@ -1,42 +1,48 @@
 """Models related to the houses section in Tibia.com."""
+from __future__ import annotations
 import datetime
 import re
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 import bs4
 
 from tibiapy.builders.house import HousesSectionBuilder, HouseEntryBuilder, HouseBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.models import HousesSection, House
-from tibiapy.utils import parse_tibia_datetime, parse_tibia_money, \
-    parse_tibiacom_content, parse_tibiacom_tables, try_enum, parse_form_data
+from tibiapy.utils import (parse_tibia_datetime, parse_tibia_money, parse_tibiacom_content, parse_tibiacom_tables,
+                           try_enum, parse_form_data)
+
+if TYPE_CHECKING:
+    from tibiapy.models import HousesSection, House
 
 __all__ = (
     "HousesSectionParser",
     "HouseParser",
 )
 
-id_regex = re.compile(r'house_(\d+)\.')
-bed_regex = re.compile(r'This (?P<type>\w+) can have up to (?P<beds>[\d-]+) bed')
-info_regex = \
-    re.compile(r'The house has a size of (?P<size>\d+) square meters?. '
-               r'The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).')
+id_regex = re.compile(r"house_(\d+)\.")
+bed_regex = re.compile(r"This (?P<type>\w+) can have up to (?P<beds>[\d-]+) bed")
+info_regex = (
+    re.compile(r"The house has a size of (?P<size>\d+) square meters?. "
+               r"The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).")
+)
 
-rented_regex = re.compile(r'The house has been rented by (?P<owner>[^.]+)\.'
-                          r' (?P<pronoun>\w+) has paid the rent until (?P<paid_until>[^.]+)\.')
-transfer_regex = re.compile(r'\w+ will move out on (?P<transfer_date>[^(]+)\([^)]+\)(?: and (?P<verb>wants to|will)'
-                            r' pass the house to (?P<transferee>[\w\s]+) for (?P<transfer_price>\d+) gold coin)?')
-moving_regex = re.compile(r'\w+ will move out on (?P<move_date>[^(]+)')
-bid_regex = \
-    re.compile(r'The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)')
-auction_regex = re.compile(r'The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).')
+rented_regex = re.compile(r"The house has been rented by (?P<owner>[^.]+)\."
+                          r" (?P<pronoun>\w+) has paid the rent until (?P<paid_until>[^.]+)\.")
+transfer_regex = re.compile(r"\w+ will move out on (?P<transfer_date>[^(]+)\([^)]+\)(?: and (?P<verb>wants to|will)"
+                            r" pass the house to (?P<transferee>[\w\s]+) for (?P<transfer_price>\d+) gold coin)?")
+moving_regex = re.compile(r"\w+ will move out on (?P<move_date>[^(]+)")
+bid_regex = (
+    re.compile(r"The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)")
+)
+auction_regex = re.compile(r"The auction (?P<auction_state>has ended|will end) at (?P<auction_end>[^.]+).")
 
-list_header_regex = re.compile(r'Available (?P<type>[\w\s]+) in (?P<town>[\w\s\']+) on (?P<world>\w+)')
-list_auction_regex = re.compile(r'\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<time_unit>day|hour)s? left\)')
+list_header_regex = re.compile(r"Available (?P<type>[\w\s]+) in (?P<town>[\w\s']+) on (?P<world>\w+)")
+list_auction_regex = re.compile(r"\((?P<bid>\d+) gold; (?P<time_left>\w)+ (?P<time_unit>day|hour)s? left\)")
 
 
 class HousesSectionParser:
+    """Parser for the houses section from Tibia.com."""
 
     @classmethod
     def from_content(cls, content: str) -> HousesSection:
@@ -62,31 +68,35 @@ class HousesSectionParser:
             builder = HousesSectionBuilder()
             if "House Search" not in tables:
                 raise InvalidContent("content does not belong to the houses section")
+
             form = parsed_content.select_one("div.BoxContent > form")
             cls._parse_filters(builder, form)
             if len(tables) < 2:
                 return builder.build()
+
             houses_table = tables[list(tables.keys())[0]]
             _, *rows = houses_table.select("tr")
             for row in rows[1:]:
                 cols = row.select("td")
                 if len(cols) != 5:
                     continue
-                name = cols[0].text.replace('\u00a0', ' ')
-                house_builder = HouseEntryBuilder()\
-                    .name(name)\
-                    .world(builder._world)\
-                    .town(builder._town)\
-                    .type(builder._house_type)
-                size = cols[1].text.replace('sqm', '')
+
+                name = cols[0].text.replace("\u00a0", " ")
+                house_builder = (HouseEntryBuilder()
+                                 .name(name)
+                                 .world(builder._world)
+                                 .town(builder._town)
+                                 .type(builder._house_type))
+                size = cols[1].text.replace("sqm", "")
                 house_builder.size(int(size))
-                rent = cols[2].text.replace('gold', '')
+                rent = cols[2].text.replace("gold", "")
                 house_builder.rent(parse_tibia_money(rent))
-                status = cols[3].text.replace('\xa0', ' ')
+                status = cols[3].text.replace("\xa0", " ")
                 cls._parse_status(house_builder, status)
                 id_input = cols[4].select_one("input[name=houseid]")
                 house_builder.id(int(id_input["value"]))
                 builder.add_entry(house_builder.build())
+
             return builder.build()
         except (ValueError, AttributeError, KeyError) as e:
             raise InvalidContent("content does not belong to a Tibia.com house list", e) from e
@@ -116,15 +126,17 @@ class HousesSectionParser:
             builder.status(HouseStatus.RENTED)
         else:
             if m := list_auction_regex.search(status):
-                builder.highest_bid(int(m.group('bid')))
+                builder.highest_bid(int(m.group("bid")))
                 if m.group("time_unit") == "day":
                     builder.time_left(datetime.timedelta(days=int(m.group("time_left"))))
                 else:
                     builder.time_left(datetime.timedelta(hours=int(m.group("time_left"))))
+
             builder.status(HouseStatus.AUCTIONED)
 
 
 class HouseParser:
+    """Parser for Houses information."""
 
     # region Public methods
     @classmethod
@@ -147,28 +159,32 @@ class HouseParser:
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            image_column, desc_column, *_ = parsed_content.select('td')
+            image_column, desc_column, *_ = parsed_content.select("td")
             if "No information" in image_column.text:
                 return None
-            image = image_column.select_one('img')
+
+            image = image_column.select_one("img")
             for br in desc_column.select("br"):
                 br.replace_with("\n")
+
             description = desc_column.text.replace("\u00a0", " ").replace("\n\n", "\n")
             lines = description.splitlines()
             try:
                 name, beds, info, state, *_ = lines
             except ValueError as e:
                 raise InvalidContent("content does is not from the house section of Tibia.com") from e
+
             image_url = image["src"]
-            builder = HouseBuilder() \
-                .name(name.strip()) \
-                .image_url(image_url) \
-                .id(int(id_regex.search(image_url).group(1)))
+            builder = (HouseBuilder()
+                       .name(name.strip())
+                       .image_url(image_url)
+                       .id(int(id_regex.search(image_url).group(1))))
             if m := bed_regex.search(beds):
                 if m.group("type").lower() in ["guildhall", "clanhall"]:
                     builder.type(HouseType.GUILDHALL)
                 else:
                     builder.type(HouseType.HOUSE)
+
                 builder.beds(int(m.group("beds")))
 
             if m := info_regex.search(info):

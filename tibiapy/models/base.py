@@ -7,12 +7,13 @@ from pydantic import ConfigDict
 from tibiapy.urls import get_character_url, get_guild_url, get_house_url, get_guild_wars_url
 
 __all__ = (
-    'BaseModel',
-    'BaseCharacter',
-    'BaseGuild',
-    'BaseHouse',
-    'HouseWithId',
+    "BaseModel",
+    "BaseCharacter",
+    "BaseGuild",
+    "BaseHouse",
+    "HouseWithId",
 )
+
 
 def to_camel(string: str) -> str:
     string_split = string.split("_")
@@ -21,9 +22,10 @@ def to_camel(string: str) -> str:
 
 class BaseModel(pydantic.BaseModel):
     """Base class for all model classes."""
+
     model_config = ConfigDict(
         populate_by_name=True,
-        alias_generator=to_camel
+        alias_generator=to_camel,
     )
 
 
@@ -49,6 +51,7 @@ class BaseCharacter(BaseModel):
         """Two characters are considered equal if their names are equal."""
         if isinstance(o, self.__class__):
             return self.name.lower() == o.name.lower()
+
         return False
 
     @property
@@ -73,6 +76,7 @@ class BaseGuild(BaseModel):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.name == other.name
+
         return False
 
     @property
@@ -107,11 +111,13 @@ class BaseHouse(BaseModel):
         """Two houses are considered equal if their names are equal."""
         if isinstance(o, self.__class__):
             return self.name.lower() == o.name.lower()
+
         return False
 
 
 class HouseWithId(BaseHouse):
     """Base classes for houses with an ID."""
+
     id: int
     """The internal ID of the house. This is used on the website to identify houses."""
     world: str
@@ -121,6 +127,7 @@ class HouseWithId(BaseHouse):
         """Two houses are considered equal if their names or ids are equal."""
         if isinstance(o, self.__class__):
             return self.name.lower() == o.name.lower() or self.id == o.id
+
         return False
 
     @property

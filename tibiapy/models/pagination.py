@@ -9,8 +9,7 @@ __all__ = (
     "AjaxPaginator",
 )
 
-
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class Paginated(BaseModel, Generic[T]):
@@ -41,7 +40,7 @@ class PaginatedWithUrl(Paginated[T], Generic[T], ABC):
 
     @abstractmethod
     def get_page_url(self, page) -> str:
-        """The URL to a specific page of the results."""
+        """Get the URL to a specific page of the results."""
         ...
 
 

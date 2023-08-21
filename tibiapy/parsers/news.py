@@ -30,7 +30,7 @@ class NewsArchiveParser:
             start_date: datetime.date,
             end_date: datetime.date,
             categories: Set[NewsCategory] = None,
-            types: Set[NewsType] = None
+            types: Set[NewsType] = None,
     ) -> Dict[str, Union[str, int]]:
         """Get the form data attributes to search news with specific parameters.
 
@@ -51,8 +51,10 @@ class NewsArchiveParser:
         """
         if not categories:
             categories = list(NewsCategory)
+
         if not types:
             types = list(NewsType)
+
         data = {
             "filter_begin_day": start_date.day,
             "filter_begin_month": start_date.month,
@@ -64,12 +66,16 @@ class NewsArchiveParser:
         for category in categories:
             key = f"filter_{category.value}"
             data[key] = category.value
+
         if NewsType.FEATURED_ARTICLE in types:
             data["filter_article"] = "article"
+
         if NewsType.NEWS in types:
             data["filter_news"] = "news"
+
         if NewsType.NEWS_TICKER in types:
             data["filter_ticker"] = "ticker"
+
         return data
 
     @classmethod
@@ -95,16 +101,19 @@ class NewsArchiveParser:
             tables = parse_tibiacom_tables(parsed_content)
             if "News Archive Search" not in tables:
                 raise InvalidContent("content is not from the news archive section in Tibia.com")
+
             form = parsed_content.select_one("form")
             builder = NewsArchiveBuilder()
             cls._parse_filter_table(builder, form)
             if "Search Results" in tables:
                 rows = tables["Search Results"].select("tr.Odd, tr.Even")
                 for row in rows:
-                    cols_raw = row.select('td')
+                    cols_raw = row.select("td")
                     if len(cols_raw) != 3:
                         continue
+
                     builder.add_entry(cls._parse_entry(cols_raw))
+
             return builder.build()
         except (AttributeError, IndexError, ValueError, KeyError) as e:
             raise InvalidContent("content is not from the news archive section in Tibia.com", e) from e
@@ -126,32 +135,35 @@ class NewsArchiveParser:
         for news_type in NewsType:  # type: NewsType
             if news_type.filter_name in form_data.values_multiple:
                 builder.add_type(news_type)
+
         for category in NewsCategory:  # type: NewsCategory
             if category.filter_name in form_data.values_multiple:
                 builder.add_category(category)
 
     @classmethod
     def _parse_entry(cls, cols_raw):
-        img = cols_raw[0].select_one('img')
+        img = cols_raw[0].select_one("img")
         img_url = img["src"]
         category_name = ICON_PATTERN.search(img_url)
         category = try_enum(NewsCategory, category_name.group(1))
         for br in cols_raw[1].select("br"):
             br.replace_with("\n")
+
         date_str, news_type_str = cols_raw[1].text.splitlines()
         date = parse_tibia_date(date_str)
-        news_type_str = news_type_str.replace('\xa0', ' ')
+        news_type_str = news_type_str.replace("\xa0", " ")
         news_type = try_enum(NewsType, news_type_str)
         title = cols_raw[2].text
-        news_link = parse_link_info(cols_raw[2].select_one('a'))
+        news_link = parse_link_info(cols_raw[2].select_one("a"))
         news_id = int(news_link["query"]["id"])
         return NewsEntry(id=news_id, title=title, type=news_type, category=category, published_on=date)
 
 
 class NewsParser:
+    """Parser for news articles from Tibia.com."""
 
     @classmethod
-    def from_content(cls, content: str, news_id: int =0) -> Optional[News]:
+    def from_content(cls, content: str, news_id: int = 0) -> Optional[News]:
         """Get a news entry by its HTML content from Tibia.com.
 
         Notes
@@ -177,19 +189,20 @@ class NewsParser:
         """
         if "News not found" in content:
             return None
+
         try:
             parsed_content = parse_tibiacom_content(content)
             builder = NewsBuilder().id(news_id)
             # Read Information from the headline
             headline = parsed_content.select_one("div.NewsHeadline")
-            img = headline.select_one('img')
+            img = headline.select_one("img")
             img_url = img["src"]
             category_name = ICON_PATTERN.search(img_url)
             builder.category(try_enum(NewsCategory, category_name.group(1)))
             title_div = headline.select_one("div.NewsHeadlineText")
             builder.title(clean_text(title_div))
             date_div = headline.select_one("div.NewsHeadlineDate")
-            date_str = clean_text(date_div).replace('-', '').strip()
+            date_str = clean_text(date_div).replace("-", "").strip()
             builder.published_on(parse_tibia_date(date_str))
 
             # Read the page's content.

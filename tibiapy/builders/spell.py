@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from typing import Optional, List, TYPE_CHECKING
 
-from typing_extensions import Self
-
 from tibiapy.models import SpellEntry, SpellsSection, Spell, Rune
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
     from tibiapy import SpellVocationFilter, SpellGroup, SpellSorting, SpellType
 
 
@@ -54,7 +53,7 @@ class SpellSectionBuilder:
             spell_type=self._spell_type,
             is_premium=self._premium,
             sort_by=self._sort_by,
-            entries=self._entries
+            entries=self._entries,
         )
 
 

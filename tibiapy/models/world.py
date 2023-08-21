@@ -9,10 +9,10 @@ from tibiapy.models.base import BaseModel
 from tibiapy.urls import get_world_url
 
 __all__ = (
-    'BaseWorld',
-    'World',
-    'WorldEntry',
-    'WorldOverview',
+    "BaseWorld",
+    "World",
+    "WorldEntry",
+    "WorldOverview",
 )
 
 

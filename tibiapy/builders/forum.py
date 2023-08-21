@@ -1,6 +1,11 @@
-from typing_extensions import Self
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from tibiapy.models.forum import CMPostArchive, CMPost, ForumAnnouncement, ForumBoard, ForumThread
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 
 class CMPostArchiveBuilder:

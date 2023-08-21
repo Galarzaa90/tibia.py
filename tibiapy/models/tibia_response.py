@@ -9,7 +9,7 @@ __all__ = (
     "TibiaResponse",
 )
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 # Tibia.com's cache for the community section is 5 minutes.
 # This limit is not sent anywhere, so there's no way to automate it.
@@ -52,5 +52,5 @@ class TibiaResponse(BaseModel, Generic[T]):
             age=raw_response.age,
             fetching_time=raw_response.fetching_time,
             parsing_time=parsing_time,
-            data=data
+            data=data,
         )

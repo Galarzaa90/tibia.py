@@ -5,15 +5,14 @@ import datetime
 import re
 from typing import Optional, TYPE_CHECKING
 
-import bs4
-
-from tibiapy.builders.guild import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
+from tibiapy.builders import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContent
-from tibiapy.models import GuildEntry, GuildHouse, GuildInvite, GuildMember, GuildWarEntry, GuildWars, GuildsSection
-from tibiapy.utils import (clean_text, parse_form_data, parse_link_info, parse_tibia_date, parse_tibiacom_content)
+from tibiapy.models import GuildEntry, GuildHouse, GuildInvite, GuildMember, GuildWarEntry, GuildsSection
+from tibiapy.utils import clean_text, parse_form_data, parse_link_info, parse_tibia_date, parse_tibiacom_content
 
 if TYPE_CHECKING:
-    from tibiapy.models import Guild
+    import bs4
+    from tibiapy.models import Guild, GuildWars
 
 __all__ = (
     "GuildParser",
@@ -25,32 +24,35 @@ COLS_INVITED_MEMBER = 2
 COLS_GUILD_MEMBER = 6
 
 founded_regex = re.compile(
-    r'(?P<desc>.*)The guild was founded on (?P<world>\w+) on (?P<date>[^.]+)\.\nIt is (?P<status>[^.]+).', re.DOTALL)
-applications_regex = re.compile(r'Guild is (\w+) for applications\.')
-homepage_regex = re.compile(r'The official homepage is at ([\w.]+)\.')
-guildhall_regex = re.compile(r'Their home on \w+ is (?P<name>[^.]+). The rent is paid until (?P<date>[^.]+)')
-disband_regex = re.compile(r'It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).')
-disband_tibadata_regex = re.compile(r'It will be disbanded, ([^.]+).')
-title_regex = re.compile(r'([^(]+)\(([^)]+)\)')
+    r"(?P<desc>.*)The guild was founded on (?P<world>\w+) on (?P<date>[^.]+)\.\nIt is (?P<status>[^.]+).",
+    re.DOTALL,
+)
+applications_regex = re.compile(r"Guild is (\w+) for applications\.")
+homepage_regex = re.compile(r"The official homepage is at ([\w.]+)\.")
+guildhall_regex = re.compile(r"Their home on \w+ is (?P<name>[^.]+). The rent is paid until (?P<date>[^.]+)")
+disband_regex = re.compile(r"It will be disbanded on (\w+\s\d+\s\d+)\s([^.]+).")
+disband_tibadata_regex = re.compile(r"It will be disbanded, ([^.]+).")
+title_regex = re.compile(r"([^(]+)\(([^)]+)\)")
 
-war_guilds_regegx = re.compile(r'The guild ([\w\s]+) is at war with the guild ([^.]+).')
-war_score_regex = re.compile(r'scored ([\d,]+) kills? against')
-war_fee_regex = re.compile(r'the guild [\w\s]+ wins the war, they will receive ([\d,]+) gold.')
-war_score_limit_regex = re.compile(r'guild scores ([\d,]+) kills against')
-war_end_regex = re.compile(r'war will end on (\w{3}\s\d{2}\s\d{4})')
+war_guilds_regegx = re.compile(r"The guild ([\w\s]+) is at war with the guild ([^.]+).")
+war_score_regex = re.compile(r"scored ([\d,]+) kills? against")
+war_fee_regex = re.compile(r"the guild [\w\s]+ wins the war, they will receive ([\d,]+) gold.")
+war_score_limit_regex = re.compile(r"guild scores ([\d,]+) kills against")
+war_end_regex = re.compile(r"war will end on (\w{3}\s\d{2}\s\d{4})")
 
-war_history_header_regex = re.compile(r'guild ([\w\s]+) fought against ([\w\s]+).')
-war_start_duration_regex = re.compile(r'started on (\w{3}\s\d{2}\s\d{4}) and had been set for a duration of (\w+) days')
-kills_needed_regex = re.compile(r'(\w+) kills were needed')
-war_history_fee_regex = re.compile(r'agreed on a fee of (\w+) gold for the guild [\w\s]+ and a fee of (\d+) gold')
-surrender_regex = re.compile(r'(?:The guild ([\w\s]+)|A disbanded guild) surrendered on (\w{3}\s\d{2}\s\d{4})')
-war_ended_regex = re.compile(r'war ended on (\w{3}\s\d{2}\s\d{4}) when the guild ([\w\s]+) had reached the')
-war_score_end_regex = re.compile(r'scored (\d+) kills against')
+war_history_header_regex = re.compile(r"guild ([\w\s]+) fought against ([\w\s]+).")
+war_start_duration_regex = re.compile(r"started on (\w{3}\s\d{2}\s\d{4}) and had been set for a duration of (\w+) days")
+kills_needed_regex = re.compile(r"(\w+) kills were needed")
+war_history_fee_regex = re.compile(r"agreed on a fee of (\w+) gold for the guild [\w\s]+ and a fee of (\d+) gold")
+surrender_regex = re.compile(r"(?:The guild ([\w\s]+)|A disbanded guild) surrendered on (\w{3}\s\d{2}\s\d{4})")
+war_ended_regex = re.compile(r"war ended on (\w{3}\s\d{2}\s\d{4}) when the guild ([\w\s]+) had reached the")
+war_score_end_regex = re.compile(r"scored (\d+) kills against")
 
-war_current_empty = re.compile(r'The guild ([\w\s]+) is currently not')
+war_current_empty = re.compile(r"The guild ([\w\s]+) is currently not")
 
 
 class GuildsSectionParser:
+    """Parser for the guild sections in Tibia.com."""
 
     @classmethod
     def from_content(cls, content: str) -> Optional[GuildsSection]:
@@ -80,26 +82,29 @@ class GuildsSectionParser:
         except (AttributeError, KeyError) as e:
             raise InvalidContent("Content does not belong to world guild list.", e) from e
         # First TableContainer contains world selector.
-        _, *containers = parsed_content.select('div.TableContainer')
+        _, *containers = parsed_content.select("div.TableContainer")
         for container in containers:
-            header = container.select_one('div.Text')
+            header = container.select_one("div.Text")
             active = "Active" in header.text
-            header, *rows = container.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+            header, *rows = container.find_all("tr", {"bgcolor": ["#D4C0A1", "#F1E0C6"]})
             for row in rows:
-                columns = row.find_all('td')
-                logo_img = columns[0].select_one('img')["src"]
+                columns = row.find_all("td")
+                logo_img = columns[0].select_one("img")["src"]
                 description_lines = columns[1].get_text("\n").split("\n", 1)
                 name = description_lines[0]
                 description = None
                 if len(description_lines) > 1:
                     description = description_lines[1].replace("\r", "").replace("\n", " ")
+
                 guild = GuildEntry(name=name, world=guilds.world, logo_url=logo_img, description=description,
                                    active=active)
                 guilds.entries.append(guild)
+
         return guilds
 
 
 class GuildParser:
+    """Parser for guild pages in Tibia.com."""
 
     @classmethod
     def from_content(cls, content: str) -> Optional[Guild]:
@@ -123,7 +128,7 @@ class GuildParser:
 
         parsed_content = parse_tibiacom_content(content)
         try:
-            name_header = parsed_content.find('h1')
+            name_header = parsed_content.find("h1")
             builder = GuildBuilder().name(name_header.text.strip())
         except AttributeError as e:
             raise InvalidContent("content does not belong to a Tibia.com guild page.", e) from e
@@ -160,6 +165,7 @@ class GuildParser:
         if m := title_regex.match(name):
             name = m.group(1)
             title = m.group(2)
+
         joined = parse_tibia_date(joined)
         builder.add_member(GuildMember(name=name.strip(), rank=rank.strip(), title=title, level=int(level),
                                        vocation=vocation, joined_on=joined, is_online=status == "online"))
@@ -176,10 +182,11 @@ class GuildParser:
         """
         if m := applications_regex.search(info_container.text):
             builder.open_applications(m.group(1) == "opened")
+
         builder.active_war("during war" in info_container.text)
 
     @classmethod
-    def _parse_guild_disband_info(cls, builder, info_container):
+    def _parse_guild_disband_info(cls, builder: bs4.Tag, info_container):
         """
         Parse the guild's disband info, if available.
 
@@ -217,6 +224,7 @@ class GuildParser:
         """
         if m := homepage_regex.search(info_container.text):
             builder.homepage(m.group(1))
+
         if link := info_container.select_one("a"):
             link_info = parse_link_info(link)
             if "target" in link_info["query"]:
@@ -255,7 +263,7 @@ class GuildParser:
         :class:`bool`
             Whether the logo was found or not.
         """
-        logo_img = parsed_content.find('img', {'height': '64'})
+        logo_img = parsed_content.find("img", {"height": "64"})
         if logo_img is None:
             raise InvalidContent("content does not belong to a Tibia.com guild page.")
 
@@ -271,13 +279,14 @@ class GuildParser:
         parsed_content: :class:`bs4.Tag`
             The parsed content of the guild's page
         """
-        member_rows = parsed_content.find_all("tr", {'bgcolor': ["#D4C0A1", "#F1E0C6"]})
+        member_rows = parsed_content.find_all("tr", {"bgcolor": ["#D4C0A1", "#F1E0C6"]})
         previous_rank = {}
         for row in member_rows:
-            columns = row.find_all('td')
+            columns = row.find_all("td")
             values = tuple(c.text.replace("\u00a0", " ") for c in columns)
             if len(columns) == COLS_GUILD_MEMBER:
                 cls._parse_current_member(builder, previous_rank, values)
+
             if len(columns) == COLS_INVITED_MEMBER:
                 cls._parse_invited_member(builder, values)
 
@@ -298,6 +307,7 @@ class GuildParser:
 
 
 class GuildWarsParser:
+    """Parser for guild war history from Tibia.com."""
 
     @classmethod
     def from_content(cls, content: str) -> GuildWars:
@@ -321,6 +331,7 @@ class GuildWarsParser:
             if current_table_content is not None:
                 for br in current_table_content.select("br"):
                     br.replace_with("\n")
+
                 current_war = cls._parse_current_war_information(current_table_content.text)
                 builder.current(current_war)
             else:
@@ -333,8 +344,10 @@ class GuildWarsParser:
             for history_content in history_contents:
                 for br in history_content.select("br"):
                     br.replace_with("\n")
+
                 entry = cls._parse_war_history_entry(history_content.text)
                 history_entries.append(entry)
+
             builder.history(history_entries)
             if current_war:
                 builder.name(current_war.guild_name)
@@ -346,7 +359,7 @@ class GuildWarsParser:
             raise InvalidContent("content does not belong to the guild wars section", e) from e
 
     @classmethod
-    def _parse_current_war_information(cls, text):
+    def _parse_current_war_information(cls, text) -> GuildWarEntry:
         """Parse the guild's current war information.
 
         Parameters
@@ -359,7 +372,7 @@ class GuildWarsParser:
         :class:`GuildWarEntry`
             The guild's war entry for the current war.
         """
-        text = text.replace('\xa0', ' ').strip()
+        text = text.replace("\xa0", " ").strip()
         names_match = war_guilds_regegx.search(text)
         guild_name, opposing_name = names_match.groups()
         builder = GuildWarEntryBuilder().guild_name(guild_name).opponent_name(opposing_name)
@@ -391,14 +404,15 @@ class GuildWarsParser:
         Returns
         -------
         :class:`GuildWarEntry`
-            The guild's war entry described in the text..
+            The guild's war entry described in the text.
         """
-        text = text.replace('\xa0', ' ').strip()
+        text = text.replace("\xa0", " ").strip()
         header_match = war_history_header_regex.search(text)
         guild_name, opposing_name = header_match.groups()
         builder = GuildWarEntryBuilder().guild_name(guild_name).opponent_name(opposing_name)
         if "disbanded guild" in opposing_name:
             builder.opponent_name(None)
+
         start_duration_match = war_start_duration_regex.search(text)
         start_str, duration_str = start_duration_match.groups()
         builder.start_date(parse_tibia_date(start_str))
@@ -428,6 +442,7 @@ class GuildWarsParser:
             winning_guild = war_end_match.group(2)
             if "disbanded guild" in winning_guild:
                 winning_guild = None
+
             winner = guild_name if winning_guild == guild_name else opposing_name
             loser_score_match = war_score_end_regex.search(text)
             loser_score = int(loser_score_match.group(1)) if loser_score_match else 0
@@ -436,5 +451,6 @@ class GuildWarsParser:
 
         if "no guild had reached the needed kills" in text:
             winner = guild_name if guild_score > opponent_score else opposing_name
+
         builder.opponent_score(opponent_score).guild_score(guild_score).winner(winner)
         return builder.build()

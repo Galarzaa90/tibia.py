@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from typing import List, TYPE_CHECKING
 
-from typing_extensions import Self
-
 from tibiapy.models import KillStatistics
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
     from tibiapy.models import RaceEntry
 
 
@@ -42,5 +41,5 @@ class KillStatisticsBuilder:
             world=self._world,
             entries=self._entries,
             total=self._total,
-            available_worlds=self._available_worlds
+            available_worlds=self._available_worlds,
         )

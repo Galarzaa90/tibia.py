@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import datetime
 from typing import Optional, List, TYPE_CHECKING
-
-from typing_extensions import Self
 
 from tibiapy.models import GuildEntry, Guild, GuildWars, GuildWarEntry
 
 if TYPE_CHECKING:
+    import datetime
+    from typing_extensions import Self
     from tibiapy.models import GuildHouse, GuildMember, GuildInvite
 
 

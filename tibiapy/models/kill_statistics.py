@@ -39,4 +39,3 @@ class KillStatistics(BaseModel):
         """The kill statistics for players."""
         return self.entries.get("players", RaceEntry(last_week_players_killed=0, last_week_killed=0,
                                                      last_day_players_killed=0, last_day_killed=0))
-

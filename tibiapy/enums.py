@@ -1,45 +1,50 @@
 """Enumerations used by models throughout the library."""
-from enum import Enum, Flag, IntEnum
-from typing import Any
+from __future__ import annotations
 
-from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
-from pydantic.json_schema import JsonSchemaValue
-from pydantic_core import core_schema, CoreSchema
+from enum import Enum, Flag, IntEnum
+from typing import Any, TYPE_CHECKING
+
+from pydantic_core import core_schema
 
 from tibiapy.errors import EnumValueError
 from tibiapy.utils import try_enum
 
+if TYPE_CHECKING:
+    from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
+    from pydantic.json_schema import JsonSchemaValue
+    from pydantic_core import CoreSchema
+
 __all__ = (
-    'AuctionBattlEyeFilter',
-    'AuctionOrderBy',
-    'AuctionOrderDirection',
-    'PvpTypeFilter',
-    'AuctionSearchType',
-    'AuctionSkillFilter',
-    'AuctionStatus',
-    'AuctionVocationFilter',
-    'AvailableForumSection',
-    'BattlEyeType',
-    'BazaarType',
-    'BidType',
-    'HighscoresBattlEyeType',
-    'HighscoresCategory',
-    'HighscoresProfession',
-    'HouseOrder',
-    'HouseStatus',
-    'HouseType',
-    'NewsCategory',
-    'NewsType',
-    'PvpType',
-    'Sex',
-    'SpellGroup',
-    'SpellSorting',
-    'SpellType',
-    'SpellVocationFilter',
-    'ThreadStatus',
-    'TransferType',
-    'Vocation',
-    'WorldLocation',
+    "AuctionBattlEyeFilter",
+    "AuctionOrderBy",
+    "AuctionOrderDirection",
+    "PvpTypeFilter",
+    "AuctionSearchType",
+    "AuctionSkillFilter",
+    "AuctionStatus",
+    "AuctionVocationFilter",
+    "AvailableForumSection",
+    "BattlEyeType",
+    "BazaarType",
+    "BidType",
+    "HighscoresBattlEyeType",
+    "HighscoresCategory",
+    "HighscoresProfession",
+    "HouseOrder",
+    "HouseStatus",
+    "HouseType",
+    "NewsCategory",
+    "NewsType",
+    "PvpType",
+    "Sex",
+    "SpellGroup",
+    "SpellSorting",
+    "SpellType",
+    "SpellVocationFilter",
+    "ThreadStatus",
+    "TransferType",
+    "Vocation",
+    "WorldLocation",
 )
 
 
@@ -50,6 +55,7 @@ class StringEnum(str, Enum):
         e = try_enum(cls, v)
         if e is None:
             raise EnumValueError(cls, v)
+
         return e
 
     @classmethod
@@ -62,7 +68,7 @@ class StringEnum(str, Enum):
 
     @classmethod
     def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, _handler: GetJsonSchemaHandler) -> JsonSchemaValue:
-        return {'enum': [m.value for m in cls], 'type': 'string'}
+        return {"enum": [m.value for m in cls], "type": "string"}
 
 
 class NumericEnum(IntEnum):
@@ -74,7 +80,9 @@ class NumericEnum(IntEnum):
         e = try_enum(cls, v)
         if e is None:
             raise EnumValueError(cls, v)
+
         return e
+
     @classmethod
     def __get_pydantic_core_schema__(cls, _source_type: Any, _handler: GetCoreSchemaHandler) -> CoreSchema:
         return core_schema.no_info_after_validator_function(
@@ -85,7 +93,7 @@ class NumericEnum(IntEnum):
 
     @classmethod
     def __get_pydantic_json_schema__(cls, _core_schema: CoreSchema, _handler: GetJsonSchemaHandler) -> JsonSchemaValue:
-        return {'enum': [m.name for m in cls], 'type': 'string'}
+        return {"enum": [m.name for m in cls], "type": "string"}
 
 
 class AuctionBattlEyeFilter(NumericEnum):
@@ -166,19 +174,19 @@ class AuctionSearchType(NumericEnum):
 class AuctionStatus(StringEnum):
     """The possible values an auction might have."""
 
-    IN_PROGRESS = 'in progress'
+    IN_PROGRESS = "in progress"
     """The auction is currently active.
 
     Notes
     -----
     This status doesn't exist in Tibia.com explicitly. It is given to all ongoing auctions."""
-    CURRENTLY_PROCESSED = 'currently processed'
+    CURRENTLY_PROCESSED = "currently processed"
     """The auction ended with a winner, but payment hasn't been received yet."""
-    PENDING_TRANSFER = 'will be transferred at the next server save'
+    PENDING_TRANSFER = "will be transferred at the next server save"
     """The auction was finished and was paid, but the character hasn't been transferred to the new owner yet."""
-    CANCELLED = 'cancelled'
+    CANCELLED = "cancelled"
     """The auction was cancelled as no payment was received in time."""
-    FINISHED = 'finished'
+    FINISHED = "finished"
     """The auction either finished with no bids or the character was transferred to the new owner already."""
 
 
@@ -206,6 +214,8 @@ class AuctionVocationFilter(NumericEnum):
 
 
 class AvailableForumSection(StringEnum):
+    """The available forum sections and their URL query parameter values."""
+
     WORLD_BOARDS = "worldboards"
     TRADE_BOARDS = "tradeboards"
     COMMUNITY_BOARDS = "communityboards"
@@ -331,13 +341,15 @@ class HighscoresProfession(NumericEnum):
         for vocation in cls:  # type: HighscoresProfession
             if vocation.name in name or vocation.name[:-1] in name and vocation != cls.ALL:
                 return vocation
+
         if all_fallback or name.upper() == "ALL":
             return cls.ALL
+
         return None
 
 
 class HouseOrder(StringEnum):
-    """The possible ordering methods for house lists in Tibia.com"""
+    """The possible ordering methods for house lists in Tibia.com."""
 
     NAME = "name"
     SIZE = "size"
@@ -491,6 +503,7 @@ class ThreadStatus(Flag):
         """
         if self.value == 0:
             return None
+
         joined_str = "".join(v.name.lower() for v in list(self))
         return f"logo_{joined_str}.gif"
 
@@ -547,7 +560,8 @@ class Vocation(StringEnum):
             return self.PALADIN
         elif self == self.ELITE_KNIGHT:
             return self.KNIGHT
-        return self
+        else:
+            return self
 
 
 class WorldLocation(StringEnum):

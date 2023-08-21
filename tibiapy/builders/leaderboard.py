@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import datetime
 from typing import List, Optional, TYPE_CHECKING
-
-from typing_extensions import Self
 
 from tibiapy.models.leaderboard import LeaderboardEntry, Leaderboard
 
 if TYPE_CHECKING:
+    import datetime
+    from typing_extensions import Self
     from tibiapy.models.leaderboard import LeaderboardRotation
 
 

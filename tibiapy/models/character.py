@@ -11,16 +11,16 @@ from tibiapy.models.base import BaseCharacter, HouseWithId, BaseGuild, BaseModel
 from tibiapy.urls import get_character_url, get_guild_url
 
 __all__ = (
-    'AccountBadge',
-    'AccountInformation',
-    'Achievement',
-    'Character',
-    'CharacterHouse',
-    'Death',
-    'DeathParticipant',
-    'GuildMembership',
-    'OnlineCharacter',
-    'OtherCharacter',
+    "AccountBadge",
+    "AccountInformation",
+    "Achievement",
+    "Character",
+    "CharacterHouse",
+    "Death",
+    "DeathParticipant",
+    "GuildMembership",
+    "OnlineCharacter",
+    "OtherCharacter",
 )
 
 
@@ -76,7 +76,9 @@ class DeathParticipant(BaseModel):
 
     a) A creature.
     b) A character.
-    c) A creature summoned by a character."""
+    c) A creature summoned by a character.
+    """
+
     name: str
     """The name of the killer. In the case of summons, the name belongs to the owner."""
     is_player: bool
@@ -139,7 +141,8 @@ class OnlineCharacter(BaseCharacter):
 class OtherCharacter(BaseCharacter):
     """A character listed in the characters section of a character's page.
 
-    These are only shown if the character is not hidden, and only characters that are not hidden are shown here."""
+    These are only shown if the character is not hidden, and only characters that are not hidden are shown here.
+    """
 
     world: str
     """The name of the world."""

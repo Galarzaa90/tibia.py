@@ -5,27 +5,27 @@ from tibiapy import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
 from tibiapy.models.base import BaseCharacter, BaseModel
 from tibiapy.models.pagination import PaginatedWithUrl
-from tibiapy.urls import get_character_url, get_cm_post_archive_url, get_forum_announcement_url, get_forum_board_url, \
-    get_forum_post_url, get_forum_section_url, get_forum_thread_url
+from tibiapy.urls import (get_character_url, get_cm_post_archive_url, get_forum_announcement_url, get_forum_board_url,
+                          get_forum_post_url, get_forum_section_url, get_forum_thread_url)
 
 __all__ = (
-    'AnnouncementEntry',
-    'BaseAnnouncement',
-    'BaseBoard',
-    'BasePost',
-    'BaseThread',
-    'BoardEntry',
-    'CMPost',
-    'CMPostArchive',
-    'ForumAnnouncement',
-    'ForumAuthor',
-    'ForumBoard',
-    'ForumEmoticon',
-    'ForumPost',
-    'ForumSection',
-    'ForumThread',
-    'LastPost',
-    'ThreadEntry',
+    "AnnouncementEntry",
+    "BaseAnnouncement",
+    "BaseBoard",
+    "BasePost",
+    "BaseThread",
+    "BoardEntry",
+    "CMPost",
+    "CMPostArchive",
+    "ForumAnnouncement",
+    "ForumAuthor",
+    "ForumBoard",
+    "ForumEmoticon",
+    "ForumPost",
+    "ForumSection",
+    "ForumThread",
+    "LastPost",
+    "ThreadEntry",
 )
 
 
@@ -38,14 +38,15 @@ class BaseAnnouncement(BaseModel):
 
     - :class:`.ForumAnnouncement`
     - :class:`.AnnouncementEntry`
-
     """
+
     announcement_id: int
     """The ID of the announcement."""
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return other.announcement_id == self.announcement_id
+
         return False
 
     @property
@@ -73,7 +74,6 @@ class BaseBoard(BaseModel):
         """The URL of this board."""
         return get_forum_board_url(self.board_id)
 
-
     def __eq__(self, o: object) -> bool:
         """Two boards are considered equal if their ids are equal."""
         return self.board_id == o.board_id if isinstance(o, self.__class__) else False
@@ -88,12 +88,14 @@ class BasePost(BaseModel):
     - :class:`.ForumPost`
     - :class:`.LastPost`
     """
+
     post_id: int
     """The internal ID of the post."""
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.post_id == other.post_id
+
         return False
 
     @property
@@ -109,8 +111,8 @@ class BaseThread(BaseModel):
 
     - :class:`.ThreadEntry`
     - :class:`.ForumThread`
-
     """
+
     thread_id: int
     """The internal ID of the thread."""
 
@@ -122,6 +124,7 @@ class BaseThread(BaseModel):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.thread_id == other.thread_id
+
         return False
 
 
@@ -143,6 +146,7 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
 
     The CM Post Archive is a collection of posts made in the forum by community managers.
     """
+
     from_date: datetime.date
     """The start date of the displayed posts."""
     to_date: datetime.date
@@ -170,6 +174,7 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
+
         return get_cm_post_archive_url(self.from_date, self.to_date, page)
 
 
@@ -259,6 +264,8 @@ class BoardEntry(BaseBoard):
 
 
 class ForumSection(BaseModel):
+    """A forum section, containing a list of boards."""
+
     section_id: int
     """The internal ID of the section."""
     entries: List[BoardEntry]
@@ -307,9 +314,8 @@ class ForumAnnouncement(BaseAnnouncement):
 
     These are a special kind of thread that are shown at the top of boards.
     They cannot be replied to, and they show no view counts.
-
-
     """
+
     announcement_id: int
     """The id of the announcement."""
     board: str
@@ -365,6 +371,7 @@ class ForumBoard(PaginatedWithUrl[ThreadEntry], BaseBoard):
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
+
         return get_forum_board_url(self.board_id, page, self.age)
 
 
@@ -447,4 +454,5 @@ class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
+
         return get_forum_thread_url(self.thread_id, page)

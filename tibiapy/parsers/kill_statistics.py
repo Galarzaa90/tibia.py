@@ -12,6 +12,7 @@ __all__ = (
 
 
 class KillStatisticsParser:
+    """Parser for kill statistics."""
 
     @classmethod
     def from_content(cls, content: str) -> Optional[KillStatistics]:
@@ -33,24 +34,26 @@ class KillStatisticsParser:
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            entries_table = parsed_content.find('table', attrs={'border': '0', 'cellpadding': '3'})
+            entries_table = parsed_content.find("table", attrs={"border": "0", "cellpadding": "3"})
             form = parsed_content.select_one("form")
             form_data = parse_form_data(form)
-            builder = KillStatisticsBuilder() \
-                .world(form_data.values["world"]) \
-                .available_worlds(list(form_data.available_options["world"].values()))
+            builder = (KillStatisticsBuilder()
+                       .world(form_data.values["world"])
+                       .available_worlds(list(form_data.available_options["world"].values())))
             if not entries_table:
                 entries_table = parsed_content.select_one("table.Table3")
             # If the entries table doesn't exist, it means that this belongs to a nonexistent or unselected world.
             if entries_table is None:
                 return None
-            header, subheader, *rows = entries_table.select('tr')
+
+            header, subheader, *rows = entries_table.select("tr")
 
             for i, row in enumerate(rows):
-                columns_raw = row.select('td')
-                columns = [c.text.replace('\xa0', ' ').strip() for c in columns_raw]
+                columns_raw = row.select("td")
+                columns = [c.text.replace("\xa0", " ").strip() for c in columns_raw]
                 if not columns[2].isnumeric():
                     continue
+
                 entry = RaceEntry(last_day_players_killed=int(columns[1]),
                                   last_day_killed=int(columns[2]),
                                   last_week_players_killed=int(columns[3]),
@@ -59,6 +62,7 @@ class KillStatisticsParser:
                     builder.total(entry)
                 else:
                     builder.set_entry(columns[0], entry)
+
             return builder.build()
         except (AttributeError, KeyError) as e:
             raise InvalidContent("content does not belong to a Tibia.com kill statistics page.", e) from e

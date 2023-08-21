@@ -23,8 +23,8 @@ __all__ = (
     "WorldOverviewParser",
 )
 
-record_regexp = re.compile(r'(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)')
-battleye_regexp = re.compile(r'since ([^.]+).')
+record_regexp = re.compile(r"(?P<count>[\d.,]+) players \(on (?P<date>[^)]+)\)")
+battleye_regexp = re.compile(r"since ([^.]+).")
 
 
 class WorldParser:
@@ -53,19 +53,23 @@ class WorldParser:
         try:
             if tables.get("Error"):
                 return None
-            selected_world = parsed_content.select_one('option:checked')
+
+            selected_world = parsed_content.select_one("option:checked")
             builder = WorldBuilder().name(selected_world.text)
             cls._parse_world_info(builder, tables.get("World Information", []))
 
             online_table = next((v for k, v in tables.items() if "Players Online" in k), None)
             if not online_table:
                 return builder.build()
+
             for row in online_table.select("tr.Odd, tr.Even"):
-                cols_raw = row.select('td')
-                name, level, vocation = (c.text.replace('\xa0', ' ').strip() for c in cols_raw)
+                cols_raw = row.select("td")
+                name, level, vocation = (c.text.replace("\xa0", " ").strip() for c in cols_raw)
                 builder.add_online_player(OnlineCharacter(name=name, level=int(level), vocation=vocation))
+
         except AttributeError as e:
             raise InvalidContent("content is not from the world section in Tibia.com") from e
+
         return builder.build()
 
     @classmethod
@@ -92,7 +96,7 @@ class WorldParser:
             "Game World Type": lambda v: builder.is_experimental(v.lower() == "experimental"),
         }
         for row in get_rows(world_info_table):
-            cols_raw = row.select('td')
+            cols_raw = row.select("td")
             cols = [clean_text(ele) for ele in cols_raw]
             field, value = cols
             field = field.replace(":", "")
@@ -189,6 +193,7 @@ class WorldOverviewParser:
             if online_count is None:
                 is_online = False
                 online_count = 0
+
             location = try_enum(WorldLocation, cols[2].text.replace("\u00a0", " ").strip())
             pvp = try_enum(PvpType, cols[3].text.strip())
             builder = (WorldEntryBuilder()
@@ -199,14 +204,15 @@ class WorldOverviewParser:
                        .is_online(is_online))
             # Check Battleye icon to get information
             battleye_icon = cols[4].select_one("span.HelperDivIndicator")
-            if battleye_icon is not None:
-                if m := battleye_regexp.search(battleye_icon["onmouseover"]):
-                    battleye_date = parse_tibia_full_date(m.group(1))
-                    builder.battleye_since(battleye_date).battleye_type(BattlEyeType.PROTECTED if battleye_date
-                                                                        else BattlEyeType.INITIALLY_PROTECTED)
+            if battleye_icon is not None and (m := battleye_regexp.search(battleye_icon["onmouseover"])):
+                battleye_date = parse_tibia_full_date(m.group(1))
+                builder.battleye_since(battleye_date).battleye_type(BattlEyeType.PROTECTED if battleye_date
+                                                                    else BattlEyeType.INITIALLY_PROTECTED)
+
             additional_info = cols[5].text.strip()
             cls._parse_additional_info(builder, additional_info)
             worlds.append(builder.build())
+
         return worlds
 
     @classmethod
@@ -217,6 +223,7 @@ class WorldOverviewParser:
             builder.transfer_type(TransferType.LOCKED)
         else:
             builder.transfer_type(TransferType.REGULAR)
+
         builder.is_experimental("experimental" in additional_info)
         builder.is_premium_only("premium" in additional_info)
 
@@ -230,7 +237,8 @@ class WorldOverviewParser:
             A mapping containing the tables with worlds.
         """
         worlds = []
-        for title_table, worlds_table in zip(tables, tables[1:]):
+        for _, worlds_table in zip(tables, tables[1:]):
             regular_world_rows = worlds_table.select("tr.Odd, tr.Even")
             worlds.extend(cls._parse_worlds(regular_world_rows))
+
         return worlds

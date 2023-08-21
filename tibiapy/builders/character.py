@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-import datetime
 from typing import Optional, List, TYPE_CHECKING
-
-from typing_extensions import Self
 
 from tibiapy.models import Character
 
 if TYPE_CHECKING:
+    import datetime
+    from typing_extensions import Self
     from tibiapy import Sex, Vocation
-    from tibiapy.models import CharacterHouse, GuildMembership, AccountBadge, Achievement, Death, AccountInformation, \
-        OtherCharacter
+    from tibiapy.models import (CharacterHouse, GuildMembership, AccountBadge, Achievement, Death, AccountInformation,
+                                OtherCharacter)
 
 
 class CharacterBuilder:

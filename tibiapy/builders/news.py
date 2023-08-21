@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import datetime
 from typing import Collection, List, Optional, TYPE_CHECKING
-
-from typing_extensions import Self
 
 from tibiapy.models import NewsEntry, NewsArchive, News
 
 if TYPE_CHECKING:
+    import datetime
+    from typing_extensions import Self
     from tibiapy import NewsType, NewsCategory
 
 

@@ -6,9 +6,9 @@ from tibiapy.models.base import HouseWithId, BaseModel
 from tibiapy.urls import get_character_url, get_houses_section_url
 
 __all__ = (
-    'HouseEntry',
-    'House',
-    'HousesSection',
+    "HouseEntry",
+    "House",
+    "HousesSection",
 )
 
 
@@ -109,6 +109,3 @@ class HousesSection(BaseModel):
     def url(self) -> str:
         """Get the URL to the houses section with the current parameters."""
         return get_houses_section_url(self.world, self.town, self.house_type, self.status, self.order)
-
-
-

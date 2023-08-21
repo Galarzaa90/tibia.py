@@ -6,13 +6,15 @@ from tibiapy.models.pagination import PaginatedWithUrl
 from tibiapy.urls import get_leaderboards_url, get_character_url
 
 __all__ = (
-    'LeaderboardEntry',
-    'LeaderboardRotation',
-    'Leaderboard',
+    "LeaderboardEntry",
+    "LeaderboardRotation",
+    "Leaderboard",
 )
 
 
 class LeaderboardEntry(BaseModel):
+    """Represents a character in the Tibiadrome leaderboards."""
+
     name: Optional[str] = None
     """The name of the character in the leaderboard. If ``None``, the character has been deleted."""
     rank: int
@@ -26,6 +28,8 @@ class LeaderboardEntry(BaseModel):
 
 
 class LeaderboardRotation(BaseModel):
+    """A Tibiadrome leaderboards rotation."""
+
     rotation_id: int
     """The internal ID of the rotation."""
     is_current: bool
@@ -36,6 +40,7 @@ class LeaderboardRotation(BaseModel):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return other.rotation_id == self.rotation_id
+
         return False
 
 
@@ -52,7 +57,7 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
     """The available rotations for selection."""
     last_updated: Optional[datetime.datetime] = None
     """The time when the shown leaderboards were last updated. The resolution is 1 minute.
-    
+
     Only available for the latest resolution.
     """
 

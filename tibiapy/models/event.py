@@ -7,17 +7,18 @@ from tibiapy.urls import get_event_schedule_url
 
 class EventEntry(BaseModel):
     """Represents an event's entry in the calendar."""
+
     title: str
     """The title of the event."""
     description: str
     """The description of the event."""
     start_date: Optional[datetime.date] = None
     """The day the event starts.
-    
+
     If the event is continuing from the previous month, this will be :obj:`None`."""
     end_date: Optional[datetime.date] = None
     """The day the event ends.
-    
+
     If the event is continuing on the next month, this will be :obj:`None`."""
 
     color: Optional[str] = None
@@ -29,8 +30,9 @@ class EventEntry(BaseModel):
     @property
     def duration(self) -> int:
         """The number of days this event will be active for."""
-        return (self.end_date - self.start_date + datetime.timedelta(days=1)).days \
-            if (self.end_date and self.start_date) else None
+        return (self.end_date - self.start_date + datetime.timedelta(days=1)).days if (
+                self.end_date and self.start_date
+        ) else None
 
 
 class EventSchedule(BaseModel):
@@ -38,13 +40,13 @@ class EventSchedule(BaseModel):
 
     month: int
     """The month being displayed.
-    
+
     Note that some days from the previous and next month may be included too."""
     year: int
     """The year being displayed."""
     events: List[EventEntry] = []
     """A list of events that happen during this month.
-    
+
     It might include some events from the previous and next months as well."""
 
     @property

@@ -12,13 +12,15 @@ from tibiapy.models import EventEntry, EventSchedule
 from tibiapy.utils import parse_popup, parse_tibiacom_content
 
 __all__ = (
-    'EventScheduleParser',
+    "EventScheduleParser",
 )
 
-month_year_regex = re.compile(r'([A-z]+)\s(\d+)')
+month_year_regex = re.compile(r"([A-z]+)\s(\d+)")
 
 
 class EventScheduleParser:
+    """Parser for the event schedule from Tibia.com."""
+
     @classmethod
     def from_content(cls, content: str) -> EventSchedule:
         """Create an instance of the class from the html content of the event's calendar.
@@ -70,6 +72,7 @@ class EventScheduleParser:
                 # We do not know the actual start date of the event.
                 if not first_day:
                     event.start_date = datetime.date(day=day, month=month, year=year)
+
                 ongoing_events.append(event)
 
             first_day = False
@@ -84,17 +87,21 @@ class EventScheduleParser:
         if ongoing_day < day:
             # The first cells may belong to the previous month
             month -= 1
+
         if day < ongoing_day:
             # The last cells may belong to the last month
             month += 1
+
         if month > 12:
             # Set to january of next year
             month = 1
             year += 1
+
         if month < 1:
             # Set to december of previous year
             month = 12
             year -= 1
+
         return month, year
 
     @classmethod
@@ -104,8 +111,10 @@ class EventScheduleParser:
         for attr in attrs:
             if not attr.strip():
                 continue
+
             key, value = attr.split(":")
             values[key.strip()] = value.strip()
+
         return values
 
     @classmethod
@@ -114,14 +123,14 @@ class EventScheduleParser:
         day = int(day_div.text)
         today_events = []
 
-        for popup in day_cell.select('span.HelperDivIndicator'):
+        for popup in day_cell.select("span.HelperDivIndicator"):
             colored_blocks = popup.select("div:not([class])")
             event_colors = {}
             for block in colored_blocks:
                 style_values = cls.parse_inline_style(block.get("style"))
                 block_title = block.text.replace("*", "")
                 event_colors[block_title] = style_values["background"]
-                pass
+
             title, popup_content = parse_popup(popup["onmouseover"])
             divs = popup_content.select("div")
             # Multiple events can be described in the same popup, they come in pairs, title and content.

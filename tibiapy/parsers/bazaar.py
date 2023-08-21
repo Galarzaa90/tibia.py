@@ -1,4 +1,4 @@
-"""Contains all classes related to the Character Bazaar sections in Tibia.com"""
+"""Contains all classes related to the Character Bazaar sections in Tibia.com."""
 import logging
 import re
 import urllib.parse
@@ -16,19 +16,19 @@ from tibiapy.models import (AchievementEntry, AjaxPaginator, Auction, AuctionFil
 from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, parse_pagination,
                            parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
-results_pattern = re.compile(r'Results: (\d+)')
-char_info_regex = re.compile(r'Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| World: (\w+)')
-id_addon_regex = re.compile(r'(\d{1,4})_(\d)\.gif$')
-id_regex = re.compile(r'(\d{1,5}).(?:gif|png)$')
+results_pattern = re.compile(r"Results: (\d+)")
+char_info_regex = re.compile(r"Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| World: (\w+)")
+id_addon_regex = re.compile(r"(\d{1,4})_(\d)\.gif$")
+id_regex = re.compile(r"(\d{1,5}).(?:gif|png)$")
 description_regex = re.compile(r'"(?:an?\s)?([^"]+)"')
-amount_regex = re.compile(r'([\d,]{1,9})x')
+amount_regex = re.compile(r"([\d,]{1,9})x")
 tier_regex = re.compile(r"(.*)\s\(tier (\d)\)")
 
 log = logging.getLogger("tibiapy")
 
 __all__ = (
     "CharacterBazaarParser",
-    "AuctionParser"
+    "AuctionParser",
 )
 
 
@@ -54,7 +54,8 @@ class AuctionFiltersParser:
         filters.world = data.values["filter_world"]
         filters.available_worlds = [w for w in data.available_options["filter_world"] if "(" not in w]
         filters.pvp_type = try_enum(PvpTypeFilter, parse_integer(data.values.get("filter_worldpvptype"), None))
-        filters.battleye = try_enum(AuctionBattlEyeFilter, parse_integer(data.values.get("filter_worldbattleyestate"), None))
+        filters.battleye = try_enum(AuctionBattlEyeFilter,
+                                    parse_integer(data.values.get("filter_worldbattleyestate"), None))
         filters.vocation = try_enum(AuctionVocationFilter, parse_integer(data.values.get("filter_profession"), None))
         filters.min_level = parse_integer(data.values.get("filter_levelrangefrom"), None)
         filters.max_level = parse_integer(data.values.get("filter_levelrangeto"), None)
@@ -67,10 +68,13 @@ class AuctionFiltersParser:
             data_search = parse_form_data(forms[1])
             filters.search_string = data_search.values.get("searchstring")
             filters.search_type = try_enum(AuctionSearchType, parse_integer(data_search.values.get("searchtype"), None))
+
         return filters
 
 
 class CharacterBazaarParser:
+    """Parser for the character bazaar in Tibia.com."""
+
     @classmethod
     def from_content(cls, content: str) -> CharacterBazaar:
         """Get the bazaar's information and list of auctions from Tibia.com.
@@ -85,7 +89,7 @@ class CharacterBazaarParser:
             The character bazaar with the entries found.
         """
         try:
-            parsed_content = parse_tibiacom_content(content, builder='html5lib')
+            parsed_content = parse_tibiacom_content(content, builder="html5lib")
             content_table = parsed_content.select_one("div.BoxContent")
             tables = content_table.select("div.TableContainer")
             filter_table = None
@@ -109,12 +113,14 @@ class CharacterBazaarParser:
                 auction = AuctionParser._parse_auction(auction_row)
 
                 builder.add_entry(auction)
+
             return builder.build()
         except (ValueError, IndexError) as e:
             raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e) from e
 
 
 class AuctionParser:
+    """Parser for Tibia.com character auctions."""
 
     @classmethod
     def from_content(cls, content: str, auction_id: int = 0, skip_details: bool = False) -> Optional[Auction]:
@@ -143,12 +149,14 @@ class AuctionParser:
         InvalidContent
             If the content does not belong to an auction detail's page.
         """
-        parsed_content = parse_tibiacom_content(content, builder='lxml' if skip_details else 'html5lib')
+        parsed_content = parse_tibiacom_content(content, builder="lxml" if skip_details else "html5lib")
         auction_row = parsed_content.select_one("div.Auction")
         if not auction_row:
             if "internal error" in content:
                 return None
+
             raise InvalidContent("content does not belong to a auction details page in Tibia.com")
+
         auction = cls._parse_auction(auction_row, auction_id)
         builder = AuctionDetailsBuilder()
         if skip_details:
@@ -157,39 +165,57 @@ class AuctionParser:
         details_tables = cls._parse_tables(parsed_content)
         if "General" in details_tables:
             cls._parse_general_table(builder, details_tables["General"])
+
         if "ItemSummary" in details_tables:
             builder.items(cls._parse_items_table(details_tables["ItemSummary"]))
+
         if "StoreItemSummary" in details_tables:
             builder.store_items(cls._parse_items_table(details_tables["StoreItemSummary"]))
+
         if "Mounts" in details_tables:
             builder.mounts(cls._parse_mounts_table(details_tables["Mounts"]))
+
         if "StoreMounts" in details_tables:
             builder.store_mounts(cls._parse_mounts_table(details_tables["StoreMounts"]))
+
         if "Outfits" in details_tables:
             builder.outfits(cls._parse_outfits_table(details_tables["Outfits"]))
+
         if "StoreOutfits" in details_tables:
             builder.store_outfits(cls._parse_outfits_table(details_tables["StoreOutfits"]))
+
         if "Familiars" in details_tables:
             builder.familiars(cls._parse_familiars_table(details_tables["Familiars"]))
+
         if "Blessings" in details_tables:
             cls._parse_blessings_table(builder, details_tables["Blessings"])
+
         if "Imbuements" in details_tables:
             builder.imbuements(cls._parse_single_column_table(details_tables["Imbuements"]))
+
         if "Charms" in details_tables:
             cls._parse_charms_table(builder, details_tables["Charms"])
+
         if "CompletedCyclopediaMapAreas" in details_tables:
-            builder.completed_cyclopedia_map_areas(cls._parse_single_column_table(
-                details_tables["CompletedCyclopediaMapAreas"]))
+            builder.completed_cyclopedia_map_areas(
+                cls._parse_single_column_table(details_tables["CompletedCyclopediaMapAreas"]),
+            )
+
         if "CompletedQuestLines" in details_tables:
             builder.completed_quest_lines(cls._parse_single_column_table(details_tables["CompletedQuestLines"]))
+
         if "Titles" in details_tables:
             builder.titles(cls._parse_single_column_table(details_tables["Titles"]))
+
         if "Achievements" in details_tables:
             cls._parse_achievements_table(builder, details_tables["Achievements"])
+
         if "BestiaryProgress" in details_tables:
             cls._parse_bestiary_table(builder, details_tables["BestiaryProgress"])
+
         if "BosstiaryProgress" in details_tables:
             cls._parse_bestiary_table(builder, details_tables["BosstiaryProgress"], True)
+
         auction.details = builder.build()
         return auction
 
@@ -220,23 +246,26 @@ class AuctionParser:
             name = char_name_container.text
 
         builder = AuctionBuilder().name(name).auction_id(auction_id)
-        char_name_container.replaceWith('')
+        char_name_container.replaceWith("")
         if m := char_info_regex.search(header_container.text):
             builder.level(int(m.group(1)))
             builder.vocation(try_enum(Vocation, m.group(2).strip()))
             builder.sex(try_enum(Sex, m.group(3).strip().lower()))
             builder.world(m.group(4))
+
         outfit_img = auction_row.select_one("img.AuctionOutfitImage")
         if m := id_addon_regex.search(outfit_img["src"]):
             builder.outfit(OutfitImage(image_url=outfit_img["src"], outfit_id=int(m.group(1)), addons=int(m.group(2))))
+
         item_boxes = auction_row.select("div.CVIcon")
         for item_box in item_boxes:
             if item := cls._parse_displayed_item(item_box):
                 builder.add_displayed_item(item)
+
         dates_containers = auction_row.select_one("div.ShortAuctionData")
         start_date_tag, end_date_tag, *_ = dates_containers.select("div.ShortAuctionDataValue")
-        builder.auction_start(parse_tibia_datetime(start_date_tag.text.replace('\xa0', ' ')))
-        builder.auction_end(parse_tibia_datetime(end_date_tag.text.replace('\xa0', ' ')))
+        builder.auction_start(parse_tibia_datetime(start_date_tag.text.replace("\xa0", " ")))
+        builder.auction_end(parse_tibia_datetime(end_date_tag.text.replace("\xa0", " ")))
         bids_container = auction_row.select_one("div.ShortAuctionDataBidRow")
         bid_tag = bids_container.select_one("div.ShortAuctionDataValue")
         bid_type_tag = bids_container.select("div.ShortAuctionDataLabel")[0]
@@ -249,6 +278,7 @@ class AuctionParser:
         if auction_info_tag:
             convert_line_breaks(auction_info_tag)
             status = auction_info_tag.text.replace("\n", " ").replace("  ", " ")
+
         builder.status(try_enum(AuctionStatus, status, AuctionStatus.IN_PROGRESS))
         argument_entries = auction_row.select("div.Entry")
         for entry in argument_entries:
@@ -257,8 +287,10 @@ class AuctionParser:
             category_id = 0
             if m := id_regex.search(img_url):
                 category_id = parse_integer(m.group(1))
+
             builder.add_sales_argument(SalesArgument(content=entry.text, category_image=img_url,
                                                      category_id=category_id))
+
         return builder.build()
 
     @classmethod
@@ -299,6 +331,7 @@ class AuctionParser:
             value = row.select_one("div").text
             name = name.lower().strip().replace(" ", "_").replace(":", "")
             data[name] = value
+
         return data
 
     @classmethod
@@ -318,6 +351,7 @@ class AuctionParser:
             level = int(level_c)
             progress = float(progress_c.replace("%", ""))
             skills.append(SkillEntry(name=name_c, level=level, progress=progress))
+
         builder.skills(skills)
 
     @classmethod
@@ -337,6 +371,7 @@ class AuctionParser:
             amount_c, name_c = [c.text for c in cols]
             amount = int(amount_c.replace("x", ""))
             blessings.append(BlessingEntry(name=name_c, amount=amount))
+
         builder.blessings(blessings)
 
     @classmethod
@@ -361,7 +396,9 @@ class AuctionParser:
             text = col.text
             if "more entries" in text:
                 continue
+
             ret.append(text)
+
         return ret
 
     @classmethod
@@ -380,9 +417,11 @@ class AuctionParser:
             cols = row.select("td")
             if len(cols) != 2:
                 continue
+
             cost_c, name_c = [c.text for c in cols]
             cost = parse_integer(cost_c.replace("x", ""))
             charms.append(CharmEntry(name=name_c, cost=cost))
+
         builder.charms(charms)
 
     @classmethod
@@ -402,8 +441,10 @@ class AuctionParser:
             text = col.text.strip()
             if "more entries" in text:
                 continue
+
             secret = col.select_one("img") is not None
             achievements.append(AchievementEntry(name=text, is_secret=secret))
+
         builder.achievements(achievements)
 
     @classmethod
@@ -422,10 +463,12 @@ class AuctionParser:
             cols = row.select("td")
             if len(cols) != 3:
                 continue
+
             step_c, kills_c, name_c = [c.text for c in cols]
             kills = parse_integer(kills_c.replace("x", ""))
             step = int(step_c)
             bestiary.append(BestiaryEntry(name=name_c, kills=kills, step=step))
+
         if bosstiary:
             builder.bosstiary_progress(bestiary)
         else:
@@ -488,9 +531,11 @@ class AuctionParser:
             dust_values = dust_data.get("exalted_dust", "0/0").split("/")
             builder.exalted_dust(parse_integer(dust_values[0]))
             builder.exalted_dust_limit(parse_integer(dust_values[1]))
+
         if len(content_containers) >= 10:
             boss_data = cls._parse_data_table(content_containers[9])
             builder.boss_points(parse_integer(boss_data.get("boss_points", "")))
+
         if len(content_containers) >= 11:
             bonus_promotion_data = cls._parse_data_table(content_containers[10])
             builder.bonus_promotion_points(parse_integer(bonus_promotion_data.get("bonus_promotion_points", "")))
@@ -501,11 +546,13 @@ class AuctionParser:
             page, total_pages, results = parse_pagination(pagination_block)
         else:
             return ItemSummary()
+
         summary = ItemSummary(current_page=page, total_pages=total_pages, results_count=results)
         item_boxes = table.select("div.CVIcon")
         for item_box in item_boxes:
             if item := cls._parse_displayed_item(item_box):
                 summary.entries.append(item)
+
         return summary
 
     @classmethod
@@ -514,11 +561,13 @@ class AuctionParser:
             page, total_pages, results = parse_pagination(pagination_block)
         else:
             return Mounts()
+
         summary = Mounts(current_page=page, total_pages=total_pages, results_count=results)
         mount_boxes = table.select("div.CVIcon")
         for mount_box in mount_boxes:
             if mount := cls._parse_displayed_mount(mount_box):
                 summary.entries.append(mount)
+
         return summary
 
     @classmethod
@@ -527,11 +576,13 @@ class AuctionParser:
             page, total_pages, results = parse_pagination(pagination_block)
         else:
             return Outfits()
+
         summary = Outfits(current_page=page, total_pages=total_pages, results_count=results)
         outfit_boxes = table.select("div.CVIcon")
         for outfit_box in outfit_boxes:
             if outfit := cls._parse_displayed_outfit(outfit_box):
                 summary.entries.append(outfit)
+
         return summary
 
     @classmethod
@@ -540,11 +591,13 @@ class AuctionParser:
             page, total_pages, results = parse_pagination(pagination_block)
         else:
             return Familiars()
+
         summary = Familiars(current_page=page, total_pages=total_pages, results_count=results)
         familiar_boxes = table.select("div.CVIcon")
         for familiar_box in familiar_boxes:
             if familiar := cls._parse_displayed_familiar(familiar_box):
                 summary.entries.append(familiar)
+
         return summary
 
     @classmethod
@@ -553,17 +606,20 @@ class AuctionParser:
         img_tag = item_box.select_one("img")
         if not img_tag:
             return None
+
         m = amount_regex.match(title_text)
         amount = 1
         if m:
             amount = parse_integer(m.group(1))
             title_text = amount_regex.sub("", title_text, 1).strip()
+
         name, *desc = title_text.split("\n")
         description = " ".join(desc) if desc else None
         tier = 0
         if m := tier_regex.search(name):
             tier = int(m.group(2))
             name = m.group(1)
+
         item_id = int(m.group(1)) if (m := id_regex.search(img_tag["src"])) else 0
         return ItemEntry(image_url=img_tag["src"], name=name, count=amount, item_id=item_id, description=description,
                          tier=tier)
@@ -574,9 +630,11 @@ class AuctionParser:
         img_tag = item_box.select_one("img")
         if not img_tag:
             return None
+
         mount = MountEntry(image_url=img_tag["src"], name=description, mount_id=0)
         if m := id_regex.search(mount.image_url):
             mount.mount_id = int(m.group(1))
+
         return mount
 
     @classmethod
@@ -585,12 +643,14 @@ class AuctionParser:
         img_tag = item_box.select_one("img")
         if not img_tag:
             return None
+
         outfit = OutfitEntry(image_url=img_tag["src"], name=description, outfit_id=0, addons=0)
         name = outfit.name.split("(")[0].strip()
         outfit.name = name
         if m := id_addon_regex.search(outfit.image_url):
             outfit.outfit_id = int(m.group(1))
             outfit.addons = int(m.group(2))
+
         return outfit
 
     @classmethod
@@ -599,16 +659,18 @@ class AuctionParser:
         img_tag = item_box.select_one("img")
         if not img_tag:
             return None
+
         familiar = FamiliarEntry(image_url=img_tag["src"], name=description, familiar_id=0)
         name = familiar.name.split("(")[0].strip()
         familiar.name = name
         if m := id_regex.search(familiar.image_url):
             familiar.familiar_id = int(m.group(1))
+
         return familiar
 
     @classmethod
     def _parse_page_items(cls, content, paginator: AjaxPaginator):
-        parsed_content = parse_tibiacom_content(content, builder='html5lib')
+        parsed_content = parse_tibiacom_content(content, builder="html5lib")
         item_boxes = parsed_content.select("div.CVIcon")
         entries = []
         for item_box in item_boxes:
@@ -622,6 +684,8 @@ class AuctionParser:
                 item = cls._parse_displayed_familiar(item_box)
             else:
                 raise TypeError("unsupported paginator type")
+
             if item:
                 entries.append(item)
+
         return entries

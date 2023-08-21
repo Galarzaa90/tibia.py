@@ -1,24 +1,27 @@
+from __future__ import annotations
+
 import datetime
 import logging
 from contextlib import asynccontextmanager
-from typing import Optional, Set, List
+from typing import List, Optional, Set
 
-from fastapi import FastAPI, Path, Query, Response, Depends
+from fastapi import Depends, FastAPI, Path, Query, Response
 from starlette import status
 from typing_extensions import Annotated
 
 import tibiapy
-from tibiapy import SpellVocationFilter, SpellGroup, SpellType, SpellSorting, NewsType, NewsCategory, \
-    HouseStatus, HouseOrder, HouseType, HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, \
-    PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, AuctionOrderBy, \
-    AuctionOrderDirection, AuctionSearchType
-from tibiapy.models import World, WorldOverview, Spell, SpellsSection, Highscores, TibiaResponse, EventSchedule, \
-    CreatureEntry, BossEntry, CreaturesSection, Creature, BoostableBosses, Character, Guild, GuildWars, GuildsSection, \
-    House, HousesSection, KillStatistics, Leaderboard, ForumSection, ForumBoard, ForumThread, CharacterBazaar, Auction, \
-    AuctionFilters
-from tibiapy.models.news import News, NewsArchive
+from tibiapy import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
+                     AuctionSkillFilter, AuctionVocationFilter, HighscoresBattlEyeType, HighscoresCategory,
+                     HighscoresProfession, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, PvpTypeFilter,
+                     SpellGroup, SpellSorting, SpellType, SpellVocationFilter)
+from tibiapy.models import (Auction, AuctionFilters, BoostableBosses, BossEntry, Character, CharacterBazaar, Creature,
+                            CreatureEntry, CreaturesSection, EventSchedule, ForumBoard, ForumSection, ForumThread,
+                            Guild, GuildWars,
+                            GuildsSection, Highscores, House, HousesSection, KillStatistics, Leaderboard, News,
+                            NewsArchive, Spell,
+                            SpellsSection, TibiaResponse, World, WorldOverview)
 
-logging_formatter = logging.Formatter('[%(asctime)s][%(levelname)s] %(message)s')
+logging_formatter = logging.Formatter("[%(asctime)s][%(levelname)s] %(message)s")
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(logging_formatter)
 log = logging.getLogger("tibiapy")
@@ -44,6 +47,7 @@ def handle_response(response: Response, body):
     """Change the status code to 404 if no data is returned in the response."""
     if isinstance(body, TibiaResponse) and body.data is None:
         response.status_code = status.HTTP_404_NOT_FOUND
+
     return body
 
 
@@ -63,7 +67,7 @@ CATEGORIES_DESCRIPTION = "The categories of news to display. Leave empty to show
 @app.get("/news/{news_id:int}", tags=["News"])
 async def get_news_article(
         response: Response,
-        news_id: int = Path(..., description="The ID of the news entry to see.")
+        news_id: int = Path(..., description="The ID of the news entry to see."),
 ) -> TibiaResponse[Optional[News]]:
     return handle_response(response, await app.state.client.fetch_news(news_id=news_id))
 
@@ -82,7 +86,7 @@ async def get_news_archive(
 
 @app.get("/news/{fromDate}/{toDate}", tags=["News"],
          summary="Get news archive between dates")
-async def get_news_archive(
+async def get_news_archive_between_dates(
         response: Response,
         from_date: datetime.date = Path(..., alias="fromDate", description=FROM_DESCRIPTION),
         to_date: datetime.date = Path(..., alias="toDate", description=TO_DESCRIPTION),
@@ -167,7 +171,8 @@ async def get_spells(
             group=group,
             spell_type=type,
             is_premium=is_premium,
-            sort=sort)
+            sort=sort,
+        ),
     )
 
 
@@ -188,7 +193,7 @@ async def get_spell(
 
 @app.get("/characters/{name}", tags=["Community"])
 async def get_character(
-        name: str = Path(...)
+        name: str = Path(...),
 ) -> TibiaResponse[Optional[Character]]:
     return await app.state.client.fetch_character(name)
 
@@ -208,21 +213,21 @@ async def get_world(
 
 @app.get("/guilds/{name}", tags=["Community"])
 async def get_guild(
-        name: str = Path(...)
+        name: str = Path(...),
 ) -> TibiaResponse[Optional[Guild]]:
     return await app.state.client.fetch_guild(name)
 
 
 @app.get("/guilds/{name}/wars", tags=["Community"])
 async def get_guild_wars(
-        name: str = Path(...)
+        name: str = Path(...),
 ) -> TibiaResponse[Optional[GuildWars]]:
     return await app.state.client.fetch_guild_wars(name)
 
 
 @app.get("/worlds/{world}/guilds", tags=["Community"])
 async def get_world_guilds(
-        world: str = Path(...)
+        world: str = Path(...),
 ) -> TibiaResponse[Optional[GuildsSection]]:
     return await app.state.client.fetch_world_guilds(world)
 
@@ -238,6 +243,7 @@ async def get_highscores(
 ) -> TibiaResponse[Highscores]:
     if world.lower() in {"global", "all"}:
         world = None
+
     return await app.state.client.fetch_highscores_page(world, category, page=page, vocation=vocation,
                                                         battleye_type=battleye,
                                                         pvp_types=pvp_types)
@@ -247,7 +253,7 @@ async def get_highscores(
 async def get_house(
         response: Response,
         world: str = Path(..., description="The world where the house is located."),
-        house_id: int = Path(..., alias="houseId", description="The ID of the house.")
+        house_id: int = Path(..., alias="houseId", description="The ID of the house."),
 ) -> TibiaResponse[Optional[House]]:
     return handle_response(response, await app.state.client.fetch_house(house_id, world))
 
@@ -266,7 +272,7 @@ async def get_houses_section(
 @app.get("/killStatistics/{world}", tags=["Community"])
 @app.get("/killstatistics/{world}", tags=["Community"])
 async def get_kill_statistics(
-        world: str = Path(...)
+        world: str = Path(...),
 ) -> TibiaResponse[Optional[KillStatistics]]:
     return await app.state.client.fetch_kill_statistics(world)
 
@@ -283,7 +289,7 @@ async def get_leaderboard(
     """Show the latest Tibiadrome rotation's leaderboard."""
     return handle_response(
         response,
-        await app.state.client.fetch_leaderboard(world=world, rotation=rotation_id, page=page)
+        await app.state.client.fetch_leaderboard(world=world, rotation=rotation_id, page=page),
     )
 
 
@@ -313,7 +319,7 @@ async def get_support_boards() -> TibiaResponse[ForumSection]:
 
 @app.get("/forums/sections/{section_id}", tags=["Forums"])
 async def get_forum_section(
-        section_id: int = Path(...)
+        section_id: int = Path(...),
 ) -> TibiaResponse[Optional[ForumSection]]:
     return await app.state.client.fetch_forum_section(section_id)
 
@@ -345,7 +351,7 @@ def auction_filter_parameters(
                                         description="Show only auctions from characters in worlds of this PvP Type."),
         battleye: AuctionBattlEyeFilter = Query(
             None, alias="battleyeType",
-            description="Show only auctions from characters in worlds with this type of BattlEye protection."
+            description="Show only auctions from characters in worlds with this type of BattlEye protection.",
         ),
         vocation: AuctionVocationFilter = Query(None,
                                                 description="Show only auctions of characters of this vocation."),
@@ -359,7 +365,7 @@ def auction_filter_parameters(
         order_by: AuctionOrderBy = Query(None, alias="orderBy", description="The column or value to order by."),
         order: AuctionOrderDirection = Query(None, alias="orderDirection", description="The ordering direction."),
         search_string: str = Query(None, alias="searchString", description="The search term to filter out auctions."),
-        search_type: AuctionSearchType = Query(None, alias="searchType", description="The type of search to use.")
+        search_type: AuctionSearchType = Query(None, alias="searchType", description="The type of search to use."),
 ):
     return AuctionFilters(
         world=world,
@@ -374,25 +380,25 @@ def auction_filter_parameters(
         order_by=order_by,
         order=order,
         search_string=search_string,
-        search_type=search_type
+        search_type=search_type,
     )
 
 
 @app.get("/auctions/", tags=["Char Bazaar"])
 async def get_current_auctions(
         page: int = Query(1),
-        filters: Annotated[AuctionFilters, Depends(auction_filter_parameters)] = None
+        filters: Annotated[AuctionFilters, Depends(auction_filter_parameters)] = None,
 ) -> TibiaResponse[CharacterBazaar]:
     return await app.state.client.fetch_current_auctions(
         page,
-        filters
+        filters,
     )
 
 
 @app.get("/auctions/history/", tags=["Char Bazaar"])
 async def get_auctions_history(
         page: int = Query(1),
-        filters: Annotated[AuctionFilters, Depends(auction_filter_parameters)] = None
+        filters: Annotated[AuctionFilters, Depends(auction_filter_parameters)] = None,
 ) -> TibiaResponse[CharacterBazaar]:
     return await app.state.client.fetch_auction_history(page, filters)
 

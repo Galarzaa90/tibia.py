@@ -1,44 +1,51 @@
 """Events related to the forum section."""
+from __future__ import annotations
+
 import datetime
 import re
 import urllib.parse
-from typing import Optional
-
-import bs4
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy import InvalidContent, errors
-from tibiapy.builders.forum import CMPostArchiveBuilder, ForumAnnouncementBuilder, ForumBoardBuilder, ForumThreadBuilder
+from tibiapy.builders import CMPostArchiveBuilder, ForumAnnouncementBuilder, ForumBoardBuilder, ForumThreadBuilder
 from tibiapy.enums import ThreadStatus, Vocation
-from tibiapy.models import GuildMembership
-from tibiapy.models.forum import AnnouncementEntry, BoardEntry, CMPost, CMPostArchive, ForumAnnouncement, ForumAuthor, \
-    ForumBoard, ForumEmoticon, ForumPost, ForumSection, ForumThread, LastPost, ThreadEntry
+from tibiapy.models import (AnnouncementEntry, BoardEntry, CMPost, CMPostArchive, ForumAnnouncement, ForumAuthor,
+                            ForumBoard, ForumEmoticon, ForumPost, ForumSection, ForumThread, GuildMembership, LastPost,
+                            ThreadEntry)
 from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, parse_link_info, parse_pagination,
                            parse_tables_map, parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content,
                            split_list, try_enum)
 
+if TYPE_CHECKING:
+    import bs4
+
 __all__ = (
-    'CMPostArchiveParser',
-    'ForumAnnouncementParser',
-    'ForumBoardParser',
-    'ForumSectionParser',
-    'ForumThreadParser',
+    "CMPostArchiveParser",
+    "ForumAnnouncementParser",
+    "ForumBoardParser",
+    "ForumSectionParser",
+    "ForumThreadParser",
 )
 
-timezone_regex = re.compile(r'times are (CES?T)')
-filename_regex = re.compile(r'(\w+.gif)')
-pages_regex = re.compile(r'\(Pages[^)]+\)')
+timezone_regex = re.compile(r"times are (CES?T)")
+filename_regex = re.compile(r"(\w+.gif)")
+pages_regex = re.compile(r"\(Pages[^)]+\)")
 
-author_info_regex = re.compile(r'Inhabitant of (\w+)\nVocation: ([\w\s]+)\nLevel: (\d+)')
-author_posts_regex = re.compile(r'Posts: (\d+)')
-guild_regexp = re.compile(r'([\s\w()]+)\sof the\s(.+)')
-guild_title_regexp = re.compile(r'([^(]+)\s\(([^)]+)\)')
-post_dates_regex = re.compile(r'(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})')
-edited_by_regex = re.compile(r'Edited by (.*) on \d{2}')
+author_info_regex = re.compile(r"Inhabitant of (\w+)\nVocation: ([\w\s]+)\nLevel: (\d+)")
+author_posts_regex = re.compile(r"Posts: (\d+)")
+guild_regexp = re.compile(r"([\s\w()]+)\sof the\s(.+)")
+guild_title_regexp = re.compile(r"([^(]+)\s\(([^)]+)\)")
+post_dates_regex = re.compile(r"(\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}:\d{2})")
+edited_by_regex = re.compile(r"Edited by (.*) on \d{2}")
 
 signature_separator = "________________"
 
+FORUM_POSITIONS = ["Tutor", "Community Manager", "Customer Support", "Programmer", "Game Content Designer", "Tester"]
+"""Special positions displayed for characters in the forums."""
+
 
 class CMPostArchiveParser:
+    """Parser for the content of the CM Post Archive page in Tibia.com."""
 
     @classmethod
     def from_content(cls, content: str) -> CMPostArchive:
@@ -62,16 +69,18 @@ class CMPostArchiveParser:
 
         form = parsed_content.select_one("form")
         try:
-            start_month_selector, start_day_selector, start_year_selector, \
-                end_month_selector, end_day_selector, end_year_selector = form.select("select")
+            (start_month_selector, start_day_selector, start_year_selector,
+             end_month_selector, end_day_selector, end_year_selector) = form.select("select")
             start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
         except (AttributeError, ValueError) as e:
             raise errors.InvalidContent("content does not belong to the CM Post Archive in Tibia.com", e)
+
         builder = CMPostArchiveBuilder().from_date(start_date).to_date(end_date)
         table = parsed_content.select_one("table.Table3")
         if not table:
             return builder.build()
+
         inner_table_container = table.select_one("div.InnerTableContainer")
         inner_table = inner_table_container.select_one("table")
         inner_table_rows = inner_table.select("tr")
@@ -92,8 +101,10 @@ class CMPostArchiveParser:
             post_link = parse_link_info(post_link_tag)
             post_id = int(post_link["query"]["postid"])
             builder.add_entry(CMPost(posted_on=date, board=board, thread_title=thread, post_id=post_id))
+
         if not rows:
             return builder.build()
+
         pages_column, results_column = inner_table_rows[-1].select("div")
         page_links = pages_column.select("a")
         if listed_pages := [int(p.text) for p in page_links]:
@@ -102,6 +113,7 @@ class CMPostArchiveParser:
             if not page:
                 total_pages += 1
                 page = total_pages
+
             builder.current_page(page).total_pages(total_pages)
 
         builder.results_count(int(results_column.text.split(":")[-1]))
@@ -112,7 +124,7 @@ class CMPostArchiveParser:
     # region Private Methods
 
     @classmethod
-    def _get_selected_date(cls, month_selector, day_selector, year_selector):
+    def _get_selected_date(cls, month_selector: bs4.Tag, day_selector: bs4.Tag, year_selector: bs4.Tag):
         """Get the date made from the selected options in the selectors.
 
         Parameters
@@ -141,11 +153,11 @@ class CMPostArchiveParser:
 
 
 class ForumSectionParser:
+    """Parser for forum sections, such as world boards, trade boards, etcetera."""
 
     @classmethod
     def from_content(cls, content: str) -> ForumSection:
-        """
-        Parses a forum section from Tibia.com
+        """Parse a forum section from Tibia.com.
 
         Parameters
         ----------
@@ -160,6 +172,7 @@ class ForumSectionParser:
         tables = parse_tables_map(parsed_content)
         if "Boards" not in tables:
             raise InvalidContent("Boards table not found.")
+
         rows = tables["Boards"].select("table.TableContent > tr:not(.LabelH)")
         section_link = parse_link_info(parsed_content.select_one("p.ForumWelcome > a"))
         redirect = section_link["query"]["redirect"]
@@ -191,6 +204,7 @@ class ForumSectionParser:
         # Second Column: Name and description
         if len(columns) < 5:
             return None
+
         name_column = columns[1]
         board_link_tag = name_column.select_one("a")
         description_tag = name_column.select_one("font")
@@ -212,6 +226,7 @@ class ForumSectionParser:
 
 
 class ForumAnnouncementParser:
+    """Parser for forum announcements posted by CipSoft."""
 
     @classmethod
     def from_content(cls, content: str, announcement_id: int = 0) -> Optional[ForumAnnouncement]:
@@ -241,6 +256,7 @@ class ForumAnnouncementParser:
             message_box = parsed_content.select_one("div.InnerTableContainer")
             if not message_box or "not found" not in message_box.text:
                 raise errors.InvalidContent("content is not a Tibia.com forum announcement.")
+
             return None
 
         section_link, board_link, *_ = forum_breadcrumbs.select("a")
@@ -251,16 +267,15 @@ class ForumAnnouncementParser:
         board = board_link_info["text"]
         board_id = parse_integer(board_link_info["query"]["boardid"])
 
-        builder = ForumAnnouncementBuilder()\
-            .section(section)\
-            .section_id(section_id)\
-            .board(board)\
-            .board_id(board_id)\
-            .announcement_id(announcement_id)
+        builder = (ForumAnnouncementBuilder()
+                   .section(section)
+                   .section_id(section_id)
+                   .board(board)
+                   .board_id(board_id)
+                   .announcement_id(announcement_id))
 
         times_container = parsed_content.select_one("div.ForumContentFooterLeft")
         offset = 2 if times_container.text == "CEST" else 1
-
 
         post_container = parsed_content.select_one("div.ForumPost")
         character_info_container = post_container.select_one("div.PostCharacterText")
@@ -305,7 +320,9 @@ class ForumAuthorParser:
                 name = name.replace("(traded)", "").strip()
                 deleted = False
                 traded = True
+
             return ForumAuthor(name=name, is_author_deleted=deleted, is_author_traded=traded)
+
         author = ForumAuthor(name=char_link.text)
         char_info = character_info_container.select_one("font.ff_infotext")
         position_info = character_info_container.select_one("font.ff_smallinfo")
@@ -315,13 +332,12 @@ class ForumAuthorParser:
         if position_info and (not char_info or position_info.parent != char_info):
             convert_line_breaks(position_info)
             titles = [title for title in position_info.text.splitlines() if title]
-            positions = ["Tutor", "Community Manager", "Customer Support", "Programmer", "Game Content Designer",
-                         "Tester"]
             for _title in titles:
-                if _title in positions:
+                if _title in FORUM_POSITIONS:
                     author.position = _title
                 else:
                     author.title = _title
+
         guild_info = char_info.select_one("font.ff_smallinfo")
         convert_line_breaks(char_info)
         char_info_text = char_info.text
@@ -329,20 +345,26 @@ class ForumAuthorParser:
             author.world = info_match.group(1)
             author.vocation = try_enum(Vocation, info_match.group(2))
             author.level = int(info_match.group(3))
+
         if guild_info:
             guild_match = guild_regexp.search(guild_info.text)
             guild_name = guild_match.group(2)
             title_match = guild_title_regexp.search(guild_name)
             title = None
+
             if title_match:
                 guild_name = title_match.group(1)
                 title = title_match.group(2)
+
             author.guild = GuildMembership(name=guild_name, rank=guild_match.group(1), title=title)
+
         author.posts = int(author_posts_regex.search(char_info_text).group(1))
         return author
 
 
 class ForumBoardParser:
+    """A parser for forum boards from Tibia.com."""
+
     @classmethod
     def from_content(cls, content: str) -> Optional[ForumBoard]:
         """Parse the board's HTML content from Tibia.com.
@@ -367,7 +389,9 @@ class ForumBoardParser:
             message_box = parsed_content.select_one("div.InnerTableContainer")
             if not message_box or "board you requested" not in message_box.text:
                 raise errors.InvalidContent("content does not belong to a board.")
+
             return None
+
         tables = parsed_content.select("table.TableContent")
 
         header_text = forum_breadcrumbs.text.strip()
@@ -384,6 +408,7 @@ class ForumBoardParser:
             builder.age(parse_integer(data.values["threadage"]))
         else:
             return builder.build()
+
         pagination_block = parsed_content.select_one("small")
         pages, total, count = parse_pagination(pagination_block) if pagination_block else (0, 0, 0)
         builder.current_page(pages)
@@ -395,6 +420,7 @@ class ForumBoardParser:
             entry = cls._parse_thread_row(columns)
             if "ClassifiedProposal" in thread_row.attrs.get("class"):
                 entry.golden_frame = True
+
             builder.add_entry(entry)
 
         if len(tables) > 1:
@@ -406,13 +432,15 @@ class ForumBoardParser:
                 entry = AnnouncementEntry(
                     title=announcement_link["text"],
                     announcement_id=int(announcement_link["query"]["announcementid"]),
-                    announcement_author=author
+                    announcement_author=author,
                 )
                 builder.add_announcement(entry)
+
         if len(forms) > 2:
             board_selector_form = forms[2]
             data = parse_form_data(board_selector_form)
             builder.board_id(parse_integer(data.values["boardid"]))
+
         return builder.build()
 
     # endregion
@@ -458,11 +486,13 @@ class ForumBoardParser:
             thread_link, *page_links = thread_column.select("a")
         except ValueError:
             return None
+
         if page_links:
             last_page_link = page_links[-1]
             link_info = parse_link_info(last_page_link)
             pages = int(link_info["query"]["pagenumber"])
             title = pages_regex.sub("", title).strip()
+
         link_info = parse_link_info(thread_link)
         thread_id = int(link_info["query"]["threadid"])
         # Fourth Column: Thread starter
@@ -503,6 +533,7 @@ class ForumBoardParser:
 
 
 class ForumThreadParser:
+    """A parser for forum threads from Tibia.com."""
 
     @classmethod
     def from_content(cls, content: str) -> Optional[ForumThread]:
@@ -528,21 +559,23 @@ class ForumThreadParser:
             message_box = parsed_content.select_one("div.InnerTableContainer")
             if not message_box or "not found" not in message_box.text:
                 raise errors.InvalidContent("content does not belong to a thread.")
+
             return None
 
         header_text = forum_breadcrumbs.text.strip()
         section_link, board_link = (parse_link_info(t) for t in forum_breadcrumbs.select("a"))
         section, board, partial_title = split_list(header_text, "|", "|")
 
-        builder = ForumThreadBuilder()\
-            .section(section)\
-            .section_id(int(section_link["query"]["sectionid"]))\
-            .board_id(int(board_link["query"]["boardid"]))\
-            .board(board)
+        builder = (ForumThreadBuilder()
+                   .section(section)
+                   .section_id(int(section_link["query"]["sectionid"]))
+                   .board_id(int(board_link["query"]["boardid"]))
+                   .board(board))
         forum_title_container = parsed_content.select_one("div.ForumTitleText")
         if not forum_title_container:
             builder.title(partial_title)
             return builder.build()
+
         builder.title(forum_title_container.text.strip())
 
         border = forum_title_container.parent.previous_sibling.previous_sibling
@@ -573,6 +606,7 @@ class ForumThreadParser:
         else:
             next_link = parse_link_info(navigation_links[0])
             builder.next_topic_number(int(next_link["query"]["threadid"]))
+
         times_container = posts_table.select_one("div.ForumContentFooterLeft")
         offset = 2 if times_container.text == "CEST" else 1
 
@@ -580,6 +614,7 @@ class ForumThreadParser:
         for post_container in post_containers:
             post = cls._parse_post_table(post_container, offset)
             builder.add_entry(post)
+
         return builder.build()
 
     # endregion
@@ -617,14 +652,15 @@ class ForumThreadParser:
             child.extract()
             if child.name == "img":
                 emoticon = ForumEmoticon(name=child["alt"], url=child["src"])
-            if child.name == "b":
+            elif child.name == "b":
                 title_tag = child
-            if child.name == "div":
+            elif child.name == "div":
                 break
         # Remove the first line jump found in post content
         first_break = content_container.select_one("br")
         if first_break:
             first_break.extract()
+
         title = None
         signature = None
         signature_container = post_table.select_one("td.ff_pagetext")
@@ -632,6 +668,7 @@ class ForumThreadParser:
             # Remove the signature's content from content container
             signature_container.extract()
             signature = signature_container.encode_contents().decode()
+
         content = content_container.encode_contents().decode()
         if signature_container:
             # The signature separator will still be part of the content container, so we remove it
@@ -639,9 +676,11 @@ class ForumThreadParser:
             # This will handle the post containing another signature separator within the content
             # We join back all the pieces except for the last one
             content = signature_separator.join(parts[:-1])
+
         if title_tag:
             title = title_tag.text
-        post_details = post_table.select_one('div.PostDetails')
+
+        post_details = post_table.select_one("div.PostDetails")
         dates = post_dates_regex.findall(post_details.text)
         edited_date = None
         edited_by = None
@@ -649,7 +688,8 @@ class ForumThreadParser:
         if len(dates) > 1:
             edited_date = parse_tibia_forum_datetime(dates[1], offset)
             edited_by = edited_by_regex.search(post_details.text).group(1)
-        post_details = post_table.select_one('div.AdditionalBox')
+
+        post_details = post_table.select_one("div.AdditionalBox")
         post_number = post_details.text.replace("Post #", "")
         post_id = int(post_number)
         return ForumPost(author=post_author, content=content, signature=signature, posted_date=posted_date,
@@ -680,6 +720,7 @@ class LastPostParser:
         last_post_info = last_post_column.select_one("div.LastPostInfo, span.LastPostInfo")
         if last_post_info is None:
             return None
+
         permalink_tag = last_post_info.select_one("a")
         permalink_info = parse_link_info(permalink_tag)
         post_id = int(permalink_info["query"]["postid"])
@@ -695,4 +736,6 @@ class LastPostParser:
             author = author.replace("(traded)", "").strip()
             traded = True
             deleted = False
-        return LastPost(author=author, post_id=post_id, posted_on=last_post_date, is_author_deleted=deleted, is_author_traded=traded)
+
+        return LastPost(author=author, post_id=post_id, posted_on=last_post_date, is_author_deleted=deleted,
+                        is_author_traded=traded)
