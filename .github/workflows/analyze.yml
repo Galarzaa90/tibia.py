@@ -41,7 +41,7 @@ jobs:
             flake8.txt
             coverage.xml
       - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.2.3
+        uses: edaniels/CodeCoverageSummary@v1.2.3
         with:
           filename: coverage.xml
 
