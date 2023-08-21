@@ -49,7 +49,10 @@ classifiers = [
 [tool.setuptools.dynamic]
 version = { attr = "tibiapy.__version__" }
 dependencies = { file = ["requirements.txt"] }
-optional-dependencies = { dev = { file = ["requirements-docs.txt"] }, server = { file = ["requirements-server.txt"] }, testing = { file = ["requirements-testing.txt"] } }
+optional-dependencies.docs = { file = ["requirements-docs.txt"] }
+optional-dependencies.server = { file = ["requirements-server.txt"] }
+optional-dependencies.testing = { file = ["requirements-testing.txt"] }
+optional-dependencies.linting = { file = ["requirements-linting.txt"] }
 
 
 [tool.coverage.run]
