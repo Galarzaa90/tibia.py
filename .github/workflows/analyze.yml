@@ -33,12 +33,6 @@ jobs:
         run: |
           coverage report >> coverage.txt
           coverage xml
-      - uses: x-color/github-actions-job-summary@v0.1.1
-        with:
-          file: flake8.txt
-      - uses: x-color/github-actions-job-summary@v0.1.1
-        with:
-          file: coverage.txt
       - name: Upload reports 📤
         uses: actions/upload-artifact@v2
         with:
@@ -46,6 +40,10 @@ jobs:
           path: |
             flake8.txt
             coverage.xml
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.2.3
+        with:
+          filename: coverage.xml
 
   sonarcloud:
     name: SonarCloud
