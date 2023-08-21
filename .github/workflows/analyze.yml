@@ -26,7 +26,7 @@ jobs:
           pip install -U -e .[testing,linting]
       - name: Test with Coverage 🔧
         run: |
-          coverage run -m unittest discover
+          coverage run
       - name: Anaylze with Flake8 ❄️
         run: flake8 --output-file=flake8.txt --exit-zero
       - name: Generate Coverage Reports 📋
