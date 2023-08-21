@@ -362,7 +362,7 @@ def parse_number_words(text_num: str) -> int:
     return result + current
 
 
-def try_datetime(obj: Union[str, datetime]) -> Optional[datetime.datetime]:
+def try_datetime(obj: Union[str, datetime.datetime]) -> Optional[datetime.datetime]:
     """Attempt to convert an object into a datetime.
 
     If the date format is known, it's recommended to use the corresponding function
