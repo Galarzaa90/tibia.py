@@ -10,7 +10,7 @@ from tibiapy.builders.highscores import HighscoresBuilder
 from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, PvpTypeFilter
 from tibiapy.errors import InvalidContent
 from tibiapy.models import HighscoresEntry, LoyaltyHighscoresEntry
-from tibiapy.utils import parse_form_data, parse_integer, parse_pagination, parse_tibiacom_content, try_enum
+from tibiapy.utils import clean_text, parse_form_data, parse_integer, parse_pagination, parse_tibiacom_content, try_enum
 
 if TYPE_CHECKING:
     from tibiapy.models import Highscores
@@ -52,7 +52,7 @@ class HighscoresParser:
             If content is not the HTML of a highscore's page.
         """
         parsed_content = parse_tibiacom_content(content)
-        form = parsed_content.find("form")
+        form = parsed_content.select_one("form")
         tables = cls._parse_tables(parsed_content)
         if form is None or "Highscores" not in tables:
             if "Error" in tables and "The world doesn't exist!" in tables["Error"].text:
@@ -85,7 +85,7 @@ class HighscoresParser:
         builder.current_page(page).total_pages(total_pages).results_count(results_count)
         rows = table.select("tr[style]")
         for row in rows:
-            cols_raw = row.find_all("td")
+            cols_raw = row.select("td")
             if "There is currently no data" in cols_raw[0].text:
                 break
 
@@ -131,13 +131,13 @@ class HighscoresParser:
         :class:`OrderedDict`[:class:`str`, :class:`bs4.Tag`]
             A dictionary containing all the table rows, with the table headers as keys.
         """
-        tables = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+        tables = parsed_content.select("div.TableContainer")
         output = OrderedDict()
         for table in tables:
-            title = table.find("div", attrs={"class": "Text"}).text
+            title = table.select_one("div.Text").text
             title = title.split("[")[0].strip()
             title = re.sub(r"Last Update.*", "", title)
-            inner_table = table.find("div", attrs={"class": "InnerTableContainer"})
+            inner_table = table.select_one("div.InnerTableContainer")
             output[title] = inner_table
 
         return output
@@ -151,7 +151,7 @@ class HighscoresParser:
         cols: :class:`bs4.ResultSet`
             The list of columns for that entry.
         """
-        rank, name, *values = [c.text.replace("\xa0", " ").strip() for c in cols]
+        rank, name, *values = [clean_text(c) for c in cols]
         rank = int(rank)
         extra = None
         if builder._category == HighscoresCategory.LOYALTY_POINTS:

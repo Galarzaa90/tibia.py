@@ -16,29 +16,6 @@ T = TypeVar("T")
 D = TypeVar("D")
 
 
-def clean_text(tag: Union[bs4.Tag, str]) -> str:
-    """Get the tag's text, removing non-breaking, leading and trailing spaces."""
-    text = tag.text if isinstance(tag, bs4.Tag) else tag
-    return text.replace("\xa0", " ").strip()
-
-
-def convert_line_breaks(element: bs4.Tag):
-    """Convert the <br> tags in a HTML elements to actual line breaks.
-
-    Parameters
-    ----------
-    element: :class:`bs4.Tag`
-        A BeautifulSoup object.
-    """
-    for br in element.find_all("br"):
-        br.replace_with("\n")
-
-
-def get_rows(table_tag: bs4.Tag):
-    """Get all the row tags inside the container."""
-    return table_tag.select("tr")
-
-
 class FormData(BaseModel):
     """Represents data in a HTML form."""
 
@@ -59,14 +36,59 @@ class FormData(BaseModel):
     """The form's method."""
 
 
-def parse_form_data(form: bs4.Tag):
+def clean_text(tag: Union[bs4.PageElement, str]) -> str:
+    """Get the tag's text, removing non-breaking, leading and trailing spaces.
+
+    Parameters
+    ----------
+    tag: :class:`bs4.Tag`, :class:`str`
+        The tax to get the clean content of. Strings are also accepted.
+
+    Returns
+    -------
+        The tag's cleaned text content.
+    """
+    text = tag.text if isinstance(tag, bs4.Tag) else tag
+    return text.replace("\xa0", " ").strip()
+
+
+def convert_line_breaks(element: bs4.Tag):
+    """Convert the <br> tags in a HTML elements to actual line breaks.
+
+    Parameters
+    ----------
+    element: :class:`bs4.Tag`
+        A BeautifulSoup object.
+    """
+    for br in element.select("br"):
+        br.replace_with("\n")
+
+
+def get_rows(table_tag: bs4.Tag) -> bs4.ResultSet[bs4.Tag]:
+    """Get all the row tags inside the container.
+
+    A very simple shortcut function used for better code semantics.
+
+    Parameters
+    ----------
+    table_tag: :class:`bs4.Tag`
+        The tag where row tags will be search in. Not necessarily a table tag.
+
+    Returns
+    -------
+        A result set with all the found rows.
+    """
+    return table_tag.select("tr")
+
+
+def parse_form_data(form: bs4.Tag) -> FormData:
     """Parse the currently selected values in a form.
 
     This should correspond to all the data the form would send if submitted.
 
     Parameters
     ----------
-    form:
+    form: :class:`bs4.Tag`
         A form tag.
 
     Returns
@@ -135,7 +157,7 @@ def parse_integer(number: str, default: Optional[int] = 0):
         return default
 
 
-def parse_link_info(link_tag: str):
+def parse_link_info(link_tag: bs4.Tag):
     """Parse the information of a link tag.
 
     It will parse the link's content, target URL as well as the query parameters where applicable.
@@ -212,7 +234,7 @@ def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
         The represented datetime, in UTC (timezone aware).
     """
     try:
-        datetime_str = datetime_str.replace(",", "").replace("&#160;", " ").replace("\xa0", " ").strip()
+        datetime_str = clean_text(datetime_str).replace(",", "")
         # Extracting timezone
         tz = datetime_str[-4:].strip()
 
@@ -475,15 +497,12 @@ def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Ta
     :class:`dict`
         A dictionary mapping the container titles and the contained table.
     """
-    table_containers = parsed_content.find_all("div", attrs={"class": "TableContainer"})
+    table_containers = parsed_content.select("div.TableContainer")
     tables = {}
     for table_container in table_containers:
-        text_tag = table_container.find("div", attrs={"class": "Text"})
-        table = table_container.find("table", attrs={"class": "TableContent"})
-        if not table:
-            continue
-
-        tables[text_tag.text.strip()] = table
+        text_tag = table_container.select_one("div.Text")
+        if table := table_container.select_one("table.TableContent"):
+            tables[text_tag.text.strip()] = table
 
     return tables
 
@@ -594,7 +613,14 @@ def parse_popup(popup_content: str) -> Tuple[str, bs4.BeautifulSoup]:
     """
     parts = popup_content.split(",", 2)
     title = parts[1].replace("'", "").strip()
-    html = parts[-1].replace(r"\'", '"').replace("'", "").replace(",);", "").replace(", );", "").strip()
+    html = (
+        parts[-1]
+        .replace(r"\'", '"')
+        .replace("'", "")
+        .replace(",);", "")
+        .replace(", );", "")
+        .strip()
+    )
     parsed_html = bs4.BeautifulSoup(html, "lxml")
     return title, parsed_html
 
@@ -621,20 +647,18 @@ def parse_pagination(pagination_block: bs4.Tag) -> Tuple[int, int, int]:
         The total number of results.
     """
     pages_div, results_div = pagination_block.select("small > div")
-    current_page_link = pages_div.find("span", {"class": "CurrentPageLink"})
-    page_links = pages_div.find_all("span", {"class": "PageLink"})
+    current_page_link = pages_div.select_one("span.CurrentPageLink")
+    page_links = pages_div.select("span.PageLink")
     # pages_with_links = pages_div.select(#)
-    first_or_last_pages = pages_div.find_all("span", {"class": "FirstOrLastElement"})
+    first_or_last_pages = pages_div.select("span.FirstOrLastElement")
     page = -1
     total_pages = -1
     if first_or_last_pages:
-        last_page_link = first_or_last_pages[-1].find("a")
-        if last_page_link:
-            m = page_pattern.search(last_page_link["href"])
-            if m:
+        if last_page_link := first_or_last_pages[-1].select_one("a"):
+            if m := page_pattern.search(last_page_link["href"]):
                 total_pages = int(m.group(1))
         else:
-            last_page_link = page_links[-2].find("a")
+            last_page_link = page_links[-2].select_one("a")
             total_pages = int(last_page_link.text) + 1
     else:
         last_page_link = page_links[-1]
@@ -643,11 +667,7 @@ def parse_pagination(pagination_block: bs4.Tag) -> Tuple[int, int, int]:
     try:
         page = int(current_page_link.text)
     except ValueError:
-        if "First" in current_page_link.text:
-            page = 1
-        else:
-            page = total_pages
-
+        page = 1 if "First" in current_page_link.text else total_pages
     results_count = parse_integer(results_pattern.search(results_div.text).group(1))
     return page, total_pages, results_count
 

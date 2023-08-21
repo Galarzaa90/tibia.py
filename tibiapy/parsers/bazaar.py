@@ -13,7 +13,7 @@ from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDi
 from tibiapy.models import (AchievementEntry, AjaxPaginator, Auction, AuctionFilters, BestiaryEntry, BlessingEntry,
                             CharacterBazaar, CharmEntry, FamiliarEntry, Familiars, ItemEntry, ItemSummary, MountEntry,
                             Mounts, OutfitEntry, OutfitImage, Outfits, SalesArgument, SkillEntry)
-from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, parse_pagination,
+from tibiapy.utils import (clean_text, convert_line_breaks, get_rows, parse_form_data, parse_integer, parse_pagination,
                            parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
 results_pattern = re.compile(r"Results: (\d+)")
@@ -264,8 +264,8 @@ class AuctionParser:
 
         dates_containers = auction_row.select_one("div.ShortAuctionData")
         start_date_tag, end_date_tag, *_ = dates_containers.select("div.ShortAuctionDataValue")
-        builder.auction_start(parse_tibia_datetime(start_date_tag.text.replace("\xa0", " ")))
-        builder.auction_end(parse_tibia_datetime(end_date_tag.text.replace("\xa0", " ")))
+        builder.auction_start(parse_tibia_datetime(clean_text(start_date_tag)))
+        builder.auction_end(parse_tibia_datetime(clean_text(end_date_tag)))
         bids_container = auction_row.select_one("div.ShortAuctionDataBidRow")
         bid_tag = bids_container.select_one("div.ShortAuctionDataValue")
         bid_type_tag = bids_container.select("div.ShortAuctionDataLabel")[0]
@@ -324,7 +324,7 @@ class AuctionParser:
         :class:`dict`
             A mapping containing the table's data.
         """
-        rows = table.select("tr")
+        rows = get_rows(table)
         data = {}
         for row in rows:
             name = row.select_one("span").text
@@ -343,7 +343,7 @@ class AuctionParser:
         table: :class:`bs4.Tag`
             The table containing the character's skill.
         """
-        rows = table.select("tr")
+        rows = get_rows(table)
         skills = []
         for row in rows:
             cols = row.select("td")
@@ -364,7 +364,7 @@ class AuctionParser:
             The table containing the character's blessings.
         """
         table_content = table.select_one("table.TableContent")
-        _, *rows = table_content.select("tr")
+        _, *rows = get_rows(table_content)
         blessings = []
         for row in rows:
             cols = row.select("td")
@@ -389,7 +389,7 @@ class AuctionParser:
             A list with the contents of each row.
         """
         table_content = table.select("table.TableContent")[-1]
-        _, *rows = table_content.select("tr")
+        _, *rows = get_rows(table_content)
         ret = []
         for row in rows:
             col = row.select_one("td")
@@ -411,7 +411,7 @@ class AuctionParser:
             The table containing the charms.
         """
         table_content = table.select_one("table.TableContent")
-        _, *rows = table_content.select("tr")
+        _, *rows = get_rows(table_content)
         charms = []
         for row in rows:
             cols = row.select("td")
@@ -434,7 +434,7 @@ class AuctionParser:
             The table containing the achievements.
         """
         table_content = table.select_one("table.TableContent")
-        _, *rows = table_content.select("tr")
+        _, *rows = get_rows(table_content)
         achievements = []
         for row in rows:
             col = row.select_one("td")
@@ -457,7 +457,7 @@ class AuctionParser:
             The table containing the bestiary information.
         """
         table_content = table.select_one("table.TableContent")
-        _, *rows = table_content.select("tr")
+        _, *rows = get_rows(table_content)
         bestiary = []
         for row in rows:
             cols = row.select("td")
@@ -497,7 +497,7 @@ class AuctionParser:
         cls._parse_skills_table(builder, content_containers[1])
 
         additional_stats = cls._parse_data_table(content_containers[2])
-        builder.creation_date(parse_tibia_datetime(additional_stats.get("creation_date", "").replace("\xa0", " ")))
+        builder.creation_date(parse_tibia_datetime(clean_text(additional_stats.get("creation_date", ""))))
         builder.experience(parse_integer(additional_stats.get("experience", "0")))
         builder.gold(parse_integer(additional_stats.get("gold", "0")))
         builder.achievement_points(parse_integer(additional_stats.get("achievement_points", "0")))

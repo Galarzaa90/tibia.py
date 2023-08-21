@@ -4,7 +4,7 @@ from typing import Optional
 from tibiapy.builders.kill_statistics import KillStatisticsBuilder
 from tibiapy.errors import InvalidContent
 from tibiapy.models import KillStatistics, RaceEntry
-from tibiapy.utils import parse_form_data, parse_tibiacom_content
+from tibiapy.utils import clean_text, get_rows, parse_form_data, parse_tibiacom_content
 
 __all__ = (
     "KillStatisticsParser",
@@ -46,11 +46,11 @@ class KillStatisticsParser:
             if entries_table is None:
                 return None
 
-            header, subheader, *rows = entries_table.select("tr")
+            header, subheader, *rows = get_rows(entries_table)
 
             for i, row in enumerate(rows):
                 columns_raw = row.select("td")
-                columns = [c.text.replace("\xa0", " ").strip() for c in columns_raw]
+                columns = [clean_text(c) for c in columns_raw]
                 if not columns[2].isnumeric():
                     continue
 

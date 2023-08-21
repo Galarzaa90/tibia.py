@@ -12,7 +12,8 @@ from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import (AnnouncementEntry, BoardEntry, CMPost, CMPostArchive, ForumAnnouncement, ForumAuthor,
                             ForumBoard, ForumEmoticon, ForumPost, ForumSection, ForumThread, GuildMembership, LastPost,
                             ThreadEntry)
-from tibiapy.utils import (convert_line_breaks, parse_form_data, parse_integer, parse_link_info, parse_pagination,
+from tibiapy.utils import (clean_text, convert_line_breaks, get_rows, parse_form_data, parse_integer, parse_link_info,
+                           parse_pagination,
                            parse_tables_map, parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content,
                            split_list, try_enum)
 
@@ -83,16 +84,16 @@ class CMPostArchiveParser:
 
         inner_table_container = table.select_one("div.InnerTableContainer")
         inner_table = inner_table_container.select_one("table")
-        inner_table_rows = inner_table.select("tr")
+        inner_table_rows = get_rows(inner_table)
         inner_table_rows = [e for e in inner_table_rows if e.parent == inner_table]
         table_content = inner_table_container.select_one("table.TableContent")
 
-        header_row, *rows = table_content.select("tr")
+        header_row, *rows = get_rows(table_content)
 
         for row in rows:
             columns = row.select("td")
             date_column = columns[0]
-            date = parse_tibia_datetime(date_column.text.replace("\xa0", " "))
+            date = parse_tibia_datetime(clean_text(date_column))
             board_thread_column = columns[1]
             convert_line_breaks(board_thread_column)
             board, thread = board_thread_column.text.splitlines()
@@ -414,7 +415,7 @@ class ForumBoardParser:
         builder.current_page(pages)
         builder.total_pages(total)
 
-        *thread_rows, times_row = tables[-1].select("tr")
+        *thread_rows, times_row = get_rows(tables[-1])
         for thread_row in thread_rows[1:]:
             columns = thread_row.select("td")
             entry = cls._parse_thread_row(columns)
@@ -424,7 +425,7 @@ class ForumBoardParser:
             builder.add_entry(entry)
 
         if len(tables) > 1:
-            announcement_rows = tables[0].select("tr")
+            announcement_rows = get_rows(tables[0])
             for announcement_row in announcement_rows[1:]:
                 author_link, title_link = announcement_row.select("a")
                 author = author_link.text.strip()
@@ -724,13 +725,13 @@ class LastPostParser:
         permalink_tag = last_post_info.select_one("a")
         permalink_info = parse_link_info(permalink_tag)
         post_id = int(permalink_info["query"]["postid"])
-        date_text = last_post_info.text.replace("\xa0", " ").strip()
+        date_text = clean_text(last_post_info)
         last_post_date = parse_tibia_forum_datetime(date_text, offset)
 
         last_post_author_tag = last_post_column.select_one("font")
         author_link = last_post_author_tag.select_one("a")
         deleted = author_link is None
-        author = last_post_author_tag.text.replace("by", "", 1).replace("\xa0", " ").strip()
+        author = clean_text(last_post_author_tag).replace("by", "", 1)
         traded = False
         if "(traded)" in author:
             author = author.replace("(traded)", "").strip()

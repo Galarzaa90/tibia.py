@@ -10,7 +10,8 @@ from tibiapy.enums import Sex, Vocation
 from tibiapy.errors import InvalidContent
 from tibiapy.models import (Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, DeathParticipant,
                             Death, GuildMembership, CharacterHouse)
-from tibiapy.utils import (parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content, split_list,
+from tibiapy.utils import (get_rows, parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content,
+                           split_list,
                            try_enum, parse_link_info, clean_text, parse_integer)
 
 if TYPE_CHECKING:
@@ -100,8 +101,8 @@ class CharacterParser:
             cols_raw = row.select("td")
             cols = [ele.text.strip() for ele in cols_raw]
             field, value = cols
-            field = field.replace("\xa0", "_").replace(" ", "_").replace(":", "").lower()
-            value = value.replace("\xa0", " ")
+            field = clean_text(field).replace(" ", "_").replace(":", "").lower()
+            value = clean_text(value)
             acc_info[field] = value
 
         created = parse_tibia_datetime(acc_info["created"])
@@ -127,7 +128,7 @@ class CharacterParser:
             field, value = cols
             grade = str(field).count("achievement-grade-symbol")
             name = value.text.strip()
-            secret_image = value.find("img")
+            secret_image = value.select_one("img")
             secret = False
             if secret_image:
                 secret = True
@@ -247,7 +248,7 @@ class CharacterParser:
         m = house_regexp.search(house_text)
         paid_until = m.group(1)
         paid_until_date = parse_tibia_date(paid_until)
-        house_link_tag = column.find("a")
+        house_link_tag = column.select_one("a")
         house_link = parse_link_info(house_link_tag)
         builder.add_house(
             CharacterHouse(
@@ -264,7 +265,7 @@ class CharacterParser:
         guild_link = column.select_one("a")
         value = clean_text(column)
         rank = value.split("of the")[0]
-        builder.guild_membership(GuildMembership(name=guild_link.text.replace("\xa0", " "), rank=rank.strip()))
+        builder.guild_membership(GuildMembership(name=clean_text(guild_link), rank=rank.strip()))
 
     @classmethod
     def _parse_deaths(cls, builder: CharacterBuilder, rows):
@@ -326,7 +327,7 @@ class CharacterParser:
         traded = False
         summon = None
         if traded_label in killer:
-            name = killer.replace("\xa0", " ").replace(traded_label, "").strip()
+            name = clean_text(killer).replace(traded_label, "").strip()
             traded = True
             player = True
 
@@ -359,7 +360,7 @@ class CharacterParser:
                 continue
 
             name, world, status, *__ = cols
-            _, *name = name.replace("\xa0", " ").split(" ")
+            _, *name = clean_text(name).split(" ")
             name = " ".join(name)
             traded = False
             if traded_label in name:
@@ -408,6 +409,6 @@ class CharacterParser:
                 title = table.select_one("td").text.strip()
                 offset = 1
 
-            output[title] = table.select("tr")[offset:]
+            output[title] = get_rows(table)[offset:]
 
         return output

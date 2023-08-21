@@ -10,7 +10,7 @@ import bs4
 from tibiapy import errors
 from tibiapy.builders.spell import RuneBuilder, SpellBuilder, SpellEntryBuilder, SpellSectionBuilder
 from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
-from tibiapy.utils import (parse_form_data, parse_integer, parse_link_info, parse_tibiacom_content,
+from tibiapy.utils import (get_rows, parse_form_data, parse_integer, parse_link_info, parse_tibiacom_content,
                            parse_tibiacom_tables, try_enum)
 
 if TYPE_CHECKING:
@@ -236,7 +236,7 @@ class SpellParser:
         :class:`dict`
             The table attributes.
         """
-        spell_rows = table.select("tr")
+        spell_rows = get_rows(table)
         attrs = {}
         for row in spell_rows:
             cols = row.select("td")

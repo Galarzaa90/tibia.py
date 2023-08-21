@@ -64,7 +64,7 @@ class WorldParser:
 
             for row in online_table.select("tr.Odd, tr.Even"):
                 cols_raw = row.select("td")
-                name, level, vocation = (c.text.replace("\xa0", " ").strip() for c in cols_raw)
+                name, level, vocation = (clean_text(c) for c in cols_raw)
                 builder.add_online_player(OnlineCharacter(name=name, level=int(level), vocation=vocation))
 
         except AttributeError as e:
@@ -194,7 +194,7 @@ class WorldOverviewParser:
                 is_online = False
                 online_count = 0
 
-            location = try_enum(WorldLocation, cols[2].text.replace("\u00a0", " ").strip())
+            location = try_enum(WorldLocation, clean_text(cols[2]))
             pvp = try_enum(PvpType, cols[3].text.strip())
             builder = (WorldEntryBuilder()
                        .name(name)

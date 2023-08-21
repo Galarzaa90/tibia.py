@@ -88,7 +88,7 @@ class GuildsSectionParser:
             active = "Active" in header.text
             header, *rows = container.find_all("tr", {"bgcolor": ["#D4C0A1", "#F1E0C6"]})
             for row in rows:
-                columns = row.find_all("td")
+                columns = row.select("td")
                 logo_img = columns[0].select_one("img")["src"]
                 description_lines = columns[1].get_text("\n").split("\n", 1)
                 name = description_lines[0]
@@ -128,13 +128,13 @@ class GuildParser:
 
         parsed_content = parse_tibiacom_content(content)
         try:
-            name_header = parsed_content.find("h1")
+            name_header = parsed_content.select_one("h1")
             builder = GuildBuilder().name(name_header.text.strip())
         except AttributeError as e:
             raise InvalidContent("content does not belong to a Tibia.com guild page.", e) from e
 
         cls._parse_logo(builder, parsed_content)
-        info_container = parsed_content.find("div", id="GuildInformationContainer")
+        info_container = parsed_content.select_one("#GuildInformationContainer")
         cls._parse_guild_info(builder, info_container)
         cls._parse_application_info(builder, info_container)
         cls._parse_guild_homepage(builder, info_container)
@@ -159,7 +159,7 @@ class GuildParser:
             A list of row contents.
         """
         rank, name, vocation, level, joined, status = values
-        rank = previous_rank[1] if rank == " " else rank
+        rank = rank or previous_rank[1]
         title = None
         previous_rank[1] = rank
         if m := title_regex.match(name):
@@ -210,7 +210,7 @@ class GuildParser:
             The parsed content of the information container.
         """
         if m := guildhall_regex.search(info_container.text):
-            paid_until = parse_tibia_date(m.group("date").replace("\xa0", " "))
+            paid_until = parse_tibia_date(clean_text(m.group("date")))
             builder.guildhall(GuildHouse(name=m.group("name"), paid_until=paid_until))
 
     @classmethod
@@ -246,7 +246,7 @@ class GuildParser:
             description = m.group("desc").strip()
             builder.description(description or None)
             builder.world(m.group("world"))
-            builder.founded(parse_tibia_date(m.group("date").replace("\xa0", " ")))
+            builder.founded(parse_tibia_date(clean_text(m.group("date"))))
             builder.active("currently active" in m.group("status"))
 
     @classmethod
@@ -263,7 +263,7 @@ class GuildParser:
         :class:`bool`
             Whether the logo was found or not.
         """
-        logo_img = parsed_content.find("img", {"height": "64"})
+        logo_img = parsed_content.select_one('img[height="64"]')
         if logo_img is None:
             raise InvalidContent("content does not belong to a Tibia.com guild page.")
 
@@ -282,8 +282,8 @@ class GuildParser:
         member_rows = parsed_content.find_all("tr", {"bgcolor": ["#D4C0A1", "#F1E0C6"]})
         previous_rank = {}
         for row in member_rows:
-            columns = row.find_all("td")
-            values = tuple(c.text.replace("\u00a0", " ") for c in columns)
+            columns = row.select("td")
+            values = tuple(clean_text(c) for c in columns)
             if len(columns) == COLS_GUILD_MEMBER:
                 cls._parse_current_member(builder, previous_rank, values)
 
@@ -372,7 +372,7 @@ class GuildWarsParser:
         :class:`GuildWarEntry`
             The guild's war entry for the current war.
         """
-        text = text.replace("\xa0", " ").strip()
+        text = clean_text(text)
         names_match = war_guilds_regegx.search(text)
         guild_name, opposing_name = names_match.groups()
         builder = GuildWarEntryBuilder().guild_name(guild_name).opponent_name(opposing_name)
@@ -406,7 +406,7 @@ class GuildWarsParser:
         :class:`GuildWarEntry`
             The guild's war entry described in the text.
         """
-        text = text.replace("\xa0", " ").strip()
+        text = clean_text(text)
         header_match = war_history_header_regex.search(text)
         guild_name, opposing_name = header_match.groups()
         builder = GuildWarEntryBuilder().guild_name(guild_name).opponent_name(opposing_name)

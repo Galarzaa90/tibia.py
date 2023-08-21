@@ -34,7 +34,7 @@ class BoostedCreaturesParser:
 
     @classmethod
     def _parse_boosted_platform(cls, parsed_content: bs4.BeautifulSoup, tag_id: str):
-        img = parsed_content.find("img", attrs={"id": tag_id})
+        img = parsed_content.select_one(f"#{tag_id}")
         name = BOOSTED_ALT.sub("", img["title"]).strip()
         image_url = img["src"]
         identifier = image_url.split("/")[-1].replace(".gif", "")
@@ -94,13 +94,13 @@ class BoostableBossesParser:
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            boosted_creature_table = parsed_content.find("div", {"class": "TableContainer"})
-            boosted_creature_text = boosted_creature_table.find("div", {"class": "Text"})
+            boosted_creature_table = parsed_content.select_one("div.TableContainer")
+            boosted_creature_text = boosted_creature_table.select_one("div.Text")
             if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
                 raise InvalidContent("content is not from the boostable bosses section.")
 
-            boosted_boss_tag = boosted_creature_table.find("b")
-            boosted_boss_image = boosted_creature_table.find("img")
+            boosted_boss_tag = boosted_creature_table.select_one("b")
+            boosted_boss_image = boosted_creature_table.select_one("img")
             image_url = urllib.parse.urlparse(boosted_boss_image["src"])
             boosted_boss = BossEntry(name=boosted_boss_tag.text,
                                      identifier=os.path.basename(image_url.path).replace(".gif", ""))
@@ -110,7 +110,7 @@ class BoostableBossesParser:
             entries = []
             for entry_container in entries_container:
                 name = entry_container.text.strip()
-                image = entry_container.find("img")
+                image = entry_container.select_one("img")
                 image_url = urllib.parse.urlparse(image["src"])
                 identifier = os.path.basename(image_url.path).replace(".gif", "")
                 entries.append(BossEntry(name=name, identifier=identifier))
@@ -188,7 +188,7 @@ class CreaturesSectionParser:
             if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
                 raise InvalidContent("content is not from the creatures section.")
 
-            boosted_creature_link = boosted_creature_table.find("a")
+            boosted_creature_link = boosted_creature_table.select_one("a")
             url = urllib.parse.urlparse(boosted_creature_link["href"])
             query = urllib.parse.parse_qs(url.query)
             boosted_creature = CreatureEntry(name=boosted_creature_link.text, identifier=query["race"][0])
@@ -231,17 +231,17 @@ class CreatureParser:
             pagination_container, content_container = (
                 parsed_content.find_all("div", style=lambda v: v and "position: relative" in v)
             )
-            title_container, description_container = content_container.find_all("div")
-            title = title_container.find("h2")
+            title_container, description_container = content_container.select("div")
+            title = title_container.select_one("h2")
             name = title.text.strip()
 
-            img = title_container.find("img")
+            img = title_container.select_one("img")
             img_url = img["src"]
             race = img_url.split("/")[-1].replace(".gif", "")
             builder = CreatureBuilder().name(name).identifier(race)
 
             convert_line_breaks(description_container)
-            paragraph_tags = description_container.find_all("p")
+            paragraph_tags = description_container.select("p")
             paragraphs = [p.text for p in paragraph_tags]
             builder.description("\n".join(paragraphs[:-2]).strip())
             hp_text = paragraphs[-2]

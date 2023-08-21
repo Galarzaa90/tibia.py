@@ -151,7 +151,7 @@ class NewsArchiveParser:
 
         date_str, news_type_str = cols_raw[1].text.splitlines()
         date = parse_tibia_date(date_str)
-        news_type_str = news_type_str.replace("\xa0", " ")
+        news_type_str = clean_text(news_type_str)
         news_type = try_enum(NewsType, news_type_str)
         title = cols_raw[2].text
         news_link = parse_link_info(cols_raw[2].select_one("a"))

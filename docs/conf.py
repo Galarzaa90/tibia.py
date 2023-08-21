@@ -200,4 +200,6 @@ texinfo_documents = [
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'aiohttp': ('https://aiohttp.readthedocs.io/en/stable/', None),
+    'beautifulsoup4': ('https://www.crummy.com/software/BeautifulSoup/bs4/doc/', None),
+    'bs4': ('https://www.crummy.com/software/BeautifulSoup/bs4/doc/', None),
 }

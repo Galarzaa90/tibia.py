@@ -9,7 +9,8 @@ import bs4
 from tibiapy.builders.house import HousesSectionBuilder, HouseEntryBuilder, HouseBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContent
-from tibiapy.utils import (parse_tibia_datetime, parse_tibia_money, parse_tibiacom_content, parse_tibiacom_tables,
+from tibiapy.utils import (clean_text, get_rows, parse_tibia_datetime, parse_tibia_money, parse_tibiacom_content,
+                           parse_tibiacom_tables,
                            try_enum, parse_form_data)
 
 if TYPE_CHECKING:
@@ -75,13 +76,13 @@ class HousesSectionParser:
                 return builder.build()
 
             houses_table = tables[list(tables.keys())[0]]
-            _, *rows = houses_table.select("tr")
+            _, *rows = get_rows(houses_table)
             for row in rows[1:]:
                 cols = row.select("td")
                 if len(cols) != 5:
                     continue
 
-                name = cols[0].text.replace("\u00a0", " ")
+                name = clean_text(cols[0])
                 house_builder = (HouseEntryBuilder()
                                  .name(name)
                                  .world(builder._world)
@@ -91,7 +92,7 @@ class HousesSectionParser:
                 house_builder.size(int(size))
                 rent = cols[2].text.replace("gold", "")
                 house_builder.rent(parse_tibia_money(rent))
-                status = cols[3].text.replace("\xa0", " ")
+                status = clean_text(cols[3])
                 cls._parse_status(house_builder, status)
                 id_input = cols[4].select_one("input[name=houseid]")
                 house_builder.id(int(id_input["value"]))
@@ -167,7 +168,7 @@ class HouseParser:
             for br in desc_column.select("br"):
                 br.replace_with("\n")
 
-            description = desc_column.text.replace("\u00a0", " ").replace("\n\n", "\n")
+            description = clean_text(desc_column).replace("\n\n", "\n")
             lines = description.splitlines()
             try:
                 name, beds, info, state, *_ = lines
