@@ -106,18 +106,8 @@ class CMPostArchiveParser:
         if not rows:
             return builder.build()
 
-        pages_column, results_column = inner_table_rows[-1].select("div")
-        page_links = pages_column.select("a")
-        if listed_pages := [int(p.text) for p in page_links]:
-            page = next((x for x in range(1, listed_pages[-1] + 1) if x not in listed_pages), 0)
-            total_pages = max(int(page_links[-1].text), page)
-            if not page:
-                total_pages += 1
-                page = total_pages
-
-            builder.current_page(page).total_pages(total_pages)
-
-        builder.results_count(int(results_column.text.split(":")[-1]))
+        page, total_pages, results = parse_pagination(inner_table_rows[-1])
+        builder.current_page(page).total_pages(total_pages).results_count(results)
         return builder.build()
 
     # endregion
@@ -254,8 +244,8 @@ class ForumAnnouncementParser:
 
         forum_breadcrumbs = parsed_content.select_one("div.ForumBreadCrumbs")
         if not forum_breadcrumbs:
-            message_box = parsed_content.select_one("div.InnerTableContainer")
-            if not message_box or "not found" not in message_box.text:
+            message_box = parsed_content.select_one("div.TableContainer")
+            if not message_box or "error" not in message_box.text.lower():
                 raise errors.InvalidContent("content is not a Tibia.com forum announcement.")
 
             return None

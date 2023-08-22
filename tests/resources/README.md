@@ -84,22 +84,26 @@ nonexistent world or a unselected world.
  - [worldOverviewOffline.txt](world/worldOverviewOffline.txt) - The world list with all worlds offline.
 
 ## Forum resources
-- [tibiacom_announcement.txt](forums/tibiacom_announcement.txt) - An announcement post on Tibia.com.
-- [tibiacom_announcement_not_found.txt](forums/tibiacom_announcement_not_found.txt) - The page for an announcement post that doesn't exist.
-- [tibiacom_board.txt](forums/tibiacom_board.txt) - A forum board.
-- [tibiacom_board_empty.txt](forums/tibiacom_board_empty.txt) - An empty forum board.
-- [tibiacom_board_golden_frame.txt](forums/tibiacom_board_golden_frame.txt) - A forum board with golden frames on some posts.
-- [tibiacom_board_invalid_page.txt](forums/tibiacom_board_invalid_page.txt) - A forum board on a page out of range.
-- [tibiacom_cmpostarchive_initial.txt](forums/tibiacom_cmpostarchive_initial.txt) - The CM Post Archive's initial page, with no data selected.
-- [tibiacom_cmpostarchive_no_pages.txt](forums/tibiacom_cmpostarchive_no_pages.txt) - The CM Post Archive with a few results in a single page.
-- [tibiacom_cmpostarchive_no_results.txt](forums/tibiacom_cmpostarchive_no_results.txt) - The CM Post Archive with no results.
-- [tibiacom_cmpostarchive_pages.txt](forums/tibiacom_cmpostarchive_pages.txt) - The CM Post Archive with multiple pages.
-- [tibiacom_section.txt](forums/tibiacom_section.txt) - A forum section.
-- [tibiacom_section_empty.txt](forums/tibiacom_section_empty.txt) - An empty forum section.
-- [tibiacom_section_empty_board.txt](forums/tibiacom_section_empty_board.txt) - A forum section with an empty board. 
-- [tibiacom_thread.txt](forums/tibiacom_thread.txt) - A forum thread.
-- [tibiacom_thread_invalid_page.txt](forums/tibiacom_thread_invalid_page.txt) - A forum thread on a page out of range.
-- [tibiacom_thread_not_found.txt](forums/tibiacom_thread_not_found.txt) - The page for forum thread that doesn't exist.
+
+- [forumSectionWithEmptyBoard.txt](forums/forumSectionWithEmptyBoard.txt) - A forum section with an empty board.
+- [forumSection.txt](forums/forumSection.txt) - A forum section.
+- [forumSectionEmpty.txt](forums/forumSectionEmpty.txt) - An empty forum section.
+- [forumAnnouncement.txt](forums/forumAnnouncement.txt) - An announcement post on Tibia.com.
+- [forumAnnouncementNotFound.txt](forums/forumAnnouncementNotFound.txt) - The page for an announcement post that doesn't
+  exist.
+- [forumBoard.txt](forums/forumBoard.txt) - A forum board.
+- [forumBoardEmpty.txt](forums/forumBoardEmpty.txt) - An empty forum board.
+- [forumBoardWithGoldenFrame.txt](forums/forumBoardWithGoldenFrame.txt) - A forum board with golden frames on some
+  posts.
+- [forumBoardInvalidPage.txt](forums/forumBoardInvalidPage.txt) - A forum board on a page out of range.
+- [forumThread.txt](forums/forumThread.txt) - A forum thread.
+- [forumThreadInvalidPage.txt](forums/forumThreadInvalidPage.txt) - A forum thread on a page out of range.
+- [forumThreadNotFound.txt](forums/forumThreadNotFound.txt) - The page for forum thread that doesn't exist.
+- [cmPostArchiveInitial.txt](forums/cmPostArchiveInitial.txt) - The CM Post Archive's initial page, with no data
+  selected.
+- [cmPostArchiveNoPages.txt](forums/cmPostArchiveNoPages.txt) - The CM Post Archive with a few results in a single page.
+- [cmPostArchiveNoResults.txt](forums/cmPostArchiveNoResults.txt) - The CM Post Archive with no results.
+- [cmPostArchivePages.txt](forums/cmPostArchivePages.txt) - The CM Post Archive with multiple pages.
 
 ## Events resources
 - [tibiacom_calendar.txt](events/event_schedule.txt) - The content of the event's calendar.

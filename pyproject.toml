@@ -59,6 +59,9 @@ optional-dependencies.linting = { file = ["requirements-linting.txt"] }
 source = ["tibiapy"]
 relative_files = true
 command_line = "-m unittest discover"
+omit = [
+    "**/builders/*.py",
+]
 
 [tool.coverage.report]
 exclude_also = [

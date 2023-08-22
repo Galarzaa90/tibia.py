@@ -668,6 +668,7 @@ def parse_pagination(pagination_block: bs4.Tag) -> Tuple[int, int, int]:
         page = int(current_page_link.text)
     except ValueError:
         page = 1 if "First" in current_page_link.text else total_pages
+
     results_count = parse_integer(results_pattern.search(results_div.text).group(1))
     return page, total_pages, results_count
 

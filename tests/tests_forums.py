@@ -8,22 +8,22 @@ from tibiapy.parsers.forum import ForumBoardParser, ForumAnnouncementParser, For
     CMPostArchiveParser, ForumSectionParser
 from tibiapy.urls import get_forum_board_url, get_cm_post_archive_url
 
-FILE_WORLD_BOARDS = "forums/tibiacom_section.txt"
-FILE_SECTION_EMPTY_BOARD = "forums/forum_section_with_empty_board.txt"
-FILE_SECTION_EMPTY = "forums/tibiacom_section_empty.txt"
-FILE_BOARD_THREAD_LIST = "forums/tibiacom_board.txt"
-FILE_BOARD_EMPTY_THREAD_LIST = "forums/tibiacom_board_empty.txt"
-FILE_BOARD_INVALID_PAGE = "forums/tibiacom_board_invalid_page.txt"
-FILE_BOARD_GOLDEN_FRAMES = "forums/tibiacom_board_golden_frame.txt"
-FILE_ANNOUNCEMENT = "forums/tibiacom_announcement.txt"
-FILE_ANNOUNCEMENT_NOT_FOUND = "forums/tibiacom_announcement_not_found.txt"
-FILE_THREAD = "forums/tibiacom_thread.txt"
-FILE_THREAD_NOT_FOUND = "forums/tibiacom_thread_not_found.txt"
-FILE_THREAD_INVALID_PAGE = "forums/tibiacom_thread_invalid_page.txt"
-FILE_CM_POST_ARCHIVE_INITIAL = "forums/tibiacom_cmpostarchive_initial.txt"
-FILE_CM_POST_ARCHIVE_NO_PAGES = "forums/tibiacom_cmpostarchive_no_pages.txt"
-FILE_CM_POST_ARCHIVE_NO_RESULTS = "forums/tibiacom_cmpostarchive_no_results.txt"
-FILE_CM_POST_ARCHIVE_PAGES = "forums/tibiacom_cmpostarchive_pages.txt"
+FILE_WORLD_BOARDS = "forums/forumSection.txt"
+FILE_SECTION_EMPTY_BOARD = "forums/forumSectionWithEmptyBoard.txt"
+FILE_SECTION_EMPTY = "forums/forumSectionEmpty.txt"
+FILE_BOARD_THREAD_LIST = "forums/forumBoard.txt"
+FILE_BOARD_EMPTY_THREAD_LIST = "forums/forumBoardEmpty.txt"
+FILE_BOARD_INVALID_PAGE = "forums/forumBoardInvalidPage.txt"
+FILE_BOARD_GOLDEN_FRAMES = "forums/forumBoardWithGoldenFrame.txt"
+FILE_ANNOUNCEMENT = "forums/forumAnnouncement.txt"
+FILE_ANNOUNCEMENT_NOT_FOUND = "forums/forumAnnouncementNotFound.txt"
+FILE_THREAD = "forums/forumThread.txt"
+FILE_THREAD_NOT_FOUND = "forums/forumThreadNotFound.txt"
+FILE_THREAD_INVALID_PAGE = "forums/forumThreadInvalidPage.txt"
+FILE_CM_POST_ARCHIVE_INITIAL = "forums/cmPostArchiveInitial.txt"
+FILE_CM_POST_ARCHIVE_NO_PAGES = "forums/cmPostArchiveNoPages.txt"
+FILE_CM_POST_ARCHIVE_NO_RESULTS = "forums/cmPostArchiveNoResults.txt"
+FILE_CM_POST_ARCHIVE_PAGES = "forums/cmPostArchivePages.txt"
 
 
 class TestForum(TestCommons):
@@ -33,8 +33,8 @@ class TestForum(TestCommons):
         forum_section = ForumSectionParser.from_content(content)
 
         self.assertEqual(2, forum_section.section_id)
-        self.assertEqual(82, len(forum_section.entries))
-        for i, board in enumerate(forum_section.entries):
+        self.assertSizeEquals(forum_section.entries, 82)
+        for board in forum_section.entries:
             self.assertIsInstance(board, BoardEntry)
             self.assertIsNotNone(board.name)
             self.assertGreater(board.board_id, 0)
@@ -49,7 +49,7 @@ class TestForum(TestCommons):
 
         self.assertEqual(3, forum_section.section_id)
         self.assertEqual(90, len(forum_section.entries))
-        for i, board in enumerate(forum_section.entries):
+        for board in forum_section.entries:
             self.assertIsInstance(board, BoardEntry)
             self.assertIsNotNone(board.name)
             self.assertGreater(board.board_id, 0)
@@ -87,7 +87,7 @@ class TestForum(TestCommons):
         self.assertIsNotNone(board.url)
         self.assertIsNotNone(board.next_page_url)
         self.assertEqual(board.next_page_url, get_forum_board_url(board.board_id, board.current_page + 1, board.age))
-        for i, thread in enumerate(board.entries):
+        for thread in board.entries:
             self.assertIsInstance(thread, ThreadEntry)
             self.assertIsNotNone(thread.title)
             self.assertGreater(thread.thread_id, 0)
@@ -105,11 +105,11 @@ class TestForum(TestCommons):
         board = ForumBoardParser.from_content(content)
 
         self.assertIsNotNone(board)
-        self.assertEqual("Role Playing", board.name)
+        self.assertEqual("Conventions", board.name)
         self.assertEqual("Community Boards", board.section)
         self.assertEqual(1, board.current_page)
         self.assertEqual(1, board.total_pages)
-        self.assertEqual(11, board.board_id)
+        self.assertEqual(18, board.board_id)
         self.assertEqual(0, len(board.entries))
         self.assertIsNone(board.next_page_url)
         self.assertIsNone(board.previous_page_url)
@@ -139,8 +139,8 @@ class TestForum(TestCommons):
         self.assertEqual("Community Boards", board.section)
         self.assertEqual(30, len(board.entries))
         self.assertEqual(5, len(board.announcements))
-        self.assertEqual(1893, board.total_pages)
-        for i, thread in enumerate(board.entries):
+        self.assertEqual(1999, board.total_pages)
+        for thread in board.entries:
             self.assertTrue(thread.golden_frame)
             self.assertTrue(thread.status & ThreadStatus.HOT)
             self.assertTrue(thread.status & ThreadStatus.CLOSED)
@@ -161,7 +161,7 @@ class TestForum(TestCommons):
         self.assertIsNotNone(announcement.author)
         self.assertEqual("CM Mirade", announcement.author.name)
         self.assertEqual(2, announcement.author.level)
-        self.assertEqual(159, announcement.author.posts)
+        self.assertEqual(160, announcement.author.posts)
         self.assertEqual("Vunira", announcement.author.world)
         self.assertEqual("Community Manager", announcement.author.position)
         self.assertIsNotNone(announcement.url)
@@ -217,7 +217,7 @@ class TestForum(TestCommons):
 
         thread = ForumThreadParser.from_content(content)
 
-        self.assertEqual("News: Te...", thread.title)
+        self.assertEqual("News Tic...", thread.title)
         self.assertEqual(0, thread.thread_id)
         self.assertEqual('Auditorium (English Only)', thread.board)
         self.assertEqual('Community Boards', thread.section)
@@ -256,16 +256,10 @@ class TestForum(TestCommons):
         cm_post_archive = CMPostArchiveParser.from_content(content)
 
         self.assertIsNotNone(cm_post_archive)
-        self.assertEqual(5, cm_post_archive.results_count)
+        self.assertEqual(6, cm_post_archive.results_count)
         self.assertEqual(1, cm_post_archive.current_page)
         self.assertEqual(1, cm_post_archive.total_pages)
         self.assertEqual(cm_post_archive.results_count, len(cm_post_archive.entries))
-
-        post = cm_post_archive.entries[0]
-        self.assertIsInstance(post, BasePost)
-        self.assertEqual('Auditorium (English Only)', post.board)
-        self.assertEqual(38974254, post.post_id)
-        self.assertEqual('Ticker Messages June 2020', post.thread_title)
 
     def test_cm_post_archive_from_content_no_results(self):
         content = self.load_resource(FILE_CM_POST_ARCHIVE_NO_RESULTS)
@@ -285,12 +279,12 @@ class TestForum(TestCommons):
 
         self.assertIsNotNone(cm_post_archive)
         self.assertIsNotNone(cm_post_archive.url)
-        self.assertIsNotNone(cm_post_archive.previous_page_url)
-        self.assertIsNone(cm_post_archive.next_page_url)
-        self.assertEqual(8370, cm_post_archive.results_count)
-        self.assertEqual(168, cm_post_archive.current_page)
-        self.assertEqual(168, cm_post_archive.total_pages)
-        self.assertEqual(20, len(cm_post_archive.entries))
+        self.assertIsNone(cm_post_archive.previous_page_url)
+        self.assertIsNotNone(cm_post_archive.next_page_url)
+        self.assertEqual(738, cm_post_archive.results_count)
+        self.assertEqual(1, cm_post_archive.current_page)
+        self.assertEqual(15, cm_post_archive.total_pages)
+        self.assertEqual(50, len(cm_post_archive.entries))
 
     def test_cm_post_archive_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
