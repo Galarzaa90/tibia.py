@@ -1,4 +1,6 @@
 """These are functions used thorough the module that may not be intended for public use."""
+from __future__ import annotations
+
 import datetime
 import re
 import urllib.parse
