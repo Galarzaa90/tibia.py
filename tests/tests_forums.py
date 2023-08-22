@@ -15,6 +15,7 @@ FILE_BOARD_THREAD_LIST = "forums/forumBoard.txt"
 FILE_BOARD_EMPTY_THREAD_LIST = "forums/forumBoardEmpty.txt"
 FILE_BOARD_INVALID_PAGE = "forums/forumBoardInvalidPage.txt"
 FILE_BOARD_GOLDEN_FRAMES = "forums/forumBoardWithGoldenFrame.txt"
+FILE_BOARD_NOT_FOUND = "forums/forumBoardNotFound.txt"
 FILE_ANNOUNCEMENT = "forums/forumAnnouncement.txt"
 FILE_ANNOUNCEMENT_NOT_FOUND = "forums/forumAnnouncementNotFound.txt"
 FILE_THREAD = "forums/forumThread.txt"
@@ -72,7 +73,7 @@ class TestForum(TestCommons):
         with self.assertRaises(InvalidContent):
             ForumSectionParser.from_content(content)
 
-    def test_forum_board_from_content(self):
+    def test_forum_board_parser_from_content(self):
         content = self.load_resource(FILE_BOARD_THREAD_LIST)
 
         board = ForumBoardParser.from_content(content)
@@ -99,7 +100,7 @@ class TestForum(TestCommons):
         with self.assertRaises(ValueError):
             board.get_page_url(-1)
 
-    def test_forum_board_from_content_empty_threads(self):
+    def test_forum_board_parser_from_content_empty_threads(self):
         content = self.load_resource(FILE_BOARD_EMPTY_THREAD_LIST)
 
         board = ForumBoardParser.from_content(content)
@@ -114,13 +115,13 @@ class TestForum(TestCommons):
         self.assertIsNone(board.next_page_url)
         self.assertIsNone(board.previous_page_url)
 
-    def test_forum_board_from_content_unrelated_section(self):
+    def test_forum_board_parser_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
             ForumBoardParser.from_content(content)
 
-    def test_forum_board_from_content_invalid_page(self):
+    def test_forum_board_parser_from_content_invalid_page(self):
         content = self.load_resource(FILE_BOARD_INVALID_PAGE)
 
         board = ForumBoardParser.from_content(content)
@@ -130,7 +131,7 @@ class TestForum(TestCommons):
         self.assertEqual([], board.entries)
         self.assertEqual(0, board.board_id)
 
-    def test_forum_board_from_content_golden_frame(self):
+    def test_forum_board_parser_from_content_golden_frame(self):
         content = self.load_resource(FILE_BOARD_GOLDEN_FRAMES)
 
         board = ForumBoardParser.from_content(content)
@@ -145,6 +146,14 @@ class TestForum(TestCommons):
             self.assertTrue(thread.status & ThreadStatus.HOT)
             self.assertTrue(thread.status & ThreadStatus.CLOSED)
             self.assertIsNotNone(thread.url)
+
+    def test_forum_board_parser_from_content_not_found(self):
+        content = self.load_resource(FILE_BOARD_NOT_FOUND)
+
+        board = ForumBoardParser.from_content(content)
+
+        self.assertIsNone(board)
+
 
     def test_forum_announcement_from_content(self):
         content = self.load_resource(FILE_ANNOUNCEMENT)

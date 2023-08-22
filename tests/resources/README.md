@@ -93,6 +93,7 @@ nonexistent world or a unselected world.
   exist.
 - [forumBoard.txt](forums/forumBoard.txt) - A forum board.
 - [forumBoardEmpty.txt](forums/forumBoardEmpty.txt) - An empty forum board.
+- [forumBoardNotFound.txt](forums/forumBoardNotFound.txt) - The page shown for a board that doesn't exist.
 - [forumBoardWithGoldenFrame.txt](forums/forumBoardWithGoldenFrame.txt) - A forum board with golden frames on some
   posts.
 - [forumBoardInvalidPage.txt](forums/forumBoardInvalidPage.txt) - A forum board on a page out of range.
