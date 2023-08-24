@@ -5,6 +5,8 @@ RUN apt-get update \
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+COPY requirements-server.txt .
+RUN pip install -r requirements-server.txt
 
 LABEL maintainer="Allan Galarza <allan.galarza@gmail.com>"
 LABEL org.opencontainers.image.licenses="Apache 2.0"
@@ -17,7 +19,6 @@ LABEL org.opencontainers.image.description="API that parses website content into
 
 
 COPY . .
-RUN pip install -e .[server]
 EXPOSE 8000
 HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=5 \
   CMD curl --fail http://localhost:8000/healthcheck || exit 1

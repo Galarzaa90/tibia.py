@@ -3,4 +3,5 @@
 !server.py
 !pyproject.toml
 !requirements.txt
+!requirements-server.txt
 !README.md
