@@ -8,7 +8,7 @@ Changelog
 
 .. v6.0.0
 
-6.0.0 (Unreleased)
+6.0.0 (2023-08-24)
 ==================
 - 🚨 Python 3.7 and below no longer supported.
 - All models are now Pydantic models, for better data validation, serialization and deserialization.
@@ -117,12 +117,7 @@ Changelog
     - Renamed ``DisplayOutfit`` to ``OutfitEntry``.
     - Renamed ``DisplayFamiliar`` to ``FamiliarEntry``.
     - Renamed ``page`` to ``current_page``, ``results`` to ``results_count``, and ``fully_fetched`` to ``is_fully_fetched`` in ``ItemSummary``, ``Mounts``, ``Familiars`` and ``Outfits``.
-
-
-
     - Added ``thread_starter_deleted`` to ``ThreadEntry``.
-
-
 - Renamed ``Category`` to ``HighscoresCategory``.
 - Renamed ``BattlEyeTypeFilter`` to ``AuctionBattlEyeFilter``.
 - Renamed ``VocationFilter`` to ``HighscoresProfession``.
