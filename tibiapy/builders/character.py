@@ -126,12 +126,20 @@ class CharacterBuilder:
         self._is_premium = is_premium
         return self
 
+    def add_account_badge(self, account_badge: AccountBadge) -> Self:
+        self._account_badges.append(account_badge)
+        return self
+
     def account_badges(self, account_badges: List[AccountBadge]) -> Self:
         self._account_badges = account_badges
         return self
 
     def achievements(self, achievements: List[Achievement]) -> Self:
         self._achievements = achievements
+        return self
+
+    def add_achievement(self, achievement: Achievement) -> Self:
+        self._achievements.append(achievement)
         return self
 
     def deaths(self, deaths: List[Death]) -> Self:
@@ -148,6 +156,10 @@ class CharacterBuilder:
 
     def account_information(self, account_information: Optional[AccountInformation]) -> Self:
         self._account_information = account_information
+        return self
+
+    def add_other_character(self, other_character: OtherCharacter) -> Self:
+        self._other_characters.append(other_character)
         return self
 
     def other_characters(self, other_characters: List[OtherCharacter]) -> Self:

@@ -85,7 +85,7 @@ class DeathParticipant(BaseModel):
     """Whether the killer is a player or not."""
     summon: Optional[str] = None
     """The name of the summoned creature, if applicable."""
-    is_traded: bool
+    is_traded: bool = False
     """If the killer was traded after this death happened."""
 
     @property

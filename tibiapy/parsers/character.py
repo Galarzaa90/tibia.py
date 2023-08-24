@@ -1,9 +1,10 @@
 """Models related to the Tibia.com character page."""
 from __future__ import annotations
 
+import logging
 import re
 from collections import OrderedDict
-from typing import List, Optional, TYPE_CHECKING
+from typing import Callable, Dict, List, Optional, TYPE_CHECKING
 
 from tibiapy.builders import CharacterBuilder
 from tibiapy.enums import Sex, Vocation
@@ -40,6 +41,8 @@ __all__ = (
     "CharacterParser",
 )
 
+logger = logging.getLogger(__name__)
+
 
 class CharacterParser:
     """A parser for characters from Tibia.com."""
@@ -70,32 +73,31 @@ class CharacterParser:
             if messsage_table and "Could not find character" in messsage_table.text:
                 return None
 
-        if "Character Information" in tables:
-            cls._parse_character_information(builder, tables["Character Information"])
-        else:
+        table_parsers = {
+            "Character Information": lambda t: cls._parse_character_information(builder, t),
+            "Account Badges": lambda t: cls._parse_account_badges(builder, t),
+            "Account Achievements": lambda t: cls._parse_achievements(builder, t),
+            "Account Information": lambda t: cls._parse_account_information(builder, t),
+            "Character Deaths": lambda t: cls._parse_deaths(builder, t),
+            "Characters": lambda t: cls._parse_other_characters(builder, t),
+        }
+
+        if "Character Information" not in tables:
             raise InvalidContent("content does not contain a tibia.com character information page.")
 
-        builder.achievements(cls._parse_achievements(tables.get("Account Achievements", [])))
-        if "Account Badges" in tables:
-            builder.account_badges(cls._parse_badges(tables["Account Badges"]))
+        for title, table in tables.items():
+            if title in table_parsers:
+                action = table_parsers[title]
+                action(table)
 
-        cls._parse_deaths(builder, tables.get("Character Deaths", []))
-        builder.account_information(cls._parse_account_information(tables.get("Account Information", [])))
-        builder.other_characters(cls._parse_other_characters(tables.get("Characters", [])))
         return builder.build()
 
     @classmethod
-    def _parse_account_information(cls, rows):
-        """Parse the character's account information.
-
-        Parameters
-        ----------
-        rows: :class:`list` of :class:`bs4.Tag`, optional
-            A list of all rows contained in the table.
-        """
+    def _parse_account_information(cls, builder: CharacterBuilder, rows: list[bs4.Tag]):
+        """Parse the character's account information."""
         acc_info = {}
         if not rows:
-            return None
+            return
 
         for row in rows:
             cols_raw = row.select("td")
@@ -108,18 +110,11 @@ class CharacterParser:
         created = parse_tibia_datetime(acc_info["created"])
         loyalty_title = None if acc_info["loyalty_title"] == "(no title)" else acc_info["loyalty_title"]
         position = acc_info.get("position")
-        return AccountInformation(created=created, loyalty_title=loyalty_title, position=position)
+        builder.account_information(AccountInformation(created=created, loyalty_title=loyalty_title, position=position))
 
     @classmethod
-    def _parse_achievements(cls, rows):
-        """Parse the character's displayed achievements.
-
-        Parameters
-        ----------
-        rows: :class:`list` of :class:`bs4.Tag`
-            A list of all rows contained in the table.
-        """
-        achievements = []
+    def _parse_achievements(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+        """Parse the character's displayed achievements."""
         for row in rows:
             cols = row.select("td")
             if len(cols) != 2:
@@ -129,94 +124,62 @@ class CharacterParser:
             grade = str(field).count("achievement-grade-symbol")
             name = value.text.strip()
             secret_image = value.select_one("img")
-            secret = False
-            if secret_image:
-                secret = True
+            secret = secret_image is not None
 
-            achievements.append(Achievement(name=name, grade=grade, is_secret=secret))
-
-        return achievements
+            builder.add_achievement(Achievement(name=name, grade=grade, is_secret=secret))
 
     @classmethod
-    def _parse_badges(cls, rows: List[bs4.Tag]):
-        """Parse the character's displayed badges.
-
-        Parameters
-        ----------
-        rows: :class:`list` of :class:`bs4.Tag`
-            A list of all rows contained in the table.
-        """
+    def _parse_account_badges(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+        """Parse the character's displayed badges."""
         row = rows[0]
         columns = row.select("td > span")
-        account_badges = []
         for column in columns:
             popup_span = column.select_one("span.HelperDivIndicator")
             if not popup_span:
                 # Badges are visible, but none selected.
-                return []
+                return
 
             popup = parse_popup(popup_span["onmouseover"])
             name = popup[0]
             description = popup[1].text
             icon_image = column.select_one("img")
             icon_url = icon_image["src"]
-            account_badges.append(AccountBadge(name=name, icon_url=icon_url, description=description))
-
-        return account_badges
+            builder.add_account_badge(AccountBadge(name=name, icon_url=icon_url, description=description))
 
     @classmethod
-    def _parse_character_information(cls, builder: CharacterBuilder, rows):
-        """
-        Parse the character's basic information and applies the found values.
+    def _parse_character_information(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+        """Parse the character's basic information and applies the found values."""
+        field_actions: dict[str, Callable[[bs4.Tag, str], None]] = {
+            "name": lambda rv, v: cls._parse_name_field(builder, v),
+            "title": lambda rv, v: cls._parse_titles(builder, v),
+            "former names": lambda rv, v: builder.former_names([fn.strip() for fn in v.split(",")]),
+            "former world": lambda rv, v: builder.former_world(v),
+            "sex": lambda rv, v: builder.sex(try_enum(Sex, v)),
+            "vocation": lambda rv, v: builder.vocation(try_enum(Vocation, v)),
+            "level": lambda rv, v: builder.level(parse_integer(v)),
+            "achievement points": lambda rv, v: builder.achievement_points(parse_integer(v)),
+            "world": lambda rv, v: builder.world(v),
+            "residence": lambda rv, v: builder.residence(v),
+            "last login": lambda rv, v: builder.last_login(None) if "never logged" in v.lower() else builder.last_login(
+                parse_tibia_datetime(v),
+            ),
+            "position": lambda rv, v: builder.position(v),
+            "comment": lambda rv, v: builder.comment(v),
+            "account status": lambda rv, v: builder.is_premium("premium" in v.lower()),
+            "married to": lambda rv, v: builder.married_to(v),
+            "house": lambda rv, v: cls._parse_house_column(builder, rv),
+            "guild membership": lambda rv, v: cls._parse_guild_column(builder, rv),
+        }
 
-        Parameters
-        ----------
-        rows: :class:`list` of :class:`bs4.Tag`
-            A list of all rows contained in the table.
-        """
         for row in rows:
-            cols_raw = row.select("td")
-            cols = [clean_text(ele) for ele in cols_raw]
-            field, value = cols
+            raw_field, raw_value = row.select("td")
+            field, value = clean_text(raw_field), clean_text(raw_value)
             field = field.replace(":", "").lower()
-            if field == "name":
-                cls._parse_name_field(builder, value)
-            elif field == "title":
-                cls._parse_titles(builder, value)
-            elif field == "former names":
-                builder.former_names([fn.strip() for fn in value.split(",")])
-            elif field == "former world":
-                builder.former_world(value)
-            elif field == "sex":
-                builder.sex(try_enum(Sex, value))
-            elif field == "vocation":
-                builder.vocation(try_enum(Vocation, value))
-            elif field == "level":
-                builder.level(parse_integer(value))
-            elif field == "achievement points":
-                builder.achievement_points(parse_integer(value))
-            elif field == "world":
-                builder.world(value)
-            elif field == "residence":
-                builder.residence(value)
-            elif field == "last login":
-                if "never logged" in value.lower():
-                    builder.last_login(None)
-                else:
-                    builder.last_login(parse_tibia_datetime(value))
-
-            elif field == "position":
-                builder.position(value)
-            elif field == "comment":
-                builder.comment(value)
-            elif field == "account status":
-                builder.is_premium("premium" in value.lower())
-            elif field == "married to":
-                builder.married_to(value)
-            elif field == "house":
-                cls._parse_house_column(builder, cols_raw[1])
-            elif field == "guild membership":
-                cls._parse_guild_column(builder, cols_raw[1])
+            if field in field_actions:
+                action = field_actions[field]
+                action(raw_value, value)
+            else:
+                logger.debug(f"Unhandled character information field found: {field}")
 
     @classmethod
     def _parse_name_field(cls, builder: CharacterBuilder, value: str):
@@ -268,14 +231,8 @@ class CharacterParser:
         builder.guild_membership(GuildMembership(name=clean_text(guild_link), rank=rank.strip()))
 
     @classmethod
-    def _parse_deaths(cls, builder: CharacterBuilder, rows):
-        """Parse the character's recent deaths.
-
-        Parameters
-        ----------
-        rows: :class:`list` of :class:`bs4.Tag`
-            A list of all rows contained in the table.
-        """
+    def _parse_deaths(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+        """Parse the character's recent deaths."""
         for row in rows:
             cols = row.select("td")
             if len(cols) != 2:
@@ -299,8 +256,8 @@ class CharacterParser:
                 assists_name_list = link_search.findall(assists_desc)
 
             killers_name_list = split_list(killers_desc)
-            killers_list = [cls._parse_killer(k) for k in killers_name_list]
-            assists_list = [cls._parse_killer(k) for k in assists_name_list]
+            killers_list = [cls._parse_participant(k) for k in killers_name_list]
+            assists_list = [cls._parse_participant(k) for k in assists_name_list]
             builder.add_death(Death(
                 level=level,
                 killers=killers_list,
@@ -309,18 +266,8 @@ class CharacterParser:
             ))
 
     @classmethod
-    def _parse_killer(cls, killer):
-        """Parse a killer into a dictionary.
-
-        Parameters
-        ----------
-        killer: :class:`str`
-            The killer's raw HTML string.
-
-        Returns
-        -------
-        :class:`dict`: A dictionary containing the killer's info.
-        """
+    def _parse_participant(cls, killer: str) -> DeathParticipant:
+        """Parse a participant's information from their raw HTML string."""
         # If the killer contains a link, it is a player.
         name = clean_text(killer)
         player = False
@@ -344,15 +291,8 @@ class CharacterParser:
         return DeathParticipant(name=name, is_player=player, summon=summon, is_traded=traded)
 
     @classmethod
-    def _parse_other_characters(cls, rows):
-        """Parse the character's other visible characters.
-
-        Parameters
-        ----------
-        rows: :class:`list` of :class:`bs4.Tag`
-            A list of all rows contained in the table.
-        """
-        other_characters = []
+    def _parse_other_characters(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+        """Parse the character's other visible characters."""
         for row in rows[1:]:
             cols_raw = row.select("td")
             cols = [ele.text.strip() for ele in cols_raw]
@@ -376,32 +316,23 @@ class CharacterParser:
             if "CipSoft Member" in status:
                 position = "CipSoft Member"
 
-            other_characters.append(OtherCharacter(name=name, world=world, is_online="online" in status,
-                                                   is_deleted="deleted" in status, is_main=main, position=position,
-                                                   is_traded=traded))
-
-        return other_characters
+            builder.add_other_character(OtherCharacter(
+                name=name,
+                world=world,
+                is_online="online" in status,
+                is_deleted="deleted" in status,
+                is_main=main,
+                position=position,
+                is_traded=traded,
+            ))
 
     @classmethod
-    def _parse_tables(cls, parsed_content):
-        """
-        Parse the information tables contained in a character's page.
-
-        Parameters
-        ----------
-        parsed_content: :class:`bs4.BeautifulSoup`
-            A :class:`BeautifulSoup` object containing all the content.
-
-        Returns
-        -------
-        :class:`OrderedDict`[str, :class:`list`of :class:`bs4.Tag`]
-            A dictionary containing all the table rows, with the table headers as keys.
-        """
+    def _parse_tables(cls, parsed_content: bs4.BeautifulSoup) -> Dict[str, List[bs4.Tag]]:
+        """Parse the tables contained in a character's page and returns a mapping of their titles and rows."""
         tables = parsed_content.select('table[width="100%"]')
         output = OrderedDict()
         for table in tables:
-            container = table.find_parent("div", {"class": "TableContainer"})
-            if container:
+            if container := table.find_parent("div", {"class": "TableContainer"}):
                 caption_container = container.select_one("div.CaptionContainer")
                 title = caption_container.text.strip()
                 offset = 0
