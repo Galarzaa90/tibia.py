@@ -125,7 +125,7 @@ Changelog
 - Renamed ``VocationAuctionFilter`` to ``AuctionVocationFilter``.
 - Renamed ``VocationSpellFilter`` to ``SpellVocationFilter``.
 - Renamed ``SkillFilter`` to ``AuctionSkillFilter``.
-- Added `ForumSection`` model and its respective parser, to fetch a list of board entries.
+- Added ``ForumSection`` model and its respective parser, to fetch a list of board entries.
 - Removed ``get_url`` class methods from all models, replaced by functions in the urls package.
 - Fixed ``Character`` account badges not being parsed properly.
 
