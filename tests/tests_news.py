@@ -12,11 +12,14 @@ FILE_NEWS_ARCHIVE_RESULTS_FILTERED = "news/newsArchiveWithFilters.txt"
 FILE_NEWS_ARCHIVE_EMPTY = "news/newsArchiveEmpty.txt"
 FILE_NEWS_ARCHIVE_ERROR = "news/newsArchiveError.txt"
 FILE_NEWS_NOT_FOUND = "news/newsNotFound.txt"
-FILE_NEWS_ARTICLE = "news/newsArticle.txt"
+FILE_NEWS_ARTICLE = "news/newsPostWithDiscussionThread.txt"
 FILE_NEWS_TICKER = "news/newsTicker.txt"
+FILE_NEWS_FEATURED_ARTICLE = "news/newsFeaturedArticle.txt"
 
 
 class TestNews(TestCommons):
+
+    # region News Archive Tests
     def test_news_archive_parser_from_content_initial(self):
         """Test parsing the news archive initial page."""
         content = self.load_resource(FILE_NEWS_ARCHIVE_INITIAL)
@@ -28,6 +31,7 @@ class TestNews(TestCommons):
         self.assertEqual(datetime.date(2023, 4, 15), news_archive.to_date)
         self.assertSizeEquals(news_archive.types, 3)
         self.assertSizeEquals(news_archive.categories, 5)
+        self.assertIsNotNone(news_archive.url)
 
     def test_news_archive_parser_from_content_with_results_filtered(self):
         """Testing parsing the news archive with results."""
@@ -77,6 +81,10 @@ class TestNews(TestCommons):
         with self.assertRaises(InvalidContent):
             NewsArchiveParser.from_content(content)
 
+    # endregion
+
+    # region News Tests
+
     def test_news_parser_from_content_not_found(self):
         """Testing parsing an empty news article"""
         content = self.load_resource(FILE_NEWS_NOT_FOUND)
@@ -102,7 +110,7 @@ class TestNews(TestCommons):
         self.assertEqual("News Ticker", news.title)
         self.assertIsNone(news.thread_id)
 
-    def test_news_parser_from_content_article(self):
+    def test_news_parser_from_content_post_with_discussion_thread(self):
         """Testing parsing an article"""
         content = self.load_resource(FILE_NEWS_ARTICLE)
         news = NewsParser.from_content(content)
@@ -112,5 +120,18 @@ class TestNews(TestCommons):
         self.assertIsInstance(news.published_on, datetime.date)
         self.assertEqual(news.title, "Sign Up for the VANGUARD Tournament")
         self.assertEqual(news.thread_id, 4725194)
+        self.assertIsNotNone(news.thread_url)
 
+    def test_news_parser_from_content_article(self):
+        """Testing parsing an article"""
+        content = self.load_resource(FILE_NEWS_FEATURED_ARTICLE)
+        news = NewsParser.from_content(content)
 
+        self.assertIsInstance(news, News)
+        self.assertEqual(NewsCategory.COMMUNITY, news.category, )
+        self.assertIsInstance(news.published_on, datetime.date)
+        self.assertEqual("Tibian Letters Part II", news.title)
+        self.assertEqual(4952487, news.thread_id)
+        self.assertIsNotNone(news.thread_url)
+
+    # endregion

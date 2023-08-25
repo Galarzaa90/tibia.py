@@ -86,8 +86,10 @@ trying to cover as many scenarios possible, to be used in unit tests.
   filters.
 - [newsArchiveEmpty.txt](news/newsArchiveEmpty.txt) - The content of the news search page with no results.
 - [newsArchiveError.txt](news/newsArchiveError.txt) - The content of the news search page with an error.
-- [newsArticle.txt](news/newsArticle.txt) - The content of a news article.
+- [newsPostWithDiscussionThread.txt](news/newsPostWithDiscussionThread.txt) - The content of a news post with a
+  discussion thread.
 - [newsTicker.txt](news/newsTicker.txt) - The content of a news ticker.
+- [newsFeaturedArticle.txt](news/newsFeaturedArticle.txt) - The content of a featured article.
 
 ## Leaderboard resources
 

@@ -96,27 +96,25 @@ class NewsArchiveParser:
         InvalidContent
             If content is not the HTML of a news search's page.
         """
-        try:
-            parsed_content = parse_tibiacom_content(content)
-            tables = parse_tibiacom_tables(parsed_content)
-            if "News Archive Search" not in tables:
-                raise InvalidContent("content is not from the news archive section in Tibia.com")
 
-            form = parsed_content.select_one("form")
-            builder = NewsArchiveBuilder()
-            cls._parse_filter_table(builder, form)
-            if "Search Results" in tables:
-                rows = tables["Search Results"].select("tr.Odd, tr.Even")
-                for row in rows:
-                    cols_raw = row.select("td")
-                    if len(cols_raw) != 3:
-                        continue
+        parsed_content = parse_tibiacom_content(content)
+        tables = parse_tibiacom_tables(parsed_content)
+        if "News Archive Search" not in tables:
+            raise InvalidContent("content is not from the news archive section in Tibia.com")
 
-                    builder.add_entry(cls._parse_entry(cols_raw))
+        form = parsed_content.select_one("form")
+        builder = NewsArchiveBuilder()
+        cls._parse_filter_table(builder, form)
+        if "Search Results" in tables:
+            rows = tables["Search Results"].select("tr.Odd, tr.Even")
+            for row in rows:
+                cols_raw = row.select("td")
+                if len(cols_raw) != 3:
+                    continue
 
-            return builder.build()
-        except (AttributeError, IndexError, ValueError, KeyError) as e:
-            raise InvalidContent("content is not from the news archive section in Tibia.com", e) from e
+                builder.add_entry(cls._parse_entry(cols_raw))
+
+        return builder.build()
 
     @classmethod
     def _parse_filter_table(cls, builder: NewsArchiveBuilder, form: bs4.Tag):

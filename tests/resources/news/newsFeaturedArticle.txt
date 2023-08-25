@@ -1,0 +1,1218 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tibia - Free Multiplayer Online Role Playing Game - News</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" /> <meta name="description" content="Tibia is a free massively multiplayer online role-playing game (MMORPG). Join this fascinating game that has thousands of fans from all over the world! - http://www.tibia.com" />
+<meta name="author" content="CipSoft GmbH" />
+<meta http-equiv="content-language" content="en" />
+<meta name="keywords" content="free online game, free multiplayer game, free online rpg, free mmorpg, mmorpg, mmog, online role playing game, online multiplayer game, internet game, online rpg, rpg" />
+<meta name="google-site-verification" content="DnO3wR8m-XUPrU02NoZt9x3vMB0fjpOXXJshbKucEj8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
+
+<meta property="og:title" content="Tibia - Featured Article" /><meta property="og:url" content="https://www.tibia.com/news/?subtopic=newsarchive&id=7409" /><meta property="og:type" content="website" />
+<meta property="og:description" content="Tibian Letters Part II - Some time ago, we invited you to write a letter to the Tibia team, asking a question that has been on your mind for a long time or to share something you are passionate about in Tibia." /><meta property="og:image" content="https://static.tibia.com/images/global/og-meta/tibia-news_square.png" /><meta property="og:image:alt" content="Tibia News" />
+<meta property="og:image:width" content="200" />
+<meta property="og:image:height" content="200" />
+<meta property="fb:app_id" content="497232093667125" />
+
+<link rel="shortcut icon" href="https://static.tibia.com/images/global/general/favicon.ico" type="image/x-icon">
+
+<link rel="apple-touch-icon" sizes="152x152" href="https://static.tibia.com/images/global/general/apple-touch-icon-152x152.png">
+
+<link rel="apple-touch-icon" sizes="144x144" href="https://static.tibia.com/images/global/general/apple-touch-icon-144x144.png">
+
+<link rel="apple-touch-icon" sizes="120x120" href="https://static.tibia.com/images/global/general/apple-touch-icon-120x120.png">
+
+<link rel="apple-touch-icon" sizes="114x114" href="https://static.tibia.com/images/global/general/apple-touch-icon-114x114.png">
+
+<link rel="apple-touch-icon" sizes="76x76" href="https://static.tibia.com/images/global/general/apple-touch-icon-76x76.png">
+
+<link rel="apple-touch-icon" sizes="72x72" href="https://static.tibia.com/images/global/general/apple-touch-icon-72x72.png">
+
+<link rel="apple-touch-icon" href="https://static.tibia.com/images/global/general/apple-touch-icon.png">
+
+<link rel="apple-touch-icon-precomposed" href="https://static.tibia.com/images/global/general/apple-touch-icon-precomposed.png">
+
+<link href="https://static.tibia.com/styles/basic_part_1.css?version=824d3461c607d71cb5c47edcf0fdb4b7" rel="stylesheet" type="text/css">
+
+<link href="https://static.tibia.com/styles/basic_part_2.css?version=7c496bf44c7127e509a009a76dbe5d16" rel="stylesheet" type="text/css">
+
+<link href="https://static.tibia.com/styles/basic_part_3.css?version=17b188b6096aadb4133c498df38d080c" rel="stylesheet" type="text/css">
+<link href="https://static.tibia.com/styles/global_part_1.css?version=02c5a141e772323854842149efab62e1" rel="stylesheet" type="text/css">
+<link href="https://static.tibia.com/styles/global_part_2.css?version=95ea3fc10ca401faf26ef0d00f4bb525" rel="stylesheet" type="text/css">
+<link href="https://static.tibia.com/styles/news.css?version=6207de2fad6fb8a91cf2ba2e18a57e91" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://static.tibia.com/javascripts/intl-tel-input/build/css/intlTelInput.css">
+<script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type":"VideoGame",
+      "name":[
+        {
+          "@language":"en",
+          "@value":"Tibia"
+        }
+      ],
+      "description":[
+        {
+          "@language":"en",
+          "@value":"Tibia is a free massively multiplayer online role-playing game (MMORPG). Join this fascinating game that has thousands of fans from all over the world!"
+        }
+      ],
+      "genre":[
+        "MMORPG",
+        "Massively multiplayer online role-playing game"
+      ],
+      "url":"https://secure.tibia.com",
+      "image":"https://static.tibia.com/images/global/general/streaming/youtube/poster.jpg",
+      "screenshot":"https://static.tibia.com/images/images/global/general/streaming/youtube/backgroundart.jpg",
+      "sameAs": [
+        "https://en.wikipedia.org/wiki/Tibia_(video_game)",
+        "https://www.youtube.com/channel/UCkOpOASkwLvVDyGUQ6T8IAA"
+      ],
+      "trailer":{
+        "@type":"VideoObject",
+        "url":"https://youtu.be/OpAaLT_PTCU",
+        "inLanguage":"en",
+        "name":"Tibia - Official Trailer 2016",
+        "description":"The official gameplay trailer for Tibia, one of the first MMORPGs ever created. Explore decades of content and unite with thousands of players from all around the world.",
+        "thumbnailUrl":"https://static.tibia.com/images/global/general/video-frame-big.png",
+        "uploadDate":"2016-01-13"
+      },
+        "applicationCategory":"Game",
+        "operatingSystem":"Windows 7 or newer, Linux, macOS"
+    }
+  </script> <script type="text/javascript" src="https://static.tibia.com/javascripts/jquery-3.6.1.min.js"></script>
+<script type="text/javascript" src="https://static.tibia.com/javascripts/ajaxcip_tibia_v1.js"></script>
+<script type="text/javascript">
+  var loginStatus=0; loginStatus='false';  var activeSubmenuItem='newsarchive';  var JS_DIR_IMAGES=0; JS_DIR_IMAGES='https://static.tibia.com/images/';  var JS_DIR_ACCOUNT=0; JS_DIR_ACCOUNT='https://www.tibia.com/account/';  var JS_DIR_COMMUNITY=0; JS_DIR_COMMUNITY='https://www.tibia.com/community/';  var JS_DIR_WEBSITESERVICES=0; JS_DIR_WEBSITESERVICES='https://www.tibia.com/websiteservices/';  var JS_FACEBOOKAPPID = '497232093667125';  var JS_COOKIE_DOMAIN=0; JS_COOKIE_DOMAIN='.tibia.com';  var g_FormName='';  var g_FormField='';  var g_Deactivated=false;  var JS_ANNIVERSARY_THEMEBOX_STEP_1=0; JS_ANNIVERSARY_THEMEBOX_STEP_1='1663660800';  var JS_ANNIVERSARY_THEMEBOX_STEP_2=0; JS_ANNIVERSARY_THEMEBOX_STEP_2='1663660800';  var JS_ANNIVERSARY_THEMEBOX_STEP_3=0; JS_ANNIVERSARY_THEMEBOX_STEP_3='1664215200';var FB_TryLogin = 0;var FB_ForceReload = 0;</script>
+<script type="text/javascript">
+</script>
+<script type="text/javascript" src="https://static.tibia.com/javascripts/zxcvbn.js?version=2f0541a1e9b57dfb523f34754a8ba59f"></script>
+<script type="text/javascript" src="https://static.tibia.com/javascripts/global.js?version=5f66c6882903e2f5edceee2d26ea398d"></script>
+<script type="text/javascript">
+    var LoadMobileCSS =   1;
+  </script>
+<script type="text/javascript" src="https://static.tibia.com/javascripts/generic.js?version=4789b904b41951df8e68f179fbcdc17e"></script>
+<script type="text/javascript" src="https://static.tibia.com/javascripts/initialize.js?version=fb5330cb245441fa3e0c0a90827cdb56"></script>
+<script type="text/javascript" src="https://static.tibia.com/javascripts/fb-init.js"></script>
+</head>
+<body onBeforeUnLoad="SaveMenu();" onUnload="SaveMenu();" onLoad="SetFormFocus()" style="background-image:url(https://static.tibia.com/images/global/header/background-artwork.jpg);">
+<div id="fb-root"></div>
+<div id="DeactivationContainer" onClick="ActivateWebsiteFrame();$('.LightBoxContentToHide').css('display', 'none');"></div>
+<a name="top"></a>
+<div id="tmp-browser-info">
+<div id="tmp-browser-info-chromium">NO - internet explorer</div>
+<div id="tmp-browser-info-internet-explorer-new">NEW - internet explorer</div>
+<div id="tmp-browser-info-internet-explorer-old">OLD - internet explorer</div>
+</div>
+<div class="main-site-container">
+<div class="main-header">
+<header id="MobileMenu"><nav><div id="MobileMenuBottom"></div><div class="MobileTibiaLogo"><a id href="https://www.tibia.com/news/?subtopic=latestnews"> </a></div><input type="checkbox" id="MobileShortMenuIcon" /><label for="MobileShortMenuIcon" id="MyAccount" class="MobileShortMenuIconContainer MobileNavigationMainElement"></label><ul class="MobileMenuItems MobileShortMenuItems"><li class="Level2Entry MobileNavigationLinkContainer" id="MobileShortMenuMyAccount"><form action="https://www.tibia.com/account/?subtopic=accountmanagement" method="post" style="padding:0px;margin:0px;"><div class="BigButton" style="background-image:url(https://static.tibia.com/images/global/buttons/button_green.gif)"><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image:url(https://static.tibia.com/images/global/buttons/button_green_over.gif);"></div><input class="BigButtonText" type="submit" value="Login" /></div></div></form></li><li class="Level2Entry MobileNavigationLinkContainer" id="MobileShortMenuLogout"><form action="https://www.tibia.com/support/?subtopic=gethelp" method="post" style="padding:0px;margin:0px;"><div class="BigButton" style="background-image:url(https://static.tibia.com/images/global/buttons/button_blue.gif)"><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image:url(https://static.tibia.com/images/global/buttons/button_blue_over.gif);"></div><input class="BigButtonText" type="submit" value="Support" /></div></div></form></li></ul><input type="checkbox" id="MobileMenuIcon" /><label for="MobileMenuIcon" class="MobileMenuIconContainer MobileNavigationMainElement"></label><ul class="MobileMenuItems"><li class="Level1Block" id="news"><div class="Level1Entry" onClick="MenuItemAction('news')" ;>News</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="latestnews"><a class="Level2Entry" href="https://www.tibia.com/news/?subtopic=latestnews">Latest News</a></li><li class="Level2Block MobileNavigationLinkContainer" id="newsarchive"><a class="Level2Entry" href="https://www.tibia.com/news/?subtopic=newsarchive">News Archive</a></li><li class="Level2Block MobileNavigationLinkContainer" id="eventcalendar"><a class="Level2Entry" href="https://www.tibia.com/news/?subtopic=eventcalendar">Event Schedule</a></li></ul></li><li class="Level1Block" id="abouttibia"><div class="Level1Entry" onClick="MenuItemAction('abouttibia')" ;>About Tibia</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="whatistibia"><a class="Level2Entry" href="https://www.tibia.com/abouttibia/?subtopic=whatistibia">What Is Tibia?</a></li><li class="Level2Block MobileNavigationLinkContainer" id="screenshots"><a class="Level2Entry" href="https://www.tibia.com/abouttibia/?subtopic=screenshots">Screenshots</a></li><li class="Level2Block MobileNavigationLinkContainer" id="gamefeatures"><a class="Level2Entry" href="https://www.tibia.com/abouttibia/?subtopic=gamefeatures">Game Features</a></li><li class="Level2Block MobileNavigationLinkContainer" id="premiumfeatures"><a class="Level2Entry" href="https://www.tibia.com/abouttibia/?subtopic=premiumfeatures">Premium Features</a></li><li class="Level2Block MobileNavigationLinkContainer" id="aboutcipsoft"><a class="Level2Entry" href="https://www.tibia.com/abouttibia/?subtopic=aboutcipsoft">About CipSoft</a></li></ul></li><li class="Level1Block" id="gameguides"><div class="Level1Entry" onClick="MenuItemAction('gameguides')" ;>Game Guides</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="quickstart"><a class="Level2Entry" href="https://www.tibia.com/gameguides/?subtopic=quickstart">Quickstart</a></li><li class="Level2Block MobileNavigationLinkContainer" id="manual"><a class="Level2Entry" href="https://www.tibia.com/gameguides/?subtopic=manual">Manual</a></li><li class="Level2Block MobileNavigationLinkContainer" id="securityhints"><a class="Level2Entry" href="https://www.tibia.com/gameguides/?subtopic=securityhints">Security Hints</a></li></ul></li><li class="Level1Block" id="library"><div class="Level1Entry" onClick="MenuItemAction('library')" ;>Library</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="creatures"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=creatures">Creatures</a></li><li class="Level2Block MobileNavigationLinkContainer" id="boostablebosses"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=boostablebosses">Boostable Bosses</a></li><li class="Level2Block MobileNavigationLinkContainer" id="spells"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=spells">Spells</a></li><li class="Level2Block MobileNavigationLinkContainer" id="achievements"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=achievements">Achievements</a></li><li class="Level2Block MobileNavigationLinkContainer" id="worldquests"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=worldquests">World Quests</a></li><li class="Level2Block MobileNavigationLinkContainer" id="experiencetable"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=experiencetable">Experience Table</a></li><li class="Level2Block MobileNavigationLinkContainer" id="maps"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=maps">Maps</a></li><li class="Level2Block MobileNavigationLinkContainer" id="genesis"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=genesis">Genesis</a></li><li class="Level2Block MobileNavigationLinkContainer" id="soundtrack"><a class="Level2Entry" href="https://www.tibia.com/library/?subtopic=soundtrack">Soundtrack</a></li></ul></li><li class="Level1Block" id="community"><div class="Level1Entry" onClick="MenuItemAction('community')" ;>Community</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="characters"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=characters">Characters</a></li><li class="Level2Block MobileNavigationLinkContainer" id="worlds"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=worlds">Worlds</a></li><li class="Level2Block MobileNavigationLinkContainer" id="highscores"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=highscores">Highscores</a></li><li class="Level2Block MobileNavigationLinkContainer" id="leaderboards"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=leaderboards">Leaderboards</a></li><li class="Level2Block MobileNavigationLinkContainer" id="wheelofdestinyplanner"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=wheelofdestinyplanner">Wheel of Destiny Planner</a></li><li class="Level2Block MobileNavigationLinkContainer" id="killstatistics"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=killstatistics">Kill Statistics</a></li><li class="Level2Block MobileNavigationLinkContainer" id="houses"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=houses">Houses</a></li><li class="Level2Block MobileNavigationLinkContainer" id="guilds"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=guilds">Guilds</a></li><li class="Level2Block MobileNavigationLinkContainer" id="polls"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=polls">Polls</a></li><li class="Level2Block MobileNavigationLinkContainer" id="feedbackform"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=feedbackform">Feedback Form</a></li><li class="Level2Block MobileNavigationLinkContainer" id="fansites"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=fansites">Fansites</a></li><li class="Level2Block MobileNavigationLinkContainer" id="resellers"><a class="Level2Entry" href="https://www.tibia.com/community/?subtopic=resellers">Resellers</a></li></ul></li><li class="Level1Block" id="forum"><div class="Level1Entry" onClick="MenuItemAction('forum')" ;>Forum</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="worldboards"><a class="Level2Entry" href="https://www.tibia.com/forum/?subtopic=worldboards">World Boards</a></li><li class="Level2Block MobileNavigationLinkContainer" id="tradeboards"><a class="Level2Entry" href="https://www.tibia.com/forum/?subtopic=tradeboards">Trade Boards</a></li><li class="Level2Block MobileNavigationLinkContainer" id="communityboards"><a class="Level2Entry" href="https://www.tibia.com/forum/?subtopic=communityboards">Community Boards</a></li><li class="Level2Block MobileNavigationLinkContainer" id="supportboards"><a class="Level2Entry" href="https://www.tibia.com/forum/?subtopic=supportboards">Support Boards</a></li><li class="Level2Block MobileNavigationLinkContainer" id="guildboards"><a class="Level2Entry" href="https://www.tibia.com/forum/?subtopic=guildboards">Guild Boards</a></li><li class="Level2Block MobileNavigationLinkContainer" id="forum"><a class="Level2Entry" href="https://www.tibia.com/forum/?subtopic=forum&action=cm_post_archive">CM Post Archive</a></li></ul></li><li class="Level1Block" id="account"><div class="Level1Entry" onClick="MenuItemAction('account')" ;>Account</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="accountmanagement"><a class="Level2Entry" href="https://www.tibia.com/account/?subtopic=accountmanagement&amp;page=overview">Account Management</a></li><li class="Level2Block MobileNavigationLinkContainer" id="createaccount"><a class="Level2Entry" href="https://www.tibia.com/account/?subtopic=createaccount">Create Account</a></li><li class="Level2Block MobileNavigationLinkContainer" id="downloadclient"><a class="Level2Entry" href="https://www.tibia.com/account/?subtopic=downloadclient&step=downloadagreement">Download Client</a></li><li class="Level2Block MobileNavigationLinkContainer" id="webshop"><a class="Level2Entry" href="https://www.tibia.com/account/index.php?subtopic=redirectlogin&redirect=https%3A%2F%2Fwww.tibia.com%2Faccount%2F%3Fsubtopic%3Daccountmanagement%23Products%2BAvailable">Webshop</a></li><li class="Level2Block MobileNavigationLinkContainer" id="lostaccount"><a class="Level2Entry" href="https://www.tibia.com/account/?subtopic=lostaccount">Lost Account</a></li></ul></li><li class="Level1Block" id="charactertrade"><div class="Level1Entry" onClick="MenuItemAction('charactertrade')" ;>Char Bazaar</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="currentcharactertrades"><a class="Level2Entry" href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades">Current Auctions</a></li><li class="Level2Block MobileNavigationLinkContainer" id="pastcharactertrades"><a class="Level2Entry" href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades">Auction History</a></li><li class="Level2Block MobileNavigationLinkContainer" id="ownbids"><a class="Level2Entry" href="https://www.tibia.com/charactertrade/?subtopic=ownbids">My Bids</a></li><li class="Level2Block MobileNavigationLinkContainer" id="owncharactertrades"><a class="Level2Entry" href="https://www.tibia.com/charactertrade/?subtopic=owncharactertrades">My Auctions</a></li><li class="Level2Block MobileNavigationLinkContainer" id="watchedcharactertrades"><a class="Level2Entry" href="https://www.tibia.com/charactertrade/?subtopic=watchedcharactertrades">My Watched Auctions</a></li></ul></li><li class="Level1Block" id="support"><div class="Level1Entry" onClick="MenuItemAction('support')" ;>Support</div><ul class><li class="Level2Block MobileNavigationLinkContainer" id="gethelp"><a class="Level2Entry" href="https://www.tibia.com/support/?subtopic=gethelp">FAQ</a></li><li class="Level2Block MobileNavigationLinkContainer" id="tibiarules"><a class="Level2Entry" href="https://www.tibia.com/support/?subtopic=tibiarules">Tibia Rules</a></li><li class="Level2Block MobileNavigationLinkContainer" id="parentsguide"><a class="Level2Entry" href="https://www.tibia.com/support/?subtopic=parentsguide">Parents' Guide</a></li><li class="Level2Block MobileNavigationLinkContainer" id="legaldocuments"><a class="Level2Entry" href="https://www.tibia.com/support/?subtopic=legaldocuments">Legal Documents</a></li></ul></li></ul></nav></header> </div>
+<div class="main-menu">
+<div id="MenuColumn">
+<div id="LeftArtwork">
+<a href="https://www.tibia.com/mmorpg/free-multiplayer-online-role-playing-game.php"><img id="TibiaLogoArtworkTop" src="https://static.tibia.com/images/global/header/tibia-logo-artwork-top.gif" alt="logoartwork" /></a>
+<img id="LogoLink" src="https://static.tibia.com/images/global/header/tibia-logo-artwork-string.gif" onClick="window.location = 'https://www.tibia.com/abouttibia/?subtopic=aboutcipsoft';" alt="logoartwork" />
+</div>
+<div class="SmallMenuBorder BorderTop" style="background-image:url(https://static.tibia.com/images/global/general/box-top-large.png);"></div>
+<div class="SmallMenuBox">
+<div class="SmallBoxTop" style="background-image:url(https://static.tibia.com/images/global/general/box-top.gif)"></div>
+<div class="SmallBoxBorder" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif)"></div>
+<div class="SmallBoxButtonContainer" style="background-image:url(https://static.tibia.com/images/global/loginbox/loginbox-textfield-background.gif)">
+<div id="PlayNowContainer"><form class="MediumButtonForm" action="https://www.tibia.com/account/?subtopic=accountmanagement" method="post"><input type="hidden" name="page" value="overview" /><div class="MediumButtonBackground" style="background-image:url(https://static.tibia.com/images/global/buttons/mediumbutton.gif)" onMouseOver="MouseOverMediumButton(this);" onMouseOut="MouseOutMediumButton(this);"><div class="MediumButtonOver" style="background-image:url(https://static.tibia.com/images/global/buttons/mediumbutton-over.gif)" onMouseOver="MouseOverMediumButton(this);" onMouseOut="MouseOutMediumButton(this);"></div><input class="MediumButtonText" type="image" name="Login" alt="Login" src="https://static.tibia.com/images/global/buttons/mediumbutton_login.png" /></div></form></div>
+</div>
+<div class="Loginstatus" style="background-image:url(https://static.tibia.com/images/global/loginbox/loginbox-textfield-background.gif)">
+<div id="LoginstatusText" onClick="LoginstatusTextAction(this);" onMouseOver="MouseOverLoginBoxText(this);" onMouseOut="MouseOutLoginBoxText(this);"><div id="LoginstatusText_1" class="LoginstatusText" style="background-image:url(https://static.tibia.com/images/global/loginbox/loginbox-font-create-account.gif)"></div><div id="LoginstatusText_2" class="LoginstatusText" style="background-image:url(https://static.tibia.com/images/global/loginbox/loginbox-font-create-account-over.gif)"></div></div>
+</div>
+<div class="SmallBoxBorder BorderRight" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif)"></div>
+<div class="Loginstatus SmallBoxBottom" style="background-image:url(https://static.tibia.com/images/global/general/box-bottom.gif)"></div>
+</div>
+<div class="SmallMenuBox" id="DownloadBox">
+<div class="SmallBoxTop" style="background-image:url(https://static.tibia.com/images/global/general/box-top.gif)"></div>
+<div class="SmallBoxBorder" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div class="SmallBoxButtonContainer" style="background-image:url(https://static.tibia.com/images/global/loginbox/loginbox-textfield-background.gif)">
+<div id="PlayNowContainer"><form class="MediumButtonForm" action="https://www.tibia.com/account/?subtopic=downloadclient&step=downloadagreement" method="post"><div class="MediumButtonBackground" style="background-image:url(https://static.tibia.com/images/global/buttons/mediumbutton.gif)" onMouseOver="MouseOverMediumButton(this);" onMouseOut="MouseOutMediumButton(this);"><div class="MediumButtonOver" style="background-image:url(https://static.tibia.com/images/global/buttons/mediumbutton-over.gif)" onMouseOver="MouseOverMediumButton(this);" onMouseOut="MouseOutMediumButton(this);"></div><input class="MediumButtonText" type="image" name="Download" alt="Download" src="https://static.tibia.com/images/global/buttons/mediumbutton_download.png" /></div></form></div>
+</div>
+<div class="SmallBoxBorder BorderRight" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div class="Loginstatus SmallBoxBottom" style="background-image:url(https://static.tibia.com/images/global/general/box-bottom.gif);"></div>
+</div>
+<div class="SmallMenuBorder BorderBottom" style="background-image:url(https://static.tibia.com/images/global/general/box-bottom-large.png);"></div><div id="Menu">
+<div id="MenuTop" style="background-image:url(https://static.tibia.com/images/global/general/box-top.gif);"></div>
+<div id="news" class="menuitem">
+<span onClick="MenuItemAction('news')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="news_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="news_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-news.gif);"></div>
+<div id="news_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-news.png);"></div>
+<div id="news_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="news_Submenu" class="Submenu">
+<a href="https://www.tibia.com/news/?subtopic=latestnews">
+<div id="submenu_latestnews" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_latestnews" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_latestnews" class="SubmenuitemLabel">Latest News</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/news/?subtopic=newsarchive">
+<div id="submenu_newsarchive" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_newsarchive" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_newsarchive" class="SubmenuitemLabel">News Archive</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/news/?subtopic=eventcalendar">
+<div id="submenu_eventcalendar" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_eventcalendar" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_eventcalendar" class="SubmenuitemLabel">Event Schedule</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="abouttibia" class="menuitem">
+<span onClick="MenuItemAction('abouttibia')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="abouttibia_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="abouttibia_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-abouttibia.gif);"></div>
+<div id="abouttibia_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-abouttibia.png);"></div>
+<div id="abouttibia_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="abouttibia_Submenu" class="Submenu">
+<a href="https://www.tibia.com/abouttibia/?subtopic=whatistibia">
+<div id="submenu_whatistibia" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_whatistibia" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_whatistibia" class="SubmenuitemLabel">What Is Tibia?</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/abouttibia/?subtopic=screenshots">
+<div id="submenu_screenshots" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_screenshots" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_screenshots" class="SubmenuitemLabel">Screenshots</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/abouttibia/?subtopic=gamefeatures">
+<div id="submenu_gamefeatures" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_gamefeatures" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_gamefeatures" class="SubmenuitemLabel">Game Features</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/abouttibia/?subtopic=premiumfeatures">
+<div id="submenu_premiumfeatures" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_premiumfeatures" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_premiumfeatures" class="SubmenuitemLabel">Premium Features</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/abouttibia/?subtopic=aboutcipsoft">
+<div id="submenu_aboutcipsoft" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_aboutcipsoft" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_aboutcipsoft" class="SubmenuitemLabel">About CipSoft</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="gameguides" class="menuitem">
+<span onClick="MenuItemAction('gameguides')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="gameguides_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="gameguides_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-gameguides.gif);"></div>
+<div id="gameguides_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-gameguides.png);"></div>
+<div id="gameguides_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="gameguides_Submenu" class="Submenu">
+<a href="https://www.tibia.com/gameguides/?subtopic=quickstart">
+<div id="submenu_quickstart" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_quickstart" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_quickstart" class="SubmenuitemLabel">Quickstart</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/gameguides/?subtopic=manual">
+<div id="submenu_manual" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_manual" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_manual" class="SubmenuitemLabel">Manual</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/gameguides/?subtopic=securityhints">
+<div id="submenu_securityhints" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_securityhints" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_securityhints" class="SubmenuitemLabel">Security Hints</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="library" class="menuitem">
+<span onClick="MenuItemAction('library')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="library_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="library_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-library.gif);"></div>
+<div id="library_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-library.png);"></div>
+<div id="library_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="library_Submenu" class="Submenu">
+<a href="https://www.tibia.com/library/?subtopic=creatures">
+<div id="submenu_creatures" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_creatures" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_creatures" class="SubmenuitemLabel">Creatures</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/library/?subtopic=boostablebosses">
+<div id="submenu_boostablebosses" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_boostablebosses" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_boostablebosses" class="SubmenuitemLabel">Boostable Bosses</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/library/?subtopic=spells">
+<div id="submenu_spells" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_spells" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_spells" class="SubmenuitemLabel">Spells</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/library/?subtopic=achievements">
+<div id="submenu_achievements" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_achievements" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_achievements" class="SubmenuitemLabel">Achievements</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/library/?subtopic=worldquests">
+<div id="submenu_worldquests" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_worldquests" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_worldquests" class="SubmenuitemLabel">World Quests</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/library/?subtopic=experiencetable">
+<div id="submenu_experiencetable" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_experiencetable" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_experiencetable" class="SubmenuitemLabel">Experience Table</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/library/?subtopic=maps">
+<div id="submenu_maps" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_maps" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_maps" class="SubmenuitemLabel">Maps</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/library/?subtopic=genesis">
+<div id="submenu_genesis" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_genesis" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_genesis" class="SubmenuitemLabel">Genesis</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/library/?subtopic=soundtrack">
+<div id="submenu_soundtrack" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_soundtrack" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_soundtrack" class="SubmenuitemLabel">Soundtrack</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="community" class="menuitem">
+<span onClick="MenuItemAction('community')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="community_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="community_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-community.gif);"></div>
+<div id="community_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-community.png);"></div>
+<div id="community_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="community_Submenu" class="Submenu">
+<a href="https://www.tibia.com/community/?subtopic=characters">
+<div id="submenu_characters" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_characters" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_characters" class="SubmenuitemLabel">Characters</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=worlds">
+<div id="submenu_worlds" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_worlds" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_worlds" class="SubmenuitemLabel">Worlds</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=highscores">
+<div id="submenu_highscores" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_highscores" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_highscores" class="SubmenuitemLabel">Highscores</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=leaderboards">
+<div id="submenu_leaderboards" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_leaderboards" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_leaderboards" class="SubmenuitemLabel">Leaderboards</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=wheelofdestinyplanner">
+<div id="submenu_wheelofdestinyplanner" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_wheelofdestinyplanner" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_wheelofdestinyplanner" class="SubmenuitemLabel">Wheel of Destiny Planner</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=killstatistics">
+<div id="submenu_killstatistics" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_killstatistics" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_killstatistics" class="SubmenuitemLabel">Kill Statistics</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=houses">
+<div id="submenu_houses" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_houses" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_houses" class="SubmenuitemLabel">Houses</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=guilds">
+<div id="submenu_guilds" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_guilds" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_guilds" class="SubmenuitemLabel">Guilds</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=polls">
+<div id="submenu_polls" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_polls" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_polls" class="SubmenuitemLabel">Polls</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=feedbackform">
+<div id="submenu_feedbackform" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_feedbackform" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_feedbackform" class="SubmenuitemLabel">Feedback Form</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=fansites">
+<div id="submenu_fansites" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_fansites" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_fansites" class="SubmenuitemLabel">Fansites</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/community/?subtopic=resellers">
+<div id="submenu_resellers" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_resellers" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_resellers" class="SubmenuitemLabel">Resellers</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="forum" class="menuitem">
+<span onClick="MenuItemAction('forum')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="forum_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="forum_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-forum.gif);"></div>
+<div id="forum_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-forum.png);"></div>
+<div id="forum_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="forum_Submenu" class="Submenu">
+<a href="https://www.tibia.com/forum/?subtopic=worldboards">
+<div id="submenu_worldboards" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_worldboards" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_worldboards" class="SubmenuitemLabel">World Boards</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/forum/?subtopic=tradeboards">
+<div id="submenu_tradeboards" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_tradeboards" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_tradeboards" class="SubmenuitemLabel">Trade Boards</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/forum/?subtopic=communityboards">
+<div id="submenu_communityboards" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_communityboards" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_communityboards" class="SubmenuitemLabel">Community Boards</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/forum/?subtopic=supportboards">
+<div id="submenu_supportboards" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_supportboards" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_supportboards" class="SubmenuitemLabel">Support Boards</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/forum/?subtopic=guildboards">
+<div id="submenu_guildboards" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_guildboards" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_guildboards" class="SubmenuitemLabel">Guild Boards</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/forum/?subtopic=forum&action=cm_post_archive">
+<div id="submenu_forum" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_forum" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_forum" class="SubmenuitemLabel">CM Post Archive</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="account" class="menuitem">
+<span onClick="MenuItemAction('account')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="account_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="account_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-account.gif);"></div>
+<div id="account_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-account.png);"></div>
+<div id="account_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="account_Submenu" class="Submenu">
+<a href="https://www.tibia.com/account/?subtopic=accountmanagement&amp;page=overview">
+<div id="submenu_accountmanagement" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_accountmanagement" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_accountmanagement" class="SubmenuitemLabel">Account Management</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/account/?subtopic=createaccount">
+<div id="submenu_createaccount" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_createaccount" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_createaccount" class="SubmenuitemLabel">Create Account</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/account/?subtopic=downloadclient&step=downloadagreement">
+<div id="submenu_downloadclient" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_downloadclient" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_downloadclient" class="SubmenuitemLabel">Download Client</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/account/index.php?subtopic=redirectlogin&redirect=https%3A%2F%2Fwww.tibia.com%2Faccount%2F%3Fsubtopic%3Daccountmanagement%23Products%2BAvailable">
+<div id="submenu_webshop" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_webshop" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_webshop" class="SubmenuitemLabel">Webshop</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/account/?subtopic=lostaccount">
+<div id="submenu_lostaccount" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_lostaccount" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_lostaccount" class="SubmenuitemLabel">Lost Account</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="charactertrade" class="menuitem">
+<span onClick="MenuItemAction('charactertrade')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="charactertrade_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="charactertrade_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-charactertrade.gif);"></div>
+<div id="charactertrade_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-charactertrade.png);"></div>
+<div id="charactertrade_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="charactertrade_Submenu" class="Submenu">
+<a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades">
+<div id="submenu_currentcharactertrades" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_currentcharactertrades" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_currentcharactertrades" class="SubmenuitemLabel">Current Auctions</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/charactertrade/?subtopic=pastcharactertrades">
+<div id="submenu_pastcharactertrades" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_pastcharactertrades" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_pastcharactertrades" class="SubmenuitemLabel">Auction History</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/charactertrade/?subtopic=ownbids">
+<div id="submenu_ownbids" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_ownbids" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_ownbids" class="SubmenuitemLabel">My Bids</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/charactertrade/?subtopic=owncharactertrades">
+<div id="submenu_owncharactertrades" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_owncharactertrades" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_owncharactertrades" class="SubmenuitemLabel">My Auctions</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/charactertrade/?subtopic=watchedcharactertrades">
+<div id="submenu_watchedcharactertrades" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_watchedcharactertrades" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_watchedcharactertrades" class="SubmenuitemLabel">My Watched Auctions</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="support" class="menuitem">
+<span onClick="MenuItemAction('support')">
+<div class="MenuButton" style="background-image:url(https://static.tibia.com/images/global/menu/button-background.gif);">
+<div onMouseOver="MouseOverMenuItem(this);" onMouseOut="MouseOutMenuItem(this);"><div class="Button" style="background-image:url(https://static.tibia.com/images/global/menu/button-background-over.gif);"></div>
+<span id="support_Lights" class="Lights">
+<div class="light_lu" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ld" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+<div class="light_ru" style="background-image:url(https://static.tibia.com/images/global/menu/green-light.gif);"></div>
+</span>
+<div id="support_Icon" class="Icon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-support.gif);"></div>
+<div id="support_Label" class="Label" style="background-image:url(https://static.tibia.com/images/global/menu/label-support.png);"></div>
+<div id="support_Extend" class="Extend" style="background-image:url(https://static.tibia.com/images/global/general/plus.gif);"></div>
+</div>
+</div>
+</span>
+<div id="support_Submenu" class="Submenu">
+<a href="https://www.tibia.com/support/?subtopic=gethelp">
+<div id="submenu_gethelp" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_gethelp" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_gethelp" class="SubmenuitemLabel">FAQ</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/support/?subtopic=tibiarules">
+<div id="submenu_tibiarules" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_tibiarules" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_tibiarules" class="SubmenuitemLabel">Tibia Rules</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/support/?subtopic=parentsguide">
+<div id="submenu_parentsguide" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_parentsguide" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_parentsguide" class="SubmenuitemLabel">Parents' Guide</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+<a href="https://www.tibia.com/support/?subtopic=legaldocuments">
+<div id="submenu_legaldocuments" class="Submenuitem" onMouseOver="MouseOverSubmenuItem(this)" onMouseOut="MouseOutSubmenuItem(this)">
+<div class="LeftChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+<div id="ActiveSubmenuItemIcon_legaldocuments" class="ActiveSubmenuItemIcon" style="background-image:url(https://static.tibia.com/images/global/menu/icon-activesubmenu.gif);"></div>
+<div id="ActiveSubmenuItemLabel_legaldocuments" class="SubmenuitemLabel">Legal Documents</div>
+<div class="RightChain" style="background-image:url(https://static.tibia.com/images/global/general/chain.gif);"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="MenuBottom" style="background-image:url(https://static.tibia.com/images/global/general/box-bottom.gif);"></div>
+</div>
+<script type="text/javascript">
+InitializePage();</script>
+</div>
+</div>
+<div class="main-content Content">
+<div id class="Box"><div class="Corner-tl" style="background-image:url(https://static.tibia.com/images/global/content/corner-tl.gif);"></div><div class="Corner-tr" style="background-image:url(https://static.tibia.com/images/global/content/corner-tr.gif);"></div><div class="Border_1" style="background-image:url(https://static.tibia.com/images/global/content/border-1.gif);"></div><div class="BorderTitleText" style="background-image:url(https://static.tibia.com/images/global/content/cacheinfo_background.gif); height: 28px;"><div class="InfoBar"><a class="InfoBarBlock" href="https://www.twitch.tv/directory/game/Tibia" target="_blank" rel="noopener noreferrer"><img class="InfoBarBigLogo NotOnMobile" src="https://static.tibia.com/images/global/header/info/icon-twitch.png" /><img class="InfoBarSmallLogo" src="https://static.tibia.com/images/global/header/info/icon-mobile-twitch.png" /><span class="InfoBarNumbers"><img class="InfoBarSmallElement" src="https://static.tibia.com/images/global/header/info/icon-streamers.png" /><span class="InfoBarSmallElement">99</span><img class="InfoBarSmallElement" src="https://static.tibia.com/images/global/header/info/icon-viewers.png" /><span class="InfoBarSmallElement">6618</span></span></a><a class="InfoBarBlock" href="https://www.youtube.com/channel/UCg5vFOB3tN8KGcJDyk6QQzQ/home" target="_blank" rel="noopener noreferrer"><img class="InfoBarBigLogo NotOnMobile" src="https://static.tibia.com/images/global/header/info/icon-youtube.png" /><img class="InfoBarSmallLogo" src="https://static.tibia.com/images/global/header/info/icon-mobile-youtube.png" /><span class="InfoBarNumbers"><img class="InfoBarSmallElement" src="https://static.tibia.com/images/global/header/info/icon-streamers.png" /><span class="InfoBarSmallElement">5</span><img class="InfoBarSmallElement" src="https://static.tibia.com/images/global/header/info/icon-viewers.png" /><span class="InfoBarSmallElement">47</span></span></a><a class="NotOnMobile" href="https://www.tibia.com/forum/?action=announcement&announcementid=87&boardid=89516"><img class="InfoBarBigLogo" src="https://static.tibia.com/images/global/header/info/icon-download.png" /><span class="InfoBarNumbers"><span class="InfoBarSmallElement">Fankit</span></span></a><a style="float:right;" href="https://www.tibia.com/community/?subtopic=worlds"><img class="InfoBarBigLogo" src="https://static.tibia.com/images/global/header/info/icon-players-online.png" /><span class="InfoBarNumbers"><span class="InfoBarSmallElement">13,009<span class="NotOnMobile"> Players Online</span></span></span></a></div></div><div class="Border_1" style="background-image:url(https://static.tibia.com/images/global/content/border-1.gif);"></div><div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url(https://static.tibia.com/images/global/content/corner-bl.gif);"></div></div><div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url(https://static.tibia.com/images/global/content/corner-br.gif);"></div></div></div> <div id="RightArtwork">
+<img id="Pedestal" src="https://static.tibia.com/images/global/header/pedestal.gif" alt="Monster Pedestal Box" /><br><img id="Monster" title="Today's boosted creature: Nightmare" src="https://static.tibia.com/images/global/header/monsters/nightmare.gif" onClick="window.location = 'https://www.tibia.com/library/?subtopic=creatures';" alt="Boosted Creature" /><img id="Boss" title="Today's boosted boss: The Diamond Blossom" src="https://static.tibia.com/images/global/header/monsters/diamondblossom.gif" onClick="window.location = 'https://www.tibia.com/library/?subtopic=boostablebosses';" alt="Boosted Boss" /> </div>
+<div id="NewsArchive" class="Box">
+<div class="Corner-tl" style="background-image:url(https://static.tibia.com/images/global/content/corner-tl.gif);"></div>
+<div class="Corner-tr" style="background-image:url(https://static.tibia.com/images/global/content/corner-tr.gif);"></div>
+<div class="Border_1" style="background-image:url(https://static.tibia.com/images/global/content/border-1.gif);"></div>
+<div class="BorderTitleText" style="background-image:url(https://static.tibia.com/images/global/content/title-background-green.gif);"></div><img id="ContentBoxHeadline" class="Title" src="https://static.tibia.com/images/global/strings/headline-newsarchive.gif" alt="Contentbox headline" />
+<div class="Border_2">
+<div class="Border_3">
+<div class="BoxContent" style="background-image:url(https://static.tibia.com/images/global/content/scroll.gif);">
+<div class="NewsHeadline"> <div class="NewsHeadlineBackground" style="background-image:url(https://static.tibia.com/images/global/content/newsheadline_background.gif);"> <div> <img src="https://static.tibia.com/images/global/content/newsicon_community_big.png" class="NewsHeadlineIcon" /> <div class="NewsHeadlineDate">Jul&#160;19&#160;2023 - </div> </div> <div class="NewsHeadlineText"><p>Tibian Letters Part II</p></div> </div></div><table class="NewsTable" cellpadding="0" cellspacing="0"> <tr> <td class="NewsTableContainer"><p><img src="https://static.tibia.com/images/global/letters/letter_martel_Y.gif" border="0" align="bottom">es, you have more than just responded to our <a href="https://www.tibia.com/news/?subtopic=newsarchive&amp;id=7248" target="_blank" rel="noopener noreferrer" rel="noopener">call for letters</a>. The Auditorium was brimming with fantastic messages and questions for the Tibia team.<img src="https://static.tibia.com/images/news/postman_letterpile.jpg" hspace="10" vspace="10" width="287" height="284" align="right"> To be more precise, over 200 letters were submitted. This clearly indicates your strong interest in specific aspects of the game.</p>
+<p>We appreciate your engagement and would like to express our gratitude for your contributions.</p>
+<p>Now, let's delve into the details and get down to the nitty-gritty.</p>
+<p>If you would like to read the player letters to which the different departments responded, just click on the images next to their replies.<br><br><u><strong>Quick Links to Letters</strong></u><br><br><a href="#content">Content <em>"Mystery secrets"</em></a><br><a href="#content ii">Content II&nbsp;<em>"Incorporation of new quests"</em></a><br><a href="#pm">PM&nbsp;<em>"Do you play Tibia incognito?"</em></a><br><a href="#programmer">Programmer&nbsp;<em>"Eureka moments"</em></a><br><a href="#content iii">Content III&nbsp;<em>"Most memorable things players did"</em></a><br><a href="#pm ii">PM II <em>"How do you deal with visitors?"</em></a><br><a href="#content iv">Content IV <em>"More power to dragons"</em></a><br><a href="#content v">Content V&nbsp;<em>"Tibian languages"</em></a><br><a href="#pm iii">PM III&nbsp;<em>"Sitting"</em></a><br><a href="#content vi">Content VI&nbsp;<em>"Update preparation"</em></a><br><a href="#programmer ii">Programmer II <em>"Loot creation"</em></a><br><a href="#programmer iii">Programmer III&nbsp;<em>"Programming challenges Tibia client"</em></a><br><a href="#pm iv">PM IV&nbsp;<em>"Old bosses"</em></a><br><a href="#content vii">Content VII<em> "What do you hold most dear in Tibia?"</em></a><br><a href="#content viii">Content VIII&nbsp;<em>"Flat or round Tibia world?"</em></a><br><a href="#programmer iv">Programmer IV&nbsp;<em>"Top-of-world feature"</em></a><br><a href="#pm iv">PM IV <em>"Languistic background for spells"</em></a><br><a href="#pm v">PM V <em>"Weak sorcerers"</em></a><br><a href="#content ix">Content IX&nbsp;<em>"New member introduction to Tibian lore"</em></a><br><a href="#programmer v">Programmer V&nbsp;<em>"Game technology, open source"</em></a><br><br><br></p>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="vykter"></a><strong>Vykter</strong></center></td>
+<td><center><a name="content"></a><strong>Content "Mystery secrets"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_01_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_01.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Vykter,</em></p>
+<p><em>Thank you, I'm pleased you enjoy the more mysterious side of our lore!</em></p>
+<p><em>A lot of the mysteries we implemented in recent years were comprised of three parts: connecting a dot to a place, event or character of the Tibian lore, an interesting and engaging plot twist or foreboding secret and a satisfying conclusion to it. Some were designed and planned to connect several dots in the lore and spanned content that didn't even exist at the time of the conception.&nbsp;Those mysteries in particular have a great sense of meaningfulness and also a gameplay or even emotional impact - as long as they are kept a secret accordingly.</em></p>
+<p><em>To maintain these secret plots and twists, we first planned out exactly how and when (if possible) they would unfold. Therefore we often&nbsp;provide a lot of background information internally that players would never actually see. Some mysteries with a very large scope were actually years in the making. This is also a very fun and exciting part of creating content for Tibia, so it's something we all like to work on and implement.</em></p>
+<p><em>We also take care of things like informing colleagues about things that should "never be told". </em><em>We do our best to make sure no secret information gets leaked - unless we deliberately want this to happen, I might add. And some things are still not uncovered (which we would never spoil, of course, not even in a personal letter like this), so we're always excited to see a mystery finally solved or players making progress. In some cases we followed the progress of puzzle-solving Tibians very closely to find the right point in time to make something happen that would surprise players.</em></p>
+<p><em>Which brings me to another important point: Tibia is a very dynamic game world and many mysteries would not exist or have worked out the way they did if not for our clue-hunting, riddle-tackling and mystery-loving community. So I will also express my gratitude to all mystery solvers out there: thank you and keep it up!</em></p>
+<p><em>Kind regards,</em><br><em>Lionet</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="sir lyon tegi"></a><strong>Content II "Incorporation of new quests"</strong></center></td>
+<td><center><a name="content ii"></a><strong>Sir Lyon Tegi</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Sir Lyon Tegi,</em></p>
+<p><em>Thank you very much for your good wishes. I'm very happy that our updates bring so much joy into your life and that you are so enthusiastic about Tibia's lore.</em></p>
+<p><em>Integrating existing areas or NPCs into these stories is indeed always very important to us. It ensures that the Tibian world is consistent and organic and not just a series of areas and quests existing unconnected next to each other.</em></p>
+<p><em>Sometimes you immediately have an idea which NPC you can include. Because you had already planned a questline for several updates anyway. Or because you have a background for the NPC that immediately comes to mind as a suitable connecting point. Other times, you do a little research in the old lore to find out what is most suitable. We might even come across a questline or an NPC by chance that inspires us to continue the story.</em></p>
+<p><em>As for cinematics, I have to say I'm a big fan of them personally. As a Magic the Gathering player, I always eagerly await the new Magic cinematics. However, it is not up to me to decide whether something like this is planned for Tibia&rsquo;s future, so I can't give any more detailed information here. But should it ever happen, I would definitely be excited about the idea.</em></p>
+<p><em>Kind regards</em></p>
+<p><em>Eudocia</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_02_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_02.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="ozud"></a><strong>Ozud</strong></center></td>
+<td><center><a name="pm"></a><strong>PM "Do you play Tibia incognito?"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_03_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_03.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Ozud,</em></p>
+<p><em>Your enthusiastic message certainly brings a smile to our faces! We appreciate your interest in whether we, the team behind Tibia, are navigating the challenging waters of this fantastic world ourselves.</em></p>
+<p><em>As a part of the Tibia Crew, some of us embark on covert journeys from time to time into the very world we've helped shape, playing incognito alongside our players. The idea of a team member possibly being a part of your crew, bravely confronting Tentugly side by side, is as thrilling to us as it is to you. And it's entirely within the realm of possibility!</em></p>
+<p><em>However, it's important to mention that our adventures in Tibia are perhaps not as frequent or as extensive as those of our dedicated players. Game development is intricate and time-consuming,&nbsp;so we cannot invest as many hours into playing as we'd like to or as many as our players do.&nbsp;Still, it makes our shared experiences and ingame adventures more exciting and memorable!</em></p>
+<p><em>We deeply cherish the camaraderie, unexpected journeys and encounters in Tibia. It's a reminder of the vibrant, dynamic world we've helped create, and it inspires us to continue enhancing and evolving the game for players like you.</em></p>
+<p><em>May you always have fair winds and calm seas on your Tibian journeys.</em></p>
+<p><em>Best regards,</em><br><em>Bolfrim (obviously not a pirate)</em><br><em>Lead Product Manager</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="kralan"></a><strong>Programmer "Eureka moments"</strong></center></td>
+<td><center><a name="programmer"></a><strong>Kralan</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<div class="content-wrapper">
+<p><em>Hi Kralan,</em></p>
+<p><em>For me, the most significant work I did was on the action bars. When the "new" client was released, it came without action bars, which is hard to believe now since they feel so natural to me. We knew from the Flash Client that they were a very handy feature, and players asked for them, so we added them when it was feasible.</em></p>
+<p><em>The fact that it was the first major feature I implemented on my own made it memorable. We had a good starting point by looking at the Flash Client, but there was no reference from the old client. We had to decide where to put them, how to style them, and address all the other little details. The placement might sound trivial at first, but the visible game area in Tibia is quite limited, and we had no intention of making it even smaller. We took inspiration from the Flash Client and many other games and decided to place them between the chat and game window. We knew this would reduce the size of the game window, but we were confident it would be worth it.</em></p>
+<p><em>I tackled all the tasks in time, including displaying the buttons, making them scrollable and lockable, creating different versions for spells, text, and equipment, and designing configuration dialogues for each version. Additionally, I made it possible to assign hotkeys, show cooldowns, add new configuration options to the options dialogues, make buttons draggable, and allow dragging equipment and spells onto the action bar. I had to find solutions for all these aspects.</em></p>
+<p><em>When it was finally done and I received feedback from you, the players, I was genuinely happy with my work, and I hope I made your and all players' lives a little easier.</em></p>
+<em>Cheers,</em></div>
+<div class="content-wrapper"><em>Xolurr</em></div>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_04_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_04.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="arcai"></a><strong>Arcai</strong></center></td>
+<td><center><a name="content iii"></a><strong>Content III "Most memorable things players did"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_05_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_05.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Arcai,</em></p>
+<p><em>I appreciate your support over the years and I'm looking forward to many more surprises and experiences together with the Tibia community.</em></p>
+<p><em>As for surprising and memorable things players did, there are far too many to list them all. However, I have very fond memories of the moments when players got together to explore and uncover some of the hidden secrets, mysteries and puzzles we created. As a designer it's always fun to see players experience your content but in terms of mysteries, the efforts of the Tibian community go far beyond that. There were people who created separate threads, chat rooms, even websites dedicated to solving some of Tibia's complex puzzles. In regards to the long running Planestrider mystery, people had open discussions over years about what the lore could mean, if there were any undiscovered clues and theories of what could be.</em></p>
+<p><em>We actually followed a lot of these discussions and in some cases we were directly working on the mystery parallel to community developments. There was always a clear goal for us to signpost dead ends or potential misconceptions. However, some of the fan theories and experiments really fueled our passion to make it even better, more fun and also - more mysterious. It's a fine line to walk if you want something to be ominous but quite solvable at the same time.</em></p>
+<p><em>And we continue to do so to this day, not only in terms of mysteries by the way, but especially in that regard. So these moments were definitely a surprise and also had an impact on us as developers as well as the development of Tibia itself.</em></p>
+<p><em>Kind regards,</em><br><em>Lionet</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="im leton"></a><strong>PM II "How do you deal with visitors?"</strong></center></td>
+<td><center><strong><a name="pm ii"></a>Im Leton</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Im Leton,</em></p>
+<p><em>Thank you for your imaginative story and your enthusiasm for Tibia. It's lovely to hear from fans passionate about the game world we've created.</em></p>
+<p><em>However, we do not permit visitors to our office. Our priority is to maintain a focused work environment for our team to continue developing and improving the games&nbsp;our players&nbsp;enjoy.</em></p>
+<p><em>While we cannot accommodate in-person visits, we&nbsp;encourage you to engage with us and the community through our forums, social platforms or ingame events. And our public tests for major game updates are a great opportunity to talk with some of the developers directly, be that on the test board or on our test servers.</em></p>
+<p><em>For a short glimpse behind the magic curtain, I'd also like to recommend our "Thank you for 25 Years" video on our YouTube channel.</em></p>
+<p><em>Your passion for Tibia is appreciated, and we are committed to providing you with more exciting content, features and experiences in the future.</em></p>
+<p><em>Best regards,</em></p>
+<p><em>Bolfrim</em><br><em>Lead Product Manager</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_06_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_06.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="tayliz"></a><strong>Tayliz</strong></center></td>
+<td><center><a name="content iv"></a><strong>Content IV "More power to dragons"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_07_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_07.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Hello Tayliz,</em></p>
+<p><em>Indeed, dragons are a captivating subject, that holds significant importance especially in Tibia, its history and backstories.&nbsp;And it is indeed true that the Tibian genesis portrayed dragons as immensely powerful beings that played a significant role.&nbsp;Most dragon encounters in the Tibian world no longer live up to their depiction as truly mighty creatures.&nbsp;</em></p>
+<p><em>Dragons were added to the Tibian monster roster very early. While being fearsome enemies back in those days, they are considered rather weak enemies nowadays.&nbsp;It may seem that dragons have lost their relevance over time, especially compared to newer creatures which surpass them in strength and ferocity. Allow me to assure you that the Tibia team does recognise the significance of dragons.</em></p>
+<p><em>So let our imagination soar for a moment: Can you picture the excitement of encountering a new (lore-wise ancient) dragon species in the game at some unexpected point in the future? Accompanied by awe-inspiring dragon-themed items and a narrative providing the background and significance our beloved scale friends deserve. The possibilities are limitless.</em></p>
+<p><em>Dragons are definitely not forgotten or shunned by the team and they never will. You may wonder when we will embark on such an adventure in the future. Well, I can say that we are always open to explore new ideas and expansions, especially since there is still so much potential for new and more powerful types of dragons. At the time of writing this letter, we are working on Rotten Blood, a new high risk/high reward update which will feature extremely dangerous, corrupted dragon bosses.</em></p>
+<p><em>In conclusion, dragons remain an integral part of Tibia. While they may not take center stage at the moment, they are always referenced and present in the world.&nbsp;It is quite possible that stronger dragons will appear in Tibia at some point in the future.&nbsp;However, as with everything in life, their time as prominent beings will eventually pass, and a new cycle will begin.</em></p>
+<p><em>We appreciate your love for dragons, and rest assured, your passion is shared. May dragons continue to captivate our hearts and imagination!</em></p>
+<p><em>Tibian greetings,</em></p>
+<p><em>Knightmare</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="fester adams"></a><strong>Content V "Tibian languages"</strong></center></td>
+<td><center><a name="content v"></a><strong>Fester Adams</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Fester Adams,</em></p>
+<p><em>Thank you for your intriguing question regarding the languages of Tibia. I'm always glad when people delve into the lore as deep as you have.</em></p>
+<p><em>Language and communication have always played a vital role in the rich Tibian history and its linguistic diversity. Being a realm of ancient civilizations and mystical beings, Tibia has witnessed countless forms of communication throughout its history. From the shouts and summoning rituals of creatures to the written passages transcribed in books, each race has left behind a linguistic legacy that speaks of their time, discoveries, and wisdom.</em></p>
+<p><em>Deciphering and translating the languages of Tibia poses a significant challenge. Not only were there spoken languages, without any scriptures, but there are also concepts and means of communication that go beyond human comprehension, making translation attempts incredibly difficult if not impossible. Some races have even stored their knowledge in telepathic crystals or similar artefacts. Yet, the means to access and interpret these stored thoughts remain a mystery to us.</em></p>
+<p><em>Determining the oldest recorded language in Tibia presents another hurdle. The scope of Tibian researchers is limited, and without specific references in texts that can be pinpointed to certain events, it becomes challenging to trace the origins of different languages. Additionally, the scarcity of available ancient texts further complicates the task. As researchers vie for the prestige of deciphering the "oldest known language," misinformation and competing claims can cloud the topic even further.</em></p>
+<p><em>Considering these challenges, your own speculation and research are as valid as the claims put forth by most Tibian linguists. In fact, given the lack of an official timeline of languages, you are encouraged to use the clues found in different texts to create your own interpretations and theories if it brings you joy and entertainment.</em></p>
+<p><em>From a developer's perspective, I might add that I'm not a big friend of absolutes. If I named you the most ancient language now and later a contradiction would counterpoint it, it wouldn't have served any real purpose but it would have limited our creativity and imagination.</em></p>
+<p><em>Still, the languages of Tibia and their study continues to unfold with new discoveries and interpretations. I encourage you to delve deeper into this fascinating realm of linguistic exploration.</em></p>
+<p><em>May the languages of Tibia always be a source of wonder and intrigue!</em></p>
+<p><em>Tibian greetings,</em></p>
+<p><em>Knightmare</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_08_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_08.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="tio kiinho"></a><strong>Tio Kiinho</strong></center></td>
+<td><center><a name="pm iii"></a><strong>PM III "Sitting"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_09_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_09.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Tio Kiinho,</em></p>
+<p><em>When I was younger I didn't try to be taller when climbing on chairs, however I did try not to touch the floor as it obviously was lava. Walking on chairs was one way to get from point A to point B. Since then I've learned to sit. Giving chairs their intended use in Tibia however is a whole other challenge. Even though I cannot tell you why sitting was not considered when the development of Tibia began I can tell you about our current stance on it:</em></p>
+<p><em>It would be nice to have this ingame, but it is a huge undertaking and requires a lot of work from our artists. Each outfit would need a unique sprite, both for their male and female version, which would have to work well in every direction on every type of seat and with each addon.</em></p>
+<p><em>As of now we would rather use all that time and work to create new and exciting environments, monsters and items.</em></p>
+<p><em>Greetings,</em><br><em>Niadus</em><br><em>Product Manager</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="sir isac santana"></a><strong>Content VI "Update preparation"</strong></center></td>
+<td><center><a name="content vi"></a><strong>Sir Isac Santana</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Sir Isac Santana,</em></p>
+<p><em>It's great to hear that you are playing Tibia for such a long time! How we design updates, add new storylines and areas is definitely an exciting question. Every time again, it is kind of a challenge, because Tibia is so incredibly big and comprehensive.</em></p>
+<p><em>Basically, there are two ways. Sometimes it starts with a closer look at Tibia: What do we already have in the game? And most importantly, what isn't there yet? Sometimes we discover that we don't have classic fantasy elements like ogres or fairies in the game yet. Sometimes, however, we consciously take the path of making something less classic, but rather very Tibia-specific. In other cases we say: This is a storyline we've wanted to pick up again for a while, like Galthen or Grimvale.</em></p>
+<p><em>Often, we already have an idea of how to continue, because we deliberately create many stories in such a way that we want to expand them. Once we've picked a theme, we decide where the new area should be and think about backgrounds and lore. In this concept phase, we work closely together with the graphics team, who in turn contribute further ideas through their designs. Once all the graphics are ready, the map of the new area starts to grow. Sometimes afterwards, sometimes in parallel, we develop a questline from the already designed background and lore.</em></p>
+<p><em>Thanks for your question and all the best wishes for you and your family!</em></p>
+<p><em>Kind regards</em></p>
+<p><em>Eudocia</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_10_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_10.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="ice mind"></a><strong>Ice Mind</strong></center></td>
+<td><center><a name="programmer ii"></a><strong>Programmer II "Loot creation"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_11_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_11.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<div class="content-wrapper">
+<p><em>Hello Ice Mind,</em></p>
+<p><em>The very short answer to your question is yes. The loot a foe drops is generated in more than one way:</em></p>
+<p><em>In simple cases, the loot is generated along with the monster. Dynamic parts of that loot, which are bound to the server save (e.g. if the creature is boosted), are also created right away.</em></p>
+<p><em>All other dynamic loot aspects, such as your prey bonus, the state of a questline you're doing, or the composition of your group, are determined when the monster dies. It's only at that moment that the game can see all the variables that influence your loot. The dynamically generated loot will then be added to the monster's corpse.</em></p>
+<p><em>We use a well-established random number generator to roll for loot chances. Such a generator will always produce the same sequence of numbers if it starts with the same seed. Each game world has its own random seed. Additionally, we use the same random number generator throughout the game, not just for loot. As a result, there's absolutely no chance to predetermine the next number to be generated for a loot roll.</em></p>
+<p><em>I hope this sheds some light on why no one can bribe the loot gods. However, that shouldn't stop you from trying&mdash;maybe there's one god mighty enough to influence your loot after all!</em></p>
+</div>
+<div class="content-wrapper"><em>Cheers,</em><br><em>Xolurr on behalf of the Tibia programmers</em></div>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="veckina"></a><strong>Programmer III "Programming challenges Tiba client"</strong></center></td>
+<td><center><a name="veckina"></a><strong>Veckina</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Salutations Veckina,</em></p>
+<p><em>I was actually part of the team that started to develop the current client. The most challenging part was to create the best possible copy of the look and feel(!) of the old client, but in new and more flexible code. We spent many hours trying to understand the exact behaviours of the old client. The existing code did not always match the game design documents or the initial feature specifications. As the code holds the only truth in cases of doubts, it overruled the documentation, and we then knew what we needed to do.</em></p>
+<p><em>In some cases, we still needed several attempts to get it right.&nbsp;Character movement in particular was a great challenge. You, our players, provided us with very detailed explanations of what and how you expect it to be based on your preference and your experiences with the old client.&nbsp;After some iterations, we finally created something most players reported as close enough to the old behaviour, so we finalised it in this state, but it was far from what textbook movement code looks like. After all, we are talking about a game that at that time was 15+ years old.</em></p>
+<p><em>From my point of view, one of the strongest allies on our side while developing was our test-driven development (TDD) approach. Every detail we extracted was fixed in a unit test. That not only documented the intended behaviour but also ensured that later changes would not alter that behaviour. To this day, nearly every Tibia update adds new unit tests to our collection.</em></p>
+<p><em>Another important part was the feedback provided by our testers, our colleagues, and, of course, by many diligent Tibians.</em></p>
+<p><em>To your second question. There is no aspect of the game, even so little, that is not worth writing a test for. When you can write a test that replicates the bug that was reported and then fix it, you can be sure this bug will not happen again.&nbsp;Also, keeping the complexity of the code low and refactoring it to reduce&nbsp;it even further is important.&nbsp;</em></p>
+<p><em>Another challenge is using third-party components, be they open source, free to use, or paid for. There can always be a point where one project decides to change something that breaks things on our end, and we need to find a solution. This is not to blame the good people and companies providing these third-party components of the client; it is just the reality we have to deal with.</em></p>
+<p><em>There are so many more interesting aspects to talk about, but I'll save those stories for future letters.</em></p>
+<p><em>Cheers,</em><br><em>Xolurr</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_12_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_12.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="smoked"></a><strong>Smoked</strong></center></td>
+<td><center><strong><a name="pm iv"></a>PM IV "Old bosses"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_13_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_13.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Smoked,</em></p>
+<p><em>There have been many discussions about this topic. As you might guess, nothing has yet come of them. At its core there are two opposing things to consider:</em><br><em>On the one hand a challenging and unique fight against an epic foe is satisfying. It is something we strife to create with new bosses and sure would love to have for older existing bosses.</em></p>
+<p><em>On the other hand many of these older bosses are part of the core of tibia. They are famous and some even unique just&nbsp;because of the way they are. Instead of simply changing classic bosses, we prefer approaches such as Morshabaal or Ferumbras' Ascendant in which we built on existing lore to create more challenging and difficult bosses.</em></p>
+<p><em>For now, I sadly cannot grant you more info than: They'll probably stay this way for a long time even though I am looking into elegant ways of adjusting them.</em></p>
+<p><em>Greetings,</em><br><em>Niadus</em><br><em>Product Manager</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="zirg"></a><strong>Content VII "What do you hold most dear in Tibia?"</strong></center></td>
+<td><center><a name="content vii"></a><strong>Zirg</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Zirg,</em></p>
+<p><em>That's a very exciting question. You're right: What makes our gaming experiences so unique are the memories we associate with them.</em></p>
+<p><em>And this is not only true for playing, but also for the process of creating a game world. You put your heart and soul into it and so there are many, many things about Tibia that mean very much to me. But if I have to pick out something in particular (and that is no easy task!), two NPCs come to my mind that are particularly important to me.</em></p>
+<p><em>One is Georgia Rainbird, the blind scientist in the Glooth Factory beneath Rathleton. She was one of my very first NPCs and I have also written some background for her outside of the actual game to flesh out her story. If you remember the featured article "Me and my Friends" on our website, you know what I mean.</em></p>
+<p><em>The other one is Alyxo, who runs the Seaside Theatre in Issavi. An art-loving medusa with an open-air theatre on the sunny coast of Kilmaresh ... It was a spontaneous off-the-cuff idea at the time, and I fell so in love with it that I had to bring Alyxo to life. I've even had her appear once in my private role-playing group's campaign.</em></p>
+<p><em>Kind regards,</em></p>
+<p><em>Eudocia</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_14_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_14.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="lee kun"></a><strong>Lee kun</strong></center></td>
+<td><center><a name="content viii"></a><strong>Content VIII "Flat or round Tibia world?"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_15_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_15.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Lee kun,</em></p>
+<p><em>Thank you for bringing this thought-provoking question to our attention. The shape of the Tibia world has been a topic of debate among Tibians for quite some time, and your dispute with your friend is a testament to the diversity of perspectives within our community.</em></p>
+<p><em>One popular notion is that the Tibia world is round, akin to a globe. This belief is supported by an old fan-made animation that depicted Tibia as a globe. At that time, there was little doubt among players about the world's spherical nature.</em></p>
+<p><em>However, the Tibian world is complex and multifaceted. We encounter peculiarities such as the absence of noticeable seasons like winter, despite references to it in books and conversations with NPCs. The existence of two suns further adds to the intricacy, providing a unique explanation for the extended duration of daylight. These factors contribute to the ambiguity surrounding the world's physical characteristics.</em></p>
+<p><em>While the assumption that Tibia is a globe aligns with our initial perceptions, it is important to recognise that the storytelling in Tibia often operates on a conceptual level rather than adhering strictly to physical laws.</em></p>
+<p><em>So let's say, for now, the prevailing understanding is that the world of Tibia is a globe, as it provides a functional framework for our adventures and narratives. However, it is worth noting that should the shape of the world present any narrative or gameplay challenges, the gods of Tibia possess the power to reshape it according to their divine will...&nbsp;and then again, the gods may just hammer it flat (if that happens, better go to an already flat place just to be safe!).</em></p>
+<p><em>Ultimately, the shape of the Tibia world is a subject that carries both a sense of wonder&nbsp;and ambiguity encouraging players to continue to explore and appreciate the ever-evolving landscape of our beloved realm.</em></p>
+<p><em>May your discussions with your friend be fruitful, and may you find joy in exploring the depths of Tibia's intriguing world.</em></p>
+<p><em>Tibian greetings,</em></p>
+<p><em>Knightmare</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="kat"></a><strong>Programmer IV "Top-of-world feature"</strong></center></td>
+<td><center><a name="programmer iv"></a><strong>Kat</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Well met Kat,</em></p>
+<p><em>I myself, Xolurr, find it hard to decide between the Action Bars, the Exaltation Forge, and the Wheel of Destiny.</em><br><em>They had all been quite challenging projects for different reasons. In the end, they worked out really well, and we received mostly positive feedback after their release.</em></p>
+<p><em>Most of my colleagues, especially those who have worked here for some time, find it hard to limit their choice to one feature. And there are some favourites shared by different developers. Therefore, I'll&nbsp;provide you with a list of top-of-the-world features mentioned by my colleagues. The list is in no particular order and not exhaustive:</em></p>
+<ul>
+<li style="font-style: italic;"><em>Char Bazaar</em></li>
+<li style="font-style: italic;"><em>Sound</em></li>
+<li style="font-style: italic;"><em>new mechanics for Soul War hunting grounds and bosses</em></li>
+<li style="font-style: italic;"><em>Quick Looting</em></li>
+<li style="font-style: italic;"><em>Cyclopedia, especially the map</em></li>
+<li style="font-style: italic;"><em>system to "Optimise Connection Stability"</em></li>
+</ul>
+<p><em>The features were chosen for different reasons: being particularly challenging, the first big feature developed, the best player response, memorable teamwork, and many more. You asked us to choose one each, and not even that we were&nbsp;able to do since there are way too many unforgettable features to list them all.</em></p>
+<p><em>I hope you and all the other players also have your top-of-the-world moments in your daily lives and enjoy your personal favourite Tibia features.</em></p>
+<p><em>Cheers,</em></p>
+<p><em>Xolurr and the other Tibia programmers</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_16_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_16.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="hoxet"></a><strong>Hoxet</strong></center></td>
+<td><center><strong><a name="pm iv"></a>PM IV "Linguistic background for spells"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_17_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_17.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Hoxet,</em></p>
+<p><em>I am but a humble servant of the gods myself, but I have been granted limited enlightenment. As you know, each spell consists of multiple syllables. These syllables themselves have been loosely derived from ancient Latin.</em></p>
+<p><em>They however have been given a new specific meaning that is linked to the original word but may surpass its scope. When creating new spells we only add new syllables if a spell cannot be sufficiently described using only existing ones. New syllables however are still derived from Latin.</em></p>
+<p><em>Greetings,</em><br><em>Niadus</em><br><em>Product Manager</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><strong><a name="amdurias"></a>PM V "Weak sorcerers"</strong></center></td>
+<td><center><a name="pm v"></a><strong>Amdurias</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Salutations Amdurias,</em></p>
+<p><em>Fear not, for you are not alone in your suffering.</em></p>
+<p><em>It seems like vocations of a more magical nature trade some of their physical prowess for their elemental affinities. Mastering these destructive and restorative capabilities obviously takes a toll on the time you can allot for getting more in shape.</em></p>
+<p><em>That being said, you're still able to move incredible amounts of weight. I certainly would not be able to transport multiple suits of armors.</em></p>
+<p><em>Greetings,</em><br><em>Niadus</em><br><em>Product Manager</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_18_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_18.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="acolyte storm"></a><strong>Acolyte Storm</strong></center></td>
+<td><center><a name="content ix"></a><strong>Content IX "New member introduction to Tibian lore"</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_19_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_19.jpg', 'letter', 'width=530, height=750')"></center></td>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Dear Acolyte Storm,</em></p>
+<p><em>The legacy of older mysteries is indeed something we talk about and are confronted with on a regular basis.</em></p>
+<p><em>Many older secrets have been documented differently than we do nowadays. Some have been kept vague even in the documentation, others have been explained, but you still have to actively&nbsp;try things out&nbsp;or look at the exact code behind them to get a full grasp of their scope. Fortunately many of the older mysteries and puzzles were designed as something that can stay in the background or the minds of players for a very long time. Some have turned out to exist even longer than anticipated.</em><br><br><em>And the solution to old mysteries is not to be taken lightly either. We do review older mysteries and there is an ongoing discussion about&nbsp;when, or if at all, we want to give&nbsp;additional hints for their solution or conclusion. The older a well-kept secret is, the more difficult it can become to handle. Not only for you as the puzzle-hunters but also for us as the creators.</em></p>
+<p><em>As you can see by now, even though it's naturally not the main part of the content we design, mysteries play an important role in our development. And if you really care for your lore as a designer, you'd never just write "anything" just to be able to continue a good story. It all has to make sense and convey the original meaning each secret once had or still has. That is one of the reasons some mysterious lore elements seem to be stuck in time.</em></p>
+<p><em>There is also the&nbsp;risk of things&nbsp;turning out as mysterious&nbsp;even though they were either intended as part of the regular lore or the designer wanted to say something else entirely. And yes, we have to find a way to get to those, too, eventually.</em></p>
+<p><em>Kind regards,</em><br><em>Lionet</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr class="odd">
+<td><center><a name="geraldo sem pavor"></a><strong>Programmer V "Game technology, open source"</strong></center></td>
+<td><center><a name="programmer v"></a><strong>Geraldo sem Pavor</strong></center></td>
+</tr>
+<tr>
+<td style="padding: 10px;" align="justify" width="80%">
+<p><em>Greetings Geraldo sem Pavor,</em></p>
+<p><em>Ignoring the website and some tooling, the underlying technology for nearly all of Tibia is C++. The code has grown over more than 25 years, so it would be far-fetched to say the code base is C++20. However, our compilers allow us to use C++20 features, which we are happy to utilise.</em></p>
+<p><em>We certainly use open-source and community software for development wherever we find it useful. This shouldn't come as a big surprise, as we list the required third-party software licences in our Client's options dialogue. You can find them under Help -&gt; Info -&gt; Third-Party Licences.</em></p>
+<p><em>Since we are using C++20, the Standard Template Library (STL) can be found everywhere. The foundation for the client is the all-purpose Qt library. Boost is another well-established library that we like to use. Additionally, smaller projects like Easylogging++ find their way into Tibia.</em></p>
+<p><em>A project like Tibia is heavily dependent on good security. Therefore, projects like OpenSSL and Crypto++ are essential components.&nbsp;As mentioned, you can already see the libraries the client uses when running.</em></p>
+<p><em>Not all used third-party libraries are visible when inspecting the deployed client, though. For example, we use Google Test for our automated tests, and that part of the code base never reaches you, the players, even though both you and we benefit greatly from it.</em></p>
+<p><em>Cheers,</em><br><em>Xolurr on behalf of the Tibia programmers</em></p>
+</td>
+<td style="padding: 10px;" align="justify" width="20%"><center><img style="cursor: pointer;" src="https://static.tibia.com/images/news/tibianletter_20_small.jpg" width="133" height="188" onclick="window.open('https://static.tibia.com/images/news/tibianletter_20.jpg', 'letter', 'width=530, height=750')"></center></td>
+</tr>
+</tbody>
+</table>
+<p>Now, that was a lot of questions and hopefully interesting answers too. All players whose letters were selected received an arcane insignia and 250 non-transferable Tibia Coins. Once again, congratulations from us CMs to the winners and a big thank you to all participants.&nbsp;<br><br>We hope you enjoyed this event and you could expand your knowledge about Tibia and those things to come. Let us know what you think in the feedback thread.</p>
+<p>See you there!<br>Your Community Managers</p> </td> </tr><tr><td><div class="NewsForumLink"><a href="https://www.tibia.com/forum/?action=thread&threadid=4952487">&raquo; Comment on this article</a></div></td></tr></table><br/><center><form action="https://www.tibia.com/news/?subtopic=newsarchive" method="post" style="padding:0px;margin:0px;"><input type="hidden" name="filter_begin_month" value="7" /><input type="hidden" name="filter_begin_day" value="26" /><input type="hidden" name="filter_begin_year" value="2022" /><input type="hidden" name="filter_end_month" value="8" /><input type="hidden" name="filter_end_day" value="25" /><input type="hidden" name="filter_end_year" value="2023" /><input type="hidden" name="filter_ticker" value="ticker" /><input type="hidden" name="filter_article" value="article" /><input type="hidden" name="filter_news" value="news" /><input type="hidden" name="filter_support" value="support" /><input type="hidden" name="filter_community" value="community" /><input type="hidden" name="filter_technical" value="technical" /><input type="hidden" name="filter_cipsoft" value="cipsoft" /><input type="hidden" name="filter_development" value="development" /><div class="BigButton" style="background-image:url(https://static.tibia.com/images/global/buttons/button_blue.gif)"><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image:url(https://static.tibia.com/images/global/buttons/button_blue_over.gif);"></div><input class="BigButtonText" type="submit" value="Back" /></div></div></form></center><br/> </div>
+</div>
+</div>
+<div class="Border_1" style="background-image:url(https://static.tibia.com/images/global/content/border-1.gif);"></div>
+<div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url(https://static.tibia.com/images/global/content/corner-bl.gif);"></div></div>
+<div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url(https://static.tibia.com/images/global/content/corner-br.gif);"></div></div>
+</div>
+<div id="Footer" class="main-footer">
+Copyright by CipSoft GmbH. All rights reserved.<br/>
+<a href="https://www.tibia.com/abouttibia/?subtopic=aboutcipsoft">About CipSoft</a> | <a href="https://www.tibia.com/support/?subtopic=legaldocuments&amp;page=agreement">Service Agreement</a> | <a href="https://www.tibia.com/support/?subtopic=legaldocuments&amp;page=privacy">Privacy Policy</a>
+</div>
+</div>
+<div class="main-themboxes Themeboxes">
+<div id="DeactivationContainerThemebox" onClick="StopVideoIfExists();DisableDeactivationContainer();"></div>
+<div id="PremiumBox" class="Themebox" style="background-image:url(https://static.tibia.com/images/global/themeboxes/premium/themebox.png);"><div id="PremiumBoxDecor" style="background-image:url(https://static.tibia.com/images/global/themeboxes/premium/coin_animation.gif);"></div><div id="PremiumBoxBg" style="background-image:url(https://static.tibia.com/images/global/themeboxes/premium/coins_premium.png);"></div><div id="PremiumBoxOverlay" style="background-image:url(https://static.tibia.com/images//global/themeboxes/premium/type_overlay.png);"><p id="PremiumBoxOverlayText">Become Premium!</p></div><div id="PremiumBoxButton"><form action="https://www.tibia.com/account/index.php?subtopic=redirectlogin&redirect=https%3A%2F%2Fwww.tibia.com%2Faccount%2F%3Fsubtopic%3Daccountmanagement%23Products%2BAvailable" method="post" style="padding:0px;margin:0px;"><div class="WebshopButton" style="background-image:url(https://static.tibia.com/images/global/themeboxes/premium/button.png)"><div onMouseOver="MouseOverWebshopButton(this);" onMouseOut="MouseOutWebshopButton(this);"><div class="WebshopButtonOver" style="background-image:url(https://static.tibia.com/images/global/themeboxes/premium/button_hover.png);"></div><input class="WebshopButtonText" type="image" name="Get Coins" alt="Get Coins" src="https://static.tibia.com/images/global/themeboxes/premium/get_tibia_coins.png"></div></div></form></div><div id="PremiumBoxButtonDecor" style="background-image:url(https://static.tibia.com/images/global/themeboxes/premium/button_tibia_coins.png);"></div></div> <div id="NetworksBox" class="Themebox" style="background-image:url(https://static.tibia.com/images/global/themeboxes/networks/networksbox.png);">
+<div id="FacebookBlock">
+<div id="FacebookIdle">
+<a href="https://www.facebook.com/tibia" target="_blank" title="Tibia on Facebook">
+<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);">
+<div id="FacebookHover"></div>
+</div>
+</a>
+</div>
+</div>
+<div id="YouTubeBlock">
+<div id="YouTubeIdle">
+<a href="https://www.youtube.com/@cipsoft" target="_blank" title="CipSoft on Youtube">
+<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);">
+<div id="YouTubeHover"></div>
+</div>
+</a>
+</div>
+</div>
+<div class="Bottom" style="background-image:url(https://static.tibia.com/images/global/general/box-bottom.gif);"></div>
+</div>
+
+<div id="FansiteBox" class="Themebox" style="background-image:url(https://static.tibia.com/images/global/themeboxes/fansites/fansites_themebox.gif);">
+<div id="FansiteLogoFrame" style="background-image:url(https://static.tibia.com/images/global/themeboxes/fansites/border_promoted.gif);">
+<a href="https://www.elpodcastibiano.com" target="_blank" rel="noopener noreferrer"><img id="FansiteLogo" src="https://static.tibia.com/images/community/fansitelogos/ElPodcastibiano.com.gif" /></a>
+</div>
+<div class="ThemeboxButton">
+<div class="BigButton" style="background-image:url(https://static.tibia.com/images/global/buttons/button_blue.gif)"><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image:url(https://static.tibia.com/images/global/buttons/button_blue_over.gif);"></div><a class="BigButtonText" href="https://www.tibia.com/community/?subtopic=fansites">View all Fansites</a></div></div> </div>
+<div class="Bottom" style="background-image:url(https://static.tibia.com/images/global/general/box-bottom.gif);"></div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+    // disable all control elements which are not part of the content container element
+    if (g_Deactivated == true) {
+      $(document).ready(function() {
+        $('#Monster').removeAttr('onclick');
+        $('#Monster').css('cursor', 'default');
+        $('#DeactivationContainer').removeAttr('onclick');
+        $('#LoginButtonContainer').css('z-index', 1);
+        $('#DeactivationContainer').css('display', 'block');
+        $('#DeactivationContainer').css('z-index', 50);
+        $('.Themeboxes').css('z-index', 40);
+        $('#RightArtwork').css('opacity', 0.30);
+      });
+    }
+  </script>
+<div id="HelperDivContainer" style="background-image: url(https://static.tibia.com/images/global/content/scroll.gif);"><div class="HelperDivArrow" style="background-image: url(https://static.tibia.com/images/global/content/helper-div-arrow.png);"></div><div id="HelperDivHeadline"></div><div id="HelperDivText"></div><center><img class="Ornament" src="https://static.tibia.com/images/global/content/ornament.gif" /></center><br/></div><div id="BackToTopButton" class="MobileNavigationLinkContainer MobileNavigationMainElement"><a id="BackToTopArrowUp" href="#top"> </a></div> </body>
+</html>
