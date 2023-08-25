@@ -96,8 +96,6 @@ class CharacterParser:
     def _parse_account_information(cls, builder: CharacterBuilder, rows: list[bs4.Tag]):
         """Parse the character's account information."""
         acc_info = {}
-        if not rows:
-            return
 
         for row in rows:
             cols_raw = row.select("td")
@@ -135,10 +133,6 @@ class CharacterParser:
         columns = row.select("td > span")
         for column in columns:
             popup_span = column.select_one("span.HelperDivIndicator")
-            if not popup_span:
-                # Badges are visible, but none selected.
-                return
-
             popup = parse_popup(popup_span["onmouseover"])
             name = popup[0]
             description = popup[1].text

@@ -21,6 +21,10 @@ class TestCommons(unittest.TestCase):
     def assertSizeEquals(self, collection: Sized, size: int, msg = None):
         self.assertEqual(size, len(collection), msg)
 
+    def assertSizeAtLeast(self, collection: Sized, size: int, msg=None):
+        self.assertGreaterEqual(len(collection), size, msg)
+
+
     @staticmethod
     def load_resource(resource):
         with open(os.path.join(RESOURCES_PATH, resource)) as f:

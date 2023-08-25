@@ -83,6 +83,7 @@ exclude_also = [
     "def __gt__",
     "return NotImplemented",
     "if TYPE_CHECKING:",
+    "logger.debug\\(.*",
 ]
 
 

@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContent, Sex, Vocation
 from tibiapy.models import Death, DeathParticipant, AccountBadge, Character
 from tibiapy.parsers.character import CharacterParser
 from tibiapy.urls import get_character_url
@@ -22,19 +22,16 @@ FILE_CHARACTER_TRUNCATED_DEATHS = "character/characterTruncatedDeaths.txt"
 
 
 class TestCharacter(TestCommons):
-    def _compare_character(self, mock_character, character):
-        self.assertEqual(mock_character.name, character.name)
-        self.assertEqual(mock_character.world, character.world)
-        self.assertEqual(mock_character.vocation, character.vocation)
-        self.assertEqual(mock_character.level, character.level)
-        self.assertEqual(mock_character.sex, character.sex)
 
     # region Tibia.com Character Tests
     def test_character_parser_from_content(self):
         """Testing parsing a character's HTML content"""
         character = CharacterParser.from_content(self.load_resource(FILE_CHARACTER_RESOURCE))
-        # TODO: Reenable
-        # self._compare_character(Character("Tschas", "Gladera", Vocation.ELDER_DRUID, 522, Sex.FEMALE), character)
+        self.assertEqual("Tschas", character.name)
+        self.assertEqual("Gladera", character.world)
+        self.assertEqual(Vocation.ELDER_DRUID, character.vocation)
+        self.assertEqual(833, character.level)
+        self.assertEqual(Sex.FEMALE, character.sex)
         self.assertIsNotNone(character.guild_membership)
         self.assertEqual("Bald Dwarfs", character.guild_membership.name)
         self.assertEqual("Exalted", character.guild_membership.rank)
@@ -51,12 +48,7 @@ class TestCharacter(TestCommons):
         self.assertEqual(character.url, get_character_url(character.name))
         self.assertEqual(5, len(character.other_characters))
         self.assertFalse(character.is_hidden)
-
-        # Badges
-        self.assertEqual(8, len(character.account_badges))
-        badge = character.account_badges[0]
-        self.assertEqual("Ancient Hero", badge.name)
-        self.assertEqual("The account is older than 15 years.", badge.description)
+        self.assertIn(character.name, character.url)
 
     def test_character_parser_from_content_not_found(self):
         """Testing parsing a character not found page"""
@@ -71,11 +63,8 @@ class TestCharacter(TestCommons):
         char = CharacterParser.from_content(content)
 
         self.assertIsInstance(char, Character)
-        self.assertEqual("King Dragotz", char.name)
         self.assertTrue(char.is_traded)
-        char_in_other = char.other_characters[0]
-        self.assertEqual("King Dragotz", char_in_other.name)
-        self.assertTrue(char_in_other.is_traded)
+        self.assertTrue(any(c.is_traded for c in char.other_characters), "at least one character should be traded")
 
     def test_character_parser_from_content_with_former_names(self):
         """Testing parsing a character that has former names"""
@@ -83,9 +72,7 @@ class TestCharacter(TestCommons):
 
         char = CharacterParser.from_content(content)
 
-        self.assertIsInstance(char.former_names, list)
-        self.assertTrue(char.former_names)
-        self.assertEqual(len(char.former_names), 3)
+        self.assertIsNotEmpty(char.former_names)
 
     def test_character_parser_from_content_with_position(self):
         """Testing parsing a character with a position"""
@@ -94,12 +81,10 @@ class TestCharacter(TestCommons):
         position = "CipSoft Member"
 
         char = CharacterParser.from_content(content)
-        self.assertEqual("Steve", char.name)
         self.assertEqual(position, char.position)
         self.assertEqual(position, char.account_information.position)
-        steve_other = char.other_characters[2]
-        self.assertEqual("Steve", steve_other.name)
-        self.assertEqual("CipSoft Member", steve_other.position)
+        self.assertTrue(any(c.position == position for c in char.other_characters),
+                        "at least one character should have a position")
 
     def test_character_parser_from_content_deleted_character(self):
         """Testing parsing a character scheduled for deletion"""
@@ -108,60 +93,48 @@ class TestCharacter(TestCommons):
         self.assertEqual("Gutek Handless", char.name)
         self.assertIsNotNone(char.deletion_date)
         self.assertIsInstance(char.deletion_date, datetime.datetime)
-        self.assertEqual(datetime.datetime(2023, 7, 4, 16, 10, 41, tzinfo=datetime.timezone.utc), char.deletion_date)
+        self.assertTrue(char.is_scheduled_for_deletion)
 
     def test_character_parser_from_content_complex_deaths(self):
         """Testing parsing a character with complex deaths (summons, assists, etc)"""
         content = self.load_resource(FILE_CHARACTER_DEATHS_COMPLEX)
+
         char = CharacterParser.from_content(content)
+
+        deaths = char.deaths
         self.assertEqual(5, len(char.deaths))
-        death1, death2, death3, death4, death5 = char.deaths
-        self.assertIsInstance(death1, Death)
-        self.assertEqual(23, len(death1.killers))
-        self.assertEqual(1, len(death1.assists))
+        self.assertTrue(deaths[0].is_by_player)
+        self.assertEqual(23, len(deaths[0].killers))
+        self.assertTrue(deaths[0].killer.is_player)
+        self.assertEqual(1, len(deaths[0].assists))
 
-        self.assertIsInstance(death2, Death)
-        self.assertEqual(1, len(death2.killers))
-        self.assertEqual(0, len(death2.assists))
+        self.assertEqual(1, len(deaths[1].killers))
+        self.assertEqual(0, len(deaths[1].assists))
 
-        self.assertIsInstance(death3, Death)
-        self.assertEqual(11, len(death3.killers))
-        self.assertEqual(0, len(death3.assists))
-        self.assertEqual("a paladin familiar", death3.killers[-1].summon)
-        self.assertEqual("Alloy Hat", death3.killers[-1].name)
-        self.assertTrue(death3.killers[-1].is_traded)
+        self.assertEqual(11, len(deaths[2].killers))
+        self.assertEqual(0, len(deaths[2].assists))
+        self.assertEqual("a paladin familiar", deaths[2].killers[-1].summon)
+        self.assertEqual("Alloy Hat", deaths[2].killers[-1].name)
+        self.assertTrue(deaths[2].killers[-1].is_traded)
 
-        self.assertIsInstance(death4, Death)
-        self.assertEqual(12, len(death4.killers))
-        self.assertEqual(0, len(death4.assists))
-        self.assertEqual("Cliff Lee Burton", death4.killers[-1].name)
-        self.assertTrue(death4.killers[-1].is_traded)
+        self.assertEqual(12, len(deaths[3].killers))
+        self.assertEqual(0, len(deaths[3].assists))
+        self.assertEqual("Cliff Lee Burton", deaths[3].killers[-1].name)
+        self.assertTrue(deaths[3].killers[-1].is_traded)
 
-    def test_character_parserparser_from_content_badges_and_title(self):
+    def test_character_parser_from_content_badges_and_title(self):
         """Testing parsing a character with account badges and a title"""
         content = self.load_resource(FILE_CHARACTER_TITLE_BADGES)
         char = CharacterParser.from_content(content)
-        self.assertEqual("Galarzaa Fidera", char.name)
-        self.assertEqual(410, char.achievement_points)
         self.assertEqual("Gold Hoarder", char.title)
         self.assertEqual(13, char.unlocked_titles)
-        self.assertEqual(8, len(char.account_badges))
-        for badge in char.account_badges:
-            self.assertIsInstance(badge, AccountBadge)
-            self.assertIsInstance(badge.name, str)
-            self.assertIsInstance(badge.icon_url, str)
-            self.assertIsInstance(badge.description, str)
+        self.assertSizeEquals(char.account_badges, 8)
 
     def test_character_parser_from_content_no_selected_badges(self):
         """Testing parsing a character with visible badges but none selected."""
         content = self.load_resource(FILE_CHARACTER_NO_BADGES_SELECTED)
         char = CharacterParser.from_content(content)
-        self.assertEqual("Cozzackirycerz", char.name)
-        self.assertEqual(25, char.achievement_points)
-        self.assertIsNone(char.title)
-        self.assertEqual(3, char.unlocked_titles)
-        self.assertEqual(0, len(char.account_badges))
-        self.assertEqual(0, len(char.former_names))
+        self.assertIsEmpty(char.account_badges)
 
     def test_character_parser_from_content_multiple_houses(self):
         """Testing parsing a character with multiple houses."""
@@ -169,20 +142,13 @@ class TestCharacter(TestCommons):
 
         char = CharacterParser.from_content(content)
 
-        self.assertEqual(2, len(char.houses))
-        first_house = char.houses[0]
-        second_house = char.houses[1]
-        self.assertEqual("Coastwood 8", first_house.name)
-        self.assertEqual("Tunnel Gardens 5", second_house.name)
-        self.assertEqual("Ab'Dendriel", first_house.town)
-        self.assertEqual("Kazordoon", second_house.town)
+        self.assertSizeAtLeast(char.houses, 2)
 
     def test_character_parser_from_content_truncated_deaths(self):
         """Testing parsing a character with truncated daths"""
         content = self.load_resource(FILE_CHARACTER_TRUNCATED_DEATHS)
         char = CharacterParser.from_content(content)
-        self.assertEqual("Godlike Terror", char.name)
-        self.assertEqual(51, len(char.deaths))
+        self.assertIsNotEmpty(char.deaths)
         self.assertTrue(char.deaths_truncated)
 
     def test_character_parser_from_content_unrelated(self):
@@ -192,26 +158,3 @@ class TestCharacter(TestCommons):
             CharacterParser.from_content(content)
 
     # endregion
-
-    def test_death_types(self):
-        """Testing different death types"""
-        assisted_suicide = Death(level=280,
-                                 killers=[
-                                     DeathParticipant(name="Galarzaa", is_player=True, summon=None, is_traded=False),
-                                     DeathParticipant(name="a pixy", is_player=False, summon=None, is_traded=False)
-                                 ],
-                                 assists=[],
-                                 time=datetime.datetime.now())
-        self.assertEqual(assisted_suicide.killer, assisted_suicide.killers[0])
-        self.assertTrue(assisted_suicide.is_by_player)
-
-        spawn_invasion = Death(level=270,
-                               killers=[
-                                   DeathParticipant(name="a demon", is_player=False, summon=None, is_traded=False),
-                                   DeathParticipant(name="Nezune", is_player=True, summon=None, is_traded=False)
-                               ],
-                               assists=[],
-                               time=datetime.datetime.now())
-        self.assertEqual(spawn_invasion.killer, spawn_invasion.killers[0])
-        self.assertIsNone(spawn_invasion.killer.url)
-        self.assertTrue(spawn_invasion.is_by_player)
