@@ -4,7 +4,11 @@ from tibiapy.parsers.spell import SpellsSectionParser, SpellParser
 
 FILE_SPELLS_SECTION = "spells/spellsSectionDefault.txt"
 FILE_SPELLS_SECTION_EMPTY = "spells/spellsSectionEmpty.txt"
+FILE_SPELL = "spells/spell.txt"
 FILE_SPELL_RUNE = "spells/spellWithRune.txt"
+FILE_SPELL_REVELATION_PERK = "spells/spellRevelationPerk.txt"
+FILE_SPELL_VARIABLE_MANA = "spells/spellVariableMana.txt"
+FILE_SPELL_MULTILINE_DESC = "spells/spellMultilneDescription.txt"
 FILE_SPELL_SECONDARY_GROUP = "spells/spellWithSecondaryGroup.txt"
 
 
@@ -41,30 +45,52 @@ class TestSpell(TestCommons,):
     
     # region Spells Tests
 
-    def test_spell_parser_from_content_rune(self):
-        """Testing parsing a rune spell."""
-        content = self.load_resource(FILE_SPELL_RUNE)
+    def test_spell_parser_from_content(self):
+        content = self.load_resource(FILE_SPELL)
 
         spell = SpellParser.from_content(content)
 
         self.assertIsNotNone(spell)
         self.assertIsNotNone(spell.url)
         self.assertIsNotNone(spell.image_url)
+
+        self.assertEqual("Light Healing", spell.name)
+        self.assertEqual("exura", spell.words)
+        self.assertIn("Druid", spell.vocations)
+        self.assertEqual("Healing", spell.group.value)
+        self.assertEqual("Instant", spell.spell_type.value)
+        self.assertEqual(1, spell.cooldown)
+        self.assertEqual(1, spell.cooldown_group)
+        self.assertEqual(8, spell.exp_level)
+        self.assertEqual(20, spell.mana)
+        self.assertEqual(0, spell.price)
+        self.assertIn("Carlin", spell.cities)
+        self.assertFalse(spell.is_premium)
+
+    def test_spell_parser_from_content_variable_mana(self):
+        content = self.load_resource(FILE_SPELL_VARIABLE_MANA)
+
+        spell = SpellParser.from_content(content)
+
+        self.assertIsNone(spell.mana)
+
+    def test_spell_parser_from_content_multiline_description(self):
+        content = self.load_resource(FILE_SPELL_MULTILINE_DESC)
+
+        spell = SpellParser.from_content(content)
+
+        self.assertEqual(2, spell.description.count("\n"))
+
+    def test_spell_parser_from_content_rune(self):
+        """Testing parsing a rune spell."""
+        content = self.load_resource(FILE_SPELL_RUNE)
+
+        spell = SpellParser.from_content(content)
+
         self.assertEqual("Sudden Death Rune", spell.name)
-        self.assertEqual("adori gran mort", spell.words)
-        self.assertIn("Sorcerer", spell.vocations)
         self.assertEqual("Support", spell.group.value)
         self.assertEqual("Rune", spell.spell_type.value)
-        self.assertEqual(2, spell.cooldown)
-        self.assertEqual(2, spell.cooldown_group)
         self.assertEqual(5, spell.soul_points)
-        self.assertEqual(3, spell.amount)
-        self.assertEqual(45, spell.exp_level)
-        self.assertEqual(985, spell.mana)
-        self.assertEqual(3000, spell.price)
-        self.assertIn("Yalahar", spell.cities)
-        self.assertIn("Edron", spell.cities)
-        self.assertFalse(spell.is_premium)
         self.assertEqual("Sudden Death Rune", spell.rune.name)
         self.assertIn("Knight", spell.rune.vocations)
         self.assertEqual("Attack", spell.rune.group.value)
@@ -78,22 +104,21 @@ class TestSpell(TestCommons,):
         spell = SpellParser.from_content(content)
 
         self.assertIsNotNone(spell)
-        self.assertEqual("Protector", spell.name)
-        self.assertEqual("utamo tempo", spell.words)
-        self.assertIn("Knight", spell.vocations)
         self.assertEqual("Support", spell.group.value)
         self.assertEqual("Focus", spell.group_secondary)
-        self.assertEqual("Instant", spell.spell_type.value)
         self.assertEqual(2, spell.cooldown)
         self.assertEqual(2, spell.cooldown_group)
         self.assertEqual(2, spell.cooldown_group_secondary)
-        self.assertIsNone(spell.soul_points)
-        self.assertIsNone(spell.amount)
-        self.assertEqual(55, spell.exp_level)
-        self.assertEqual(200, spell.mana)
-        self.assertEqual(6000, spell.price)
-        self.assertIn("Edron", spell.cities)
-        self.assertTrue(spell.is_premium)
+
+    def test_spell_parser_from_content_revelation_perk(self):
+        """Testing parsing a spell with a secondary group."""
+        content = self.load_resource(FILE_SPELL_REVELATION_PERK)
+        spell = SpellParser.from_content(content)
+
+        self.assertIsNotNone(spell)
+        self.assertIsNone(spell.exp_level)
+        self.assertEqual(0, spell.price)
+        self.assertIsEmpty(spell.cities)
 
     def test_spells_from_content_unknown_spell(self):
         """Testing parsing an unknown spell

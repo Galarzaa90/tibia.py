@@ -50,7 +50,7 @@ class SpellEntry(BaseModel):
     spell_type: SpellType
     """The type of the spell"""
     exp_level: Optional[int] = None
-    """The required level to cast the spell."""
+    """The required level to cast the spell. If obj:`None`, the spell is obtained through a Revelation Perk."""
     mana: Optional[int] = None
     """The mana required to use the spell. If :obj:`None`, the mana cost is variable."""
     price: int

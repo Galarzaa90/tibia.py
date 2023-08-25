@@ -202,7 +202,7 @@ class SpellParser:
         builder.is_premium("yes" in attrs["premium"])
         builder.exp_level(parse_integer(attrs["exp_lvl"], None))
         builder.vocations([s.strip() for s in attrs["vocation"].split(",")])
-        builder.cities([s.strip() for s in attrs["city"].split(",")])
+        builder.cities([s.strip() for s in attrs["city"].split(",")] if "none" not in attrs["city"] else [])
         m = group_pattern.match(attrs["group"])
         groups = m.groupdict()
         builder.group(try_enum(SpellGroup, groups.get("group")))
