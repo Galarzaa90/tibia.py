@@ -6,6 +6,13 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v6.0.1
+
+6.0.1 (2023-08-25)
+==================
+- Fix spells not sold in any cities (revelation perks) having a single "cities" entry ``none`` instead of being empty.
+
+
 .. v6.0.0
 
 6.0.0 (2023-08-24)
