@@ -9,7 +9,10 @@ packages = ["tibiapy"]
 name = "tibia.py"
 dynamic = ["version", "dependencies", "optional-dependencies"]
 authors = [
-    { name = "Galarzaa90", email = "allan.galarza@gmail.com" }
+    { name = "Allan Galarza", email = "allan.galarza@gmail.com" }
+]
+maintainers = [
+    { name = "Allan Galarza", email = "allan.galarza@gmail.com" }
 ]
 license = { text = 'Apache 2.0' }
 description = "API that parses website content into python data."
@@ -17,20 +20,24 @@ requires-python = '>=3.8'
 readme = "README.md"
 classifiers = [
     'Development Status :: 5 - Production/Stable',
+    'Framework :: Pydantic :: 2',
+    'Framework :: Pydantic',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: Apache Software License',
     'Natural Language :: English',
     'Operating System :: OS Independent',
-    'Programming Language :: Python',
     'Programming Language :: Python :: 3 :: Only',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python',
     'Topic :: Games/Entertainment :: Role-Playing',
     'Topic :: Internet',
-    'Topic :: Software Development',
+    'Topic :: Software Development :: Libraries :: Python Modules',
     'Topic :: Software Development :: Libraries',
+    'Topic :: Software Development :: Libraries',
+    'Topic :: Software Development',
     'Topic :: Text Processing :: Markup :: HTML',
     'Topic :: Utilities',
     'Typing :: Typed',
