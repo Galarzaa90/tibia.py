@@ -78,7 +78,9 @@ nonexistent world or a unselected world.
 
 ## World resources
  - [worldOnline.txt](world/worldOnline.txt) - An online world on Tibia.com.
- - [worldOffline.txt](world/worldOffline.txt) - An offline world on Tibia.com.
+ - [worldUnprotected.txt](world/worldUnprotected.txt) - A world with no BattlEye protection.
+ - [worldYellowBattlEye.txt](world/worldYellowBattlEye.txt) - A world that was not initially protected by BattlEye.
+ - [worldNoTitles.txt](world/worldNoTitles.txt) - A world without titles.
  - [worldNotFound.txt](world/worldNotFound.txt) - The page shown for a world that doesn't exist.
  - [worldOverviewOnline.txt](world/worldOverviewOnline.txt) - The world list with all worlds online.
  - [worldOverviewOffline.txt](world/worldOverviewOffline.txt) - The world list with all worlds offline.

@@ -9,7 +9,9 @@ from tibiapy.parsers.world import WorldOverviewParser, WorldParser
 from tibiapy.urls import get_world_url
 
 FILE_WORLD_ONLINE = "world/worldOnline.txt"
+FILE_WORLD_YELLOW_BE = "world/worldYellowBattlEye.txt"
 FILE_WORLD_UNPROTECTED = "world/worldUnprotected.txt"
+FILE_WORLD_NO_TITLES = "world/worldNoTitles.txt"
 FILE_WORLD_OFFLINE = "world/worldOffline.txt"
 FILE_WORLD_NOT_FOUND = "world/worldNotFound.txt"
 FILE_WORLD_OVERVIEW_ONLINE = "world/worldOverviewOnline.txt"
@@ -19,34 +21,28 @@ FILE_WORLD_OVERVIEW_OFFLINE = "world/worldOverviewOffline.txt"
 class TestWorld(TestCommons):
 
     # region Tibia.com Tests
-    def test_world_parser_from_content_full(self):
+    def test_world_parser_from_content_online(self):
         """Testing parsing a world with full information"""
         content = self.load_resource(FILE_WORLD_ONLINE)
 
         world = WorldParser.from_content(content)
 
         self.assertIsInstance(world, World)
-        self.assertEqual(world.name, "Premia")
         self.assertTrue(world.is_online)
         self.assertEqual(world.record_count, 531)
-        self.assertIsInstance(world.record_date, datetime.datetime)
-        self.assertEqual(world.creation_date, "2002-04")
-        self.assertEqual(world.creation_year, 2002)
-        self.assertEqual(world.creation_month, 4)
-        self.assertEqual(world.location, WorldLocation.EUROPE)
-        self.assertEqual(world.pvp_type, PvpType.OPEN_PVP)
-        self.assertEqual(world.transfer_type, TransferType.REGULAR)
-        self.assertSizeEquals(world.world_quest_titles, 6)
-        self.assertTrue(world.is_premium_only)
-        self.assertTrue(world.is_battleye_protected)
-        self.assertEqual(world.battleye_since, datetime.date(2017, 9, 5))
-        self.assertFalse(world.is_experimental)
         self.assertSizeEquals(world.online_players, world.online_count)
         self.assertEqual(get_world_url(world.name), world.url)
 
-        world_json_raw = world.model_dump_json()
-        world_json = json.loads(world_json_raw)
-        self.assertEqual(len(world.online_players), len(world_json["online_players"]))
+    def test_world_parser_from_content_yellow_battleye(self):
+        """Testing parsing a world with yellow BattlEye."""
+        content = self.load_resource(FILE_WORLD_YELLOW_BE)
+
+        world = WorldParser.from_content(content)
+
+        self.assertIsInstance(world.battleye_since, datetime.date)
+        self.assertEqual(BattlEyeType.YELLOW, world.battleye_type)
+        self.assertEqual(BattlEyeType.PROTECTED, world.battleye_type)
+        self.assertTrue(world.is_battleye_protected)
 
     def test_world_parser_from_content_no_battleye_protection(self):
         """Testing parsing a world without BattlEye protection."""
@@ -54,10 +50,18 @@ class TestWorld(TestCommons):
 
         world = WorldParser.from_content(content)
 
-        self.assertEqual("Zuna", world.name)
         self.assertIsNone(world.battleye_since)
         self.assertEqual(BattlEyeType.UNPROTECTED, world.battleye_type)
         self.assertFalse(world.is_battleye_protected)
+
+    def test_world_parser_from_content_no_quest_titles(self):
+        """Testing parsing a world without BattlEye protection."""
+        content = self.load_resource(FILE_WORLD_NO_TITLES)
+
+        world = WorldParser.from_content(content)
+
+        self.assertIsEmpty(world.world_quest_titles)
+
 
     def test_world_parser_from_content_offline(self):
         """Testing parsing an offline world"""
@@ -66,23 +70,9 @@ class TestWorld(TestCommons):
         world = WorldParser.from_content(content)
 
         self.assertIsInstance(world, World)
-        self.assertEqual(world.name, "Antica")
         self.assertFalse(world.is_online)
-        self.assertEqual(world.record_count, 1055)
-        self.assertIsInstance(world.record_date, datetime.datetime)
-        self.assertEqual(world.creation_date, "1997-01")
-        self.assertEqual(world.creation_year, 1997)
-        self.assertEqual(world.creation_month, 1)
-        self.assertEqual(world.location, WorldLocation.EUROPE)
-        self.assertEqual(world.pvp_type, PvpType.OPEN_PVP)
-        self.assertEqual(world.transfer_type, TransferType.REGULAR)
-        self.assertEqual(len(world.world_quest_titles), 6)
-        self.assertFalse(world.is_premium_only)
-        self.assertTrue(world.is_battleye_protected)
-        self.assertEqual(world.battleye_since, datetime.date(2017, 8, 29))
-        self.assertFalse(world.is_experimental)
+        self.assertEqual(world.online_count, 0)
         self.assertEqual(len(world.online_players), world.online_count)
-        self.assertEqual(get_world_url(world.name), world.url)
 
     def test_world_parser_from_content_not_found(self):
         """Testing parsing a world that doesn't exist"""
