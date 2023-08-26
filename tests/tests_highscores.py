@@ -1,8 +1,7 @@
 from tests.tests_tibiapy import TestCommons
-from tibiapy import HighscoresCategory, InvalidContent, \
-    Vocation, HighscoresProfession, HighscoresBattlEyeType
+from tibiapy import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, InvalidContent, Vocation
 from tibiapy.models import Highscores, HighscoresEntry, LoyaltyHighscoresEntry
-from tibiapy.parsers.highscores import HighscoresParser
+from tibiapy.parsers import HighscoresParser
 
 FILE_HIGHSCORES_FULL = "highscores/highscores.txt"
 FILE_HIGHSCORES_EXPERIENCE = "highscores/highscoresExperience.txt"

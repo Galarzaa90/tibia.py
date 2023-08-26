@@ -1,6 +1,6 @@
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.parsers.kill_statistics import KillStatisticsParser
+from tibiapy.parsers import KillStatisticsParser
 
 FILE_KILL_STATISTICS_FULL = "killStatistics/killStatisticsWithResults.txt"
 FILE_KILL_STATISTICS_EMPTY = "killStatistics/killStatisticsNotFound.txt"

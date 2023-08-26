@@ -3,10 +3,10 @@ from tibiapy import InvalidContent
 from tibiapy.parsers.leaderboard import LeaderboardParser
 from tibiapy.urls import get_leaderboards_url
 
-FILE_LEADERBOARD_CURRENT = "leaderboards/leaderboardCurrentRotation.txt"
-FILE_LEADERBOARD_DELETED_CHAR = "leaderboards/leaderboardDeletedCharacter.txt"
-FILE_LEADERBOARD_NOT_FOUND = "leaderboards/leaderboardNotFound.txt"
-FILE_LEADERBOARD_EMPTY = "leaderboards/leaderboardEmpty.txt"
+FILE_LEADERBOARD_CURRENT = "leaderboard/leaderboardCurrentRotation.txt"
+FILE_LEADERBOARD_DELETED_CHAR = "leaderboard/leaderboardDeletedCharacter.txt"
+FILE_LEADERBOARD_NOT_FOUND = "leaderboard/leaderboardNotFound.txt"
+FILE_LEADERBOARD_EMPTY = "leaderboard/leaderboardEmpty.txt"
 
 
 class TestLeaderboards(TestCommons):

@@ -1,21 +1,17 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import AuctionOrderDirection, AuctionOrderBy, AuctionSearchType, AuctionStatus, AuctionBattlEyeFilter, \
-    BidType, \
- \
-    InvalidContent, PvpTypeFilter, \
-    Sex, AuctionSkillFilter, \
-    Vocation, AuctionVocationFilter
-from tibiapy.parsers.bazaar import CharacterBazaarParser, AuctionParser
+from tibiapy import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType, AuctionSkillFilter, \
+    AuctionStatus, AuctionVocationFilter, BidType, InvalidContent, PvpTypeFilter, Sex, Vocation
+from tibiapy.parsers import AuctionParser, CharacterBazaarParser
 
-FILE_BAZAAR_CURRENT_EMPTY = "bazaar/bazaarHistoryEmpty.txt"
-FILE_BAZAAR_CURRENT = "bazaar/bazaarCurrentAuctions.txt"
-FILE_BAZAAR_CURRENT_ALL_FILTERS = "bazaar/bazaarCurrentAuctionsWithFilters.txt"
-FILE_BAZAAR_HISTORY = "bazaar/bazaarHistory.txt"
-FILE_AUCTION_FINISHED = "bazaar/auctionFinished.txt"
-FILE_AUCTION_UPGRADED_ITEMS = "bazaar/auctionWithUpgradedItems.txt"
-FILE_AUCTION_NOT_FOUND = "bazaar/auctionNotFound.txt"
+FILE_BAZAAR_CURRENT_EMPTY = "characterBazaar/bazaarHistoryEmpty.txt"
+FILE_BAZAAR_CURRENT = "characterBazaar/bazaarCurrentAuctions.txt"
+FILE_BAZAAR_CURRENT_ALL_FILTERS = "characterBazaar/bazaarCurrentAuctionsWithFilters.txt"
+FILE_BAZAAR_HISTORY = "characterBazaar/bazaarHistory.txt"
+FILE_AUCTION_FINISHED = "auction/auctionFinished.txt"
+FILE_AUCTION_UPGRADED_ITEMS = "auction/auctionWithUpgradedItems.txt"
+FILE_AUCTION_NOT_FOUND = "auction/auctionNotFound.txt"
 
 
 class TestBazaar(TestCommons):

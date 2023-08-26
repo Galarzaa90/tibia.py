@@ -2,29 +2,28 @@ import datetime
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent, ThreadStatus
-from tibiapy.models import BoardEntry, LastPost, ThreadEntry, CMPostArchive
-from tibiapy.models.forum import BasePost, ForumSection
-from tibiapy.parsers.forum import ForumBoardParser, ForumAnnouncementParser, ForumThreadParser, \
-    CMPostArchiveParser, ForumSectionParser
-from tibiapy.urls import get_forum_board_url, get_cm_post_archive_url
+from tibiapy.models import BoardEntry, CMPostArchive, ForumSection, LastPost, ThreadEntry
+from tibiapy.parsers import CMPostArchiveParser, ForumAnnouncementParser, ForumBoardParser, ForumSectionParser, \
+    ForumThreadParser
+from tibiapy.urls import get_cm_post_archive_url, get_forum_board_url
 
-FILE_WORLD_BOARDS = "forums/forumSection.txt"
-FILE_SECTION_EMPTY_BOARD = "forums/forumSectionWithEmptyBoard.txt"
-FILE_SECTION_EMPTY = "forums/forumSectionEmpty.txt"
-FILE_BOARD_THREAD_LIST = "forums/forumBoard.txt"
-FILE_BOARD_EMPTY_THREAD_LIST = "forums/forumBoardEmpty.txt"
-FILE_BOARD_INVALID_PAGE = "forums/forumBoardInvalidPage.txt"
-FILE_BOARD_GOLDEN_FRAMES = "forums/forumBoardWithGoldenFrame.txt"
-FILE_BOARD_NOT_FOUND = "forums/forumBoardNotFound.txt"
-FILE_ANNOUNCEMENT = "forums/forumAnnouncement.txt"
-FILE_ANNOUNCEMENT_NOT_FOUND = "forums/forumAnnouncementNotFound.txt"
-FILE_THREAD = "forums/forumThread.txt"
-FILE_THREAD_NOT_FOUND = "forums/forumThreadNotFound.txt"
-FILE_THREAD_INVALID_PAGE = "forums/forumThreadInvalidPage.txt"
-FILE_CM_POST_ARCHIVE_INITIAL = "forums/cmPostArchiveInitial.txt"
-FILE_CM_POST_ARCHIVE_NO_PAGES = "forums/cmPostArchiveNoPages.txt"
-FILE_CM_POST_ARCHIVE_NO_RESULTS = "forums/cmPostArchiveNoResults.txt"
-FILE_CM_POST_ARCHIVE_PAGES = "forums/cmPostArchivePages.txt"
+FILE_WORLD_BOARDS = "forumSection/forumSection.txt"
+FILE_SECTION_EMPTY_BOARD = "forumSection/forumSectionWithEmptyBoard.txt"
+FILE_SECTION_EMPTY = "forumSection/forumSectionEmpty.txt"
+FILE_BOARD_THREAD_LIST = "forumBoard/forumBoard.txt"
+FILE_BOARD_EMPTY_THREAD_LIST = "forumBoard/forumBoardEmpty.txt"
+FILE_BOARD_INVALID_PAGE = "forumBoard/forumBoardInvalidPage.txt"
+FILE_BOARD_GOLDEN_FRAMES = "forumBoard/forumBoardWithGoldenFrame.txt"
+FILE_BOARD_NOT_FOUND = "forumBoard/forumBoardNotFound.txt"
+FILE_ANNOUNCEMENT = "forumAnnouncement/forumAnnouncement.txt"
+FILE_ANNOUNCEMENT_NOT_FOUND = "forumAnnouncement/forumAnnouncementNotFound.txt"
+FILE_THREAD = "forumThread/forumThread.txt"
+FILE_THREAD_NOT_FOUND = "forumThread/forumThreadNotFound.txt"
+FILE_THREAD_INVALID_PAGE = "forumThread/forumThreadInvalidPage.txt"
+FILE_CM_POST_ARCHIVE_INITIAL = "cmPostArchive/cmPostArchiveInitial.txt"
+FILE_CM_POST_ARCHIVE_NO_PAGES = "cmPostArchive/cmPostArchiveNoPages.txt"
+FILE_CM_POST_ARCHIVE_NO_RESULTS = "cmPostArchive/cmPostArchiveNoResults.txt"
+FILE_CM_POST_ARCHIVE_PAGES = "cmPostArchive/cmPostArchivePages.txt"
 
 
 class TestForum(TestCommons):

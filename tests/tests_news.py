@@ -3,14 +3,14 @@ import datetime
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
 from tibiapy.enums import NewsCategory, NewsType
-from tibiapy.models.news import NewsEntry, NewsArchive, News
-from tibiapy.parsers.news import NewsArchiveParser, NewsParser
+from tibiapy.models import NewsEntry, NewsArchive, News
+from tibiapy.parsers import NewsArchiveParser, NewsParser
 from tibiapy.urls import get_news_url
 
-FILE_NEWS_ARCHIVE_INITIAL = "news/newsArchiveInitial.txt"
-FILE_NEWS_ARCHIVE_RESULTS_FILTERED = "news/newsArchiveWithFilters.txt"
-FILE_NEWS_ARCHIVE_EMPTY = "news/newsArchiveEmpty.txt"
-FILE_NEWS_ARCHIVE_ERROR = "news/newsArchiveError.txt"
+FILE_NEWS_ARCHIVE_INITIAL = "newsArchive/newsArchiveInitial.txt"
+FILE_NEWS_ARCHIVE_RESULTS_FILTERED = "newsArchive/newsArchiveWithFilters.txt"
+FILE_NEWS_ARCHIVE_EMPTY = "newsArchive/newsArchiveEmpty.txt"
+FILE_NEWS_ARCHIVE_ERROR = "newsArchive/newsArchiveError.txt"
 FILE_NEWS_NOT_FOUND = "news/newsNotFound.txt"
 FILE_NEWS_ARTICLE = "news/newsPostWithDiscussionThread.txt"
 FILE_NEWS_TICKER = "news/newsTicker.txt"

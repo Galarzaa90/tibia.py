@@ -5,31 +5,29 @@ import unittest.mock
 import aiohttp
 from aioresponses import aioresponses
 
-from tests.tests_bazaar import FILE_BAZAAR_CURRENT, FILE_BAZAAR_HISTORY, FILE_AUCTION_FINISHED
-from tests.tests_character import FILE_CHARACTER_RESOURCE, FILE_CHARACTER_NOT_FOUND
+from tests.tests_bazaar import FILE_AUCTION_FINISHED, FILE_BAZAAR_CURRENT, FILE_BAZAAR_HISTORY
+from tests.tests_character import FILE_CHARACTER_NOT_FOUND, FILE_CHARACTER_RESOURCE
 from tests.tests_events import FILE_EVENT_CALENDAR
 from tests.tests_forums import FILE_BOARD_THREAD_LIST, FILE_CM_POST_ARCHIVE_PAGES, FILE_WORLD_BOARDS
 from tests.tests_guild import FILE_GUILD_FULL, FILE_GUILD_LIST
 from tests.tests_highscores import FILE_HIGHSCORES_FULL
-from tests.tests_house import FILE_HOUSE_RENTED, FILE_HOUSE_LIST
+from tests.tests_house import FILE_HOUSE_LIST, FILE_HOUSE_RENTED
 from tests.tests_kill_statistics import FILE_KILL_STATISTICS_FULL
 from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_ARCHIVE_RESULTS_FILTERED, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_ONLINE, FILE_WORLD_OVERVIEW_ONLINE
-from tibiapy import Client, Forbidden, NetworkError, HouseType, BazaarType
-from tibiapy.models import BoardEntry, CharacterBazaar, Character, CMPostArchive, ForumBoard, Guild, Highscores, \
-    HousesSection, Leaderboard, HighscoresProfession, HighscoresCategory, House, HouseEntry, GuildEntry, KillStatistics, \
-    World, WorldOverview, Auction, NewsArchive, NewsEntry, News, ItemSummary, ForumSection
+from tibiapy import BazaarType, Client, Forbidden, HouseType, NetworkError
+from tibiapy.models import Auction, CMPostArchive, Character, CharacterBazaar, ForumBoard, ForumSection, Guild, \
+    GuildEntry, Highscores, HighscoresCategory, HighscoresProfession, House, HouseEntry, HousesSection, ItemSummary, \
+    KillStatistics, Leaderboard, News, NewsArchive, NewsEntry, World, WorldOverview
 from tibiapy.models.creature import CreatureEntry
 from tibiapy.models.event import EventSchedule
-from tibiapy.urls import get_character_url, get_community_boards_url, get_support_boards_url, get_trade_boards_url, \
-    get_world_boards_url, get_world_guilds_url, \
-    get_guild_url, get_house_url, \
-    get_world_overview_url, \
-    get_news_archive_url, get_news_url, get_forum_board_url, get_highscores_url, get_kill_statistics_url, \
-    get_event_schedule_url, get_houses_section_url, get_auction_url, get_bazaar_url, get_cm_post_archive_url, \
-    get_leaderboards_url, get_world_url
+from tibiapy.urls import get_auction_url, get_bazaar_url, get_character_url, get_cm_post_archive_url, \
+    get_community_boards_url, get_event_schedule_url, get_forum_board_url, get_guild_url, get_highscores_url, \
+    get_house_url, get_houses_section_url, get_kill_statistics_url, get_leaderboards_url, get_news_archive_url, \
+    get_news_url, get_support_boards_url, get_trade_boards_url, get_world_boards_url, get_world_guilds_url, \
+    get_world_overview_url, get_world_url
 
 
 class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):

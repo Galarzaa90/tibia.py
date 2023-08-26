@@ -84,6 +84,7 @@ exclude_also = [
     "return NotImplemented",
     "if TYPE_CHECKING:",
     "logger.debug\\(.*",
+    "\\.{3}",
 ]
 
 

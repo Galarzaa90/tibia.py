@@ -2,8 +2,8 @@ import tibiapy
 from tests.tests_tibiapy import TestCommons
 from tibiapy.parsers.spell import SpellsSectionParser, SpellParser
 
-FILE_SPELLS_SECTION = "spells/spellsSectionDefault.txt"
-FILE_SPELLS_SECTION_EMPTY = "spells/spellsSectionEmpty.txt"
+FILE_SPELLS_SECTION = "spellsSection/spellsSectionDefault.txt"
+FILE_SPELLS_SECTION_EMPTY = "spellsSection/spellsSectionEmpty.txt"
 FILE_SPELL = "spells/spell.txt"
 FILE_SPELL_RUNE = "spells/spellWithRune.txt"
 FILE_SPELL_REVELATION_PERK = "spells/spellRevelationPerk.txt"

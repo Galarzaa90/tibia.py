@@ -3,10 +3,10 @@ import json
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.builders.house import HouseBuilder
+from tibiapy.builders import HouseBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType
-from tibiapy.models import House, HousesSection, HouseEntry
-from tibiapy.parsers.house import HouseParser, HousesSectionParser
+from tibiapy.models import House, HouseEntry, HousesSection
+from tibiapy.parsers import HouseParser, HousesSectionParser
 from tibiapy.urls import get_house_url
 
 FILE_HOUSE_RENTED = "house/houseRented.txt"
@@ -15,9 +15,9 @@ FILE_HOUSE_STATUS_NO_BIDS = "house/houseStatusNoBids.txt"
 FILE_HOUSE_STATUS_WITH_BIDS = "house/houseAuctionedWithBids.txt"
 FILE_HOUSE_STATUS_RENTED = "house/houseStatusRented.txt"
 FILE_HOUSE_NOT_FOUND = "house/houseNotFound.txt"
-FILE_HOUSE_LIST = "house/housesSection.txt"
-FILE_HOUSE_LIST_NOT_FOUND = "house/housesSectionNotFound.txt"
-FILE_HOUSE_LIST_EMPTY = "house/housesSectionEmpty.txt"
+FILE_HOUSE_LIST = "housesSection/housesSection.txt"
+FILE_HOUSE_LIST_NOT_FOUND = "housesSection/housesSectionNotFound.txt"
+FILE_HOUSE_LIST_EMPTY = "housesSection/housesSectionEmpty.txt"
 
 
 class TestsHouse(TestCommons):

@@ -1,11 +1,10 @@
 import datetime
-import json
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.enums import PvpType, TransferType, WorldLocation, BattlEyeType
-from tibiapy.models.world import WorldOverview, WorldEntry, World
-from tibiapy.parsers.world import WorldOverviewParser, WorldParser
+from tibiapy.enums import BattlEyeType, PvpType, TransferType, WorldLocation
+from tibiapy.models import World, WorldEntry, WorldOverview
+from tibiapy.parsers import WorldOverviewParser, WorldParser
 from tibiapy.urls import get_world_url
 
 FILE_WORLD_ONLINE = "world/worldOnline.txt"
@@ -14,8 +13,8 @@ FILE_WORLD_UNPROTECTED = "world/worldUnprotected.txt"
 FILE_WORLD_NO_TITLES = "world/worldNoTitles.txt"
 FILE_WORLD_OFFLINE = "world/worldOffline.txt"
 FILE_WORLD_NOT_FOUND = "world/worldNotFound.txt"
-FILE_WORLD_OVERVIEW_ONLINE = "world/worldOverviewOnline.txt"
-FILE_WORLD_OVERVIEW_OFFLINE = "world/worldOverviewOffline.txt"
+FILE_WORLD_OVERVIEW_ONLINE = "worldOverview/worldOverviewOnline.txt"
+FILE_WORLD_OVERVIEW_OFFLINE = "worldOverview/worldOverviewOffline.txt"
 
 
 class TestWorld(TestCommons):

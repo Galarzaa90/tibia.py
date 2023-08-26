@@ -2,24 +2,23 @@ import datetime
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.builders.guild import GuildBuilder
-from tibiapy.models import Guild, GuildWars
-from tibiapy.models.guild import GuildHouse
-from tibiapy.parsers.guild import GuildParser, GuildWarsParser, GuildsSectionParser
-from tibiapy.urls import get_world_guilds_url, get_guild_url, get_guild_wars_url
+from tibiapy.builders import GuildBuilder
+from tibiapy.models import Guild, GuildHouse, GuildWars
+from tibiapy.parsers import GuildParser, GuildWarsParser, GuildsSectionParser
+from tibiapy.urls import get_guild_url, get_guild_wars_url, get_world_guilds_url
 
 FILE_GUILD_FULL = "guild/guild.txt"
 FILE_GUILD_NOT_FOUND = "guild/guildNotFound.txt"
 FILE_GUILD_INFO_MINIMUM = "guild/guildMinimumInfo.txt"
 FILE_GUILD_INFO_DISBANDING = "guild/guildDisbanding.txt"
 FILE_GUILD_INFO_FORMATION = "guild/guildFormation.txt"
-FILE_GUILD_LIST = "guild/guildsSection.txt"
-FILE_GUILD_LIST_NOT_FOUND = "guild/guildsSectionNotFound.txt"
+FILE_GUILD_LIST = "guildsSection/guildsSection.txt"
+FILE_GUILD_LIST_NOT_FOUND = "guildsSection/guildsSectionNotFound.txt"
 FILE_GUILD_IN_WAR = "guild/guildAtWar.txt"
 
-FILE_GUILD_WAR_ACTIVE_HISTORY = "guild/wars/guildWarActiveAndHistory.txt"
-FILE_GUILD_WAR_EMPTY = "guild/wars/guildWarEmpty.txt"
-FILE_GUILD_WAR_UNACTIVE_HISTORY = "guild/wars/guildWarUnactiveAndHistory.txt"
+FILE_GUILD_WAR_ACTIVE_HISTORY = "guildWars/guildWarActiveAndHistory.txt"
+FILE_GUILD_WAR_EMPTY = "guildWars/guildWarEmpty.txt"
+FILE_GUILD_WAR_UNACTIVE_HISTORY = "guildWars/guildWarUnactiveAndHistory.txt"
 
 
 class TestsGuild(TestCommons):

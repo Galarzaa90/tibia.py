@@ -2,23 +2,23 @@ import datetime
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent, Sex, Vocation
-from tibiapy.models import Death, DeathParticipant, AccountBadge, Character
-from tibiapy.parsers.character import CharacterParser
+from tibiapy.models import Character
+from tibiapy.parsers import CharacterParser
 from tibiapy.urls import get_character_url
 from tibiapy.utils import parse_tibia_datetime
 
 FILE_CHARACTER_RESOURCE = "character/character.txt"
 FILE_CHARACTER_NOT_FOUND = "character/characterNotFound.txt"
-FILE_CHARACTER_FORMER_NAMES = "character/characterFormerNames.txt"
-FILE_CHARACTER_TRADED = "character/characterTraded.txt"
+FILE_CHARACTER_FORMER_NAMES = "character/characterWithFormerNames.txt"
+FILE_CHARACTER_TRADED = "character/characterRecentlyTraded.txt"
 FILE_CHARACTER_TRADED_KILLER = "character/character_with_traded_killer.txt"
-FILE_CHARACTER_SPECIAL_POSITION = "character/characterSpecialPosition.txt"
-FILE_CHARACTER_DELETION = "character/characterDeletionScheduled.txt"
+FILE_CHARACTER_SPECIAL_POSITION = "character/characterWithSpecialPosition.txt"
+FILE_CHARACTER_DELETION = "character/characterScheduledForDeletion.txt"
 FILE_CHARACTER_DEATHS_COMPLEX = "character/characterWithComplexDeaths.txt"
 FILE_CHARACTER_TITLE_BADGES = "character/characterWithTitleAndBadges.txt"
-FILE_CHARACTER_NO_BADGES_SELECTED = "character/characterNoBadgesSelected.txt"
-FILE_CHARACTER_MULTIPLE_HOUSES = "character/characterMultipleHouses.txt"
-FILE_CHARACTER_TRUNCATED_DEATHS = "character/characterTruncatedDeaths.txt"
+FILE_CHARACTER_NO_BADGES_SELECTED = "character/characterWithNoBadgesSelected.txt"
+FILE_CHARACTER_MULTIPLE_HOUSES = "character/characterWithMultipleHouses.txt"
+FILE_CHARACTER_TRUNCATED_DEATHS = "character/characterWithTruncatedDeaths.txt"
 
 
 class TestCharacter(TestCommons):

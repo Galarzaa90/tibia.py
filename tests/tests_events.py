@@ -1,11 +1,11 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy.models.event import EventSchedule
-from tibiapy.parsers.event import EventScheduleParser
+from tibiapy.models import EventSchedule
+from tibiapy.parsers import EventScheduleParser
 from tibiapy.urls import get_event_schedule_url
 
-FILE_EVENT_CALENDAR = "events/event_schedule.txt"
+FILE_EVENT_CALENDAR = "eventSchedule/eventSchedule.txt"
 
 
 class TestEvents(TestCommons):

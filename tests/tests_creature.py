@@ -1,12 +1,12 @@
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent
-from tibiapy.models.creature import CreatureEntry
-from tibiapy.parsers.creature import CreaturesSectionParser, CreatureParser, BoostableBossesParser
+from tibiapy.models import CreatureEntry
+from tibiapy.parsers import BoostableBossesParser, CreatureParser, CreaturesSectionParser
 
-FILE_CREATURE_SECTION = "library/creatureList.txt"
-FILE_CREATURE_CONVINCEABLE = "library/creatureConvinceable.txt"
-FILE_CREATURE_ELEMENTAL_RESISTANCES = "library/creatureElementalResistances.txt"
-FILE_BOOSTABLE_BOSSES = "library/bossList.txt"
+FILE_CREATURE_SECTION = "creaturesSection/creatureList.txt"
+FILE_CREATURE_CONVINCEABLE = "creature/creatureConvinceable.txt"
+FILE_CREATURE_ELEMENTAL_RESISTANCES = "creature/creatureElementalResistances.txt"
+FILE_BOOSTABLE_BOSSES = "boostableBosses/bossList.txt"
 
 
 class TestCreature(TestCommons):
