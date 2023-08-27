@@ -7,7 +7,8 @@ Changelog
     Try to always use the latest version.
 
 .. v6.0.2
-6.0.2 (Unreleased)
+
+6.0.2 (2023-08-27)
 ==================
 - Fixed transfer recipient not being set in houses.
 - Fixed highest bid and time left not being set in houses in the houses section.
