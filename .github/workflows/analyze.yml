@@ -34,13 +34,12 @@ jobs:
           coverage report
           coverage xml
       - name: Upload reports 📤
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: reports
           path: |
             flake8.txt
             coverage.xml
-
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
