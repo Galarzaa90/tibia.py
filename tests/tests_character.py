@@ -10,6 +10,7 @@ from tibiapy.utils import parse_tibia_datetime
 FILE_CHARACTER_RESOURCE = "character/character.txt"
 FILE_CHARACTER_NOT_FOUND = "character/characterNotFound.txt"
 FILE_CHARACTER_FORMER_NAMES = "character/characterWithFormerNames.txt"
+FILE_CHARACTER_FORMER_WORLD = "character/characterWithFormerWorld.txt"
 FILE_CHARACTER_TRADED = "character/characterRecentlyTraded.txt"
 FILE_CHARACTER_TRADED_KILLER = "character/character_with_traded_killer.txt"
 FILE_CHARACTER_SPECIAL_POSITION = "character/characterWithSpecialPosition.txt"
@@ -73,6 +74,14 @@ class TestCharacter(TestCommons):
         char = CharacterParser.from_content(content)
 
         self.assertIsNotEmpty(char.former_names)
+
+    def test_character_parser_from_content_with_former_world(self):
+        """Testing parsing a character that has a former world."""
+        content = self.load_resource(FILE_CHARACTER_FORMER_NAMES)
+
+        char = CharacterParser.from_content(content)
+
+        self.assertIsNotNone(char.former_world)
 
     def test_character_parser_from_content_with_position(self):
         """Testing parsing a character with a position"""

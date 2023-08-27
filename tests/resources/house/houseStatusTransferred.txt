@@ -1,6 +1,0 @@
-Beach Home Apartments, Flat 14
-This house has one bed.
-
-The house has a size of 7 square meters. The monthly rent is 25k gold and will be debited to the bank account on Antica.
-
-The house has been rented by Xenaris mag. He has paid the rent until Jan 10 2019, 10:20:52 CET. He will move out on Dec 12 2018, 10:00:00 CET (time of daily server save) and will pass the house to Ivarr Bezkosci for 850000 gold coins.

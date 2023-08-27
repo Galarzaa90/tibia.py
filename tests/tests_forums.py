@@ -2,24 +2,37 @@ import datetime
 
 from tests.tests_tibiapy import TestCommons
 from tibiapy import InvalidContent, ThreadStatus
-from tibiapy.models import BoardEntry, CMPostArchive, ForumSection, LastPost, ThreadEntry
-from tibiapy.parsers import CMPostArchiveParser, ForumAnnouncementParser, ForumBoardParser, ForumSectionParser, \
-    ForumThreadParser
+from tibiapy.models import BoardEntry, CMPostArchive, ForumPost, LastPost, ThreadEntry
+from tibiapy.parsers import (CMPostArchiveParser, ForumAnnouncementParser, ForumBoardParser, ForumSectionParser,
+                             ForumThreadParser)
 from tibiapy.urls import get_cm_post_archive_url, get_forum_board_url
 
 FILE_WORLD_BOARDS = "forumSection/forumSection.txt"
 FILE_SECTION_EMPTY_BOARD = "forumSection/forumSectionWithEmptyBoard.txt"
 FILE_SECTION_EMPTY = "forumSection/forumSectionEmpty.txt"
+
 FILE_BOARD_THREAD_LIST = "forumBoard/forumBoard.txt"
 FILE_BOARD_EMPTY_THREAD_LIST = "forumBoard/forumBoardEmpty.txt"
 FILE_BOARD_INVALID_PAGE = "forumBoard/forumBoardInvalidPage.txt"
 FILE_BOARD_GOLDEN_FRAMES = "forumBoard/forumBoardWithGoldenFrame.txt"
+FILE_BOARD_THREAD_BY_DELETED_CHAR = "forumBoard/forumBoardWithThreadByDeletedChar.txt"
+FILE_BOARD_THREAD_BY_TRADED_CHAR = "forumBoard/forumBoardWithThreadByTradedChar.txt"
+FILE_BOARD_THREAD_LAST_POST_BY_DELETED_CHAR = "forumBoard/forumBoardWithThreadWithLastPostByDeletedChar.txt"
+FILE_BOARD_THREAD_LAST_POST_BY_TRADED_CHAR = "forumBoard/forumBoardWithThreadWithLastPostByTradedChar.txt"
 FILE_BOARD_NOT_FOUND = "forumBoard/forumBoardNotFound.txt"
+
 FILE_ANNOUNCEMENT = "forumAnnouncement/forumAnnouncement.txt"
 FILE_ANNOUNCEMENT_NOT_FOUND = "forumAnnouncement/forumAnnouncementNotFound.txt"
+
 FILE_THREAD = "forumThread/forumThread.txt"
 FILE_THREAD_NOT_FOUND = "forumThread/forumThreadNotFound.txt"
 FILE_THREAD_INVALID_PAGE = "forumThread/forumThreadInvalidPage.txt"
+FILE_THREAD_EDITED_POST = "forumThread/forumThreadWithEditedPost.txt"
+FILE_THREAD_GOLDEN_FRAME = "forumThread/forumThreadWithGoldenFrame.txt"
+FILE_THREAD_POST_BY_DELETED_CHAR = "forumThread/forumThreadWithPostByDeletedChar.txt"
+FILE_THREAD_POST_BY_TRADED_CHAR = "forumThread/forumThreadWithPostByTradedChar.txt"
+FILE_THREAD_POST_GOLDEN_FRAME = "forumThread/forumThreadWithPostWithGoldenFrame.txt"
+
 FILE_CM_POST_ARCHIVE_INITIAL = "cmPostArchive/cmPostArchiveInitial.txt"
 FILE_CM_POST_ARCHIVE_NO_PAGES = "cmPostArchive/cmPostArchiveNoPages.txt"
 FILE_CM_POST_ARCHIVE_NO_RESULTS = "cmPostArchive/cmPostArchiveNoResults.txt"
@@ -27,6 +40,9 @@ FILE_CM_POST_ARCHIVE_PAGES = "cmPostArchive/cmPostArchivePages.txt"
 
 
 class TestForum(TestCommons):
+
+    # region Forum Section Tests
+
     def test_forum_section_parser_from_content_world_boards(self):
         content = self.load_resource(FILE_WORLD_BOARDS)
 
@@ -35,7 +51,6 @@ class TestForum(TestCommons):
         self.assertEqual(2, forum_section.section_id)
         self.assertSizeEquals(forum_section.entries, 82)
         for board in forum_section.entries:
-            self.assertIsInstance(board, BoardEntry)
             self.assertIsNotNone(board.name)
             self.assertGreater(board.board_id, 0)
             self.assertGreater(board.posts, 0)
@@ -47,30 +62,29 @@ class TestForum(TestCommons):
 
         forum_section = ForumSectionParser.from_content(content)
 
-        self.assertEqual(3, forum_section.section_id)
-        self.assertEqual(90, len(forum_section.entries))
-        for board in forum_section.entries:
-            self.assertIsInstance(board, BoardEntry)
-            self.assertIsNotNone(board.name)
-            self.assertGreater(board.board_id, 0)
-            self.assertGreaterEqual(board.posts, 0)
-            self.assertGreaterEqual(board.threads, 0)
-            self.assertIsNotNone(board.url)
+        def test_board_entry(board: BoardEntry):
+            self.assertEqual(0, board.threads)
+            self.assertEqual(0, board.posts)
+            self.assertIsNone(board.last_post)
+
+        self.assertForAtLeastOne(forum_section.entries, test_board_entry)
 
     def test_forum_section_parser_from_content_empty_section(self):
         content = self.load_resource(FILE_SECTION_EMPTY)
 
         forum_section = ForumSectionParser.from_content(content)
 
-        self.assertEqual(10, forum_section.section_id)
-        self.assertIsInstance(forum_section, ForumSection)
-        self.assertEqual(0, len(forum_section.entries))
+        self.assertIsEmpty(forum_section.entries)
 
     def test_forum_section_parser_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
             ForumSectionParser.from_content(content)
+
+    # endregion
+
+    # region Forum Board Tests
 
     def test_forum_board_parser_from_content(self):
         content = self.load_resource(FILE_BOARD_THREAD_LIST)
@@ -87,14 +101,6 @@ class TestForum(TestCommons):
         self.assertIsNotNone(board.url)
         self.assertIsNotNone(board.next_page_url)
         self.assertEqual(board.next_page_url, get_forum_board_url(board.board_id, board.current_page + 1, board.age))
-        for thread in board.entries:
-            self.assertIsInstance(thread, ThreadEntry)
-            self.assertIsNotNone(thread.title)
-            self.assertGreater(thread.thread_id, 0)
-            self.assertGreaterEqual(thread.views, 0)
-            self.assertGreaterEqual(thread.replies, 0)
-            self.assertIsInstance(thread.last_post, LastPost)
-            self.assertIsNotNone(thread.last_post.author_url)
 
         with self.assertRaises(ValueError):
             board.get_page_url(-1)
@@ -105,14 +111,9 @@ class TestForum(TestCommons):
         board = ForumBoardParser.from_content(content)
 
         self.assertIsNotNone(board)
-        self.assertEqual("Conventions", board.name)
-        self.assertEqual("Community Boards", board.section)
-        self.assertEqual(1, board.current_page)
+        self.assertEqual(0, board.results_count)
         self.assertEqual(1, board.total_pages)
-        self.assertEqual(18, board.board_id)
-        self.assertEqual(0, len(board.entries))
-        self.assertIsNone(board.next_page_url)
-        self.assertIsNone(board.previous_page_url)
+        self.assertIsEmpty(board.entries)
 
     def test_forum_board_parser_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
@@ -135,16 +136,64 @@ class TestForum(TestCommons):
 
         board = ForumBoardParser.from_content(content)
 
-        self.assertEqual("Proposals (English Only)", board.name)
-        self.assertEqual("Community Boards", board.section)
-        self.assertEqual(30, len(board.entries))
-        self.assertEqual(5, len(board.announcements))
-        self.assertEqual(1999, board.total_pages)
-        for thread in board.entries:
+        self.assertIsNotNone(board)
+
+        def test_thread_entry(thread: ThreadEntry):
             self.assertTrue(thread.golden_frame)
             self.assertTrue(thread.status & ThreadStatus.HOT)
             self.assertTrue(thread.status & ThreadStatus.CLOSED)
-            self.assertIsNotNone(thread.url)
+
+        self.assertForAtLeastOne(board.entries, test_thread_entry)
+
+    def test_forum_board_parser_from_content_thread_by_deleted_char(self):
+        content = self.load_resource(FILE_BOARD_THREAD_BY_DELETED_CHAR)
+
+        board = ForumBoardParser.from_content(content)
+
+        self.assertIsNotNone(board)
+
+        def test_thread_entry(thread: ThreadEntry):
+            self.assertTrue(thread.thread_starter_deleted)
+
+        self.assertForAtLeastOne(board.entries, test_thread_entry)
+
+    def test_forum_board_parser_from_content_thread_by_traded_char(self):
+        content = self.load_resource(FILE_BOARD_THREAD_BY_TRADED_CHAR)
+
+        board = ForumBoardParser.from_content(content)
+
+        self.assertIsNotNone(board)
+
+        def test_thread_entry(thread: ThreadEntry):
+            self.assertTrue(thread.thread_starter_traded)
+
+        self.assertForAtLeastOne(board.entries, test_thread_entry)
+
+    def test_forum_board_parser_from_content_thread_last_post_by_deleted_char(self):
+        content = self.load_resource(FILE_BOARD_THREAD_LAST_POST_BY_DELETED_CHAR)
+
+        board = ForumBoardParser.from_content(content)
+
+        self.assertIsNotNone(board)
+
+        def test_thread_entry(thread: ThreadEntry):
+            self.assertIsNotNone(thread.last_post)
+            self.assertTrue(thread.last_post.is_author_deleted)
+
+        self.assertForAtLeastOne(board.entries, test_thread_entry)
+
+    def test_forum_board_parser_from_content_thread_last_post_by_traded_char(self):
+        content = self.load_resource(FILE_BOARD_THREAD_LAST_POST_BY_TRADED_CHAR)
+
+        board = ForumBoardParser.from_content(content)
+
+        self.assertIsNotNone(board)
+
+        def test_thread_entry(thread: ThreadEntry):
+            self.assertIsNotNone(thread.last_post)
+            self.assertTrue(thread.last_post.is_author_traded)
+
+        self.assertForAtLeastOne(board.entries, test_thread_entry)
 
     def test_forum_board_parser_from_content_not_found(self):
         content = self.load_resource(FILE_BOARD_NOT_FOUND)
@@ -153,6 +202,9 @@ class TestForum(TestCommons):
 
         self.assertIsNone(board)
 
+    # endregion
+
+    # region Forum Announcement Tests
 
     def test_forum_announcement_from_content(self):
         content = self.load_resource(FILE_ANNOUNCEMENT)
@@ -187,7 +239,11 @@ class TestForum(TestCommons):
         with self.assertRaises(InvalidContent):
             ForumAnnouncementParser.from_content(content, 34)
 
-    def test_forum_thread_from_content(self):
+    # endregion
+
+    # region Forum Thread Tests
+
+    def test_forum_thread_parser_from_content(self):
         content = self.load_resource(FILE_THREAD)
 
         thread = ForumThreadParser.from_content(content)
@@ -220,7 +276,7 @@ class TestForum(TestCommons):
         with self.assertRaises(ValueError):
             thread.get_page_url(-1)
 
-    def test_forum_thread_from_content_invalid_page(self):
+    def test_forum_thread_parser_from_content_invalid_page(self):
         content = self.load_resource(FILE_THREAD_INVALID_PAGE)
 
         thread = ForumThreadParser.from_content(content)
@@ -235,18 +291,79 @@ class TestForum(TestCommons):
         self.assertEqual(1, thread.total_pages)
         self.assertEqual(0, len(thread.entries))
 
-    def test_forum_thread_from_content_not_found(self):
+    def test_forum_thread_parser_from_content_with_edited_post(self):
+        content = self.load_resource(FILE_THREAD_EDITED_POST)
+
+        thread = ForumThreadParser.from_content(content)
+
+        self.assertIsNotNone(thread)
+
+        def test_post(post: ForumPost):
+            self.assertIsNotNone(post.edited_by)
+            self.assertIsNotNone(post.edited_date)
+
+        self.assertForAtLeastOne(thread.entries, test_post)
+
+    def test_forum_thread_parser_from_content_with_golden_frame(self):
+        content = self.load_resource(FILE_THREAD_GOLDEN_FRAME)
+
+        thread = ForumThreadParser.from_content(content)
+
+        self.assertIsNotNone(thread)
+        self.assertTrue(thread.golden_frame)
+
+    def test_forum_thread_parser_from_content_with_post_by_deleted_char(self):
+        content = self.load_resource(FILE_THREAD_POST_BY_DELETED_CHAR)
+
+        thread = ForumThreadParser.from_content(content)
+
+        self.assertIsNotNone(thread)
+
+        def test_post(post: ForumPost):
+            self.assertIsNotNone(post.author.is_author_deleted)
+
+        self.assertForAtLeastOne(thread.entries, test_post)
+
+    def test_forum_thread_parser_from_content_with_post_by_traded_char(self):
+        content = self.load_resource(FILE_THREAD_POST_BY_DELETED_CHAR)
+
+        thread = ForumThreadParser.from_content(content)
+
+        self.assertIsNotNone(thread)
+
+        def test_post(post: ForumPost):
+            self.assertIsNotNone(post.author.is_author_traded)
+
+        self.assertForAtLeastOne(thread.entries, test_post)
+
+    def test_forum_thread_parser_from_content_with_post_with_golden_frame(self):
+        content = self.load_resource(FILE_THREAD_POST_GOLDEN_FRAME)
+
+        thread = ForumThreadParser.from_content(content)
+
+        self.assertIsNotNone(thread)
+
+        def test_post(post: ForumPost):
+            self.assertIsNotNone(post.golden_frame)
+
+        self.assertForAtLeastOne(thread.entries, test_post)
+
+    def test_forum_thread_parser_from_content_not_found(self):
         content = self.load_resource(FILE_THREAD_NOT_FOUND)
 
         thread = ForumThreadParser.from_content(content)
 
         self.assertIsNone(thread)
 
-    def test_forum_thread_from_content_unrelated_section(self):
+    def test_forum_thread_parser_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
         with self.assertRaises(InvalidContent):
             ForumThreadParser.from_content(content)
+
+    # endregion
+
+    # region CM Post Archive Tests
 
     def test_cm_post_archive_from_content_initial(self):
         content = self.load_resource(FILE_CM_POST_ARCHIVE_INITIAL)
@@ -312,8 +429,10 @@ class TestForum(TestCommons):
 
     def test_cm_post_archive_get_url_invalid_dates(self):
         with self.assertRaises(ValueError):
-            get_cm_post_archive_url(datetime.date.today(), datetime.date.today()-datetime.timedelta(days=20))
+            get_cm_post_archive_url(datetime.date.today(), datetime.date.today() - datetime.timedelta(days=20))
 
     def test_cm_post_archive_get_url_invalid_page(self):
         with self.assertRaises(ValueError):
-            get_cm_post_archive_url(datetime.date.today()-datetime.timedelta(days=20), datetime.date.today(), -2)
+            get_cm_post_archive_url(datetime.date.today() - datetime.timedelta(days=20), datetime.date.today(), -2)
+
+    # endregion

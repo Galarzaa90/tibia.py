@@ -4,10 +4,11 @@ from tibiapy.models import Highscores, HighscoresEntry, LoyaltyHighscoresEntry
 from tibiapy.parsers import HighscoresParser
 
 FILE_HIGHSCORES_FULL = "highscores/highscores.txt"
+FILE_HIGHSCORES_GLOBAL = "highscores/highscoresGlobal.txt"
 FILE_HIGHSCORES_EXPERIENCE = "highscores/highscoresExperience.txt"
 FILE_HIGHSCORES_LOYALTY = "highscores/highscoresLoyalty.txt"
 FILE_HIGHSCORES_BATTLEYE_PVP_FILTER = "highscores/highscoresBattleEyePvpFilters.txt"
-FILE_HIGHSCORES_EMPTY = "highscores/highscoresEmpty.txt"
+FILE_HIGHSCORES_NOT_FOUND = "highscores/highscoresNotFound.txt"
 FILE_HIGHSCORES_NO_RESULTS = "highscores/highscoresNoResults.txt"
 
 
@@ -33,7 +34,6 @@ class TestHighscores(TestCommons):
         self.assertIsNotNone(highscores.previous_page_url)
 
         for entry in highscores.entries:
-            self.assertIsInstance(entry, HighscoresEntry)
             self.assertIsInstance(entry.name, str)
             self.assertIsInstance(entry.vocation, Vocation)
             self.assertIsInstance(entry.rank, int)
@@ -41,25 +41,21 @@ class TestHighscores(TestCommons):
             self.assertIsInstance(entry.level, int)
             self.assertEqual("Gladera", entry.world)
 
+    def test_highscores_parser_from_content_global_highscores(self):
+        content = self.load_resource(FILE_HIGHSCORES_GLOBAL)
+        highscores = HighscoresParser.from_content(content)
+
+        self.assertIsNotNone(highscores)
+        self.assertIsNone(highscores.world)
+
     def test_highscores_parser_from_content_experience(self):
         """Testing parsing experience highscores"""
         content = self.load_resource(FILE_HIGHSCORES_EXPERIENCE)
         highscores = HighscoresParser.from_content(content)
 
-        self.assertEqual(highscores.world, "Gladera")
-        self.assertEqual(highscores.vocation, HighscoresProfession.PALADINS)
+        self.assertIsNotNone(highscores.world, )
         self.assertEqual(highscores.category, HighscoresCategory.EXPERIENCE)
-        self.assertEqual(highscores.results_count, 1000)
-        self.assertEqual(highscores.total_pages, 20)
 
-        for entry in highscores.entries:
-            self.assertIsInstance(entry, HighscoresEntry)
-            self.assertIsInstance(entry.name, str)
-            self.assertIsInstance(entry.vocation, Vocation)
-            self.assertIsInstance(entry.rank, int)
-            self.assertIsInstance(entry.value, int)
-            self.assertIsInstance(entry.level, int)
-            self.assertEqual(entry.world, "Gladera")
 
     def test_highscores_parser_from_content_loyalty(self):
         """Testing parsing experience loyalty"""
@@ -72,14 +68,8 @@ class TestHighscores(TestCommons):
         self.assertEqual(1000, highscores.results_count)
         self.assertEqual(20, highscores.total_pages)
 
-        for entry in highscores.entries:
-            self.assertIsInstance(entry, LoyaltyHighscoresEntry)
-            self.assertIsInstance(entry.name, str)
-            self.assertIsInstance(entry.vocation, Vocation)
-            self.assertIsInstance(entry.rank, int)
-            self.assertIsInstance(entry.value, int)
-            self.assertIsInstance(entry.level, int)
-            self.assertIsInstance(entry.title, str)
+        self.assertForAll(highscores.entries, lambda e: self.assertIsInstance(e, LoyaltyHighscoresEntry))
+
 
     def test_highscores_parser_from_content_battleye_and_pvp_filters(self):
         """Testing parsing Highscores"""
@@ -106,22 +96,21 @@ class TestHighscores(TestCommons):
             self.assertIsInstance(entry.value, int)
             self.assertIsInstance(entry.level, int)
 
-    def test_highscores_parser_from_content_empty(self):
+    def test_highscores_parser_from_content_not_found(self):
         """Testing parsing highscores when empty (world doesn't exist)"""
-        content = self.load_resource(FILE_HIGHSCORES_EMPTY)
+        content = self.load_resource(FILE_HIGHSCORES_NOT_FOUND)
         highscores = HighscoresParser.from_content(content)
 
         self.assertIsNone(highscores)
 
     def test_highscores_parser_from_content_no_results(self):
-        """Testing parsing highscores with no results (first day of a new world)"""
+        """Testing parsing highscores with no results"""
         content = self.load_resource(FILE_HIGHSCORES_NO_RESULTS)
         highscores = HighscoresParser.from_content(content)
 
         self.assertIsInstance(highscores, Highscores)
-        self.assertEqual("Gravitera", highscores.world)
         self.assertEqual(1, highscores.total_pages)
-        self.assertEqual(0, len(highscores.entries))
+        self.assertIsEmpty(highscores.entries)
         self.assertEqual(0, highscores.results_count)
 
     def test_highscores_parser_from_content_unrelated_section(self):

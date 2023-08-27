@@ -9,6 +9,7 @@ from tibiapy.urls import get_world_url
 
 FILE_WORLD_ONLINE = "world/worldOnline.txt"
 FILE_WORLD_YELLOW_BE = "world/worldYellowBattlEye.txt"
+FILE_WORLD_GREEN_BE = "world/worldGreenBattlEye.txt"
 FILE_WORLD_UNPROTECTED = "world/worldUnprotected.txt"
 FILE_WORLD_NO_TITLES = "world/worldNoTitles.txt"
 FILE_WORLD_OFFLINE = "world/worldOffline.txt"
@@ -19,7 +20,7 @@ FILE_WORLD_OVERVIEW_OFFLINE = "worldOverview/worldOverviewOffline.txt"
 
 class TestWorld(TestCommons):
 
-    # region Tibia.com Tests
+    # region World Tests
     def test_world_parser_from_content_online(self):
         """Testing parsing a world with full information"""
         content = self.load_resource(FILE_WORLD_ONLINE)
@@ -38,9 +39,22 @@ class TestWorld(TestCommons):
 
         world = WorldParser.from_content(content)
 
+        self.assertIsInstance(world, World)
         self.assertIsInstance(world.battleye_since, datetime.date)
         self.assertEqual(BattlEyeType.YELLOW, world.battleye_type)
         self.assertEqual(BattlEyeType.PROTECTED, world.battleye_type)
+        self.assertTrue(world.is_battleye_protected)
+
+    def test_world_parser_from_content_green_battleye(self):
+        """Testing parsing a world with green BattlEye."""
+        content = self.load_resource(FILE_WORLD_GREEN_BE)
+
+        world = WorldParser.from_content(content)
+
+        self.assertIsInstance(world, World)
+        self.assertIsNone(world.battleye_since)
+        self.assertEqual(BattlEyeType.GREEN, world.battleye_type)
+        self.assertEqual(BattlEyeType.INITIALLY_PROTECTED, world.battleye_type)
         self.assertTrue(world.is_battleye_protected)
 
     def test_world_parser_from_content_no_battleye_protection(self):
@@ -49,9 +63,19 @@ class TestWorld(TestCommons):
 
         world = WorldParser.from_content(content)
 
+        self.assertIsInstance(world, World)
         self.assertIsNone(world.battleye_since)
         self.assertEqual(BattlEyeType.UNPROTECTED, world.battleye_type)
         self.assertFalse(world.is_battleye_protected)
+
+    def test_world_parser_from_content_experimental(self):
+        """Testing parsing an experimental world"""
+        content = self.load_resource(FILE_WORLD_UNPROTECTED)
+
+        world = WorldParser.from_content(content)
+
+        self.assertIsInstance(world, World)
+        self.assertTrue(world.is_experimental)
 
     def test_world_parser_from_content_no_quest_titles(self):
         """Testing parsing a world without BattlEye protection."""
@@ -60,7 +84,6 @@ class TestWorld(TestCommons):
         world = WorldParser.from_content(content)
 
         self.assertIsEmpty(world.world_quest_titles)
-
 
     def test_world_parser_from_content_offline(self):
         """Testing parsing an offline world"""
@@ -88,10 +111,9 @@ class TestWorld(TestCommons):
         with self.assertRaises(InvalidContent):
             WorldParser.from_content(content)
 
-
     # endregion
 
-    # region Tibia.com WorldOverview Tests
+    # region WorldOverview Tests
     def test_world_overview_from_content(self):
         """Testing parsing world overview"""
         content = self.load_resource(FILE_WORLD_OVERVIEW_ONLINE)

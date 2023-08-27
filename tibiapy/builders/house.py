@@ -138,6 +138,8 @@ class HouseEntryBuilder(_HouseWithIdBuilder):
             town=self._town,
             size=self._size,
             rent=self._rent,
+            time_left=self._time_left,
+            highest_bid=self._highest_bid,
         )
 
 
@@ -238,7 +240,9 @@ class HouseBuilder(_HouseWithIdBuilder):
             beds=self._beds,
             owner=self._owner,
             owner_sex=self._owner_sex,
+            transfer_recipient=self._transfer_recipient,
             transfer_price=self._transfer_price,
+            transfer_date=self._transfer_date,
             transfer_accepted=self._transfer_accepted,
             highest_bid=self._highest_bid,
             highest_bidder=self._highest_bidder,

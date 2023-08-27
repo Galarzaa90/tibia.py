@@ -96,7 +96,6 @@ class NewsArchiveParser:
         InvalidContent
             If content is not the HTML of a news search's page.
         """
-
         parsed_content = parse_tibiacom_content(content)
         tables = parse_tibiacom_tables(parsed_content)
         if "News Archive Search" not in tables:

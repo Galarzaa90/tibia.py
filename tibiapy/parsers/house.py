@@ -114,7 +114,7 @@ class HousesSectionParser:
         builder.order(try_enum(HouseOrder, form_data.values.get("order"), HouseOrder.NAME))
 
     @classmethod
-    def _parse_status(cls, builder, status):
+    def _parse_status(cls, builder: HouseEntryBuilder, status):
         """
         Parse the status string found in the table and applies the corresponding values.
 
@@ -201,7 +201,7 @@ class HouseParser:
     # endregion
 
     @classmethod
-    def _parse_status(cls, builder, status):
+    def _parse_status(cls, builder: HouseBuilder, status):
         """Parse the house's state description and applies the corresponding values.
 
         Parameters

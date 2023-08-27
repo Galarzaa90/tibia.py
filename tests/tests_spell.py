@@ -8,7 +8,7 @@ FILE_SPELL = "spells/spell.txt"
 FILE_SPELL_RUNE = "spells/spellWithRune.txt"
 FILE_SPELL_REVELATION_PERK = "spells/spellRevelationPerk.txt"
 FILE_SPELL_VARIABLE_MANA = "spells/spellVariableMana.txt"
-FILE_SPELL_MULTILINE_DESC = "spells/spellMultilneDescription.txt"
+FILE_SPELL_MULTILINE_DESC = "spells/spellMultilineDescription.txt"
 FILE_SPELL_SECONDARY_GROUP = "spells/spellWithSecondaryGroup.txt"
 
 
