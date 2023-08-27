@@ -31,7 +31,7 @@ jobs:
         run: flake8 --output-file=flake8.txt --exit-zero
       - name: Generate Coverage Reports 📋
         run: |
-          coverage report >> coverage.txt
+          coverage report
           coverage xml
       - name: Upload reports 📤
         uses: actions/upload-artifact@v2
@@ -69,4 +69,4 @@ jobs:
         with:
           name: reports
       - name: Upload to Codecov ☂️
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3.1.4
