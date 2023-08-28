@@ -138,7 +138,8 @@ trying to cover as many scenarios possible, to be used in unit tests.
 
 ## Kill Statistics
 
-- [killStatisticsNotFound.txt](killStatistics/killStatisticsNotFound.txt) - The content of the kill statistics's page of a nonexistent world or a unselected world.
+- [killStatisticsNotFound.txt](killStatistics/killStatisticsNotFound.txt) - The content of the kill statistics page of a nonexistent world or a unselected world.
+- [killStatisticsEmpty.txt](killStatistics/killStatisticsEmpty.txt) - The content for the kill statistics page with no results.
 - [killStatisticsWithResults.txt](killStatistics/killStatisticsWithResults.txt) - The content of a correct kill statistics' page.
 
 ## Leaderboard

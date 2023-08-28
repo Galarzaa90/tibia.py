@@ -3,11 +3,12 @@ from tibiapy import InvalidContent
 from tibiapy.parsers import KillStatisticsParser
 
 FILE_KILL_STATISTICS_FULL = "killStatistics/killStatisticsWithResults.txt"
-FILE_KILL_STATISTICS_EMPTY = "killStatistics/killStatisticsNotFound.txt"
+FILE_KILL_STATISTICS_EMPTY = "killStatistics/killStatisticsEmpty.txt"
+FILE_KILL_STATISTICS_NOT_FOUND = "killStatistics/killStatisticsNotFound.txt"
 
 
 class TestHighscores(TestCommons):
-    # region Tibia.com Tests
+
     def test_kill_statistics_from_parser_content(self):
         """Testing parsing kill statistics"""
         content = self.load_resource(FILE_KILL_STATISTICS_FULL)
@@ -33,8 +34,16 @@ class TestHighscores(TestCommons):
         self.assertEqual(3, demons_entry.last_week_players_killed)
 
     def test_kill_statistics_from_parser_content_empty(self):
-        """Testing parsing empty kill statistics"""
         content = self.load_resource(FILE_KILL_STATISTICS_EMPTY)
+
+        kill_statistics = KillStatisticsParser.from_content(content)
+
+        self.assertIsNotNone(kill_statistics)
+        self.assertIsEmpty(kill_statistics.entries)
+
+    def test_kill_statistics_from_parser_content_not_found(self):
+        """Testing parsing empty kill statistics"""
+        content = self.load_resource(FILE_KILL_STATISTICS_NOT_FOUND)
         kill_statistics = KillStatisticsParser.from_content(content)
 
         self.assertIsNone(kill_statistics)
@@ -44,5 +53,3 @@ class TestHighscores(TestCommons):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
         with self.assertRaises(InvalidContent):
             KillStatisticsParser.from_content(content)
-
-    # endregion
