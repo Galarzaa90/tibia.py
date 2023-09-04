@@ -12,6 +12,7 @@ FILE_SECTION_EMPTY_BOARD = "forumSection/forumSectionWithEmptyBoard.txt"
 FILE_SECTION_EMPTY = "forumSection/forumSectionEmpty.txt"
 
 FILE_BOARD_THREAD_LIST = "forumBoard/forumBoard.txt"
+FILE_BOARD_WITH_ANNOUNCEMENTS = "forumBoard/forumBoardWithAnnouncements.txt"
 FILE_BOARD_EMPTY_THREAD_LIST = "forumBoard/forumBoardEmpty.txt"
 FILE_BOARD_INVALID_PAGE = "forumBoard/forumBoardInvalidPage.txt"
 FILE_BOARD_GOLDEN_FRAMES = "forumBoard/forumBoardWithGoldenFrame.txt"
@@ -104,6 +105,14 @@ class TestForum(TestCommons):
 
         with self.assertRaises(ValueError):
             board.get_page_url(-1)
+
+    def test_forum_board_parser_from_content_with_announcements(self):
+        content = self.load_resource(FILE_BOARD_WITH_ANNOUNCEMENTS)
+
+        board = ForumBoardParser.from_content(content)
+
+        self.assertIsNotNone(board)
+        self.assertIsNotEmpty(board.announcements)
 
     def test_forum_board_parser_from_content_empty_threads(self):
         content = self.load_resource(FILE_BOARD_EMPTY_THREAD_LIST)

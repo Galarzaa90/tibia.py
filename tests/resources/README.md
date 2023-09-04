@@ -63,6 +63,7 @@ trying to cover as many scenarios possible, to be used in unit tests.
 ## Forum Board
 
 - [forumBoard.txt](forumBoard/forumBoard.txt) - A forum board.
+- [forumBoardWithAnnouncements.txt](forumBoard/forumBoardWithAnnouncements.txt) - A forum board with announcements.
 - [forumBoardEmpty.txt](forumBoard/forumBoardEmpty.txt) - An empty forum board.
 - [forumBoardInvalidPage.txt](forumBoard/forumBoardInvalidPage.txt) - A forum board on a page out of range.
 - [forumBoardNotFound.txt](forumBoard/forumBoardNotFound.txt) - The page shown for a board that doesn't exist.
