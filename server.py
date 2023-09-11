@@ -10,7 +10,7 @@ from starlette import status
 from typing_extensions import Annotated
 
 import tibiapy
-from tibiapy import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
+from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
                      AuctionSkillFilter, AuctionVocationFilter, HighscoresBattlEyeType, HighscoresCategory,
                      HighscoresProfession, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, PvpTypeFilter,
                      SpellGroup, SpellSorting, SpellType, SpellVocationFilter)

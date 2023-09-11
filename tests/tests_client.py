@@ -17,7 +17,9 @@ from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_ARCHIVE_RESULTS_FILTERED, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_ONLINE, FILE_WORLD_OVERVIEW_ONLINE
-from tibiapy import BazaarType, Client, Forbidden, HouseType, NetworkError
+from tibiapy import Forbidden, NetworkError
+from tibiapy.client import Client
+from tibiapy.enums import BazaarType, HouseType
 from tibiapy.models import Auction, CMPostArchive, Character, CharacterBazaar, ForumBoard, ForumSection, Guild, \
     GuildEntry, Highscores, HighscoresCategory, HighscoresProfession, House, HouseEntry, HousesSection, ItemSummary, \
     KillStatistics, Leaderboard, News, NewsArchive, NewsEntry, World, WorldOverview

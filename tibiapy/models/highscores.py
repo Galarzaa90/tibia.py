@@ -3,9 +3,8 @@ from typing import List, Optional, Set
 
 from pydantic import SerializeAsAny
 
-from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, PvpTypeFilter, Vocation
-from tibiapy.models.base import BaseCharacter
-from tibiapy.models.pagination import PaginatedWithUrl
+from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, PvpTypeFilter, Vocation
+from tibiapy.models import BaseCharacter, PaginatedWithUrl
 from tibiapy.urls import get_highscores_url
 
 

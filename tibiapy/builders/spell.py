@@ -6,7 +6,7 @@ from tibiapy.models import SpellEntry, SpellsSection, Spell, Rune
 
 if TYPE_CHECKING:
     from typing_extensions import Self
-    from tibiapy import SpellVocationFilter, SpellGroup, SpellSorting, SpellType
+    from tibiapy.enums import SpellVocationFilter, SpellGroup, SpellSorting, SpellType
 
 
 class SpellSectionBuilder:

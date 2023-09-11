@@ -106,6 +106,7 @@ class Client:
     ):
         self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if loop is None else loop
         self._session_ready = asyncio.Event()
+        self.proxy_url = proxy_url
         if session is not None:
             self.session: aiohttp.ClientSession = session
             self._session_ready.set()

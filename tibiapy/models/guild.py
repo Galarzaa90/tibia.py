@@ -4,8 +4,8 @@ from typing import Optional, List, Dict, OrderedDict
 
 from pydantic import computed_field
 
-from tibiapy import Vocation
-from tibiapy.models.base import BaseCharacter, BaseHouse, BaseGuild, BaseModel
+from tibiapy.enums import Vocation
+from tibiapy.models import BaseCharacter, BaseHouse, BaseGuild, BaseModel
 from tibiapy.urls import get_world_guilds_url, get_guild_url, get_guild_wars_url
 
 __all__ = (

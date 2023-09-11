@@ -1,7 +1,8 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, Sex, Vocation
+from tibiapy import InvalidContent
+from tibiapy.enums import Sex, Vocation
 from tibiapy.models import Character
 from tibiapy.parsers import CharacterParser
 from tibiapy.urls import get_character_url

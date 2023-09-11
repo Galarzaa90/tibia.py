@@ -7,7 +7,7 @@ from tibiapy.models import NewsEntry, NewsArchive, News
 if TYPE_CHECKING:
     import datetime
     from typing_extensions import Self
-    from tibiapy import NewsType, NewsCategory
+    from tibiapy.enums import NewsType, NewsCategory
 
 
 class NewsArchiveBuilder:

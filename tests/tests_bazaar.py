@@ -1,9 +1,11 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType, AuctionSkillFilter, \
-    AuctionStatus, AuctionVocationFilter, BidType, InvalidContent, PvpTypeFilter, Sex, Vocation
+from tibiapy.enums import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType, \
+    AuctionSkillFilter, \
+    AuctionStatus, AuctionVocationFilter, BidType, PvpTypeFilter, Sex, Vocation
 from tibiapy.parsers import AuctionParser, CharacterBazaarParser
+from tibiapy import InvalidContent
 
 FILE_BAZAAR_CURRENT_EMPTY = "characterBazaar/bazaarHistoryEmpty.txt"
 FILE_BAZAAR_CURRENT = "characterBazaar/bazaarCurrentAuctions.txt"

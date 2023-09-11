@@ -1,5 +1,6 @@
 from tests.tests_tibiapy import TestCommons
-from tibiapy import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, InvalidContent, Vocation
+from tibiapy import InvalidContent
+from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, Vocation
 from tibiapy.models import Highscores, HighscoresEntry, LoyaltyHighscoresEntry
 from tibiapy.parsers import HighscoresParser
 

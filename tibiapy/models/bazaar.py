@@ -2,11 +2,11 @@ import datetime
 from abc import ABC, abstractmethod
 from typing import Optional, List, Dict, TypeVar, Generic
 
-from tibiapy import (PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter, AuctionSearchType,
+from tibiapy.enums import (PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter,
+                           AuctionSearchType,
                      AuctionOrderBy, AuctionOrderDirection, BazaarType, Vocation, Sex, BidType, AuctionStatus)
 from tibiapy.models import BaseModel
 from tibiapy.models.pagination import AjaxPaginator, PaginatedWithUrl
-from tibiapy.urls import get_character_url, get_auction_url, get_bazaar_url
 
 __all__ = (
     "AchievementEntry",
@@ -29,6 +29,8 @@ __all__ = (
     "SalesArgument",
     "SkillEntry",
 )
+
+from tibiapy.urls import get_auction_url, get_bazaar_url, get_character_url
 
 
 class AchievementEntry(BaseModel):

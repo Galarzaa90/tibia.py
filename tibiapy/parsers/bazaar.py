@@ -6,10 +6,10 @@ from typing import Dict, Optional
 
 import bs4
 
-from tibiapy import InvalidContent, Sex, Vocation
+from tibiapy import InvalidContent
 from tibiapy.builders import AuctionBuilder, AuctionDetailsBuilder, CharacterBazaarBuilder
-from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
-                           AuctionSkillFilter, AuctionStatus, AuctionVocationFilter, BazaarType, BidType, PvpTypeFilter)
+from tibiapy.enums import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType, \
+    AuctionSkillFilter, AuctionStatus, AuctionVocationFilter, BazaarType, BidType, PvpTypeFilter, Sex, Vocation
 from tibiapy.models import (AchievementEntry, AjaxPaginator, Auction, AuctionFilters, BestiaryEntry, BlessingEntry,
                             CharacterBazaar, CharmEntry, FamiliarEntry, Familiars, ItemEntry, ItemSummary, MountEntry,
                             Mounts, OutfitEntry, OutfitImage, Outfits, SalesArgument, SkillEntry)

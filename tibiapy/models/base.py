@@ -4,7 +4,7 @@ from __future__ import annotations
 import pydantic
 from pydantic import ConfigDict
 
-from tibiapy.urls import get_character_url, get_guild_url, get_house_url, get_guild_wars_url
+import tibiapy
 
 __all__ = (
     "BaseModel",
@@ -57,7 +57,7 @@ class BaseCharacter(BaseModel):
     @property
     def url(self) -> str:
         """The URL of the character's information page on Tibia.com."""
-        return get_character_url(self.name)
+        return tibiapy.urls.get_character_url(self.name)
 
 
 class BaseGuild(BaseModel):
@@ -82,7 +82,7 @@ class BaseGuild(BaseModel):
     @property
     def url(self) -> str:
         """The URL to the guild's information page on Tibia.com."""
-        return get_guild_url(self.name)
+        return tibiapy.urls.get_guild_url(self.name)
 
     @property
     def url_wars(self) -> str:
@@ -90,7 +90,7 @@ class BaseGuild(BaseModel):
 
         .. versionadded:: 3.0.0
         """
-        return get_guild_wars_url(self.name)
+        return tibiapy.urls.get_guild_wars_url(self.name)
 
 
 class BaseHouse(BaseModel):
@@ -133,4 +133,4 @@ class HouseWithId(BaseHouse):
     @property
     def url(self) -> str:
         """The URL to the Tibia.com page of the house."""
-        return get_house_url(self.world, self.id) if self.id and self.world else None
+        return tibiapy.urls.get_house_url(self.world, self.id) if self.id and self.world else None

@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import List, Optional, TYPE_CHECKING
 
-from tibiapy import TransferType, BattlEyeType
+from tibiapy.enums import TransferType, BattlEyeType
 from tibiapy.models import World, WorldEntry, WorldOverview
 
 if TYPE_CHECKING:
     from tibiapy.models import OnlineCharacter
-    from tibiapy import WorldLocation, PvpType
+    from tibiapy.enums import WorldLocation, PvpType
     from typing_extensions import Self
     import datetime
 

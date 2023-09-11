@@ -1,7 +1,8 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent, ThreadStatus
+from tibiapy import InvalidContent
+from tibiapy.enums import ThreadStatus
 from tibiapy.models import BoardEntry, CMPostArchive, ForumPost, LastPost, ThreadEntry
 from tibiapy.parsers import (CMPostArchiveParser, ForumAnnouncementParser, ForumBoardParser, ForumSectionParser,
                              ForumThreadParser)

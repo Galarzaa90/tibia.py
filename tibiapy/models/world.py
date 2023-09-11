@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import computed_field
 
-from tibiapy import WorldLocation, PvpType, TransferType, BattlEyeType
+from tibiapy.enums import BattlEyeType, PvpType, TransferType, WorldLocation
 from tibiapy.models import OnlineCharacter
 from tibiapy.models.base import BaseModel
 from tibiapy.urls import get_world_url

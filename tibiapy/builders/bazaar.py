@@ -9,7 +9,7 @@ from tibiapy.models.bazaar import AuctionDetails
 if TYPE_CHECKING:
     import datetime
     from typing_extensions import Self
-    from tibiapy import BazaarType, Vocation, Sex, BidType, AuctionStatus
+    from tibiapy.enums import BazaarType, Vocation, Sex, BidType, AuctionStatus
     from tibiapy.models import (AuctionFilters, OutfitImage, ItemEntry, SalesArgument, SkillEntry, ItemSummary, Mounts,
                                 Outfits, Familiars, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry)
 

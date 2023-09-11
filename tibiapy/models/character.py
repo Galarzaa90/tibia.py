@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import datetime
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import computed_field
 
-from tibiapy import Sex, Vocation
-from tibiapy.models.base import BaseCharacter, HouseWithId, BaseGuild, BaseModel
-
-from tibiapy.urls import get_character_url, get_guild_url
+from tibiapy.enums import Sex, Vocation
+from tibiapy.models.base import BaseCharacter, BaseGuild, BaseModel, HouseWithId
+from tibiapy import urls
 
 __all__ = (
     "AccountBadge",
@@ -91,7 +90,7 @@ class DeathParticipant(BaseModel):
     @property
     def url(self) -> Optional[str]:
         """The URL of the character’s information page on Tibia.com, if applicable."""
-        return get_character_url(self.name) if self.is_player else None
+        return urls.get_character_url(self.name) if self.is_player else None
 
 
 class Death(BaseModel):
@@ -236,7 +235,7 @@ class Character(BaseCharacter):
     @property
     def guild_url(self) -> Optional[str]:
         """The character's rank in the guild they belong to, or :obj:`None`."""
-        return get_guild_url(self.guild_membership.name) if self.guild_membership else None
+        return urls.get_guild_url(self.guild_membership.name) if self.guild_membership else None
 
     @computed_field
     @property
@@ -247,5 +246,5 @@ class Character(BaseCharacter):
     @property
     def married_to_url(self) -> Optional[str]:
         """The URL to the husband/spouse information page on Tibia.com, if applicable."""
-        return get_character_url(self.married_to) if self.married_to else None
+        return urls.get_character_url(self.married_to) if self.married_to else None
     # endregion

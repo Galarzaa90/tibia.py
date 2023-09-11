@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional
 
-from tibiapy import ThreadStatus, Vocation
+from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
 from tibiapy.models.base import BaseCharacter, BaseModel
 from tibiapy.models.pagination import PaginatedWithUrl

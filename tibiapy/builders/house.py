@@ -7,7 +7,7 @@ from tibiapy.models.house import HouseEntry, HousesSection, House
 
 if TYPE_CHECKING:
     import datetime
-    from tibiapy import HouseStatus, HouseType, HouseOrder, Sex
+    from tibiapy.enums import HouseStatus, HouseType, HouseOrder, Sex
 
 
 class HousesSectionBuilder:

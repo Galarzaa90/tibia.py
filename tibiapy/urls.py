@@ -4,12 +4,11 @@ import datetime
 import urllib.parse
 from typing import Optional, Set, TYPE_CHECKING
 
-from tibiapy import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, PvpTypeFilter
-
 if TYPE_CHECKING:
+    from tibiapy.enums import (BazaarType, HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, HouseOrder,
+                               HouseStatus, HouseType, PvpTypeFilter, SpellGroup, SpellSorting, SpellType,
+                               SpellVocationFilter)
     from tibiapy.models import AuctionFilters
-    from tibiapy import (BazaarType, HouseType, HouseStatus, HouseOrder, SpellVocationFilter, SpellGroup, SpellType,
-                         SpellSorting)
 
 
 def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
@@ -378,8 +377,8 @@ def get_forum_post_url(post_id):
 
 def get_highscores_url(
         world: str = None,
-        category: HighscoresCategory = HighscoresCategory.EXPERIENCE,
-        vocation: HighscoresProfession = HighscoresProfession.ALL,
+        category: HighscoresCategory = None,
+        vocation: HighscoresProfession = None,
         page=1,
         battleye_type: HighscoresBattlEyeType = None,
         pvp_types: Set[PvpTypeFilter] = None,

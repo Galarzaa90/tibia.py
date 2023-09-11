@@ -186,7 +186,7 @@ class GuildParser:
         builder.active_war("during war" in info_container.text)
 
     @classmethod
-    def _parse_guild_disband_info(cls, builder: bs4.Tag, info_container):
+    def _parse_guild_disband_info(cls, builder: GuildBuilder, info_container: bs4.Tag):
         """
         Parse the guild's disband info, if available.
 
