@@ -5,15 +5,17 @@ import logging
 from contextlib import asynccontextmanager
 from typing import List, Optional, Set
 
+import uvicorn
 from fastapi import Depends, FastAPI, Path, Query, Response
 from starlette import status
 from typing_extensions import Annotated
 
 import tibiapy
 from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
-                     AuctionSkillFilter, AuctionVocationFilter, HighscoresBattlEyeType, HighscoresCategory,
-                     HighscoresProfession, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType, PvpTypeFilter,
-                     SpellGroup, SpellSorting, SpellType, SpellVocationFilter)
+                           AuctionSkillFilter, AuctionVocationFilter, HighscoresBattlEyeType, HighscoresCategory,
+                           HighscoresProfession, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType,
+                           PvpTypeFilter,
+                           SpellGroup, SpellSorting, SpellType, SpellVocationFilter)
 from tibiapy.models import (Auction, AuctionFilters, BoostableBosses, BossEntry, Character, CharacterBazaar, Creature,
                             CreatureEntry, CreaturesSection, EventSchedule, ForumBoard, ForumSection, ForumThread,
                             Guild, GuildWars,
@@ -417,4 +419,9 @@ async def get_auction(
                                                 fetch_mounts=fetch_mounts, fetch_outfits=fetch_outfits,
                                                 fetch_familiars=fetch_familiars)
 
+
 # endregion
+
+
+if __name__ == "__main__":
+    uvicorn.run(app=app)
