@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v6.0.4
+
+6.0.4 (2023-10-01)
+==================
+- Fixed pypi packaging issue.
+
 .. v6.0.3
 
 6.0.3 (2023-10-01)
