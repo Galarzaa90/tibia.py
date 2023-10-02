@@ -8,7 +8,7 @@ Changelog
 
 .. v6.0.3
 
-6.0.3 (2023-09-01)
+6.0.3 (2023-10-01)
 ==================
 - Fixed bazaar filters not being set correctly for some values.
 
