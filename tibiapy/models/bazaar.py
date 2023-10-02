@@ -81,19 +81,19 @@ class AuctionFilters(BaseModel):
     def query_params(self) -> Dict[str, str]:
         """The query parameters representing this filter."""
         params = {
-            "filter_profession": self.vocation.value if self.vocation else None,
+            "filter_profession": self.vocation.value if self.vocation is not None else None,
             "filter_levelrangefrom": self.min_level,
             "filter_levelrangeto": self.max_level,
             "filter_world": self.world,
-            "filter_worldpvptype": self.pvp_type.value if self.pvp_type else None,
-            "filter_worldbattleyestate": self.battleye.value if self.battleye else None,
-            "filter_skillid": self.skill.value if self.skill else None,
+            "filter_worldpvptype": self.pvp_type.value if self.pvp_type is not None else None,
+            "filter_worldbattleyestate": self.battleye.value if self.battleye is not None else None,
+            "filter_skillid": self.skill.value if self.skill is not None else None,
             "filter_skillrangefrom": self.min_skill_level,
             "filter_skillrangeto": self.max_skill_level,
-            "order_column": self.order_by.value if self.order_by else None,
-            "order_direction": self.order.value if self.order else None,
+            "order_column": self.order_by.value if self.order_by is not None else None,
+            "order_direction": self.order.value if self.order is not None else None,
             "searchstring": self.search_string,
-            "searchtype": self.search_type.value if self.search_type else None,
+            "searchtype": self.search_type.value if self.search_type is not None else None,
         }
         return {k: v for k, v in params.items() if v is not None}
 

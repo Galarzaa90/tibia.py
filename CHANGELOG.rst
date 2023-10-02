@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v6.0.3
+
+6.0.3 (2023-09-01)
+==================
+- Fixed bazaar filters not being set correctly for some values.
+
 .. v6.0.2
 
 6.0.2 (2023-08-27)
