@@ -48,15 +48,15 @@ This allows you to use any networking module to obtain the data, and use the lib
 
     import requests
     import tibiapy
+    from tibiapy.parsers import CharacterParser
 
     # Fetching a character using requests instead of aiohttp
     def get_character(name):
-        url = tibiapy.Character.get_url(name)
+        url = tibiapy.urls.get_character_url(name)
 
         r = requests.get(url)
         content = r.text
-        character = tibiapy.Character.from_content(content)
-        return character
+        return CharacterParser.from_content(content)
 
 On the other hand, using the built-in asynchronous client you can do the fetching and parsing in one step:
 
@@ -68,6 +68,7 @@ On the other hand, using the built-in asynchronous client you can do the fetchin
     async def main():
         client = tibiapy.Client()
         character = await client.fetch_character("Galarzaa Fidera")
+        await client.session.close()
 
     if __name__ == "__main__":
         asyncio.get_event_loop().run_until_complete(main())
@@ -76,75 +77,69 @@ On the other hand, using the built-in asynchronous client you can do the fetchin
 Supported Sections
 ==================
 
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Section                          | Parsing                                    | Fetching                                     |
-+==================================+============================================+==============================================+
-| `Boostable Bosses`_ (List)       | :meth:`BoostableBosses.from_content`       | :meth:`Client.fetch_library_bosses`          |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Characters_                      | :meth:`Character.from_content`             | :meth:`Client.fetch_character`               |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Character Bazaar`_ (Current)    | :meth:`CharacterBazaar.from_content`       | :meth:`Client.fetch_current_auctions`        |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Character Bazaar`_ (History)    | :meth:`CharacterBazaar.from_content`       | :meth:`Client.fetch_auction_history`         |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Character Bazaar`_ (Detail)     | :meth:`Auction.from_content`               | :meth:`Client.fetch_auction`                 |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Characters_                      | :meth:`Character.from_content`             | :meth:`Client.fetch_character`               |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `CM Post Archive`_               | :meth:`CMPostArchive.from_content`         | :meth:`Client.fetch_cm_post_archive`         |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Creature Library`_ (List)       | :meth:`CreaturesSection.from_content`      | :meth:`Client.fetch_library_creatures`       |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Creature Library`_ (Individual) | :meth:`Creature.from_content`              | :meth:`Client.fetch_creature`                |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Event Schedule`_                | :meth:`EventSchedule.from_content`         | :meth:`Client.fetch_event_schedule`          |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Guilds_ (Individual)             | :meth:`Guild.from_content`                 | :meth:`Client.fetch_guild`                   |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Guilds_ (List)                   | :meth:`GuildsSection.from_content`         | :meth:`Client.fetch_world_guilds`            |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Guilds_ (Wars)                   | :meth:`GuildWars.from_content`             | :meth:`Client.fetch_guild_wars`              |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-|| Forums_ (Section)               || :meth:`BoardEntry.list_from_content`      || :meth:`Client.fetch_forum_world_boards`     |
-||                                 ||                                           || :meth:`Client.fetch_forum_trade_boards`     |
-||                                 ||                                           || :meth:`Client.fetch_forum_community_boards` |
-||                                 ||                                           || :meth:`Client.fetch_forum_support_boards`   |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Forums_ (Board)                  | :meth:`ForumBoard.from_content`            | :meth:`Client.fetch_forum_board`             |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Forums_ (Announcement)           | :meth:`ForumAnnouncement.from_content`     | :meth:`Client.fetch_forum_announcement`      |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Forums_ (Thread)                 | :meth:`ForumThread.from_content`           | :meth:`Client.fetch_forum_thread`            |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Highscores_                      | :meth:`Highscores.from_content`            | :meth:`Client.fetch_highscores_page`         |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Highscores_                      | :meth:`Highscores.from_content`            | :meth:`Client.fetch_highscores_page`         |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Houses_ (Individual)             | :meth:`House.from_content`                 | :meth:`Client.fetch_house`                   |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Houses_ (List)                   | :meth:`HousesSection.from_content`         | :meth:`Client.fetch_world_houses`            |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Kill Statistics`_ (List)        | :meth:`KillStatistics.from_content`        | :meth:`Client.fetch_kill_statistics`         |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Leaderboards_                    | :meth:`Leaderboard.from_content`           | :meth:`Client.fetch_leaderboard`             |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| News_ (Individual)               | :meth:`News.from_content`                  | :meth:`Client.fetch_news`                    |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-|| News_ (List)                    || :meth:`NewsArchive.from_content`          || :meth:`Client.fetch_news_archive`           |
-||                                 ||                                           || :meth:`Client.fetch_recent_news`            |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Spell Library`_ (List)          | :meth:`SpellsSection.from_content`         | :meth:`Client.fetch_spells`                  |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Spell Library`_ (Individual)    | :meth:`Spell.from_content`                 | :meth:`Client.fetch_spell`                   |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Tournaments_                     | :meth:`Tournament.from_content`            | :meth:`Client.fetch_tournament`              |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| `Tournament Leaderboards`_       | :meth:`TournamentLeaderboard.from_content` | :meth:`Client.fetch_tournament_leaderboard`  |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Worlds_ (Individual)             | :meth:`World.from_content`                 | :meth:`Client.fetch_world`                   |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
-| Worlds_ (List)                   | :meth:`WorldOverview.from_content`         | :meth:`Client.fetch_world_list`              |
-+----------------------------------+--------------------------------------------+----------------------------------------------+
+.. currentmodule:: tibiapy
+
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+|             Section              |                           Parsing                            |                  Fetching                   |
++==================================+==============================================================+=============================================+
+| `Boostable Bosses`_ (List)       | :meth:`tibiapy.parsers.BoostableBossesParser.from_content`   | :meth:`Client.fetch_library_bosses`         |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Characters_                      | :meth:`tibiapy.parsers.CharacterParser.from_content`         | :meth:`Client.fetch_character`              |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Character Bazaar`_ (Current)    | :meth:`tibiapy.parsers.CharacterBazaarParser.from_content`   | :meth:`Client.fetch_current_auctions`       |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Character Bazaar`_ (History)    | :meth:`tibiapy.parsers.CharacterBazaarParser.from_content`   | :meth:`Client.fetch_auction_history`        |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Character Bazaar`_ (Detail)     | :meth:`tibiapy.parsers.AuctionParser.from_content`           | :meth:`Client.fetch_auction`                |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `CM Post Archive`_               | :meth:`tibiapy.parsers.CMPostArchiveParser.from_content`     | :meth:`Client.fetch_cm_post_archive`        |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Creature Library`_ (List)       | :meth:`tibiapy.parsers.CreaturesSectionParser.from_content`  | :meth:`Client.fetch_creatures`              |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Creature Library`_ (Individual) | :meth:`tibiapy.parsers.CreatureParser.from_content`          | :meth:`Client.fetch_creature`               |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Event Schedule`_                | :meth:`tibiapy.parsers.EventScheduleParser.from_content`     | :meth:`Client.fetch_event_schedule`         |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Guilds_ (Individual)             | :meth:`tibiapy.parsers.GuildParser.from_content`             | :meth:`Client.fetch_guild`                  |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Guilds_ (List)                   | :meth:`tibiapy.parsers.GuildsSectionParser.from_content`     | :meth:`Client.fetch_world_guilds`           |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Guilds_ (Wars)                   | :meth:`tibiapy.parsers.GuildWarsParser.from_content`         | :meth:`Client.fetch_guild_wars`             |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Forums_ (Section)                | :meth:`tibiapy.parsers.ForumSectionParser.from_content`      | :meth:`Client.fetch_forum_world_boards`     |
+|                                  |                                                              | :meth:`Client.fetch_forum_trade_boards`     |
+|                                  |                                                              | :meth:`Client.fetch_forum_community_boards` |
+|                                  |                                                              | :meth:`Client.fetch_forum_support_boards`   |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Forums_ (Board)                  | :meth:`tibiapy.parsers.ForumBoardParser.from_content`        | :meth:`Client.fetch_forum_board`            |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Forums_ (Announcement)           | :meth:`tibiapy.parsers.ForumAnnouncementParser.from_content` | :meth:`Client.fetch_forum_announcement`     |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Forums_ (Thread)                 | :meth:`tibiapy.parsers.ForumThreadParser.from_content`       | :meth:`Client.fetch_forum_thread`           |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Highscores_                      | :meth:`tibiapy.parsers.HighscoresParser.from_content`        | :meth:`Client.fetch_highscores_page`        |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Houses_ (Individual)             | :meth:`tibiapy.parsers.HouseParser.from_content`             | :meth:`Client.fetch_house`                  |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Houses_ (List)                   | :meth:`tibiapy.parsers.HousesSectionParser.from_content`     | :meth:`Client.fetch_houses_section`         |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Kill Statistics`_ (List)        | :meth:`tibiapy.parsers.KillStatisticsParser.from_content`    | :meth:`Client.fetch_kill_statistics`        |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Leaderboards_                    | :meth:`tibiapy.parsers.LeaderboardParser.from_content`       | :meth:`Client.fetch_leaderboard`            |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| News_ (Individual)               | :meth:`tibiapy.parsers.NewsParser.from_content`              | :meth:`Client.fetch_news`                   |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| News_ (List)                     | :meth:`tibiapy.parsers.NewsArchiveParser.from_content`       | :meth:`Client.fetch_news_archive`           |
+|                                  |                                                              | :meth:`Client.fetch_news_archive_by_days`   |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Spell Library`_ (List)          | :meth:`tibiapy.parsers.SpellsSectionParser.from_content`     | :meth:`Client.fetch_spells`                 |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| `Spell Library`_ (Individual)    | :meth:`tibiapy.parsers.SpellParser.from_content`             | :meth:`Client.fetch_spell`                  |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Worlds_ (Individual)             | :meth:`tibiapy.parsers.WorldParser.from_content`             | :meth:`Client.fetch_world`                  |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Worlds_ (List)                   | :meth:`tibiapy.parsers.WorldOverviewParser.from_content`     | :meth:`Client.fetch_world_overview`         |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
 
 
 .. _Boostable Bosses: https://www.tibia.com/library/?subtopic=boostablebosses
@@ -162,8 +157,6 @@ Supported Sections
 .. _News: https://www.tibia.com/news/?subtopic=newsarchive
 .. _Worlds: https://www.tibia.com/community/?subtopic=worlds
 .. _Spell Library: https://www.tibia.com/library/?subtopic=spells
-.. _Tournaments: https://www.tibia.com/community/?subtopic=tournament
-.. _Tournament Leaderboards: https://www.tibia.com/community/?subtopic=tournamentleaderboards
 
 
 Docker
