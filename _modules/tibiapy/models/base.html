@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.models.base &#8212; Tibia.py 6.0.0a1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <title>tibiapy.models.base &#8212; Tibia.py 6.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=28c8e701" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/custom.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
+    <script src="../../../_static/documentation_options.js?v=eee49b8e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/custom.js?v=49006cea"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Tibia.py 6.0.0a1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Tibia.py 6.0.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.models.base</a></li> 
       </ul>
@@ -47,27 +47,39 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">pydantic</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ConfigDict</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">BattlEyeType</span>
-<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_character_url</span><span class="p">,</span> <span class="n">get_guild_url</span><span class="p">,</span> <span class="n">get_house_url</span><span class="p">,</span> <span class="n">get_guild_wars_url</span>
+<span class="kn">import</span> <span class="nn">tibiapy</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">&#39;BaseModel&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;BaseCharacter&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;BaseGuild&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;BaseHouse&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;HouseWithId&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;BaseModel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BaseCharacter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BaseGuild&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BaseHouse&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HouseWithId&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">to_camel</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">string_split</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">string_split</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+<div class="viewcode-block" id="BaseModel">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseModel">[docs]</a>
 <span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all model classes.&quot;&quot;&quot;</span>
 
-    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
-        <span class="n">json_encoders</span> <span class="o">=</span> <span class="p">{</span><span class="n">BattlEyeType</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
+        <span class="n">populate_by_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">alias_generator</span><span class="o">=</span><span class="n">to_camel</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="BaseCharacter"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseCharacter">[docs]</a><span class="k">class</span> <span class="nc">BaseCharacter</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseCharacter">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseCharacter">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseCharacter</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all character classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -89,15 +101,19 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Two characters are considered equal if their names are equal.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of the character&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="BaseGuild"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseGuild">[docs]</a><span class="k">class</span> <span class="nc">BaseGuild</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseGuild">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseGuild">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseGuild</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for Guild classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -113,12 +129,13 @@
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
+
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the guild&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_guild_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">get_guild_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url_wars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -126,10 +143,13 @@
 
 <span class="sd">        .. versionadded:: 3.0.0</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_guild_wars_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">get_guild_wars_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="BaseHouse"><a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseHouse">[docs]</a><span class="k">class</span> <span class="nc">BaseHouse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseHouse">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseHouse">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseHouse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all house classes.</span>
 
 <span class="sd">    The following implement this class:</span>
@@ -147,11 +167,16 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Two houses are considered equal if their names are equal.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="HouseWithId"><a class="viewcode-back" href="../../../api.html#tibiapy.models.HouseWithId">[docs]</a><span class="k">class</span> <span class="nc">HouseWithId</span><span class="p">(</span><span class="n">BaseHouse</span><span class="p">):</span>
+
+<div class="viewcode-block" id="HouseWithId">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.HouseWithId">[docs]</a>
+<span class="k">class</span> <span class="nc">HouseWithId</span><span class="p">(</span><span class="n">BaseHouse</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base classes for houses with an ID.&quot;&quot;&quot;</span>
+
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the house. This is used on the website to identify houses.&quot;&quot;&quot;</span>
     <span class="n">world</span><span class="p">:</span> <span class="nb">str</span>
@@ -161,12 +186,14 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Two houses are considered equal if their names or ids are equal.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">id</span>
+
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the Tibia.com page of the house.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_house_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="k">else</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">get_house_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="k">else</span> <span class="kc">None</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -191,18 +218,18 @@
 
 
 
+
+
     
 
 <p>
-<a class="badge" href="https://travis-ci.org/Galarzaa90/tibia.py">
+<a class="badge" href="https://codecov.io/github/Galarzaa90/tibia.py">
     <img
-        alt="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
-        src="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+    alt="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    src="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
     />
 </a>
 </p>
-
-
 <h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
@@ -251,7 +278,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2023, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.0.1.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
   </div>
   
   </body>

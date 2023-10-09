@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tibiapy.models.spell &#8212; Tibia.py 6.0.0a1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <title>tibiapy.models.spell &#8212; Tibia.py 6.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=28c8e701" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/custom.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
+    <script src="../../../_static/documentation_options.js?v=eee49b8e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/custom.js?v=49006cea"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
    
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Tibia.py 6.0.0a1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Tibia.py 6.0.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tibiapy.models.spell</a></li> 
       </ul>
@@ -48,20 +48,23 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">computed_field</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">SpellVocationFilter</span><span class="p">,</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellSorting</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">SpellVocationFilter</span><span class="p">,</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellSorting</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_spells_section_url</span><span class="p">,</span> <span class="n">get_spell_url</span><span class="p">,</span> <span class="n">get_static_file_url</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">&#39;SpellsSection&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Spell&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;SpellEntry&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Rune&#39;</span>
+    <span class="s2">&quot;SpellsSection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Spell&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SpellEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Rune&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Rune"><a class="viewcode-back" href="../../../api.html#tibiapy.models.Rune">[docs]</a><span class="k">class</span> <span class="nc">Rune</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Rune">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Rune">[docs]</a>
+<span class="k">class</span> <span class="nc">Rune</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Information about runes created by spells.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -72,15 +75,18 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The cooldown group of the rune.&quot;&quot;&quot;</span>
     <span class="n">exp_level</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The experience level required to use the rune.&quot;&quot;&quot;</span>
-    <span class="n">mana</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">mana</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The amount of mana needed to use the rune. It will be :obj:`None` if not applicable.&quot;&quot;&quot;</span>
     <span class="n">magic_level</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The magic level required to use the rune.&quot;&quot;&quot;</span>
-    <span class="n">magic_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">magic_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of magic of this rune. Influenced by specialized magic level attributes.&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="SpellEntry"><a class="viewcode-back" href="../../../api.html#tibiapy.models.SpellEntry">[docs]</a><span class="k">class</span> <span class="nc">SpellEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpellEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.SpellEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">SpellEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A spell listed on the spells section.&quot;&quot;&quot;</span>
 
     <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
@@ -93,13 +99,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The cooldown group of the spell.&quot;&quot;&quot;</span>
     <span class="n">spell_type</span><span class="p">:</span> <span class="n">SpellType</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of the spell&quot;&quot;&quot;</span>
-    <span class="n">exp_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The required level to cast the spell.&quot;&quot;&quot;</span>
-    <span class="n">mana</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">exp_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The required level to cast the spell. If obj:`None`, the spell is obtained through a Revelation Perk.&quot;&quot;&quot;</span>
+    <span class="n">mana</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The mana required to use the spell. If :obj:`None`, the mana cost is variable.&quot;&quot;&quot;</span>
     <span class="n">price</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The price in gold coins to learn the spell.&quot;&quot;&quot;</span>
-    <span class="n">premium</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">is_premium</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the spell requires a premium account to learn and use it.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -107,13 +113,17 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the spell.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_spell_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
 
+    <span class="nd">@computed_field</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">image_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to this spell&#39;s image.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_static_file_url</span><span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Spell"><a class="viewcode-back" href="../../../api.html#tibiapy.models.Spell">[docs]</a><span class="k">class</span> <span class="nc">Spell</span><span class="p">(</span><span class="n">SpellEntry</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Spell">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Spell">[docs]</a>
+<span class="k">class</span> <span class="nc">Spell</span><span class="p">(</span><span class="n">SpellEntry</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A spell listed on the spells section.&quot;&quot;&quot;</span>
 
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
@@ -122,34 +132,37 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The vocations that can use this spell.&quot;&quot;&quot;</span>
     <span class="n">cooldown</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The individual cooldown of this spell in seconds.&quot;&quot;&quot;</span>
-    <span class="n">cooldown_group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">cooldown_group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The group cooldown of this spell in seconds.&quot;&quot;&quot;</span>
-    <span class="n">group_secondary</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">group_secondary</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The secondary cooldown group of this spell, if any.&quot;&quot;&quot;</span>
-    <span class="n">cooldown_group_secondary</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">cooldown_group_secondary</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The secondary cooldown of this spell in seconds.&quot;&quot;&quot;</span>
-    <span class="n">soul_points</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">soul_points</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of soul points consumed by this spell. It will be :obj:`None` if not applicable.&quot;&quot;&quot;</span>
-    <span class="n">amount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The amount of objects created by this spell. It will be :obj:`None` if not applicable.&quot;&quot;&quot;</span>
-    <span class="n">magic_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">magic_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of magic of this spell. Influenced by specialized magic level attributes.&quot;&quot;&quot;</span>
     <span class="n">cities</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The cities where this spell can be learned.&quot;&quot;&quot;</span>
-    <span class="n">rune</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Rune</span><span class="p">]</span>
+    <span class="n">rune</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Rune</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Information of the rune created by this spell, if applicable.&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="SpellsSection"><a class="viewcode-back" href="../../../api.html#tibiapy.models.SpellsSection">[docs]</a><span class="k">class</span> <span class="nc">SpellsSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SpellsSection">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.SpellsSection">[docs]</a>
+<span class="k">class</span> <span class="nc">SpellsSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The spells section in Tibia.com.&quot;&quot;&quot;</span>
 
-    <span class="n">vocation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellVocationFilter</span><span class="p">]</span>
+    <span class="n">vocation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellVocationFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The selected vocation filter. If :obj:`None`, spells for any vocation will be shown.&quot;&quot;&quot;</span>
-    <span class="n">group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellGroup</span><span class="p">]</span>
+    <span class="n">group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellGroup</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The selected spell group to display. If :obj:`None`, spells for any group will be shown.&quot;&quot;&quot;</span>
-    <span class="n">spell_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellType</span><span class="p">]</span>
+    <span class="n">spell_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The selected spell type to display. If :obj:`None`, spells for any type will be shown.&quot;&quot;&quot;</span>
-    <span class="n">premium</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+    <span class="n">is_premium</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The premium status to filter in. :obj:`True` to show only premium spells,</span>
 <span class="sd">        :obj:`False` to show free account spells and :obj:`None` will show any spells.&quot;&quot;&quot;</span>
     <span class="n">sort_by</span><span class="p">:</span> <span class="n">SpellSorting</span>
@@ -164,9 +177,10 @@
             <span class="n">vocation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">,</span>
             <span class="n">group</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">,</span>
             <span class="n">spell_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spell_type</span><span class="p">,</span>
-            <span class="n">premium</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">premium</span><span class="p">,</span>
-            <span class="n">sort</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sort_by</span>
+            <span class="n">is_premium</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_premium</span><span class="p">,</span>
+            <span class="n">sort</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sort_by</span><span class="p">,</span>
         <span class="p">)</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -191,18 +205,18 @@
 
 
 
+
+
     
 
 <p>
-<a class="badge" href="https://travis-ci.org/Galarzaa90/tibia.py">
+<a class="badge" href="https://codecov.io/github/Galarzaa90/tibia.py">
     <img
-        alt="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
-        src="https://secure.travis-ci.org/Galarzaa90/tibia.py.svg?branch=master"
+    alt="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    src="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
     />
 </a>
 </p>
-
-
 <h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
@@ -251,7 +265,7 @@
     </div>
   <div class="footer">
     &copy; Copyright 2023, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.0.1.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
   </div>
   
   </body>

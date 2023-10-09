@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.parsers.character &#8212; Tibia.py 6.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=28c8e701" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
+    <script src="../../../_static/documentation_options.js?v=eee49b8e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/custom.js?v=49006cea"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Tibia.py 6.0.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.parsers.character</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.parsers.character</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Models related to the Tibia.com character page.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="kn">from</span> <span class="nn">tibiapy.builders</span> <span class="kn">import</span> <span class="n">CharacterBuilder</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Achievement</span><span class="p">,</span> <span class="n">Character</span><span class="p">,</span> <span class="n">AccountBadge</span><span class="p">,</span> <span class="n">AccountInformation</span><span class="p">,</span> <span class="n">OtherCharacter</span><span class="p">,</span> <span class="n">DeathParticipant</span><span class="p">,</span>
+                            <span class="n">Death</span><span class="p">,</span> <span class="n">GuildMembership</span><span class="p">,</span> <span class="n">CharacterHouse</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_rows</span><span class="p">,</span> <span class="n">parse_popup</span><span class="p">,</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span>
+                           <span class="n">split_list</span><span class="p">,</span>
+                           <span class="n">try_enum</span><span class="p">,</span> <span class="n">parse_link_info</span><span class="p">,</span> <span class="n">clean_text</span><span class="p">,</span> <span class="n">parse_integer</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">bs4</span>
+
+<span class="c1"># Extracts the scheduled deletion date of a character.&quot;&quot;&quot;</span>
+<span class="n">deleted_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([^,]+), will be deleted at (.*)&quot;</span><span class="p">)</span>
+<span class="c1"># Extracts the death&#39;s level and killers.</span>
+<span class="n">death_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Level (?P&lt;level&gt;\d+) by (?P&lt;killers&gt;.*)\.&lt;/td&gt;&quot;</span><span class="p">)</span>
+<span class="c1"># From the killers list, filters out the assists.</span>
+<span class="n">death_assisted</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?P&lt;killers&gt;.+)\.&lt;br/&gt;Assisted by (?P&lt;assists&gt;.+)&quot;</span><span class="p">)</span>
+<span class="c1"># From a killer entry, extracts the summoned creature</span>
+<span class="n">death_summon</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?P&lt;summon&gt;an? .+) of (?P&lt;name&gt;[^&lt;]+)&quot;</span><span class="p">)</span>
+<span class="n">link_search</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&lt;a[^&gt;]+&gt;[^&lt;]+&lt;/a&gt;&quot;</span><span class="p">)</span>
+<span class="c1"># Extracts the contents of a tag</span>
+<span class="n">link_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&gt;([^&lt;]+)&lt;&quot;</span><span class="p">)</span>
+
+<span class="n">house_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;paid until (.*)&quot;</span><span class="p">)</span>
+
+<span class="n">title_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(.*)\((\d+) titles? unlocked\)&quot;</span><span class="p">)</span>
+<span class="n">badge_popup_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\$\(this\),\s+&#39;([^&#39;]+)&#39;,\s+&#39;([^&#39;]+)&#39;,&quot;</span><span class="p">)</span>
+
+<span class="n">traded_label</span> <span class="o">=</span> <span class="s2">&quot;(traded)&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;CharacterParser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CharacterParser">
+<a class="viewcode-back" href="../../../api.html#tibiapy.parsers.CharacterParser">[docs]</a>
+<span class="k">class</span> <span class="nc">CharacterParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A parser for characters from Tibia.com.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CharacterParser.from_content">
+<a class="viewcode-back" href="../../../api.html#tibiapy.parsers.CharacterParser.from_content">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Character</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of the class from the html content of the character&#39;s page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content:</span>
+<span class="sd">            The HTML content of the page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            The character contained in the page, or None if the character doesn&#39;t exist</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If content is not the HTML of a character&#39;s page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">tables</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">)</span>
+        <span class="n">builder</span> <span class="o">=</span> <span class="n">CharacterBuilder</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="n">messsage_table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.TableContainer&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">messsage_table</span> <span class="ow">and</span> <span class="s2">&quot;Could not find character&quot;</span> <span class="ow">in</span> <span class="n">messsage_table</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">table_parsers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Character Information&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_character_information</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span>
+            <span class="s2">&quot;Account Badges&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_account_badges</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span>
+            <span class="s2">&quot;Account Achievements&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_achievements</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span>
+            <span class="s2">&quot;Account Information&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_account_information</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span>
+            <span class="s2">&quot;Character Deaths&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_deaths</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span>
+            <span class="s2">&quot;Characters&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_other_characters</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="s2">&quot;Character Information&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not contain a tibia.com character information page.&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">table_parsers</span><span class="p">:</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">table_parsers</span><span class="p">[</span><span class="n">title</span><span class="p">]</span>
+                <span class="n">action</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_account_information</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s account information.&quot;&quot;&quot;</span>
+        <span class="n">acc_info</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">ele</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">]</span>
+            <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">cols</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">acc_info</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="n">created</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">acc_info</span><span class="p">[</span><span class="s2">&quot;created&quot;</span><span class="p">])</span>
+        <span class="n">loyalty_title</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">acc_info</span><span class="p">[</span><span class="s2">&quot;loyalty_title&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;(no title)&quot;</span> <span class="k">else</span> <span class="n">acc_info</span><span class="p">[</span><span class="s2">&quot;loyalty_title&quot;</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">acc_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">account_information</span><span class="p">(</span><span class="n">AccountInformation</span><span class="p">(</span><span class="n">created</span><span class="o">=</span><span class="n">created</span><span class="p">,</span> <span class="n">loyalty_title</span><span class="o">=</span><span class="n">loyalty_title</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_achievements</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s displayed achievements.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">cols</span>
+            <span class="n">grade</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">field</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;achievement-grade-symbol&quot;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">secret_image</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
+            <span class="n">secret</span> <span class="o">=</span> <span class="n">secret_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+            <span class="n">builder</span><span class="o">.</span><span class="n">add_achievement</span><span class="p">(</span><span class="n">Achievement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">grade</span><span class="o">=</span><span class="n">grade</span><span class="p">,</span> <span class="n">is_secret</span><span class="o">=</span><span class="n">secret</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_account_badges</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s displayed badges.&quot;&quot;&quot;</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td &gt; span&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+            <span class="n">popup_span</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;span.HelperDivIndicator&quot;</span><span class="p">)</span>
+            <span class="n">popup</span> <span class="o">=</span> <span class="n">parse_popup</span><span class="p">(</span><span class="n">popup_span</span><span class="p">[</span><span class="s2">&quot;onmouseover&quot;</span><span class="p">])</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">popup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">popup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">icon_image</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
+            <span class="n">icon_url</span> <span class="o">=</span> <span class="n">icon_image</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">add_account_badge</span><span class="p">(</span><span class="n">AccountBadge</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">icon_url</span><span class="o">=</span><span class="n">icon_url</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_character_information</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s basic information and applies the found values.&quot;&quot;&quot;</span>
+        <span class="n">field_actions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_name_field</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_titles</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;former names&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">former_names</span><span class="p">([</span><span class="n">fn</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]),</span>
+            <span class="s2">&quot;former world&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">former_world</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">sex</span><span class="p">(</span><span class="n">try_enum</span><span class="p">(</span><span class="n">Sex</span><span class="p">,</span> <span class="n">v</span><span class="p">)),</span>
+            <span class="s2">&quot;vocation&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">vocation</span><span class="p">(</span><span class="n">try_enum</span><span class="p">(</span><span class="n">Vocation</span><span class="p">,</span> <span class="n">v</span><span class="p">)),</span>
+            <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">level</span><span class="p">(</span><span class="n">parse_integer</span><span class="p">(</span><span class="n">v</span><span class="p">)),</span>
+            <span class="s2">&quot;achievement points&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">achievement_points</span><span class="p">(</span><span class="n">parse_integer</span><span class="p">(</span><span class="n">v</span><span class="p">)),</span>
+            <span class="s2">&quot;world&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">world</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;residence&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">residence</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;last login&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">last_login</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;never logged&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">else</span> <span class="n">builder</span><span class="o">.</span><span class="n">last_login</span><span class="p">(</span>
+                <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">position</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;account status&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">is_premium</span><span class="p">(</span><span class="s2">&quot;premium&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
+            <span class="s2">&quot;married to&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">married_to</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;house&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_house_column</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">rv</span><span class="p">),</span>
+            <span class="s2">&quot;guild membership&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_guild_column</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">rv</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">raw_field</span><span class="p">,</span> <span class="n">raw_value</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+            <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">raw_field</span><span class="p">),</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">raw_value</span><span class="p">)</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">field_actions</span><span class="p">:</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">field_actions</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+                <span class="n">action</span><span class="p">(</span><span class="n">raw_value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unhandled character information field found: </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_name_field</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">deleted_regexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">deletion_date</span><span class="p">(</span><span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">traded_label</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">traded_label</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">traded</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_titles</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">title_regexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">unlocked</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">builder</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">unlocked_titles</span><span class="p">(</span><span class="n">unlocked</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_house_column</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+        <span class="n">house_text</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">house_regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">house_text</span><span class="p">)</span>
+        <span class="n">paid_until</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">paid_until_date</span> <span class="o">=</span> <span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">paid_until</span><span class="p">)</span>
+        <span class="n">house_link_tag</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+        <span class="n">house_link</span> <span class="o">=</span> <span class="n">parse_link_info</span><span class="p">(</span><span class="n">house_link_tag</span><span class="p">)</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">add_house</span><span class="p">(</span>
+            <span class="n">CharacterHouse</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="n">house_link</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">][</span><span class="s2">&quot;houseid&quot;</span><span class="p">],</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">house_link</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">],</span>
+                <span class="n">town</span><span class="o">=</span><span class="n">house_link</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">][</span><span class="s2">&quot;town&quot;</span><span class="p">],</span>
+                <span class="n">paid_until</span><span class="o">=</span><span class="n">paid_until_date</span><span class="p">,</span>
+                <span class="n">world</span><span class="o">=</span><span class="n">house_link</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">][</span><span class="s2">&quot;world&quot;</span><span class="p">],</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_guild_column</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+        <span class="n">guild_link</span> <span class="o">=</span> <span class="n">column</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;of the&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">guild_membership</span><span class="p">(</span><span class="n">GuildMembership</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">clean_text</span><span class="p">(</span><span class="n">guild_link</span><span class="p">),</span> <span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_deaths</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s recent deaths.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">builder</span><span class="o">.</span><span class="n">deaths_truncated</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="n">date_column</span><span class="p">,</span> <span class="n">desc_column</span> <span class="o">=</span> <span class="n">cols</span>
+            <span class="n">death_time</span> <span class="o">=</span> <span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">date_column</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">death_info</span> <span class="o">:=</span> <span class="n">death_regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">desc_column</span><span class="p">))):</span>
+                <span class="k">continue</span>
+
+            <span class="n">level</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">death_info</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;level&quot;</span><span class="p">))</span>
+            <span class="n">killers_desc</span> <span class="o">=</span> <span class="n">death_info</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">)</span>
+            <span class="n">assists_name_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># Check if the killers list contains assists</span>
+            <span class="k">if</span> <span class="n">assist_match</span> <span class="o">:=</span> <span class="n">death_assisted</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">killers_desc</span><span class="p">):</span>
+                <span class="c1"># Filter out assists</span>
+                <span class="n">killers_desc</span> <span class="o">=</span> <span class="n">assist_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;killers&quot;</span><span class="p">)</span>
+                <span class="c1"># Split assists into a list.</span>
+                <span class="n">assists_desc</span> <span class="o">=</span> <span class="n">assist_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;assists&quot;</span><span class="p">)</span>
+                <span class="n">assists_name_list</span> <span class="o">=</span> <span class="n">link_search</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">assists_desc</span><span class="p">)</span>
+
+            <span class="n">killers_name_list</span> <span class="o">=</span> <span class="n">split_list</span><span class="p">(</span><span class="n">killers_desc</span><span class="p">)</span>
+            <span class="n">killers_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_participant</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">killers_name_list</span><span class="p">]</span>
+            <span class="n">assists_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_participant</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">assists_name_list</span><span class="p">]</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">add_death</span><span class="p">(</span><span class="n">Death</span><span class="p">(</span>
+                <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
+                <span class="n">killers</span><span class="o">=</span><span class="n">killers_list</span><span class="p">,</span>
+                <span class="n">assists</span><span class="o">=</span><span class="n">assists_list</span><span class="p">,</span>
+                <span class="n">time</span><span class="o">=</span><span class="n">death_time</span><span class="p">,</span>
+            <span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_participant</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">killer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeathParticipant</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a participant&#39;s information from their raw HTML string.&quot;&quot;&quot;</span>
+        <span class="c1"># If the killer contains a link, it is a player.</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">killer</span><span class="p">)</span>
+        <span class="n">player</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">traded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">summon</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">traded_label</span> <span class="ow">in</span> <span class="n">killer</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">killer</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">traded_label</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">traded</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">player</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="s2">&quot;href&quot;</span> <span class="ow">in</span> <span class="n">killer</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">link_content</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">killer</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">player</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Check if it contains a summon.</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">death_summon</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+            <span class="n">summon</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;summon&quot;</span><span class="p">))</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">DeathParticipant</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">is_player</span><span class="o">=</span><span class="n">player</span><span class="p">,</span> <span class="n">summon</span><span class="o">=</span><span class="n">summon</span><span class="p">,</span> <span class="n">is_traded</span><span class="o">=</span><span class="n">traded</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_other_characters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s other visible characters.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">ele</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">name</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="o">*</span><span class="n">__</span> <span class="o">=</span> <span class="n">cols</span>
+            <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">traded</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">traded_label</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">traded_label</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">traded</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">main_img</span> <span class="o">=</span> <span class="n">cols_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
+            <span class="n">main</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">main_img</span> <span class="ow">and</span> <span class="n">main_img</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Main Character&quot;</span><span class="p">:</span>
+                <span class="n">main</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">position</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="s2">&quot;CipSoft Member&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">:</span>
+                <span class="n">position</span> <span class="o">=</span> <span class="s2">&quot;CipSoft Member&quot;</span>
+
+            <span class="n">builder</span><span class="o">.</span><span class="n">add_other_character</span><span class="p">(</span><span class="n">OtherCharacter</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span>
+                <span class="n">is_online</span><span class="o">=</span><span class="s2">&quot;online&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">,</span>
+                <span class="n">is_deleted</span><span class="o">=</span><span class="s2">&quot;deleted&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">,</span>
+                <span class="n">is_main</span><span class="o">=</span><span class="n">main</span><span class="p">,</span>
+                <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+                <span class="n">is_traded</span><span class="o">=</span><span class="n">traded</span><span class="p">,</span>
+            <span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the tables contained in a character&#39;s page and returns a mapping of their titles and rows.&quot;&quot;&quot;</span>
+        <span class="n">tables</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;table[width=&quot;100%&quot;]&#39;</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">container</span> <span class="o">:=</span> <span class="n">table</span><span class="o">.</span><span class="n">find_parent</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;TableContainer&quot;</span><span class="p">}):</span>
+                <span class="n">caption_container</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.CaptionContainer&quot;</span><span class="p">)</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">caption_container</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="n">output</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_rows</span><span class="p">(</span><span class="n">table</span><span class="p">)[</span><span class="n">offset</span><span class="p">:]</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Galarzaa90/tibia.py">
+    <img
+    alt="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    src="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2023, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
+  </div>
+  
+  </body>
+</html>
