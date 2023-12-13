@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.models.character &#8212; Tibia.py 6.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=28c8e701" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
+    <script src="../../../_static/documentation_options.js?v=eee49b8e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/custom.js?v=49006cea"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Tibia.py 6.0.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.models.character</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.models.character</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">computed_field</span>
+
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models.base</span> <span class="kn">import</span> <span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">BaseGuild</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">HouseWithId</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">urls</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;AccountBadge&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AccountInformation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Achievement&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Character&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CharacterHouse&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Death&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DeathParticipant&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GuildMembership&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OnlineCharacter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OtherCharacter&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="AccountBadge">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.AccountBadge">[docs]</a>
+<span class="k">class</span> <span class="nc">AccountBadge</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A displayed account badge in the character&#39;s information.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the badge.&quot;&quot;&quot;</span>
+    <span class="n">icon_url</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the badge&#39;s icon.&quot;&quot;&quot;</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The description of the badge.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="AccountInformation">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.AccountInformation">[docs]</a>
+<span class="k">class</span> <span class="nc">AccountInformation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the information of a character&#39;s account.</span>
+
+<span class="sd">    This is only visible if the character is not marked as hidden.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">created</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the account was created.&quot;&quot;&quot;</span>
+    <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The special position of this account, if any.&quot;&quot;&quot;</span>
+    <span class="n">loyalty_title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The loyalty title of the account, if any&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Achievement">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Achievement">[docs]</a>
+<span class="k">class</span> <span class="nc">Achievement</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an achievement listed on a character’s page.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the achievement.&quot;&quot;&quot;</span>
+    <span class="n">grade</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The grade of the achievement, also known as stars.&quot;&quot;&quot;</span>
+    <span class="n">is_secret</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the achievement is secret or not.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="CharacterHouse">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.CharacterHouse">[docs]</a>
+<span class="k">class</span> <span class="nc">CharacterHouse</span><span class="p">(</span><span class="n">HouseWithId</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A house owned by a character.&quot;&quot;&quot;</span>
+
+    <span class="n">town</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The town where the city is located in.&quot;&quot;&quot;</span>
+    <span class="n">paid_until</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date the last paid rent is due.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="DeathParticipant">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.DeathParticipant">[docs]</a>
+<span class="k">class</span> <span class="nc">DeathParticipant</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A creature or player that participated in a death, either as a killer o as an assistant.</span>
+
+<span class="sd">    A participant can be:</span>
+
+<span class="sd">    a) A creature.</span>
+<span class="sd">    b) A character.</span>
+<span class="sd">    c) A creature summoned by a character.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the killer. In the case of summons, the name belongs to the owner.&quot;&quot;&quot;</span>
+    <span class="n">is_player</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the killer is a player or not.&quot;&quot;&quot;</span>
+    <span class="n">summon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the summoned creature, if applicable.&quot;&quot;&quot;</span>
+    <span class="n">is_traded</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;If the killer was traded after this death happened.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of the character’s information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">urls</span><span class="o">.</span><span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_player</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="Death">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Death">[docs]</a>
+<span class="k">class</span> <span class="nc">Death</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A character&#39;s death.&quot;&quot;&quot;</span>
+
+    <span class="n">level</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The level at which the death occurred.&quot;&quot;&quot;</span>
+    <span class="n">killers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DeathParticipant</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of all the killers involved.&quot;&quot;&quot;</span>
+    <span class="n">assists</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DeathParticipant</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of characters that were involved, without dealing damage.&quot;&quot;&quot;</span>
+    <span class="n">time</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The time at which the death occurred.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_by_player</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the kill involves other characters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">is_player</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">killer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeathParticipant</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The first killer in the list.</span>
+
+<span class="sd">        This is usually the killer that gave the killing blow.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="GuildMembership">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.GuildMembership">[docs]</a>
+<span class="k">class</span> <span class="nc">GuildMembership</span><span class="p">(</span><span class="n">BaseGuild</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The guild information of a character.&quot;&quot;&quot;</span>
+
+    <span class="n">rank</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the rank the member has.&quot;&quot;&quot;</span>
+    <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The title of the member in the guild. This is only available for characters in the forums section.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="OnlineCharacter">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.OnlineCharacter">[docs]</a>
+<span class="k">class</span> <span class="nc">OnlineCharacter</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An online character in the world&#39;s page.&quot;&quot;&quot;</span>
+
+    <span class="n">vocation</span><span class="p">:</span> <span class="n">Vocation</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The vocation of the character.&quot;&quot;&quot;</span>
+    <span class="n">level</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The level of the character.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="OtherCharacter">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.OtherCharacter">[docs]</a>
+<span class="k">class</span> <span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A character listed in the characters section of a character&#39;s page.</span>
+
+<span class="sd">    These are only shown if the character is not hidden, and only characters that are not hidden are shown here.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">world</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the world.&quot;&quot;&quot;</span>
+    <span class="n">is_online</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the character is online or not.&quot;&quot;&quot;</span>
+    <span class="n">is_deleted</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the character is scheduled for deletion or not.&quot;&quot;&quot;</span>
+    <span class="n">is_traded</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the character has been traded recently or not.&quot;&quot;&quot;</span>
+    <span class="n">is_main</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether this is the main character or not.&quot;&quot;&quot;</span>
+    <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s official position, if any.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Character">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Character">[docs]</a>
+<span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A full character from Tibia.com, obtained from its character page.&quot;&quot;&quot;</span>
+
+    <span class="n">is_traded</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;If the character was traded in the last 6 months.&quot;&quot;&quot;</span>
+    <span class="n">deletion_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise.&quot;&quot;&quot;</span>
+    <span class="n">former_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Previous names of the character in the last 6 months..&quot;&quot;&quot;</span>
+    <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s selected title, if any.&quot;&quot;&quot;</span>
+    <span class="n">unlocked_titles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of titles the character has unlocked.&quot;&quot;&quot;</span>
+    <span class="n">sex</span><span class="p">:</span> <span class="n">Sex</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s sex.&quot;&quot;&quot;</span>
+    <span class="n">vocation</span><span class="p">:</span> <span class="n">Vocation</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s vocation.&quot;&quot;&quot;</span>
+    <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s level.&quot;&quot;&quot;</span>
+    <span class="n">achievement_points</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The total of achievement points the character has.&quot;&quot;&quot;</span>
+    <span class="n">world</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s current world.&quot;&quot;&quot;</span>
+    <span class="n">former_world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The previous world the character was in, in the last 6 months.&quot;&quot;&quot;</span>
+    <span class="n">residence</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current hometown of the character.&quot;&quot;&quot;</span>
+    <span class="n">married_to</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the character&#39;s spouse. It will be :obj:`None` if not married.&quot;&quot;&quot;</span>
+    <span class="n">houses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CharacterHouse</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The houses currently owned by the character.&quot;&quot;&quot;</span>
+    <span class="n">guild_membership</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GuildMembership</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The guild the character is a member of. It will be :obj:`None` if the character is not in a guild.&quot;&quot;&quot;</span>
+    <span class="n">last_login</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The last time the character logged in. It will be :obj:`None` if the character has never logged in.&quot;&quot;&quot;</span>
+    <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The position of the character (e.g. CipSoft Member), if any.&quot;&quot;&quot;</span>
+    <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The displayed comment.&quot;&quot;&quot;</span>
+    <span class="n">is_premium</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the character&#39;s account is Premium or Free.&quot;&quot;&quot;</span>
+    <span class="n">account_badges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AccountBadge</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The displayed account badges.&quot;&quot;&quot;</span>
+    <span class="n">achievements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Achievement</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The achievements chosen to be displayed.&quot;&quot;&quot;</span>
+    <span class="n">deaths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Death</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s recent deaths.&quot;&quot;&quot;</span>
+    <span class="n">deaths_truncated</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the character&#39;s deaths are truncated or not.</span>
+
+<span class="sd">    In some cases, there are more deaths in the last 30 days than what can be displayed.&quot;&quot;&quot;</span>
+    <span class="n">account_information</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AccountInformation</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s account information. If the character is hidden, this will be :obj:`None`.&quot;&quot;&quot;</span>
+    <span class="n">other_characters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OtherCharacter</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Other characters in the same account.</span>
+
+<span class="sd">    It will be empty if the character is hidden, otherwise, it will contain at least the character itself.&quot;&quot;&quot;</span>
+
+    <span class="c1"># region Properties</span>
+    <span class="nd">@computed_field</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_scheduled_for_deletion</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the character is scheduled for deletion or not.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deletion_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">guild_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the guild the character belongs to, or :obj:`None`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">guild_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">rank</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">guild_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">urls</span><span class="o">.</span><span class="n">get_guild_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@computed_field</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether this is a hidden character or not.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other_characters</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">married_to_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the husband/spouse information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">urls</span><span class="o">.</span><span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">married_to</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">married_to</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+    <span class="c1"># endregion</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Galarzaa90/tibia.py">
+    <img
+    alt="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    src="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2023, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
+  </div>
+  
+  </body>
+</html>

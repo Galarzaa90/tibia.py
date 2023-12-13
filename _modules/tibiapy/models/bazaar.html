@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.models.bazaar &#8212; Tibia.py 6.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=28c8e701" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
+    <script src="../../../_static/documentation_options.js?v=eee49b8e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/custom.js?v=49006cea"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Tibia.py 6.0.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.models.bazaar</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.models.bazaar</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span>
+
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">AuctionBattlEyeFilter</span><span class="p">,</span> <span class="n">AuctionVocationFilter</span><span class="p">,</span> <span class="n">AuctionSkillFilter</span><span class="p">,</span>
+                           <span class="n">AuctionSearchType</span><span class="p">,</span>
+                     <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionOrderDirection</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">,</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">AuctionStatus</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models.pagination</span> <span class="kn">import</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">PaginatedWithUrl</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;AchievementEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Auction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AuctionDetails&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AuctionFilters&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BestiaryEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BlessingEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CharacterBazaar&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CharmEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;FamiliarEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Familiars&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ItemEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ItemSummary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MountEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Mounts&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OutfitEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OutfitImage&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Outfits&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SalesArgument&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SkillEntry&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_auction_url</span><span class="p">,</span> <span class="n">get_bazaar_url</span><span class="p">,</span> <span class="n">get_character_url</span>
+
+
+<div class="viewcode-block" id="AchievementEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.AchievementEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">AchievementEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An unlocked achievement by the character.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the achievement.&quot;&quot;&quot;</span>
+    <span class="n">is_secret</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the achievement is secret or not.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="AuctionFilters">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.AuctionFilters">[docs]</a>
+<span class="k">class</span> <span class="nc">AuctionFilters</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The auction filters available in the auctions section.</span>
+
+<span class="sd">    All attributes are optional.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s world to show characters for.&quot;&quot;&quot;</span>
+    <span class="n">pvp_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The PvP type of the character&#39;s worlds to show.&quot;&quot;&quot;</span>
+    <span class="n">battleye</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionBattlEyeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of BattlEye protection of the character&#39;s worlds to show.&quot;&quot;&quot;</span>
+    <span class="n">vocation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionVocationFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character vocation to show results for.&quot;&quot;&quot;</span>
+    <span class="n">min_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The minimum level to display.&quot;&quot;&quot;</span>
+    <span class="n">max_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum level to display.&quot;&quot;&quot;</span>
+    <span class="n">skill</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionSkillFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The skill to filter by its level range.&quot;&quot;&quot;</span>
+    <span class="n">min_skill_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The minimum skill level of the selected :attr:`skill` to display.&quot;&quot;&quot;</span>
+    <span class="n">max_skill_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum skill level of the selected :attr:`skill` to display.&quot;&quot;&quot;</span>
+    <span class="n">order_by</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionOrderBy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The column or value to order by.&quot;&quot;&quot;</span>
+    <span class="n">order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionOrderDirection</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The ordering direction for the results.&quot;&quot;&quot;</span>
+    <span class="n">search_string</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The search term to filter out auctions.&quot;&quot;&quot;</span>
+    <span class="n">search_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionSearchType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of search to use. Defines the behaviour of :py:attr:`search_string`.&quot;&quot;&quot;</span>
+    <span class="n">available_worlds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of available worlds to select to filter.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">query_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The query parameters representing this filter.&quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;filter_profession&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;filter_levelrangefrom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_level</span><span class="p">,</span>
+            <span class="s2">&quot;filter_levelrangeto&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_level</span><span class="p">,</span>
+            <span class="s2">&quot;filter_world&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span>
+            <span class="s2">&quot;filter_worldpvptype&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pvp_type</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pvp_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;filter_worldbattleyestate&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">battleye</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;filter_skillid&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">skill</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">skill</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;filter_skillrangefrom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_skill_level</span><span class="p">,</span>
+            <span class="s2">&quot;filter_skillrangeto&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_skill_level</span><span class="p">,</span>
+            <span class="s2">&quot;order_column&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">order_by</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;order_direction&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;searchstring&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_string</span><span class="p">,</span>
+            <span class="s2">&quot;searchtype&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_type</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="BestiaryEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.BestiaryEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">BestiaryEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The bestiary progress for a specific creature.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the creature.&quot;&quot;&quot;</span>
+    <span class="n">kills</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of kills of this creature the player has done.&quot;&quot;&quot;</span>
+    <span class="n">step</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current step to unlock this creature the character is in, where 4 is fully unlocked.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the entry is completed or not.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">4</span></div>
+
+
+
+<div class="viewcode-block" id="BlessingEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.BlessingEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">BlessingEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A character&#39;s blessings.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the blessing.&quot;&quot;&quot;</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The amount of blessing charges the character has.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="CharmEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.CharmEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">CharmEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An unlocked charm by the character.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the charm.&quot;&quot;&quot;</span>
+    <span class="n">cost</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The cost of the charm in charm points.&quot;&quot;&quot;</span></div>
+
+
+
+<span class="k">class</span> <span class="nc">BaseOutfit</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base outfit displayed in auctions.&quot;&quot;&quot;</span>
+
+    <span class="n">outfit_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the outfit.&quot;&quot;&quot;</span>
+    <span class="n">addons</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The selected or unlocked addons.&quot;&quot;&quot;</span>
+    <span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">class</span> <span class="nc">DisplayImage</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An image displayed in the auction.&quot;&quot;&quot;</span>
+
+    <span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the image.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The element&#39;s name.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="ItemEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.ItemEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">ItemEntry</span><span class="p">(</span><span class="n">DisplayImage</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an item displayed on an auction, or the character&#39;s items in the auction detail.&quot;&quot;&quot;</span>
+
+    <span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the item&#39;s image.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The item&#39;s name.&quot;&quot;&quot;</span>
+    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The item&#39;s description, if any.&quot;&quot;&quot;</span>
+    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The item&#39;s count.&quot;&quot;&quot;</span>
+    <span class="n">item_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The item&#39;s client id.&quot;&quot;&quot;</span>
+    <span class="n">tier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The item&#39;s tier.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="MountEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.MountEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">MountEntry</span><span class="p">(</span><span class="n">DisplayImage</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a mount owned or unlocked by the character.&quot;&quot;&quot;</span>
+
+    <span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the image.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The mount&#39;s name.&quot;&quot;&quot;</span>
+    <span class="n">mount_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the mount.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="OutfitEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.OutfitEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">OutfitEntry</span><span class="p">(</span><span class="n">DisplayImage</span><span class="p">,</span> <span class="n">BaseOutfit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a outfit owned or unlocked by the character.&quot;&quot;&quot;</span>
+
+    <span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the image.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The outfit&#39;s name.&quot;&quot;&quot;</span>
+    <span class="n">outfit_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the outfit.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="FamiliarEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.FamiliarEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">FamiliarEntry</span><span class="p">(</span><span class="n">DisplayImage</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a familiar owned or unlocked by the character.&quot;&quot;&quot;</span>
+
+    <span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the image.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The familiar&#39;s name.&quot;&quot;&quot;</span>
+    <span class="n">familiar_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the familiar.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="OutfitImage">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.OutfitImage">[docs]</a>
+<span class="k">class</span> <span class="nc">OutfitImage</span><span class="p">(</span><span class="n">BaseOutfit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The image of the outfit currently being worn by the character.&quot;&quot;&quot;</span>
+
+    <span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL of the image.&quot;&quot;&quot;</span>
+    <span class="n">outfit_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The ID of the outfit.&quot;&quot;&quot;</span>
+    <span class="n">addons</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The addons displayed in the outfit.&quot;&quot;&quot;</span></div>
+
+
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">DisplayImage</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">AuctionSummary</span><span class="p">(</span><span class="n">AjaxPaginator</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an entry by its name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: :class:`str`</span>
+<span class="sd">            The name of the entry, case insensitive.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`object`:</span>
+<span class="sd">            The entry matching the name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Search an entry by its name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value: :class:`str`</span>
+<span class="sd">            The value to look for.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`list`</span>
+<span class="sd">            A list of entries with names containing the search term.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="o">...</span>
+
+
+<div class="viewcode-block" id="ItemSummary">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.ItemSummary">[docs]</a>
+<span class="k">class</span> <span class="nc">ItemSummary</span><span class="p">(</span><span class="n">AuctionSummary</span><span class="p">[</span><span class="n">ItemEntry</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Items in a character&#39;s inventory and depot.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ItemSummary.get_by_id">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.ItemSummary.get_by_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an item by its item id.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entry_id: :class:`int`</span>
+<span class="sd">            The ID of the item.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`ItemEntry`</span>
+<span class="sd">            The item matching the id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">item_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Mounts">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Mounts">[docs]</a>
+<span class="k">class</span> <span class="nc">Mounts</span><span class="p">(</span><span class="n">AuctionSummary</span><span class="p">[</span><span class="n">MountEntry</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The mounts the character has unlocked or purchased.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Mounts.get_by_id">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Mounts.get_by_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a mount by its mount id.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entry_id: :class:`int`</span>
+<span class="sd">            The ID of the mount.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`MountEntry`</span>
+<span class="sd">            The mount matching the id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">mount_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Familiars">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Familiars">[docs]</a>
+<span class="k">class</span> <span class="nc">Familiars</span><span class="p">(</span><span class="n">AuctionSummary</span><span class="p">[</span><span class="n">FamiliarEntry</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The familiars the character has unlocked or purchased.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Familiars.get_by_id">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Familiars.get_by_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an familiar by its familiar id.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entry_id: :class:`int`</span>
+<span class="sd">            The ID of the familiar.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`FamiliarEntry`</span>
+<span class="sd">            The familiar matching the id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">familiar_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Outfits">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Outfits">[docs]</a>
+<span class="k">class</span> <span class="nc">Outfits</span><span class="p">(</span><span class="n">AuctionSummary</span><span class="p">[</span><span class="n">OutfitEntry</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The outfits the character has unlocked or purchased.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Outfits.get_by_id">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Outfits.get_by_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an outfit by its outfit id.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        entry_id: :class:`int`</span>
+<span class="sd">            The ID of the outfit.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`OutfitEntry`</span>
+<span class="sd">            The outfit matching the id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">outfit_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SalesArgument">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.SalesArgument">[docs]</a>
+<span class="k">class</span> <span class="nc">SalesArgument</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a sales argument.</span>
+
+<span class="sd">    Sales arguments can be selected when creating an auction, and allow the user to highlight certain</span>
+<span class="sd">    character features in the auction listing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">category_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">category_image</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the category icon.&quot;&quot;&quot;</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The content of the sales argument.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SkillEntry">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.SkillEntry">[docs]</a>
+<span class="k">class</span> <span class="nc">SkillEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents the character&#39;s skills.&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the skill.&quot;&quot;&quot;</span>
+    <span class="n">level</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current level.&quot;&quot;&quot;</span>
+    <span class="n">progress</span><span class="p">:</span> <span class="nb">float</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The percentage of progress for the next level.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="AuctionDetails">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.AuctionDetails">[docs]</a>
+<span class="k">class</span> <span class="nc">AuctionDetails</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The details of an auction.&quot;&quot;&quot;</span>
+
+    <span class="n">hit_points</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The hit points of the character.&quot;&quot;&quot;</span>
+    <span class="n">mana</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The mana points of the character.&quot;&quot;&quot;</span>
+    <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s capacity in ounces.&quot;&quot;&quot;</span>
+    <span class="n">speed</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The character&#39;s speed.&quot;&quot;&quot;</span>
+    <span class="n">blessings_count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of blessings the character has.&quot;&quot;&quot;</span>
+    <span class="n">mounts_count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of mounts the character has.&quot;&quot;&quot;</span>
+    <span class="n">outfits_count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of outfits the character has.&quot;&quot;&quot;</span>
+    <span class="n">titles_count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of titles the character has.&quot;&quot;&quot;</span>
+    <span class="n">skills</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SkillEntry</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current skills of the character.&quot;&quot;&quot;</span>
+    <span class="n">creation_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the character was created.&quot;&quot;&quot;</span>
+    <span class="n">experience</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The total experience of the character.&quot;&quot;&quot;</span>
+    <span class="n">gold</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The total amount of gold the character has.&quot;&quot;&quot;</span>
+    <span class="n">achievement_points</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of achievement points of the character.&quot;&quot;&quot;</span>
+    <span class="n">regular_world_transfer_available_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date after regular world transfers will be available to purchase and use.</span>
+<span class="sd">    :obj:`None` indicates it is available immediately.&quot;&quot;&quot;</span>
+    <span class="n">charm_expansion</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the character has a charm expansion or not.&quot;&quot;&quot;</span>
+    <span class="n">available_charm_points</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The amount of charm points the character has available to spend.&quot;&quot;&quot;</span>
+    <span class="n">spent_charm_points</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The total charm points the character has spent.&quot;&quot;&quot;</span>
+    <span class="n">prey_wildcards</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of Prey Wildcards the character has.&quot;&quot;&quot;</span>
+    <span class="n">daily_reward_streak</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current daily reward streak.&quot;&quot;&quot;</span>
+    <span class="n">hunting_task_points</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">permanent_hunting_task_slots</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of hunting task slots.&quot;&quot;&quot;</span>
+    <span class="n">permanent_prey_slots</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of prey slots.&quot;&quot;&quot;</span>
+    <span class="n">hirelings</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of hirelings the character has.&quot;&quot;&quot;</span>
+    <span class="n">hireling_jobs</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of hireling jobs the character has.&quot;&quot;&quot;</span>
+    <span class="n">hireling_outfits</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of hireling outfits the character has.&quot;&quot;&quot;</span>
+    <span class="n">exalted_dust</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The amount of exalted dust the character has.&quot;&quot;&quot;</span>
+    <span class="n">exalted_dust_limit</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The dust limit of the character.&quot;&quot;&quot;</span>
+    <span class="n">boss_points</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The boss points of the character.&quot;&quot;&quot;</span>
+    <span class="n">bonus_promotion_points</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The bonus promotion points of the character.&quot;&quot;&quot;</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">ItemSummary</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The items the character has across inventory, depot and item stash.&quot;&quot;&quot;</span>
+    <span class="n">store_items</span><span class="p">:</span> <span class="n">ItemSummary</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The store items the character has.&quot;&quot;&quot;</span>
+    <span class="n">mounts</span><span class="p">:</span> <span class="n">Mounts</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The mounts the character has unlocked.&quot;&quot;&quot;</span>
+    <span class="n">store_mounts</span><span class="p">:</span> <span class="n">Mounts</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The mounts the character has purchased from the store.&quot;&quot;&quot;</span>
+    <span class="n">outfits</span><span class="p">:</span> <span class="n">Outfits</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The outfits the character has unlocked.&quot;&quot;&quot;</span>
+    <span class="n">store_outfits</span><span class="p">:</span> <span class="n">Outfits</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The outfits the character has purchased from the store.&quot;&quot;&quot;</span>
+    <span class="n">familiars</span><span class="p">:</span> <span class="n">Familiars</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The familiars the character has purchased or unlocked.&quot;&quot;&quot;</span>
+    <span class="n">blessings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BlessingEntry</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The blessings the character has.&quot;&quot;&quot;</span>
+    <span class="n">imbuements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The imbuements the character has unlocked access to.&quot;&quot;&quot;</span>
+    <span class="n">charms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CharmEntry</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The charms the character has unlocked.&quot;&quot;&quot;</span>
+    <span class="n">completed_cyclopedia_map_areas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The cyclopedia map areas that the character has fully discovered.&quot;&quot;&quot;</span>
+    <span class="n">completed_quest_lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The quest lines the character has fully completed.&quot;&quot;&quot;</span>
+    <span class="n">titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The titles the character has unlocked.&quot;&quot;&quot;</span>
+    <span class="n">achievements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AchievementEntry</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The achievements the character has unlocked.&quot;&quot;&quot;</span>
+    <span class="n">bestiary_progress</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The bestiary progress of the character.&quot;&quot;&quot;</span>
+    <span class="n">bosstiary_progress</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The bosstiary progress of the character.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">completed_bestiary_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of completed bestiary entries.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bestiary_progress</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">is_completed</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">regular_world_transfer_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether regular world transfers are available immediately for this character.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">regular_world_transfer_available_date</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">skills_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SkillEntry</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A mapping of skills by their name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">skill</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">skill</span> <span class="k">for</span> <span class="n">skill</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="Auction">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.Auction">[docs]</a>
+<span class="k">class</span> <span class="nc">Auction</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an auction in the list, containing the summary.&quot;&quot;&quot;</span>
+
+    <span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal id of the auction.&quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the character.&quot;&quot;&quot;</span>
+    <span class="n">level</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The level of the character.&quot;&quot;&quot;</span>
+    <span class="n">world</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The world the character is in.&quot;&quot;&quot;</span>
+    <span class="n">vocation</span><span class="p">:</span> <span class="n">Vocation</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The vocation of the character.&quot;&quot;&quot;</span>
+    <span class="n">sex</span><span class="p">:</span> <span class="n">Sex</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The sex of the character.&quot;&quot;&quot;</span>
+    <span class="n">outfit</span><span class="p">:</span> <span class="n">OutfitImage</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current outfit selected by the user.&quot;&quot;&quot;</span>
+    <span class="n">displayed_items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ItemEntry</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The items selected to be displayed.&quot;&quot;&quot;</span>
+    <span class="n">sales_arguments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SalesArgument</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The sale arguments selected for the auction.&quot;&quot;&quot;</span>
+    <span class="n">auction_start</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the auction started.&quot;&quot;&quot;</span>
+    <span class="n">auction_end</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the auction ends.&quot;&quot;&quot;</span>
+    <span class="n">bid</span><span class="p">:</span> <span class="nb">int</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current bid in Tibia Coins.&quot;&quot;&quot;</span>
+    <span class="n">bid_type</span><span class="p">:</span> <span class="n">BidType</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of the auction&#39;s bid.&quot;&quot;&quot;</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">AuctionStatus</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The current status of the auction.&quot;&quot;&quot;</span>
+    <span class="n">details</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionDetails</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The auction&#39;s details.&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">character_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of the character&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to this auction&#39;s detail page on Tibia.com.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_auction_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">auction_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="CharacterBazaar">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.CharacterBazaar">[docs]</a>
+<span class="k">class</span> <span class="nc">CharacterBazaar</span><span class="p">(</span><span class="n">PaginatedWithUrl</span><span class="p">[</span><span class="n">Auction</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents the char bazaar.&quot;&quot;&quot;</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="n">BazaarType</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of auctions being displayed, either current or auction history.&quot;&quot;&quot;</span>
+    <span class="n">filters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionFilters</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The currently set filtering options.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CharacterBazaar.get_page_url">
+<a class="viewcode-back" href="../../../api.html#tibiapy.models.CharacterBazaar.get_page_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_bazaar_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the Character Bazaar with the current parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">get_bazaar_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">)</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Galarzaa90/tibia.py">
+    <img
+    alt="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    src="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2023, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
+  </div>
+  
+  </body>
+</html>

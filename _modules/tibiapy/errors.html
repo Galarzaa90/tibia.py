@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.errors &#8212; Tibia.py 6.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=28c8e701" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=4183444b" />
+    <script src="../../_static/documentation_options.js?v=eee49b8e"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/custom.js?v=49006cea"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Tibia.py 6.0.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.errors</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.errors</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Exceptions thrown by tibia.py.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+
+<div class="viewcode-block" id="TibiapyException">
+<a class="viewcode-back" href="../../api.html#tibiapy.TibiapyException">[docs]</a>
+<span class="k">class</span> <span class="nc">TibiapyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for the tibiapy module.</span>
+
+<span class="sd">    All exceptions thrown by the module are inherited from this.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidContent">
+<a class="viewcode-back" href="../../api.html#tibiapy.InvalidContent">[docs]</a>
+<span class="k">class</span> <span class="nc">InvalidContent</span><span class="p">(</span><span class="n">TibiapyException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception thrown when the provided content is unrelated for the calling function.</span>
+
+<span class="sd">    This usually means that the content provided belongs to a different website or section of the website.</span>
+<span class="sd">    This serves as a way to differentiate those cases from a parsing that returned no results (e.g. Character not found)</span>
+
+<span class="sd">    In some cases this can mean that Tibia.com&#39;s format has changed and the library needs updating.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    original: :class:`Exception`</span>
+<span class="sd">        The original exception that caused this exception.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">original</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original</span> <span class="o">=</span> <span class="n">original</span></div>
+
+
+
+<div class="viewcode-block" id="NetworkError">
+<a class="viewcode-back" href="../../api.html#tibiapy.NetworkError">[docs]</a>
+<span class="k">class</span> <span class="nc">NetworkError</span><span class="p">(</span><span class="n">TibiapyException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception thrown when there was a network error trying to fetch a resource from the web.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    original: :class:`Exception`</span>
+<span class="sd">        The original exception that caused this exception.</span>
+<span class="sd">    fetching_time: :class:`float`</span>
+<span class="sd">        The time between the request and the response.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">original</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fetching_time</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original</span> <span class="o">=</span> <span class="n">original</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fetching_time</span> <span class="o">=</span> <span class="n">fetching_time</span></div>
+
+
+
+<div class="viewcode-block" id="Forbidden">
+<a class="viewcode-back" href="../../api.html#tibiapy.Forbidden">[docs]</a>
+<span class="k">class</span> <span class="nc">Forbidden</span><span class="p">(</span><span class="n">NetworkError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A subclass of :class:`NetworkError` thrown when Tibia.com returns a 403 status code.</span>
+
+<span class="sd">    Tibia.com returns a 403 status code when it detects that too many requests are being done.</span>
+<span class="sd">    This has its own subclass to let the user decide to treat this differently than other network errors.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="SiteMaintenanceError">
+<a class="viewcode-back" href="../../api.html#tibiapy.SiteMaintenanceError">[docs]</a>
+<span class="k">class</span> <span class="nc">SiteMaintenanceError</span><span class="p">(</span><span class="n">NetworkError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A subclass of :class:`NetworkError` thrown when Tibia.com is down for maintenance.</span>
+
+<span class="sd">    When Tibia.com is under maintenance, all sections of the website redirect to maintenance.tibia.com.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<span class="k">class</span> <span class="nc">EnumValueError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when the provided value cannot be converted to an enum.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Enum</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enum</span> <span class="o">=</span> <span class="n">enum</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> is not a valid value for </span><span class="si">{</span><span class="n">enum</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">. Expected names (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="si">}</span><span class="s2">) or values (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">enum</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">enum</span><span class="p">)</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Galarzaa90/tibia.py">
+    <img
+    alt="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    src="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2023, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
+  </div>
+  
+  </body>
+</html>

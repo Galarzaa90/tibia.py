@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tibiapy.parsers.world &#8212; Tibia.py 6.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=28c8e701" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
+    <script src="../../../_static/documentation_options.js?v=eee49b8e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/custom.js?v=49006cea"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+  
+  
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Tibia.py 6.0.4 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">tibiapy.parsers.world</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tibiapy.parsers.world</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">tibiapy.builders.world</span> <span class="kn">import</span> <span class="p">(</span><span class="n">WorldBuilder</span><span class="p">,</span> <span class="n">WorldEntryBuilder</span><span class="p">,</span>
+                                    <span class="n">WorldOverviewBuilder</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BattlEyeType</span><span class="p">,</span> <span class="n">PvpType</span><span class="p">,</span>
+                           <span class="n">TransferType</span><span class="p">,</span> <span class="n">WorldLocation</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">OnlineCharacter</span><span class="p">,</span> <span class="n">WorldEntry</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">parse_integer</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span>
+                           <span class="n">parse_tibia_full_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span>
+                           <span class="n">try_enum</span><span class="p">,</span> <span class="n">parse_tables_map</span><span class="p">,</span> <span class="n">get_rows</span><span class="p">,</span> <span class="n">clean_text</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">bs4</span>
+    <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">World</span><span class="p">,</span> <span class="n">WorldOverview</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;WorldParser&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;WorldOverviewParser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">record_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?P&lt;count&gt;[\d.,]+) players \(on (?P&lt;date&gt;[^)]+)\)&quot;</span><span class="p">)</span>
+<span class="n">battleye_regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;since ([^.]+).&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="WorldParser">
+<a class="viewcode-back" href="../../../api.html#tibiapy.parsers.WorldParser">[docs]</a>
+<span class="k">class</span> <span class="nc">WorldParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses Tibia.com content into worlds.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="WorldParser.from_content">
+<a class="viewcode-back" href="../../../api.html#tibiapy.parsers.WorldParser.from_content">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">World</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a Tibia.com response into a :class:`World`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content:</span>
+<span class="sd">            The raw HTML from the server&#39;s information page.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            The World described in the page, or :obj:`None`.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If the provided content is not the HTML content of the world section in Tibia.com</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">tables</span> <span class="o">=</span> <span class="n">parse_tables_map</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">,</span> <span class="s2">&quot;div.InnerTableContainer&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="n">selected_world</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;option:checked&quot;</span><span class="p">)</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="n">WorldBuilder</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">selected_world</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_world_info</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;World Information&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+
+            <span class="n">online_table</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tables</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s2">&quot;Players Online&quot;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">online_table</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">online_table</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;tr.Odd, tr.Even&quot;</span><span class="p">):</span>
+                <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">vocation</span> <span class="o">=</span> <span class="p">(</span><span class="n">clean_text</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">)</span>
+                <span class="n">builder</span><span class="o">.</span><span class="n">add_online_player</span><span class="p">(</span><span class="n">OnlineCharacter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">),</span> <span class="n">vocation</span><span class="o">=</span><span class="n">vocation</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from the world section in Tibia.com&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+        <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_world_info</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">WorldBuilder</span><span class="p">,</span> <span class="n">world_info_table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the World Information table from Tibia.com and adds the found values to the object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world_info_table: :class:`bs4.Tag`</span>
+<span class="sd">            The table containing the world&#39;s information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">field_actions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">is_online</span><span class="p">(</span><span class="s2">&quot;online&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
+            <span class="s2">&quot;Players Online&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">online_count</span><span class="p">(</span><span class="n">parse_integer</span><span class="p">(</span><span class="n">v</span><span class="p">)),</span>
+            <span class="s2">&quot;Online Record&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_online_record</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;Creation Date&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_creation_date</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;Location&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">location</span><span class="p">(</span><span class="n">try_enum</span><span class="p">(</span><span class="n">WorldLocation</span><span class="p">,</span> <span class="n">v</span><span class="p">)),</span>
+            <span class="s2">&quot;PvP Type&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">pvp_type</span><span class="p">(</span><span class="n">try_enum</span><span class="p">(</span><span class="n">PvpType</span><span class="p">,</span> <span class="n">v</span><span class="p">)),</span>
+            <span class="s2">&quot;Premium Type&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">is_premium_only</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span>
+            <span class="s2">&quot;Transfer Type&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">transfer_type</span><span class="p">(</span><span class="n">try_enum</span><span class="p">(</span><span class="n">TransferType</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">TransferType</span><span class="o">.</span><span class="n">REGULAR</span><span class="p">)),</span>
+            <span class="s2">&quot;World Quest Titles&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_world_quest_titles</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;BattlEye Status&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_battleye_status</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+            <span class="s2">&quot;Game World Type&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">is_experimental</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;experimental&quot;</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">get_rows</span><span class="p">(</span><span class="n">world_info_table</span><span class="p">):</span>
+            <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">clean_text</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">cols_raw</span><span class="p">]</span>
+            <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">cols</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">field_actions</span><span class="p">:</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">field_actions</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+                <span class="n">action</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_world_quest_titles</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">WorldBuilder</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="s2">&quot;currently has no title&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">world_quest_titles</span><span class="p">(</span><span class="n">titles</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_online_record</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">WorldBuilder</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">record_regexp</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">record_count</span><span class="p">(</span><span class="n">parse_integer</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)))</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">record_date</span><span class="p">(</span><span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_creation_date</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">WorldBuilder</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">parsed_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;%B %Y&quot;</span><span class="p">)</span>
+        <span class="n">year</span><span class="p">,</span> <span class="n">month</span> <span class="o">=</span> <span class="n">parsed_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">parsed_date</span><span class="o">.</span><span class="n">month</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">creation_date</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">year</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">month</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_battleye_status</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">WorldBuilder</span><span class="p">,</span> <span class="n">battleye_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the BattlEye string and applies the results.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        builder: :class:`WorldBuilder`</span>
+<span class="sd">            The builder instance used to set the values.</span>
+<span class="sd">        battleye_string: :class:`str`</span>
+<span class="sd">            String containing the world&#39;s BattlEye Status.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">battleye_regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">battleye_string</span><span class="p">):</span>
+            <span class="n">battleye_date</span> <span class="o">=</span> <span class="n">parse_tibia_full_date</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+            <span class="p">(</span><span class="n">builder</span><span class="o">.</span><span class="n">battleye_since</span><span class="p">(</span><span class="n">battleye_date</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">battleye_type</span><span class="p">(</span><span class="n">BattlEyeType</span><span class="o">.</span><span class="n">PROTECTED</span> <span class="k">if</span> <span class="n">battleye_date</span> <span class="k">else</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">INITIALLY_PROTECTED</span><span class="p">)</span>
+             <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">battleye_since</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">battleye_type</span><span class="p">(</span><span class="n">BattlEyeType</span><span class="o">.</span><span class="n">UNPROTECTED</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="WorldOverviewParser">
+<a class="viewcode-back" href="../../../api.html#tibiapy.parsers.WorldOverviewParser">[docs]</a>
+<span class="k">class</span> <span class="nc">WorldOverviewParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses Tibia.com content from the World Overview section.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="WorldOverviewParser.from_content">
+<a class="viewcode-back" href="../../../api.html#tibiapy.parsers.WorldOverviewParser.from_content">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WorldOverview</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the content of the World Overview section from Tibia.com into an object of this class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        content:</span>
+<span class="sd">            The HTML content of the World Overview page in Tibia.com</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            An instance of this class containing all the information.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidContent</span>
+<span class="sd">            If the provided content is not the HTML content of the worlds section in Tibia.com</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">record_table</span><span class="p">,</span> <span class="o">*</span><span class="n">tables</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;table.TableContent&quot;</span><span class="p">)</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">record_regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">record_table</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">WorldOverviewBuilder</span><span class="p">()</span>
+                    <span class="o">.</span><span class="n">record_count</span><span class="p">(</span><span class="n">parse_integer</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)))</span>
+                    <span class="o">.</span><span class="n">record_date</span><span class="p">(</span><span class="n">parse_tibia_datetime</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)))</span>
+                    <span class="o">.</span><span class="n">worlds</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_worlds_tables</span><span class="p">(</span><span class="n">tables</span><span class="p">))</span>
+                    <span class="o">.</span><span class="n">build</span><span class="p">())</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to the World Overview section in Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_worlds</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">world_rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">WorldEntry</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the world columns and adds the results to :py:attr:`worlds`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world_rows: :class:`list` of :class:`bs4.Tag`</span>
+<span class="sd">            A list containing the rows of each world.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">worlds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">world_row</span> <span class="ow">in</span> <span class="n">world_rows</span><span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">world_row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">is_online</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">online_count</span> <span class="o">=</span> <span class="n">parse_integer</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">online_count</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">is_online</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">online_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="n">location</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">WorldLocation</span><span class="p">,</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+            <span class="n">pvp</span> <span class="o">=</span> <span class="n">try_enum</span><span class="p">(</span><span class="n">PvpType</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">builder</span> <span class="o">=</span> <span class="p">(</span><span class="n">WorldEntryBuilder</span><span class="p">()</span>
+                       <span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                       <span class="o">.</span><span class="n">location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+                       <span class="o">.</span><span class="n">pvp_type</span><span class="p">(</span><span class="n">pvp</span><span class="p">)</span>
+                       <span class="o">.</span><span class="n">online_count</span><span class="p">(</span><span class="n">online_count</span><span class="p">)</span>
+                       <span class="o">.</span><span class="n">is_online</span><span class="p">(</span><span class="n">is_online</span><span class="p">))</span>
+            <span class="c1"># Check Battleye icon to get information</span>
+            <span class="n">battleye_icon</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;span.HelperDivIndicator&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">battleye_icon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">m</span> <span class="o">:=</span> <span class="n">battleye_regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">battleye_icon</span><span class="p">[</span><span class="s2">&quot;onmouseover&quot;</span><span class="p">])):</span>
+                <span class="n">battleye_date</span> <span class="o">=</span> <span class="n">parse_tibia_full_date</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">builder</span><span class="o">.</span><span class="n">battleye_since</span><span class="p">(</span><span class="n">battleye_date</span><span class="p">)</span><span class="o">.</span><span class="n">battleye_type</span><span class="p">(</span><span class="n">BattlEyeType</span><span class="o">.</span><span class="n">PROTECTED</span> <span class="k">if</span> <span class="n">battleye_date</span>
+                                                                    <span class="k">else</span> <span class="n">BattlEyeType</span><span class="o">.</span><span class="n">INITIALLY_PROTECTED</span><span class="p">)</span>
+
+            <span class="n">additional_info</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_additional_info</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">)</span>
+            <span class="n">worlds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">worlds</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_additional_info</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">WorldEntryBuilder</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;blocked&quot;</span> <span class="ow">in</span> <span class="n">additional_info</span><span class="p">:</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">transfer_type</span><span class="p">(</span><span class="n">TransferType</span><span class="o">.</span><span class="n">BLOCKED</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;locked&quot;</span> <span class="ow">in</span> <span class="n">additional_info</span><span class="p">:</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">transfer_type</span><span class="p">(</span><span class="n">TransferType</span><span class="o">.</span><span class="n">LOCKED</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">builder</span><span class="o">.</span><span class="n">transfer_type</span><span class="p">(</span><span class="n">TransferType</span><span class="o">.</span><span class="n">REGULAR</span><span class="p">)</span>
+
+        <span class="n">builder</span><span class="o">.</span><span class="n">is_experimental</span><span class="p">(</span><span class="s2">&quot;experimental&quot;</span> <span class="ow">in</span> <span class="n">additional_info</span><span class="p">)</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">is_premium_only</span><span class="p">(</span><span class="s2">&quot;premium&quot;</span> <span class="ow">in</span> <span class="n">additional_info</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_worlds_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tables</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the tables and adds the results to the world list.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tables: :class:`map` of :class:`bs4.Tag`</span>
+<span class="sd">            A mapping containing the tables with worlds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">worlds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">worlds_table</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tables</span><span class="p">,</span> <span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="n">regular_world_rows</span> <span class="o">=</span> <span class="n">worlds_table</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;tr.Odd, tr.Even&quot;</span><span class="p">)</span>
+            <span class="n">worlds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_worlds</span><span class="p">(</span><span class="n">regular_world_rows</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">worlds</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Tibia.py</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+
+    
+
+<p>
+<a class="badge" href="https://codecov.io/github/Galarzaa90/tibia.py">
+    <img
+    alt="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    src="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
+    />
+</a>
+</p>
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+<h3 class="donation">Donate/support</h3>
+
+
+
+<p>
+<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
+<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
+</a>
+</p>
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+    &copy; Copyright 2023, Allan Galarza.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
+  </div>
+  
+  </body>
+</html>
