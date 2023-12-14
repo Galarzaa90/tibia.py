@@ -178,6 +178,8 @@ select = [
     "S",
     # flake8-bugbear
     "B",
+    # flake8-commas
+    "COM",
 
 ]
 ignore = [

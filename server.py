@@ -410,7 +410,7 @@ async def get_auction(
         auction_id: int = Path(...),
         skip_details: bool = Query(
             False,
-            description="Whether to skip the auction details and only fetch the basic information."
+            description="Whether to skip the auction details and only fetch the basic information.",
         ),
         fetch_items: bool = Query(False, description="Whether to fetch additional item pages (if available)."),
         fetch_mounts: bool = Query(False, description="Whether to fetch additional mounts pages (if available)."),
