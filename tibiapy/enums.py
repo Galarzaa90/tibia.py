@@ -561,14 +561,13 @@ class Vocation(StringEnum):
         """The base vocation of this vocation if promoted. If not promoted, the same value is returned."""
         if self == self.ELDER_DRUID:
             return self.DRUID
-        elif self == self.MASTER_SORCERER:
+        if self == self.MASTER_SORCERER:
             return self.SORCERER
-        elif self == self.ROYAL_PALADIN:
+        if self == self.ROYAL_PALADIN:
             return self.PALADIN
-        elif self == self.ELITE_KNIGHT:
+        if self == self.ELITE_KNIGHT:
             return self.KNIGHT
-        else:
-            return self
+        return self
 
 
 class WorldLocation(StringEnum):
