@@ -172,7 +172,7 @@
 
             <span class="k">return</span> <span class="n">BoostableBosses</span><span class="p">(</span><span class="n">boosted_boss</span><span class="o">=</span><span class="n">boosted_boss</span><span class="p">,</span> <span class="n">bosses</span><span class="o">=</span><span class="n">entries</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not the boosted boss&#39;s library&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not the boosted boss&#39;s library&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="BoostableBossesParser.boosted_boss_from_header">
@@ -272,7 +272,7 @@
 
             <span class="k">return</span> <span class="n">CreaturesSection</span><span class="p">(</span><span class="n">boosted_creature</span><span class="o">=</span><span class="n">boosted_creature</span><span class="p">,</span> <span class="n">creatures</span><span class="o">=</span><span class="n">entries</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not the creature&#39;s library&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not the creature&#39;s library&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 </div>
 
 
