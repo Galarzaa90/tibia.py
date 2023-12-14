@@ -172,6 +172,8 @@ select = [
     "N",
     # pydocstyle
     "D",
+    # pyupgrade
+    "UP"
 ]
 ignore = [
     # Missing docstring in magic method
@@ -186,3 +188,7 @@ max-line-length = 120
 
 [tool.ruff.lint.pep8-naming]
 extend-ignore-names = ["assert*"]
+
+[tool.ruff.lint.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+keep-runtime-typing = true

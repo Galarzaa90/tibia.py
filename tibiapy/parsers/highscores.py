@@ -155,7 +155,7 @@ class HighscoresParser:
         cols: :class:`bs4.ResultSet`
             The list of columns for that entry.
         """
-        rank, name, *values = [clean_text(c) for c in cols]
+        rank, name, *values = (clean_text(c) for c in cols)
         rank = int(rank)
         extra = None
         if builder._category == HighscoresCategory.LOYALTY_POINTS:

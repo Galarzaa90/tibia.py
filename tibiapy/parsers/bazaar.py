@@ -349,7 +349,7 @@ class AuctionParser:
         skills = []
         for row in rows:
             cols = row.select("td")
-            name_c, level_c, progress_c = [c.text for c in cols]
+            name_c, level_c, progress_c = (c.text for c in cols)
             level = int(level_c)
             progress = float(progress_c.replace("%", ""))
             skills.append(SkillEntry(name=name_c, level=level, progress=progress))
@@ -372,7 +372,7 @@ class AuctionParser:
         blessings = []
         for row in rows:
             cols = row.select("td")
-            amount_c, name_c = [c.text for c in cols]
+            amount_c, name_c = (c.text for c in cols)
             amount = int(amount_c.replace("x", ""))
             blessings.append(BlessingEntry(name=name_c, amount=amount))
 
@@ -424,7 +424,7 @@ class AuctionParser:
             if len(cols) != 2:
                 continue
 
-            cost_c, name_c = [c.text for c in cols]
+            cost_c, name_c = (c.text for c in cols)
             cost = parse_integer(cost_c.replace("x", ""))
             charms.append(CharmEntry(name=name_c, cost=cost))
 
@@ -476,7 +476,7 @@ class AuctionParser:
             if len(cols) != 3:
                 continue
 
-            step_c, kills_c, name_c = [c.text for c in cols]
+            step_c, kills_c, name_c = (c.text for c in cols)
             kills = parse_integer(kills_c.replace("x", ""))
             step = int(step_c)
             bestiary.append(BestiaryEntry(name=name_c, kills=kills, step=step))
