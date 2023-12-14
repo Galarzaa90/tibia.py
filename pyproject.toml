@@ -194,6 +194,12 @@ select = [
     "Q",
     # flake8-return
     "RET",
+    # flake8-simplify
+    "SIM",
+    # flake8-unused-arguments
+    "ARG",
+    # Perflint
+    "PERF",
 
 ]
 ignore = [
@@ -201,6 +207,8 @@ ignore = [
     "D105",
     # Missing docstring in `__init__`
     "D107",
+    # Unused lambda argument
+    "ARG005",
 
 ]
 
