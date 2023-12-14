@@ -13,7 +13,6 @@ class TibiapyException(Exception):
     All exceptions thrown by the module are inherited from this.
     """
 
-    pass
 
 
 class InvalidContent(TibiapyException):

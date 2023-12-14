@@ -173,7 +173,7 @@ class CharacterParser:
                 action = field_actions[field]
                 action(raw_value, value)
             else:
-                logger.debug(f"Unhandled character information field found: {field}")
+                logger.debug("Unhandled character information field found: %s", field)
 
     @classmethod
     def _parse_name_field(cls, builder: CharacterBuilder, value: str):

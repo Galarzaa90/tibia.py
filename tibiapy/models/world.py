@@ -85,7 +85,6 @@ class World(BaseWorld):
 class WorldEntry(BaseWorld):
     """Represents a game server listed in the World Overview section."""
 
-    pass
 
 
 class WorldOverview(BaseModel):

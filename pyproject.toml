@@ -180,6 +180,16 @@ select = [
     "B",
     # flake8-commas
     "COM",
+    # flake8-comprehensions
+    "C4",
+    # flake8-future-annotations
+    "FA",
+    # flake8-implicit-str-concat
+    "ISC",
+    # flake8-logging-format
+    "G",
+    # flake8-pie
+    "PIE",
 
 ]
 ignore = [
