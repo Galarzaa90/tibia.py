@@ -115,8 +115,7 @@ class HousesSectionParser:
 
     @classmethod
     def _parse_status(cls, builder: HouseEntryBuilder, status):
-        """
-        Parse the status string found in the table and applies the corresponding values.
+        """Parse the status string found in the table and applies the corresponding values.
 
         Parameters
         ----------

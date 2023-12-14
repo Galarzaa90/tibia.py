@@ -142,3 +142,30 @@ rst-directives = [
 literal-inline-quotes = "double"
 type-checking-pydantic-enabled = true
 
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+"**/builders/*" = ["D101"]
+"tests/**" = ["D101"]
+
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E", "W293",
+    # Pyflakes
+    "F",
+    # pep8-naming
+    "N",
+    # pydocstyle
+    "D",
+]
+exclude = [
+    "D105"
+]
+
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+
+[tool.ruff.lint.pep8-naming]
+extend-ignore-names = ["assert*"]

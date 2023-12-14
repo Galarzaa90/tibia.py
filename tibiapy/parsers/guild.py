@@ -111,11 +111,11 @@ class GuildParser:
         """Create an instance of the class from the HTML content of the guild's page.
 
         Parameters
-        -----------
+        ----------
             The HTML content of the page.
 
         Returns
-        ----------
+        -------
             The guild contained in the page or None if it doesn't exist.
 
         Raises
@@ -172,8 +172,7 @@ class GuildParser:
 
     @classmethod
     def _parse_application_info(cls, builder, info_container):
-        """
-        Parse the guild's application info.
+        """Parse the guild's application info.
 
         Parameters
         ----------
@@ -187,8 +186,7 @@ class GuildParser:
 
     @classmethod
     def _parse_guild_disband_info(cls, builder: GuildBuilder, info_container: bs4.Tag):
-        """
-        Parse the guild's disband info, if available.
+        """Parse the guild's disband info, if available.
 
         Parameters
         ----------
@@ -201,8 +199,7 @@ class GuildParser:
 
     @classmethod
     def _parse_guild_guildhall(cls, builder, info_container):
-        """
-        Parse the guild's guildhall info.
+        """Parse the guild's guildhall info.
 
         Parameters
         ----------
@@ -234,8 +231,7 @@ class GuildParser:
 
     @classmethod
     def _parse_guild_info(cls, builder, info_container):
-        """
-        Parse the guild's general information and applies the found values.
+        """Parse the guild's general information and applies the found values.
 
         Parameters
         ----------
@@ -271,8 +267,7 @@ class GuildParser:
 
     @classmethod
     def _parse_guild_members(cls, builder, parsed_content):
-        """
-        Parse the guild's member and invited list.
+        """Parse the guild's member and invited list.
 
         Parameters
         ----------

@@ -73,7 +73,8 @@ class EnumValueError(ValueError):
     def __init__(self, enum: Type[Enum], value: Any) -> None:
         self.enum = enum
         super().__init__(
-            f"{value!r} is not a valid value for {enum.__name__}. Expected names ({self.names}) or values ({self.values})",
+            f"{value!r} is not a valid value for {enum.__name__}."
+            f"Expected names ({self.names}) or values ({self.values})",
         )
 
     @property

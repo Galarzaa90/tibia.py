@@ -408,8 +408,10 @@ async def get_auctions_history(
 @app.get("/auctions/{auction_id}", tags=["Char Bazaar"])
 async def get_auction(
         auction_id: int = Path(...),
-        skip_details: bool = Query(False,
-                                   description="Whether to skip the auction details and only fetch the basic information."),
+        skip_details: bool = Query(
+            False,
+            description="Whether to skip the auction details and only fetch the basic information."
+        ),
         fetch_items: bool = Query(False, description="Whether to fetch additional item pages (if available)."),
         fetch_mounts: bool = Query(False, description="Whether to fetch additional mounts pages (if available)."),
         fetch_outfits: bool = Query(False, description="Whether to fetch additional outfits pages (if available)."),

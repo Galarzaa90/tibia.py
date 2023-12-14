@@ -99,8 +99,7 @@ class HighscoresParser:
 
     @classmethod
     def _parse_filters_table(cls, builder, form):
-        """
-        Parse the filters table found in a highscores page.
+        """Parse the filters table found in a highscores page.
 
         Parameters
         ----------
@@ -118,8 +117,7 @@ class HighscoresParser:
 
     @classmethod
     def _parse_tables(cls, parsed_content):
-        """
-        Parse the information tables found in a highscores page.
+        """Parse the information tables found in a highscores page.
 
         Parameters
         ----------

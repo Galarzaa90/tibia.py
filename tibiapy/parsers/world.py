@@ -74,8 +74,7 @@ class WorldParser:
 
     @classmethod
     def _parse_world_info(cls, builder: WorldBuilder, world_info_table: bs4.Tag):
-        """
-        Parse the World Information table from Tibia.com and adds the found values to the object.
+        """Parse the World Information table from Tibia.com and adds the found values to the object.
 
         Parameters
         ----------

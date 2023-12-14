@@ -226,12 +226,12 @@ def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
     - ``MMM DD YYYY, HH:mm ZZZ``, e.g. ``Dec 10 2018, 21:53 CET``.
 
     Parameters
-    -------------
+    ----------
     datetime_str: :class:`str`
         The date and time as represented in Tibia.com
 
     Returns
-    -----------
+    -------
     :class:`datetime.datetime`, optional
         The represented datetime, in UTC (timezone aware).
     """
@@ -269,12 +269,12 @@ def parse_tibia_date(date_str: str) -> Optional[datetime.date]:
     - ``MMM DD YYYY``, e.g. ``Jul 23 2015``
 
     Parameters
-    -----------
+    ----------
     date_str: :class:`str`
         The date as represented in Tibia.com
 
     Returns
-    -----------
+    -------
     :class:`datetime.date`, optional
         The represented date, in UTC (timezone aware).
     """
@@ -322,12 +322,12 @@ def parse_tibia_full_date(date_str: str) -> Optional[datetime.date]:
     - ``MMMM DD, YYYY``, e.g. ``July 23, 2015``
 
     Parameters
-    -----------
+    ----------
     date_str: :class:`str`
         The date as represented in Tibia.com
 
     Returns
-    -----------
+    -------
     :class:`datetime.date`, optional
         The represented date, in UTC (timezone aware).
     """

@@ -138,12 +138,12 @@ def get_guild_wars_url(name: str) -> str:
     """Get the Tibia.com URL for the guild wars of a guild with a given name.
 
     Parameters
-    ------------
+    ----------
     name: :class:`str`
         The name of the guild.
 
     Returns
-    --------
+    -------
     :class:`str`
         The URL to the guild's wars page.
     """

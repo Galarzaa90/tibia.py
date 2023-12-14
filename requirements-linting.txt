@@ -19,4 +19,4 @@ flake8-simplify
 flake8-type-checking
 flake8-use-fstring
 flake8-secure-coding-standard
-
+ruff

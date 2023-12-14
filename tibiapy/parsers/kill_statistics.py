@@ -19,12 +19,12 @@ class KillStatisticsParser:
         """Create an instance of the class from the HTML content of the kill statistics' page.
 
         Parameters
-        -----------
+        ----------
         content:
             The HTML content of the page.
 
         Returns
-        ----------
+        -------
             The kill statistics contained in the page or None if it doesn't exist.
 
         Raises

@@ -36,12 +36,12 @@ class SpellsSectionParser:
         """Parse the content of the spells section.
 
         Parameters
-        -----------
+        ----------
         content:
             The HTML content of the page.
 
         Returns
-        ----------
+        -------
             The spells contained and the filtering information.
 
         Raises
@@ -105,12 +105,12 @@ class SpellParser:
         """Parse the content of a spells page.
 
         Parameters
-        -----------
+        ----------
         content:
             The HTML content of the page.
 
         Returns
-        ----------
+        -------
             The spell data. If the spell doesn't exist, this will be :obj:`None`.
 
         Raises

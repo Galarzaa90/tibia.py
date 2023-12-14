@@ -14,7 +14,7 @@ FILE_SPELL_SECONDARY_GROUP = "spells/spellWithSecondaryGroup.txt"
 
 class TestSpell(TestCommons,):
     # region Spells Section Tests
-    
+
     def test_spells_section_parser_from_content(self):
         """Testing parsing a boosted creature"""
         content = self.load_resource(FILE_SPELLS_SECTION)
@@ -40,9 +40,9 @@ class TestSpell(TestCommons,):
 
         with self.assertRaises(tibiapy.InvalidContent):
             SpellsSectionParser.from_content(content)
-            
+
     # endregion
-    
+
     # region Spells Tests
 
     def test_spell_parser_from_content(self):
@@ -123,7 +123,8 @@ class TestSpell(TestCommons,):
     def test_spells_from_content_unknown_spell(self):
         """Testing parsing an unknown spell
 
-        When trying to fetch a spell that doesn't exist, the website will just show the spells section."""
+        When trying to fetch a spell that doesn't exist, the website will just show the spells section.
+        """
         content = self.load_resource(FILE_SPELLS_SECTION)
         spell = SpellParser.from_content(content)
 
