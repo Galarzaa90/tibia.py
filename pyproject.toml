@@ -173,13 +173,19 @@ select = [
     # pydocstyle
     "D",
     # pyupgrade
-    "UP"
+    "UP",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+
 ]
 ignore = [
     # Missing docstring in magic method
     "D105",
     # Missing docstring in `__init__`
     "D107",
+
 ]
 
 
@@ -192,3 +198,7 @@ extend-ignore-names = ["assert*"]
 [tool.ruff.lint.pyupgrade]
 # Preserve types, even if a file imports `from __future__ import annotations`.
 keep-runtime-typing = true
+
+[tool.ruff.lint.flake8-bugbear]
+# Allow default arguments like, e.g., `data: List[str] = fastapi.Query(None)`.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path"]

@@ -75,7 +75,7 @@ class CMPostArchiveParser:
             start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
         except (AttributeError, ValueError) as e:
-            raise errors.InvalidContent("content does not belong to the CM Post Archive in Tibia.com", e)
+            raise errors.InvalidContent("content does not belong to the CM Post Archive in Tibia.com", e) from e
 
         builder = CMPostArchiveBuilder().from_date(start_date).to_date(end_date)
         table = parsed_content.select_one("table.Table3")

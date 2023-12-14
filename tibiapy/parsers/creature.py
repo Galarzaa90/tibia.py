@@ -117,7 +117,7 @@ class BoostableBossesParser:
 
             return BoostableBosses(boosted_boss=boosted_boss, bosses=entries)
         except (AttributeError, ValueError) as e:
-            raise InvalidContent("content is not the boosted boss's library", e)
+            raise InvalidContent("content is not the boosted boss's library", e) from e
 
     @classmethod
     def boosted_boss_from_header(cls, content: str) -> BossEntry:
@@ -205,7 +205,7 @@ class CreaturesSectionParser:
 
             return CreaturesSection(boosted_creature=boosted_creature, creatures=entries)
         except (AttributeError, ValueError) as e:
-            raise InvalidContent("content is not the creature's library", e)
+            raise InvalidContent("content is not the creature's library", e) from e
 
 
 class CreatureParser:
