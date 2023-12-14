@@ -392,10 +392,12 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_skills_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the skills table.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the skills&#39; table.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        builder: :class:`AuctionDetailsBuilder`</span>
+<span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        table: :class:`bs4.Tag`</span>
 <span class="sd">            The table containing the character&#39;s skill.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -416,6 +418,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        builder: :class:`AuctionDetailsBuilder`</span>
+<span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        table: :class:`bs4.Tag`</span>
 <span class="sd">            The table containing the character&#39;s blessings.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -459,10 +463,12 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_charms_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the charms table and extracts its information.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the charms&#39; table and extracts its information.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        builder: :class:`AuctionDetailsBuilder`</span>
+<span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        table: :class:`bs4.Tag`</span>
 <span class="sd">            The table containing the charms.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -482,10 +488,12 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_achievements_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the achievements table and extracts its information.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the achievements&#39; table and extracts its information.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        builder: :class:`AuctionDetailsBuilder`</span>
+<span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        table: :class:`bs4.Tag`</span>
 <span class="sd">            The table containing the achievements.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -509,8 +517,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        table:</span>
+<span class="sd">        builder: :class:`AuctionDetailsBuilder`</span>
+<span class="sd">            The builder where data will be stored to.</span>
+<span class="sd">        table: :class:`bs4.Tag`</span>
 <span class="sd">            The table containing the bestiary information.</span>
+<span class="sd">        bosstiary: :class:`bool`</span>
+<span class="sd">            Whether this is a bosstiary table or a bestiary table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table_content</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;table.TableContent&quot;</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">rows</span> <span class="o">=</span> <span class="n">get_rows</span><span class="p">(</span><span class="n">table_content</span><span class="p">)</span>
@@ -536,6 +548,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        builder: :class:`AuctionDetailsBuilder`</span>
+<span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        table: :class:`bs4.Tag`</span>
 <span class="sd">            The table with general information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
