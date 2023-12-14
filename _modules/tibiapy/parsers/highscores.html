@@ -205,7 +205,7 @@
 <span class="sd">        cols: :class:`bs4.ResultSet`</span>
 <span class="sd">            The list of columns for that entry.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">clean_text</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+        <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="n">clean_text</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">)</span>
         <span class="n">rank</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rank</span><span class="p">)</span>
         <span class="n">extra</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">builder</span><span class="o">.</span><span class="n">_category</span> <span class="o">==</span> <span class="n">HighscoresCategory</span><span class="o">.</span><span class="n">LOYALTY_POINTS</span><span class="p">:</span>
