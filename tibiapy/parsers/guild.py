@@ -112,6 +112,7 @@ class GuildParser:
 
         Parameters
         ----------
+        content: :class:`str`
             The HTML content of the page.
 
         Returns
@@ -153,6 +154,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         previous_rank: :class:`dict`[int, str]
             The last rank present in the rows.
         values: :class:`tuple` of :class:`str`
@@ -176,6 +179,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
@@ -190,6 +195,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
@@ -203,6 +210,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
@@ -216,6 +225,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
@@ -235,6 +246,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
         """
@@ -251,6 +264,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         parsed_content: :class:`bs4.Tag`
             The parsed content of the page.
 
@@ -271,6 +286,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         parsed_content: :class:`bs4.Tag`
             The parsed content of the guild's page
         """
@@ -291,6 +308,8 @@ class GuildParser:
 
         Parameters
         ----------
+        builder: :class:`GuildBuilder`
+            The builder where data will be stored to.
         values: tuple[:class:`str`]
             A list of row contents.
         """

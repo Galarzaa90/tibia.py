@@ -1,3 +1,4 @@
+"""Parsers for the spell sections and spell pages."""
 from __future__ import annotations
 
 import os
@@ -188,6 +189,8 @@ class SpellParser:
 
         Parameters
         ----------
+        builder: :class:`SpellBuilder`
+            The instance of the builder where data will be collected.
         spell_table: :class:`bs4.Tag`
             The table containing the spell information.
 

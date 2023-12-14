@@ -1,3 +1,4 @@
+"""Models related to the Kill Statistics."""
 from typing import Dict, List
 
 from tibiapy.models import BaseModel

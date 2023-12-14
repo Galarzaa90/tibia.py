@@ -142,10 +142,24 @@ rst-directives = [
 literal-inline-quotes = "double"
 type-checking-pydantic-enabled = true
 
+[tool.ruff]
+exclude = [
+    "__pycache__",
+    ".git/",
+    "build/",
+    ".idea/",
+    "venv/",
+    "docs/",
+    "logs/",
+    "tests/",
+]
+
+
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["F401", "F403"]
-"**/builders/*" = ["D101"]
+"__init__.py" = ["D104", "F401", "F403"]
+"**/builders/*" = ["D"]
 "tests/**" = ["D101"]
+"server.py" = ["D100", "D103"]
 
 
 [tool.ruff.lint]
@@ -159,8 +173,11 @@ select = [
     # pydocstyle
     "D",
 ]
-exclude = [
-    "D105"
+ignore = [
+    # Missing docstring in magic method
+    "D105",
+    # Missing docstring in `__init__`
+    "D107",
 ]
 
 

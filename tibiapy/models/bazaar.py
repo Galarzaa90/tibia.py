@@ -1,3 +1,4 @@
+"""Models relatd to the character bazaar."""
 import datetime
 from abc import ABC, abstractmethod
 from typing import Optional, List, Dict, TypeVar, Generic
@@ -516,6 +517,18 @@ class CharacterBazaar(PaginatedWithUrl[Auction]):
     """The currently set filtering options."""
 
     def get_page_url(self, page) -> str:
+        """Get the URL to a given page of the bazaar.
+
+        Parameters
+        ----------
+        page: :class:`int`
+            The desired page.
+
+        Returns
+        -------
+        :class:`str`
+            The URL to the desired page.
+        """
         return get_bazaar_url(self.type, page, self.filters)
 
     @property

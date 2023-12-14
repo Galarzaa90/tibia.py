@@ -259,6 +259,8 @@ class CreatureParser:
 
         Parameters
         ----------
+        builder: :class:`CreatureBuilder`
+            The builder where data will be stored to.
         exp_text: :class:`str`
             The text containing experience.
         """
@@ -270,10 +272,12 @@ class CreatureParser:
 
     @classmethod
     def _parse_hp_text(cls, builder: CreatureBuilder, hp_text):
-        """Parse the text containing the creatures hitpoints, containing weaknesses, immunities and more and adds it.
+        """Parse the text containing the creature's hitpoints, containing weaknesses, immunities and more and adds it.
 
         Parameters
         ----------
+        builder: :class:`CreatureBuilder`
+            The builder where data will be stored to.
         hp_text: :class:`str`
             The text containing hitpoints.
         """

@@ -249,6 +249,7 @@ class BazaarType(StringEnum):
 
     @property
     def subtopic(self):
+        """The subtopic argument for this Bazaar type."""
         return "currentcharactertrades" if self == self.CURRENT else "pastcharactertrades"
 
 
@@ -388,15 +389,18 @@ class NewsCategory(StringEnum):
 
     @property
     def filter_name(self):
+        """The name of the filter parameter for this value."""
         return f"filter_{self.value}"
 
     @property
     def big_icon_url(self):
+        """The URL to the big icon representing this category."""
         from tibiapy.urls import get_static_file_url
         return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_big.gif")
 
     @property
     def small_icon_url(self):
+        """The URL to the small icon representing this category."""
         from tibiapy.urls import get_static_file_url
         return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_small.gif")
 
@@ -410,10 +414,12 @@ class NewsType(StringEnum):
 
     @property
     def filter_name(self):
+        """The filter parameter name for this value."""
         return f"filter_{self.value.split(' ')[-1].lower()}"
 
     @property
     def filter_value(self):
+        """The filter parameter value for this value."""
         return self.value.split(" ")[-1].lower()
 
 
@@ -552,6 +558,7 @@ class Vocation(StringEnum):
 
     @property
     def base(self):
+        """The base vocation of this vocation if promoted. If not promoted, the same value is returned."""
         if self == self.ELDER_DRUID:
             return self.DRUID
         elif self == self.MASTER_SORCERER:

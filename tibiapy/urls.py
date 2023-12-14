@@ -1,3 +1,4 @@
+"""Functions to generate urls to Tibia.com."""
 from __future__ import annotations
 
 import datetime
@@ -505,6 +506,8 @@ def get_bazaar_url(type: BazaarType, page: int = 1, filters: AuctionFilters = No
 
     Parameters
     ----------
+    type: :class:`BazaarType`
+        The type of bazaar to show.
     page: :class:`int`
         The page to show the URL for.
     filters: :class:`AuctionFilters`

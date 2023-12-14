@@ -79,8 +79,10 @@ class EnumValueError(ValueError):
 
     @property
     def names(self):
+        """The valid names for the enum."""
         return ", ".join(e.name for e in self.enum)
 
     @property
     def values(self):
+        """The valid values for the enum."""
         return ", ".join(str(e.value) for e in self.enum)

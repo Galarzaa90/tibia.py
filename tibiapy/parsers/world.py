@@ -1,3 +1,4 @@
+"""Parser for the worlds sections."""
 from __future__ import annotations
 
 import datetime
@@ -78,6 +79,8 @@ class WorldParser:
 
         Parameters
         ----------
+        builder: :class:`WorldBuilder`
+            The instance of the builder where data will be collected.
         world_info_table: :class:`bs4.Tag`
             The table containing the world's information.
         """

@@ -1,3 +1,4 @@
+"""Models for the houses section."""
 import datetime
 from typing import List, Optional
 

@@ -41,7 +41,7 @@ class EventScheduleParser:
         """
         parsed_content = parse_tibiacom_content(content)
 
-        month, year = cls.calculate_month_year(parsed_content.select_one("div.eventscheduleheaderdateblock"))
+        month, year = cls._calculate_month_year(parsed_content.select_one("div.eventscheduleheaderdateblock"))
         builder = EventScheduleBuilder().year(year).month(month)
         events_table = parsed_content.select_one("#eventscheduletable")
         day_cells = events_table.select("td")
@@ -51,8 +51,8 @@ class EventScheduleParser:
         first_day = True
 
         for day_cell in day_cells:
-            day, today_events = cls.process_day_cell(day_cell)
-            month, year = cls.adjust_date(ongoing_day, day, month, year)
+            day, today_events = cls._process_day_cell(day_cell)
+            month, year = cls._adjust_date(ongoing_day, day, month, year)
             ongoing_day = day + 1
 
             # Check which of the ongoing events did not show up today, meaning it has ended now
@@ -83,7 +83,7 @@ class EventScheduleParser:
         return builder.build()
 
     @classmethod
-    def adjust_date(cls, ongoing_day: int, day: int, month: int, year: int) -> Tuple[int, int]:
+    def _adjust_date(cls, ongoing_day: int, day: int, month: int, year: int) -> Tuple[int, int]:
         if ongoing_day < day:
             # The first cells may belong to the previous month
             month -= 1
@@ -105,7 +105,7 @@ class EventScheduleParser:
         return month, year
 
     @classmethod
-    def parse_inline_style(cls, style_content):
+    def _parse_inline_style(cls, style_content):
         attrs = style_content.split(";")
         values = {}
         for attr in attrs:
@@ -118,7 +118,7 @@ class EventScheduleParser:
         return values
 
     @classmethod
-    def process_day_cell(cls, day_cell: bs4.Tag) -> Tuple[int, List[EventEntry]]:
+    def _process_day_cell(cls, day_cell: bs4.Tag) -> Tuple[int, List[EventEntry]]:
         day_div = day_cell.select_one("div")
         day = int(day_div.text)
         today_events = []
@@ -127,7 +127,7 @@ class EventScheduleParser:
             colored_blocks = popup.select("div:not([class])")
             event_colors = {}
             for block in colored_blocks:
-                style_values = cls.parse_inline_style(block.get("style"))
+                style_values = cls._parse_inline_style(block.get("style"))
                 block_title = block.text.replace("*", "")
                 event_colors[block_title] = style_values["background"]
 
@@ -143,7 +143,7 @@ class EventScheduleParser:
         return day, today_events
 
     @classmethod
-    def calculate_month_year(cls, month_year_div: bs4.Tag) -> Tuple[int, int]:
+    def _calculate_month_year(cls, month_year_div: bs4.Tag) -> Tuple[int, int]:
         month, year = month_year_regex.search(month_year_div.text).groups()
         month = time.strptime(month, "%B").tm_mon
         year = int(year)

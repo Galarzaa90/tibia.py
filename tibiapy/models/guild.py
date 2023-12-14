@@ -1,3 +1,4 @@
+"""Models for guilds and members."""
 import datetime
 from collections import defaultdict
 from typing import Optional, List, Dict, OrderedDict

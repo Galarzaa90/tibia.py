@@ -1,3 +1,4 @@
+"""Models related to the forums."""
 import datetime
 from typing import List, Optional
 
@@ -273,6 +274,7 @@ class ForumSection(BaseModel):
 
     @property
     def url(self):
+        """The URL to this forum section."""
         return get_forum_section_url(self.section_id)
 
 

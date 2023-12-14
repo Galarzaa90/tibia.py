@@ -1,3 +1,4 @@
+"""Models related to game worlds."""
 import datetime
 from typing import List, Optional
 

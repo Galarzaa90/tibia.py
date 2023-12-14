@@ -78,6 +78,8 @@ class HighscoresParser:
 
         Parameters
         ----------
+        builder: :class:`HighscoresBuilder`
+            The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the entries.
         """
@@ -103,6 +105,8 @@ class HighscoresParser:
 
         Parameters
         ----------
+        builder: :class:`HighscoresBuilder`
+            The builder where data will be stored to.
         form: :class:`bs4.Tag`
             The table containing the filters.
         """
@@ -146,6 +150,8 @@ class HighscoresParser:
 
         Parameters
         ----------
+        builder: :class:`HighscoresBuilder`
+            The builder where data will be stored to.
         cols: :class:`bs4.ResultSet`
             The list of columns for that entry.
         """

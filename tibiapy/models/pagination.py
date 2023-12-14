@@ -1,3 +1,4 @@
+"""Base models for paginated classes."""
 from abc import abstractmethod, ABC
 from typing import TypeVar, Generic, List, Optional
 

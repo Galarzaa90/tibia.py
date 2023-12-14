@@ -119,6 +119,8 @@ class HousesSectionParser:
 
         Parameters
         ----------
+        builder: :class:`HouseEntryBuilder`
+            The instance of the builder where data will be collected.
         status: :class:`str`
             The string containing the status.
         """
@@ -205,6 +207,8 @@ class HouseParser:
 
         Parameters
         ----------
+        builder: :class:`HouseBuilder`
+            The instance of the builder where data will be collected.
         status: :class:`str`
             Plain text string containing the current renting state of the house.
         """

@@ -1,3 +1,4 @@
+"""Models used to wrap responses from Tibia.com."""
 import datetime
 from typing import Generic, TypeVar
 
@@ -46,6 +47,7 @@ class TibiaResponse(BaseModel, Generic[T]):
 
     @classmethod
     def from_raw(cls, raw_response, data: T, parsing_time=None):
+        """Build an instance from a raw response."""
         return cls(
             timestamp=raw_response.timestamp,
             cached=raw_response.cached,

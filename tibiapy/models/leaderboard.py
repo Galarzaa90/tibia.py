@@ -1,3 +1,4 @@
+"""Models related to the leaderboards."""
 import datetime
 from typing import List, Optional
 
@@ -24,6 +25,7 @@ class LeaderboardEntry(BaseModel):
 
     @property
     def url(self) -> Optional[str]:
+        """The URL of the character, if available."""
         return get_character_url(self.name) if self.name else None
 
 

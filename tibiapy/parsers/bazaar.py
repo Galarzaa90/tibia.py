@@ -336,10 +336,12 @@ class AuctionParser:
 
     @classmethod
     def _parse_skills_table(cls, builder: AuctionDetailsBuilder, table):
-        """Parse the skills table.
+        """Parse the skills' table.
 
         Parameters
         ----------
+        builder: :class:`AuctionDetailsBuilder`
+            The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the character's skill.
         """
@@ -360,6 +362,8 @@ class AuctionParser:
 
         Parameters
         ----------
+        builder: :class:`AuctionDetailsBuilder`
+            The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the character's blessings.
         """
@@ -403,10 +407,12 @@ class AuctionParser:
 
     @classmethod
     def _parse_charms_table(cls, builder: AuctionDetailsBuilder, table):
-        """Parse the charms table and extracts its information.
+        """Parse the charms' table and extracts its information.
 
         Parameters
         ----------
+        builder: :class:`AuctionDetailsBuilder`
+            The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the charms.
         """
@@ -426,10 +432,12 @@ class AuctionParser:
 
     @classmethod
     def _parse_achievements_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag):
-        """Parse the achievements table and extracts its information.
+        """Parse the achievements' table and extracts its information.
 
         Parameters
         ----------
+        builder: :class:`AuctionDetailsBuilder`
+            The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the achievements.
         """
@@ -453,8 +461,12 @@ class AuctionParser:
 
         Parameters
         ----------
-        table:
+        builder: :class:`AuctionDetailsBuilder`
+            The builder where data will be stored to.
+        table: :class:`bs4.Tag`
             The table containing the bestiary information.
+        bosstiary: :class:`bool`
+            Whether this is a bosstiary table or a bestiary table.
         """
         table_content = table.select_one("table.TableContent")
         _, *rows = get_rows(table_content)
@@ -480,6 +492,8 @@ class AuctionParser:
 
         Parameters
         ----------
+        builder: :class:`AuctionDetailsBuilder`
+            The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table with general information.
         """

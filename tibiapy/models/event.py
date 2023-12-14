@@ -1,3 +1,4 @@
+"""Models related to the event schedule calendar."""
 import datetime
 from typing import List, Optional
 

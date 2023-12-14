@@ -1,3 +1,4 @@
+"""Models for highscores."""
 import datetime
 from typing import List, Optional, Set
 

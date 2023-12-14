@@ -1,3 +1,4 @@
+"""Models for creatures."""
 from typing import List, Optional
 
 from pydantic import computed_field
