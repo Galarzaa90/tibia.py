@@ -51,7 +51,7 @@
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.builders</span> <span class="kn">import</span> <span class="n">AuctionBuilder</span><span class="p">,</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">CharacterBazaarBuilder</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">AuctionBattlEyeFilter</span><span class="p">,</span> <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionOrderDirection</span><span class="p">,</span> <span class="n">AuctionSearchType</span><span class="p">,</span> \
     <span class="n">AuctionSkillFilter</span><span class="p">,</span> <span class="n">AuctionStatus</span><span class="p">,</span> <span class="n">AuctionVocationFilter</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
@@ -165,7 +165,7 @@
 
             <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to the bazaar at Tibia.com&quot;</span><span class="p">,</span> <span class="n">original</span><span class="o">=</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to the bazaar at Tibia.com&quot;</span><span class="p">,</span> <span class="n">original</span><span class="o">=</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 </div>
 
 
@@ -210,7 +210,7 @@
             <span class="k">if</span> <span class="s2">&quot;internal error&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
 
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a auction details page in Tibia.com&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a auction details page in Tibia.com&quot;</span><span class="p">)</span>
 
         <span class="n">auction</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_auction</span><span class="p">(</span><span class="n">auction_row</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">)</span>
         <span class="n">builder</span> <span class="o">=</span> <span class="n">AuctionDetailsBuilder</span><span class="p">()</span>

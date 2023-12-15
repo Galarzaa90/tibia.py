@@ -48,24 +48,28 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">deprecated</span>
+
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 
-<div class="viewcode-block" id="TibiapyException">
-<a class="viewcode-back" href="../../api.html#tibiapy.TibiapyException">[docs]</a>
-<span class="k">class</span> <span class="nc">TibiapyException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">TibiapyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for the tibiapy module.</span>
 
 <span class="sd">    All exceptions thrown by the module are inherited from this.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="TibiapyException">
+<a class="viewcode-back" href="../../api.html#tibiapy.TibiapyException">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;Renamed to TibiapyError&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TibiapyException</span><span class="p">(</span><span class="n">TibiapyError</span><span class="p">):</span>  <span class="c1"># noqa: N818</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated, use TibiapyError instead.&quot;&quot;&quot;</span></div>
 
 
 
-
-<div class="viewcode-block" id="InvalidContent">
-<a class="viewcode-back" href="../../api.html#tibiapy.InvalidContent">[docs]</a>
-<span class="k">class</span> <span class="nc">InvalidContent</span><span class="p">(</span><span class="n">TibiapyException</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">InvalidContentError</span><span class="p">(</span><span class="n">TibiapyError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception thrown when the provided content is unrelated for the calling function.</span>
 
 <span class="sd">    This usually means that the content provided belongs to a different website or section of the website.</span>
@@ -81,13 +85,20 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">original</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">original</span> <span class="o">=</span> <span class="n">original</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original</span> <span class="o">=</span> <span class="n">original</span>
+
+
+<div class="viewcode-block" id="InvalidContent">
+<a class="viewcode-back" href="../../api.html#tibiapy.InvalidContent">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;Renamed to InvalidContentError&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">InvalidContent</span><span class="p">(</span><span class="n">InvalidContentError</span><span class="p">):</span>  <span class="c1"># noqa: N818</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated, use InvalidContentError instead.&quot;&quot;&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="NetworkError">
 <a class="viewcode-back" href="../../api.html#tibiapy.NetworkError">[docs]</a>
-<span class="k">class</span> <span class="nc">NetworkError</span><span class="p">(</span><span class="n">TibiapyException</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NetworkError</span><span class="p">(</span><span class="n">TibiapyError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception thrown when there was a network error trying to fetch a resource from the web.</span>
 
 <span class="sd">    Attributes</span>
@@ -105,14 +116,19 @@
 
 
 
-<div class="viewcode-block" id="Forbidden">
-<a class="viewcode-back" href="../../api.html#tibiapy.Forbidden">[docs]</a>
-<span class="k">class</span> <span class="nc">Forbidden</span><span class="p">(</span><span class="n">NetworkError</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ForbiddenError</span><span class="p">(</span><span class="n">NetworkError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A subclass of :class:`NetworkError` thrown when Tibia.com returns a 403 status code.</span>
 
 <span class="sd">    Tibia.com returns a 403 status code when it detects that too many requests are being done.</span>
 <span class="sd">    This has its own subclass to let the user decide to treat this differently than other network errors.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="Forbidden">
+<a class="viewcode-back" href="../../api.html#tibiapy.Forbidden">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;Renamed to ForbiddenError&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Forbidden</span><span class="p">(</span><span class="n">ForbiddenError</span><span class="p">):</span>  <span class="c1"># noqa: N818</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated, use ForbiddenError instead.&quot;&quot;&quot;</span></div>
 
 
 

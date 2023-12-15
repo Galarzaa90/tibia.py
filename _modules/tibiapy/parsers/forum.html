@@ -51,7 +51,7 @@
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">InvalidContent</span><span class="p">,</span> <span class="n">errors</span>
+<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">InvalidContentError</span><span class="p">,</span> <span class="n">errors</span>
 <span class="kn">from</span> <span class="nn">tibiapy.builders</span> <span class="kn">import</span> <span class="n">CMPostArchiveBuilder</span><span class="p">,</span> <span class="n">ForumAnnouncementBuilder</span><span class="p">,</span> <span class="n">ForumBoardBuilder</span><span class="p">,</span> <span class="n">ForumThreadBuilder</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">ThreadStatus</span><span class="p">,</span> <span class="n">Vocation</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AnnouncementEntry</span><span class="p">,</span> <span class="n">BoardEntry</span><span class="p">,</span> <span class="n">CMPost</span><span class="p">,</span> <span class="n">CMPostArchive</span><span class="p">,</span> <span class="n">ForumAnnouncement</span><span class="p">,</span> <span class="n">ForumAuthor</span><span class="p">,</span>
@@ -124,7 +124,7 @@
             <span class="n">start_date</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_selected_date</span><span class="p">(</span><span class="n">start_month_selector</span><span class="p">,</span> <span class="n">start_day_selector</span><span class="p">,</span> <span class="n">start_year_selector</span><span class="p">)</span>
             <span class="n">end_date</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_selected_date</span><span class="p">(</span><span class="n">end_month_selector</span><span class="p">,</span> <span class="n">end_day_selector</span><span class="p">,</span> <span class="n">end_year_selector</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to the CM Post Archive in Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to the CM Post Archive in Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">builder</span> <span class="o">=</span> <span class="n">CMPostArchiveBuilder</span><span class="p">()</span><span class="o">.</span><span class="n">from_date</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">to_date</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;table.Table3&quot;</span><span class="p">)</span>
@@ -217,7 +217,7 @@
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="n">tables</span> <span class="o">=</span> <span class="n">parse_tables_map</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;Boards&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;Boards table not found.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;Boards table not found.&quot;</span><span class="p">)</span>
 
         <span class="n">rows</span> <span class="o">=</span> <span class="n">tables</span><span class="p">[</span><span class="s2">&quot;Boards&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;table.TableContent &gt; tr:not(.LabelH)&quot;</span><span class="p">)</span>
         <span class="n">section_link</span> <span class="o">=</span> <span class="n">parse_link_info</span><span class="p">(</span><span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;p.ForumWelcome &gt; a&quot;</span><span class="p">))</span>
@@ -307,7 +307,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">forum_breadcrumbs</span><span class="p">:</span>
             <span class="n">message_box</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.TableContainer&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">message_box</span> <span class="ow">or</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">message_box</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not a Tibia.com forum announcement.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content is not a Tibia.com forum announcement.&quot;</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -446,7 +446,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">forum_breadcrumbs</span><span class="p">:</span>
             <span class="n">message_box</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.InnerTableContainer&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">message_box</span> <span class="ow">or</span> <span class="s2">&quot;board you requested&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">message_box</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a board.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a board.&quot;</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -622,7 +622,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">forum_breadcrumbs</span><span class="p">:</span>
             <span class="n">message_box</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.InnerTableContainer&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">message_box</span> <span class="ow">or</span> <span class="s2">&quot;not found&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">message_box</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a thread.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a thread.&quot;</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="kc">None</span>
 

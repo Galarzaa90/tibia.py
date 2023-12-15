@@ -51,7 +51,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.builders</span> <span class="kn">import</span> <span class="n">GuildBuilder</span><span class="p">,</span> <span class="n">GuildWarEntryBuilder</span><span class="p">,</span> <span class="n">GuildWarsBuilder</span>
-<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">GuildEntry</span><span class="p">,</span> <span class="n">GuildHouse</span><span class="p">,</span> <span class="n">GuildInvite</span><span class="p">,</span> <span class="n">GuildMember</span><span class="p">,</span> <span class="n">GuildWarEntry</span><span class="p">,</span> <span class="n">GuildsSection</span>
 <span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">clean_text</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">,</span> <span class="n">parse_link_info</span><span class="p">,</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span>
 
@@ -129,7 +129,7 @@
             <span class="n">available_worlds</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">available_options</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">w</span><span class="p">]</span>
             <span class="n">guilds</span> <span class="o">=</span> <span class="n">GuildsSection</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="n">selected_world</span><span class="p">,</span> <span class="n">available_worlds</span><span class="o">=</span><span class="n">available_worlds</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;Content does not belong to world guild list.&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;Content does not belong to world guild list.&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
         <span class="c1"># First TableContainer contains world selector.</span>
         <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">containers</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;div.TableContainer&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">containers</span><span class="p">:</span>
@@ -187,7 +187,7 @@
             <span class="n">name_header</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)</span>
             <span class="n">builder</span> <span class="o">=</span> <span class="n">GuildBuilder</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="n">name_header</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com guild page.&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com guild page.&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_logo</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">)</span>
         <span class="n">info_container</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;#GuildInformationContainer&quot;</span><span class="p">)</span>
@@ -332,7 +332,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logo_img</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s1">&#39;img[height=&quot;64&quot;]&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">logo_img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com guild page.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com guild page.&quot;</span><span class="p">)</span>
 
         <span class="n">builder</span><span class="o">.</span><span class="n">logo_url</span><span class="p">(</span><span class="n">logo_img</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">])</span>
 
@@ -431,7 +431,7 @@
 
             <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to the guild wars section&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to the guild wars section&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
     <span class="nd">@classmethod</span>

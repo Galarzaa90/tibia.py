@@ -53,7 +53,7 @@
 
 <span class="kn">from</span> <span class="nn">tibiapy.builders.house</span> <span class="kn">import</span> <span class="n">HousesSectionBuilder</span><span class="p">,</span> <span class="n">HouseEntryBuilder</span><span class="p">,</span> <span class="n">HouseBuilder</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">Sex</span>
-<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">get_rows</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibia_money</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span>
                            <span class="n">parse_tibiacom_tables</span><span class="p">,</span>
                            <span class="n">try_enum</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">)</span>
@@ -117,14 +117,14 @@
             <span class="n">tables</span> <span class="o">=</span> <span class="n">parse_tibiacom_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">)</span>
             <span class="n">builder</span> <span class="o">=</span> <span class="n">HousesSectionBuilder</span><span class="p">()</span>
             <span class="k">if</span> <span class="s2">&quot;House Search&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to the houses section&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to the houses section&quot;</span><span class="p">)</span>
 
             <span class="n">form</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.BoxContent &gt; form&quot;</span><span class="p">)</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_filters</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">form</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tables</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 
-            <span class="n">houses_table</span> <span class="o">=</span> <span class="n">tables</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">houses_table</span> <span class="o">=</span> <span class="n">tables</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">keys</span><span class="p">()))]</span>
             <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">rows</span> <span class="o">=</span> <span class="n">get_rows</span><span class="p">(</span><span class="n">houses_table</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
                 <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
@@ -149,7 +149,7 @@
 
             <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com house list&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com house list&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
     <span class="nd">@classmethod</span>
@@ -229,7 +229,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">name</span><span class="p">,</span> <span class="n">beds</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">lines</span>
             <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does is not from the house section of Tibia.com&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+                <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does is not from the house section of Tibia.com&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
             <span class="n">image_url</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
             <span class="n">builder</span> <span class="o">=</span> <span class="p">(</span><span class="n">HouseBuilder</span><span class="p">()</span>
@@ -252,7 +252,7 @@
             <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_status</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to a house page&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a house page&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
     <span class="c1"># endregion</span>

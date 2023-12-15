@@ -55,7 +55,7 @@
 <span class="kn">import</span> <span class="nn">bs4</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
 
 <span class="n">TIBIA_CASH_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d*\.?\d*)\s?k*$&quot;</span><span class="p">)</span>
 
@@ -536,7 +536,7 @@
     <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
         <span class="n">caption</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.Text&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">caption</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;table has no caption&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;table has no caption&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">content_table</span> <span class="o">:=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="n">selector</span><span class="p">):</span>
             <span class="n">output</span><span class="p">[</span><span class="n">clean_text</span><span class="p">(</span><span class="n">caption</span><span class="p">)]</span> <span class="o">=</span> <span class="n">content_table</span>

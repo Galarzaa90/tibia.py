@@ -54,7 +54,7 @@
                                     <span class="n">WorldOverviewBuilder</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BattlEyeType</span><span class="p">,</span> <span class="n">PvpType</span><span class="p">,</span>
                            <span class="n">TransferType</span><span class="p">,</span> <span class="n">WorldLocation</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">OnlineCharacter</span><span class="p">,</span> <span class="n">WorldEntry</span>
 <span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">parse_integer</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span>
                            <span class="n">parse_tibia_full_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span>
@@ -118,7 +118,7 @@
                 <span class="n">builder</span><span class="o">.</span><span class="n">add_online_player</span><span class="p">(</span><span class="n">OnlineCharacter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">),</span> <span class="n">vocation</span><span class="o">=</span><span class="n">vocation</span><span class="p">))</span>
 
         <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from the world section in Tibia.com&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content is not from the world section in Tibia.com&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
 
@@ -230,7 +230,7 @@
                     <span class="o">.</span><span class="n">worlds</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_worlds_tables</span><span class="p">(</span><span class="n">tables</span><span class="p">))</span>
                     <span class="o">.</span><span class="n">build</span><span class="p">())</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content does not belong to the World Overview section in Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to the World Overview section in Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
     <span class="nd">@classmethod</span>

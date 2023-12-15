@@ -60,7 +60,7 @@
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BazaarType</span><span class="p">,</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span>
                            <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span><span class="p">,</span> <span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellSorting</span><span class="p">,</span>
                            <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellVocationFilter</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">Forbidden</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">ForbiddenError</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">TibiaResponse</span>
 <span class="kn">from</span> <span class="nn">tibiapy.parsers</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AuctionParser</span><span class="p">,</span> <span class="n">BoostableBossesParser</span><span class="p">,</span> <span class="n">BoostedCreaturesParser</span><span class="p">,</span> <span class="n">CMPostArchiveParser</span><span class="p">,</span> <span class="n">CharacterBazaarParser</span><span class="p">,</span>
@@ -183,7 +183,7 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">Forbidden</span><span class="p">(</span><span class="s2">&quot;403 Forbidden: Might be getting rate-limited&quot;</span><span class="p">,</span> <span class="n">fetching_time</span><span class="o">=</span><span class="n">fetching_time</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ForbiddenError</span><span class="p">(</span><span class="s2">&quot;403 Forbidden: Might be getting rate-limited&quot;</span><span class="p">,</span> <span class="n">fetching_time</span><span class="o">=</span><span class="n">fetching_time</span><span class="p">)</span>
 
         <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Request error, status code: </span><span class="si">{</span><span class="n">status_code</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fetching_time</span><span class="o">=</span><span class="n">fetching_time</span><span class="p">)</span>
 

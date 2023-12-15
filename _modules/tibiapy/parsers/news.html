@@ -53,7 +53,7 @@
 
 <span class="kn">from</span> <span class="nn">tibiapy.builders.news</span> <span class="kn">import</span> <span class="n">NewsArchiveBuilder</span><span class="p">,</span> <span class="n">NewsBuilder</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span>
-<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContent</span>
+<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.news</span> <span class="kn">import</span> <span class="n">NewsArchive</span><span class="p">,</span> <span class="n">News</span><span class="p">,</span> <span class="n">NewsEntry</span>
 <span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">parse_tibia_date</span><span class="p">,</span>
                            <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">parse_tibiacom_tables</span><span class="p">,</span>
@@ -152,7 +152,7 @@
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="n">tables</span> <span class="o">=</span> <span class="n">parse_tibiacom_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;News Archive Search&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from the news archive section in Tibia.com&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content is not from the news archive section in Tibia.com&quot;</span><span class="p">)</span>
 
         <span class="n">form</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;form&quot;</span><span class="p">)</span>
         <span class="n">builder</span> <span class="o">=</span> <span class="n">NewsArchiveBuilder</span><span class="p">()</span>
@@ -272,7 +272,7 @@
 
             <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContent</span><span class="p">(</span><span class="s2">&quot;content is not from the news archive section in Tibia.com&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content is not from the news archive section in Tibia.com&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 </div>
 
 </pre></div>
