@@ -10,7 +10,7 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Type, T
 import bs4
 from pydantic import BaseModel
 
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 
 TIBIA_CASH_PATTERN = re.compile(r"(\d*\.?\d*)\s?k*$")
 
@@ -447,7 +447,7 @@ def parse_tables_map(
     for table in tables:
         caption = table.select_one("div.Text")
         if not caption:
-            raise InvalidContent("table has no caption")
+            raise InvalidContentError("table has no caption")
 
         if content_table := table.select_one(selector):
             output[clean_text(caption)] = content_table

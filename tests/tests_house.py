@@ -1,5 +1,5 @@
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType
 from tibiapy.models import House, HouseEntry, HousesSection
 from tibiapy.parsers import HouseParser, HousesSectionParser
@@ -87,7 +87,7 @@ class TestsHouse(TestCommons):
     def test_house_parser_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             HouseParser.from_content(content)
 
     # endregion
@@ -161,7 +161,7 @@ class TestsHouse(TestCommons):
     def test_houses_section_parser_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             HousesSectionParser.from_content(content)
 
     # endregion

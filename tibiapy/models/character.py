@@ -50,7 +50,7 @@ class AccountInformation(BaseModel):
 
 
 class Achievement(BaseModel):
-    """Represents an achievement listed on a character’s page."""
+    """Represents an achievement listed on a character's page."""
 
     name: str
     """The name of the achievement."""
@@ -90,7 +90,7 @@ class DeathParticipant(BaseModel):
 
     @property
     def url(self) -> Optional[str]:
-        """The URL of the character’s information page on Tibia.com, if applicable."""
+        """The URL of the character's information page on Tibia.com, if applicable."""
         return urls.get_character_url(self.name) if self.is_player else None
 
 

@@ -3,19 +3,25 @@ from __future__ import annotations
 
 from typing import Type, Any, TYPE_CHECKING
 
+from typing_extensions import deprecated
+
 if TYPE_CHECKING:
     from enum import Enum
 
 
-class TibiapyException(Exception):
+class TibiapyError(Exception):
     """Base exception for the tibiapy module.
 
     All exceptions thrown by the module are inherited from this.
     """
 
 
+@deprecated("Renamed to TibiapyError")
+class TibiapyException(TibiapyError):  # noqa: N818
+    """Deprecated, use TibiapyError instead."""
 
-class InvalidContent(TibiapyException):
+
+class InvalidContentError(TibiapyError):
     """Exception thrown when the provided content is unrelated for the calling function.
 
     This usually means that the content provided belongs to a different website or section of the website.
@@ -34,7 +40,12 @@ class InvalidContent(TibiapyException):
         self.original = original
 
 
-class NetworkError(TibiapyException):
+@deprecated("Renamed to InvalidContentError")
+class InvalidContent(InvalidContentError):  # noqa: N818
+    """Deprecated, use InvalidContentError instead."""
+
+
+class NetworkError(TibiapyError):
     """Exception thrown when there was a network error trying to fetch a resource from the web.
 
     Attributes
@@ -51,12 +62,17 @@ class NetworkError(TibiapyException):
         self.fetching_time = fetching_time
 
 
-class Forbidden(NetworkError):
+class ForbiddenError(NetworkError):
     """A subclass of :class:`NetworkError` thrown when Tibia.com returns a 403 status code.
 
     Tibia.com returns a 403 status code when it detects that too many requests are being done.
     This has its own subclass to let the user decide to treat this differently than other network errors.
     """
+
+
+@deprecated("Renamed to ForbiddenError")
+class Forbidden(ForbiddenError):  # noqa: N818
+    """Deprecated, use ForbiddenError instead."""
 
 
 class SiteMaintenanceError(NetworkError):

@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.enums import ThreadStatus
 from tibiapy.models import BoardEntry, CMPostArchive, ForumPost, LastPost, ThreadEntry
 from tibiapy.parsers import (CMPostArchiveParser, ForumAnnouncementParser, ForumBoardParser, ForumSectionParser,
@@ -81,7 +81,7 @@ class TestForum(TestCommons):
     def test_forum_section_parser_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             ForumSectionParser.from_content(content)
 
     # endregion
@@ -128,7 +128,7 @@ class TestForum(TestCommons):
     def test_forum_board_parser_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             ForumBoardParser.from_content(content)
 
     def test_forum_board_parser_from_content_invalid_page(self):
@@ -246,7 +246,7 @@ class TestForum(TestCommons):
     def test_forum_announcement_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             ForumAnnouncementParser.from_content(content, 34)
 
     # endregion
@@ -368,7 +368,7 @@ class TestForum(TestCommons):
     def test_forum_thread_parser_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             ForumThreadParser.from_content(content)
 
     # endregion
@@ -423,7 +423,7 @@ class TestForum(TestCommons):
 
     def test_cm_post_archive_from_content_unrelated_section(self):
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             CMPostArchiveParser.from_content(content)
 
     def test_cm_post_archive_get_page_url_negative_page(self):

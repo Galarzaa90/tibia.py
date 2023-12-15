@@ -1,5 +1,5 @@
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.models import CreatureEntry
 from tibiapy.parsers import BoostableBossesParser, CreatureParser, CreaturesSectionParser
 
@@ -20,7 +20,7 @@ class TestCreature(TestCommons):
 
     def test_creatures_section_from_boosted_creature_header_content_not_tibiacom(self):
         """Testing parsing the boosted creature from a page that is not Tibia.com"""
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             CreaturesSectionParser.boosted_creature_from_header("<html><div><p>Nothing</p></div></html>")
 
     def test_creature_section_from_content(self):
@@ -42,7 +42,7 @@ class TestCreature(TestCommons):
     def test_creatures_section_from_content_invalid_content(self):
         """Testing parsing the creatures section from an invalid section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             CreaturesSectionParser.from_content(content)
 
     def test_creature_from_content(self):
@@ -103,7 +103,7 @@ class TestCreature(TestCommons):
         """Testing parsing the creatures section from an invalid section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             BoostableBossesParser.from_content(content)
 
 

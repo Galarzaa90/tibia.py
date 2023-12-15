@@ -2,7 +2,7 @@
 from typing import Optional
 
 from tibiapy.builders.kill_statistics import KillStatisticsBuilder
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 from tibiapy.models import KillStatistics, RaceEntry
 from tibiapy.utils import clean_text, get_rows, parse_form_data, parse_tibiacom_content
 
@@ -65,4 +65,4 @@ class KillStatisticsParser:
 
             return builder.build()
         except (AttributeError, KeyError) as e:
-            raise InvalidContent("content does not belong to a Tibia.com kill statistics page.", e) from e
+            raise InvalidContentError("content does not belong to a Tibia.com kill statistics page.", e) from e

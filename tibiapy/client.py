@@ -15,7 +15,7 @@ import tibiapy
 from tibiapy.enums import (BazaarType, HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, HouseOrder,
                            HouseStatus, HouseType, NewsCategory, NewsType, PvpTypeFilter, SpellGroup, SpellSorting,
                            SpellType, SpellVocationFilter)
-from tibiapy.errors import Forbidden, NetworkError, SiteMaintenanceError
+from tibiapy.errors import ForbiddenError, NetworkError, SiteMaintenanceError
 from tibiapy.models import TibiaResponse
 from tibiapy.parsers import (
     AuctionParser, BoostableBossesParser, BoostedCreaturesParser, CMPostArchiveParser, CharacterBazaarParser,
@@ -136,7 +136,7 @@ class Client:
             return
 
         if status_code == 403:
-            raise Forbidden("403 Forbidden: Might be getting rate-limited", fetching_time=fetching_time)
+            raise ForbiddenError("403 Forbidden: Might be getting rate-limited", fetching_time=fetching_time)
 
         raise NetworkError(f"Request error, status code: {status_code:d}", fetching_time=fetching_time)
 

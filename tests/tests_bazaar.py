@@ -5,7 +5,7 @@ from tibiapy.enums import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDir
     AuctionSkillFilter, \
     AuctionStatus, AuctionVocationFilter, BidType, PvpTypeFilter, Sex, Vocation
 from tibiapy.parsers import AuctionParser, CharacterBazaarParser
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 
 FILE_BAZAAR_CURRENT_EMPTY = "characterBazaar/bazaarHistoryEmpty.txt"
 FILE_BAZAAR_CURRENT = "characterBazaar/bazaarCurrentAuctions.txt"
@@ -73,7 +73,7 @@ class TestBazaar(TestCommons):
     def test_character_bazaar_parser_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             CharacterBazaarParser.from_content(content)
 
     def test_auction_parser_from_content_finished(self):
@@ -206,5 +206,5 @@ class TestBazaar(TestCommons):
     def test_auction_parser_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             AuctionParser.from_content(content)

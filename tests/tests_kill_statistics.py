@@ -1,5 +1,5 @@
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.parsers import KillStatisticsParser
 
 FILE_KILL_STATISTICS_FULL = "killStatistics/killStatisticsWithResults.txt"
@@ -51,5 +51,5 @@ class TestHighscores(TestCommons):
     def test_kill_statistics_from_parser_content_unrelated_section(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             KillStatisticsParser.from_content(content)

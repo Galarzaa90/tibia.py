@@ -6,7 +6,7 @@ import re
 from typing import Optional, TYPE_CHECKING
 
 from tibiapy.builders import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 from tibiapy.models import GuildEntry, GuildHouse, GuildInvite, GuildMember, GuildWarEntry, GuildsSection
 from tibiapy.utils import clean_text, parse_form_data, parse_link_info, parse_tibia_date, parse_tibiacom_content
 
@@ -80,7 +80,7 @@ class GuildsSectionParser:
             available_worlds = [w for w in data.available_options["world"].values() if w]
             guilds = GuildsSection(world=selected_world, available_worlds=available_worlds)
         except (AttributeError, KeyError) as e:
-            raise InvalidContent("Content does not belong to world guild list.", e) from e
+            raise InvalidContentError("Content does not belong to world guild list.", e) from e
         # First TableContainer contains world selector.
         _, *containers = parsed_content.select("div.TableContainer")
         for container in containers:
@@ -132,7 +132,7 @@ class GuildParser:
             name_header = parsed_content.select_one("h1")
             builder = GuildBuilder().name(name_header.text.strip())
         except AttributeError as e:
-            raise InvalidContent("content does not belong to a Tibia.com guild page.", e) from e
+            raise InvalidContentError("content does not belong to a Tibia.com guild page.", e) from e
 
         cls._parse_logo(builder, parsed_content)
         info_container = parsed_content.select_one("#GuildInformationContainer")
@@ -276,7 +276,7 @@ class GuildParser:
         """
         logo_img = parsed_content.select_one('img[height="64"]')
         if logo_img is None:
-            raise InvalidContent("content does not belong to a Tibia.com guild page.")
+            raise InvalidContentError("content does not belong to a Tibia.com guild page.")
 
         builder.logo_url(logo_img["src"])
 
@@ -370,7 +370,7 @@ class GuildWarsParser:
 
             return builder.build()
         except ValueError as e:
-            raise InvalidContent("content does not belong to the guild wars section", e) from e
+            raise InvalidContentError("content does not belong to the guild wars section", e) from e
 
     @classmethod
     def _parse_current_war_information(cls, text) -> GuildWarEntry:

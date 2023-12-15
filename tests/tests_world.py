@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.enums import BattlEyeType, PvpType, TransferType, WorldLocation
 from tibiapy.models import World, WorldEntry, WorldOverview
 from tibiapy.parsers import WorldOverviewParser, WorldParser
@@ -108,7 +108,7 @@ class TestWorld(TestCommons):
         """Testing parsing a world using an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             WorldParser.from_content(content)
 
     # endregion
@@ -145,6 +145,6 @@ class TestWorld(TestCommons):
         """Testing parsing an unrelated tibia section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             WorldOverviewParser.from_content(content)
     # endregion

@@ -9,7 +9,7 @@ from tibiapy.builders.world import (WorldBuilder, WorldEntryBuilder,
                                     WorldOverviewBuilder)
 from tibiapy.enums import (BattlEyeType, PvpType,
                            TransferType, WorldLocation)
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 from tibiapy.models import OnlineCharacter, WorldEntry
 from tibiapy.utils import (parse_integer, parse_tibia_datetime,
                            parse_tibia_full_date, parse_tibiacom_content,
@@ -69,7 +69,7 @@ class WorldParser:
                 builder.add_online_player(OnlineCharacter(name=name, level=int(level), vocation=vocation))
 
         except AttributeError as e:
-            raise InvalidContent("content is not from the world section in Tibia.com") from e
+            raise InvalidContentError("content is not from the world section in Tibia.com") from e
 
         return builder.build()
 
@@ -175,7 +175,7 @@ class WorldOverviewParser:
                     .worlds(cls._parse_worlds_tables(tables))
                     .build())
         except (AttributeError, KeyError, ValueError) as e:
-            raise InvalidContent("content does not belong to the World Overview section in Tibia.com", e) from e
+            raise InvalidContentError("content does not belong to the World Overview section in Tibia.com", e) from e
 
     @classmethod
     def _parse_worlds(cls, world_rows: List[bs4.Tag]) -> List[WorldEntry]:

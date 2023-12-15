@@ -8,7 +8,7 @@ import bs4
 
 from tibiapy.builders.house import HousesSectionBuilder, HouseEntryBuilder, HouseBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 from tibiapy.utils import (clean_text, get_rows, parse_tibia_datetime, parse_tibia_money, parse_tibiacom_content,
                            parse_tibiacom_tables,
                            try_enum, parse_form_data)
@@ -68,14 +68,14 @@ class HousesSectionParser:
             tables = parse_tibiacom_tables(parsed_content)
             builder = HousesSectionBuilder()
             if "House Search" not in tables:
-                raise InvalidContent("content does not belong to the houses section")
+                raise InvalidContentError("content does not belong to the houses section")
 
             form = parsed_content.select_one("div.BoxContent > form")
             cls._parse_filters(builder, form)
             if len(tables) < 2:
                 return builder.build()
 
-            houses_table = tables[list(tables.keys())[0]]
+            houses_table = tables[next(iter(tables.keys()))]
             _, *rows = get_rows(houses_table)
             for row in rows[1:]:
                 cols = row.select("td")
@@ -100,7 +100,7 @@ class HousesSectionParser:
 
             return builder.build()
         except (ValueError, AttributeError, KeyError) as e:
-            raise InvalidContent("content does not belong to a Tibia.com house list", e) from e
+            raise InvalidContentError("content does not belong to a Tibia.com house list", e) from e
 
     @classmethod
     def _parse_filters(cls, builder: HousesSectionBuilder, form: bs4.Tag):
@@ -174,7 +174,7 @@ class HouseParser:
             try:
                 name, beds, info, state, *_ = lines
             except ValueError as e:
-                raise InvalidContent("content does is not from the house section of Tibia.com") from e
+                raise InvalidContentError("content does is not from the house section of Tibia.com") from e
 
             image_url = image["src"]
             builder = (HouseBuilder()
@@ -197,7 +197,7 @@ class HouseParser:
             cls._parse_status(builder, state)
             return builder.build()
         except (ValueError, TypeError) as e:
-            raise InvalidContent("content does not belong to a house page", e) from e
+            raise InvalidContentError("content does not belong to a house page", e) from e
 
     # endregion
 

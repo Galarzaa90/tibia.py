@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.builders import GuildBuilder
 from tibiapy.models import Guild, GuildHouse, GuildWars
 from tibiapy.parsers import GuildParser, GuildWarsParser, GuildsSectionParser
@@ -69,7 +69,7 @@ class TestsGuild(TestCommons):
     def test_guild_parser_from_content_unrelated(self):
         """Testing parsing an unrelated tibiacom section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             GuildParser.from_content(content)
 
 
@@ -143,7 +143,7 @@ class TestsGuild(TestCommons):
     def test_guilds_section_parser_from_content_unrelated(self):
         """Testing parsing and unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             GuildsSectionParser.from_content(content)
 
 

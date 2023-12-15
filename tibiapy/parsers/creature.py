@@ -7,7 +7,7 @@ from typing import Optional
 import bs4
 
 from tibiapy.builders import CreatureBuilder
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 from tibiapy.models import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses, Creature
 from tibiapy.utils import parse_tibiacom_content, convert_line_breaks
 
@@ -68,7 +68,7 @@ class BoostedCreaturesParser:
                 boss=BossEntry(name=boss_name, identifier=boss_identifier),
             )
         except (TypeError, NameError, KeyError) as e:
-            raise InvalidContent("content is not from Tibia.com", e) from e
+            raise InvalidContentError("content is not from Tibia.com", e) from e
 
 
 class BoostableBossesParser:
@@ -97,7 +97,7 @@ class BoostableBossesParser:
             boosted_creature_table = parsed_content.select_one("div.TableContainer")
             boosted_creature_text = boosted_creature_table.select_one("div.Text")
             if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
-                raise InvalidContent("content is not from the boostable bosses section.")
+                raise InvalidContentError("content is not from the boostable bosses section.")
 
             boosted_boss_tag = boosted_creature_table.select_one("b")
             boosted_boss_image = boosted_creature_table.select_one("img")
@@ -117,7 +117,7 @@ class BoostableBossesParser:
 
             return BoostableBosses(boosted_boss=boosted_boss, bosses=entries)
         except (AttributeError, ValueError) as e:
-            raise InvalidContent("content is not the boosted boss's library", e) from e
+            raise InvalidContentError("content is not the boosted boss's library", e) from e
 
     @classmethod
     def boosted_boss_from_header(cls, content: str) -> BossEntry:
@@ -186,7 +186,7 @@ class CreaturesSectionParser:
             boosted_creature_table = parsed_content.select_one("div.TableContainer")
             boosted_creature_text = boosted_creature_table.select_one("div.Text")
             if not boosted_creature_text or "Boosted" not in boosted_creature_text.text:
-                raise InvalidContent("content is not from the creatures section.")
+                raise InvalidContentError("content is not from the creatures section.")
 
             boosted_creature_link = boosted_creature_table.select_one("a")
             url = urllib.parse.urlparse(boosted_creature_link["href"])
@@ -205,13 +205,13 @@ class CreaturesSectionParser:
 
             return CreaturesSection(boosted_creature=boosted_creature, creatures=entries)
         except (AttributeError, ValueError) as e:
-            raise InvalidContent("content is not the creature's library", e) from e
+            raise InvalidContentError("content is not the creature's library", e) from e
 
 
 class CreatureParser:
     """Parser for creatures."""
 
-    _valid_elements = ["ice", "fire", "earth", "poison", "death", "holy", "physical", "energy"]
+    _valid_elements = ("ice", "fire", "earth", "poison", "death", "holy", "physical", "energy")
 
     @classmethod
     def from_content(cls, content: str) -> Optional[Creature]:

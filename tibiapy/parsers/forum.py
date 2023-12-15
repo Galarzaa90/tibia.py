@@ -6,7 +6,7 @@ import re
 import urllib.parse
 from typing import Optional, TYPE_CHECKING
 
-from tibiapy import InvalidContent, errors
+from tibiapy import InvalidContentError, errors
 from tibiapy.builders import CMPostArchiveBuilder, ForumAnnouncementBuilder, ForumBoardBuilder, ForumThreadBuilder
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import (AnnouncementEntry, BoardEntry, CMPost, CMPostArchive, ForumAnnouncement, ForumAuthor,
@@ -75,7 +75,7 @@ class CMPostArchiveParser:
             start_date = cls._get_selected_date(start_month_selector, start_day_selector, start_year_selector)
             end_date = cls._get_selected_date(end_month_selector, end_day_selector, end_year_selector)
         except (AttributeError, ValueError) as e:
-            raise errors.InvalidContent("content does not belong to the CM Post Archive in Tibia.com", e) from e
+            raise errors.InvalidContentError("content does not belong to the CM Post Archive in Tibia.com", e) from e
 
         builder = CMPostArchiveBuilder().from_date(start_date).to_date(end_date)
         table = parsed_content.select_one("table.Table3")
@@ -162,7 +162,7 @@ class ForumSectionParser:
         parsed_content = parse_tibiacom_content(content)
         tables = parse_tables_map(parsed_content)
         if "Boards" not in tables:
-            raise InvalidContent("Boards table not found.")
+            raise InvalidContentError("Boards table not found.")
 
         rows = tables["Boards"].select("table.TableContent > tr:not(.LabelH)")
         section_link = parse_link_info(parsed_content.select_one("p.ForumWelcome > a"))
@@ -246,7 +246,7 @@ class ForumAnnouncementParser:
         if not forum_breadcrumbs:
             message_box = parsed_content.select_one("div.TableContainer")
             if not message_box or "error" not in message_box.text.lower():
-                raise errors.InvalidContent("content is not a Tibia.com forum announcement.")
+                raise errors.InvalidContentError("content is not a Tibia.com forum announcement.")
 
             return None
 
@@ -379,7 +379,7 @@ class ForumBoardParser:
         if not forum_breadcrumbs:
             message_box = parsed_content.select_one("div.InnerTableContainer")
             if not message_box or "board you requested" not in message_box.text:
-                raise errors.InvalidContent("content does not belong to a board.")
+                raise errors.InvalidContentError("content does not belong to a board.")
 
             return None
 
@@ -549,7 +549,7 @@ class ForumThreadParser:
         if not forum_breadcrumbs:
             message_box = parsed_content.select_one("div.InnerTableContainer")
             if not message_box or "not found" not in message_box.text:
-                raise errors.InvalidContent("content does not belong to a thread.")
+                raise errors.InvalidContentError("content does not belong to a thread.")
 
             return None
 

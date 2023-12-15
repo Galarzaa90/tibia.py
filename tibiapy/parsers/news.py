@@ -8,7 +8,7 @@ import bs4
 
 from tibiapy.builders.news import NewsArchiveBuilder, NewsBuilder
 from tibiapy.enums import NewsCategory, NewsType
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 from tibiapy.models.news import NewsArchive, News, NewsEntry
 from tibiapy.utils import (parse_tibia_date,
                            parse_tibiacom_content, parse_tibiacom_tables,
@@ -100,7 +100,7 @@ class NewsArchiveParser:
         parsed_content = parse_tibiacom_content(content)
         tables = parse_tibiacom_tables(parsed_content)
         if "News Archive Search" not in tables:
-            raise InvalidContent("content is not from the news archive section in Tibia.com")
+            raise InvalidContentError("content is not from the news archive section in Tibia.com")
 
         form = parsed_content.select_one("form")
         builder = NewsArchiveBuilder()
@@ -214,4 +214,4 @@ class NewsParser:
 
             return builder.build()
         except AttributeError as e:
-            raise InvalidContent("content is not from the news archive section in Tibia.com") from e
+            raise InvalidContentError("content is not from the news archive section in Tibia.com") from e

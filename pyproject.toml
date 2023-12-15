@@ -200,6 +200,8 @@ select = [
     "ARG",
     # Perflint
     "PERF",
+    # Ruff-specific rules
+    "RUF",
 
 ]
 ignore = [
@@ -209,7 +211,14 @@ ignore = [
     "D107",
     # Unused lambda argument
     "ARG005",
-
+    # 1 blank line required before class docstring
+    "D203",
+    # 1 blank line required before class docstring
+    "D213",
+    # Mutable class attributes should be annotated with `typing.ClassVar`
+    "RUF012",
+    # PEP 484 prohibits implicit `Optional`
+    "RUF013"
 ]
 
 

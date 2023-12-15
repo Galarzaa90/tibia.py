@@ -1,5 +1,5 @@
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, Vocation
 from tibiapy.models import Highscores, HighscoresEntry, LoyaltyHighscoresEntry
 from tibiapy.parsers import HighscoresParser
@@ -117,7 +117,7 @@ class TestHighscores(TestCommons):
     def test_highscores_parser_from_content_unrelated_section(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             HighscoresParser.from_content(content)
 
     # endregion

@@ -8,7 +8,7 @@ from typing import Optional, TYPE_CHECKING
 
 from tibiapy.builders.highscores import HighscoresBuilder
 from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, PvpTypeFilter
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 from tibiapy.models import HighscoresEntry, LoyaltyHighscoresEntry
 from tibiapy.utils import clean_text, parse_form_data, parse_integer, parse_pagination, parse_tibiacom_content, try_enum
 
@@ -58,7 +58,7 @@ class HighscoresParser:
             if "Error" in tables and "The world doesn't exist!" in tables["Error"].text:
                 return None
 
-            raise InvalidContent("content does is not from the highscores section of Tibia.com")
+            raise InvalidContentError("content does is not from the highscores section of Tibia.com")
 
         builder = HighscoresBuilder()
         cls._parse_filters_table(builder, form)

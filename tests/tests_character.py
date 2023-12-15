@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.enums import Sex, Vocation
 from tibiapy.models import Character
 from tibiapy.parsers import CharacterParser
@@ -164,7 +164,7 @@ class TestCharacter(TestCommons):
     def test_character_parser_from_content_unrelated(self):
         """Testing parsing an unrelated tibia.com section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             CharacterParser.from_content(content)
 
     # endregion

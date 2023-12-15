@@ -6,7 +6,7 @@ from typing import Dict, Optional
 
 import bs4
 
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.builders import AuctionBuilder, AuctionDetailsBuilder, CharacterBazaarBuilder
 from tibiapy.enums import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType, \
     AuctionSkillFilter, AuctionStatus, AuctionVocationFilter, BazaarType, BidType, PvpTypeFilter, Sex, Vocation
@@ -116,7 +116,7 @@ class CharacterBazaarParser:
 
             return builder.build()
         except (ValueError, IndexError) as e:
-            raise InvalidContent("content does not belong to the bazaar at Tibia.com", original=e) from e
+            raise InvalidContentError("content does not belong to the bazaar at Tibia.com", original=e) from e
 
 
 class AuctionParser:
@@ -155,7 +155,7 @@ class AuctionParser:
             if "internal error" in content:
                 return None
 
-            raise InvalidContent("content does not belong to a auction details page in Tibia.com")
+            raise InvalidContentError("content does not belong to a auction details page in Tibia.com")
 
         auction = cls._parse_auction(auction_row, auction_id)
         builder = AuctionDetailsBuilder()

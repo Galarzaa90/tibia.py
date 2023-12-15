@@ -1,5 +1,5 @@
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.parsers.leaderboard import LeaderboardParser
 from tibiapy.urls import get_leaderboards_url
 
@@ -65,7 +65,7 @@ class TestLeaderboards(TestCommons):
     def test_leaderboard_parser_from_content_unrelated_section(self):
         """Testing parsing a leaderboard's page"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             LeaderboardParser.from_content(content)
 
     def test_leaderboard_get_url_invalid_page(self):

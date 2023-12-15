@@ -17,7 +17,7 @@ from tests.tests_leaderboards import FILE_LEADERBOARD_CURRENT
 from tests.tests_news import FILE_NEWS_ARCHIVE_RESULTS_FILTERED, FILE_NEWS_ARTICLE
 from tests.tests_tibiapy import TestCommons
 from tests.tests_world import FILE_WORLD_ONLINE, FILE_WORLD_OVERVIEW_ONLINE
-from tibiapy import Forbidden, NetworkError
+from tibiapy import ForbiddenError, NetworkError
 from tibiapy.client import Client
 from tibiapy.enums import BazaarType, HouseType
 from tibiapy.models import Auction, CMPostArchive, Character, CharacterBazaar, ForumBoard, ForumSection, Guild, \
@@ -53,7 +53,7 @@ class TestClient(unittest.IsolatedAsyncioTestCase, TestCommons):
     async def test_client_handle_errors(self, mock):
         """Testing error handling"""
         mock.get(get_world_overview_url(), status=403)
-        with self.assertRaises(Forbidden):
+        with self.assertRaises(ForbiddenError):
             await self.client.fetch_world_overview()
 
         mock.get(get_world_overview_url(), status=404)

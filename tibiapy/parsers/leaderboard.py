@@ -78,7 +78,7 @@ class LeaderboardParser:
             builder.current_page(pages).total_pages(total).results_count(count)
             return builder.build()
         except (AttributeError, ValueError, KeyError) as e:
-            raise errors.InvalidContent("content does not belong to the leaderboards", e) from e
+            raise errors.InvalidContentError("content does not belong to the leaderboards", e) from e
 
     @classmethod
     def _parse_entries(cls, builder: LeaderboardBuilder, entries_table: Tag):

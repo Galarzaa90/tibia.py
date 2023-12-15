@@ -1,7 +1,7 @@
 import datetime
 
 from tests.tests_tibiapy import TestCommons
-from tibiapy import InvalidContent
+from tibiapy import InvalidContentError
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.models import NewsEntry, NewsArchive, News
 from tibiapy.parsers import NewsArchiveParser, NewsParser
@@ -78,7 +78,7 @@ class TestNews(TestCommons):
     def test_news_archive_parser_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             NewsArchiveParser.from_content(content)
 
     # endregion
@@ -96,7 +96,7 @@ class TestNews(TestCommons):
     def test_news_parser_from_content_unrelated(self):
         """Testing parsing an unrelated section"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(InvalidContent):
+        with self.assertRaises(InvalidContentError):
             NewsParser.from_content(content)
 
     def test_news_parser_from_content_ticker(self):

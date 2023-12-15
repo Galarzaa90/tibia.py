@@ -38,7 +38,7 @@ class TestSpell(TestCommons,):
         """Testing parsing a boosted creature"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
 
-        with self.assertRaises(tibiapy.InvalidContent):
+        with self.assertRaises(tibiapy.InvalidContentError):
             SpellsSectionParser.from_content(content)
 
     # endregion
@@ -133,7 +133,7 @@ class TestSpell(TestCommons,):
     def test_spells_from_content_unrelated_section(self):
         """Testing parsing a boosted creature"""
         content = self.load_resource(self.FILE_UNRELATED_SECTION)
-        with self.assertRaises(tibiapy.InvalidContent):
+        with self.assertRaises(tibiapy.InvalidContentError):
             SpellParser.from_content(content)
 
     # endregion

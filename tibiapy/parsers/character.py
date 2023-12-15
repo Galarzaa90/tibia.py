@@ -8,7 +8,7 @@ from typing import Callable, Dict, List, Optional, TYPE_CHECKING
 
 from tibiapy.builders import CharacterBuilder
 from tibiapy.enums import Sex, Vocation
-from tibiapy.errors import InvalidContent
+from tibiapy.errors import InvalidContentError
 from tibiapy.models import (Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, DeathParticipant,
                             Death, GuildMembership, CharacterHouse)
 from tibiapy.utils import (get_rows, parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content,
@@ -83,7 +83,7 @@ class CharacterParser:
         }
 
         if "Character Information" not in tables:
-            raise InvalidContent("content does not contain a tibia.com character information page.")
+            raise InvalidContentError("content does not contain a tibia.com character information page.")
 
         for title, table in tables.items():
             if title in table_parsers:

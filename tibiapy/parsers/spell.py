@@ -25,7 +25,8 @@ __all__ = (
 spell_name = re.compile(r"([^(]+)\(([^)]+)\)")
 group_pattern = re.compile(r"(?P<group>\w+)(?:\s?\(Secondary Group: (?P<secondary>[^)]+))?")
 cooldown_pattern = re.compile(
-    r"(?P<cooldown>\d+)s\s?\(Group: (?P<group_cooldown>\d+)s(?:,\s?Secondary Group: (?P<secondary_group_cooldown>\d+))?",
+    r"(?P<cooldown>\d+)s\s?\(Group: (?P<group_cooldown>\d+)s(?:,\s?"
+    r"Secondary Group: (?P<secondary_group_cooldown>\d+))?",
 )
 
 
@@ -95,7 +96,7 @@ class SpellsSectionParser:
             builder.premium("yes" in data.values["premium"] if data.values["premium"] else None)
             return builder.build()
         except (AttributeError, TypeError, KeyError) as e:
-            raise errors.InvalidContent("content does not belong to the Spells section", e) from e
+            raise errors.InvalidContentError("content does not belong to the Spells section", e) from e
 
 
 class SpellParser:
@@ -126,7 +127,7 @@ class SpellParser:
             if "Spells" in tables:
                 return None
 
-            raise errors.InvalidContent("content is not a spell page.")
+            raise errors.InvalidContentError("content is not a spell page.")
 
         spell_table = tables["Spell Information"]
         img = title_table.select_one("img")
