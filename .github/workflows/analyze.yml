@@ -29,6 +29,8 @@ jobs:
           coverage run
       - name: Anaylze with Flake8 ❄️
         run: flake8 --output-file=flake8.txt --exit-zero
+      - name: Anaylze with Ruff ⚡️
+        run: ruff check --output-format json --output-file ruff.json --exit-zero .
       - name: Generate Coverage Reports 📋
         run: |
           coverage report
@@ -40,6 +42,7 @@ jobs:
           path: |
             flake8.txt
             coverage.xml
+            ruff.json
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
