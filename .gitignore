@@ -107,4 +107,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# Generated files
 htmlflake/
+ruff.json
