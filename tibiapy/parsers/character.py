@@ -209,7 +209,7 @@ class CharacterParser:
         house_link = parse_link_info(house_link_tag)
         builder.add_house(
             CharacterHouse(
-                id=house_link["query"]["houseid"],
+                id=int(house_link["query"]["houseid"]),
                 name=house_link["text"],
                 town=house_link["query"]["town"],
                 paid_until=paid_until_date,

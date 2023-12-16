@@ -4,7 +4,9 @@ from __future__ import annotations
 import datetime
 import re
 from collections import OrderedDict
-from typing import Optional, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING
+
+import bs4
 
 from tibiapy.builders.highscores import HighscoresBuilder
 from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, PvpTypeFilter
@@ -34,7 +36,7 @@ class HighscoresParser:
 
         Notes
         -----
-        Tibia.com only shows up to 50 entries per page, so in order to obtain the full highscores, all pages must be
+        Tibia.com only shows up to 50 entries per page, so to obtain the full highscores, all pages must be
         obtained individually and merged into one.
 
         Parameters
@@ -73,7 +75,7 @@ class HighscoresParser:
 
     # region Private methods
     @classmethod
-    def _parse_entries_table(cls, builder: HighscoresBuilder, table):
+    def _parse_entries_table(cls, builder: HighscoresBuilder, table: bs4.Tag) -> None:
         """Parse the table containing the highscore entries.
 
         Parameters
@@ -100,7 +102,7 @@ class HighscoresParser:
             cls._parse_entry(builder, cols_raw)
 
     @classmethod
-    def _parse_filters_table(cls, builder, form):
+    def _parse_filters_table(cls, builder: HighscoresBuilder, form: bs4.Tag) -> None:
         """Parse the filters table found in a highscores page.
 
         Parameters
@@ -120,7 +122,7 @@ class HighscoresParser:
         builder.available_worlds([v for v in data.available_options["world"].values() if v])
 
     @classmethod
-    def _parse_tables(cls, parsed_content):
+    def _parse_tables(cls, parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Tag]:
         """Parse the information tables found in a highscores page.
 
         Parameters
@@ -145,7 +147,7 @@ class HighscoresParser:
         return output
 
     @classmethod
-    def _parse_entry(cls, builder, cols):
+    def _parse_entry(cls, builder: HighscoresBuilder, cols: bs4.ResultSet) -> None:
         """Parse an entry's row and adds the result to py:attr:`entries`.
 
         Parameters

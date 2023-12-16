@@ -202,6 +202,8 @@ select = [
     "PERF",
     # Ruff-specific rules
     "RUF",
+    # flake8-annotations
+    "ANN",
 
 ]
 ignore = [
@@ -218,7 +220,15 @@ ignore = [
     # Mutable class attributes should be annotated with `typing.ClassVar`
     "RUF012",
     # PEP 484 prohibits implicit `Optional`
-    "RUF013"
+    "RUF013",
+    # Missing type annotation for {name} in method
+    "ANN101",
+    # Missing type annotation for {name} in classmethod
+    "ANN102",
+    # Missing return type annotation for private function {name}
+    "ANN202",
+    # Missing return type annotation for special method {name}
+    "ANN204",
 ]
 
 

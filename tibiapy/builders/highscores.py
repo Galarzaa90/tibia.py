@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, TYPE_CHECKING
+from typing import List, Set, TYPE_CHECKING
 
 from tibiapy.models import Highscores
 
@@ -42,7 +42,7 @@ class HighscoresBuilder:
         self._battleye_filter = battleye_filter
         return self
 
-    def pvp_types_filter(self, pvp_types_filter: PvpTypeFilter) -> Self:
+    def pvp_types_filter(self, pvp_types_filter: Set[PvpTypeFilter]) -> Self:
         self._pvp_types_filter = pvp_types_filter
         return self
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import urllib.parse
-from typing import Optional, Set, TYPE_CHECKING
+from typing import Optional, Set, TYPE_CHECKING, Tuple, Union
 
 if TYPE_CHECKING:
     from tibiapy.enums import (BazaarType, HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, HouseOrder,
@@ -12,22 +12,29 @@ if TYPE_CHECKING:
     from tibiapy.models import AuctionFilters
 
 
-def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwargs):
+def get_tibia_url(
+        section: str,
+        subtopic: str = None,
+        *args: Tuple[str, Union[str, int]],
+        anchor: str = None,
+        test: bool = False,
+        **kwargs: Union[str, int],
+) -> str:
     """Build a URL to Tibia.com with the given parameters.
 
     Parameters
     ----------
     section: :class:`str`
-        The desired section (e.g. community, abouttibia, manual, library)
+        The desired section (e.g., community, abouttibia, manual, library)
     subtopic: :class:`str`, optional
-        The desired subtopic (e.g. characters, guilds, houses, etc)
+        The desired subtopic (e.g., characters, guilds, houses, etc.)
     anchor: :class:`str`
         A link anchor to add to the link.
     args:
         A list of key-value pairs to add as query parameters.
         This allows passing multiple parameters with the same name.
     kwargs:
-        Additional parameters to pass to the url as query parameters (e.g name, world, houseid, etc)
+        Additional parameters to pass to the url as query parameters (e.g., name, world, houseid, etc.)
     test: :class:`bool`
         Whether to use the test website or not.
 
@@ -58,7 +65,7 @@ def get_tibia_url(section, subtopic=None, *args, anchor=None, test=False, **kwar
             if value is None:
                 continue
 
-            params[key] = value
+            params[key] = str(value)
 
     url += urllib.parse.urlencode(params)
     if args:
@@ -104,7 +111,7 @@ def get_character_url(name: str) -> str:
 
 
 def get_world_guilds_url(world: str) -> str:
-    """Get the URL to guild list of a specific world.
+    """Get the URL to the guild list of a specific world.
 
     Parameters
     ----------
@@ -146,7 +153,7 @@ def get_guild_wars_url(name: str) -> str:
     Returns
     -------
     :class:`str`
-        The URL to the guild's wars page.
+        The URL to the guild's wars' page.
     """
     return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
 
@@ -260,7 +267,7 @@ def get_forum_section_url_by_name(section_name: str) -> str:
     return get_tibia_url("forum", section_name)
 
 
-def get_world_boards_url():
+def get_world_boards_url() -> str:
     """Get the URL to the World Boards section in Tibia.com.
 
     Returns
@@ -271,7 +278,7 @@ def get_world_boards_url():
     return get_tibia_url("forum", "worldboards")
 
 
-def get_trade_boards_url():
+def get_trade_boards_url() -> str:
     """Get the URL to the Trade Boards section in Tibia.com.
 
     Returns
@@ -282,7 +289,7 @@ def get_trade_boards_url():
     return get_tibia_url("forum", "tradeboards")
 
 
-def get_community_boards_url():
+def get_community_boards_url() -> str:
     """Get the URL to the Community Boards section in Tibia.com.
 
     Returns
@@ -293,7 +300,7 @@ def get_community_boards_url():
     return get_tibia_url("forum", "communityboards")
 
 
-def get_support_boards_url():
+def get_support_boards_url() -> str:
     """Get the URL to the Support Boards section in Tibia.com.
 
     Returns
@@ -360,7 +367,7 @@ def get_forum_thread_url(thread_id: int, page: int = 1) -> str:
     return get_tibia_url("forum", None, action="thread", threadid=thread_id, pagenumber=page)
 
 
-def get_forum_post_url(post_id):
+def get_forum_post_url(post_id: int) -> str:
     """Get the URL to a specific post.
 
     Parameters
@@ -380,7 +387,7 @@ def get_highscores_url(
         world: str = None,
         category: HighscoresCategory = None,
         vocation: HighscoresProfession = None,
-        page=1,
+        page: int = 1,
         battleye_type: HighscoresBattlEyeType = None,
         pvp_types: Set[PvpTypeFilter] = None,
 ) -> str:
@@ -485,7 +492,7 @@ def get_houses_section_url(world: str, town: str, house_type: HouseType, status:
     return get_tibia_url("community", "houses", **{k: v for k, v in params.items() if v is not None})
 
 
-def get_auction_url(auction_id: int):
+def get_auction_url(auction_id: int) -> str:
     """Get the URL to the Tibia.com detail page of an auction with a given id.
 
     Parameters
@@ -501,7 +508,7 @@ def get_auction_url(auction_id: int):
     return get_tibia_url("charactertrade", "currentcharactertrades", page="details", auctionid=auction_id)
 
 
-def get_bazaar_url(type: BazaarType, page: int = 1, filters: AuctionFilters = None):
+def get_bazaar_url(type: BazaarType, page: int = 1, filters: AuctionFilters = None) -> str:
     """Get the URL to the list of current auctions in Tibia.com.
 
     Parameters
@@ -522,7 +529,7 @@ def get_bazaar_url(type: BazaarType, page: int = 1, filters: AuctionFilters = No
     return get_tibia_url("charactertrade", type.subtopic, currentpage=page, **query_params)
 
 
-def get_cm_post_archive_url(from_date: datetime.date, to_date: datetime.date, page=1):
+def get_cm_post_archive_url(from_date: datetime.date, to_date: datetime.date, page: int = 1) -> str:
     """Get the URL to the CM Post Archive for the given date range.
 
     Parameters
@@ -629,7 +636,7 @@ def get_boostable_bosses_url() -> str:
     return get_tibia_url("library", "boostablebosses")
 
 
-def _to_yes_no(value: Optional[bool]):
+def _to_yes_no(value: Optional[bool]) -> Optional[str]:
     if value is None:
         return None
 
@@ -642,7 +649,7 @@ def get_spells_section_url(
         spell_type: SpellType = None,
         is_premium: bool = None,
         sort: SpellSorting = None,
-):
+) -> str:
     """Get the URL to the spells section with the desired filtering parameters.
 
     Parameters

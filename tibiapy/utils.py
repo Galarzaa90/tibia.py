@@ -5,7 +5,7 @@ import datetime
 import re
 import urllib.parse
 from collections import defaultdict
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, TypedDict, Union
 
 import bs4
 from pydantic import BaseModel
@@ -54,7 +54,7 @@ def clean_text(tag: Union[bs4.PageElement, str]) -> str:
     return text.replace("\xa0", " ").strip()
 
 
-def convert_line_breaks(element: bs4.Tag):
+def convert_line_breaks(element: bs4.Tag) -> None:
     """Convert the <br> tags in a HTML elements to actual line breaks.
 
     Parameters
@@ -133,7 +133,7 @@ def parse_form_data(form: bs4.Tag) -> FormData:
     return form_data
 
 
-def parse_integer(number: str, default: Optional[int] = 0):
+def parse_integer(number: str, default: Optional[int] = 0) -> int:
     """Parse a string representing an integer, ignoring commas or periods.
 
     Parameters
@@ -159,7 +159,15 @@ def parse_integer(number: str, default: Optional[int] = 0):
         return default
 
 
-def parse_link_info(link_tag: bs4.Tag):
+class LinkInfo(TypedDict):
+    """Represent the dictionary containing link information."""
+
+    text: str
+    url: str
+    query: Dict[str, Union[List[str], str]]
+
+
+def parse_link_info(link_tag: bs4.Tag) -> LinkInfo:
     """Parse the information of a link tag.
 
     It will parse the link's content, target URL as well as the query parameters where applicable.
@@ -509,7 +517,7 @@ def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Ta
     return tables
 
 
-def try_enum(cls: Type[T], val: Any, default: D = None) -> Union[T, D]:
+def try_enum(cls: Type[T], val: Any, default: D = None) -> Union[T, D]:  # noqa: ANN401
     """Attempt to convert a value into their enum value.
 
     Parameters
