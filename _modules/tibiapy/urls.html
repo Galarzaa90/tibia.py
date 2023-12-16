@@ -48,7 +48,7 @@
 
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BazaarType</span><span class="p">,</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span>
@@ -59,22 +59,29 @@
 
 <div class="viewcode-block" id="get_tibia_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_tibia_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_tibia_url</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">subtopic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_tibia_url</span><span class="p">(</span>
+        <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">subtopic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+        <span class="n">anchor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a URL to Tibia.com with the given parameters.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    section: :class:`str`</span>
-<span class="sd">        The desired section (e.g. community, abouttibia, manual, library)</span>
+<span class="sd">        The desired section (e.g., community, abouttibia, manual, library)</span>
 <span class="sd">    subtopic: :class:`str`, optional</span>
-<span class="sd">        The desired subtopic (e.g. characters, guilds, houses, etc)</span>
+<span class="sd">        The desired subtopic (e.g., characters, guilds, houses, etc.)</span>
 <span class="sd">    anchor: :class:`str`</span>
 <span class="sd">        A link anchor to add to the link.</span>
 <span class="sd">    args:</span>
 <span class="sd">        A list of key-value pairs to add as query parameters.</span>
 <span class="sd">        This allows passing multiple parameters with the same name.</span>
 <span class="sd">    kwargs:</span>
-<span class="sd">        Additional parameters to pass to the url as query parameters (e.g name, world, houseid, etc)</span>
+<span class="sd">        Additional parameters to pass to the url as query parameters (e.g., name, world, houseid, etc.)</span>
 <span class="sd">    test: :class:`bool`</span>
 <span class="sd">        Whether to use the test website or not.</span>
 
@@ -105,7 +112,7 @@
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="n">url</span> <span class="o">+=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
@@ -160,7 +167,7 @@
 <div class="viewcode-block" id="get_world_guilds_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_world_guilds_url">[docs]</a>
 <span class="k">def</span> <span class="nf">get_world_guilds_url</span><span class="p">(</span><span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to guild list of a specific world.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the guild list of a specific world.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -208,7 +215,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
-<span class="sd">        The URL to the guild&#39;s wars page.</span>
+<span class="sd">        The URL to the guild&#39;s wars&#39; page.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;guildwars&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">GuildName</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -346,7 +353,7 @@
 
 <div class="viewcode-block" id="get_world_boards_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_world_boards_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_world_boards_url</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_world_boards_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the World Boards section in Tibia.com.</span>
 
 <span class="sd">    Returns</span>
@@ -360,7 +367,7 @@
 
 <div class="viewcode-block" id="get_trade_boards_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_trade_boards_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_trade_boards_url</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_trade_boards_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the Trade Boards section in Tibia.com.</span>
 
 <span class="sd">    Returns</span>
@@ -374,7 +381,7 @@
 
 <div class="viewcode-block" id="get_community_boards_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_community_boards_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_community_boards_url</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_community_boards_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the Community Boards section in Tibia.com.</span>
 
 <span class="sd">    Returns</span>
@@ -388,7 +395,7 @@
 
 <div class="viewcode-block" id="get_support_boards_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_support_boards_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_support_boards_url</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_support_boards_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the Support Boards section in Tibia.com.</span>
 
 <span class="sd">    Returns</span>
@@ -467,7 +474,7 @@
 
 <div class="viewcode-block" id="get_forum_post_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_forum_post_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_forum_post_url</span><span class="p">(</span><span class="n">post_id</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_forum_post_url</span><span class="p">(</span><span class="n">post_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to a specific post.</span>
 
 <span class="sd">    Parameters</span>
@@ -490,7 +497,7 @@
         <span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">category</span><span class="p">:</span> <span class="n">HighscoresCategory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">vocation</span><span class="p">:</span> <span class="n">HighscoresProfession</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">battleye_type</span><span class="p">:</span> <span class="n">HighscoresBattlEyeType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">pvp_types</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">PvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -607,7 +614,7 @@
 
 <div class="viewcode-block" id="get_auction_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_auction_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_auction_url</span><span class="p">(</span><span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_auction_url</span><span class="p">(</span><span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the Tibia.com detail page of an auction with a given id.</span>
 
 <span class="sd">    Parameters</span>
@@ -626,7 +633,7 @@
 
 <div class="viewcode-block" id="get_bazaar_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_bazaar_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_bazaar_url</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">AuctionFilters</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_bazaar_url</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">AuctionFilters</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the list of current auctions in Tibia.com.</span>
 
 <span class="sd">    Parameters</span>
@@ -650,7 +657,7 @@
 
 <div class="viewcode-block" id="get_cm_post_archive_url">
 <a class="viewcode-back" href="../../api.html#tibiapy.urls.get_cm_post_archive_url">[docs]</a>
-<span class="k">def</span> <span class="nf">get_cm_post_archive_url</span><span class="p">(</span><span class="n">from_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_cm_post_archive_url</span><span class="p">(</span><span class="n">from_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the CM Post Archive for the given date range.</span>
 
 <span class="sd">    Parameters</span>
@@ -770,7 +777,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_to_yes_no</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]):</span>
+<span class="k">def</span> <span class="nf">_to_yes_no</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
@@ -785,7 +792,7 @@
         <span class="n">spell_type</span><span class="p">:</span> <span class="n">SpellType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">is_premium</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">sort</span><span class="p">:</span> <span class="n">SpellSorting</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the URL to the spells section with the desired filtering parameters.</span>
 
 <span class="sd">    Parameters</span>
