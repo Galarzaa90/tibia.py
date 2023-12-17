@@ -65,7 +65,7 @@ def get_tibia_url(
             if value is None:
                 continue
 
-            params[key] = str(value)
+            params[key] = value
 
     url += urllib.parse.urlencode(params)
     if args:
