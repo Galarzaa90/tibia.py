@@ -414,9 +414,13 @@ def get_highscores_url(
     """
     pvp_types = pvp_types or []
     pvp_params = [("worldtypes[]", p.value) for p in pvp_types]
-    return get_tibia_url("community", "highscores", *pvp_params, world=world, category=category.value,
-                         profession=vocation.value, currentpage=page,
-                         beprotection=battleye_type.value if battleye_type else None)
+    return get_tibia_url("community", "highscores", *pvp_params,
+                         world=world,
+                         category=category.value if category else None,
+                         profession=vocation.value if vocation else None,
+                         currentpage=page,
+                         beprotection=battleye_type.value if battleye_type else None,
+                         )
 
 
 def get_kill_statistics_url(world: str) -> str:
