@@ -24,14 +24,15 @@ __all__ = (
 id_regex = re.compile(r"house_(\d+)\.")
 bed_regex = re.compile(r"This (?P<type>\w+) can have up to (?P<beds>[\d-]+) bed")
 info_regex = (
-    re.compile(r"The house has a size of (?P<size>\d+) square meters?. "
-               r"The monthly rent is (?P<rent>\d+k?) gold and will be debited to the bank account on (?P<world>\w+).")
+    re.compile(r"The (?:house|guildhall) has a size of (?P<size>\d+) square meters?. "
+               r"The monthly rent is (?P<rent>\d+k+) gold and will be debited to the bank account on (?P<world>\w+).")
 )
 
-rented_regex = re.compile(r"The house has been rented by (?P<owner>[^.]+)\."
+rented_regex = re.compile(r"The (?:house|guildhall) has been rented by (?P<owner>[^.]+)\."
                           r" (?P<pronoun>\w+) has paid the rent until (?P<paid_until>[^.]+)\.")
 transfer_regex = re.compile(r"\w+ will move out on (?P<transfer_date>[^(]+)\([^)]+\)(?: and (?P<verb>wants to|will)"
-                            r" pass the house to (?P<transferee>[\w\s]+) for (?P<transfer_price>\d+) gold coin)?")
+                            r" pass the (?:house|guildhall) to (?P<transferee>[\w\s]+) for "
+                            r"(?P<transfer_price>\d+) gold coin)?")
 moving_regex = re.compile(r"\w+ will move out on (?P<move_date>[^(]+)")
 bid_regex = (
     re.compile(r"The highest bid so far is (?P<highest_bid>\d+) gold and has been submitted by (?P<bidder>[^.]+)")

@@ -240,6 +240,7 @@ class HouseBuilder(_HouseWithIdBuilder):
             beds=self._beds,
             owner=self._owner,
             owner_sex=self._owner_sex,
+            paid_until=self._paid_until,
             transfer_recipient=self._transfer_recipient,
             transfer_price=self._transfer_price,
             transfer_date=self._transfer_date,
