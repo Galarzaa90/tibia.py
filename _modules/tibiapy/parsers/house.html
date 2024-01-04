@@ -69,14 +69,15 @@
 <span class="n">id_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;house_(\d+)\.&quot;</span><span class="p">)</span>
 <span class="n">bed_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;This (?P&lt;type&gt;\w+) can have up to (?P&lt;beds&gt;[\d-]+) bed&quot;</span><span class="p">)</span>
 <span class="n">info_regex</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;The house has a size of (?P&lt;size&gt;\d+) square meters?. &quot;</span>
-               <span class="sa">r</span><span class="s2">&quot;The monthly rent is (?P&lt;rent&gt;\d+k?) gold and will be debited to the bank account on (?P&lt;world&gt;\w+).&quot;</span><span class="p">)</span>
+    <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;The (?:house|guildhall) has a size of (?P&lt;size&gt;\d+) square meters?. &quot;</span>
+               <span class="sa">r</span><span class="s2">&quot;The monthly rent is (?P&lt;rent&gt;\d+k+) gold and will be debited to the bank account on (?P&lt;world&gt;\w+).&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="n">rented_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;The house has been rented by (?P&lt;owner&gt;[^.]+)\.&quot;</span>
+<span class="n">rented_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;The (?:house|guildhall) has been rented by (?P&lt;owner&gt;[^.]+)\.&quot;</span>
                           <span class="sa">r</span><span class="s2">&quot; (?P&lt;pronoun&gt;\w+) has paid the rent until (?P&lt;paid_until&gt;[^.]+)\.&quot;</span><span class="p">)</span>
 <span class="n">transfer_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\w+ will move out on (?P&lt;transfer_date&gt;[^(]+)\([^)]+\)(?: and (?P&lt;verb&gt;wants to|will)&quot;</span>
-                            <span class="sa">r</span><span class="s2">&quot; pass the house to (?P&lt;transferee&gt;[\w\s]+) for (?P&lt;transfer_price&gt;\d+) gold coin)?&quot;</span><span class="p">)</span>
+                            <span class="sa">r</span><span class="s2">&quot; pass the (?:house|guildhall) to (?P&lt;transferee&gt;[\w\s]+) for &quot;</span>
+                            <span class="sa">r</span><span class="s2">&quot;(?P&lt;transfer_price&gt;\d+) gold coin)?&quot;</span><span class="p">)</span>
 <span class="n">moving_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\w+ will move out on (?P&lt;move_date&gt;[^(]+)&quot;</span><span class="p">)</span>
 <span class="n">bid_regex</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;The highest bid so far is (?P&lt;highest_bid&gt;\d+) gold and has been submitted by (?P&lt;bidder&gt;[^.]+)&quot;</span><span class="p">)</span>
