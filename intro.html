@@ -74,8 +74,8 @@ Dependencies are installed automatically when installing the package.</p>
 <p>This library is composed of two parts, parsers and an asynchronous request client.</p>
 <p>The asynchronous client (<a class="reference internal" href="api.html#tibiapy.Client" title="tibiapy.Client"><code class="xref py py-class docutils literal notranslate"><span class="pre">tibiapy.Client</span></code></a>) contains methods to obtain information from Tibia.com.</p>
 <p>The parsing methods allow you to get Python objects given the HTML content of a page.</p>
-<p>The main models have a <code class="docutils literal notranslate"><span class="pre">get_url</span></code> method that can be used to get their Tibia.com page.
-With the url, the html/json content can be fetched and then passed to their <code class="docutils literal notranslate"><span class="pre">from_content</span></code> methods.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">tibiapy.urls</span></code> package contains many methods to get URLs for Tibia.com.</p>
+<p>With the url, the html/json content can be fetched and then passed to their <code class="docutils literal notranslate"><span class="pre">from_content</span></code> methods.</p>
 <p>This allows you to use any networking module to obtain the data, and use the library to parse it.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">tibiapy</span>
