@@ -39,7 +39,8 @@ The asynchronous client (:class:`tibiapy.Client`) contains methods to obtain inf
 
 The parsing methods allow you to get Python objects given the HTML content of a page.
 
-The main models have a ``get_url`` method that can be used to get their Tibia.com page.
+The ``tibiapy.urls`` package contains many methods to get URLs for Tibia.com.
+
 With the url, the html/json content can be fetched and then passed to their ``from_content`` methods.
 
 This allows you to use any networking module to obtain the data, and use the library to parse it.
