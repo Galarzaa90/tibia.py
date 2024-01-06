@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import List, Optional, TYPE_CHECKING
 
 from tibiapy.models import Auction, CharacterBazaar
-from tibiapy.models.bazaar import AuctionDetails
+from tibiapy.models.bazaar import AuctionDetails, RevealedGem
 
 if TYPE_CHECKING:
     import datetime
@@ -210,6 +210,7 @@ class AuctionDetailsBuilder:
         self._achievements = None
         self._bestiary_progress = None
         self._bosstiary_progress = None
+        self._revealed_gems = []
 
     def hit_points(self, hit_points: int) -> Self:
         self._hit_points = hit_points
@@ -394,6 +395,10 @@ class AuctionDetailsBuilder:
         self._bosstiary_progress = bosstiary_progress
         return self
 
+    def add_revealed_gem(self, gem: RevealedGem) -> Self:
+        self._revealed_gems.append(gem)
+        return self
+
     def build(self):
         return AuctionDetails(
             hit_points=self._hit_points,
@@ -441,4 +446,5 @@ class AuctionDetailsBuilder:
             achievements=self._achievements,
             bestiary_progress=self._bestiary_progress,
             bosstiary_progress=self._bosstiary_progress,
+            revealed_gems=self._revealed_gems,
         )

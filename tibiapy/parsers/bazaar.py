@@ -13,6 +13,7 @@ from tibiapy.enums import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDir
 from tibiapy.models import (AchievementEntry, AjaxPaginator, Auction, AuctionFilters, BestiaryEntry, BlessingEntry,
                             CharacterBazaar, CharmEntry, FamiliarEntry, Familiars, ItemEntry, ItemSummary, MountEntry,
                             Mounts, OutfitEntry, OutfitImage, Outfits, SalesArgument, SkillEntry)
+from tibiapy.models.bazaar import RevealedGem
 from tibiapy.utils import (clean_text, convert_line_breaks, get_rows, parse_form_data, parse_integer, parse_pagination,
                            parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
@@ -215,6 +216,9 @@ class AuctionParser:
 
         if "BosstiaryProgress" in details_tables:
             cls._parse_bestiary_table(builder, details_tables["BosstiaryProgress"], True)
+
+        if "RevealedGems" in details_tables:
+            cls._parse_revealed_gems_table(builder, details_tables["RevealedGems"])
 
         auction.details = builder.build()
         return auction
@@ -681,6 +685,19 @@ class AuctionParser:
             familiar.familiar_id = int(m.group(1))
 
         return familiar
+
+    @classmethod
+    def _parse_revealed_gems_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag):
+        table_content = table.select_one("table.TableContent")
+        _, *rows = get_rows(table_content)
+        for row in rows:
+            gem_tag = row.select_one("div.Gem")
+            gem_type = gem_tag["title"]
+            effects = [t.text for t in row.select("span")]
+            builder.add_revealed_gem(RevealedGem(
+                gem_type=gem_type,
+                mods=effects,
+            ))
 
     @classmethod
     def _parse_page_items(cls, content, paginator: AjaxPaginator):
