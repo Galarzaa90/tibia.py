@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tibiapy.models.bazaar &#8212; Tibia.py 6.0.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=28c8e701" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
     <script src="../../../_static/documentation_options.js?v=eee49b8e"></script>
@@ -458,6 +458,13 @@
 
 
 
+<span class="k">class</span> <span class="nc">RevealedGem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">gem_type</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of gem.&quot;&quot;&quot;</span>
+    <span class="n">mods</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The mods or effects the gem has.&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="AuctionDetails">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.AuctionDetails">[docs]</a>
 <span class="k">class</span> <span class="nc">AuctionDetails</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -553,6 +560,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The bestiary progress of the character.&quot;&quot;&quot;</span>
     <span class="n">bosstiary_progress</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The bosstiary progress of the character.&quot;&quot;&quot;</span>
+    <span class="n">revealed_gems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RevealedGem</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The gems that have been revealed by the character.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">completed_bestiary_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]:</span>
