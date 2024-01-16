@@ -6,6 +6,15 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v6.1.0
+
+6.1.0 (2024-01-15)
+==================
+- Add revealed gems to auction details.
+- Fixed `get_highscores` not handling null values in parameters.
+- Fixed house parsing not handing guildhalls properly.
+- Fixed houses missing "paid until" date.
+
 .. v6.0.4
 
 6.0.4 (2023-10-01)
