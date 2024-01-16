@@ -355,7 +355,9 @@ class SkillEntry(BaseModel):
 
 class RevealedGem(BaseModel):
     gem_type: str
+    """The type of gem."""
     mods: List[str]
+    """The mods or effects the gem has."""
 
 
 class AuctionDetails(BaseModel):
@@ -452,6 +454,7 @@ class AuctionDetails(BaseModel):
     bosstiary_progress: List[BestiaryEntry]
     """The bosstiary progress of the character."""
     revealed_gems: List[RevealedGem]
+    """The gems that have been revealed by the character."""
 
     @property
     def completed_bestiary_entries(self) -> List[BestiaryEntry]:
