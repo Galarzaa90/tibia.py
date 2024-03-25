@@ -41,8 +41,8 @@ jobs:
           name: reports
           path: |
             flake8.txt
-            coverage.xml
             ruff.json
+            coverage.xml
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
@@ -71,6 +71,7 @@ jobs:
         with:
           name: reports
       - name: Upload to Codecov ☂️
-        uses: codecov/codecov-action@v3.1.6
+        uses: codecov/codecov-action@v4.1.0
         with:
-          files: ./coverage.xml
+          file: ./coverage.xml
+          verbose: true
