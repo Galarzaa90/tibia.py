@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime
 import logging
 from contextlib import asynccontextmanager
-from typing import List, Optional, Set
+from typing import List, Optional, Set, TypeVar
 
 import uvicorn
 from fastapi import Depends, FastAPI, Path, Query, Response
@@ -44,8 +44,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+T = TypeVar("T")
 
-def handle_response(response: Response, body):
+
+def handle_response(response: Response, body: T) -> T:
     """Change the status code to 404 if no data is returned in the response."""
     if isinstance(body, TibiaResponse) and body.data is None:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -54,7 +56,7 @@ def handle_response(response: Response, body):
 
 
 @app.get("/healthcheck", tags=["General"])
-async def healthcheck():
+async def healthcheck() -> bool:
     return True
 
 
@@ -368,7 +370,7 @@ def auction_filter_parameters(
         order: AuctionOrderDirection = Query(None, alias="orderDirection", description="The ordering direction."),
         search_string: str = Query(None, alias="searchString", description="The search term to filter out auctions."),
         search_type: AuctionSearchType = Query(None, alias="searchType", description="The type of search to use."),
-):
+) -> AuctionFilters:
     return AuctionFilters(
         world=world,
         pvp_type=pvp_type,

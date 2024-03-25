@@ -17,6 +17,8 @@ from tibiapy.models.bazaar import RevealedGem
 from tibiapy.utils import (clean_text, convert_line_breaks, get_rows, parse_form_data, parse_integer, parse_pagination,
                            parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
+CSS_CLASS_ICON = "div.CVIcon"
+
 results_pattern = re.compile(r"Results: (\d+)")
 char_info_regex = re.compile(r"Level: (\d+) \| Vocation: ([\w\s]+)\| (\w+) \| World: (\w+)")
 id_addon_regex = re.compile(r"(\d{1,4})_(\d)\.gif$")
@@ -261,7 +263,7 @@ class AuctionParser:
         if m := id_addon_regex.search(outfit_img["src"]):
             builder.outfit(OutfitImage(image_url=outfit_img["src"], outfit_id=int(m.group(1)), addons=int(m.group(2))))
 
-        item_boxes = auction_row.select("div.CVIcon")
+        item_boxes = auction_row.select(CSS_CLASS_ICON)
         for item_box in item_boxes:
             if item := cls._parse_displayed_item(item_box):
                 builder.add_displayed_item(item)
@@ -566,7 +568,7 @@ class AuctionParser:
             return ItemSummary()
 
         summary = ItemSummary(current_page=page, total_pages=total_pages, results_count=results)
-        item_boxes = table.select("div.CVIcon")
+        item_boxes = table.select(CSS_CLASS_ICON)
         for item_box in item_boxes:
             if item := cls._parse_displayed_item(item_box):
                 summary.entries.append(item)
@@ -581,7 +583,7 @@ class AuctionParser:
             return Mounts()
 
         summary = Mounts(current_page=page, total_pages=total_pages, results_count=results)
-        mount_boxes = table.select("div.CVIcon")
+        mount_boxes = table.select(CSS_CLASS_ICON)
         for mount_box in mount_boxes:
             if mount := cls._parse_displayed_mount(mount_box):
                 summary.entries.append(mount)
@@ -596,7 +598,7 @@ class AuctionParser:
             return Outfits()
 
         summary = Outfits(current_page=page, total_pages=total_pages, results_count=results)
-        outfit_boxes = table.select("div.CVIcon")
+        outfit_boxes = table.select(CSS_CLASS_ICON)
         for outfit_box in outfit_boxes:
             if outfit := cls._parse_displayed_outfit(outfit_box):
                 summary.entries.append(outfit)
@@ -611,7 +613,7 @@ class AuctionParser:
             return Familiars()
 
         summary = Familiars(current_page=page, total_pages=total_pages, results_count=results)
-        familiar_boxes = table.select("div.CVIcon")
+        familiar_boxes = table.select(CSS_CLASS_ICON)
         for familiar_box in familiar_boxes:
             if familiar := cls._parse_displayed_familiar(familiar_box):
                 summary.entries.append(familiar)
@@ -702,7 +704,7 @@ class AuctionParser:
     @classmethod
     def _parse_page_items(cls, content, paginator: AjaxPaginator):
         parsed_content = parse_tibiacom_content(content, builder="html5lib")
-        item_boxes = parsed_content.select("div.CVIcon")
+        item_boxes = parsed_content.select(CSS_CLASS_ICON)
         entries = []
         for item_box in item_boxes:
             if isinstance(paginator, ItemSummary):

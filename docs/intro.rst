@@ -41,9 +41,9 @@ The parsing methods allow you to get Python objects given the HTML content of a 
 
 The ``tibiapy.urls`` package contains many methods to get URLs for Tibia.com.
 
-With the url, the html/json content can be fetched and then passed to their ``from_content`` methods.
+With the URL, the HTML content can be fetched and then passed to the respective class from the available :ref:`api_parsers`.
 
-This allows you to use any networking module to obtain the data, and use the library to parse it.
+This allows you to use any networking library (e.g. aiohttp, requests, httpx) to obtain the data, and use the library to parse it.
 
 .. code-block:: python
 
@@ -83,7 +83,7 @@ Supported Sections
 +----------------------------------+--------------------------------------------------------------+---------------------------------------------+
 |             Section              |                           Parsing                            |                  Fetching                   |
 +==================================+==============================================================+=============================================+
-| `Boostable Bosses`_ (List)       | :meth:`tibiapy.parsers.BoostableBossesParser.from_content`   | :meth:`Client.fetch_library_bosses`         |
+| `Boostable Bosses`_ (List)       | :meth:`tibiapy.parsers.BoostableBossesParser.from_content`   | :meth:`Client.fetch_boostable_bosses`       |
 +----------------------------------+--------------------------------------------------------------+---------------------------------------------+
 | Characters_                      | :meth:`tibiapy.parsers.CharacterParser.from_content`         | :meth:`Client.fetch_character`              |
 +----------------------------------+--------------------------------------------------------------+---------------------------------------------+
@@ -181,9 +181,6 @@ To run the image:
         --rm -ti \
         galarzaa90/tibia.py
 
-The root location shows a list of the available routes.
+API documentation will be available at: `http://localhost:8000/docs`.
 
 .. _Docker Hub: https://hub.docker.com/r/galarzaa90/tibia.py
-
-.. note::
-    Documentation for endpoints and JSON schemas is not yet available.
