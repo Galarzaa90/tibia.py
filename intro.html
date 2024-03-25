@@ -75,8 +75,8 @@ Dependencies are installed automatically when installing the package.</p>
 <p>The asynchronous client (<a class="reference internal" href="api.html#tibiapy.Client" title="tibiapy.Client"><code class="xref py py-class docutils literal notranslate"><span class="pre">tibiapy.Client</span></code></a>) contains methods to obtain information from Tibia.com.</p>
 <p>The parsing methods allow you to get Python objects given the HTML content of a page.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">tibiapy.urls</span></code> package contains many methods to get URLs for Tibia.com.</p>
-<p>With the url, the html/json content can be fetched and then passed to their <code class="docutils literal notranslate"><span class="pre">from_content</span></code> methods.</p>
-<p>This allows you to use any networking module to obtain the data, and use the library to parse it.</p>
+<p>With the URL, the HTML content can be fetched and then passed to the respective class from the available <a class="reference internal" href="api.html#api-parsers"><span class="std std-ref">Parsers</span></a>.</p>
+<p>This allows you to use any networking library (e.g. aiohttp, requests, httpx) to obtain the data, and use the library to parse it.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">tibiapy</span>
 <span class="kn">from</span> <span class="nn">tibiapy.parsers</span> <span class="kn">import</span> <span class="n">CharacterParser</span>
@@ -116,7 +116,7 @@ Dependencies are installed automatically when installing the package.</p>
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://www.tibia.com/library/?subtopic=boostablebosses">Boostable Bosses</a> (List)</p></td>
 <td><p><a class="reference internal" href="api.html#tibiapy.parsers.BoostableBossesParser.from_content" title="tibiapy.parsers.BoostableBossesParser.from_content"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tibiapy.parsers.BoostableBossesParser.from_content()</span></code></a></p></td>
-<td><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_library_bosses()</span></code></p></td>
+<td><p><a class="reference internal" href="api.html#tibiapy.Client.fetch_boostable_bosses" title="tibiapy.Client.fetch_boostable_bosses"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Client.fetch_boostable_bosses()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://www.tibia.com/community/?subtopic=characters">Characters</a></p></td>
 <td><p><a class="reference internal" href="api.html#tibiapy.parsers.CharacterParser.from_content" title="tibiapy.parsers.CharacterParser.from_content"><code class="xref py py-meth docutils literal notranslate"><span class="pre">tibiapy.parsers.CharacterParser.from_content()</span></code></a></p></td>
@@ -244,11 +244,7 @@ Dependencies are installed automatically when installing the package.</p>
 <span class="w">    </span>galarzaa90/tibia.py
 </pre></div>
 </div>
-<p>The root location shows a list of the available routes.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Documentation for endpoints and JSON schemas is not yet available.</p>
-</div>
+<p>API documentation will be available at: <cite>http://localhost:8000/docs</cite>.</p>
 </section>
 </section>
 
@@ -341,7 +337,7 @@ Dependencies are installed automatically when installing the package.</p>
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2023, Allan Galarza.
+    &copy; Copyright 2024, Allan Galarza.
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
   </div>
   

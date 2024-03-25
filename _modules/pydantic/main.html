@@ -46,6 +46,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Logic for creating models.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span> <span class="k">as</span> <span class="n">_annotations</span>
 
+<span class="kn">import</span> <span class="nn">operator</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">types</span>
 <span class="kn">import</span> <span class="nn">typing</span>
@@ -103,7 +104,7 @@
 
 
 <span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_model_construction</span><span class="o">.</span><span class="n">ModelMetaclass</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.5/concepts/models/</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.6/concepts/models/</span>
 
 <span class="sd">    A base class for creating Pydantic models.</span>
 
@@ -151,6 +152,9 @@
 <span class="sd">        This replaces `Model.__fields__` from Pydantic V1.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="n">model_computed_fields</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ComputedFieldInfo</span><span class="p">]]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A dictionary of computed field names and their corresponding `ComputedFieldInfo` objects.&quot;&quot;&quot;</span>
+
         <span class="n">__class_vars__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
         <span class="n">__private_attributes__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelPrivateAttr</span><span class="p">]]</span>
         <span class="n">__signature__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Signature</span><span class="p">]</span>
@@ -172,11 +176,15 @@
         <span class="n">__pydantic_extra__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_Field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="n">__pydantic_fields_set__</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_Field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="n">__pydantic_private__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_Field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># `model_fields` and `__pydantic_decorators__` must be set for</span>
         <span class="c1"># pydantic._internal._generate_schema.GenerateSchema.model_schema to work for a plain BaseModel annotation</span>
         <span class="n">model_fields</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">model_computed_fields</span> <span class="o">=</span> <span class="p">{}</span>
+
         <span class="n">__pydantic_decorators__</span> <span class="o">=</span> <span class="n">_decorators</span><span class="o">.</span><span class="n">DecoratorInfos</span><span class="p">()</span>
+        <span class="n">__pydantic_parent_namespace__</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Prevent `BaseModel` from being instantiated directly:</span>
         <span class="n">__pydantic_validator__</span> <span class="o">=</span> <span class="n">_mock_val_ser</span><span class="o">.</span><span class="n">MockValSer</span><span class="p">(</span>
             <span class="s1">&#39;Pydantic models should inherit from BaseModel, BaseModel cannot be instantiated directly&#39;</span><span class="p">,</span>
@@ -195,30 +203,20 @@
     <span class="n">__pydantic_complete__</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">__pydantic_root_model__</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">__pydantic_self__</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new model by parsing and validating input data from keyword arguments.</span>
 
 <span class="sd">        Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be</span>
 <span class="sd">        validated to form a valid model.</span>
 
-<span class="sd">        `__init__` uses `__pydantic_self__` instead of the more common `self` for the first arg to</span>
-<span class="sd">        allow `self` as a field name.</span>
+<span class="sd">        `self` is explicitly positional-only to allow `self` as a field name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># `__tracebackhide__` tells pytest and some other tools to omit this function from tracebacks</span>
         <span class="n">__tracebackhide__</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">__pydantic_self__</span><span class="o">.</span><span class="n">__pydantic_validator__</span><span class="o">.</span><span class="n">validate_python</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">self_instance</span><span class="o">=</span><span class="n">__pydantic_self__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_validator__</span><span class="o">.</span><span class="n">validate_python</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">self_instance</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="c1"># The following line sets a flag that we use to determine when `__init__` gets overridden by the user</span>
-    <span class="fm">__init__</span><span class="o">.</span><span class="n">__pydantic_base_init__</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">model_computed_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ComputedFieldInfo</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the computed fields of this model instance.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            A dictionary of computed field names and their corresponding `ComputedFieldInfo` objects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">info</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_decorators__</span><span class="o">.</span><span class="n">computed_fields</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="fm">__init__</span><span class="o">.</span><span class="n">__pydantic_base_init__</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># pyright: ignore[reportFunctionMemberAccess]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">model_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
@@ -258,17 +256,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">m</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">fields_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">defaults</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># keeping this separate from `fields_values` helps us compute `_fields_set`</span>
+        <span class="n">fields_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">alias</span> <span class="ow">and</span> <span class="n">field</span><span class="o">.</span><span class="n">alias</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
                 <span class="n">fields_values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">alias</span><span class="p">)</span>
+                <span class="n">fields_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
                 <span class="n">fields_values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">fields_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="n">field</span><span class="o">.</span><span class="n">is_required</span><span class="p">():</span>
-                <span class="n">defaults</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get_default</span><span class="p">(</span><span class="n">call_default_factory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">fields_values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get_default</span><span class="p">(</span><span class="n">call_default_factory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_fields_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">_fields_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fields_values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">fields_values</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">defaults</span><span class="p">)</span>
+            <span class="n">_fields_set</span> <span class="o">=</span> <span class="n">fields_set</span>
 
         <span class="n">_extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;allow&#39;</span><span class="p">:</span>
@@ -284,6 +284,12 @@
 
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__pydantic_post_init__</span><span class="p">:</span>
             <span class="n">m</span><span class="o">.</span><span class="n">model_post_init</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+            <span class="c1"># update private attributes with values set</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;__pydantic_private__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">__pydantic_private__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">__private_attributes__</span><span class="p">:</span>
+                        <span class="n">m</span><span class="o">.</span><span class="n">__pydantic_private__</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
         <span class="k">elif</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__pydantic_root_model__</span><span class="p">:</span>
             <span class="c1"># Note: if there are any private attributes, cls.__pydantic_post_init__ would exist</span>
             <span class="c1"># Since it doesn&#39;t, that means that `__pydantic_private__` should be set to None</span>
@@ -295,7 +301,7 @@
 <div class="viewcode-block" id="BaseModel.model_copy">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.model_copy">[docs]</a>
     <span class="k">def</span> <span class="nf">model_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.5/concepts/serialization/#model_copy</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.6/concepts/serialization/#model_copy</span>
 
 <span class="sd">        Returns a copy of the model.</span>
 
@@ -338,21 +344,21 @@
         <span class="n">round_trip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">warnings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.5/concepts/serialization/#modelmodel_dump</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.6/concepts/serialization/#modelmodel_dump</span>
 
 <span class="sd">        Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            mode: The mode in which `to_python` should run.</span>
-<span class="sd">                If mode is &#39;json&#39;, the dictionary will only contain JSON serializable types.</span>
-<span class="sd">                If mode is &#39;python&#39;, the dictionary may contain any Python objects.</span>
+<span class="sd">                If mode is &#39;json&#39;, the output will only contain JSON serializable types.</span>
+<span class="sd">                If mode is &#39;python&#39;, the output may contain non-JSON-serializable Python objects.</span>
 <span class="sd">            include: A list of fields to include in the output.</span>
 <span class="sd">            exclude: A list of fields to exclude from the output.</span>
 <span class="sd">            by_alias: Whether to use the field&#39;s alias in the dictionary key if defined.</span>
 <span class="sd">            exclude_unset: Whether to exclude fields that have not been explicitly set.</span>
-<span class="sd">            exclude_defaults: Whether to exclude fields that are set to their default value from the output.</span>
-<span class="sd">            exclude_none: Whether to exclude fields that have a value of `None` from the output.</span>
-<span class="sd">            round_trip: Whether to enable serialization and deserialization round-trip support.</span>
+<span class="sd">            exclude_defaults: Whether to exclude fields that are set to their default value.</span>
+<span class="sd">            exclude_none: Whether to exclude fields that have a value of `None`.</span>
+<span class="sd">            round_trip: If True, dumped values should be valid as input for non-idempotent types such as Json[T].</span>
 <span class="sd">            warnings: Whether to log warnings when invalid fields are encountered.</span>
 
 <span class="sd">        Returns:</span>
@@ -387,20 +393,20 @@
         <span class="n">round_trip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">warnings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.5/concepts/serialization/#modelmodel_dump_json</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.6/concepts/serialization/#modelmodel_dump_json</span>
 
 <span class="sd">        Generates a JSON representation of the model using Pydantic&#39;s `to_json` method.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            indent: Indentation to use in the JSON output. If None is passed, the output will be compact.</span>
-<span class="sd">            include: Field(s) to include in the JSON output. Can take either a string or set of strings.</span>
-<span class="sd">            exclude: Field(s) to exclude from the JSON output. Can take either a string or set of strings.</span>
+<span class="sd">            include: Field(s) to include in the JSON output.</span>
+<span class="sd">            exclude: Field(s) to exclude from the JSON output.</span>
 <span class="sd">            by_alias: Whether to serialize using field aliases.</span>
 <span class="sd">            exclude_unset: Whether to exclude fields that have not been explicitly set.</span>
-<span class="sd">            exclude_defaults: Whether to exclude fields that have the default value.</span>
+<span class="sd">            exclude_defaults: Whether to exclude fields that are set to their default value.</span>
 <span class="sd">            exclude_none: Whether to exclude fields that have a value of `None`.</span>
-<span class="sd">            round_trip: Whether to use serialization/deserialization between JSON and class instance.</span>
-<span class="sd">            warnings: Whether to show any warnings that occurred during serialization.</span>
+<span class="sd">            round_trip: If True, dumped values should be valid as input for non-idempotent types such as Json[T].</span>
+<span class="sd">            warnings: Whether to log warnings when invalid fields are encountered.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A JSON string representation of the model.</span>
@@ -559,7 +565,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            obj: The object to validate.</span>
-<span class="sd">            strict: Whether to raise an exception on invalid fields.</span>
+<span class="sd">            strict: Whether to enforce types strictly.</span>
 <span class="sd">            from_attributes: Whether to extract data from object attributes.</span>
 <span class="sd">            context: Additional context to pass to the validator.</span>
 
@@ -586,7 +592,7 @@
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.5/concepts/json/#json-parsing</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.6/concepts/json/#json-parsing</span>
 
 <span class="sd">        Validate the given JSON data against the Pydantic model.</span>
 
@@ -946,12 +952,50 @@
             <span class="n">self_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_generic_metadata__</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span>
             <span class="n">other_type</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">__pydantic_generic_metadata__</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span>
 
-            <span class="k">return</span> <span class="p">(</span>
+            <span class="c1"># Perform common checks first</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
                 <span class="n">self_type</span> <span class="o">==</span> <span class="n">other_type</span>
-                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span>
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_private__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">__pydantic_private__</span>
                 <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_extra__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">__pydantic_extra__</span>
-            <span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="c1"># We only want to compare pydantic fields but ignoring fields is costly.</span>
+            <span class="c1"># We&#39;ll perform a fast check first, and fallback only when needed</span>
+            <span class="c1"># See GH-7444 and GH-7825 for rationale and a performance benchmark</span>
+
+            <span class="c1"># First, do the fast (and sometimes faulty) __dict__ comparison</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+                <span class="c1"># If the check above passes, then pydantic fields are equal, we can return early</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+            <span class="c1"># We don&#39;t want to trigger unnecessary costly filtering of __dict__ on all unequal objects, so we return</span>
+            <span class="c1"># early if there are no keys to ignore (we would just return False later on anyway)</span>
+            <span class="n">model_fields</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">model_fields</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">model_fields</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">model_fields</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+            <span class="c1"># If we reach here, there are non-pydantic-fields keys, mapped to unequal values, that we need to ignore</span>
+            <span class="c1"># Resort to costly filtering of the __dict__ objects</span>
+            <span class="c1"># We use operator.itemgetter because it is much faster than dict comprehensions</span>
+            <span class="c1"># NOTE: Contrary to standard python class and instances, when the Model class has a default value for an</span>
+            <span class="c1"># attribute and the model instance doesn&#39;t have a corresponding attribute, accessing the missing attribute</span>
+            <span class="c1"># raises an error in BaseModel.__getattr__ instead of returning the class attribute</span>
+            <span class="c1"># So we can use operator.itemgetter() instead of operator.attrgetter()</span>
+            <span class="n">getter</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="o">*</span><span class="n">model_fields</span><span class="p">)</span> <span class="k">if</span> <span class="n">model_fields</span> <span class="k">else</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">_utils</span><span class="o">.</span><span class="n">_SENTINEL</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">getter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span> <span class="o">==</span> <span class="n">getter</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># In rare cases (such as when using the deprecated BaseModel.copy() method),</span>
+                <span class="c1"># the __dict__ may not contain all model fields, which is how we can get here.</span>
+                <span class="c1"># getter(self.__dict__) is much faster than any &#39;safe&#39; method that accounts</span>
+                <span class="c1"># for missing keys, and wrapping it in a `try` doesn&#39;t slow things down much</span>
+                <span class="c1"># in the common case.</span>
+                <span class="n">self_fields_proxy</span> <span class="o">=</span> <span class="n">_utils</span><span class="o">.</span><span class="n">SafeGetItemProxy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+                <span class="n">other_fields_proxy</span> <span class="o">=</span> <span class="n">_utils</span><span class="o">.</span><span class="n">SafeGetItemProxy</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">getter</span><span class="p">(</span><span class="n">self_fields_proxy</span><span class="p">)</span> <span class="o">==</span> <span class="n">getter</span><span class="p">(</span><span class="n">other_fields_proxy</span><span class="p">)</span>
+
+        <span class="c1"># other instance is not a BaseModel</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">NotImplemented</span>  <span class="c1"># delegate to the other item in the comparison</span>
 
@@ -1024,28 +1068,29 @@
     <span class="c1"># ##### Deprecated methods from v1 #####</span>
     <span class="nd">@property</span>
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The `__fields__` attribute is deprecated, use `model_fields` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="s1">&#39;The `__fields__` attribute is deprecated, use `model_fields` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">__fields__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FieldInfo</span><span class="p">]:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The `__fields__` attribute is deprecated, use `model_fields` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;The `__fields__` attribute is deprecated, use `model_fields` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_fields</span>
 
     <span class="nd">@property</span>
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The `__fields_set__` attribute is deprecated, use `model_fields_set` instead.&#39;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">__fields_set__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s1">&#39;The `__fields_set__` attribute is deprecated, use `model_fields_set` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span>
+            <span class="s1">&#39;The `__fields_set__` attribute is deprecated, use `model_fields_set` instead.&#39;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_fields_set__</span>
 
 <div class="viewcode-block" id="BaseModel.dict">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.dict">[docs]</a>
-    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The `dict` method is deprecated; use `model_dump` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
-    <span class="p">)</span>
+    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s1">&#39;The `dict` method is deprecated; use `model_dump` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">dict</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -1056,7 +1101,7 @@
         <span class="n">exclude_defaults</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">exclude_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa UP006</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The `dict` method is deprecated; use `model_dump` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The `dict` method is deprecated; use `model_dump` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span>
             <span class="n">include</span><span class="o">=</span><span class="n">include</span><span class="p">,</span>
             <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
@@ -1069,9 +1114,7 @@
 
 <div class="viewcode-block" id="BaseModel.json">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.json">[docs]</a>
-    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The `json` method is deprecated; use `model_dump_json` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
-    <span class="p">)</span>
+    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s1">&#39;The `json` method is deprecated; use `model_dump_json` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">json</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -1085,7 +1128,9 @@
         <span class="n">models_as_dict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">PydanticUndefined</span><span class="p">,</span>  <span class="c1"># type: ignore[assignment]</span>
         <span class="o">**</span><span class="n">dumps_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The `json` method is deprecated; use `model_dump_json` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;The `json` method is deprecated; use `model_dump_json` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">encoder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">PydanticUndefined</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;The `encoder` argument is no longer supported; use field serializers instead.&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">models_as_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">PydanticUndefined</span><span class="p">:</span>
@@ -1105,11 +1150,11 @@
 <div class="viewcode-block" id="BaseModel.parse_obj">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.parse_obj">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The `parse_obj` method is deprecated; use `model_validate` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
-    <span class="p">)</span>
+    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s1">&#39;The `parse_obj` method is deprecated; use `model_validate` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">parse_obj</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Model</span><span class="p">],</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The `parse_obj` method is deprecated; use `model_validate` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;The `parse_obj` method is deprecated; use `model_validate` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
 
 
@@ -1119,7 +1164,7 @@
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The `parse_raw` method is deprecated; if your data is JSON use `model_validate_json`, &#39;</span>
         <span class="s1">&#39;otherwise load the data then use `model_validate` instead.&#39;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">parse_raw</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Model</span><span class="p">],</span>
@@ -1133,7 +1178,7 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s1">&#39;The `parse_raw` method is deprecated; if your data is JSON use `model_validate_json`, &#39;</span>
             <span class="s1">&#39;otherwise load the data then use `model_validate` instead.&#39;</span><span class="p">,</span>
-            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="kn">from</span> <span class="nn">.deprecated</span> <span class="kn">import</span> <span class="n">parse</span>
 
@@ -1175,7 +1220,7 @@
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The `parse_file` method is deprecated; load the data from file, then if your data is JSON &#39;</span>
         <span class="s1">&#39;use `model_validate_json`, otherwise `model_validate` instead.&#39;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">parse_file</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Model</span><span class="p">],</span>
@@ -1188,8 +1233,8 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s1">&#39;The `parse_file` method is deprecated; load the data from file, then if your data is JSON &#39;</span>
-            <span class="s1">&#39;use `model_validate_json` otherwise `model_validate` instead.&#39;</span><span class="p">,</span>
-            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="s1">&#39;use `model_validate_json`, otherwise `model_validate` instead.&#39;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="kn">from</span> <span class="nn">.deprecated</span> <span class="kn">import</span> <span class="n">parse</span>
 
@@ -1209,13 +1254,13 @@
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The `from_orm` method is deprecated; set &#39;</span>
         <span class="s2">&quot;`model_config[&#39;from_attributes&#39;]=True` and use `model_validate` instead.&quot;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">from_orm</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Model</span><span class="p">],</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s1">&#39;The `from_orm` method is deprecated; set `model_config[&quot;from_attributes&quot;]=True` &#39;</span>
-            <span class="s1">&#39;and use `model_validate` instead.&#39;</span><span class="p">,</span>
-            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="s1">&#39;The `from_orm` method is deprecated; set &#39;</span>
+            <span class="s2">&quot;`model_config[&#39;from_attributes&#39;]=True` and use `model_validate` instead.&quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;from_attributes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">PydanticUserError</span><span class="p">(</span>
@@ -1227,18 +1272,20 @@
 <div class="viewcode-block" id="BaseModel.construct">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.construct">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The `construct` method is deprecated; use `model_construct` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
-    <span class="p">)</span>
+    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s1">&#39;The `construct` method is deprecated; use `model_construct` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">construct</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Model</span><span class="p">],</span> <span class="n">_fields_set</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">values</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The `construct` method is deprecated; use `model_construct` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;The `construct` method is deprecated; use `model_construct` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_construct</span><span class="p">(</span><span class="n">_fields_set</span><span class="o">=</span><span class="n">_fields_set</span><span class="p">,</span> <span class="o">**</span><span class="n">values</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BaseModel.copy">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.copy">[docs]</a>
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The copy method is deprecated; use `model_copy` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="s1">&#39;The `copy` method is deprecated; use `model_copy` instead. &#39;</span>
+        <span class="s1">&#39;See the docstring of `BaseModel.copy` for details about how to handle `include` and `exclude`.&#39;</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
@@ -1262,13 +1309,10 @@
 <span class="sd">        ```</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            include: Optional set or mapping</span>
-<span class="sd">                specifying which fields to include in the copied model.</span>
-<span class="sd">            exclude: Optional set or mapping</span>
-<span class="sd">                specifying which fields to exclude in the copied model.</span>
-<span class="sd">            update: Optional dictionary of field-value pairs to override field values</span>
-<span class="sd">                in the copied model.</span>
-<span class="sd">            deep: If True, the values of fields that are Pydantic models will be deep copied.</span>
+<span class="sd">            include: Optional set or mapping specifying which fields to include in the copied model.</span>
+<span class="sd">            exclude: Optional set or mapping specifying which fields to exclude in the copied model.</span>
+<span class="sd">            update: Optional dictionary of field-value pairs to override field values in the copied model.</span>
+<span class="sd">            deep: If True, the values of fields that are Pydantic models will be deep-copied.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A copy of the model with included, excluded and updated fields as specified.</span>
@@ -1276,7 +1320,7 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s1">&#39;The `copy` method is deprecated; use `model_copy` instead. &#39;</span>
             <span class="s1">&#39;See the docstring of `BaseModel.copy` for details about how to handle `include` and `exclude`.&#39;</span><span class="p">,</span>
-            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="kn">from</span> <span class="nn">.deprecated</span> <span class="kn">import</span> <span class="n">copy_internals</span>
 
@@ -1318,13 +1362,13 @@
 <div class="viewcode-block" id="BaseModel.schema">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.schema">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The `schema` method is deprecated; use `model_json_schema` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
-    <span class="p">)</span>
+    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s1">&#39;The `schema` method is deprecated; use `model_json_schema` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">by_alias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">ref_template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REF_TEMPLATE</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># noqa UP006</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The `schema` method is deprecated; use `model_json_schema` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;The `schema` method is deprecated; use `model_json_schema` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">(</span><span class="n">by_alias</span><span class="o">=</span><span class="n">by_alias</span><span class="p">,</span> <span class="n">ref_template</span><span class="o">=</span><span class="n">ref_template</span><span class="p">)</span></div>
 
 
@@ -1333,17 +1377,17 @@
     <span class="nd">@classmethod</span>
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The `schema_json` method is deprecated; use `model_json_schema` and json.dumps instead.&#39;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">schema_json</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">by_alias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">ref_template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REF_TEMPLATE</span><span class="p">,</span> <span class="o">**</span><span class="n">dumps_kwargs</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-        <span class="kn">import</span> <span class="nn">json</span>
-
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s1">&#39;The `schema_json` method is deprecated; use `model_json_schema` and json.dumps instead.&#39;</span><span class="p">,</span>
-            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+
         <span class="kn">from</span> <span class="nn">.deprecated.json</span> <span class="kn">import</span> <span class="n">pydantic_encoder</span>
 
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
@@ -1356,11 +1400,11 @@
 <div class="viewcode-block" id="BaseModel.validate">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.validate">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The `validate` method is deprecated; use `model_validate` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
-    <span class="p">)</span>
+    <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span><span class="s1">&#39;The `validate` method is deprecated; use `model_validate` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Model</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The `validate` method is deprecated; use `model_validate` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;The `validate` method is deprecated; use `model_validate` instead.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 
@@ -1369,11 +1413,12 @@
     <span class="nd">@classmethod</span>
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The `update_forward_refs` method is deprecated; use `model_rebuild` instead.&#39;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">update_forward_refs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">localns</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: D102</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s1">&#39;The `update_forward_refs` method is deprecated; use `model_rebuild` instead.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span>
+            <span class="s1">&#39;The `update_forward_refs` method is deprecated; use `model_rebuild` instead.&#39;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">localns</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;`localns` arguments are not longer accepted.&#39;</span><span class="p">)</span>
@@ -1381,23 +1426,25 @@
 
 
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
-        <span class="s1">&#39;The private method `_iter` will be removed and should no longer be used.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span>
+        <span class="s1">&#39;The private method `_iter` will be removed and should no longer be used.&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The private method `_iter` will be removed and should no longer be used.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
-
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;The private method `_iter` will be removed and should no longer be used.&#39;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="kn">from</span> <span class="nn">.deprecated</span> <span class="kn">import</span> <span class="n">copy_internals</span>
 
         <span class="k">return</span> <span class="n">copy_internals</span><span class="o">.</span><span class="n">_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The private method `_copy_and_set_values` will be removed and should no longer be used.&#39;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_copy_and_set_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s1">&#39;The private method  `_copy_and_set_values` will be removed and should no longer be used.&#39;</span><span class="p">,</span>
-            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="s1">&#39;The private method `_copy_and_set_values` will be removed and should no longer be used.&#39;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="kn">from</span> <span class="nn">.deprecated</span> <span class="kn">import</span> <span class="n">copy_internals</span>
 
@@ -1406,26 +1453,26 @@
     <span class="nd">@classmethod</span>
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The private method `_get_value` will be removed and should no longer be used.&#39;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_get_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s1">&#39;The private method  `_get_value` will be removed and should no longer be used.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span>
+            <span class="s1">&#39;The private method `_get_value` will be removed and should no longer be used.&#39;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
-
         <span class="kn">from</span> <span class="nn">.deprecated</span> <span class="kn">import</span> <span class="n">copy_internals</span>
 
         <span class="k">return</span> <span class="n">copy_internals</span><span class="o">.</span><span class="n">_get_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@typing_extensions</span><span class="o">.</span><span class="n">deprecated</span><span class="p">(</span>
         <span class="s1">&#39;The private method `_calculate_keys` will be removed and should no longer be used.&#39;</span><span class="p">,</span>
-        <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
+        <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">_calculate_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s1">&#39;The private method `_calculate_keys` will be removed and should no longer be used.&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span>
+            <span class="s1">&#39;The private method `_calculate_keys` will be removed and should no longer be used.&#39;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">PydanticDeprecatedSince20</span><span class="p">,</span>
         <span class="p">)</span>
-
         <span class="kn">from</span> <span class="nn">.deprecated</span> <span class="kn">import</span> <span class="n">copy_internals</span>
 
         <span class="k">return</span> <span class="n">copy_internals</span><span class="o">.</span><span class="n">_calculate_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1473,18 +1520,20 @@
     <span class="vm">__slots__</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">field_definitions</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dynamically creates and returns a new Pydantic model, in other words, `create_model` dynamically creates a</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.6/concepts/models/#dynamic-model-creation</span>
+
+<span class="sd">    Dynamically creates and returns a new Pydantic model, in other words, `create_model` dynamically creates a</span>
 <span class="sd">    subclass of [`BaseModel`][pydantic.BaseModel].</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        __model_name: The name of the newly created model.</span>
 <span class="sd">        __config__: The configuration of the new model.</span>
 <span class="sd">        __doc__: The docstring of the new model.</span>
-<span class="sd">        __base__: The base class for the new model.</span>
-<span class="sd">        __module__: The name of the module that the model belongs to,</span>
-<span class="sd">            if `None` the value is taken from `sys._getframe(1)`</span>
+<span class="sd">        __base__: The base class or classes for the new model.</span>
+<span class="sd">        __module__: The name of the module that the model belongs to;</span>
+<span class="sd">            if `None`, the value is taken from `sys._getframe(1)`</span>
 <span class="sd">        __validators__: A dictionary of methods that validate fields.</span>
-<span class="sd">        __cls_kwargs__: A dictionary of keyword arguments for class creation.</span>
+<span class="sd">        __cls_kwargs__: A dictionary of keyword arguments for class creation, such as `metaclass`.</span>
 <span class="sd">        __slots__: Deprecated. Should not be passed to `create_model`.</span>
 <span class="sd">        **field_definitions: Attributes of the new model. They should be passed in the format:</span>
 <span class="sd">            `&lt;name&gt;=(&lt;type&gt;, &lt;default value&gt;)` or `&lt;name&gt;=(&lt;type&gt;, &lt;FieldInfo&gt;)`.</span>
@@ -1646,7 +1695,7 @@
       <div class="clearer"></div>
     </div>
   <div class="footer">
-    &copy; Copyright 2023, Allan Galarza.
+    &copy; Copyright 2024, Allan Galarza.
     Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.2.6.
   </div>
   
