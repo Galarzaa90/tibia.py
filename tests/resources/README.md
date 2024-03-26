@@ -193,6 +193,11 @@ trying to cover as many scenarios possible, to be used in unit tests.
 - [worldOverviewOnline.txt](worldOverview/worldOverviewOnline.txt) - The world list with all worlds online.
 - [worldOverviewOffline.txt](worldOverview/worldOverviewOffline.txt) - The world list with all worlds offline.
 
+## Fansites
+
+- [fansites.txt](fansites/fansites.txt) - The fansites section.
+
 ## Other
 
 - [tibiacom_about.txt](aboutSection.txt) - The 'About Tibia' section on Tibia.com, used to provide invalid content for tests.
+
