@@ -17,7 +17,8 @@ from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDi
                            PvpTypeFilter,
                            SpellGroup, SpellSorting, SpellType, SpellVocationFilter)
 from tibiapy.models import (Auction, AuctionFilters, BoostableBosses, BossEntry, Character, CharacterBazaar, Creature,
-                            CreatureEntry, CreaturesSection, EventSchedule, ForumBoard, ForumSection, ForumThread,
+                            CreatureEntry, CreaturesSection, EventSchedule, FansitesSection, ForumBoard, ForumSection,
+                            ForumThread,
                             Guild, GuildWars,
                             GuildsSection, Highscores, House, HousesSection, KillStatistics, Leaderboard, News,
                             NewsArchive, Spell,
@@ -294,6 +295,17 @@ async def get_leaderboard(
     return handle_response(
         response,
         await app.state.client.fetch_leaderboard(world=world, rotation=rotation_id, page=page),
+    )
+
+
+@app.get("/fansites", tags=["Community"])
+async def get_fansites(
+        response: Response,
+) -> TibiaResponse[FansitesSection]:
+    """Show the fansites section."""
+    return handle_response(
+        response,
+        await app.state.client.fetch_fansites_section(),
     )
 
 

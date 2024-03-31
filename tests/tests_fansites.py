@@ -1,5 +1,5 @@
 from tests.tests_tibiapy import TestCommons
-from tibiapy.models.fansites import FansitesSection
+from tibiapy.models.fansite import FansitesSection
 from tibiapy.parsers.fansite import FansitesSectionParser
 
 FILE_FANSITES_SECTION = "fansites/fansites.txt"

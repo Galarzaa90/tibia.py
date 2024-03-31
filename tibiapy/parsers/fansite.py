@@ -3,7 +3,7 @@ from typing import List
 import bs4
 
 from tibiapy import InvalidContentError
-from tibiapy.models.fansites import Fansite, FansiteContent, FansiteSocialMedia, FansitesSection
+from tibiapy.models.fansite import Fansite, FansiteContent, FansiteSocialMedia, FansitesSection
 from tibiapy.utils import get_rows, parse_popup, parse_tibiacom_content
 
 
