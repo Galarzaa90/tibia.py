@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from enum import Enum, Flag, IntEnum
-from typing import Any, TYPE_CHECKING
+from typing import Any, Optional, Self, TYPE_CHECKING
 
 from pydantic_core import core_schema
 
@@ -51,7 +51,7 @@ __all__ = (
 class StringEnum(str, Enum):
 
     @classmethod
-    def validate(cls, v):
+    def validate(cls, v: Any) -> Self:
         e = try_enum(cls, v)
         if e is None:
             raise EnumValueError(cls, v)
@@ -76,7 +76,7 @@ class NumericEnum(IntEnum):
         return self.name.lower()
 
     @classmethod
-    def validate(cls, v):
+    def validate(cls, v: Any):
         e = try_enum(cls, v)
         if e is None:
             raise EnumValueError(cls, v)
@@ -248,7 +248,7 @@ class BazaarType(StringEnum):
     HISTORY = "Auction History"
 
     @property
-    def subtopic(self):
+    def subtopic(self) -> str:
         """The subtopic argument for this Bazaar type."""
         return "currentcharactertrades" if self == self.CURRENT else "pastcharactertrades"
 
@@ -323,7 +323,7 @@ class HighscoresProfession(NumericEnum):
     DRUIDS = 5
 
     @classmethod
-    def from_name(cls, name, all_fallback=True):
+    def from_name(cls, name: str, all_fallback: bool = True) -> Optional[Self]:
         """Get a vocation filter from a vocation's name.
 
         Parameters
@@ -373,7 +373,7 @@ class HouseType(StringEnum):
     GUILDHALL = "guildhall"
 
     @property
-    def plural(self):
+    def plural(self) -> str:
         """:class:`str`: The plural for the house type."""
         return f"{self.value}s"
 
@@ -388,18 +388,18 @@ class NewsCategory(StringEnum):
     TECHNICAL_ISSUES = "technical"
 
     @property
-    def filter_name(self):
+    def filter_name(self) -> str:
         """The name of the filter parameter for this value."""
         return f"filter_{self.value}"
 
     @property
-    def big_icon_url(self):
+    def big_icon_url(self) -> str:
         """The URL to the big icon representing this category."""
         from tibiapy.urls import get_static_file_url
         return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_big.gif")
 
     @property
-    def small_icon_url(self):
+    def small_icon_url(self) -> str:
         """The URL to the small icon representing this category."""
         from tibiapy.urls import get_static_file_url
         return get_static_file_url("images", "global", "content", f"newsicon_{self.value}_small.gif")
@@ -413,12 +413,12 @@ class NewsType(StringEnum):
     NEWS = "News"
 
     @property
-    def filter_name(self):
+    def filter_name(self) -> str:
         """The filter parameter name for this value."""
         return f"filter_{self.value.split(' ')[-1].lower()}"
 
     @property
-    def filter_value(self):
+    def filter_value(self) -> str:
         """The filter parameter value for this value."""
         return self.value.split(" ")[-1].lower()
 
@@ -499,7 +499,7 @@ class ThreadStatus(Flag):
             if entry in self and entry is not self.NONE:
                 yield entry
 
-    def get_icon_name(self):
+    def get_icon_name(self) -> Optional[str]:
         """Generate an icon name, following the same ordering used in Tibia.com.
 
         Returns
@@ -514,7 +514,7 @@ class ThreadStatus(Flag):
         return f"logo_{joined_str}.gif"
 
     @classmethod
-    def from_icon(cls, icon):
+    def from_icon(cls, icon: str) -> Self:
         """Get the flag combination, based from the icon's name present in the thread status.
 
         Parameters
@@ -557,7 +557,7 @@ class Vocation(StringEnum):
     MASTER_SORCERER = "Master Sorcerer"
 
     @property
-    def base(self):
+    def base(self) -> Self:
         """The base vocation of this vocation if promoted. If not promoted, the same value is returned."""
         if self == self.ELDER_DRUID:
             return self.DRUID

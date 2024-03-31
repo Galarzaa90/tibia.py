@@ -46,7 +46,7 @@ class SpellSectionBuilder:
         self._entries.append(spell)
         return self
 
-    def build(self):
+    def build(self) -> SpellsSection:
         return SpellsSection(
             vocation=self._vocation,
             group=self._group,
@@ -69,43 +69,43 @@ class SpellEntryBuilder:
         self._price = None
         self._is_premium = None
 
-    def identifier(self, identifier: str):
+    def identifier(self, identifier: str) -> Self:
         self._identifier = identifier
         return self
 
-    def name(self, name: str):
+    def name(self, name: str) -> Self:
         self._name = name
         return self
 
-    def words(self, words: str):
+    def words(self, words: str) -> Self:
         self._words = words
         return self
 
-    def group(self, group: SpellGroup):
+    def group(self, group: SpellGroup) -> Self:
         self._group = group
         return self
 
-    def spell_type(self, spell_type: SpellType):
+    def spell_type(self, spell_type: SpellType) -> Self:
         self._spell_type = spell_type
         return self
 
-    def exp_level(self, exp_level: int):
+    def exp_level(self, exp_level: int) -> Self:
         self._exp_level = exp_level
         return self
 
-    def mana(self, mana: Optional[int]):
+    def mana(self, mana: Optional[int]) -> Self:
         self._mana = mana
         return self
 
-    def price(self, price: int):
+    def price(self, price: int) -> Self:
         self._price = price
         return self
 
-    def is_premium(self, is_premium: bool):
+    def is_premium(self, is_premium: bool) -> Self:
         self._is_premium = is_premium
         return self
 
-    def build(self):
+    def build(self) -> SpellEntry:
         return SpellEntry(
             identifier=self._identifier,
             name=self._name,
@@ -179,7 +179,7 @@ class SpellBuilder(SpellEntryBuilder):
         self._rune = rune
         return self
 
-    def build(self):
+    def build(self) -> Spell:
         return Spell(
             identifier=self._identifier,
             name=self._name,
@@ -242,7 +242,7 @@ class RuneBuilder:
         self._magic_type = magic_type
         return self
 
-    def build(self):
+    def build(self) -> Rune:
         return Rune(
             name=self._name,
             vocations=self._vocations,

@@ -93,7 +93,7 @@ class CharacterParser:
         return builder.build()
 
     @classmethod
-    def _parse_account_information(cls, builder: CharacterBuilder, rows: list[bs4.Tag]):
+    def _parse_account_information(cls, builder: CharacterBuilder, rows: list[bs4.Tag]) -> None:
         """Parse the character's account information."""
         acc_info = {}
 
@@ -111,7 +111,7 @@ class CharacterParser:
         builder.account_information(AccountInformation(created=created, loyalty_title=loyalty_title, position=position))
 
     @classmethod
-    def _parse_achievements(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+    def _parse_achievements(cls, builder: CharacterBuilder, rows: List[bs4.Tag]) -> None:
         """Parse the character's displayed achievements."""
         for row in rows:
             cols = row.select("td")
@@ -127,7 +127,7 @@ class CharacterParser:
             builder.add_achievement(Achievement(name=name, grade=grade, is_secret=secret))
 
     @classmethod
-    def _parse_account_badges(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+    def _parse_account_badges(cls, builder: CharacterBuilder, rows: List[bs4.Tag]) -> None:
         """Parse the character's displayed badges."""
         row = rows[0]
         columns = row.select("td > span")
@@ -141,7 +141,7 @@ class CharacterParser:
             builder.add_account_badge(AccountBadge(name=name, icon_url=icon_url, description=description))
 
     @classmethod
-    def _parse_character_information(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+    def _parse_character_information(cls, builder: CharacterBuilder, rows: List[bs4.Tag]) -> None:
         """Parse the character's basic information and applies the found values."""
         field_actions: dict[str, Callable[[bs4.Tag, str], None]] = {
             "name": lambda rv, v: cls._parse_name_field(builder, v),
@@ -176,7 +176,7 @@ class CharacterParser:
                 logger.debug("Unhandled character information field found: %s", field)
 
     @classmethod
-    def _parse_name_field(cls, builder: CharacterBuilder, value: str):
+    def _parse_name_field(cls, builder: CharacterBuilder, value: str) -> None:
         if m := deleted_regexp.match(value):
             value = m.group(1)
             builder.name(value)
@@ -189,7 +189,7 @@ class CharacterParser:
             builder.traded(True)
 
     @classmethod
-    def _parse_titles(cls, builder: CharacterBuilder, value: str):
+    def _parse_titles(cls, builder: CharacterBuilder, value: str) -> None:
         if m := title_regexp.match(value):
             name = m.group(1).strip()
             unlocked = int(m.group(2))
@@ -200,7 +200,7 @@ class CharacterParser:
             builder.unlocked_titles(unlocked)
 
     @classmethod
-    def _parse_house_column(cls, builder: CharacterBuilder, column: bs4.Tag):
+    def _parse_house_column(cls, builder: CharacterBuilder, column: bs4.Tag) -> None:
         house_text = clean_text(column)
         m = house_regexp.search(house_text)
         paid_until = m.group(1)
@@ -218,14 +218,14 @@ class CharacterParser:
         )
 
     @classmethod
-    def _parse_guild_column(cls, builder: CharacterBuilder, column: bs4.Tag):
+    def _parse_guild_column(cls, builder: CharacterBuilder, column: bs4.Tag) -> None:
         guild_link = column.select_one("a")
         value = clean_text(column)
         rank = value.split("of the")[0]
         builder.guild_membership(GuildMembership(name=clean_text(guild_link), rank=rank.strip()))
 
     @classmethod
-    def _parse_deaths(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+    def _parse_deaths(cls, builder: CharacterBuilder, rows: List[bs4.Tag]) -> None:
         """Parse the character's recent deaths."""
         for row in rows:
             cols = row.select("td")
@@ -285,7 +285,7 @@ class CharacterParser:
         return DeathParticipant(name=name, is_player=player, summon=summon, is_traded=traded)
 
     @classmethod
-    def _parse_other_characters(cls, builder: CharacterBuilder, rows: List[bs4.Tag]):
+    def _parse_other_characters(cls, builder: CharacterBuilder, rows: List[bs4.Tag]) -> None:
         """Parse the character's other visible characters."""
         for row in rows[1:]:
             cols_raw = row.select("td")

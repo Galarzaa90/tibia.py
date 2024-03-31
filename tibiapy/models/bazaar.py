@@ -1,11 +1,11 @@
 """Models relatd to the character bazaar."""
 import datetime
 from abc import ABC, abstractmethod
-from typing import Optional, List, Dict, TypeVar, Generic
+from typing import Dict, Generic, List, Optional, TypeVar
 
-from tibiapy.enums import (PvpTypeFilter, AuctionBattlEyeFilter, AuctionVocationFilter, AuctionSkillFilter,
-                           AuctionSearchType,
-                     AuctionOrderBy, AuctionOrderDirection, BazaarType, Vocation, Sex, BidType, AuctionStatus)
+from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
+                           AuctionSkillFilter, AuctionStatus, AuctionVocationFilter, BazaarType, BidType, PvpTypeFilter,
+                           Sex, Vocation)
 from tibiapy.models import BaseModel
 from tibiapy.models.pagination import AjaxPaginator, PaginatedWithUrl
 
@@ -27,6 +27,7 @@ __all__ = (
     "OutfitEntry",
     "OutfitImage",
     "Outfits",
+    "RevealedGem",
     "SalesArgument",
     "SkillEntry",
 )
@@ -181,7 +182,7 @@ class MountEntry(DisplayImage):
 
 
 class OutfitEntry(DisplayImage, BaseOutfit):
-    """Represents a outfit owned or unlocked by the character."""
+    """Represents an outfit owned or unlocked by the character."""
 
     image_url: str
     """The URL to the image."""
@@ -217,13 +218,13 @@ T = TypeVar("T", bound=DisplayImage)
 
 
 class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
-    def get_by_name(self, name):
+    def get_by_name(self, name: str):
         """Get an entry by its name.
 
         Parameters
         ----------
         name: :class:`str`
-            The name of the entry, case insensitive.
+            The name of the entry, case-insensitive.
 
         Returns
         -------
@@ -232,7 +233,7 @@ class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
         """
         return next((e for e in self.entries if e.name.lower() == name.lower()), None)
 
-    def search(self, value):
+    def search(self, value: str):
         """Search an entry by its name.
 
         Parameters
@@ -248,14 +249,14 @@ class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
         return [e for e in self.entries if value.lower() in e.name.lower()]
 
     @abstractmethod
-    def get_by_id(self, name):
+    def get_by_id(self, entry_id: int):
         ...
 
 
 class ItemSummary(AuctionSummary[ItemEntry]):
     """Items in a character's inventory and depot."""
 
-    def get_by_id(self, entry_id):
+    def get_by_id(self, entry_id: int) -> Optional[ItemEntry]:
         """Get an item by its item id.
 
         Parameters
@@ -274,7 +275,7 @@ class ItemSummary(AuctionSummary[ItemEntry]):
 class Mounts(AuctionSummary[MountEntry]):
     """The mounts the character has unlocked or purchased."""
 
-    def get_by_id(self, entry_id):
+    def get_by_id(self, entry_id: int) -> Optional[MountEntry]:
         """Get a mount by its mount id.
 
         Parameters
@@ -293,8 +294,8 @@ class Mounts(AuctionSummary[MountEntry]):
 class Familiars(AuctionSummary[FamiliarEntry]):
     """The familiars the character has unlocked or purchased."""
 
-    def get_by_id(self, entry_id):
-        """Get an familiar by its familiar id.
+    def get_by_id(self, entry_id: int) -> Optional[FamiliarEntry]:
+        """Get a familiar by its familiar id.
 
         Parameters
         ----------
@@ -312,7 +313,7 @@ class Familiars(AuctionSummary[FamiliarEntry]):
 class Outfits(AuctionSummary[OutfitEntry]):
     """The outfits the character has unlocked or purchased."""
 
-    def get_by_id(self, entry_id):
+    def get_by_id(self, entry_id: int) -> Optional[OutfitEntry]:
         """Get an outfit by its outfit id.
 
         Parameters
@@ -354,6 +355,8 @@ class SkillEntry(BaseModel):
 
 
 class RevealedGem(BaseModel):
+    """A gem that has been revealed for the character."""
+
     gem_type: str
     """The type of gem."""
     mods: List[str]
@@ -525,7 +528,7 @@ class CharacterBazaar(PaginatedWithUrl[Auction]):
     filters: Optional[AuctionFilters] = None
     """The currently set filtering options."""
 
-    def get_page_url(self, page) -> str:
+    def get_page_url(self, page: int) -> str:
         """Get the URL to a given page of the bazaar.
 
         Parameters

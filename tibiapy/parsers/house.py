@@ -104,7 +104,7 @@ class HousesSectionParser:
             raise InvalidContentError("content does not belong to a Tibia.com house list", e) from e
 
     @classmethod
-    def _parse_filters(cls, builder: HousesSectionBuilder, form: bs4.Tag):
+    def _parse_filters(cls, builder: HousesSectionBuilder, form: bs4.Tag) -> None:
         form_data = parse_form_data(form)
         builder.available_worlds(list(form_data.available_options["world"].values()))
         builder.available_towns(list(form_data.available_options["town"].values()))
@@ -115,7 +115,7 @@ class HousesSectionParser:
         builder.order(try_enum(HouseOrder, form_data.values.get("order"), HouseOrder.NAME))
 
     @classmethod
-    def _parse_status(cls, builder: HouseEntryBuilder, status):
+    def _parse_status(cls, builder: HouseEntryBuilder, status: str) -> None:
         """Parse the status string found in the table and applies the corresponding values.
 
         Parameters
@@ -203,7 +203,7 @@ class HouseParser:
     # endregion
 
     @classmethod
-    def _parse_status(cls, builder: HouseBuilder, status):
+    def _parse_status(cls, builder: HouseBuilder, status: str) -> None:
         """Parse the house's state description and applies the corresponding values.
 
         Parameters

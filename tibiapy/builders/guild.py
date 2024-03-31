@@ -48,7 +48,7 @@ class GuildEntryBuilder(_BaseGuildBuilder):
         self._active = active
         return self
 
-    def build(self):
+    def build(self) -> GuildEntry:
         return GuildEntry(
             name=self._name,
             logo_url=self._logo_url,
@@ -128,7 +128,7 @@ class GuildBuilder(_BaseGuildBuilder):
         self._invites.append(invite)
         return self
 
-    def build(self):
+    def build(self) -> Guild:
         return Guild(
             name=self._name,
             logo_url=self._logo_url,
@@ -166,7 +166,7 @@ class GuildWarsBuilder:
         self._history = history
         return self
 
-    def build(self):
+    def build(self) -> GuildWars:
         return GuildWars(
             name=self._name,
             history=self._history,
@@ -237,7 +237,7 @@ class GuildWarEntryBuilder:
         self._surrender = surrender
         return self
 
-    def build(self):
+    def build(self) -> GuildWarEntry:
         return GuildWarEntry(
             guild_name=self._guild_name,
             guild_score=self._guild_score,

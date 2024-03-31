@@ -2,7 +2,7 @@
 import logging
 import re
 import urllib.parse
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 import bs4
 
@@ -13,7 +13,7 @@ from tibiapy.enums import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDir
 from tibiapy.models import (AchievementEntry, AjaxPaginator, Auction, AuctionFilters, BestiaryEntry, BlessingEntry,
                             CharacterBazaar, CharmEntry, FamiliarEntry, Familiars, ItemEntry, ItemSummary, MountEntry,
                             Mounts, OutfitEntry, OutfitImage, Outfits, SalesArgument, SkillEntry)
-from tibiapy.models.bazaar import RevealedGem
+from tibiapy.models.bazaar import DisplayImage, RevealedGem
 from tibiapy.utils import (clean_text, convert_line_breaks, get_rows, parse_form_data, parse_integer, parse_pagination,
                            parse_tibia_datetime, parse_tibiacom_content, try_enum)
 
@@ -226,7 +226,7 @@ class AuctionParser:
         return auction
 
     @classmethod
-    def _parse_auction(cls, auction_row: bs4.Tag, auction_id=0) -> Auction:
+    def _parse_auction(cls, auction_row: bs4.Tag, auction_id: int = 0) -> Auction:
         """Parse an auction's table, extracting its data.
 
         Parameters
@@ -341,7 +341,7 @@ class AuctionParser:
         return data
 
     @classmethod
-    def _parse_skills_table(cls, builder: AuctionDetailsBuilder, table):
+    def _parse_skills_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag) -> None:
         """Parse the skills' table.
 
         Parameters
@@ -363,7 +363,7 @@ class AuctionParser:
         builder.skills(skills)
 
     @classmethod
-    def _parse_blessings_table(cls, builder: AuctionDetailsBuilder, table):
+    def _parse_blessings_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag) -> None:
         """Parse the blessings table.
 
         Parameters
@@ -385,7 +385,7 @@ class AuctionParser:
         builder.blessings(blessings)
 
     @classmethod
-    def _parse_single_column_table(cls, table: bs4.Tag):
+    def _parse_single_column_table(cls, table: bs4.Tag) -> List[str]:
         """Parse a table with a single column into an array.
 
         Parameters
@@ -412,7 +412,7 @@ class AuctionParser:
         return ret
 
     @classmethod
-    def _parse_charms_table(cls, builder: AuctionDetailsBuilder, table):
+    def _parse_charms_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag) -> None:
         """Parse the charms' table and extracts its information.
 
         Parameters
@@ -437,7 +437,7 @@ class AuctionParser:
         builder.charms(charms)
 
     @classmethod
-    def _parse_achievements_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag):
+    def _parse_achievements_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag) -> None:
         """Parse the achievements' table and extracts its information.
 
         Parameters
@@ -462,7 +462,7 @@ class AuctionParser:
         builder.achievements(achievements)
 
     @classmethod
-    def _parse_bestiary_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag, bosstiary=False):
+    def _parse_bestiary_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag, bosstiary: bool = False) -> None:
         """Parse the bestiary table and extracts its information.
 
         Parameters
@@ -493,7 +493,7 @@ class AuctionParser:
             builder.bestiary_progress(bestiary)
 
     @classmethod
-    def _parse_general_table(cls, builder: AuctionDetailsBuilder, table):
+    def _parse_general_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag) -> None:
         """Parse the general information table and assigns its values.
 
         Parameters
@@ -561,7 +561,7 @@ class AuctionParser:
             builder.bonus_promotion_points(parse_integer(bonus_promotion_data.get("bonus_promotion_points", "")))
 
     @classmethod
-    def _parse_items_table(cls, table: bs4.Tag):
+    def _parse_items_table(cls, table: bs4.Tag) -> ItemSummary:
         if pagination_block := table.select_one("div.BlockPageNavigationRow"):
             page, total_pages, results = parse_pagination(pagination_block)
         else:
@@ -576,7 +576,7 @@ class AuctionParser:
         return summary
 
     @classmethod
-    def _parse_mounts_table(cls, table):
+    def _parse_mounts_table(cls, table: bs4.Tag) -> Mounts:
         if pagination_block := table.select_one("div.BlockPageNavigationRow"):
             page, total_pages, results = parse_pagination(pagination_block)
         else:
@@ -591,7 +591,7 @@ class AuctionParser:
         return summary
 
     @classmethod
-    def _parse_outfits_table(cls, table):
+    def _parse_outfits_table(cls, table: bs4.Tag) -> Outfits:
         if pagination_block := table.select_one("div.BlockPageNavigationRow"):
             page, total_pages, results = parse_pagination(pagination_block)
         else:
@@ -606,7 +606,7 @@ class AuctionParser:
         return summary
 
     @classmethod
-    def _parse_familiars_table(cls, table):
+    def _parse_familiars_table(cls, table: bs4.Tag) -> Familiars:
         if pagination_block := table.select_one("div.BlockPageNavigationRow"):
             page, total_pages, results = parse_pagination(pagination_block)
         else:
@@ -621,7 +621,7 @@ class AuctionParser:
         return summary
 
     @classmethod
-    def _parse_displayed_item(cls, item_box):
+    def _parse_displayed_item(cls, item_box: bs4.Tag) -> Optional[ItemEntry]:
         title_text = item_box["title"]
         img_tag = item_box.select_one("img")
         if not img_tag:
@@ -645,7 +645,7 @@ class AuctionParser:
                          tier=tier)
 
     @classmethod
-    def _parse_displayed_mount(cls, item_box):
+    def _parse_displayed_mount(cls, item_box: bs4.Tag) -> Optional[MountEntry]:
         description = item_box["title"]
         img_tag = item_box.select_one("img")
         if not img_tag:
@@ -658,7 +658,7 @@ class AuctionParser:
         return mount
 
     @classmethod
-    def _parse_displayed_outfit(cls, item_box):
+    def _parse_displayed_outfit(cls, item_box: bs4.Tag) -> Optional[OutfitEntry]:
         description = item_box["title"]
         img_tag = item_box.select_one("img")
         if not img_tag:
@@ -674,7 +674,7 @@ class AuctionParser:
         return outfit
 
     @classmethod
-    def _parse_displayed_familiar(cls, item_box):
+    def _parse_displayed_familiar(cls, item_box: bs4.Tag) -> Optional[FamiliarEntry]:
         description = item_box["title"]
         img_tag = item_box.select_one("img")
         if not img_tag:
@@ -689,7 +689,7 @@ class AuctionParser:
         return familiar
 
     @classmethod
-    def _parse_revealed_gems_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag):
+    def _parse_revealed_gems_table(cls, builder: AuctionDetailsBuilder, table: bs4.Tag) -> None:
         table_content = table.select_one("table.TableContent")
         _, *rows = get_rows(table_content)
         for row in rows:
@@ -702,7 +702,7 @@ class AuctionParser:
             ))
 
     @classmethod
-    def _parse_page_items(cls, content, paginator: AjaxPaginator):
+    def _parse_page_items(cls, content: str, paginator: AjaxPaginator) -> List[DisplayImage]:
         parsed_content = parse_tibiacom_content(content, builder="html5lib")
         item_boxes = parsed_content.select(CSS_CLASS_ICON)
         entries = []

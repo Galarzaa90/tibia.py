@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from typing import List, TYPE_CHECKING, Optional
 
+from typing_extensions import Self
+
 from tibiapy.models.house import HouseEntry, HousesSection, House
 
 if TYPE_CHECKING:
@@ -21,43 +23,43 @@ class HousesSectionBuilder:
         self._available_worlds = []
         self._available_towns = []
 
-    def world(self, world: str):
+    def world(self, world: str) -> Self:
         self._world = world
         return self
 
-    def town(self, town: str):
+    def town(self, town: str) -> Self:
         self._town = town
         return self
 
-    def status(self, status: HouseStatus):
+    def status(self, status: HouseStatus) -> Self:
         self._status = status
         return self
 
-    def house_type(self, house_type: HouseType):
+    def house_type(self, house_type: HouseType) -> Self:
         self._house_type = house_type
         return self
 
-    def order(self, order: HouseOrder):
+    def order(self, order: HouseOrder) -> Self:
         self._order = order
         return self
 
-    def entries(self, entries: List[HouseEntry]):
+    def entries(self, entries: List[HouseEntry]) -> Self:
         self._entries = entries
         return self
 
-    def add_entry(self, entry: HouseEntry):
+    def add_entry(self, entry: HouseEntry) -> Self:
         self._entries.append(entry)
         return self
 
-    def available_worlds(self, available_worlds: List[str]):
+    def available_worlds(self, available_worlds: List[str]) -> Self:
         self._available_worlds = available_worlds
         return self
 
-    def available_towns(self, available_towns: List[str]):
+    def available_towns(self, available_towns: List[str]) -> Self:
         self._available_towns = available_towns
         return self
 
-    def build(self):
+    def build(self) -> HousesSection:
         return HousesSection(
             world=self._world,
             town=self._town,
@@ -100,35 +102,35 @@ class HouseEntryBuilder(_HouseWithIdBuilder):
         self._time_left = None
         self._highest_bid = None
 
-    def status(self, status: HouseStatus):
+    def status(self, status: HouseStatus) -> Self:
         self._status = status
         return self
 
-    def type(self, type: HouseType):
+    def type(self, type: HouseType) -> Self:
         self._type = type
         return self
 
-    def town(self, town: str):
+    def town(self, town: str) -> Self:
         self._town = town
         return self
 
-    def size(self, size: int):
+    def size(self, size: int) -> Self:
         self._size = size
         return self
 
-    def rent(self, rent: int):
+    def rent(self, rent: int) -> Self:
         self._rent = rent
         return self
 
-    def time_left(self, time_left: Optional[datetime.timedelta]):
+    def time_left(self, time_left: Optional[datetime.timedelta]) -> Self:
         self._time_left = time_left
         return self
 
-    def highest_bid(self, highest_bid: Optional[int]):
+    def highest_bid(self, highest_bid: Optional[int]) -> Self:
         self._highest_bid = highest_bid
         return self
 
-    def build(self):
+    def build(self) -> HouseEntry:
         return HouseEntry(
             name=self._name,
             id=self._id,
@@ -163,71 +165,71 @@ class HouseBuilder(_HouseWithIdBuilder):
         self._highest_bidder = None
         self._auction_end = None
 
-    def status(self, status: HouseStatus):
+    def status(self, status: HouseStatus) -> Self:
         self._status = status
         return self
 
-    def rent(self, rent: int):
+    def rent(self, rent: int) -> Self:
         self._rent = rent
         return self
 
-    def type(self, type: HouseType):
+    def type(self, type: HouseType) -> Self:
         self._type = type
         return self
 
-    def image_url(self, image_url: str):
+    def image_url(self, image_url: str) -> Self:
         self._image_url = image_url
         return self
 
-    def beds(self, beds: int):
+    def beds(self, beds: int) -> Self:
         self._beds = beds
         return self
 
-    def size(self, size: int):
+    def size(self, size: int) -> Self:
         self._size = size
         return self
 
-    def owner(self, owner: Optional[str]):
+    def owner(self, owner: Optional[str]) -> Self:
         self._owner = owner
         return self
 
-    def owner_sex(self, owner_sex: Sex):
+    def owner_sex(self, owner_sex: Sex) -> Self:
         self._owner_sex = owner_sex
         return self
 
-    def paid_until(self, paid_until: Optional[datetime.datetime]):
+    def paid_until(self, paid_until: Optional[datetime.datetime]) -> Self:
         self._paid_until = paid_until
         return self
 
-    def transfer_date(self, transfer_date: Optional[datetime.datetime]):
+    def transfer_date(self, transfer_date: Optional[datetime.datetime]) -> Self:
         self._transfer_date = transfer_date
         return self
 
-    def transfer_recipient(self, transfer_recipient: Optional[str]):
+    def transfer_recipient(self, transfer_recipient: Optional[str]) -> Self:
         self._transfer_recipient = transfer_recipient
         return self
 
-    def transfer_price(self, transfer_price: Optional[int]):
+    def transfer_price(self, transfer_price: Optional[int]) -> Self:
         self._transfer_price = transfer_price
         return self
 
-    def transfer_accepted(self, transfer_accepted: Optional[bool]):
+    def transfer_accepted(self, transfer_accepted: Optional[bool]) -> Self:
         self._transfer_accepted = transfer_accepted
         return self
 
-    def highest_bid(self, highest_bid: Optional[int]):
+    def highest_bid(self, highest_bid: Optional[int]) -> Self:
         self._highest_bid = highest_bid
         return self
 
-    def highest_bidder(self, highest_bidder: Optional[str]):
+    def highest_bidder(self, highest_bidder: Optional[str]) -> Self:
         self._highest_bidder = highest_bidder
         return self
 
-    def auction_end(self, auction_end: Optional[datetime.datetime]):
+    def auction_end(self, auction_end: Optional[datetime.datetime]) -> Self:
         self._auction_end = auction_end
         return self
 
-    def build(self):
+    def build(self) -> House:
         return House(
             name=self._name,
             id=self._id,

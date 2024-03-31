@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import Optional, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING, Tuple
 
 from tibiapy.builders import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContentError
@@ -149,7 +149,12 @@ class GuildParser:
 
     # region Private methods
     @classmethod
-    def _parse_current_member(cls, builder, previous_rank, values):
+    def _parse_current_member(
+            cls,
+            builder: GuildBuilder,
+            previous_rank: Dict[int, str],
+            values: Tuple[str, ...],
+    ) -> None:
         """Parse the column texts of a member row into a member dictionary.
 
         Parameters
@@ -174,7 +179,7 @@ class GuildParser:
                                        vocation=vocation, joined_on=joined, is_online=status == "online"))
 
     @classmethod
-    def _parse_application_info(cls, builder, info_container):
+    def _parse_application_info(cls, builder: GuildBuilder, info_container: bs4.Tag) -> None:
         """Parse the guild's application info.
 
         Parameters
@@ -190,7 +195,7 @@ class GuildParser:
         builder.active_war("during war" in info_container.text)
 
     @classmethod
-    def _parse_guild_disband_info(cls, builder: GuildBuilder, info_container: bs4.Tag):
+    def _parse_guild_disband_info(cls, builder: GuildBuilder, info_container: bs4.Tag) -> None:
         """Parse the guild's disband info, if available.
 
         Parameters
@@ -205,7 +210,7 @@ class GuildParser:
             builder.disband_date(parse_tibia_date(clean_text(m.group(1))))
 
     @classmethod
-    def _parse_guild_guildhall(cls, builder, info_container):
+    def _parse_guild_guildhall(cls, builder: GuildBuilder, info_container: bs4.Tag) -> None:
         """Parse the guild's guildhall info.
 
         Parameters
@@ -220,7 +225,7 @@ class GuildParser:
             builder.guildhall(GuildHouse(name=m.group("name"), paid_until=paid_until))
 
     @classmethod
-    def _parse_guild_homepage(cls, builder, info_container):
+    def _parse_guild_homepage(cls, builder: GuildBuilder, info_container: bs4.Tag) -> None:
         """Parse the guild's homepage info.
 
         Parameters
@@ -241,7 +246,7 @@ class GuildParser:
                 builder.homepage(link_info["url"])
 
     @classmethod
-    def _parse_guild_info(cls, builder, info_container):
+    def _parse_guild_info(cls, builder: GuildBuilder, info_container: bs4.Tag) -> None:
         """Parse the guild's general information and applies the found values.
 
         Parameters
@@ -259,7 +264,7 @@ class GuildParser:
             builder.active("currently active" in m.group("status"))
 
     @classmethod
-    def _parse_logo(cls, builder: GuildBuilder, parsed_content):
+    def _parse_logo(cls, builder: GuildBuilder, parsed_content: bs4.Tag) -> bool:
         """Parse the guild logo and saves it to the instance.
 
         Parameters
@@ -281,7 +286,7 @@ class GuildParser:
         builder.logo_url(logo_img["src"])
 
     @classmethod
-    def _parse_guild_members(cls, builder, parsed_content):
+    def _parse_guild_members(cls, builder: GuildBuilder, parsed_content: bs4.Tag) -> None:
         """Parse the guild's member and invited list.
 
         Parameters
@@ -303,7 +308,7 @@ class GuildParser:
                 cls._parse_invited_member(builder, values)
 
     @classmethod
-    def _parse_invited_member(cls, builder, values):
+    def _parse_invited_member(cls, builder: GuildBuilder, values: tuple[str, ...]) -> None:
         """Parse the column texts of an invited row into a invited dictionary.
 
         Parameters
@@ -373,7 +378,7 @@ class GuildWarsParser:
             raise InvalidContentError("content does not belong to the guild wars section", e) from e
 
     @classmethod
-    def _parse_current_war_information(cls, text) -> GuildWarEntry:
+    def _parse_current_war_information(cls, text: str) -> GuildWarEntry:
         """Parse the guild's current war information.
 
         Parameters
@@ -407,7 +412,7 @@ class GuildWarsParser:
         return builder.build()
 
     @classmethod
-    def _parse_war_history_entry(cls, text):
+    def _parse_war_history_entry(cls, text: str) -> GuildWarEntry:
         """Parse a guild's war information.
 
         Parameters

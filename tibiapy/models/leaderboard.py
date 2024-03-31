@@ -1,6 +1,6 @@
 """Models related to the leaderboards."""
 import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from tibiapy.models import BaseModel
 from tibiapy.models.pagination import PaginatedWithUrl
@@ -39,7 +39,7 @@ class LeaderboardRotation(BaseModel):
     end_date: datetime.datetime
     """The date and time when this rotation ends."""
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any):
         if isinstance(other, self.__class__):
             return other.rotation_id == self.rotation_id
 
@@ -68,7 +68,7 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
         """The URL to the current leaderboard."""
         return get_leaderboards_url(self.world, self.rotation.rotation_id, self.current_page)
 
-    def get_page_url(self, page):
+    def get_page_url(self, page: int) -> str:
         """Get the URL of the leaderboard at a specific page, with the current date parameters.
 
         Parameters

@@ -51,7 +51,7 @@ class CharacterBazaarBuilder:
         self._filters = filters
         return self
 
-    def build(self):
+    def build(self) -> CharacterBazaar:
         return CharacterBazaar(
             current_page=self._current_page,
             total_pages=self._total_pages,
@@ -143,7 +143,7 @@ class AuctionBuilder:
         self._status = status
         return self
 
-    def build(self):
+    def build(self) -> Auction:
         return Auction(
             auction_id=self._auction_id,
             name=self._name,
@@ -399,7 +399,7 @@ class AuctionDetailsBuilder:
         self._revealed_gems.append(gem)
         return self
 
-    def build(self):
+    def build(self) -> AuctionDetails:
         return AuctionDetails(
             hit_points=self._hit_points,
             mana=self._mana,

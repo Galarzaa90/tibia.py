@@ -74,7 +74,7 @@ class WorldParser:
         return builder.build()
 
     @classmethod
-    def _parse_world_info(cls, builder: WorldBuilder, world_info_table: bs4.Tag):
+    def _parse_world_info(cls, builder: WorldBuilder, world_info_table: bs4.Tag) -> None:
         """Parse the World Information table from Tibia.com and adds the found values to the object.
 
         Parameters
@@ -107,25 +107,25 @@ class WorldParser:
                 action(value)
 
     @classmethod
-    def _parse_world_quest_titles(cls, builder: WorldBuilder, value: str):
+    def _parse_world_quest_titles(cls, builder: WorldBuilder, value: str) -> None:
         titles = [q.strip() for q in value.split(",")]
         if "currently has no title" not in titles[0]:
             builder.world_quest_titles(titles)
 
     @classmethod
-    def _parse_online_record(cls, builder: WorldBuilder, value: str):
+    def _parse_online_record(cls, builder: WorldBuilder, value: str) -> None:
         if m := record_regexp.match(value):
             builder.record_count(parse_integer(m.group("count")))
             builder.record_date(parse_tibia_datetime(m.group("date")))
 
     @classmethod
-    def _parse_creation_date(cls, builder: WorldBuilder, value: str):
+    def _parse_creation_date(cls, builder: WorldBuilder, value: str) -> None:
         parsed_date = datetime.datetime.strptime(value, "%B %Y")
         year, month = parsed_date.year, parsed_date.month
         builder.creation_date(f"{year:d}-{month:02d}")
 
     @classmethod
-    def _parse_battleye_status(cls, builder: WorldBuilder, battleye_string: str):
+    def _parse_battleye_status(cls, builder: WorldBuilder, battleye_string: str) -> None:
         """Parse the BattlEye string and applies the results.
 
         Parameters
@@ -218,7 +218,7 @@ class WorldOverviewParser:
         return worlds
 
     @classmethod
-    def _parse_additional_info(cls, builder: WorldEntryBuilder, additional_info: str):
+    def _parse_additional_info(cls, builder: WorldEntryBuilder, additional_info: str) -> None:
         if "blocked" in additional_info:
             builder.transfer_type(TransferType.BLOCKED)
         elif "locked" in additional_info:
@@ -230,7 +230,7 @@ class WorldOverviewParser:
         builder.is_premium_only("premium" in additional_info)
 
     @classmethod
-    def _parse_worlds_tables(cls, tables: List[bs4.Tag]):
+    def _parse_worlds_tables(cls, tables: List[bs4.Tag]) -> List[WorldEntry]:
         """Parse the tables and adds the results to the world list.
 
         Parameters

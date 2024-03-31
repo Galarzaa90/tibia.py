@@ -517,7 +517,7 @@ def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Ta
     return tables
 
 
-def try_enum(cls: Type[T], val: Any, default: D = None) -> Union[T, D]:  # noqa: ANN401
+def try_enum(cls: Type[T], val: Any, default: D = None) -> Union[T, D]:
     """Attempt to convert a value into their enum value.
 
     Parameters

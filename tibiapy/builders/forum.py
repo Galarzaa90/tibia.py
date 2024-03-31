@@ -45,7 +45,7 @@ class CMPostArchiveBuilder:
         self._entries.append(entry)
         return self
 
-    def build(self):
+    def build(self) -> CMPostArchive:
         return CMPostArchive(
             from_date=self._from_date,
             to_date=self._to_date,
@@ -79,7 +79,7 @@ class CMPostBuilder:
         self._thread_title = thread_title
         return self
 
-    def build(self):
+    def build(self) -> CMPost:
         return CMPost(
             post_id=self._post_id,
             posted_on=self._posted_on,
@@ -141,7 +141,7 @@ class ForumAnnouncementBuilder:
         self._to_date = to_date
         return self
 
-    def build(self):
+    def build(self) -> ForumAnnouncement:
         return ForumAnnouncement(
             announcement_id=self._announcement_id,
             board=self._board,
@@ -217,7 +217,7 @@ class ForumBoardBuilder(_BaseBoardBuilder):
         self._entries.append(entry)
         return self
 
-    def build(self):
+    def build(self) -> ForumBoard:
         return ForumBoard(
             board_id=self._board_id,
             name=self._name,
@@ -303,7 +303,7 @@ class ForumThreadBuilder:
         self._entries.append(entry)
         return self
 
-    def build(self):
+    def build(self) -> ForumThread:
         return ForumThread(
             title=self._title,
             thread_id=self._thread_id,

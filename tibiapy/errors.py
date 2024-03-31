@@ -35,7 +35,7 @@ class InvalidContentError(TibiapyError):
         The original exception that caused this exception.
     """
 
-    def __init__(self, message, original=None):
+    def __init__(self, message: str, original=None):
         super().__init__(message)
         self.original = original
 

@@ -2,7 +2,7 @@
 import datetime
 import re
 import urllib.parse
-from typing import Optional, Set, Dict, Union
+from typing import List, Optional, Set, Dict, Union
 
 import bs4
 
@@ -117,7 +117,7 @@ class NewsArchiveParser:
         return builder.build()
 
     @classmethod
-    def _parse_filter_table(cls, builder: NewsArchiveBuilder, form: bs4.Tag):
+    def _parse_filter_table(cls, builder: NewsArchiveBuilder, form: bs4.Tag) -> None:
         form_data = parse_form_data(form)
         builder.from_date(datetime.date(
             int(form_data.values["filter_begin_year"]),
@@ -139,7 +139,7 @@ class NewsArchiveParser:
                 builder.add_category(category)
 
     @classmethod
-    def _parse_entry(cls, cols_raw):
+    def _parse_entry(cls, cols_raw: List[bs4.Tag]) -> NewsEntry:
         img = cols_raw[0].select_one("img")
         img_url = img["src"]
         category_name = ICON_PATTERN.search(img_url)

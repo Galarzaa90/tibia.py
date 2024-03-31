@@ -166,7 +166,7 @@ class CharacterBuilder:
         self._other_characters = other_characters
         return self
 
-    def build(self):
+    def build(self) -> Character:
         return Character(
             name=self._name,
             is_traded=self._traded,

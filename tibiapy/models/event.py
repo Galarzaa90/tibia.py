@@ -1,6 +1,6 @@
 """Models related to the event schedule calendar."""
 import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from tibiapy.models import BaseModel
 from tibiapy.urls import get_event_schedule_url
@@ -25,7 +25,7 @@ class EventEntry(BaseModel):
     color: Optional[str] = None
     """The displayed color of the event."""
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any):
         return self.title == other.title
 
     @property
@@ -73,7 +73,7 @@ class EventSchedule(BaseModel):
         Dates outside the calendar's month and year may yield unexpected results.
         """
 
-        def is_between(start, end, desired_date):
+        def is_between(start: Optional[datetime.date], end: Optional[datetime.date], desired_date: datetime.date):
             start = start or datetime.date.min
             end = end or datetime.date.max
             return start <= desired_date <= end

@@ -21,7 +21,7 @@ class CreatureEntryBuilder:
         self._identifier = identifier
         return self
 
-    def build(self):
+    def build(self) -> CreatureEntry:
         return CreatureEntry(
             name=self._name,
             identifier=self._identifier,
@@ -91,7 +91,7 @@ class CreatureBuilder:
         self._convinceable = convinceable
         return self
 
-    def build(self):
+    def build(self) -> Creature:
         return Creature(
             name=self._name,
             identifier=self._identifier,

@@ -2,7 +2,7 @@
 import os
 import re
 import urllib.parse
-from typing import Optional
+from typing import List, Optional, Tuple
 
 import bs4
 
@@ -33,7 +33,7 @@ class BoostedCreaturesParser:
     """Parser for boosted creatures and bosses."""
 
     @classmethod
-    def _parse_boosted_platform(cls, parsed_content: bs4.BeautifulSoup, tag_id: str):
+    def _parse_boosted_platform(cls, parsed_content: bs4.BeautifulSoup, tag_id: str) -> Tuple[str, str]:
         img = parsed_content.select_one(f"#{tag_id}")
         name = BOOSTED_ALT.sub("", img["title"]).strip()
         image_url = img["src"]
@@ -228,7 +228,7 @@ class CreatureParser:
         """
         try:
             parsed_content = parse_tibiacom_content(content)
-            pagination_container, content_container = (
+            _, content_container = (
                 parsed_content.find_all("div", style=lambda v: v and "position: relative" in v)
             )
             title_container, description_container = content_container.select("div")
@@ -254,7 +254,7 @@ class CreatureParser:
             return None
 
     @classmethod
-    def _parse_exp_text(cls, builder, exp_text):
+    def _parse_exp_text(cls, builder: CreatureBuilder, exp_text: str) -> None:
         """Parse the experience text, containing dropped loot and adds it to the creature.
 
         Parameters
@@ -271,7 +271,7 @@ class CreatureParser:
             builder.loot(m.group(1))
 
     @classmethod
-    def _parse_hp_text(cls, builder: CreatureBuilder, hp_text):
+    def _parse_hp_text(cls, builder: CreatureBuilder, hp_text: str) -> None:
         """Parse the text containing the creature's hitpoints, containing weaknesses, immunities and more and adds it.
 
         Parameters
@@ -316,13 +316,11 @@ class CreatureParser:
                 builder.summonable(True)
 
     @classmethod
-    def _parse_elements(cls, text):
+    def _parse_elements(cls, text: str) -> List[str]:
         """Parse the elements found in a string, adding them to the collection.
 
         Parameters
         ----------
-        collection: :class:`list`
-            The collection where found elements will be added to.
         text: :class:`str`
             The text containing the elements.
         """

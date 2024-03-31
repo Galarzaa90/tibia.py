@@ -1,6 +1,6 @@
 """Models used to wrap responses from Tibia.com."""
 import datetime
-from typing import Generic, TypeVar
+from typing import Generic, Self, TypeVar
 
 from pydantic import computed_field
 
@@ -41,12 +41,12 @@ class TibiaResponse(BaseModel, Generic[T]):
                 - (datetime.datetime.now(datetime.timezone.utc) - self.timestamp))
 
     @property
-    def seconds_left(self):
+    def seconds_left(self) -> int:
         """:class:`int`: The time left in seconds for this response's cache to expire."""
         return self.time_left.seconds
 
     @classmethod
-    def from_raw(cls, raw_response, data: T, parsing_time=None):
+    def from_raw(cls, raw_response, data: T, parsing_time: float = None) -> Self:
         """Build an instance from a raw response."""
         return cls(
             timestamp=raw_response.timestamp,

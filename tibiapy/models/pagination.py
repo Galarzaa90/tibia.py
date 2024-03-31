@@ -40,7 +40,7 @@ class PaginatedWithUrl(Paginated[T], Generic[T], ABC):
         return None if self.current_page == 1 else self.get_page_url(self.current_page - 1)
 
     @abstractmethod
-    def get_page_url(self, page) -> str:
+    def get_page_url(self, page: int) -> str:
         """Get the URL to a specific page of the results."""
         ...
 

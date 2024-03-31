@@ -1,6 +1,8 @@
 """Base classes shared by various models."""
 from __future__ import annotations
 
+from typing import Any
+
 import pydantic
 from pydantic import ConfigDict
 
@@ -73,7 +75,7 @@ class BaseGuild(BaseModel):
     name: str
     """The name of the guild."""
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any):
         if isinstance(other, self.__class__):
             return self.name == other.name
 

@@ -62,7 +62,7 @@ class LeaderboardBuilder:
         self._results_count = results_count
         return self
 
-    def build(self):
+    def build(self) -> Leaderboard:
         return Leaderboard(
             world=self._world,
             available_worlds=self._available_worlds,
@@ -95,7 +95,7 @@ class LeaderboardEntryBuilder:
         self._drome_level = drome_level
         return self
 
-    def build(self):
+    def build(self) -> LeaderboardEntry:
         return LeaderboardEntry(
             name=self._name,
             rank=self._rank,

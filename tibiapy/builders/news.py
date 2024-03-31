@@ -50,7 +50,7 @@ class NewsArchiveBuilder:
         self._entries.append(entry)
         return self
 
-    def build(self):
+    def build(self) -> NewsArchive:
         return NewsArchive(
             from_date=self._from_date,
             to_date=self._to_date,
@@ -93,7 +93,7 @@ class NewsBuilder:
         self._thread_id = thread_id
         return self
 
-    def build(self):
+    def build(self) -> News:
         return News(
             id=self._id,
             category=self._category,

@@ -3,7 +3,7 @@
 import datetime
 import re
 import time
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 import bs4
 
@@ -105,7 +105,7 @@ class EventScheduleParser:
         return month, year
 
     @classmethod
-    def _parse_inline_style(cls, style_content):
+    def _parse_inline_style(cls, style_content: str) -> Dict[str, str]:
         attrs = style_content.split(";")
         values = {}
         for attr in attrs:

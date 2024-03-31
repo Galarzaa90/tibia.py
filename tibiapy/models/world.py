@@ -86,7 +86,6 @@ class WorldEntry(BaseWorld):
     """Represents a game server listed in the World Overview section."""
 
 
-
 class WorldOverview(BaseModel):
     """Container class for the World Overview section."""
 

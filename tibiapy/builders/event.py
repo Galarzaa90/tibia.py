@@ -32,7 +32,7 @@ class EventScheduleBuilder:
         self._events.append(event)
         return self
 
-    def build(self):
+    def build(self) -> EventSchedule:
         return EventSchedule(
             month=self._month,
             year=self._year,

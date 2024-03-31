@@ -81,7 +81,7 @@ class LeaderboardParser:
             raise errors.InvalidContentError("content does not belong to the leaderboards", e) from e
 
     @classmethod
-    def _parse_entries(cls, builder: LeaderboardBuilder, entries_table: Tag):
+    def _parse_entries(cls, builder: LeaderboardBuilder, entries_table: Tag) -> None:
         entries_rows = entries_table.select("tr[style]")
         for row in entries_rows:
             columns = row.select("td")

@@ -115,7 +115,12 @@ class CMPostArchiveParser:
     # region Private Methods
 
     @classmethod
-    def _get_selected_date(cls, month_selector: bs4.Tag, day_selector: bs4.Tag, year_selector: bs4.Tag):
+    def _get_selected_date(
+            cls,
+            month_selector: bs4.Tag,
+            day_selector: bs4.Tag,
+            year_selector: bs4.Tag,
+    ) -> Optional[datetime.date]:
         """Get the date made from the selected options in the selectors.
 
         Parameters
@@ -175,7 +180,7 @@ class ForumSectionParser:
         return ForumSection(section_id=int(section_id), entries=boards)
 
     @classmethod
-    def _parse_board_row(cls, board_row, offset=1):
+    def _parse_board_row(cls, board_row: bs4.Tag, offset: int = 1) -> Optional[BoardEntry]:
         """Parse a row containing a board and extracts its information.
 
         Parameters
@@ -288,7 +293,7 @@ class ForumAnnouncementParser:
 class ForumAuthorParser:
 
     @classmethod
-    def _parse_author_table(cls, character_info_container):
+    def _parse_author_table(cls, character_info_container: bs4.Tag) -> ForumAuthor:
         """Parse the table containing the author's information.
 
         Parameters
@@ -439,7 +444,7 @@ class ForumBoardParser:
     # region Private Methods
 
     @classmethod
-    def _parse_thread_row(cls, columns):
+    def _parse_thread_row(cls, columns: bs4.ResultSet) -> Optional[ThreadEntry]:
         """Parse the thread row, containing a single thread.
 
         Parameters
@@ -613,7 +618,7 @@ class ForumThreadParser:
     # region Private Methods
 
     @classmethod
-    def _parse_post_table(cls, post_table, offset=1):
+    def _parse_post_table(cls, post_table: bs4.Tag, offset: int = 1) -> ForumPost:
         """Parse the table containing a single posts, extracting its information.
 
         Parameters
@@ -693,7 +698,7 @@ class ForumThreadParser:
 class LastPostParser:
 
     @classmethod
-    def _parse_column(cls, last_post_column, offset=1):
+    def _parse_column(cls, last_post_column: bs4.Tag, offset: int = 1) -> Optional[LastPost]:
         """Parse the column containing the last post information and extracts its data.
 
         Parameters

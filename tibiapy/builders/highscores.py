@@ -74,7 +74,7 @@ class HighscoresBuilder:
         self._available_worlds = available_worlds
         return self
 
-    def build(self):
+    def build(self) -> Highscores:
         return Highscores(
             world=self._world,
             category=self._category,

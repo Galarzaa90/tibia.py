@@ -143,7 +143,7 @@ class SpellParser:
         return builder.build()
 
     @classmethod
-    def _parse_description(cls, title_table):
+    def _parse_description(cls, title_table: bs4.Tag) -> str:
         next_sibling = title_table.next_sibling
         description = ""
         while next_sibling:
@@ -161,7 +161,7 @@ class SpellParser:
         return description.strip()
 
     @classmethod
-    def _parse_rune_table(cls, table) -> Rune:
+    def _parse_rune_table(cls, table: bs4.Tag) -> Rune:
         """Parse the rune information table.
 
         Parameters
@@ -185,7 +185,7 @@ class SpellParser:
                 .build())
 
     @classmethod
-    def _parse_spells_table(cls, builder: SpellBuilder, spell_table: bs4.Tag):
+    def _parse_spells_table(cls, builder: SpellBuilder, spell_table: bs4.Tag) -> None:
         """Parse the table containing spell information.
 
         Parameters
@@ -194,11 +194,6 @@ class SpellParser:
             The instance of the builder where data will be collected.
         spell_table: :class:`bs4.Tag`
             The table containing the spell information.
-
-        Returns
-        -------
-        :class:`Spell`
-            The spell described in the table.
         """
         attrs = cls._parse_table_attributes(spell_table)
         builder.name(attrs["name"])
@@ -222,10 +217,9 @@ class SpellParser:
         builder.amount(parse_integer(attrs.get("amount"), None))
         builder.price(parse_integer(attrs.get("price"), 0))
         builder.magic_type(attrs.get("magic_type"))
-        return builder
 
     @classmethod
-    def _parse_table_attributes(cls, table) -> Dict[str, str]:
+    def _parse_table_attributes(cls, table: bs4.Tag) -> Dict[str, str]:
         """Parse the attributes of a table.
 
         Create a dictionary where every key is the left column (cleaned up) and the value is the right column.

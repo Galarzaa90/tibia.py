@@ -1,6 +1,6 @@
 """Models related to the forums."""
 import datetime
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
@@ -44,7 +44,7 @@ class BaseAnnouncement(BaseModel):
     announcement_id: int
     """The ID of the announcement."""
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any):
         if isinstance(other, self.__class__):
             return other.announcement_id == self.announcement_id
 
@@ -93,7 +93,7 @@ class BasePost(BaseModel):
     post_id: int
     """The internal ID of the post."""
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any):
         if isinstance(other, self.__class__):
             return self.post_id == other.post_id
 
@@ -118,11 +118,11 @@ class BaseThread(BaseModel):
     """The internal ID of the thread."""
 
     @property
-    def url(self):
+    def url(self) -> str:
         """:class:`str`: The URL to the thread in Tibia.com."""
         return get_forum_thread_url(self.thread_id)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any):
         if isinstance(other, self.__class__):
             return self.thread_id == other.thread_id
 
@@ -160,7 +160,7 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
         """The URL of the CM Post Archive with the current parameters."""
         return get_cm_post_archive_url(self.from_date, self.to_date, self.current_page)
 
-    def get_page_url(self, page) -> str:
+    def get_page_url(self, page: int) -> str:
         """Get the URL of the CM Post Archive at a specific page, with the current date parameters.
 
         Parameters
@@ -273,7 +273,7 @@ class ForumSection(BaseModel):
     """The boards in the forum section."""
 
     @property
-    def url(self):
+    def url(self) -> str:
         """The URL to this forum section."""
         return get_forum_section_url(self.section_id)
 
@@ -358,7 +358,7 @@ class ForumBoard(PaginatedWithUrl[ThreadEntry], BaseBoard):
     entries: List[ThreadEntry]
     """The list of threads currently visible."""
 
-    def get_page_url(self, page):
+    def get_page_url(self, page: int) -> str:
         """Get the URL to a given page of the board.
 
         Parameters
@@ -441,7 +441,7 @@ class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
         """The URL to the next topic of the board, if there's any."""
         return get_forum_thread_url(self.next_topic_number) if self.next_topic_number else None
 
-    def get_page_url(self, page):
+    def get_page_url(self, page: int) -> str:
         """Get the URL to a given page of the board.
 
         Parameters

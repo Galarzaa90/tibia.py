@@ -6,7 +6,7 @@ import datetime
 import json
 import logging
 import time
-from typing import Callable, Optional, Set, TYPE_CHECKING, TypeVar
+from typing import Any, Callable, Dict, Optional, Set, TYPE_CHECKING, TypeVar
 
 import aiohttp
 import aiohttp_socks
@@ -132,7 +132,7 @@ class Client:
         self._session_ready.set()
 
     @classmethod
-    def _handle_status(cls, status_code: int, fetching_time: float = 0.0):
+    def _handle_status(cls, status_code: int, fetching_time: float = 0.0) -> None:
         """Handle error status codes, raising exceptions if necessary."""
         if status_code < 400:
             return
@@ -142,7 +142,15 @@ class Client:
 
         raise NetworkError(f"Request error, status code: {status_code:d}", fetching_time=fetching_time)
 
-    async def _request(self, method, url, data=None, headers=None, *, test: bool = False):
+    async def _request(
+            self,
+            method: str,
+            url: str,
+            data: Dict[str, Any] = None,
+            headers: Dict[str, Any] = None,
+            *,
+            test: bool = False,
+    ):
         """Perform the HTTP request, handling possible error statuses.
 
         Parameters
@@ -195,7 +203,7 @@ class Client:
         except UnicodeDecodeError as e:
             raise NetworkError(f"UnicodeDecodeError: {e}", e, time.perf_counter() - init_time) from e
 
-    async def _fetch_all_pages(self, auction_id: int, paginator: AjaxPaginator, item_type, *, test: bool = False):
+    async def _fetch_all_pages(self, auction_id: int, paginator: AjaxPaginator, item_type: int, *, test: bool = False):
         """Fetch all the pages of an auction paginator.
 
         Parameters
@@ -221,7 +229,7 @@ class Client:
 
         paginator.is_fully_fetched = True
 
-    async def _fetch_ajax_page(self, auction_id, type_id, page, *, test: bool = False):
+    async def _fetch_ajax_page(self, auction_id: int, type_id: int, page: int, *, test: bool = False):
         """Fetch an ajax page from the paginated summaries in the auction section.
 
         Parameters

@@ -171,6 +171,7 @@ ignore = [
     "RUF012",
     # PEP 484 prohibits implicit `Optional`
     "RUF013",
+
     # Missing type annotation for {name} in method
     "ANN101",
     # Missing type annotation for {name} in classmethod
@@ -179,6 +180,8 @@ ignore = [
     "ANN202",
     # Missing return type annotation for special method {name}
     "ANN204",
+    # Dynamically typed expressions ({name}) are disallowed in `other`
+    "ANN401",
 ]
 
 

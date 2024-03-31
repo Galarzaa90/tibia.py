@@ -71,7 +71,7 @@ class WorldEntryBuilder:
         self._is_experimental = is_experimental
         return self
 
-    def build(self):
+    def build(self) -> WorldEntry:
         return WorldEntry(
             name=self._name,
             is_online=self._is_online,
@@ -123,7 +123,7 @@ class WorldBuilder(WorldEntryBuilder):
         self._online_players.append(player)
         return self
 
-    def build(self):
+    def build(self) -> World:
         return World(
             name=self._name,
             is_online=self._is_online,
@@ -161,7 +161,7 @@ class WorldOverviewBuilder:
         self._worlds = worlds
         return self
 
-    def build(self):
+    def build(self) -> WorldOverview:
         return WorldOverview(
             record_count=self._record_count,
             record_date=self._record_date,
