@@ -3,12 +3,18 @@ An API to parse Tibia.com content into object oriented data.
 
 No fetching is done by this module, you must provide the html content.
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Galarzaa90/tibia.py/build.yml)
-[![codecov](https://codecov.io/gh/Galarzaa90/tibia.py/branch/master/graph/badge.svg?token=mS9Wxv6O2F)](https://codecov.io/gh/Galarzaa90/tibia.py)
 [![PyPI](https://img.shields.io/pypi/v/tibia.py.svg)](https://pypi.python.org/pypi/tibia.py/)
+![GitHub commits since latest release (branch)](https://img.shields.io/github/commits-since/Galarzaa90/tibia.py/latest/main)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tibia.py.svg)
 ![PyPI - License](https://img.shields.io/pypi/l/tibia.py.svg)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/tibia.py)
 
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Galarzaa90_tibia.py&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Galarzaa90_tibia.py)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Galarzaa90_tibia.py&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Galarzaa90_tibia.py)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Galarzaa90_tibia.py&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=Galarzaa90_tibia.py)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Galarzaa90_tibia.py&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Galarzaa90_tibia.py)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Galarzaa90_tibia.py&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=Galarzaa90_tibia.py)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Galarzaa90_tibia.py&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Galarzaa90_tibia.py)
 
 **Features:**
 

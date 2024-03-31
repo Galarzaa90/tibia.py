@@ -34,6 +34,7 @@ classifiers = [
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
     'Programming Language :: Python',
     'Topic :: Games/Entertainment :: Role-Playing',
     'Topic :: Internet',
@@ -90,57 +91,6 @@ exclude_also = [
     "\\.{3}",
 ]
 
-
-[tool.flake8]
-max-line-length = 120
-exclude = [
-    "__pycache__",
-    ".git/",
-    "build/",
-    ".idea/",
-    "venv/",
-    "docs/",
-    "logs/",
-    "tests/",
-]
-tee = true
-# Ignore unused imports in __INIT__.py files
-per-file-ignores = [
-    "**/__init__.py:F401, F403",
-    "server.py:D103,B008,TC002",
-    "**/builders/*:D101",
-]
-count = true
-ignore = [
-    # flake8-docstrings: Missing docstring in public module
-    "D100",
-    # flake8-docstrings: Missing docstring in public method
-    "D102",
-    # flake8-docstrings: Missing docstring in public package
-    "D104",
-    # flake8-docstrings: Missing docstring in magic method
-    "D105",
-    # flake8-docstrings: Missing docstring in __init__
-    "D107",
-    # flake8: line break before binary operator
-    "W503",
-    # flake8: line too long (121 > 120 characters)
-    "E501",
-]
-rst-roles = [
-    "class",
-    "py:attr",
-    "obj",
-    "meth",
-    "attr",
-    "exc",
-]
-rst-directives = [
-    "versionadded",
-    "versionchanged",
-]
-literal-inline-quotes = "double"
-type-checking-pydantic-enabled = true
 
 [tool.ruff]
 exclude = [
