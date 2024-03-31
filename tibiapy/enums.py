@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 from enum import Enum, Flag, IntEnum
-from typing import Any, Optional, Self, TYPE_CHECKING
+from typing import Any, Optional, TYPE_CHECKING
 
 from pydantic_core import core_schema
+from typing_extensions import Self
 
 from tibiapy.errors import EnumValueError
 from tibiapy.utils import try_enum

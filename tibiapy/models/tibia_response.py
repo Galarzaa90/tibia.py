@@ -1,8 +1,9 @@
 """Models used to wrap responses from Tibia.com."""
 import datetime
-from typing import Generic, Self, TypeVar
+from typing import Generic, TypeVar
 
 from pydantic import computed_field
+from typing_extensions import Self
 
 from tibiapy.models.base import BaseModel
 
