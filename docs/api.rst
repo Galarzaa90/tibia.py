@@ -640,6 +640,9 @@ Additionally, parsers attempt to detect when the HTML belongs to a different sec
 .. autoclass:: tibiapy.parsers.CMPostArchiveParser
    :members:
 
+.. autoclass:: tibiapy.parsers.FansitesSectionParser
+   :members:
+
 .. autoclass:: tibiapy.parsers.ForumAnnouncementParser
    :members:
 

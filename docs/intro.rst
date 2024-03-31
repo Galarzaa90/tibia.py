@@ -107,6 +107,8 @@ Supported Sections
 +----------------------------------+--------------------------------------------------------------+---------------------------------------------+
 | Guilds_ (Wars)                   | :meth:`tibiapy.parsers.GuildWarsParser.from_content`         | :meth:`Client.fetch_guild_wars`             |
 +----------------------------------+--------------------------------------------------------------+---------------------------------------------+
+| Fansites_                        | :meth:`tibiapy.parsers.FansitesSectionParser.from_content`   | :meth:`Client.fetch_fansites_section`       |
++----------------------------------+--------------------------------------------------------------+---------------------------------------------+
 | Forums_ (Section)                | :meth:`tibiapy.parsers.ForumSectionParser.from_content`      | :meth:`Client.fetch_forum_world_boards`     |
 |                                  |                                                              | :meth:`Client.fetch_forum_trade_boards`     |
 |                                  |                                                              | :meth:`Client.fetch_forum_community_boards` |
@@ -150,6 +152,7 @@ Supported Sections
 .. _Creature Library: https://www.tibia.com/library/?subtopic=creatures
 .. _Event Schedule: https://www.tibia.com/news/?subtopic=eventcalendar
 .. _Guilds: https://www.tibia.com/community/?subtopic=guilds
+.. _Fansites: https://www.tibia.com/community/?subtopic=fansites
 .. _Forums: https://www.tibia.com/community/?subtopic=forum
 .. _Highscores: https://www.tibia.com/community/?subtopic=highscores
 .. _Houses: https://www.tibia.com/community/?subtopic=houses
