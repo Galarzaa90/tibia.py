@@ -33,6 +33,8 @@ class Fansite(BaseModel):
 
     name: str
     """The name of the fansite."""
+    url: str
+    """The URL to the fansite."""
     logo_url: str
     """URL to the fansite's logo."""
     contact: str

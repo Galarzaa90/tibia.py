@@ -45,8 +45,10 @@ class FansitesSectionParser:
         for row in get_rows(table)[1:]:
             cols = row.select("td")
             site_image = cols[0].select_one("img")
+            site_link = cols[0].select_one("a")
             name = site_image["alt"]
             image_url = site_image["src"]
+            site_url = site_link["href"]
 
             character = cols[1].select_one("a").text
 
@@ -75,6 +77,7 @@ class FansitesSectionParser:
             fansites.append(
                 Fansite(
                     name=name,
+                    url=site_url,
                     logo_url=image_url,
                     contact=character,
                     content=content,
