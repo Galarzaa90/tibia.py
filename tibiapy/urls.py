@@ -176,6 +176,17 @@ def get_house_url(world: str, house_id: int) -> str:
     return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
 
 
+def get_fansites_url() -> str:
+    """Get the Tibia.com URL for the fansites section.
+
+    Returns
+    -------
+    :class:`str`
+        The URL to the fansites section.
+    """
+    return get_tibia_url("community", "fansites")
+
+
 def get_world_overview_url() -> str:
     """Get the URL to world overview section in Tibia.com.
 

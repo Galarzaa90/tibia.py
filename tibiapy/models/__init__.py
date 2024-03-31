@@ -4,6 +4,7 @@ from tibiapy.models.bazaar import *
 from tibiapy.models.character import *
 from tibiapy.models.creature import *
 from tibiapy.models.event import *
+from tibiapy.models.fansite import *
 from tibiapy.models.forum import *
 from tibiapy.models.guild import *
 from tibiapy.models.highscores import *

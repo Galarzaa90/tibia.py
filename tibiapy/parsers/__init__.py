@@ -2,6 +2,7 @@ from tibiapy.parsers.bazaar import *
 from tibiapy.parsers.character import *
 from tibiapy.parsers.creature import *
 from tibiapy.parsers.event import *
+from tibiapy.parsers.fansite import *
 from tibiapy.parsers.forum import *
 from tibiapy.parsers.guild import *
 from tibiapy.parsers.highscores import *

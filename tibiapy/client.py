@@ -19,7 +19,8 @@ from tibiapy.errors import ForbiddenError, NetworkError, SiteMaintenanceError
 from tibiapy.models import TibiaResponse
 from tibiapy.parsers import (
     AuctionParser, BoostableBossesParser, BoostedCreaturesParser, CMPostArchiveParser, CharacterBazaarParser,
-    CharacterParser, CreatureParser, CreaturesSectionParser, EventScheduleParser, ForumAnnouncementParser,
+    CharacterParser, CreatureParser, CreaturesSectionParser, EventScheduleParser, FansitesSectionParser,
+    ForumAnnouncementParser,
     ForumBoardParser, ForumSectionParser, ForumThreadParser, GuildParser, GuildWarsParser, GuildsSectionParser,
     HighscoresParser, HouseParser, HousesSectionParser, KillStatisticsParser, LeaderboardParser, NewsArchiveParser,
     NewsParser, SpellParser, SpellsSectionParser, WorldOverviewParser, WorldParser,
@@ -27,7 +28,8 @@ from tibiapy.parsers import (
 from tibiapy.urls import (
     get_auction_url, get_bazaar_url, get_boostable_bosses_url, get_character_url, get_cm_post_archive_url,
     get_community_boards_url, get_creature_url, get_creatures_section_url, get_event_schedule_url,
-    get_forum_announcement_url, get_forum_board_url, get_forum_post_url, get_forum_section_url, get_forum_thread_url,
+    get_fansites_url, get_forum_announcement_url, get_forum_board_url, get_forum_post_url, get_forum_section_url,
+    get_forum_thread_url,
     get_guild_url, get_guild_wars_url, get_highscores_url, get_house_url, get_houses_section_url,
     get_kill_statistics_url, get_leaderboards_url, get_news_archive_url, get_news_url, get_spell_url,
     get_spells_section_url, get_support_boards_url, get_trade_boards_url, get_world_boards_url, get_world_guilds_url,
@@ -37,9 +39,9 @@ from tibiapy.urls import (
 if TYPE_CHECKING:
     from tibiapy.models import (
         AjaxPaginator, Auction, AuctionFilters, BoostableBosses, BoostedCreatures, BossEntry, CMPostArchive, Character,
-        CharacterBazaar, Creature, CreatureEntry, CreaturesSection, EventSchedule, ForumAnnouncement, ForumBoard,
-        ForumSection, ForumThread, Guild, GuildWars, GuildsSection, Highscores, House, HousesSection, KillStatistics,
-        Leaderboard, News, NewsArchive, Spell, SpellsSection, World, WorldOverview,
+        CharacterBazaar, Creature, CreatureEntry, CreaturesSection, EventSchedule, FansitesSection, ForumAnnouncement,
+        ForumBoard, ForumSection, ForumThread, Guild, GuildWars, GuildsSection, Highscores, House, HousesSection,
+        KillStatistics, Leaderboard, News, NewsArchive, Spell, SpellsSection, World, WorldOverview,
     )
 
 __all__ = (
@@ -1034,6 +1036,32 @@ class Client:
         """
         response = await self._request("GET", get_guild_wars_url(name), test=test)
         return response.parse(GuildWarsParser.from_content)
+
+    async def fetch_fansites_section(self, *, test: bool = False) -> TibiaResponse[FansitesSection]:
+        """Fetch the fansites section from Tibia.com.
+
+        .. versionadded:: 6.2.0
+
+        Parameters
+        ----------
+        test:
+            Whether to request the test website instead.
+
+        Returns
+        -------
+        TibiaResponse[FansitesSection]
+            A response containing the fansites section.
+
+        Raises
+        ------
+        Forbidden
+            If a 403 Forbidden error was returned.
+            This usually means that Tibia.com is rate-limiting the client because of too many requests.
+        NetworkError
+            If there's any connection errors during the request.
+        """
+        response = await self._request("GET", get_fansites_url(), test=test)
+        return response.parse(FansitesSectionParser.from_content)
 
     # endregion
 
