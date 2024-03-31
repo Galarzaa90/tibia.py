@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v6.2.0
+
+6.2.0 (2024-03-31)
+==================
+- Add support for parsing the fansites section.
+
 .. v6.1.0
 
 6.1.0 (2024-01-15)
