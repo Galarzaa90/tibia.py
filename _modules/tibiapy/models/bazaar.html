@@ -46,11 +46,11 @@
 <span></span><span class="sd">&quot;&quot;&quot;Models relatd to the character bazaar.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">AuctionBattlEyeFilter</span><span class="p">,</span> <span class="n">AuctionVocationFilter</span><span class="p">,</span> <span class="n">AuctionSkillFilter</span><span class="p">,</span>
-                           <span class="n">AuctionSearchType</span><span class="p">,</span>
-                     <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionOrderDirection</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">,</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">AuctionStatus</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AuctionBattlEyeFilter</span><span class="p">,</span> <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionOrderDirection</span><span class="p">,</span> <span class="n">AuctionSearchType</span><span class="p">,</span>
+                           <span class="n">AuctionSkillFilter</span><span class="p">,</span> <span class="n">AuctionStatus</span><span class="p">,</span> <span class="n">AuctionVocationFilter</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">PvpTypeFilter</span><span class="p">,</span>
+                           <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.pagination</span> <span class="kn">import</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">PaginatedWithUrl</span>
 
@@ -72,6 +72,7 @@
     <span class="s2">&quot;OutfitEntry&quot;</span><span class="p">,</span>
     <span class="s2">&quot;OutfitImage&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Outfits&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RevealedGem&quot;</span><span class="p">,</span>
     <span class="s2">&quot;SalesArgument&quot;</span><span class="p">,</span>
     <span class="s2">&quot;SkillEntry&quot;</span><span class="p">,</span>
 <span class="p">)</span>
@@ -249,7 +250,7 @@
 <div class="viewcode-block" id="OutfitEntry">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.OutfitEntry">[docs]</a>
 <span class="k">class</span> <span class="nc">OutfitEntry</span><span class="p">(</span><span class="n">DisplayImage</span><span class="p">,</span> <span class="n">BaseOutfit</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a outfit owned or unlocked by the character.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an outfit owned or unlocked by the character.&quot;&quot;&quot;</span>
 
     <span class="n">image_url</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the image.&quot;&quot;&quot;</span>
@@ -292,13 +293,13 @@
 
 
 <span class="k">class</span> <span class="nc">AuctionSummary</span><span class="p">(</span><span class="n">AjaxPaginator</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ABC</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">get_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an entry by its name.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name: :class:`str`</span>
-<span class="sd">            The name of the entry, case insensitive.</span>
+<span class="sd">            The name of the entry, case-insensitive.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -307,7 +308,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Search an entry by its name.</span>
 
 <span class="sd">        Parameters</span>
@@ -323,7 +324,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="o">...</span>
 
 
@@ -334,7 +335,7 @@
 
 <div class="viewcode-block" id="ItemSummary.get_by_id">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.ItemSummary.get_by_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ItemEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an item by its item id.</span>
 
 <span class="sd">        Parameters</span>
@@ -359,7 +360,7 @@
 
 <div class="viewcode-block" id="Mounts.get_by_id">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Mounts.get_by_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MountEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a mount by its mount id.</span>
 
 <span class="sd">        Parameters</span>
@@ -384,8 +385,8 @@
 
 <div class="viewcode-block" id="Familiars.get_by_id">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Familiars.get_by_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an familiar by its familiar id.</span>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FamiliarEntry</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a familiar by its familiar id.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -409,7 +410,7 @@
 
 <div class="viewcode-block" id="Outfits.get_by_id">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Outfits.get_by_id">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OutfitEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an outfit by its outfit id.</span>
 
 <span class="sd">        Parameters</span>
@@ -459,6 +460,8 @@
 
 
 <span class="k">class</span> <span class="nc">RevealedGem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A gem that has been revealed for the character.&quot;&quot;&quot;</span>
+
     <span class="n">gem_type</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of gem.&quot;&quot;&quot;</span>
     <span class="n">mods</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
@@ -640,7 +643,7 @@
 
 <div class="viewcode-block" id="CharacterBazaar.get_page_url">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.CharacterBazaar.get_page_url">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_page_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the URL to a given page of the bazaar.</span>
 
 <span class="sd">        Parameters</span>

@@ -165,7 +165,12 @@
     <span class="c1"># region Private Methods</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_get_selected_date</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">month_selector</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">day_selector</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">year_selector</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_selected_date</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="p">,</span>
+            <span class="n">month_selector</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span>
+            <span class="n">day_selector</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span>
+            <span class="n">year_selector</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the date made from the selected options in the selectors.</span>
 
 <span class="sd">        Parameters</span>
@@ -231,7 +236,7 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_board_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">board_row</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_board_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">board_row</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BoardEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a row containing a board and extracts its information.</span>
 
 <span class="sd">        Parameters</span>
@@ -351,7 +356,7 @@
 <span class="k">class</span> <span class="nc">ForumAuthorParser</span><span class="p">:</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_author_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">character_info_container</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_author_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">character_info_container</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumAuthor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the table containing the author&#39;s information.</span>
 
 <span class="sd">        Parameters</span>
@@ -507,7 +512,7 @@
     <span class="c1"># region Private Methods</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_thread_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_thread_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">ResultSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the thread row, containing a single thread.</span>
 
 <span class="sd">        Parameters</span>
@@ -687,7 +692,7 @@
     <span class="c1"># region Private Methods</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_post_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">post_table</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_post_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">post_table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumPost</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the table containing a single posts, extracting its information.</span>
 
 <span class="sd">        Parameters</span>
@@ -768,7 +773,7 @@
 <span class="k">class</span> <span class="nc">LastPostParser</span><span class="p">:</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_column</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">last_post_column</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_column</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">last_post_column</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LastPost</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the column containing the last post information and extracts its data.</span>
 
 <span class="sd">        Parameters</span>

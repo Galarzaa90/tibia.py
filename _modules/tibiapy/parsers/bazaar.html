@@ -47,7 +47,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 
@@ -58,7 +58,7 @@
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AchievementEntry</span><span class="p">,</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">Auction</span><span class="p">,</span> <span class="n">AuctionFilters</span><span class="p">,</span> <span class="n">BestiaryEntry</span><span class="p">,</span> <span class="n">BlessingEntry</span><span class="p">,</span>
                             <span class="n">CharacterBazaar</span><span class="p">,</span> <span class="n">CharmEntry</span><span class="p">,</span> <span class="n">FamiliarEntry</span><span class="p">,</span> <span class="n">Familiars</span><span class="p">,</span> <span class="n">ItemEntry</span><span class="p">,</span> <span class="n">ItemSummary</span><span class="p">,</span> <span class="n">MountEntry</span><span class="p">,</span>
                             <span class="n">Mounts</span><span class="p">,</span> <span class="n">OutfitEntry</span><span class="p">,</span> <span class="n">OutfitImage</span><span class="p">,</span> <span class="n">Outfits</span><span class="p">,</span> <span class="n">SalesArgument</span><span class="p">,</span> <span class="n">SkillEntry</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models.bazaar</span> <span class="kn">import</span> <span class="n">RevealedGem</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models.bazaar</span> <span class="kn">import</span> <span class="n">DisplayImage</span><span class="p">,</span> <span class="n">RevealedGem</span>
 <span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">convert_line_breaks</span><span class="p">,</span> <span class="n">get_rows</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">,</span> <span class="n">parse_integer</span><span class="p">,</span> <span class="n">parse_pagination</span><span class="p">,</span>
                            <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_enum</span><span class="p">)</span>
 
@@ -282,7 +282,7 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_auction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">auction_row</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">auction_id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Auction</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_parse_auction</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">auction_row</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Auction</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse an auction&#39;s table, extracting its data.</span>
 
 <span class="sd">        Parameters</span>
@@ -397,7 +397,7 @@
         <span class="k">return</span> <span class="n">data</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_skills_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_skills_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the skills&#39; table.</span>
 
 <span class="sd">        Parameters</span>
@@ -419,7 +419,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">skills</span><span class="p">(</span><span class="n">skills</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_blessings_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_blessings_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the blessings table.</span>
 
 <span class="sd">        Parameters</span>
@@ -441,7 +441,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">blessings</span><span class="p">(</span><span class="n">blessings</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_single_column_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_single_column_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a table with a single column into an array.</span>
 
 <span class="sd">        Parameters</span>
@@ -468,7 +468,7 @@
         <span class="k">return</span> <span class="n">ret</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_charms_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_charms_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the charms&#39; table and extracts its information.</span>
 
 <span class="sd">        Parameters</span>
@@ -493,7 +493,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">charms</span><span class="p">(</span><span class="n">charms</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_achievements_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_achievements_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the achievements&#39; table and extracts its information.</span>
 
 <span class="sd">        Parameters</span>
@@ -518,7 +518,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">achievements</span><span class="p">(</span><span class="n">achievements</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_bestiary_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">bosstiary</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_bestiary_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">bosstiary</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the bestiary table and extracts its information.</span>
 
 <span class="sd">        Parameters</span>
@@ -549,7 +549,7 @@
             <span class="n">builder</span><span class="o">.</span><span class="n">bestiary_progress</span><span class="p">(</span><span class="n">bestiary</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_general_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_general_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the general information table and assigns its values.</span>
 
 <span class="sd">        Parameters</span>
@@ -617,7 +617,7 @@
             <span class="n">builder</span><span class="o">.</span><span class="n">bonus_promotion_points</span><span class="p">(</span><span class="n">parse_integer</span><span class="p">(</span><span class="n">bonus_promotion_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bonus_promotion_points&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_items_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_items_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ItemSummary</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">pagination_block</span> <span class="o">:=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.BlockPageNavigationRow&quot;</span><span class="p">):</span>
             <span class="n">page</span><span class="p">,</span> <span class="n">total_pages</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">parse_pagination</span><span class="p">(</span><span class="n">pagination_block</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -632,7 +632,7 @@
         <span class="k">return</span> <span class="n">summary</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_mounts_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_mounts_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mounts</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">pagination_block</span> <span class="o">:=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.BlockPageNavigationRow&quot;</span><span class="p">):</span>
             <span class="n">page</span><span class="p">,</span> <span class="n">total_pages</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">parse_pagination</span><span class="p">(</span><span class="n">pagination_block</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -647,7 +647,7 @@
         <span class="k">return</span> <span class="n">summary</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_outfits_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_outfits_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Outfits</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">pagination_block</span> <span class="o">:=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.BlockPageNavigationRow&quot;</span><span class="p">):</span>
             <span class="n">page</span><span class="p">,</span> <span class="n">total_pages</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">parse_pagination</span><span class="p">(</span><span class="n">pagination_block</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -662,7 +662,7 @@
         <span class="k">return</span> <span class="n">summary</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_familiars_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_familiars_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Familiars</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">pagination_block</span> <span class="o">:=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;div.BlockPageNavigationRow&quot;</span><span class="p">):</span>
             <span class="n">page</span><span class="p">,</span> <span class="n">total_pages</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">parse_pagination</span><span class="p">(</span><span class="n">pagination_block</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -677,7 +677,7 @@
         <span class="k">return</span> <span class="n">summary</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_displayed_item</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item_box</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_displayed_item</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item_box</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ItemEntry</span><span class="p">]:</span>
         <span class="n">title_text</span> <span class="o">=</span> <span class="n">item_box</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span>
         <span class="n">img_tag</span> <span class="o">=</span> <span class="n">item_box</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">img_tag</span><span class="p">:</span>
@@ -701,7 +701,7 @@
                          <span class="n">tier</span><span class="o">=</span><span class="n">tier</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_displayed_mount</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item_box</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_displayed_mount</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item_box</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MountEntry</span><span class="p">]:</span>
         <span class="n">description</span> <span class="o">=</span> <span class="n">item_box</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span>
         <span class="n">img_tag</span> <span class="o">=</span> <span class="n">item_box</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">img_tag</span><span class="p">:</span>
@@ -714,7 +714,7 @@
         <span class="k">return</span> <span class="n">mount</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_displayed_outfit</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item_box</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_displayed_outfit</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item_box</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OutfitEntry</span><span class="p">]:</span>
         <span class="n">description</span> <span class="o">=</span> <span class="n">item_box</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span>
         <span class="n">img_tag</span> <span class="o">=</span> <span class="n">item_box</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">img_tag</span><span class="p">:</span>
@@ -730,7 +730,7 @@
         <span class="k">return</span> <span class="n">outfit</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_displayed_familiar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item_box</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_displayed_familiar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item_box</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FamiliarEntry</span><span class="p">]:</span>
         <span class="n">description</span> <span class="o">=</span> <span class="n">item_box</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span>
         <span class="n">img_tag</span> <span class="o">=</span> <span class="n">item_box</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">img_tag</span><span class="p">:</span>
@@ -745,7 +745,7 @@
         <span class="k">return</span> <span class="n">familiar</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_revealed_gems_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_revealed_gems_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">AuctionDetailsBuilder</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">table_content</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;table.TableContent&quot;</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">rows</span> <span class="o">=</span> <span class="n">get_rows</span><span class="p">(</span><span class="n">table_content</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
@@ -758,7 +758,7 @@
             <span class="p">))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_page_items</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">paginator</span><span class="p">:</span> <span class="n">AjaxPaginator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_page_items</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">paginator</span><span class="p">:</span> <span class="n">AjaxPaginator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">DisplayImage</span><span class="p">]:</span>
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">builder</span><span class="o">=</span><span class="s2">&quot;html5lib&quot;</span><span class="p">)</span>
         <span class="n">item_boxes</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">CSS_CLASS_ICON</span><span class="p">)</span>
         <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>

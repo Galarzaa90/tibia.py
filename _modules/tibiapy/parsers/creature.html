@@ -47,7 +47,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 
@@ -80,7 +80,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parser for boosted creatures and bosses.&quot;&quot;&quot;</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_boosted_platform</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">tag_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_boosted_platform</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">tag_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">tag_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">BOOSTED_ALT</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">image_url</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
@@ -301,7 +301,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
-            <span class="n">pagination_container</span><span class="p">,</span> <span class="n">content_container</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">content_container</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="ow">and</span> <span class="s2">&quot;position: relative&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="n">title_container</span><span class="p">,</span> <span class="n">description_container</span> <span class="o">=</span> <span class="n">content_container</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
@@ -328,7 +328,7 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_exp_text</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">exp_text</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_exp_text</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CreatureBuilder</span><span class="p">,</span> <span class="n">exp_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the experience text, containing dropped loot and adds it to the creature.</span>
 
 <span class="sd">        Parameters</span>
@@ -345,7 +345,7 @@
             <span class="n">builder</span><span class="o">.</span><span class="n">loot</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_hp_text</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CreatureBuilder</span><span class="p">,</span> <span class="n">hp_text</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_hp_text</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CreatureBuilder</span><span class="p">,</span> <span class="n">hp_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the text containing the creature&#39;s hitpoints, containing weaknesses, immunities and more and adds it.</span>
 
 <span class="sd">        Parameters</span>
@@ -390,13 +390,11 @@
                 <span class="n">builder</span><span class="o">.</span><span class="n">summonable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_elements</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_parse_elements</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the elements found in a string, adding them to the collection.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        collection: :class:`list`</span>
-<span class="sd">            The collection where found elements will be added to.</span>
 <span class="sd">        text: :class:`str`</span>
 <span class="sd">            The text containing the elements.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
