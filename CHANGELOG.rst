@@ -7,6 +7,13 @@ Changelog
     Try to always use the latest version.
 
 
+.. v5.7.0
+
+5.7.0 (2024-04-05)
+==================
+- Added Oceania location.
+
+
 
 .. v5.6.1
 
