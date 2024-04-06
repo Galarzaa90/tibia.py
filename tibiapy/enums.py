@@ -576,4 +576,5 @@ class WorldLocation(StringEnum):
 
     EUROPE = "Europe"
     NORTH_AMERICA = "North America"
+    OCEANIA = "Oceania"
     SOUTH_AMERICA = "South America"

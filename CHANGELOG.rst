@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v6.3.0
+
+6.3.0 (2024-04-05)
+==================
+- Add Ocenia world location.
+
 .. v6.2.0
 
 6.2.0 (2024-03-31)
