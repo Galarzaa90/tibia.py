@@ -182,6 +182,7 @@ trying to cover as many scenarios possible, to be used in unit tests.
 
 - [worldExperimental.txt](world/worldExperimental.txt) - A experimental world.
 - [worldGreenBattlEye.txt](world/worldGreenBattlEye.txt) - A world that was initially protected by BattlEye.
+- [worldNeverOnline.txt](world/worldNeverOnline.txt) - A world that has never been online.
 - [worldNoTitles.txt](world/worldNoTitles.txt) - A world without titles.
 - [worldNotFound.txt](world/worldNotFound.txt) - The page shown for a world that doesn't exist.
 - [worldOnline.txt](world/worldOnline.txt) - An online world on Tibia.com.
