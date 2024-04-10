@@ -7,6 +7,13 @@ Changelog
     Try to always use the latest version.
 
 
+.. v5.7.1
+
+5.7.1 (2024-04-09)
+==================
+- Handle parsing a world that has never been online.
+
+
 .. v5.7.0
 
 5.7.0 (2024-04-05)

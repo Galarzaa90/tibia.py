@@ -320,10 +320,11 @@ class World(abc.BaseWorld, abc.Serializable):
         self.location = try_enum(WorldLocation, world_info.pop("location"))
         self.pvp_type = try_enum(PvpType, world_info.pop("pvp_type"))
         self.transfer_type = try_enum(TransferType, world_info.pop("transfer_type", None), TransferType.REGULAR)
-        m = record_regexp.match(world_info.pop("online_record"))
-        if m:
-            self.record_count = parse_integer(m.group("count"))
-            self.record_date = parse_tibia_datetime(m.group("date"))
+        if "online_record" in world_info:
+            m = record_regexp.match(world_info.pop("online_record"))
+            if m:
+                self.record_count = parse_integer(m.group("count"))
+                self.record_date = parse_tibia_datetime(m.group("date"))
         if "world_quest_titles" in world_info:
             self.world_quest_titles = [q.strip() for q in world_info.pop("world_quest_titles").split(",")]
         if self.world_quest_titles and "currently has no title" in self.world_quest_titles[0]:
