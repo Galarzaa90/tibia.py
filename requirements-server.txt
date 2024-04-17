@@ -1,2 +1,2 @@
-fastapi>=0.109.1
+fastapi>=0.110.0
 uvicorn
