@@ -13,6 +13,7 @@ FILE_WORLD_GREEN_BE = "world/worldGreenBattlEye.txt"
 FILE_WORLD_UNPROTECTED = "world/worldUnprotected.txt"
 FILE_WORLD_NO_TITLES = "world/worldNoTitles.txt"
 FILE_WORLD_OFFLINE = "world/worldOffline.txt"
+FILE_WORLD_NEVER_ONLINE = "world/worldNeverOnline.txt"
 FILE_WORLD_NOT_FOUND = "world/worldNotFound.txt"
 FILE_WORLD_OVERVIEW_ONLINE = "worldOverview/worldOverviewOnline.txt"
 FILE_WORLD_OVERVIEW_OFFLINE = "worldOverview/worldOverviewOffline.txt"
@@ -94,6 +95,17 @@ class TestWorld(TestCommons):
         self.assertIsInstance(world, World)
         self.assertFalse(world.is_online)
         self.assertEqual(world.online_count, 0)
+        self.assertEqual(len(world.online_players), world.online_count)
+
+    def test_world_parser_from_content_never_online(self):
+        """Testing parsing a world that has never been online."""
+        content = self.load_resource(FILE_WORLD_NEVER_ONLINE)
+
+        world = WorldParser.from_content(content)
+
+        self.assertIsInstance(world, World)
+        self.assertEqual(0, world.record_count, )
+        self.assertIsNone(world.record_date)
         self.assertEqual(len(world.online_players), world.online_count)
 
     def test_world_parser_from_content_not_found(self):

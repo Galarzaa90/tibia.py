@@ -61,9 +61,9 @@ class World(BaseWorld):
     """Represents a Tibia game server."""
 
     record_count: int
-    """The server's online players record."""
-    record_date: datetime.datetime
-    """The date when the online record was achieved."""
+    """The server's online players record. Will be 0 if the world has never been online."""
+    record_date: Optional[datetime.datetime]
+    """The date when the online record was achieved. Will be None if the world has never been online."""
     creation_date: str
     """The month and year the world was created. In YYYY-MM format."""
     world_quest_titles: List[str]

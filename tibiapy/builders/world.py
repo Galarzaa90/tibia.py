@@ -89,7 +89,7 @@ class WorldEntryBuilder:
 class WorldBuilder(WorldEntryBuilder):
     def __init__(self):
         super().__init__()
-        self._record_count = None
+        self._record_count = 0
         self._record_date = None
         self._creation_date = None
         self._online_players = []
@@ -99,7 +99,7 @@ class WorldBuilder(WorldEntryBuilder):
         self._record_count = record_count
         return self
 
-    def record_date(self, record_date: datetime.datetime) -> Self:
+    def record_date(self, record_date: Optional[datetime.datetime]) -> Self:
         self._record_date = record_date
         return self
 
