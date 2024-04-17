@@ -203,3 +203,5 @@ intersphinx_mapping = {
     'beautifulsoup4': ('https://www.crummy.com/software/BeautifulSoup/bs4/doc/', None),
     'bs4': ('https://www.crummy.com/software/BeautifulSoup/bs4/doc/', None),
 }
+
+autodoc_pydantic_field_doc_policy = 'docstring'
