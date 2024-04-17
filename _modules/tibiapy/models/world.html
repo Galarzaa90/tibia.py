@@ -111,9 +111,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a Tibia game server.&quot;&quot;&quot;</span>
 
     <span class="n">record_count</span><span class="p">:</span> <span class="nb">int</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The server&#39;s online players record.&quot;&quot;&quot;</span>
-    <span class="n">record_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the online record was achieved.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The server&#39;s online players record. Will be 0 if the world has never been online.&quot;&quot;&quot;</span>
+    <span class="n">record_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the online record was achieved. Will be None if the world has never been online.&quot;&quot;&quot;</span>
     <span class="n">creation_date</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The month and year the world was created. In YYYY-MM format.&quot;&quot;&quot;</span>
     <span class="n">world_quest_titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
