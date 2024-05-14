@@ -5,6 +5,7 @@ RUN apt-get update \
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+
 COPY requirements-server.txt .
 RUN pip install -r requirements-server.txt
 
@@ -18,8 +19,9 @@ LABEL org.opencontainers.image.title="tibia.py"
 LABEL org.opencontainers.image.description="API that parses website content into python data."
 
 
-COPY . .
+COPY tibiapy/ tibiapy/
+COPY server.py main.py
 EXPOSE 8000
 HEALTHCHECK --interval=60s --timeout=10s --start-period=5s --retries=5 \
   CMD curl --fail http://localhost:8000/healthcheck || exit 1
-ENTRYPOINT ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["fastapi", "run", "--port", "8000"]

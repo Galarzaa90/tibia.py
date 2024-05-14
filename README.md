@@ -72,5 +72,30 @@ def get_character_sync(name):
 
 ```
 
+## Running from Docker
+A ready to use HTTP server is also available as a Docker image, allowing you to integrate tibia.py in projects using other languages other than Python.
+
+The image can be pulled from [Docker Hub](https://hub.docker.com/r/galarzaa90/tibia.py):
+
+```shell
+docker pull galarzaa90/tibia.py
+```
+
+Alternatively, the image can be built from the root of the project's source.
+
+```shell
+docker build . -t tibia.py:local
+```
+
+To run the image:
+
+```shell
+docker run -p 8000:8000 --rm -ti tibia.py:local
+```
+
+API documentation will be available at: http://localhost:8000/docs.
+
+
+
 ## Documentation
 https://tibiapy.readthedocs.io/
