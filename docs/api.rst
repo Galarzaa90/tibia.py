@@ -479,6 +479,11 @@ Models related to `Tibia.com's Bazaar section`_.
 .. autopydantic_model:: SkillEntry
    :inherited-members: BaseModel
 
+
+.. autopydantic_model:: RevealedGem
+   :inherited-members: BaseModel
+
+
 Kill Statistics
 ---------------
 
