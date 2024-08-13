@@ -8,6 +8,7 @@ trying to cover as many scenarios possible, to be used in unit tests.
 - [auctionFinished.txt](auction/auctionFinished.txt) - The content of a finished auction.
 - [auctionNotFound.txt](auction/auctionNotFound.txt) - The content of an auction that doesn't exist.
 - [auctionWithUpgradedItems.txt](auction/auctionWithUpgradedItems.txt) - An auction with upgraded items.
+- [auctionWithFragmentProgress.txt](auction/auctionWithFragmentProgress.txt) - An auction displaying fragment progress.
 
 ## Boostable bosses
 
