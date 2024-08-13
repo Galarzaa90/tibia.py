@@ -49,6 +49,7 @@ class AuctionFiltersParser:
         -------
         :class:`.AuctionFilters`
             The currently applied filters.
+
         """
         filters = AuctionFilters()
         forms = table.select("form")
@@ -90,6 +91,7 @@ class CharacterBazaarParser:
         Returns
         -------
             The character bazaar with the entries found.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content, builder="html5lib")
@@ -151,6 +153,7 @@ class AuctionParser:
         ------
         InvalidContent
             If the content does not belong to an auction detail's page.
+
         """
         parsed_content = parse_tibiacom_content(content, builder="lxml" if skip_details else "html5lib")
         auction_row = parsed_content.select_one("div.Auction")
@@ -240,6 +243,7 @@ class AuctionParser:
         -------
         :class:`Auction`
             The auction contained in the table.
+
         """
         header_container = auction_row.select_one("div.AuctionHeader")
         char_name_container = header_container.select_one("div.AuctionCharacterName")
@@ -312,6 +316,7 @@ class AuctionParser:
         -------
         :class:`dict`
             A dictionary of the tables, grouped by their id.
+
         """
         details_tables = parsed_content.select("div.CharacterDetailsBlock")
         return {table["id"]: table for table in details_tables}
@@ -329,6 +334,7 @@ class AuctionParser:
         -------
         :class:`dict`
             A mapping containing the table's data.
+
         """
         rows = get_rows(table)
         data = {}
@@ -350,6 +356,7 @@ class AuctionParser:
             The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the character's skill.
+
         """
         rows = get_rows(table)
         skills = []
@@ -372,6 +379,7 @@ class AuctionParser:
             The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the character's blessings.
+
         """
         table_content = table.select_one("table.TableContent")
         _, *rows = get_rows(table_content)
@@ -397,6 +405,7 @@ class AuctionParser:
         -------
         :class:`list` of :class:`str`
             A list with the contents of each row.
+
         """
         table_content = table.select("table.TableContent")[-1]
         _, *rows = get_rows(table_content)
@@ -421,6 +430,7 @@ class AuctionParser:
             The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the charms.
+
         """
         table_content = table.select_one("table.TableContent")
         _, *rows = get_rows(table_content)
@@ -446,6 +456,7 @@ class AuctionParser:
             The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the achievements.
+
         """
         table_content = table.select_one("table.TableContent")
         _, *rows = get_rows(table_content)
@@ -473,6 +484,7 @@ class AuctionParser:
             The table containing the bestiary information.
         bosstiary: :class:`bool`
             Whether this is a bosstiary table or a bestiary table.
+
         """
         table_content = table.select_one("table.TableContent")
         _, *rows = get_rows(table_content)
@@ -502,6 +514,7 @@ class AuctionParser:
             The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table with general information.
+
         """
         content_containers = table.select("table.TableContent")
         general_stats = cls._parse_data_table(content_containers[0])

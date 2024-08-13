@@ -71,6 +71,7 @@ class GuildsSectionParser:
         ------
         InvalidContent
             If content is not the HTML of a guild's page.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)
@@ -123,6 +124,7 @@ class GuildParser:
         ------
         InvalidContent
             If content is not the HTML of a guild's page.
+
         """
         if "An internal error has occurred" in content:
             return None
@@ -165,6 +167,7 @@ class GuildParser:
             The last rank present in the rows.
         values: :class:`tuple` of :class:`str`
             A list of row contents.
+
         """
         rank, name, vocation, level, joined, status = values
         rank = rank or previous_rank[1]
@@ -188,6 +191,7 @@ class GuildParser:
             The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
+
         """
         if m := applications_regex.search(info_container.text):
             builder.open_applications(m.group(1) == "opened")
@@ -204,6 +208,7 @@ class GuildParser:
             The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
+
         """
         if m := disband_regex.search(info_container.text):
             builder.disband_condition(m.group(2))
@@ -219,6 +224,7 @@ class GuildParser:
             The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
+
         """
         if m := guildhall_regex.search(info_container.text):
             paid_until = parse_tibia_date(clean_text(m.group("date")))
@@ -234,6 +240,7 @@ class GuildParser:
             The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
+
         """
         if m := homepage_regex.search(info_container.text):
             builder.homepage(m.group(1))
@@ -255,6 +262,7 @@ class GuildParser:
             The builder where data will be stored to.
         info_container: :class:`bs4.Tag`
             The parsed content of the information container.
+
         """
         if m := founded_regex.search(info_container.text):
             description = m.group("desc").strip()
@@ -278,6 +286,7 @@ class GuildParser:
         -------
         :class:`bool`
             Whether the logo was found or not.
+
         """
         logo_img = parsed_content.select_one('img[height="64"]')
         if logo_img is None:
@@ -295,6 +304,7 @@ class GuildParser:
             The builder where data will be stored to.
         parsed_content: :class:`bs4.Tag`
             The parsed content of the guild's page
+
         """
         member_rows = parsed_content.find_all("tr", {"bgcolor": ["#D4C0A1", "#F1E0C6"]})
         previous_rank = {}
@@ -317,6 +327,7 @@ class GuildParser:
             The builder where data will be stored to.
         values: tuple[:class:`str`]
             A list of row contents.
+
         """
         name, date = values
         if date != "Invitation Date":
@@ -340,6 +351,7 @@ class GuildWarsParser:
         Returns
         -------
             The guild's war information.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)
@@ -390,6 +402,7 @@ class GuildWarsParser:
         -------
         :class:`GuildWarEntry`
             The guild's war entry for the current war.
+
         """
         text = clean_text(text)
         names_match = war_guilds_regegx.search(text)
@@ -424,6 +437,7 @@ class GuildWarsParser:
         -------
         :class:`GuildWarEntry`
             The guild's war entry described in the text.
+
         """
         text = clean_text(text)
         header_match = war_history_header_regex.search(text)

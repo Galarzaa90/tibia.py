@@ -27,6 +27,7 @@ class FansitesSectionParser:
         ------
         InvalidContent
             If content is not the HTML of the fansites section's page.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content, builder="html5lib")

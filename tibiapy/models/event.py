@@ -71,6 +71,7 @@ class EventSchedule(BaseModel):
         Notes
         -----
         Dates outside the calendar's month and year may yield unexpected results.
+
         """
 
         def is_between(start: Optional[datetime.date], end: Optional[datetime.date], desired_date: datetime.date):

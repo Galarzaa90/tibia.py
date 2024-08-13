@@ -36,6 +36,7 @@ class LeaderboardParser:
         Returns
         -------
             The leaderboard, if found.
+
         """
         now = datetime.datetime.now(datetime.timezone.utc)
         try:

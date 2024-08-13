@@ -52,6 +52,7 @@ class HighscoresParser:
         ------
         InvalidContent
             If content is not the HTML of a highscore's page.
+
         """
         parsed_content = parse_tibiacom_content(content)
         form = parsed_content.select_one("form")
@@ -84,6 +85,7 @@ class HighscoresParser:
             The builder where data will be stored to.
         table: :class:`bs4.Tag`
             The table containing the entries.
+
         """
         page, total_pages, results_count = parse_pagination(table.select_one(".PageNavigation"))
         builder.current_page(page).total_pages(total_pages).results_count(results_count)
@@ -111,6 +113,7 @@ class HighscoresParser:
             The builder where data will be stored to.
         form: :class:`bs4.Tag`
             The table containing the filters.
+
         """
         data = parse_form_data(form)
         builder.world(data.values["world"] if data.values.get("world") else None)
@@ -134,6 +137,7 @@ class HighscoresParser:
         -------
         :class:`OrderedDict`[:class:`str`, :class:`bs4.Tag`]
             A dictionary containing all the table rows, with the table headers as keys.
+
         """
         tables = parsed_content.select("div.TableContainer")
         output = OrderedDict()
@@ -156,6 +160,7 @@ class HighscoresParser:
             The builder where data will be stored to.
         cols: :class:`bs4.ResultSet`
             The list of columns for that entry.
+
         """
         rank, name, *values = (clean_text(c) for c in cols)
         rank = int(rank)

@@ -50,6 +50,7 @@ class SpellsSectionParser:
         ------
         InvalidContent
             If content is not the HTML of the spells section.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)
@@ -119,6 +120,7 @@ class SpellParser:
         ------
         InvalidContent
             If content is not the HTML of the spells section.
+
         """
         parsed_content = parse_tibiacom_content(content)
         tables = parse_tibiacom_tables(parsed_content)
@@ -173,6 +175,7 @@ class SpellParser:
         -------
         :class:`Rune`
             The rune described in the table.
+
         """
         attrs = cls._parse_table_attributes(table)
         return (RuneBuilder().name(attrs["name"])
@@ -194,6 +197,7 @@ class SpellParser:
             The instance of the builder where data will be collected.
         spell_table: :class:`bs4.Tag`
             The table containing the spell information.
+
         """
         attrs = cls._parse_table_attributes(spell_table)
         builder.name(attrs["name"])
@@ -233,6 +237,7 @@ class SpellParser:
         -------
         :class:`dict`
             The table attributes.
+
         """
         spell_rows = get_rows(table)
         attrs = {}

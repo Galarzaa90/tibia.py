@@ -338,6 +338,7 @@ class HighscoresProfession(NumericEnum):
         -------
         HighscoresProfession, optional:
             The matching vocation filter.
+
         """
         name = name.upper()
         for vocation in cls:  # type: HighscoresProfession
@@ -507,6 +508,7 @@ class ThreadStatus(Flag):
         -------
         :class:`str`
             The name of the icon used in Tibia.com
+
         """
         if self.value == 0:
             return None
@@ -527,6 +529,7 @@ class ThreadStatus(Flag):
         -------
         :class:`ThreadStatus`
             The combination of thread status founds.
+
         """
         flags = 0
         for entry in list(cls):

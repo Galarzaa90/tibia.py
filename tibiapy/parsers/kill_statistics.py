@@ -31,6 +31,7 @@ class KillStatisticsParser:
         ------
         InvalidContent
             If content is not the HTML of a kill statistics' page.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)

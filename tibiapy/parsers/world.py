@@ -48,6 +48,7 @@ class WorldParser:
         ------
         InvalidContent
             If the provided content is not the HTML content of the world section in Tibia.com
+
         """
         parsed_content = parse_tibiacom_content(content)
         tables = parse_tables_map(parsed_content, "div.InnerTableContainer")
@@ -83,6 +84,7 @@ class WorldParser:
             The instance of the builder where data will be collected.
         world_info_table: :class:`bs4.Tag`
             The table containing the world's information.
+
         """
         field_actions = {
             "Status": lambda v: builder.is_online("online" in v.lower()),
@@ -120,7 +122,7 @@ class WorldParser:
 
     @classmethod
     def _parse_creation_date(cls, builder: WorldBuilder, value: str) -> None:
-        parsed_date = datetime.datetime.strptime(value, "%B %Y")
+        parsed_date = datetime.datetime.strptime(value, "%B %Y").astimezone(datetime.timezone.utc)
         year, month = parsed_date.year, parsed_date.month
         builder.creation_date(f"{year:d}-{month:02d}")
 
@@ -134,6 +136,7 @@ class WorldParser:
             The builder instance used to set the values.
         battleye_string: :class:`str`
             String containing the world's BattlEye Status.
+
         """
         if m := battleye_regexp.search(battleye_string):
             battleye_date = parse_tibia_full_date(m.group(1))
@@ -164,6 +167,7 @@ class WorldOverviewParser:
         ------
         InvalidContent
             If the provided content is not the HTML content of the worlds section in Tibia.com
+
         """
         parsed_content = parse_tibiacom_content(content)
         try:
@@ -185,6 +189,7 @@ class WorldOverviewParser:
         ----------
         world_rows: :class:`list` of :class:`bs4.Tag`
             A list containing the rows of each world.
+
         """
         worlds = []
         for world_row in world_rows:
@@ -237,6 +242,7 @@ class WorldOverviewParser:
         ----------
         tables: :class:`map` of :class:`bs4.Tag`
             A mapping containing the tables with worlds.
+
         """
         worlds = []
         for _, worlds_table in zip(tables, tables[1:]):

@@ -33,6 +33,7 @@ class InvalidContentError(TibiapyError):
     ----------
     original: :class:`Exception`
         The original exception that caused this exception.
+
     """
 
     def __init__(self, message: str, original=None):
@@ -54,6 +55,7 @@ class NetworkError(TibiapyError):
         The original exception that caused this exception.
     fetching_time: :class:`float`
         The time between the request and the response.
+
     """
 
     def __init__(self, message, original=None, fetching_time=0):

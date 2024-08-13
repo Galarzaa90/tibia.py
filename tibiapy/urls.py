@@ -53,6 +53,7 @@ def get_tibia_url(
     >>> params = {'world': "Gladera"}
     >>> get_tibia_url("community", "worlds", **params)
     https://www.tibia.com/community/?subtopic=worlds&world=Gladera
+
     """
     base_url = "www.test.tibia.com" if test else "www.tibia.com"
     url = f"https://{base_url}/{section}/?"
@@ -90,6 +91,7 @@ def get_static_file_url(*path: str) -> str:
     --------
     >>> get_static_file_url("images", "global", "content", "newsicon_community_big.gif")
     https://static.tibia.com/images/global/content/newsicon_community_big.gif
+
     """
     return urllib.parse.urljoin("https://static.tibia.com/", "/".join(path))
 
@@ -106,6 +108,7 @@ def get_character_url(name: str) -> str:
     -------
     :class:`str`
         The URL to the character's page in Tibia.com.
+
     """
     return get_tibia_url("community", "characters", name=name)
 
@@ -122,6 +125,7 @@ def get_world_guilds_url(world: str) -> str:
     -------
     :class:`str`
         The URL to the guild list's page in Tibia.com.
+
     """
     return get_tibia_url("community", "guilds", world=world)
 
@@ -138,6 +142,7 @@ def get_guild_url(name: str) -> str:
     -------
     :class:`str`
         The URL to the guild's page in Tibia.com.
+
     """
     return get_tibia_url("community", "guilds", page="view", GuildName=name)
 
@@ -154,6 +159,7 @@ def get_guild_wars_url(name: str) -> str:
     -------
     :class:`str`
         The URL to the guild's wars' page.
+
     """
     return get_tibia_url("community", "guilds", page="guildwars", action="view", GuildName=name)
 
@@ -172,6 +178,7 @@ def get_house_url(world: str, house_id: int) -> str:
     -------
     :class:`str`
         The URL to the house's page in Tibia.com.
+
     """
     return get_tibia_url("community", "houses", page="view", houseid=house_id, world=world)
 
@@ -183,6 +190,7 @@ def get_fansites_url() -> str:
     -------
     :class:`str`
         The URL to the fansites section.
+
     """
     return get_tibia_url("community", "fansites")
 
@@ -194,6 +202,7 @@ def get_world_overview_url() -> str:
     -------
     :class:`str`
         The URL to the world overview section in Tibia.com.
+
     """
     return get_tibia_url("community", "worlds")
 
@@ -210,6 +219,7 @@ def get_world_url(name: str) -> str:
     -------
     :class:`str`
         The URL to the world's information page.
+
     """
     return get_tibia_url("community", "worlds", world=name.title())
 
@@ -226,6 +236,7 @@ def get_news_archive_url() -> str:
     -------
     :class:`str`
         The URL to the news archive page.
+
     """
     return get_tibia_url("news", "newsarchive")
 
@@ -242,6 +253,7 @@ def get_news_url(news_id: int) -> str:
     -------
     :class:`str`
         The URL to the article's page on Tibia.com
+
     """
     return get_tibia_url("news", "newsarchive", id=news_id)
 
@@ -258,6 +270,7 @@ def get_forum_section_url(section_id: int) -> str:
     -------
     :class:`str`
         The URL to forum section.
+
     """
     return get_tibia_url("forum", action="main", sectionid=section_id)
 
@@ -274,6 +287,7 @@ def get_forum_section_url_by_name(section_name: str) -> str:
     -------
     :class:`str`
         The URL to forum section.
+
     """
     return get_tibia_url("forum", section_name)
 
@@ -285,6 +299,7 @@ def get_world_boards_url() -> str:
     -------
     :class:`str`:
         The URL to the World Boards.
+
     """
     return get_tibia_url("forum", "worldboards")
 
@@ -296,6 +311,7 @@ def get_trade_boards_url() -> str:
     -------
     :class:`str`:
         The URL to the Trade Boards.
+
     """
     return get_tibia_url("forum", "tradeboards")
 
@@ -307,6 +323,7 @@ def get_community_boards_url() -> str:
     -------
     :class:`str`:
         The URL to the Community Boards.
+
     """
     return get_tibia_url("forum", "communityboards")
 
@@ -318,6 +335,7 @@ def get_support_boards_url() -> str:
     -------
     :class:`str`:
         The URL to the Support Boards.
+
     """
     return get_tibia_url("forum", "supportboards")
 
@@ -340,6 +358,7 @@ def get_forum_board_url(board_id: int, page: int = 1, thread_age: int = None) ->
     -------
     :class:`str`
         The URL to forum board.
+
     """
     return get_tibia_url("forum", None, action="board", boardid=board_id, pagenumber=page, threadage=thread_age)
 
@@ -356,6 +375,7 @@ def get_forum_announcement_url(announcement_id: int) -> str:
     -------
     :class:`str`
         The URL to forum announcement.
+
     """
     return get_tibia_url("forum", None, action="announcement", announcementid=announcement_id)
 
@@ -374,6 +394,7 @@ def get_forum_thread_url(thread_id: int, page: int = 1) -> str:
     -------
     :class:`str`
         The URL to forum thread.
+
     """
     return get_tibia_url("forum", None, action="thread", threadid=thread_id, pagenumber=page)
 
@@ -390,6 +411,7 @@ def get_forum_post_url(post_id: int) -> str:
     -------
     :class:`str`
         The URL to the post.
+
     """
     return get_tibia_url("forum", None, anchor=f"post{post_id}", action="thread", postid=post_id)
 
@@ -422,6 +444,7 @@ def get_highscores_url(
     Returns
     -------
         The URL to the Tibia.com highscores.
+
     """
     pvp_types = pvp_types or []
     pvp_params = [("worldtypes[]", p.value) for p in pvp_types]
@@ -446,6 +469,7 @@ def get_kill_statistics_url(world: str) -> str:
     -------
     :class:`str`
         The URL to the Tibia.com kill statistics for this world.
+
     """
     return get_tibia_url("community", "killstatistics", world=world)
 
@@ -471,6 +495,7 @@ def get_event_schedule_url(month: int = None, year: int = None) -> str:
     -------
     :class:`str`
         The URL to the calendar with the given parameters.
+
     """
     return get_tibia_url("news", "eventcalendar", calendarmonth=month, calendaryear=year)
 
@@ -496,6 +521,7 @@ def get_houses_section_url(world: str, town: str, house_type: HouseType, status:
     -------
     :class:`str`
         The URL to the list matching the parameters.
+
     """
     params = {
         "world": world,
@@ -519,6 +545,7 @@ def get_auction_url(auction_id: int) -> str:
     -------
     :class:`str`
         The URL to the auction's detail page.
+
     """
     return get_tibia_url("charactertrade", "currentcharactertrades", page="details", auctionid=auction_id)
 
@@ -539,6 +566,7 @@ def get_bazaar_url(type: BazaarType, page: int = 1, filters: AuctionFilters = No
     -------
     :class:`str`
         The URL to the current auctions section in Tibia.com
+
     """
     query_params = filters.query_params if filters else {}
     return get_tibia_url("charactertrade", type.subtopic, currentpage=page, **query_params)
@@ -567,6 +595,7 @@ def get_cm_post_archive_url(from_date: datetime.date, to_date: datetime.date, pa
         Either of the dates is not an instance of :class:`datetime.date`
     ValueError:
         If ``start_date`` is more recent than ``end_date``.
+
     """
     if not isinstance(from_date, datetime.date):
         raise TypeError(f"start_date: expected datetime.date instance, {type(from_date)} found.")
@@ -606,6 +635,7 @@ def get_leaderboards_url(world: str, rotation_id: int = None, page: int = 1) -> 
     ------
     ValueError
         If the specified page is zer or less.
+
     """
     if page <= 0:
         raise ValueError("page must be 1 or greater")
@@ -620,6 +650,7 @@ def get_creatures_section_url() -> str:
     -------
     :class:`str`:
         The URL to the Tibia.com library section.
+
     """
     return get_tibia_url("library", "creature")
 
@@ -636,6 +667,7 @@ def get_creature_url(identifier: str) -> str:
     -------
     :class:`str`
         The URL to the detail page.
+
     """
     return get_tibia_url("library", "creatures", race=identifier)
 
@@ -647,6 +679,7 @@ def get_boostable_bosses_url() -> str:
     -------
     :class:`str`:
         The URL to the Tibia.com library section.
+
     """
     return get_tibia_url("library", "boostablebosses")
 
@@ -684,6 +717,7 @@ def get_spells_section_url(
     -------
     :class:`str`
         The URL to the spells section with the provided filtering parameters.
+
     """
     params = {
         "vocation": vocation.value if vocation else None,
@@ -707,5 +741,6 @@ def get_spell_url(identifier: str) -> str:
     -------
     :class:`str`
         The URL to the spell.
+
     """
     return get_tibia_url("library", "spells", spell=identifier.lower())

@@ -85,5 +85,6 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
         ------
         ValueError
             If the specified page is zer or less.
+
         """
         return get_leaderboards_url(self.world, self.rotation.rotation_id, page)

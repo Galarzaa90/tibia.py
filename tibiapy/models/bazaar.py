@@ -230,6 +230,7 @@ class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
         -------
         :class:`object`:
             The entry matching the name.
+
         """
         return next((e for e in self.entries if e.name.lower() == name.lower()), None)
 
@@ -245,6 +246,7 @@ class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
         -------
         :class:`list`
             A list of entries with names containing the search term.
+
         """
         return [e for e in self.entries if value.lower() in e.name.lower()]
 
@@ -268,6 +270,7 @@ class ItemSummary(AuctionSummary[ItemEntry]):
         -------
         :class:`ItemEntry`
             The item matching the id.
+
         """
         return next((e for e in self.entries if e.item_id == entry_id), None)
 
@@ -287,6 +290,7 @@ class Mounts(AuctionSummary[MountEntry]):
         -------
         :class:`MountEntry`
             The mount matching the id.
+
         """
         return next((e for e in self.entries if e.mount_id == entry_id), None)
 
@@ -306,6 +310,7 @@ class Familiars(AuctionSummary[FamiliarEntry]):
         -------
         :class:`FamiliarEntry`
             The familiar matching the id.
+
         """
         return next((e for e in self.entries if e.familiar_id == entry_id), None)
 
@@ -325,6 +330,7 @@ class Outfits(AuctionSummary[OutfitEntry]):
         -------
         :class:`OutfitEntry`
             The outfit matching the id.
+
         """
         return next((e for e in self.entries if e.outfit_id == entry_id), None)
 
@@ -540,6 +546,7 @@ class CharacterBazaar(PaginatedWithUrl[Auction]):
         -------
         :class:`str`
             The URL to the desired page.
+
         """
         return get_bazaar_url(self.type, page, self.filters)
 

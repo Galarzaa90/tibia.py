@@ -63,6 +63,7 @@ class HousesSectionParser:
         ------
         InvalidContent
             Content is not the house list from Tibia.com
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)
@@ -124,6 +125,7 @@ class HousesSectionParser:
             The instance of the builder where data will be collected.
         status: :class:`str`
             The string containing the status.
+
         """
         if "rented" in status:
             builder.status(HouseStatus.RENTED)
@@ -159,6 +161,7 @@ class HouseParser:
         ------
         InvalidContent
             If the content is not the house section on Tibia.com
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)
@@ -212,6 +215,7 @@ class HouseParser:
             The instance of the builder where data will be collected.
         status: :class:`str`
             Plain text string containing the current renting state of the house.
+
         """
         if m := rented_regex.search(status):
             builder.status(HouseStatus.RENTED)

@@ -49,6 +49,7 @@ def clean_text(tag: Union[bs4.PageElement, str]) -> str:
     Returns
     -------
         The tag's cleaned text content.
+
     """
     text = tag.text if isinstance(tag, bs4.Tag) else tag
     return text.replace("\xa0", " ").strip()
@@ -61,6 +62,7 @@ def convert_line_breaks(element: bs4.Tag) -> None:
     ----------
     element: :class:`bs4.Tag`
         A BeautifulSoup object.
+
     """
     for br in element.select("br"):
         br.replace_with("\n")
@@ -79,6 +81,7 @@ def get_rows(table_tag: bs4.Tag) -> bs4.ResultSet[bs4.Tag]:
     Returns
     -------
         A result set with all the found rows.
+
     """
     return table_tag.select("tr")
 
@@ -96,6 +99,7 @@ def parse_form_data(form: bs4.Tag) -> FormData:
     Returns
     -------
         The values and data of the form.
+
     """
     form_data = FormData()
     if "action" in form.attrs:
@@ -148,6 +152,7 @@ def parse_integer(number: str, default: Optional[int] = 0) -> int:
     -------
     :class:`int`
         The represented integer, or the default value if invalid.
+
     """
     if number is None:
         return default
@@ -210,6 +215,7 @@ def parse_link_info(link_tag: bs4.Tag) -> LinkInfo:
             "worldtypes": ["0", "3"]
         }
     }
+
     """
     url = link_tag["href"]
     info = {"text": link_tag.text.strip(), "url": url, "query": {}}
@@ -242,6 +248,7 @@ def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
     -------
     :class:`datetime.datetime`, optional
         The represented datetime, in UTC (timezone aware).
+
     """
     try:
         datetime_str = clean_text(datetime_str).replace(",", "")
@@ -251,10 +258,10 @@ def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
         # Convert time string to time object
         # Removing timezone cause CEST and CET are not supported
         try:
-            t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M:%S")
+            t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M:%S")  # noqa: DTZ007
         except ValueError:
-            t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M")
-
+            t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M")  # noqa: DTZ007
+        t = t.astimezone(datetime.timezone.utc)
         # Getting the offset
         if tz == "CET":
             utc_offset = 1
@@ -285,9 +292,10 @@ def parse_tibia_date(date_str: str) -> Optional[datetime.date]:
     -------
     :class:`datetime.date`, optional
         The represented date, in UTC (timezone aware).
+
     """
     try:
-        t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")
+        t = datetime.datetime.strptime(date_str.strip(), "%b %d %Y")  # noqa: DTZ007
         return t.date()
     except (ValueError, AttributeError):
         return None
@@ -315,11 +323,11 @@ def parse_tibia_forum_datetime(datetime_str: str, utc_offset: int = 1) -> dateti
     -------
     :class:`datetime.datetime`
         The represented datetime, in UTC (timezone aware).
+
     """
-    t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S")
+    t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S").astimezone(datetime.timezone.utc)
     # Add/subtract hours to get the real time
-    t = t - datetime.timedelta(hours=utc_offset)
-    return t.replace(tzinfo=datetime.timezone.utc)
+    return t - datetime.timedelta(hours=utc_offset)
 
 
 def parse_tibia_full_date(date_str: str) -> Optional[datetime.date]:
@@ -338,9 +346,10 @@ def parse_tibia_full_date(date_str: str) -> Optional[datetime.date]:
     -------
     :class:`datetime.date`, optional
         The represented date, in UTC (timezone aware).
+
     """
     try:
-        t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y")
+        t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y").astimezone(datetime.timezone.utc)
         return t.date()
     except (ValueError, AttributeError):
         return None
@@ -358,6 +367,7 @@ def parse_number_words(text_num: str) -> int:
     -------
     :class:`int`
         The number represented by the string.
+
     """
     units = [
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
@@ -409,6 +419,7 @@ def try_datetime(obj: Union[str, datetime.datetime]) -> Optional[datetime.dateti
     -------
     :class:`datetime.datetime`, optional
         The represented datetime, in UTC (timezone aware), or :obj:`None` if conversion wasn't possible.
+
     """
     if obj is None:
         return None
@@ -431,6 +442,7 @@ def try_date(obj: Union[str, datetime.datetime, datetime.date]) -> Optional[date
     -------
     :class:`datetime.date`, optional
         The represented date, in UTC (timezone aware).
+
     """
     if obj is None:
         return None
@@ -487,6 +499,7 @@ def parse_tibiacom_content(
     -------
     :class:`bs4.BeautifulSoup`, optional
         The parsed content.
+
     """
     strainer = bs4.SoupStrainer(tag, class_=html_class) if builder != "html5lib" else None
     return bs4.BeautifulSoup(content.replace("ISO-8859-1", "utf-8", 1), builder, parse_only=strainer)
@@ -506,6 +519,7 @@ def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Ta
     -------
     :class:`dict`
         A dictionary mapping the container titles and the contained table.
+
     """
     table_containers = parsed_content.select("div.TableContainer")
     tables = {}
@@ -533,6 +547,7 @@ def try_enum(cls: Type[T], val: Any, default: D = None) -> Union[T, D]:
     -------
     obj:
         The enum value if found, otherwise None.
+
     """
     if isinstance(val, cls):
         return val
@@ -561,6 +576,7 @@ def parse_tibia_money(argument: str) -> int:
     -------
     :class:`int`:
         The value represented by the string.
+
     """
     try:
         return int(argument)
@@ -592,6 +608,7 @@ def split_list(items: str, separator: str = ",", last_separator: str = " and ") 
     -------
     :class:`list` of :class:`str`
         A list containing each one of the items.
+
     """
     if items is None:
         return None
@@ -620,6 +637,7 @@ def parse_popup(popup_content: str) -> Tuple[str, bs4.BeautifulSoup]:
         The popup's title.
     :class:`bs4.BeautifulSoup`
         The parsed HTML content of the popup.
+
     """
     parts = popup_content.split(",", 2)
     title = parts[1].replace("'", "").strip()
@@ -655,6 +673,7 @@ def parse_pagination(pagination_block: bs4.Tag) -> Tuple[int, int, int]:
         The total number of pages.
     results_count : :class:`int`
         The total number of results.
+
     """
     pages_div, results_div = pagination_block.select("small > div")
     current_page_link = pages_div.select_one("span.CurrentPageLink")

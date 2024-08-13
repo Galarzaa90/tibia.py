@@ -64,6 +64,7 @@ class CharacterParser:
         ------
         InvalidContent
             If content is not the HTML of a character's page.
+
         """
         parsed_content = parse_tibiacom_content(content)
         tables = cls._parse_tables(parsed_content)

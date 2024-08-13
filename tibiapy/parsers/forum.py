@@ -65,6 +65,7 @@ class CMPostArchiveParser:
         ------
         InvalidContent
             If content is not the HTML content of the CM Post Archive in Tibia.com
+
         """
         parsed_content = parse_tibiacom_content(content)
 
@@ -136,6 +137,7 @@ class CMPostArchiveParser:
         -------
         :class:`datetime.date`
             The selected date.
+
         """
         selected_month = month_selector.select_one("option[selected]") or month_selector.select_one("option")
         selected_day = day_selector.select_one("option[selected]") or day_selector.select_one("option")
@@ -163,6 +165,7 @@ class ForumSectionParser:
         Returns
         -------
             The forum section found in the page.
+
         """
         parsed_content = parse_tibiacom_content(content)
         tables = parse_tables_map(parsed_content)
@@ -195,6 +198,7 @@ class ForumSectionParser:
         -------
         :class:`BoardEntry`
             The board contained in this row.
+
         """
         columns = board_row.select("td")
         # Second Column: Name and description
@@ -244,6 +248,7 @@ class ForumAnnouncementParser:
         ------
         InvalidContent
             If content is not the HTML content of an announcement page in Tibia.com
+
         """
         parsed_content = parse_tibiacom_content(content)
 
@@ -305,6 +310,7 @@ class ForumAuthorParser:
         -------
         :class:`ForumAuthor`
             The author's information.
+
         """
         # First link belongs to character
         char_link = character_info_container.select_one("a")
@@ -378,6 +384,7 @@ class ForumBoardParser:
         ------
         InvalidContent`
             Content is not a board in Tibia.com
+
         """
         parsed_content = parse_tibiacom_content(content)
         forum_breadcrumbs = parsed_content.select_one("div.ForumBreadCrumbs")
@@ -455,6 +462,7 @@ class ForumBoardParser:
         Returns
         -------
         :class:`ThreadEntry`
+
         """
         # First Column: Thread's status
         status = None
@@ -548,6 +556,7 @@ class ForumThreadParser:
         ------
         InvalidContent
             If content is not the HTML of a thread's page.
+
         """
         parsed_content = parse_tibiacom_content(content)
         forum_breadcrumbs = parsed_content.select_one("div.ForumBreadCrumbs")
@@ -635,6 +644,7 @@ class ForumThreadParser:
         -------
         :class:`ForumPost`
             The post contained in the table.
+
         """
         golden_frame = "CipPostWithBorderImage" in post_table.parent.attrs.get("class")
         character_info_container = post_table.select_one("div.PostCharacterText")
@@ -712,6 +722,7 @@ class LastPostParser:
         -------
         Optional[:class:`LastPost`]:
             The last post described in the column, if any.
+
         """
         last_post_info = last_post_column.select_one("div.LastPostInfo, span.LastPostInfo")
         if last_post_info is None:

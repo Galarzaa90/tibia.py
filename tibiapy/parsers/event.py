@@ -38,6 +38,7 @@ class EventScheduleParser:
         ------
         InvalidContent
             If content is not the HTML of the event's schedule page.
+
         """
         parsed_content = parse_tibiacom_content(content)
 

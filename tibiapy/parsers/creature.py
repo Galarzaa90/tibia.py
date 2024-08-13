@@ -57,6 +57,7 @@ class BoostedCreaturesParser:
         ------
         InvalidContent
             If content is not the HTML of a Tibia.com page.
+
         """
         try:
             parsed_content = bs4.BeautifulSoup(content.replace("ISO-8859-1", "utf-8"), "lxml",
@@ -91,6 +92,7 @@ class BoostableBossesParser:
         ------
         InvalidContent
             If content is not the HTML of a creature library's page.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)
@@ -136,6 +138,7 @@ class BoostableBossesParser:
         ------
         InvalidContent
             If content is not the HTML of a Tibia.com's page.
+
         """
         return BoostedCreaturesParser.from_header(content).boss
 
@@ -160,6 +163,7 @@ class CreaturesSectionParser:
         ------
         InvalidContent
             If content is not the HTML of a Tibia.com's page.
+
         """
         return BoostedCreaturesParser.from_header(content).creature
 
@@ -180,6 +184,7 @@ class CreaturesSectionParser:
         ------
         InvalidContent
             If content is not the HTML of a creature library's page.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)
@@ -225,6 +230,7 @@ class CreatureParser:
         Returns
         -------
             The creature contained in the page.
+
         """
         try:
             parsed_content = parse_tibiacom_content(content)
@@ -263,6 +269,7 @@ class CreatureParser:
             The builder where data will be stored to.
         exp_text: :class:`str`
             The text containing experience.
+
         """
         if m := EXP_PATTERN.search(exp_text):
             builder.experience(int(m.group(1)))
@@ -280,6 +287,7 @@ class CreatureParser:
             The builder where data will be stored to.
         hp_text: :class:`str`
             The text containing hitpoints.
+
         """
         m = HP_PATTERN.search(hp_text)
         if m:
@@ -323,5 +331,6 @@ class CreatureParser:
         ----------
         text: :class:`str`
             The text containing the elements.
+
         """
         return [element for element in cls._valid_elements if element in text]

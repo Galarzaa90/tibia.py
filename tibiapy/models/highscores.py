@@ -91,6 +91,7 @@ class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
         ------
         ValueError
             The provided page is less or equals than zero.
+
         """
         if page <= 0:
             raise ValueError("page cannot be less or equals than zero")

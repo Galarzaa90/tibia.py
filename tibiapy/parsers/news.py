@@ -49,6 +49,7 @@ class NewsArchiveParser:
         Returns
         -------
             A dictionary with the required form data to search news in the archive.
+
         """
         if not categories:
             categories = list(NewsCategory)
@@ -96,6 +97,7 @@ class NewsArchiveParser:
         ------
         InvalidContent
             If content is not the HTML of a news search's page.
+
         """
         parsed_content = parse_tibiacom_content(content)
         tables = parse_tibiacom_tables(parsed_content)
@@ -184,6 +186,7 @@ class NewsParser:
         ------
         InvalidContent
             If content is not the HTML of a news' page.
+
         """
         if "News not found" in content:
             return None

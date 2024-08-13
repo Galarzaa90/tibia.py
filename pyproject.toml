@@ -105,84 +105,54 @@ exclude = [
 ]
 
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint]
+select = [
+    "E", "W293", # pycodestyle
+    "F", # Pyflakes
+    "N", # pep8-naming
+    "D", # pydocstyle
+    "UP", # pyupgrade
+    "S", # flake8-bandit
+    "B", # flake8-bugbear
+    "COM", # flake8-commas
+    "C4", # flake8-comprehensions
+    "FA", # flake8-future-annotations
+    "ISC", # flake8-implicit-str-concat
+    "G", # flake8-logging-format
+    "PIE", # flake8-pie
+    "Q", # flake8-quotes
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "ARG", # flake8-unused-arguments
+    "PERF", # Perflint
+    "RUF", # Ruff-specific rules
+    "ANN", # flake8-annotations
+    "DTZ", # flake8-datetimez
+    "PL", # Pylint
+    "FURB", # refurb
+]
+ignore = [
+    "D105", # Missing docstring in magic method
+    "D107", # Missing docstring in `__init__`
+    "ARG005", # Unused lambda argument
+    "D203", # 1 blank line required before class docstring
+    "D213", # 1 blank line required before class docstring
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "RUF013", # PEP 484 prohibits implicit `Optional`
+    "ANN101", # Missing type annotation for {name} in method
+    "ANN102", # Missing type annotation for {name} in classmethod
+    "ANN202", # Missing return type annotation for private function {name}
+    "ANN204", # Missing return type annotation for special method {name}
+    "ANN401", # Dynamically typed expressions ({name}) are disallowed in `other`
+    "PLR0913", # Too many arguments in function definition
+    "PLR2004", #  Magic value used in comparison, consider replacing `{number}` with a constant variable
+]
+
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["D104", "F401", "F403"]
 "**/builders/*" = ["D"]
 "tests/**" = ["D101"]
 "server.py" = ["D100", "D103"]
-
-
-[tool.ruff.lint]
-select = [
-    # pycodestyle
-    "E", "W293",
-    # Pyflakes
-    "F",
-    # pep8-naming
-    "N",
-    # pydocstyle
-    "D",
-    # pyupgrade
-    "UP",
-    # flake8-bandit
-    "S",
-    # flake8-bugbear
-    "B",
-    # flake8-commas
-    "COM",
-    # flake8-comprehensions
-    "C4",
-    # flake8-future-annotations
-    "FA",
-    # flake8-implicit-str-concat
-    "ISC",
-    # flake8-logging-format
-    "G",
-    # flake8-pie
-    "PIE",
-    # flake8-quotes
-    "Q",
-    # flake8-return
-    "RET",
-    # flake8-simplify
-    "SIM",
-    # flake8-unused-arguments
-    "ARG",
-    # Perflint
-    "PERF",
-    # Ruff-specific rules
-    "RUF",
-    # flake8-annotations
-    "ANN",
-
-]
-ignore = [
-    # Missing docstring in magic method
-    "D105",
-    # Missing docstring in `__init__`
-    "D107",
-    # Unused lambda argument
-    "ARG005",
-    # 1 blank line required before class docstring
-    "D203",
-    # 1 blank line required before class docstring
-    "D213",
-    # Mutable class attributes should be annotated with `typing.ClassVar`
-    "RUF012",
-    # PEP 484 prohibits implicit `Optional`
-    "RUF013",
-
-    # Missing type annotation for {name} in method
-    "ANN101",
-    # Missing type annotation for {name} in classmethod
-    "ANN102",
-    # Missing return type annotation for private function {name}
-    "ANN202",
-    # Missing return type annotation for special method {name}
-    "ANN204",
-    # Dynamically typed expressions ({name}) are disallowed in `other`
-    "ANN401",
-]
 
 
 [tool.ruff.lint.pycodestyle]
@@ -198,3 +168,6 @@ keep-runtime-typing = true
 [tool.ruff.lint.flake8-bugbear]
 # Allow default arguments like, e.g., `data: List[str] = fastapi.Query(None)`.
 extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path"]
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["pydantic.BaseModel"]

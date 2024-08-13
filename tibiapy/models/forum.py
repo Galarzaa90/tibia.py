@@ -172,6 +172,7 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
         -------
         :class:`str`
             The URL to the desired page.
+
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
@@ -370,6 +371,7 @@ class ForumBoard(PaginatedWithUrl[ThreadEntry], BaseBoard):
         -------
         :class:`str`
             The URL to the desired page.
+
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")
@@ -453,6 +455,7 @@ class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
         -------
         :class:`str`
             The URL to the desired page.
+
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater")

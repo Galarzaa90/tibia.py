@@ -97,6 +97,7 @@ class Client:
     proxy_url: :class:`str`
         The URL of the SOCKS proxy to use for requests.
         Note that if a session is passed, the SOCKS proxy won't be used and must be applied when creating the session.
+
     """
 
     def __init__(
@@ -178,6 +179,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         await self._session_ready.wait()
         if test:
@@ -216,6 +218,7 @@ class Client:
             The item type.
         test:
             Whether to request the test website instead.
+
         """
         current_page = 2
         while current_page <= paginator.total_pages:
@@ -247,6 +250,7 @@ class Client:
         -------
         :class:`str`:
             The HTML content of the obtained page.
+
         """
         headers = {"x-requested-with": "XMLHttpRequest"}
         page_response = await self._request(
@@ -294,6 +298,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_news_archive_url(), test=test)
         return response.parse(CreaturesSectionParser.boosted_creature_from_header)
@@ -320,6 +325,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_news_archive_url(), test=test)
         return response.parse(BoostedCreaturesParser.from_header)
@@ -347,6 +353,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_news_archive_url(), test=test)
         return response.parse(BoostableBossesParser.boosted_boss_from_header)
@@ -395,6 +402,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         to_date = to_date or datetime.date.today()
         if from_date > to_date:
@@ -444,6 +452,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         if days < 0:
             raise ValueError("days must be zero or higher")
@@ -474,6 +483,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_news_url(news_id), test=test)
         return response.parse(lambda r: NewsParser.from_content(r, news_id))
@@ -512,6 +522,7 @@ class Client:
             If there's any connection errors during the request.
         ValueError
             If only one of year or month are defined.
+
         """
         if (year is None and month is not None) or (year is not None and month is None):
             raise ValueError("both year and month must be defined or neither must be defined.")
@@ -545,6 +556,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_creatures_section_url(), test=test)
         return response.parse(CreaturesSectionParser.from_content)
@@ -573,6 +585,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_creature_url(identifier), test=test)
         return response.parse(CreatureParser.from_content)
@@ -599,6 +612,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_boostable_bosses_url(), test=test)
         return response.parse(BoostableBossesParser.from_content)
@@ -639,6 +653,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_spells_section_url(vocation=vocation, group=group,
                                                                      spell_type=spell_type, is_premium=is_premium,
@@ -667,6 +682,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_spell_url(identifier), test=test)
         return response.parse(SpellParser.from_content)
@@ -697,6 +713,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_character_url(name.strip()), test=test)
         return response.parse(CharacterParser.from_content)
@@ -721,6 +738,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_world_overview_url(), test=test)
         return response.parse(WorldOverviewParser.from_content)
@@ -747,6 +765,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_world_url(name), test=test)
         return response.parse(WorldParser.from_content)
@@ -799,6 +818,7 @@ class Client:
             If there's any connection errors during the request.
         ValueError
             If an invalid filter combination is passed or an invalid page is provided.
+
         """
         pvp_types = pvp_types or []
         if page < 1:
@@ -846,6 +866,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_leaderboards_url(world, rotation, page), test=test)
         return response.parse(LeaderboardParser.from_content)
@@ -877,6 +898,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_kill_statistics_url(world), test=test)
         return response.parse(KillStatisticsParser.from_content)
@@ -923,6 +945,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_houses_section_url(world=world, town=town, house_type=house_type,
                                                                      status=status, order=order), test=test)
@@ -952,6 +975,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_house_url(world, house_id), test=test)
         return response.parse(HouseParser.from_content)
@@ -984,6 +1008,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_world_guilds_url(world), test=test)
         return response.parse(GuildsSectionParser.from_content)
@@ -1010,6 +1035,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_guild_url(name), test=test)
         return response.parse(GuildParser.from_content)
@@ -1041,6 +1067,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_guild_wars_url(name), test=test)
         return response.parse(GuildWarsParser.from_content)
@@ -1067,6 +1094,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_fansites_url(), test=test)
         return response.parse(FansitesSectionParser.from_content)
@@ -1101,6 +1129,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_forum_section_url(section_id), test=test)
         return response.parse(ForumSectionParser.from_content)
@@ -1127,6 +1156,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_world_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
@@ -1153,6 +1183,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_trade_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
@@ -1179,6 +1210,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_community_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
@@ -1205,6 +1237,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_support_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
@@ -1240,6 +1273,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_forum_board_url(board_id, page, age), test=test)
         return response.parse(ForumBoardParser.from_content)
@@ -1271,6 +1305,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_forum_thread_url(thread_id, page), test=test)
         return response.parse(ForumThreadParser.from_content)
@@ -1304,6 +1339,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_forum_post_url(post_id), test=test)
         built_response = response.parse(ForumThreadParser.from_content)
@@ -1342,6 +1378,7 @@ class Client:
             This usually means that Tibia.com is rate-limiting the client because of too many requests.
         NetworkError
             If there's any connection errors during the request.
+
         """
         response = await self._request("GET", get_forum_announcement_url(announcement_id), test=test)
         return response.parse(lambda c: ForumAnnouncementParser.from_content(c, announcement_id))
@@ -1383,6 +1420,7 @@ class Client:
             If there's any connection errors during the request.
         ValueError
             If the start_date is more recent than the end date or page number is not 1 or greater.
+
         """
         if start_date > end_date:
             raise ValueError("start_date cannot be more recent than end_date")
@@ -1430,6 +1468,7 @@ class Client:
             If there's any connection errors during the request.
         ValueError
             If the page number is not 1 or greater.
+
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater.")
@@ -1466,6 +1505,7 @@ class Client:
             If there's any connection errors during the request.
         ValueError
             If the page number is not 1 or greater.
+
         """
         if page <= 0:
             raise ValueError("page must be 1 or greater.")
@@ -1522,6 +1562,7 @@ class Client:
             If there's any connection errors during the request.
         ValueError
             If the auction id is not 1 or greater.
+
         """
         if auction_id <= 0:
             raise ValueError("auction_id must be 1 or greater.")
