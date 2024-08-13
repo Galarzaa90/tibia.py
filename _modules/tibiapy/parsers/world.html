@@ -97,6 +97,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If the provided content is not the HTML content of the world section in Tibia.com</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="n">tables</span> <span class="o">=</span> <span class="n">parse_tables_map</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">,</span> <span class="s2">&quot;div.InnerTableContainer&quot;</span><span class="p">)</span>
@@ -133,6 +134,7 @@
 <span class="sd">            The instance of the builder where data will be collected.</span>
 <span class="sd">        world_info_table: :class:`bs4.Tag`</span>
 <span class="sd">            The table containing the world&#39;s information.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field_actions</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">builder</span><span class="o">.</span><span class="n">is_online</span><span class="p">(</span><span class="s2">&quot;online&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
@@ -170,7 +172,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_parse_creation_date</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">WorldBuilder</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">parsed_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;%B %Y&quot;</span><span class="p">)</span>
+        <span class="n">parsed_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;%B %Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
         <span class="n">year</span><span class="p">,</span> <span class="n">month</span> <span class="o">=</span> <span class="n">parsed_date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">parsed_date</span><span class="o">.</span><span class="n">month</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">creation_date</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">year</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">month</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -184,6 +186,7 @@
 <span class="sd">            The builder instance used to set the values.</span>
 <span class="sd">        battleye_string: :class:`str`</span>
 <span class="sd">            String containing the world&#39;s BattlEye Status.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">battleye_regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">battleye_string</span><span class="p">):</span>
             <span class="n">battleye_date</span> <span class="o">=</span> <span class="n">parse_tibia_full_date</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -219,6 +222,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If the provided content is not the HTML content of the worlds section in Tibia.com</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -241,6 +245,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        world_rows: :class:`list` of :class:`bs4.Tag`</span>
 <span class="sd">            A list containing the rows of each world.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">worlds</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">world_row</span> <span class="ow">in</span> <span class="n">world_rows</span><span class="p">:</span>
@@ -293,6 +298,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        tables: :class:`map` of :class:`bs4.Tag`</span>
 <span class="sd">            A mapping containing the tables with worlds.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">worlds</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">worlds_table</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">tables</span><span class="p">,</span> <span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>

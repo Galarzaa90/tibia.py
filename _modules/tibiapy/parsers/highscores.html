@@ -101,6 +101,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If content is not the HTML of a highscore&#39;s page.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;form&quot;</span><span class="p">)</span>
@@ -134,6 +135,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        table: :class:`bs4.Tag`</span>
 <span class="sd">            The table containing the entries.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">page</span><span class="p">,</span> <span class="n">total_pages</span><span class="p">,</span> <span class="n">results_count</span> <span class="o">=</span> <span class="n">parse_pagination</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;.PageNavigation&quot;</span><span class="p">))</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">current_page</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">total_pages</span><span class="p">(</span><span class="n">total_pages</span><span class="p">)</span><span class="o">.</span><span class="n">results_count</span><span class="p">(</span><span class="n">results_count</span><span class="p">)</span>
@@ -161,6 +163,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        form: :class:`bs4.Tag`</span>
 <span class="sd">            The table containing the filters.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">parse_form_data</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">world</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
@@ -184,6 +187,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`OrderedDict`[:class:`str`, :class:`bs4.Tag`]</span>
 <span class="sd">            A dictionary containing all the table rows, with the table headers as keys.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tables</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;div.TableContainer&quot;</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
@@ -206,6 +210,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        cols: :class:`bs4.ResultSet`</span>
 <span class="sd">            The list of columns for that entry.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">values</span> <span class="o">=</span> <span class="p">(</span><span class="n">clean_text</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">)</span>
         <span class="n">rank</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rank</span><span class="p">)</span>

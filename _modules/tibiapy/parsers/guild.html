@@ -120,6 +120,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If content is not the HTML of a guild&#39;s page.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
@@ -178,6 +179,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If content is not the HTML of a guild&#39;s page.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;An internal error has occurred&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -221,6 +223,7 @@
 <span class="sd">            The last rank present in the rows.</span>
 <span class="sd">        values: :class:`tuple` of :class:`str`</span>
 <span class="sd">            A list of row contents.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vocation</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">joined</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">values</span>
         <span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span> <span class="ow">or</span> <span class="n">previous_rank</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -244,6 +247,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        info_container: :class:`bs4.Tag`</span>
 <span class="sd">            The parsed content of the information container.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">applications_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">):</span>
             <span class="n">builder</span><span class="o">.</span><span class="n">open_applications</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;opened&quot;</span><span class="p">)</span>
@@ -260,6 +264,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        info_container: :class:`bs4.Tag`</span>
 <span class="sd">            The parsed content of the information container.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">disband_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">):</span>
             <span class="n">builder</span><span class="o">.</span><span class="n">disband_condition</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
@@ -275,6 +280,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        info_container: :class:`bs4.Tag`</span>
 <span class="sd">            The parsed content of the information container.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">guildhall_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">):</span>
             <span class="n">paid_until</span> <span class="o">=</span> <span class="n">parse_tibia_date</span><span class="p">(</span><span class="n">clean_text</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)))</span>
@@ -290,6 +296,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        info_container: :class:`bs4.Tag`</span>
 <span class="sd">            The parsed content of the information container.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">homepage_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">):</span>
             <span class="n">builder</span><span class="o">.</span><span class="n">homepage</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -311,6 +318,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        info_container: :class:`bs4.Tag`</span>
 <span class="sd">            The parsed content of the information container.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">founded_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">info_container</span><span class="o">.</span><span class="n">text</span><span class="p">):</span>
             <span class="n">description</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;desc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -334,6 +342,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`bool`</span>
 <span class="sd">            Whether the logo was found or not.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logo_img</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s1">&#39;img[height=&quot;64&quot;]&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">logo_img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -351,6 +360,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        parsed_content: :class:`bs4.Tag`</span>
 <span class="sd">            The parsed content of the guild&#39;s page</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">member_rows</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;bgcolor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;#D4C0A1&quot;</span><span class="p">,</span> <span class="s2">&quot;#F1E0C6&quot;</span><span class="p">]})</span>
         <span class="n">previous_rank</span> <span class="o">=</span> <span class="p">{}</span>
@@ -373,6 +383,7 @@
 <span class="sd">            The builder where data will be stored to.</span>
 <span class="sd">        values: tuple[:class:`str`]</span>
 <span class="sd">            A list of row contents.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">values</span>
         <span class="k">if</span> <span class="n">date</span> <span class="o">!=</span> <span class="s2">&quot;Invitation Date&quot;</span><span class="p">:</span>
@@ -401,6 +412,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">            The guild&#39;s war information.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
@@ -452,6 +464,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`GuildWarEntry`</span>
 <span class="sd">            The guild&#39;s war entry for the current war.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">names_match</span> <span class="o">=</span> <span class="n">war_guilds_regegx</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -486,6 +499,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`GuildWarEntry`</span>
 <span class="sd">            The guild&#39;s war entry described in the text.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">header_match</span> <span class="o">=</span> <span class="n">war_history_header_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>

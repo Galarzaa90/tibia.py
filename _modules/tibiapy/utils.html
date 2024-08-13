@@ -99,6 +99,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">        The tag&#39;s cleaned text content.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">text</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="k">else</span> <span class="n">tag</span>
     <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xa0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
@@ -114,6 +115,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    element: :class:`bs4.Tag`</span>
 <span class="sd">        A BeautifulSoup object.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">br</span> <span class="ow">in</span> <span class="n">element</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;br&quot;</span><span class="p">):</span>
         <span class="n">br</span><span class="o">.</span><span class="n">replace_with</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
@@ -135,6 +137,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">        A result set with all the found rows.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">table_tag</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)</span></div>
 
@@ -155,6 +158,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">        The values and data of the form.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">form_data</span> <span class="o">=</span> <span class="n">FormData</span><span class="p">()</span>
     <span class="k">if</span> <span class="s2">&quot;action&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span>
@@ -210,6 +214,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`int`</span>
 <span class="sd">        The represented integer, or the default value if invalid.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">default</span>
@@ -278,6 +283,7 @@
 <span class="sd">            &quot;worldtypes&quot;: [&quot;0&quot;, &quot;3&quot;]</span>
 <span class="sd">        }</span>
 <span class="sd">    }</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">link_tag</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
     <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">link_tag</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">{}}</span>
@@ -313,6 +319,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime.datetime`, optional</span>
 <span class="sd">        The represented datetime, in UTC (timezone aware).</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">datetime_str</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -322,10 +329,10 @@
         <span class="c1"># Convert time string to time object</span>
         <span class="c1"># Removing timezone cause CEST and CET are not supported</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">)</span>  <span class="c1"># noqa: DTZ007</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y %H:%M&quot;</span><span class="p">)</span>
-
+            <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y %H:%M&quot;</span><span class="p">)</span>  <span class="c1"># noqa: DTZ007</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
         <span class="c1"># Getting the offset</span>
         <span class="k">if</span> <span class="n">tz</span> <span class="o">==</span> <span class="s2">&quot;CET&quot;</span><span class="p">:</span>
             <span class="n">utc_offset</span> <span class="o">=</span> <span class="mi">1</span>
@@ -359,9 +366,10 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime.date`, optional</span>
 <span class="sd">        The represented date, in UTC (timezone aware).</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y&quot;</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y&quot;</span><span class="p">)</span>  <span class="c1"># noqa: DTZ007</span>
         <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -392,11 +400,11 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime.datetime`</span>
 <span class="sd">        The represented datetime, in UTC (timezone aware).</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M:%S&quot;</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
     <span class="c1"># Add/subtract hours to get the real time</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">utc_offset</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">t</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">utc_offset</span><span class="p">)</span></div>
 
 
 
@@ -418,9 +426,10 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime.date`, optional</span>
 <span class="sd">        The represented date, in UTC (timezone aware).</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -441,6 +450,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`int`</span>
 <span class="sd">        The number represented by the string.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">units</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;zero&quot;</span><span class="p">,</span> <span class="s2">&quot;one&quot;</span><span class="p">,</span> <span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="s2">&quot;three&quot;</span><span class="p">,</span> <span class="s2">&quot;four&quot;</span><span class="p">,</span> <span class="s2">&quot;five&quot;</span><span class="p">,</span> <span class="s2">&quot;six&quot;</span><span class="p">,</span> <span class="s2">&quot;seven&quot;</span><span class="p">,</span> <span class="s2">&quot;eight&quot;</span><span class="p">,</span>
@@ -495,6 +505,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime.datetime`, optional</span>
 <span class="sd">        The represented datetime, in UTC (timezone aware), or :obj:`None` if conversion wasn&#39;t possible.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -520,6 +531,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`datetime.date`, optional</span>
 <span class="sd">        The represented date, in UTC (timezone aware).</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -582,6 +594,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`bs4.BeautifulSoup`, optional</span>
 <span class="sd">        The parsed content.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">strainer</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">SoupStrainer</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">class_</span><span class="o">=</span><span class="n">html_class</span><span class="p">)</span> <span class="k">if</span> <span class="n">builder</span> <span class="o">!=</span> <span class="s2">&quot;html5lib&quot;</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">builder</span><span class="p">,</span> <span class="n">parse_only</span><span class="o">=</span><span class="n">strainer</span><span class="p">)</span></div>
@@ -604,6 +617,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`dict`</span>
 <span class="sd">        A dictionary mapping the container titles and the contained table.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">table_containers</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;div.TableContainer&quot;</span><span class="p">)</span>
     <span class="n">tables</span> <span class="o">=</span> <span class="p">{}</span>
@@ -634,6 +648,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    obj:</span>
 <span class="sd">        The enum value if found, otherwise None.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">val</span>
@@ -665,6 +680,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`int`:</span>
 <span class="sd">        The value represented by the string.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
@@ -699,6 +715,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`list` of :class:`str`</span>
 <span class="sd">        A list containing each one of the items.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -730,6 +747,7 @@
 <span class="sd">        The popup&#39;s title.</span>
 <span class="sd">    :class:`bs4.BeautifulSoup`</span>
 <span class="sd">        The parsed HTML content of the popup.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parts</span> <span class="o">=</span> <span class="n">popup_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -768,6 +786,7 @@
 <span class="sd">        The total number of pages.</span>
 <span class="sd">    results_count : :class:`int`</span>
 <span class="sd">        The total number of results.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pages_div</span><span class="p">,</span> <span class="n">results_div</span> <span class="o">=</span> <span class="n">pagination_block</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;small &gt; div&quot;</span><span class="p">)</span>
     <span class="n">current_page_link</span> <span class="o">=</span> <span class="n">pages_div</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;span.CurrentPageLink&quot;</span><span class="p">)</span>

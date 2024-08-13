@@ -305,6 +305,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`object`:</span>
 <span class="sd">            The entry matching the name.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -320,6 +321,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`list`</span>
 <span class="sd">            A list of entries with names containing the search term.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
 
@@ -347,6 +349,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`ItemEntry`</span>
 <span class="sd">            The item matching the id.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">item_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
@@ -372,6 +375,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`MountEntry`</span>
 <span class="sd">            The mount matching the id.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">mount_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
@@ -397,6 +401,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`FamiliarEntry`</span>
 <span class="sd">            The familiar matching the id.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">familiar_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
@@ -422,6 +427,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`OutfitEntry`</span>
 <span class="sd">            The outfit matching the id.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">((</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">outfit_id</span> <span class="o">==</span> <span class="n">entry_id</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
@@ -658,6 +664,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`str`</span>
 <span class="sd">            The URL to the desired page.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_bazaar_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">)</span></div>
 

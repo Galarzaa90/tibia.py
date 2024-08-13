@@ -112,6 +112,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        InvalidContent</span>
 <span class="sd">            Content is not the house list from Tibia.com</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
@@ -174,6 +175,7 @@
 <span class="sd">            The instance of the builder where data will be collected.</span>
 <span class="sd">        status: :class:`str`</span>
 <span class="sd">            The string containing the status.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;rented&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">:</span>
             <span class="n">builder</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="n">HouseStatus</span><span class="o">.</span><span class="n">RENTED</span><span class="p">)</span>
@@ -214,6 +216,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        InvalidContent</span>
 <span class="sd">            If the content is not the house section on Tibia.com</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">parsed_content</span> <span class="o">=</span> <span class="n">parse_tibiacom_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
@@ -268,6 +271,7 @@
 <span class="sd">            The instance of the builder where data will be collected.</span>
 <span class="sd">        status: :class:`str`</span>
 <span class="sd">            Plain text string containing the current renting state of the house.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">m</span> <span class="o">:=</span> <span class="n">rented_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">status</span><span class="p">):</span>
             <span class="n">builder</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="n">HouseStatus</span><span class="o">.</span><span class="n">RENTED</span><span class="p">)</span>

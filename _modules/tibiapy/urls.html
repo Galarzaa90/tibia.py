@@ -100,6 +100,7 @@
 <span class="sd">    &gt;&gt;&gt; params = {&#39;world&#39;: &quot;Gladera&quot;}</span>
 <span class="sd">    &gt;&gt;&gt; get_tibia_url(&quot;community&quot;, &quot;worlds&quot;, **params)</span>
 <span class="sd">    https://www.tibia.com/community/?subtopic=worlds&amp;world=Gladera</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;www.test.tibia.com&quot;</span> <span class="k">if</span> <span class="n">test</span> <span class="k">else</span> <span class="s2">&quot;www.tibia.com&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">/?&quot;</span>
@@ -140,6 +141,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; get_static_file_url(&quot;images&quot;, &quot;global&quot;, &quot;content&quot;, &quot;newsicon_community_big.gif&quot;)</span>
 <span class="sd">    https://static.tibia.com/images/global/content/newsicon_community_big.gif</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urljoin</span><span class="p">(</span><span class="s2">&quot;https://static.tibia.com/&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
 
@@ -159,6 +161,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the character&#39;s page in Tibia.com.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;characters&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -178,6 +181,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the guild list&#39;s page in Tibia.com.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">)</span></div>
 
@@ -197,6 +201,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the guild&#39;s page in Tibia.com.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">GuildName</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -216,6 +221,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the guild&#39;s wars&#39; page.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;guilds&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;guildwars&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">GuildName</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -237,6 +243,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the house&#39;s page in Tibia.com.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;houses&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">,</span> <span class="n">houseid</span><span class="o">=</span><span class="n">house_id</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">)</span></div>
 
@@ -251,6 +258,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the fansites section.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;fansites&quot;</span><span class="p">)</span></div>
 
@@ -265,6 +273,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the world overview section in Tibia.com.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;worlds&quot;</span><span class="p">)</span></div>
 
@@ -284,6 +293,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the world&#39;s information page.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;worlds&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">())</span></div>
 
@@ -303,6 +313,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the news archive page.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="s2">&quot;newsarchive&quot;</span><span class="p">)</span></div>
 
@@ -322,6 +333,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the article&#39;s page on Tibia.com</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="s2">&quot;newsarchive&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">news_id</span><span class="p">)</span></div>
 
@@ -341,6 +353,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to forum section.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;main&quot;</span><span class="p">,</span> <span class="n">sectionid</span><span class="o">=</span><span class="n">section_id</span><span class="p">)</span></div>
 
@@ -360,6 +373,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to forum section.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="n">section_name</span><span class="p">)</span></div>
 
@@ -374,6 +388,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`:</span>
 <span class="sd">        The URL to the World Boards.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="s2">&quot;worldboards&quot;</span><span class="p">)</span></div>
 
@@ -388,6 +403,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`:</span>
 <span class="sd">        The URL to the Trade Boards.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="s2">&quot;tradeboards&quot;</span><span class="p">)</span></div>
 
@@ -402,6 +418,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`:</span>
 <span class="sd">        The URL to the Community Boards.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="s2">&quot;communityboards&quot;</span><span class="p">)</span></div>
 
@@ -416,6 +433,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`:</span>
 <span class="sd">        The URL to the Support Boards.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="s2">&quot;supportboards&quot;</span><span class="p">)</span></div>
 
@@ -441,6 +459,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to forum board.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;board&quot;</span><span class="p">,</span> <span class="n">boardid</span><span class="o">=</span><span class="n">board_id</span><span class="p">,</span> <span class="n">pagenumber</span><span class="o">=</span><span class="n">page</span><span class="p">,</span> <span class="n">threadage</span><span class="o">=</span><span class="n">thread_age</span><span class="p">)</span></div>
 
@@ -460,6 +479,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to forum announcement.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;announcement&quot;</span><span class="p">,</span> <span class="n">announcementid</span><span class="o">=</span><span class="n">announcement_id</span><span class="p">)</span></div>
 
@@ -481,6 +501,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to forum thread.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span> <span class="n">threadid</span><span class="o">=</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">pagenumber</span><span class="o">=</span><span class="n">page</span><span class="p">)</span></div>
 
@@ -500,6 +521,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the post.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;forum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;post</span><span class="si">{</span><span class="n">post_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span> <span class="n">postid</span><span class="o">=</span><span class="n">post_id</span><span class="p">)</span></div>
 
@@ -535,6 +557,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">        The URL to the Tibia.com highscores.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pvp_types</span> <span class="o">=</span> <span class="n">pvp_types</span> <span class="ow">or</span> <span class="p">[]</span>
     <span class="n">pvp_params</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;worldtypes[]&quot;</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pvp_types</span><span class="p">]</span>
@@ -562,6 +585,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the Tibia.com kill statistics for this world.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;community&quot;</span><span class="p">,</span> <span class="s2">&quot;killstatistics&quot;</span><span class="p">,</span> <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">)</span></div>
 
@@ -590,6 +614,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the calendar with the given parameters.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;news&quot;</span><span class="p">,</span> <span class="s2">&quot;eventcalendar&quot;</span><span class="p">,</span> <span class="n">calendarmonth</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">calendaryear</span><span class="o">=</span><span class="n">year</span><span class="p">)</span></div>
 
@@ -618,6 +643,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the list matching the parameters.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;world&quot;</span><span class="p">:</span> <span class="n">world</span><span class="p">,</span>
@@ -644,6 +670,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the auction&#39;s detail page.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;charactertrade&quot;</span><span class="p">,</span> <span class="s2">&quot;currentcharactertrades&quot;</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="s2">&quot;details&quot;</span><span class="p">,</span> <span class="n">auctionid</span><span class="o">=</span><span class="n">auction_id</span><span class="p">)</span></div>
 
@@ -667,6 +694,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the current auctions section in Tibia.com</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">query_params</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">query_params</span> <span class="k">if</span> <span class="n">filters</span> <span class="k">else</span> <span class="p">{}</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;charactertrade&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">.</span><span class="n">subtopic</span><span class="p">,</span> <span class="n">currentpage</span><span class="o">=</span><span class="n">page</span><span class="p">,</span> <span class="o">**</span><span class="n">query_params</span><span class="p">)</span></div>
@@ -698,6 +726,7 @@
 <span class="sd">        Either of the dates is not an instance of :class:`datetime.date`</span>
 <span class="sd">    ValueError:</span>
 <span class="sd">        If ``start_date`` is more recent than ``end_date``.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">from_date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;start_date: expected datetime.date instance, </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">from_date</span><span class="p">)</span><span class="si">}</span><span class="s2"> found.&quot;</span><span class="p">)</span>
@@ -740,6 +769,7 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If the specified page is zer or less.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;page must be 1 or greater&quot;</span><span class="p">)</span>
@@ -757,6 +787,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`:</span>
 <span class="sd">        The URL to the Tibia.com library section.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;creature&quot;</span><span class="p">)</span></div>
 
@@ -776,6 +807,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the detail page.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;creatures&quot;</span><span class="p">,</span> <span class="n">race</span><span class="o">=</span><span class="n">identifier</span><span class="p">)</span></div>
 
@@ -790,6 +822,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`:</span>
 <span class="sd">        The URL to the Tibia.com library section.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;boostablebosses&quot;</span><span class="p">)</span></div>
 
@@ -830,6 +863,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the spells section with the provided filtering parameters.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;vocation&quot;</span><span class="p">:</span> <span class="n">vocation</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">vocation</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -856,6 +890,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    :class:`str`</span>
 <span class="sd">        The URL to the spell.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_tibia_url</span><span class="p">(</span><span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="s2">&quot;spells&quot;</span><span class="p">,</span> <span class="n">spell</span><span class="o">=</span><span class="n">identifier</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
 
