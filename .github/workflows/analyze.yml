@@ -50,7 +50,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download reports 📥
-        uses: actions/download-artifact@v4.1.4
+        uses: actions/download-artifact@v4.1.7
         with:
           name: reports
       - name: SonarCloud Scan ☁️
