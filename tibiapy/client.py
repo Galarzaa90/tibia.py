@@ -6,7 +6,7 @@ import datetime
 import json
 import logging
 import time
-from typing import Any, Callable, Dict, Optional, Set, TYPE_CHECKING, TypeVar
+from typing import Any, Callable, Optional, TYPE_CHECKING, TypeVar
 
 import aiohttp
 import aiohttp_socks
@@ -147,8 +147,8 @@ class Client:
             self,
             method: str,
             url: str,
-            data: Dict[str, Any] = None,
-            headers: Dict[str, Any] = None,
+            data: dict[str, Any] = None,
+            headers: dict[str, Any] = None,
             *,
             test: bool = False,
     ):
@@ -365,8 +365,8 @@ class Client:
             self,
             from_date: datetime.date,
             to_date: datetime.date = None,
-            categories: Set[NewsCategory] = None,
-            types: Set[NewsType] = None,
+            categories: set[NewsCategory] = None,
+            types: set[NewsType] = None,
             *,
             test: bool = False,
     ) -> TibiaResponse[NewsArchive]:
@@ -415,8 +415,8 @@ class Client:
     async def fetch_news_archive_by_days(
             self,
             days: int = 30,
-            categories: Set[NewsCategory] = None,
-            types: Set[NewsType] = None,
+            categories: set[NewsCategory] = None,
+            types: set[NewsType] = None,
             *,
             test: bool = False,
     ) -> TibiaResponse[NewsArchive]:
@@ -777,7 +777,7 @@ class Client:
             vocation: HighscoresProfession = HighscoresProfession.ALL,
             page: int = 1,
             battleye_type: Optional[HighscoresBattlEyeType] = None,
-            pvp_types: Set[PvpTypeFilter] = None,
+            pvp_types: set[PvpTypeFilter] = None,
             *,
             test: bool = False,
     ) -> TibiaResponse[Optional[Highscores]]:

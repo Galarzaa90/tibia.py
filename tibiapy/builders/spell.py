@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, List, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy.models import SpellEntry, SpellsSection, Spell, Rune
 
@@ -38,7 +38,7 @@ class SpellSectionBuilder:
         self._sort_by = sort_by
         return self
 
-    def entries(self, entries: List[SpellEntry]) -> Self:
+    def entries(self, entries: list[SpellEntry]) -> Self:
         self._entries = entries
         return self
 
@@ -139,7 +139,7 @@ class SpellBuilder(SpellEntryBuilder):
         self._description = description
         return self
 
-    def vocations(self, vocations: List[str]) -> Self:
+    def vocations(self, vocations: list[str]) -> Self:
         self._vocations = vocations
         return self
 
@@ -171,7 +171,7 @@ class SpellBuilder(SpellEntryBuilder):
         self._magic_type = magic_type
         return self
 
-    def cities(self, cities: List[str]) -> Self:
+    def cities(self, cities: list[str]) -> Self:
         self._cities = cities
         return self
 
@@ -218,7 +218,7 @@ class RuneBuilder:
         self._name = name
         return self
 
-    def vocations(self, vocations: List[str]) -> Self:
+    def vocations(self, vocations: list[str]) -> Self:
         self._vocations = vocations
         return self
 

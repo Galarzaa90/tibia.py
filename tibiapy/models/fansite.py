@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from tibiapy.models import BaseModel
 
@@ -39,13 +39,13 @@ class Fansite(BaseModel):
     """URL to the fansite's logo."""
     contact: str
     """The name of the contact person."""
-    content: List[FansiteContent]
+    content: list[FansiteContent]
     """A list of content categories for the site."""
-    social_media: List[FansiteSocialMedia]
+    social_media: list[FansiteSocialMedia]
     """A list of the social media sites the fansite has."""
-    languages: List[str]
+    languages: list[str]
     """A list of the languages the site is available in."""
-    specials: List[str]
+    specials: list[str]
     """A description of features or highligts."""
     fansite_item_image_url: Optional[str]
     """The URL to the fansite item's icon, if available."""
@@ -54,7 +54,7 @@ class Fansite(BaseModel):
 class FansitesSection(BaseModel):
     """The fansites section of Tibia.com."""
 
-    promoted_fansites: List[Fansite]
+    promoted_fansites: list[Fansite]
     """Promoted fansites."""
-    supported_fansites: List[Fansite]
+    supported_fansites: list[Fansite]
     """Supported fansites."""

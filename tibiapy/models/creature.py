@@ -1,5 +1,5 @@
 """Models for creatures."""
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import computed_field
 
@@ -27,7 +27,7 @@ class BoostableBosses(BaseModel):
 
     boosted_boss: BossEntry
     """The current boosted boss."""
-    bosses: List[BossEntry]
+    bosses: list[BossEntry]
     """The list of boostable bosses."""
 
 
@@ -64,11 +64,11 @@ class Creature(CreatureEntry):
     """The number of hitpoints the creature has."""
     experience: int
     """The number of experience points given for killing this creature."""
-    immune_to: List[str]
+    immune_to: list[str]
     """The elements this creature is immune to."""
-    weak_against: List[str]
+    weak_against: list[str]
     """The elements this creature is weak against."""
-    strong_against: List[str]
+    strong_against: list[str]
     """The elements this creature is strong against."""
     loot: str
     """Some of the items this creature drops."""
@@ -85,7 +85,7 @@ class CreaturesSection(BaseModel):
 
     boosted_creature: CreatureEntry
     """The current boosted creature."""
-    creatures: List[CreatureEntry]
+    creatures: list[CreatureEntry]
     """The list of creatures in the library."""
 
 

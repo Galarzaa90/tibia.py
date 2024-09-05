@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy.models.leaderboard import LeaderboardEntry, Leaderboard
 
@@ -26,7 +26,7 @@ class LeaderboardBuilder:
         self._world = world
         return self
 
-    def available_worlds(self, available_worlds: List[str]) -> Self:
+    def available_worlds(self, available_worlds: list[str]) -> Self:
         self._available_worlds = available_worlds
         return self
 
@@ -34,11 +34,11 @@ class LeaderboardBuilder:
         self._rotation = rotation
         return self
 
-    def available_rotations(self, available_rotations: List[LeaderboardRotation]) -> Self:
+    def available_rotations(self, available_rotations: list[LeaderboardRotation]) -> Self:
         self._available_rotations = available_rotations
         return self
 
-    def entries(self, entries: List[LeaderboardEntry]) -> Self:
+    def entries(self, entries: list[LeaderboardEntry]) -> Self:
         self._entries = entries
         return self
 

@@ -2,7 +2,7 @@
 import logging
 import re
 import urllib.parse
-from typing import Dict, List, Optional
+from typing import Optional
 
 import bs4
 
@@ -304,7 +304,7 @@ class AuctionParser:
         return builder.build()
 
     @classmethod
-    def _parse_tables(cls, parsed_content: bs4.Tag) -> Dict[str, bs4.Tag]:
+    def _parse_tables(cls, parsed_content: bs4.Tag) -> dict[str, bs4.Tag]:
         """Parse the character details tables.
 
         Parameters
@@ -322,7 +322,7 @@ class AuctionParser:
         return {table["id"]: table for table in details_tables}
 
     @classmethod
-    def _parse_data_table(cls, table: bs4.Tag) -> Dict[str, str]:
+    def _parse_data_table(cls, table: bs4.Tag) -> dict[str, str]:
         """Parse a simple data table into a key value mapping.
 
         Parameters
@@ -393,7 +393,7 @@ class AuctionParser:
         builder.blessings(blessings)
 
     @classmethod
-    def _parse_single_column_table(cls, table: bs4.Tag) -> List[str]:
+    def _parse_single_column_table(cls, table: bs4.Tag) -> list[str]:
         """Parse a table with a single column into an array.
 
         Parameters
@@ -715,7 +715,7 @@ class AuctionParser:
             ))
 
     @classmethod
-    def _parse_page_items(cls, content: str, paginator: AjaxPaginator) -> List[DisplayImage]:
+    def _parse_page_items(cls, content: str, paginator: AjaxPaginator) -> list[DisplayImage]:
         parsed_content = parse_tibiacom_content(content, builder="html5lib")
         item_boxes = parsed_content.select(CSS_CLASS_ICON)
         entries = []

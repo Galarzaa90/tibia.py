@@ -3,12 +3,12 @@ from __future__ import annotations
 import datetime
 import logging
 from contextlib import asynccontextmanager
-from typing import List, Optional, Set, TypeVar
+from typing import Optional, TypeVar
 
 import uvicorn
 from fastapi import Depends, FastAPI, Path, Query, Response
 from starlette import status
-from typing_extensions import Annotated
+from typing import Annotated
 
 import tibiapy
 from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
@@ -82,8 +82,8 @@ async def get_news_article(
 async def get_news_archive(
         response: Response,
         from_date: datetime.date = Path(..., alias="fromDate", description=FROM_DESCRIPTION),
-        types: Set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
-        categories: Set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
+        types: set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
+        categories: set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
 ) -> TibiaResponse[NewsArchive]:
     """Show the news archive from a start date to today."""
     return handle_response(response, await app.state.client.fetch_news_archive(from_date, None, categories, types))
@@ -95,8 +95,8 @@ async def get_news_archive_between_dates(
         response: Response,
         from_date: datetime.date = Path(..., alias="fromDate", description=FROM_DESCRIPTION),
         to_date: datetime.date = Path(..., alias="toDate", description=TO_DESCRIPTION),
-        types: Set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
-        categories: Set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
+        types: set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
+        categories: set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
 ) -> TibiaResponse[NewsArchive]:
     """Show the news archive for a specific date period."""
     return handle_response(response, await app.state.client.fetch_news_archive(from_date, to_date, categories, types))
@@ -106,8 +106,8 @@ async def get_news_archive_between_dates(
 async def get_news_archive_by_days(
         response: Response,
         days: int = Query(30, description="The number of days to look back for news."),
-        types: Set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
-        categories: Set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
+        types: set[NewsType] = Query(None, alias="type", description=TYPES_DESCRIPTION),
+        categories: set[NewsCategory] = Query(None, alias="category", description=CATEGORIES_DESCRIPTION),
 ) -> TibiaResponse[NewsArchive]:
     return handle_response(response, await app.state.client.fetch_news_archive_by_days(days, categories, types))
 
@@ -244,7 +244,7 @@ async def get_highscores(
         category: HighscoresCategory = Query(HighscoresCategory.EXPERIENCE),
         vocation: HighscoresProfession = Query(HighscoresProfession.ALL),
         battleye: HighscoresBattlEyeType = Query(None),
-        pvp_types: List[PvpTypeFilter] = Query([], alias="pvp"),
+        pvp_types: list[PvpTypeFilter] = Query([], alias="pvp"),
 ) -> TibiaResponse[Highscores]:
     if world.lower() in {"global", "all"}:
         world = None

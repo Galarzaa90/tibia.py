@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from tibiapy.models.event import EventSchedule
 
@@ -24,7 +24,7 @@ class EventScheduleBuilder:
         self._year = year
         return self
 
-    def events(self, events: List[EventEntry]) -> Self:
+    def events(self, events: list[EventEntry]) -> Self:
         self._events = events
         return self
 

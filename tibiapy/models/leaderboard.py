@@ -1,6 +1,6 @@
 """Models related to the leaderboards."""
 import datetime
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from tibiapy.models import BaseModel
 from tibiapy.models.pagination import PaginatedWithUrl
@@ -51,11 +51,11 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
 
     world: str
     """The world this leaderboards are for."""
-    available_worlds: List[str]
+    available_worlds: list[str]
     """The worlds available for selection."""
     rotation: LeaderboardRotation
     """The rotation this leaderboards' entries are for."""
-    available_rotations: List[LeaderboardRotation]
+    available_rotations: list[LeaderboardRotation]
     """The available rotations for selection."""
     last_updated: Optional[datetime.datetime] = None
     """The time when the shown leaderboards were last updated. The resolution is 1 minute.

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-from typing import List, TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional
 
 from typing_extensions import Self
 
@@ -43,7 +43,7 @@ class HousesSectionBuilder:
         self._order = order
         return self
 
-    def entries(self, entries: List[HouseEntry]) -> Self:
+    def entries(self, entries: list[HouseEntry]) -> Self:
         self._entries = entries
         return self
 
@@ -51,11 +51,11 @@ class HousesSectionBuilder:
         self._entries.append(entry)
         return self
 
-    def available_worlds(self, available_worlds: List[str]) -> Self:
+    def available_worlds(self, available_worlds: list[str]) -> Self:
         self._available_worlds = available_worlds
         return self
 
-    def available_towns(self, available_towns: List[str]) -> Self:
+    def available_towns(self, available_towns: list[str]) -> Self:
         self._available_towns = available_towns
         return self
 

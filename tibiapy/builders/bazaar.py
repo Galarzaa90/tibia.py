@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-from typing import List, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy.models import Auction, CharacterBazaar
 from tibiapy.models.bazaar import AuctionDetails, RevealedGem
@@ -35,7 +35,7 @@ class CharacterBazaarBuilder:
         self._results_count = results_count
         return self
 
-    def entries(self, entries: List[Auction]) -> Self:
+    def entries(self, entries: list[Auction]) -> Self:
         self._entries = entries
         return self
 
@@ -107,7 +107,7 @@ class AuctionBuilder:
         self._outfit = outfit
         return self
 
-    def displayed_items(self, displayed_items: List[ItemEntry]) -> Self:
+    def displayed_items(self, displayed_items: list[ItemEntry]) -> Self:
         self._displayed_items = displayed_items
         return self
 
@@ -115,7 +115,7 @@ class AuctionBuilder:
         self._displayed_items.append(displayed_item)
         return self
 
-    def sales_arguments(self, sales_arguments: List[SalesArgument]) -> Self:
+    def sales_arguments(self, sales_arguments: list[SalesArgument]) -> Self:
         self._sales_arguments = sales_arguments
         return self
 
@@ -244,7 +244,7 @@ class AuctionDetailsBuilder:
         self._titles_count = titles_count
         return self
 
-    def skills(self, skills: List[SkillEntry]) -> Self:
+    def skills(self, skills: list[SkillEntry]) -> Self:
         self._skills = skills
         return self
 
@@ -359,39 +359,39 @@ class AuctionDetailsBuilder:
         self._familiars = familiars
         return self
 
-    def blessings(self, blessings: List[BlessingEntry]) -> Self:
+    def blessings(self, blessings: list[BlessingEntry]) -> Self:
         self._blessings = blessings
         return self
 
-    def imbuements(self, imbuements: List[str]) -> Self:
+    def imbuements(self, imbuements: list[str]) -> Self:
         self._imbuements = imbuements
         return self
 
-    def charms(self, charms: List[CharmEntry]) -> Self:
+    def charms(self, charms: list[CharmEntry]) -> Self:
         self._charms = charms
         return self
 
-    def completed_cyclopedia_map_areas(self, completed_cyclopedia_map_areas: List[str]) -> Self:
+    def completed_cyclopedia_map_areas(self, completed_cyclopedia_map_areas: list[str]) -> Self:
         self._completed_cyclopedia_map_areas = completed_cyclopedia_map_areas
         return self
 
-    def completed_quest_lines(self, completed_quest_lines: List[str]) -> Self:
+    def completed_quest_lines(self, completed_quest_lines: list[str]) -> Self:
         self._completed_quest_lines = completed_quest_lines
         return self
 
-    def titles(self, titles: List[str]) -> Self:
+    def titles(self, titles: list[str]) -> Self:
         self._titles = titles
         return self
 
-    def achievements(self, achievements: List[AchievementEntry]) -> Self:
+    def achievements(self, achievements: list[AchievementEntry]) -> Self:
         self._achievements = achievements
         return self
 
-    def bestiary_progress(self, bestiary_progress: List[BestiaryEntry]) -> Self:
+    def bestiary_progress(self, bestiary_progress: list[BestiaryEntry]) -> Self:
         self._bestiary_progress = bestiary_progress
         return self
 
-    def bosstiary_progress(self, bosstiary_progress: List[BestiaryEntry]) -> Self:
+    def bosstiary_progress(self, bosstiary_progress: list[BestiaryEntry]) -> Self:
         self._bosstiary_progress = bosstiary_progress
         return self
 

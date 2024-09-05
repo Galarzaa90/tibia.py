@@ -1,6 +1,6 @@
 """Models related to game worlds."""
 import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import computed_field
 
@@ -66,9 +66,9 @@ class World(BaseWorld):
     """The date when the online record was achieved. Will be None if the world has never been online."""
     creation_date: str
     """The month and year the world was created. In YYYY-MM format."""
-    world_quest_titles: List[str]
+    world_quest_titles: list[str]
     """List of world quest titles the server has achieved."""
-    online_players: List[OnlineCharacter]
+    online_players: list[OnlineCharacter]
     """A list of characters currently online in the server."""
 
     @property
@@ -93,7 +93,7 @@ class WorldOverview(BaseModel):
     """The overall player online record."""
     record_date: datetime.datetime
     """The date when the record was achieved."""
-    worlds: List[WorldEntry] = []
+    worlds: list[WorldEntry] = []
     """List of worlds, with limited info."""
 
     @computed_field

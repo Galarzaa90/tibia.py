@@ -1,7 +1,7 @@
 """Exceptions thrown by tibia.py."""
 from __future__ import annotations
 
-from typing import Type, Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 from typing_extensions import deprecated
 
@@ -87,7 +87,7 @@ class SiteMaintenanceError(NetworkError):
 class EnumValueError(ValueError):
     """Exception raised when the provided value cannot be converted to an enum."""
 
-    def __init__(self, enum: Type[Enum], value: Any) -> None:
+    def __init__(self, enum: type[Enum], value: Any) -> None:
         self.enum = enum
         super().__init__(
             f"{value!r} is not a valid value for {enum.__name__}."

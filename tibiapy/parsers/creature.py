@@ -2,7 +2,7 @@
 import os
 import re
 import urllib.parse
-from typing import List, Optional, Tuple
+from typing import Optional
 
 import bs4
 
@@ -33,7 +33,7 @@ class BoostedCreaturesParser:
     """Parser for boosted creatures and bosses."""
 
     @classmethod
-    def _parse_boosted_platform(cls, parsed_content: bs4.BeautifulSoup, tag_id: str) -> Tuple[str, str]:
+    def _parse_boosted_platform(cls, parsed_content: bs4.BeautifulSoup, tag_id: str) -> tuple[str, str]:
         img = parsed_content.select_one(f"#{tag_id}")
         name = BOOSTED_ALT.sub("", img["title"]).strip()
         image_url = img["src"]
@@ -324,7 +324,7 @@ class CreatureParser:
                 builder.summonable(True)
 
     @classmethod
-    def _parse_elements(cls, text: str) -> List[str]:
+    def _parse_elements(cls, text: str) -> list[str]:
         """Parse the elements found in a string, adding them to the collection.
 
         Parameters

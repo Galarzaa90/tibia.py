@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import Dict, Optional, TYPE_CHECKING, Tuple
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy.builders import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContentError
@@ -154,8 +154,8 @@ class GuildParser:
     def _parse_current_member(
             cls,
             builder: GuildBuilder,
-            previous_rank: Dict[int, str],
-            values: Tuple[str, ...],
+            previous_rank: dict[int, str],
+            values: tuple[str, ...],
     ) -> None:
         """Parse the column texts of a member row into a member dictionary.
 
@@ -272,7 +272,7 @@ class GuildParser:
             builder.active("currently active" in m.group("status"))
 
     @classmethod
-    def _parse_logo(cls, builder: GuildBuilder, parsed_content: bs4.Tag) -> bool:
+    def _parse_logo(cls, builder: GuildBuilder, parsed_content: bs4.Tag) -> None:
         """Parse the guild logo and saves it to the instance.
 
         Parameters

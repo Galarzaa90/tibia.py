@@ -2,7 +2,7 @@
 import datetime
 import re
 import urllib.parse
-from typing import List, Optional, Set, Dict, Union
+from typing import Optional, Union
 
 import bs4
 
@@ -30,9 +30,9 @@ class NewsArchiveParser:
             cls,
             start_date: datetime.date,
             end_date: datetime.date,
-            categories: Set[NewsCategory] = None,
-            types: Set[NewsType] = None,
-    ) -> Dict[str, Union[str, int]]:
+            categories: set[NewsCategory] = None,
+            types: set[NewsType] = None,
+    ) -> dict[str, Union[str, int]]:
         """Get the form data attributes to search news with specific parameters.
 
         Parameters
@@ -141,7 +141,7 @@ class NewsArchiveParser:
                 builder.add_category(category)
 
     @classmethod
-    def _parse_entry(cls, cols_raw: List[bs4.Tag]) -> NewsEntry:
+    def _parse_entry(cls, cols_raw: list[bs4.Tag]) -> NewsEntry:
         img = cols_raw[0].select_one("img")
         img_url = img["src"]
         category_name = ICON_PATTERN.search(img_url)

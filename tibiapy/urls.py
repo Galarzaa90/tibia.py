@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import urllib.parse
-from typing import Optional, Set, TYPE_CHECKING, Tuple, Union
+from typing import Optional, TYPE_CHECKING, Union
 
 if TYPE_CHECKING:
     from tibiapy.enums import (BazaarType, HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, HouseOrder,
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 def get_tibia_url(
         section: str,
         subtopic: str = None,
-        *args: Tuple[str, Union[str, int]],
+        *args: tuple[str, Union[str, int]],
         anchor: str = None,
         test: bool = False,
         **kwargs: Union[str, int],
@@ -422,7 +422,7 @@ def get_highscores_url(
         vocation: HighscoresProfession = None,
         page: int = 1,
         battleye_type: HighscoresBattlEyeType = None,
-        pvp_types: Set[PvpTypeFilter] = None,
+        pvp_types: set[PvpTypeFilter] = None,
 ) -> str:
     """Get the Tibia.com URL of the highscores for the given parameters.
 

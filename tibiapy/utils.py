@@ -5,7 +5,8 @@ import datetime
 import re
 import urllib.parse
 from collections import defaultdict
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Type, TypeVar, TypedDict, Union
+from typing import Any, Callable, Optional, TypeVar, TypedDict, Union
+from collections.abc import Iterable
 
 import bs4
 from pydantic import BaseModel
@@ -21,16 +22,16 @@ D = TypeVar("D")
 class FormData(BaseModel):
     """Represents data in a HTML form."""
 
-    values: Dict[str, str] = {}
+    values: dict[str, str] = {}
     """The values in the form.
 
     This contains text fields, select fields and radios.
     """
-    values_multiple: Dict[str, List[str]] = defaultdict(list)
+    values_multiple: dict[str, list[str]] = defaultdict(list)
     """The selected values in the form of inputs that allow multiple selections.
 
     This contains the values of check boxes."""
-    available_options: Dict[str, Dict[str, str]] = defaultdict(dict)
+    available_options: dict[str, dict[str, str]] = defaultdict(dict)
     """The available options in select fields, radios and check boxes."""
     action: Optional[str] = None
     """The form's action URL."""
@@ -68,7 +69,7 @@ def convert_line_breaks(element: bs4.Tag) -> None:
         br.replace_with("\n")
 
 
-def get_rows(table_tag: bs4.Tag) -> bs4.ResultSet[bs4.Tag]:
+def get_rows(table_tag: bs4.Tag) -> bs4.Resultset[bs4.Tag]:
     """Get all the row tags inside the container.
 
     A very simple shortcut function used for better code semantics.
@@ -169,7 +170,7 @@ class LinkInfo(TypedDict):
 
     text: str
     url: str
-    query: Dict[str, Union[List[str], str]]
+    query: dict[str, Union[list[str], str]]
 
 
 def parse_link_info(link_tag: bs4.Tag) -> LinkInfo:
@@ -261,7 +262,7 @@ def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
             t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M:%S")  # noqa: DTZ007
         except ValueError:
             t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M")  # noqa: DTZ007
-        t = t.astimezone(datetime.timezone.utc)
+        t = t.replace(tzinfo=datetime.timezone.utc)
         # Getting the offset
         if tz == "CET":
             utc_offset = 1
@@ -460,7 +461,7 @@ def try_date(obj: Union[str, datetime.datetime, datetime.date]) -> Optional[date
 def parse_tables_map(
         parsed_content: bs4.BeautifulSoup,
         selector: str = "div.TableContentContainer",
-) -> Dict[str, bs4.Tag]:
+) -> dict[str, bs4.Tag]:
     """Parse Tibia.com style tables, building a map with their title as key."""
     tables = parsed_content.select("div.TableContainer")
     output = {}
@@ -505,7 +506,7 @@ def parse_tibiacom_content(
     return bs4.BeautifulSoup(content.replace("ISO-8859-1", "utf-8", 1), builder, parse_only=strainer)
 
 
-def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Tag]:
+def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> dict[str, bs4.Tag]:
     """Parse tables from Tibia.com into a mapping by the tables title.
 
     This is used for the table style used in Tibia.com, where a table is wrapped in a container with a title.
@@ -531,7 +532,7 @@ def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Ta
     return tables
 
 
-def try_enum(cls: Type[T], val: Any, default: D = None) -> Union[T, D]:
+def try_enum(cls: type[T], val: Any, default: D = None) -> Union[T, D]:
     """Attempt to convert a value into their enum value.
 
     Parameters
@@ -592,7 +593,7 @@ def parse_tibia_money(argument: str) -> int:
         return int(num)
 
 
-def split_list(items: str, separator: str = ",", last_separator: str = " and ") -> List[str]:
+def split_list(items: str, separator: str = ",", last_separator: str = " and ") -> list[str]:
     """Split a string listing elements into an actual list.
 
     Parameters
@@ -623,7 +624,7 @@ def split_list(items: str, separator: str = ",", last_separator: str = " and ") 
     return [e.strip() for e in items]
 
 
-def parse_popup(popup_content: str) -> Tuple[str, bs4.BeautifulSoup]:
+def parse_popup(popup_content: str) -> tuple[str, bs4.BeautifulSoup]:
     """Parse the information popups used through Tibia.com.
 
     Parameters
@@ -657,7 +658,7 @@ results_pattern = re.compile(r"Results: ([\d,]+)")
 page_pattern = re.compile(r"page=(\d+)")
 
 
-def parse_pagination(pagination_block: bs4.Tag) -> Tuple[int, int, int]:
+def parse_pagination(pagination_block: bs4.Tag) -> tuple[int, int, int]:
     """Parse a pagination section in Tibia.com and extracts its information.
 
     Parameters

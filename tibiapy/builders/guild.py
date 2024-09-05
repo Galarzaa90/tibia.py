@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, List, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy.models import GuildEntry, Guild, GuildWars, GuildWarEntry
 
@@ -112,7 +112,7 @@ class GuildBuilder(_BaseGuildBuilder):
         self._homepage = homepage
         return self
 
-    def members(self, members: List[GuildMember]) -> Self:
+    def members(self, members: list[GuildMember]) -> Self:
         self._members = members
         return self
 
@@ -120,7 +120,7 @@ class GuildBuilder(_BaseGuildBuilder):
         self._members.append(member)
         return self
 
-    def invites(self, invites: List[GuildInvite]) -> Self:
+    def invites(self, invites: list[GuildInvite]) -> Self:
         self._invites = invites
         return self
 
@@ -162,7 +162,7 @@ class GuildWarsBuilder:
         self._current = current
         return self
 
-    def history(self, history: List[GuildWarEntry]) -> Self:
+    def history(self, history: list[GuildWarEntry]) -> Self:
         self._history = history
         return self
 

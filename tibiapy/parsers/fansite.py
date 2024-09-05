@@ -1,4 +1,3 @@
-from typing import List
 
 import bs4
 
@@ -41,7 +40,7 @@ class FansitesSectionParser:
             raise InvalidContentError("content does not belong to the bazaar at Tibia.com", original=e) from e
 
     @classmethod
-    def _parse_fansites_table(cls, table: bs4.Tag) -> List[Fansite]:
+    def _parse_fansites_table(cls, table: bs4.Tag) -> list[Fansite]:
         fansites = []
         for row in get_rows(table)[1:]:
             cols = row.select("td")

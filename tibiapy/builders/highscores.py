@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Set, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from tibiapy.models import Highscores
 
@@ -42,7 +42,7 @@ class HighscoresBuilder:
         self._battleye_filter = battleye_filter
         return self
 
-    def pvp_types_filter(self, pvp_types_filter: Set[PvpTypeFilter]) -> Self:
+    def pvp_types_filter(self, pvp_types_filter: set[PvpTypeFilter]) -> Self:
         self._pvp_types_filter = pvp_types_filter
         return self
 
@@ -62,7 +62,7 @@ class HighscoresBuilder:
         self._last_updated = last_updated
         return self
 
-    def entries(self, entries: List[HighscoresEntry]) -> Self:
+    def entries(self, entries: list[HighscoresEntry]) -> Self:
         self._entries = entries
         return self
 
@@ -70,7 +70,7 @@ class HighscoresBuilder:
         self._entries.append(entry)
         return self
 
-    def available_worlds(self, available_worlds: List[str]) -> Self:
+    def available_worlds(self, available_worlds: list[str]) -> Self:
         self._available_worlds = available_worlds
         return self
 

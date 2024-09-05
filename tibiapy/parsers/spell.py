@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 import re
 import urllib.parse
-from typing import Dict, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 import bs4
 
@@ -223,7 +223,7 @@ class SpellParser:
         builder.magic_type(attrs.get("magic_type"))
 
     @classmethod
-    def _parse_table_attributes(cls, table: bs4.Tag) -> Dict[str, str]:
+    def _parse_table_attributes(cls, table: bs4.Tag) -> dict[str, str]:
         """Parse the attributes of a table.
 
         Create a dictionary where every key is the left column (cleaned up) and the value is the right column.

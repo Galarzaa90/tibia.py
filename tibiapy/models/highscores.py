@@ -1,6 +1,6 @@
 """Models for highscores."""
 import datetime
-from typing import List, Optional, Set
+from typing import Optional
 
 from pydantic import SerializeAsAny
 
@@ -49,13 +49,13 @@ class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
     """The selected BattlEye filter. If :obj:`None`, all worlds will be displayed.
 
     Only applies for global highscores. Only characters from worlds matching BattlEye protection will be shown."""
-    pvp_types_filter: Set[PvpTypeFilter]
+    pvp_types_filter: set[PvpTypeFilter]
     """The selected PvP types filter. If :obj:`None`, all world will be displayed.
 
     Only applies for global highscores. Only characters from worlds with the matching PvP type will be shown."""
     last_updated: datetime.datetime
     """The time when the shown highscores were last updated. The resolution is 1 minute."""
-    available_worlds: List[str]
+    available_worlds: list[str]
     """The worlds available for selection."""
 
     @property

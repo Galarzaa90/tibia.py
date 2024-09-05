@@ -3,7 +3,6 @@
 import datetime
 import re
 import time
-from typing import Dict, List, Tuple
 
 import bs4
 
@@ -84,7 +83,7 @@ class EventScheduleParser:
         return builder.build()
 
     @classmethod
-    def _adjust_date(cls, ongoing_day: int, day: int, month: int, year: int) -> Tuple[int, int]:
+    def _adjust_date(cls, ongoing_day: int, day: int, month: int, year: int) -> tuple[int, int]:
         if ongoing_day < day:
             # The first cells may belong to the previous month
             month -= 1
@@ -106,7 +105,7 @@ class EventScheduleParser:
         return month, year
 
     @classmethod
-    def _parse_inline_style(cls, style_content: str) -> Dict[str, str]:
+    def _parse_inline_style(cls, style_content: str) -> dict[str, str]:
         attrs = style_content.split(";")
         values = {}
         for attr in attrs:
@@ -119,7 +118,7 @@ class EventScheduleParser:
         return values
 
     @classmethod
-    def _process_day_cell(cls, day_cell: bs4.Tag) -> Tuple[int, List[EventEntry]]:
+    def _process_day_cell(cls, day_cell: bs4.Tag) -> tuple[int, list[EventEntry]]:
         day_div = day_cell.select_one("div")
         day = int(day_div.text)
         today_events = []
@@ -144,7 +143,7 @@ class EventScheduleParser:
         return day, today_events
 
     @classmethod
-    def _calculate_month_year(cls, month_year_div: bs4.Tag) -> Tuple[int, int]:
+    def _calculate_month_year(cls, month_year_div: bs4.Tag) -> tuple[int, int]:
         month, year = month_year_regex.search(month_year_div.text).groups()
         month = time.strptime(month, "%B").tm_mon
         year = int(year)

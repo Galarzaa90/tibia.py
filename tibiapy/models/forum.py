@@ -1,6 +1,6 @@
 """Models related to the forums."""
 import datetime
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
@@ -152,7 +152,7 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
     """The start date of the displayed posts."""
     to_date: datetime.date
     """The end date of the displayed posts."""
-    entries: List[CMPost] = []
+    entries: list[CMPost] = []
     """The list of posts for the selected range."""
 
     @property
@@ -270,7 +270,7 @@ class ForumSection(BaseModel):
 
     section_id: int
     """The internal ID of the section."""
-    entries: List[BoardEntry]
+    entries: list[BoardEntry]
     """The boards in the forum section."""
 
     @property
@@ -354,9 +354,9 @@ class ForumBoard(PaginatedWithUrl[ThreadEntry], BaseBoard):
     """The maximum age of the displayed threads, in days.
 
     -1 means all threads will be shown."""
-    announcements: List[AnnouncementEntry]
+    announcements: list[AnnouncementEntry]
     """The list of announcements currently visible."""
-    entries: List[ThreadEntry]
+    entries: list[ThreadEntry]
     """The list of threads currently visible."""
 
     def get_page_url(self, page: int) -> str:
@@ -422,7 +422,7 @@ class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
     """The number of the previous topic."""
     next_topic_number: Optional[int] = None
     """The number of the next topic."""
-    entries: List[ForumPost] = []
+    entries: list[ForumPost] = []
     """The list of posts the thread has."""
     golden_frame: bool = False
     """Whether the thread has a golden frame or not.

@@ -1,7 +1,7 @@
 """Models related to the spells section in the library."""
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import computed_field
 
@@ -22,7 +22,7 @@ class Rune(BaseModel):
 
     name: str
     """The name of the rune."""
-    vocations: List[str]
+    vocations: list[str]
     """The vocations that can use this rune."""
     group: SpellGroup
     """The cooldown group of the rune."""
@@ -75,7 +75,7 @@ class Spell(SpellEntry):
 
     description: str
     """A description of the spells effect and history."""
-    vocations: List[str]
+    vocations: list[str]
     """The vocations that can use this spell."""
     cooldown: int
     """The individual cooldown of this spell in seconds."""
@@ -91,7 +91,7 @@ class Spell(SpellEntry):
     """The amount of objects created by this spell. It will be :obj:`None` if not applicable."""
     magic_type: Optional[str] = None
     """The type of magic of this spell. Influenced by specialized magic level attributes."""
-    cities: List[str]
+    cities: list[str]
     """The cities where this spell can be learned."""
     rune: Optional[Rune] = None
     """Information of the rune created by this spell, if applicable."""
@@ -111,7 +111,7 @@ class SpellsSection(BaseModel):
         :obj:`False` to show free account spells and :obj:`None` will show any spells."""
     sort_by: SpellSorting
     """The sorting order of the displayed spells."""
-    entries: List[SpellEntry]
+    entries: list[SpellEntry]
     """The spells matching the selected filters."""
 
     @property

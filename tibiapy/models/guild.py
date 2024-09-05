@@ -1,13 +1,13 @@
 """Models for guilds and members."""
 import datetime
-from collections import defaultdict
-from typing import Optional, List, Dict, OrderedDict
+from collections import OrderedDict, defaultdict
+from typing import Optional
 
 from pydantic import computed_field
 
 from tibiapy.enums import Vocation
-from tibiapy.models import BaseCharacter, BaseHouse, BaseGuild, BaseModel
-from tibiapy.urls import get_world_guilds_url, get_guild_url, get_guild_wars_url
+from tibiapy.models import BaseCharacter, BaseGuild, BaseHouse, BaseModel
+from tibiapy.urls import get_guild_url, get_guild_wars_url, get_world_guilds_url
 
 __all__ = (
     "GuildHouse",
@@ -82,9 +82,9 @@ class Guild(BaseGuild):
     """The reason why the guild will get disbanded."""
     homepage: Optional[str] = None
     """The guild's homepage, if any."""
-    members: List[GuildMember]
+    members: list[GuildMember]
     """List of guild members."""
-    invites: List[GuildInvite]
+    invites: list[GuildInvite]
     """List of invited characters."""
 
     @computed_field
@@ -100,13 +100,13 @@ class Guild(BaseGuild):
         return len(self.online_members)
 
     @property
-    def online_members(self) -> List[GuildMember]:
+    def online_members(self) -> list[GuildMember]:
         """List of currently online members."""
         return list(filter(lambda m: m.is_online, self.members))
 
     @computed_field
     @property
-    def ranks(self) -> List[str]:
+    def ranks(self) -> list[str]:
         """Ranks in their hierarchical order."""
         return list(OrderedDict.fromkeys(m.rank for m in self.members))
 
@@ -116,7 +116,7 @@ class Guild(BaseGuild):
         return self.members[0]
 
     @property
-    def vice_leaders(self) -> List[GuildMember]:
+    def vice_leaders(self) -> list[GuildMember]:
         """The vice leader of the guilds."""
         if len(self.members) <= 1:
             return []
@@ -124,7 +124,7 @@ class Guild(BaseGuild):
         return list(take_while(self.members[1:], lambda m: m.rank == self.members[1].rank))
 
     @property
-    def members_by_rank(self) -> Dict[str, List[GuildMember]]:
+    def members_by_rank(self) -> dict[str, list[GuildMember]]:
         """Get a mapping of members, grouped by their guild rank."""
         rank_dict = defaultdict(list)
         [rank_dict[m.rank].append(m) for m in self.members]
@@ -149,18 +149,18 @@ class GuildsSection(BaseModel):
 
     world: Optional[str] = None
     """The name of the world. If :obj:`None`, the section belongs to a world that doesn't exist."""
-    entries: List[GuildEntry] = []
+    entries: list[GuildEntry] = []
     """The list of guilds in the world."""
-    available_worlds: List[str]
+    available_worlds: list[str]
     """The list of worlds available for selection."""
 
     @property
-    def active_guilds(self) -> List[GuildEntry]:
+    def active_guilds(self) -> list[GuildEntry]:
         """Get a list of the guilds that are active."""
         return [g for g in self.entries if g.active]
 
     @property
-    def in_formation_guilds(self) -> List[GuildEntry]:
+    def in_formation_guilds(self) -> list[GuildEntry]:
         """Get a list of the guilds that are in course of formation."""
         return [g for g in self.entries if not g.active]
 
@@ -223,7 +223,7 @@ class GuildWars(BaseModel):
     """The name of the guild."""
     is_current: Optional[GuildWarEntry] = None
     """The current war the guild is involved in."""
-    history: List[GuildWarEntry]
+    history: list[GuildWarEntry]
     """The previous wars the guild has been involved in."""
 
     @property

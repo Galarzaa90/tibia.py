@@ -1,6 +1,6 @@
 """Models for the houses section."""
 import datetime
-from typing import List, Optional
+from typing import Optional
 
 from tibiapy.enums import HouseStatus, HouseType, HouseOrder, Sex
 from tibiapy.models import HouseWithId, BaseModel
@@ -99,11 +99,11 @@ class HousesSection(BaseModel):
     """The type of houses to show."""
     order: HouseOrder
     """The ordering to use for the results."""
-    entries: List[HouseEntry]
+    entries: list[HouseEntry]
     """The houses matching the filters."""
-    available_worlds: List[str]
+    available_worlds: list[str]
     """The list of available worlds to choose from."""
-    available_towns: List[str]
+    available_towns: list[str]
     """The list of available towns to choose from."""
 
     @property

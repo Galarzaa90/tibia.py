@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import computed_field
 
@@ -99,9 +99,9 @@ class Death(BaseModel):
 
     level: int
     """The level at which the death occurred."""
-    killers: List[DeathParticipant]
+    killers: list[DeathParticipant]
     """A list of all the killers involved."""
-    assists: List[DeathParticipant]
+    assists: list[DeathParticipant]
     """A list of characters that were involved, without dealing damage."""
     time: datetime.datetime
     """The time at which the death occurred."""
@@ -165,7 +165,7 @@ class Character(BaseCharacter):
     """If the character was traded in the last 6 months."""
     deletion_date: Optional[datetime.datetime] = None
     """The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise."""
-    former_names: List[str]
+    former_names: list[str]
     """Previous names of the character in the last 6 months.."""
     title: Optional[str] = None
     """The character's selected title, if any."""
@@ -187,7 +187,7 @@ class Character(BaseCharacter):
     """The current hometown of the character."""
     married_to: Optional[str] = None
     """The name of the character's spouse. It will be :obj:`None` if not married."""
-    houses: List[CharacterHouse]
+    houses: list[CharacterHouse]
     """The houses currently owned by the character."""
     guild_membership: Optional[GuildMembership] = None
     """The guild the character is a member of. It will be :obj:`None` if the character is not in a guild."""
@@ -199,11 +199,11 @@ class Character(BaseCharacter):
     """The displayed comment."""
     is_premium: bool
     """Whether the character's account is Premium or Free."""
-    account_badges: List[AccountBadge]
+    account_badges: list[AccountBadge]
     """The displayed account badges."""
-    achievements: List[Achievement]
+    achievements: list[Achievement]
     """The achievements chosen to be displayed."""
-    deaths: List[Death]
+    deaths: list[Death]
     """The character's recent deaths."""
     deaths_truncated: bool
     """Whether the character's deaths are truncated or not.
@@ -211,7 +211,7 @@ class Character(BaseCharacter):
     In some cases, there are more deaths in the last 30 days than what can be displayed."""
     account_information: Optional[AccountInformation] = None
     """The character's account information. If the character is hidden, this will be :obj:`None`."""
-    other_characters: List[OtherCharacter]
+    other_characters: list[OtherCharacter]
     """Other characters in the same account.
 
     It will be empty if the character is hidden, otherwise, it will contain at least the character itself."""

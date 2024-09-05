@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from tibiapy.models.creature import CreatureEntry, Creature
 
@@ -63,15 +63,15 @@ class CreatureBuilder:
         self._experience = experience
         return self
 
-    def immune_to(self, immune_to: List[str]) -> Self:
+    def immune_to(self, immune_to: list[str]) -> Self:
         self._immune_to = immune_to
         return self
 
-    def weak_against(self, weak_against: List[str]) -> Self:
+    def weak_against(self, weak_against: list[str]) -> Self:
         self._weak_against = weak_against
         return self
 
-    def strong_against(self, strong_against: List[str]) -> Self:
+    def strong_against(self, strong_against: list[str]) -> Self:
         self._strong_against = strong_against
         return self
 

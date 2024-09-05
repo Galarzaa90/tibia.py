@@ -4,7 +4,7 @@ from __future__ import annotations
 import datetime
 import re
 from collections import OrderedDict
-from typing import Dict, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 import bs4
 
@@ -125,7 +125,7 @@ class HighscoresParser:
         builder.available_worlds([v for v in data.available_options["world"].values() if v])
 
     @classmethod
-    def _parse_tables(cls, parsed_content: bs4.BeautifulSoup) -> Dict[str, bs4.Tag]:
+    def _parse_tables(cls, parsed_content: bs4.BeautifulSoup) -> dict[str, bs4.Tag]:
         """Parse the information tables found in a highscores page.
 
         Parameters
@@ -135,7 +135,7 @@ class HighscoresParser:
 
         Returns
         -------
-        :class:`OrderedDict`[:class:`str`, :class:`bs4.Tag`]
+        :class:`Ordereddict`[:class:`str`, :class:`bs4.Tag`]
             A dictionary containing all the table rows, with the table headers as keys.
 
         """

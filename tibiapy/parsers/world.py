@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import TYPE_CHECKING, Optional, List
+from typing import TYPE_CHECKING, Optional
 
 from tibiapy.builders.world import (WorldBuilder, WorldEntryBuilder,
                                     WorldOverviewBuilder)
@@ -182,7 +182,7 @@ class WorldOverviewParser:
             raise InvalidContentError("content does not belong to the World Overview section in Tibia.com", e) from e
 
     @classmethod
-    def _parse_worlds(cls, world_rows: List[bs4.Tag]) -> List[WorldEntry]:
+    def _parse_worlds(cls, world_rows: list[bs4.Tag]) -> list[WorldEntry]:
         """Parse the world columns and adds the results to :py:attr:`worlds`.
 
         Parameters
@@ -235,7 +235,7 @@ class WorldOverviewParser:
         builder.is_premium_only("premium" in additional_info)
 
     @classmethod
-    def _parse_worlds_tables(cls, tables: List[bs4.Tag]) -> List[WorldEntry]:
+    def _parse_worlds_tables(cls, tables: list[bs4.Tag]) -> list[WorldEntry]:
         """Parse the tables and adds the results to the world list.
 
         Parameters

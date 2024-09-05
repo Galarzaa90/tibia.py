@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, List, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy.models import Character
 
@@ -54,7 +54,7 @@ class CharacterBuilder:
         self._deletion_date = deletion_date
         return self
 
-    def former_names(self, former_names: List[str]) -> Self:
+    def former_names(self, former_names: list[str]) -> Self:
         self._former_names = former_names
         return self
 
@@ -98,7 +98,7 @@ class CharacterBuilder:
         self._married_to = married_to
         return self
 
-    def houses(self, houses: List[CharacterHouse]) -> Self:
+    def houses(self, houses: list[CharacterHouse]) -> Self:
         self._houses = houses
         return self
 
@@ -130,11 +130,11 @@ class CharacterBuilder:
         self._account_badges.append(account_badge)
         return self
 
-    def account_badges(self, account_badges: List[AccountBadge]) -> Self:
+    def account_badges(self, account_badges: list[AccountBadge]) -> Self:
         self._account_badges = account_badges
         return self
 
-    def achievements(self, achievements: List[Achievement]) -> Self:
+    def achievements(self, achievements: list[Achievement]) -> Self:
         self._achievements = achievements
         return self
 
@@ -142,7 +142,7 @@ class CharacterBuilder:
         self._achievements.append(achievement)
         return self
 
-    def deaths(self, deaths: List[Death]) -> Self:
+    def deaths(self, deaths: list[Death]) -> Self:
         self._deaths = deaths
         return self
 
@@ -162,7 +162,7 @@ class CharacterBuilder:
         self._other_characters.append(other_character)
         return self
 
-    def other_characters(self, other_characters: List[OtherCharacter]) -> Self:
+    def other_characters(self, other_characters: list[OtherCharacter]) -> Self:
         self._other_characters = other_characters
         return self
 

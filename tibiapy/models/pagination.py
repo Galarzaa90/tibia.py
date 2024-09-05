@@ -1,6 +1,6 @@
 """Base models for paginated classes."""
 from abc import abstractmethod, ABC
-from typing import TypeVar, Generic, List, Optional
+from typing import TypeVar, Generic, Optional
 
 from tibiapy.models import BaseModel
 
@@ -22,7 +22,7 @@ class Paginated(BaseModel, Generic[T]):
     """The total number of pages."""
     results_count: int = 0
     """The total number of entries across all pages."""
-    entries: List[T] = []
+    entries: list[T] = []
     """The entries in this page."""
 
 

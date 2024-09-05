@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from tibiapy.enums import TransferType, BattlEyeType
 from tibiapy.models import World, WorldEntry, WorldOverview
@@ -107,7 +107,7 @@ class WorldBuilder(WorldEntryBuilder):
         self._creation_date = creation_date
         return self
 
-    def world_quest_titles(self, world_quest_titles: List[str]) -> Self:
+    def world_quest_titles(self, world_quest_titles: list[str]) -> Self:
         self._world_quest_titles = world_quest_titles
         return self
 
@@ -115,7 +115,7 @@ class WorldBuilder(WorldEntryBuilder):
         self._world_quest_titles.append(world_quest_title)
         return self
 
-    def online_players(self, online_players: List[OnlineCharacter]) -> Self:
+    def online_players(self, online_players: list[OnlineCharacter]) -> Self:
         self._online_players = online_players
         return self
 
@@ -157,7 +157,7 @@ class WorldOverviewBuilder:
         self._record_date = record_date
         return self
 
-    def worlds(self, worlds: List[WorldEntry]) -> Self:
+    def worlds(self, worlds: list[WorldEntry]) -> Self:
         self._worlds = worlds
         return self
 

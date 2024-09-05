@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Collection, List, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
+from collections.abc import Collection
 
 from tibiapy.models import NewsEntry, NewsArchive, News
 
@@ -42,7 +43,7 @@ class NewsArchiveBuilder:
         self._categories.add(category)
         return self
 
-    def entries(self, entries: List[NewsEntry]) -> Self:
+    def entries(self, entries: list[NewsEntry]) -> Self:
         self._entries = entries
         return self
 

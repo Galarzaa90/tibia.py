@@ -1,6 +1,4 @@
 """Models related to the Kill Statistics."""
-from typing import Dict, List
-
 from tibiapy.models import BaseModel
 from tibiapy.urls import get_kill_statistics_url
 
@@ -23,11 +21,11 @@ class KillStatistics(BaseModel):
 
     world: str
     """The world the statistics belong to."""
-    entries: Dict[str, RaceEntry]
+    entries: dict[str, RaceEntry]
     """A dictionary of kills entries of every race, where the key is the name of the race."""
     total: RaceEntry
     """The kill statistics totals."""
-    available_worlds: List[str]
+    available_worlds: list[str]
     """The list of worlds available for selection."""
 
     @property

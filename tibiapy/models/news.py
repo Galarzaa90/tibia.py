@@ -1,6 +1,6 @@
 """Models related to the news section in Tibia.com."""
 import datetime
-from typing import Optional, Set, List
+from typing import Optional
 
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.models import BaseModel
@@ -79,12 +79,12 @@ class NewsArchive(BaseModel):
     """The start date to show news for."""
     to_date: datetime.date
     """The end date to show news for."""
-    types: Set[NewsType]
+    types: set[NewsType]
     """The type of news to show."""
-    categories: Set[NewsCategory]
+    categories: set[NewsCategory]
     """The categories to show."""
 
-    entries: List[NewsEntry]
+    entries: list[NewsEntry]
     """The news matching the provided parameters."""
 
     @property

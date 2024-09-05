@@ -1,7 +1,7 @@
 """Models relatd to the character bazaar."""
 import datetime
 from abc import ABC, abstractmethod
-from typing import Dict, Generic, List, Optional, TypeVar
+from typing import Generic, Optional, TypeVar
 
 from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
                            AuctionSkillFilter, AuctionStatus, AuctionVocationFilter, BazaarType, BidType, PvpTypeFilter,
@@ -76,11 +76,11 @@ class AuctionFilters(BaseModel):
     """The search term to filter out auctions."""
     search_type: Optional[AuctionSearchType] = None
     """The type of search to use. Defines the behaviour of :py:attr:`search_string`."""
-    available_worlds: List[str] = []
+    available_worlds: list[str] = []
     """The list of available worlds to select to filter."""
 
     @property
-    def query_params(self) -> Dict[str, str]:
+    def query_params(self) -> dict[str, str]:
         """The query parameters representing this filter."""
         params = {
             "filter_profession": self.vocation.value if self.vocation is not None else None,
@@ -365,7 +365,7 @@ class RevealedGem(BaseModel):
 
     gem_type: str
     """The type of gem."""
-    mods: List[str]
+    mods: list[str]
     """The mods or effects the gem has."""
 
 
@@ -388,7 +388,7 @@ class AuctionDetails(BaseModel):
     """The number of outfits the character has."""
     titles_count: int
     """The number of titles the character has."""
-    skills: List[SkillEntry]
+    skills: list[SkillEntry]
     """The current skills of the character."""
     creation_date: datetime.datetime
     """The date when the character was created."""
@@ -444,29 +444,29 @@ class AuctionDetails(BaseModel):
     """The outfits the character has purchased from the store."""
     familiars: Familiars
     """The familiars the character has purchased or unlocked."""
-    blessings: List[BlessingEntry]
+    blessings: list[BlessingEntry]
     """The blessings the character has."""
-    imbuements: List[str]
+    imbuements: list[str]
     """The imbuements the character has unlocked access to."""
-    charms: List[CharmEntry]
+    charms: list[CharmEntry]
     """The charms the character has unlocked."""
-    completed_cyclopedia_map_areas: List[str]
+    completed_cyclopedia_map_areas: list[str]
     """The cyclopedia map areas that the character has fully discovered."""
-    completed_quest_lines: List[str]
+    completed_quest_lines: list[str]
     """The quest lines the character has fully completed."""
-    titles: List[str]
+    titles: list[str]
     """The titles the character has unlocked."""
-    achievements: List[AchievementEntry]
+    achievements: list[AchievementEntry]
     """The achievements the character has unlocked."""
-    bestiary_progress: List[BestiaryEntry]
+    bestiary_progress: list[BestiaryEntry]
     """The bestiary progress of the character."""
-    bosstiary_progress: List[BestiaryEntry]
+    bosstiary_progress: list[BestiaryEntry]
     """The bosstiary progress of the character."""
-    revealed_gems: List[RevealedGem]
+    revealed_gems: list[RevealedGem]
     """The gems that have been revealed by the character."""
 
     @property
-    def completed_bestiary_entries(self) -> List[BestiaryEntry]:
+    def completed_bestiary_entries(self) -> list[BestiaryEntry]:
         """Get a list of completed bestiary entries."""
         return [e for e in self.bestiary_progress if e.is_completed]
 
@@ -476,7 +476,7 @@ class AuctionDetails(BaseModel):
         return self.regular_world_transfer_available_date is None
 
     @property
-    def skills_map(self) -> Dict[str, SkillEntry]:
+    def skills_map(self) -> dict[str, SkillEntry]:
         """A mapping of skills by their name."""
         return {skill.name: skill for skill in self.skills}
 
@@ -498,9 +498,9 @@ class Auction(BaseModel):
     """The sex of the character."""
     outfit: OutfitImage
     """The current outfit selected by the user."""
-    displayed_items: List[ItemEntry]
+    displayed_items: list[ItemEntry]
     """The items selected to be displayed."""
-    sales_arguments: List[SalesArgument]
+    sales_arguments: list[SalesArgument]
     """The sale arguments selected for the auction."""
     auction_start: datetime.datetime
     """The date when the auction started."""

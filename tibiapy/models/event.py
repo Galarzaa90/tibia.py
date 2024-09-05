@@ -1,6 +1,6 @@
 """Models related to the event schedule calendar."""
 import datetime
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from tibiapy.models import BaseModel
 from tibiapy.urls import get_event_schedule_url
@@ -45,7 +45,7 @@ class EventSchedule(BaseModel):
     Note that some days from the previous and next month may be included too."""
     year: int
     """The year being displayed."""
-    events: List[EventEntry] = []
+    events: list[EventEntry] = []
     """A list of events that happen during this month.
 
     It might include some events from the previous and next months as well."""
@@ -55,7 +55,7 @@ class EventSchedule(BaseModel):
         """Get the URL to the event calendar with the current parameters."""
         return get_event_schedule_url(self.month, self.year)
 
-    def get_events_on(self, date: datetime.date) -> List[EventEntry]:
+    def get_events_on(self, date: datetime.date) -> list[EventEntry]:
         """Get a list of events that are active during the specified desired_date.
 
         Parameters
