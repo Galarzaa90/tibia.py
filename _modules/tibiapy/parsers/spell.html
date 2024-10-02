@@ -49,15 +49,27 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">errors</span>
-<span class="kn">from</span> <span class="nn">tibiapy.builders.spell</span> <span class="kn">import</span> <span class="n">RuneBuilder</span><span class="p">,</span> <span class="n">SpellBuilder</span><span class="p">,</span> <span class="n">SpellEntryBuilder</span><span class="p">,</span> <span class="n">SpellSectionBuilder</span>
+<span class="kn">from</span> <span class="nn">tibiapy.builders.spell</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RuneBuilder</span><span class="p">,</span>
+    <span class="n">SpellBuilder</span><span class="p">,</span>
+    <span class="n">SpellEntryBuilder</span><span class="p">,</span>
+    <span class="n">SpellSectionBuilder</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellSorting</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellVocationFilter</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_rows</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">,</span> <span class="n">parse_integer</span><span class="p">,</span> <span class="n">parse_link_info</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span>
-                           <span class="n">parse_tibiacom_tables</span><span class="p">,</span> <span class="n">try_enum</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_rows</span><span class="p">,</span>
+    <span class="n">parse_form_data</span><span class="p">,</span>
+    <span class="n">parse_integer</span><span class="p">,</span>
+    <span class="n">parse_link_info</span><span class="p">,</span>
+    <span class="n">parse_tibiacom_content</span><span class="p">,</span>
+    <span class="n">parse_tibiacom_tables</span><span class="p">,</span>
+    <span class="n">try_enum</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">Rune</span><span class="p">,</span> <span class="n">Spell</span><span class="p">,</span> <span class="n">SpellsSection</span>
@@ -279,7 +291,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">magic_type</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;magic_type&quot;</span><span class="p">))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_table_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_parse_table_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the attributes of a table.</span>
 
 <span class="sd">        Create a dictionary where every key is the left column (cleaned up) and the value is the right column.</span>

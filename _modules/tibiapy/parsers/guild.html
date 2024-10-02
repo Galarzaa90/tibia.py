@@ -48,15 +48,29 @@
 
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.builders</span> <span class="kn">import</span> <span class="n">GuildBuilder</span><span class="p">,</span> <span class="n">GuildWarEntryBuilder</span><span class="p">,</span> <span class="n">GuildWarsBuilder</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">GuildEntry</span><span class="p">,</span> <span class="n">GuildHouse</span><span class="p">,</span> <span class="n">GuildInvite</span><span class="p">,</span> <span class="n">GuildMember</span><span class="p">,</span> <span class="n">GuildWarEntry</span><span class="p">,</span> <span class="n">GuildsSection</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">clean_text</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">,</span> <span class="n">parse_link_info</span><span class="p">,</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GuildEntry</span><span class="p">,</span>
+    <span class="n">GuildHouse</span><span class="p">,</span>
+    <span class="n">GuildInvite</span><span class="p">,</span>
+    <span class="n">GuildMember</span><span class="p">,</span>
+    <span class="n">GuildsSection</span><span class="p">,</span>
+    <span class="n">GuildWarEntry</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">clean_text</span><span class="p">,</span>
+    <span class="n">parse_form_data</span><span class="p">,</span>
+    <span class="n">parse_link_info</span><span class="p">,</span>
+    <span class="n">parse_tibia_date</span><span class="p">,</span>
+    <span class="n">parse_tibiacom_content</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">bs4</span>
+
     <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">GuildWars</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -210,8 +224,8 @@
     <span class="k">def</span> <span class="nf">_parse_current_member</span><span class="p">(</span>
             <span class="bp">cls</span><span class="p">,</span>
             <span class="n">builder</span><span class="p">:</span> <span class="n">GuildBuilder</span><span class="p">,</span>
-            <span class="n">previous_rank</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
-            <span class="n">values</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+            <span class="n">previous_rank</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+            <span class="n">values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the column texts of a member row into a member dictionary.</span>
 
@@ -328,7 +342,7 @@
             <span class="n">builder</span><span class="o">.</span><span class="n">active</span><span class="p">(</span><span class="s2">&quot;currently active&quot;</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_logo</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">GuildBuilder</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_parse_logo</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">GuildBuilder</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the guild logo and saves it to the instance.</span>
 
 <span class="sd">        Parameters</span>

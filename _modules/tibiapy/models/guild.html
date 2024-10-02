@@ -45,14 +45,14 @@
   <h1>Source code for tibiapy.models.guild</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models for guilds and members.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">computed_field</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">Vocation</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">BaseHouse</span><span class="p">,</span> <span class="n">BaseGuild</span><span class="p">,</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_world_guilds_url</span><span class="p">,</span> <span class="n">get_guild_url</span><span class="p">,</span> <span class="n">get_guild_wars_url</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">BaseGuild</span><span class="p">,</span> <span class="n">BaseHouse</span><span class="p">,</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_guild_url</span><span class="p">,</span> <span class="n">get_guild_wars_url</span><span class="p">,</span> <span class="n">get_world_guilds_url</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;GuildHouse&quot;</span><span class="p">,</span>
@@ -138,9 +138,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The reason why the guild will get disbanded.&quot;&quot;&quot;</span>
     <span class="n">homepage</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The guild&#39;s homepage, if any.&quot;&quot;&quot;</span>
-    <span class="n">members</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildMember</span><span class="p">]</span>
+    <span class="n">members</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildMember</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;List of guild members.&quot;&quot;&quot;</span>
-    <span class="n">invites</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildInvite</span><span class="p">]</span>
+    <span class="n">invites</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildInvite</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;List of invited characters.&quot;&quot;&quot;</span>
 
     <span class="nd">@computed_field</span>
@@ -156,13 +156,13 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">online_members</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">online_members</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildMember</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">online_members</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildMember</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;List of currently online members.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">is_online</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">))</span>
 
     <span class="nd">@computed_field</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">ranks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">ranks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ranks in their hierarchical order.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">OrderedDict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">rank</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">))</span>
 
@@ -172,7 +172,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vice_leaders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildMember</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">vice_leaders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildMember</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The vice leader of the guilds.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
@@ -180,7 +180,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">take_while</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rank</span><span class="p">))</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">members_by_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildMember</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">members_by_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildMember</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a mapping of members, grouped by their guild rank.&quot;&quot;&quot;</span>
         <span class="n">rank_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
         <span class="p">[</span><span class="n">rank_dict</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">rank</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
@@ -211,18 +211,18 @@
 
     <span class="n">world</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the world. If :obj:`None`, the section belongs to a world that doesn&#39;t exist.&quot;&quot;&quot;</span>
-    <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildEntry</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildEntry</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of guilds in the world.&quot;&quot;&quot;</span>
-    <span class="n">available_worlds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">available_worlds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of worlds available for selection.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">active_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildEntry</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">active_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of the guilds that are active.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">in_formation_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildEntry</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">in_formation_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of the guilds that are in course of formation.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">g</span><span class="o">.</span><span class="n">active</span><span class="p">]</span>
 
@@ -291,7 +291,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the guild.&quot;&quot;&quot;</span>
     <span class="n">is_current</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">GuildWarEntry</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The current war the guild is involved in.&quot;&quot;&quot;</span>
-    <span class="n">history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">GuildWarEntry</span><span class="p">]</span>
+    <span class="n">history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">GuildWarEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The previous wars the guild has been involved in.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>

@@ -51,42 +51,129 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="kn">import</span> <span class="nn">aiohttp</span>
 <span class="kn">import</span> <span class="nn">aiohttp_socks</span>
 
 <span class="kn">import</span> <span class="nn">tibiapy</span>
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BazaarType</span><span class="p">,</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span>
-                           <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">NewsCategory</span><span class="p">,</span> <span class="n">NewsType</span><span class="p">,</span> <span class="n">PvpTypeFilter</span><span class="p">,</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellSorting</span><span class="p">,</span>
-                           <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellVocationFilter</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BazaarType</span><span class="p">,</span>
+    <span class="n">HighscoresBattlEyeType</span><span class="p">,</span>
+    <span class="n">HighscoresCategory</span><span class="p">,</span>
+    <span class="n">HighscoresProfession</span><span class="p">,</span>
+    <span class="n">HouseOrder</span><span class="p">,</span>
+    <span class="n">HouseStatus</span><span class="p">,</span>
+    <span class="n">HouseType</span><span class="p">,</span>
+    <span class="n">NewsCategory</span><span class="p">,</span>
+    <span class="n">NewsType</span><span class="p">,</span>
+    <span class="n">PvpTypeFilter</span><span class="p">,</span>
+    <span class="n">SpellGroup</span><span class="p">,</span>
+    <span class="n">SpellSorting</span><span class="p">,</span>
+    <span class="n">SpellType</span><span class="p">,</span>
+    <span class="n">SpellVocationFilter</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">ForbiddenError</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">TibiaResponse</span>
 <span class="kn">from</span> <span class="nn">tibiapy.parsers</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">AuctionParser</span><span class="p">,</span> <span class="n">BoostableBossesParser</span><span class="p">,</span> <span class="n">BoostedCreaturesParser</span><span class="p">,</span> <span class="n">CMPostArchiveParser</span><span class="p">,</span> <span class="n">CharacterBazaarParser</span><span class="p">,</span>
-    <span class="n">CharacterParser</span><span class="p">,</span> <span class="n">CreatureParser</span><span class="p">,</span> <span class="n">CreaturesSectionParser</span><span class="p">,</span> <span class="n">EventScheduleParser</span><span class="p">,</span> <span class="n">FansitesSectionParser</span><span class="p">,</span>
+    <span class="n">AuctionParser</span><span class="p">,</span>
+    <span class="n">BoostableBossesParser</span><span class="p">,</span>
+    <span class="n">BoostedCreaturesParser</span><span class="p">,</span>
+    <span class="n">CharacterBazaarParser</span><span class="p">,</span>
+    <span class="n">CharacterParser</span><span class="p">,</span>
+    <span class="n">CMPostArchiveParser</span><span class="p">,</span>
+    <span class="n">CreatureParser</span><span class="p">,</span>
+    <span class="n">CreaturesSectionParser</span><span class="p">,</span>
+    <span class="n">EventScheduleParser</span><span class="p">,</span>
+    <span class="n">FansitesSectionParser</span><span class="p">,</span>
     <span class="n">ForumAnnouncementParser</span><span class="p">,</span>
-    <span class="n">ForumBoardParser</span><span class="p">,</span> <span class="n">ForumSectionParser</span><span class="p">,</span> <span class="n">ForumThreadParser</span><span class="p">,</span> <span class="n">GuildParser</span><span class="p">,</span> <span class="n">GuildWarsParser</span><span class="p">,</span> <span class="n">GuildsSectionParser</span><span class="p">,</span>
-    <span class="n">HighscoresParser</span><span class="p">,</span> <span class="n">HouseParser</span><span class="p">,</span> <span class="n">HousesSectionParser</span><span class="p">,</span> <span class="n">KillStatisticsParser</span><span class="p">,</span> <span class="n">LeaderboardParser</span><span class="p">,</span> <span class="n">NewsArchiveParser</span><span class="p">,</span>
-    <span class="n">NewsParser</span><span class="p">,</span> <span class="n">SpellParser</span><span class="p">,</span> <span class="n">SpellsSectionParser</span><span class="p">,</span> <span class="n">WorldOverviewParser</span><span class="p">,</span> <span class="n">WorldParser</span><span class="p">,</span>
+    <span class="n">ForumBoardParser</span><span class="p">,</span>
+    <span class="n">ForumSectionParser</span><span class="p">,</span>
+    <span class="n">ForumThreadParser</span><span class="p">,</span>
+    <span class="n">GuildParser</span><span class="p">,</span>
+    <span class="n">GuildsSectionParser</span><span class="p">,</span>
+    <span class="n">GuildWarsParser</span><span class="p">,</span>
+    <span class="n">HighscoresParser</span><span class="p">,</span>
+    <span class="n">HouseParser</span><span class="p">,</span>
+    <span class="n">HousesSectionParser</span><span class="p">,</span>
+    <span class="n">KillStatisticsParser</span><span class="p">,</span>
+    <span class="n">LeaderboardParser</span><span class="p">,</span>
+    <span class="n">NewsArchiveParser</span><span class="p">,</span>
+    <span class="n">NewsParser</span><span class="p">,</span>
+    <span class="n">SpellParser</span><span class="p">,</span>
+    <span class="n">SpellsSectionParser</span><span class="p">,</span>
+    <span class="n">WorldOverviewParser</span><span class="p">,</span>
+    <span class="n">WorldParser</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">get_auction_url</span><span class="p">,</span> <span class="n">get_bazaar_url</span><span class="p">,</span> <span class="n">get_boostable_bosses_url</span><span class="p">,</span> <span class="n">get_character_url</span><span class="p">,</span> <span class="n">get_cm_post_archive_url</span><span class="p">,</span>
-    <span class="n">get_community_boards_url</span><span class="p">,</span> <span class="n">get_creature_url</span><span class="p">,</span> <span class="n">get_creatures_section_url</span><span class="p">,</span> <span class="n">get_event_schedule_url</span><span class="p">,</span>
-    <span class="n">get_fansites_url</span><span class="p">,</span> <span class="n">get_forum_announcement_url</span><span class="p">,</span> <span class="n">get_forum_board_url</span><span class="p">,</span> <span class="n">get_forum_post_url</span><span class="p">,</span> <span class="n">get_forum_section_url</span><span class="p">,</span>
+    <span class="n">get_auction_url</span><span class="p">,</span>
+    <span class="n">get_bazaar_url</span><span class="p">,</span>
+    <span class="n">get_boostable_bosses_url</span><span class="p">,</span>
+    <span class="n">get_character_url</span><span class="p">,</span>
+    <span class="n">get_cm_post_archive_url</span><span class="p">,</span>
+    <span class="n">get_community_boards_url</span><span class="p">,</span>
+    <span class="n">get_creature_url</span><span class="p">,</span>
+    <span class="n">get_creatures_section_url</span><span class="p">,</span>
+    <span class="n">get_event_schedule_url</span><span class="p">,</span>
+    <span class="n">get_fansites_url</span><span class="p">,</span>
+    <span class="n">get_forum_announcement_url</span><span class="p">,</span>
+    <span class="n">get_forum_board_url</span><span class="p">,</span>
+    <span class="n">get_forum_post_url</span><span class="p">,</span>
+    <span class="n">get_forum_section_url</span><span class="p">,</span>
     <span class="n">get_forum_thread_url</span><span class="p">,</span>
-    <span class="n">get_guild_url</span><span class="p">,</span> <span class="n">get_guild_wars_url</span><span class="p">,</span> <span class="n">get_highscores_url</span><span class="p">,</span> <span class="n">get_house_url</span><span class="p">,</span> <span class="n">get_houses_section_url</span><span class="p">,</span>
-    <span class="n">get_kill_statistics_url</span><span class="p">,</span> <span class="n">get_leaderboards_url</span><span class="p">,</span> <span class="n">get_news_archive_url</span><span class="p">,</span> <span class="n">get_news_url</span><span class="p">,</span> <span class="n">get_spell_url</span><span class="p">,</span>
-    <span class="n">get_spells_section_url</span><span class="p">,</span> <span class="n">get_support_boards_url</span><span class="p">,</span> <span class="n">get_trade_boards_url</span><span class="p">,</span> <span class="n">get_world_boards_url</span><span class="p">,</span> <span class="n">get_world_guilds_url</span><span class="p">,</span>
-    <span class="n">get_world_overview_url</span><span class="p">,</span> <span class="n">get_world_url</span><span class="p">,</span>
+    <span class="n">get_guild_url</span><span class="p">,</span>
+    <span class="n">get_guild_wars_url</span><span class="p">,</span>
+    <span class="n">get_highscores_url</span><span class="p">,</span>
+    <span class="n">get_house_url</span><span class="p">,</span>
+    <span class="n">get_houses_section_url</span><span class="p">,</span>
+    <span class="n">get_kill_statistics_url</span><span class="p">,</span>
+    <span class="n">get_leaderboards_url</span><span class="p">,</span>
+    <span class="n">get_news_archive_url</span><span class="p">,</span>
+    <span class="n">get_news_url</span><span class="p">,</span>
+    <span class="n">get_spell_url</span><span class="p">,</span>
+    <span class="n">get_spells_section_url</span><span class="p">,</span>
+    <span class="n">get_support_boards_url</span><span class="p">,</span>
+    <span class="n">get_trade_boards_url</span><span class="p">,</span>
+    <span class="n">get_world_boards_url</span><span class="p">,</span>
+    <span class="n">get_world_guilds_url</span><span class="p">,</span>
+    <span class="n">get_world_overview_url</span><span class="p">,</span>
+    <span class="n">get_world_url</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">Auction</span><span class="p">,</span> <span class="n">AuctionFilters</span><span class="p">,</span> <span class="n">BoostableBosses</span><span class="p">,</span> <span class="n">BoostedCreatures</span><span class="p">,</span> <span class="n">BossEntry</span><span class="p">,</span> <span class="n">CMPostArchive</span><span class="p">,</span> <span class="n">Character</span><span class="p">,</span>
-        <span class="n">CharacterBazaar</span><span class="p">,</span> <span class="n">Creature</span><span class="p">,</span> <span class="n">CreatureEntry</span><span class="p">,</span> <span class="n">CreaturesSection</span><span class="p">,</span> <span class="n">EventSchedule</span><span class="p">,</span> <span class="n">FansitesSection</span><span class="p">,</span> <span class="n">ForumAnnouncement</span><span class="p">,</span>
-        <span class="n">ForumBoard</span><span class="p">,</span> <span class="n">ForumSection</span><span class="p">,</span> <span class="n">ForumThread</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">GuildWars</span><span class="p">,</span> <span class="n">GuildsSection</span><span class="p">,</span> <span class="n">Highscores</span><span class="p">,</span> <span class="n">House</span><span class="p">,</span> <span class="n">HousesSection</span><span class="p">,</span>
-        <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">Leaderboard</span><span class="p">,</span> <span class="n">News</span><span class="p">,</span> <span class="n">NewsArchive</span><span class="p">,</span> <span class="n">Spell</span><span class="p">,</span> <span class="n">SpellsSection</span><span class="p">,</span> <span class="n">World</span><span class="p">,</span> <span class="n">WorldOverview</span><span class="p">,</span>
+        <span class="n">AjaxPaginator</span><span class="p">,</span>
+        <span class="n">Auction</span><span class="p">,</span>
+        <span class="n">AuctionFilters</span><span class="p">,</span>
+        <span class="n">BoostableBosses</span><span class="p">,</span>
+        <span class="n">BoostedCreatures</span><span class="p">,</span>
+        <span class="n">BossEntry</span><span class="p">,</span>
+        <span class="n">Character</span><span class="p">,</span>
+        <span class="n">CharacterBazaar</span><span class="p">,</span>
+        <span class="n">CMPostArchive</span><span class="p">,</span>
+        <span class="n">Creature</span><span class="p">,</span>
+        <span class="n">CreatureEntry</span><span class="p">,</span>
+        <span class="n">CreaturesSection</span><span class="p">,</span>
+        <span class="n">EventSchedule</span><span class="p">,</span>
+        <span class="n">FansitesSection</span><span class="p">,</span>
+        <span class="n">ForumAnnouncement</span><span class="p">,</span>
+        <span class="n">ForumBoard</span><span class="p">,</span>
+        <span class="n">ForumSection</span><span class="p">,</span>
+        <span class="n">ForumThread</span><span class="p">,</span>
+        <span class="n">Guild</span><span class="p">,</span>
+        <span class="n">GuildsSection</span><span class="p">,</span>
+        <span class="n">GuildWars</span><span class="p">,</span>
+        <span class="n">Highscores</span><span class="p">,</span>
+        <span class="n">House</span><span class="p">,</span>
+        <span class="n">HousesSection</span><span class="p">,</span>
+        <span class="n">KillStatistics</span><span class="p">,</span>
+        <span class="n">Leaderboard</span><span class="p">,</span>
+        <span class="n">News</span><span class="p">,</span>
+        <span class="n">NewsArchive</span><span class="p">,</span>
+        <span class="n">Spell</span><span class="p">,</span>
+        <span class="n">SpellsSection</span><span class="p">,</span>
+        <span class="n">World</span><span class="p">,</span>
+        <span class="n">WorldOverview</span><span class="p">,</span>
     <span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -194,8 +281,8 @@
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">headers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">headers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="o">*</span><span class="p">,</span>
             <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
@@ -423,8 +510,8 @@
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">from_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
             <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">categories</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">types</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">categories</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">types</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="o">*</span><span class="p">,</span>
             <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">NewsArchive</span><span class="p">]:</span>
@@ -476,8 +563,8 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news_archive_by_days</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-            <span class="n">categories</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">types</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">categories</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">types</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">NewsType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="o">*</span><span class="p">,</span>
             <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">NewsArchive</span><span class="p">]:</span>
@@ -871,7 +958,7 @@
             <span class="n">vocation</span><span class="p">:</span> <span class="n">HighscoresProfession</span> <span class="o">=</span> <span class="n">HighscoresProfession</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span>
             <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
             <span class="n">battleye_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">HighscoresBattlEyeType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">pvp_types</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">PvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">pvp_types</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">PvpTypeFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="o">*</span><span class="p">,</span>
             <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Highscores</span><span class="p">]]:</span>

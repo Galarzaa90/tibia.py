@@ -43,7 +43,7 @@
           <div class="body" role="main">
             
   <h1>Source code for tibiapy.models.fansite</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 
@@ -92,13 +92,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;URL to the fansite&#39;s logo.&quot;&quot;&quot;</span>
     <span class="n">contact</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the contact person.&quot;&quot;&quot;</span>
-    <span class="n">content</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FansiteContent</span><span class="p">]</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">FansiteContent</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of content categories for the site.&quot;&quot;&quot;</span>
-    <span class="n">social_media</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">FansiteSocialMedia</span><span class="p">]</span>
+    <span class="n">social_media</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">FansiteSocialMedia</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of the social media sites the fansite has.&quot;&quot;&quot;</span>
-    <span class="n">languages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">languages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of the languages the site is available in.&quot;&quot;&quot;</span>
-    <span class="n">specials</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">specials</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A description of features or highligts.&quot;&quot;&quot;</span>
     <span class="n">fansite_item_image_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The URL to the fansite item&#39;s icon, if available.&quot;&quot;&quot;</span></div>
@@ -110,9 +110,9 @@
 <span class="k">class</span> <span class="nc">FansitesSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The fansites section of Tibia.com.&quot;&quot;&quot;</span>
 
-    <span class="n">promoted_fansites</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Fansite</span><span class="p">]</span>
+    <span class="n">promoted_fansites</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Fansite</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Promoted fansites.&quot;&quot;&quot;</span>
-    <span class="n">supported_fansites</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Fansite</span><span class="p">]</span>
+    <span class="n">supported_fansites</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Fansite</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Supported fansites.&quot;&quot;&quot;</span></div>
 
 </pre></div>

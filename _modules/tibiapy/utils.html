@@ -50,7 +50,8 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
@@ -68,16 +69,16 @@
 <span class="k">class</span> <span class="nc">FormData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents data in a HTML form.&quot;&quot;&quot;</span>
 
-    <span class="n">values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The values in the form.</span>
 
 <span class="sd">    This contains text fields, select fields and radios.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">values_multiple</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">values_multiple</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The selected values in the form of inputs that allow multiple selections.</span>
 
 <span class="sd">    This contains the values of check boxes.&quot;&quot;&quot;</span>
-    <span class="n">available_options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">available_options</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The available options in select fields, radios and check boxes.&quot;&quot;&quot;</span>
     <span class="n">action</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The form&#39;s action URL.&quot;&quot;&quot;</span>
@@ -124,7 +125,7 @@
 
 <div class="viewcode-block" id="get_rows">
 <a class="viewcode-back" href="../../api.html#tibiapy.utils.get_rows">[docs]</a>
-<span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="n">table_tag</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bs4</span><span class="o">.</span><span class="n">ResultSet</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="n">table_tag</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Resultset</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all the row tags inside the container.</span>
 
 <span class="sd">    A very simple shortcut function used for better code semantics.</span>
@@ -234,7 +235,7 @@
 
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">query</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span></div>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span></div>
 
 
 
@@ -332,7 +333,7 @@
             <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">)</span>  <span class="c1"># noqa: DTZ007</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y %H:%M&quot;</span><span class="p">)</span>  <span class="c1"># noqa: DTZ007</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
         <span class="c1"># Getting the offset</span>
         <span class="k">if</span> <span class="n">tz</span> <span class="o">==</span> <span class="s2">&quot;CET&quot;</span><span class="p">:</span>
             <span class="n">utc_offset</span> <span class="o">=</span> <span class="mi">1</span>
@@ -552,7 +553,7 @@
 <span class="k">def</span> <span class="nf">parse_tables_map</span><span class="p">(</span>
         <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">,</span>
         <span class="n">selector</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;div.TableContentContainer&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse Tibia.com style tables, building a map with their title as key.&quot;&quot;&quot;</span>
     <span class="n">tables</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;div.TableContainer&quot;</span><span class="p">)</span>
     <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
@@ -603,7 +604,7 @@
 
 <div class="viewcode-block" id="parse_tibiacom_tables">
 <a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_tibiacom_tables">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_tibiacom_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">parse_tibiacom_tables</span><span class="p">(</span><span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse tables from Tibia.com into a mapping by the tables title.</span>
 
 <span class="sd">    This is used for the table style used in Tibia.com, where a table is wrapped in a container with a title.</span>
@@ -632,7 +633,7 @@
 
 <div class="viewcode-block" id="try_enum">
 <a class="viewcode-back" href="../../api.html#tibiapy.utils.try_enum">[docs]</a>
-<span class="k">def</span> <span class="nf">try_enum</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">D</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">D</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">try_enum</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">D</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">D</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Attempt to convert a value into their enum value.</span>
 
 <span class="sd">    Parameters</span>
@@ -699,7 +700,7 @@
 
 <div class="viewcode-block" id="split_list">
 <a class="viewcode-back" href="../../api.html#tibiapy.utils.split_list">[docs]</a>
-<span class="k">def</span> <span class="nf">split_list</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">last_separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; and &quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">split_list</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">last_separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; and &quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Split a string listing elements into an actual list.</span>
 
 <span class="sd">    Parameters</span>
@@ -733,7 +734,7 @@
 
 <div class="viewcode-block" id="parse_popup">
 <a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_popup">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_popup</span><span class="p">(</span><span class="n">popup_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">parse_popup</span><span class="p">(</span><span class="n">popup_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse the information popups used through Tibia.com.</span>
 
 <span class="sd">    Parameters</span>
@@ -770,7 +771,7 @@
 
 <div class="viewcode-block" id="parse_pagination">
 <a class="viewcode-back" href="../../api.html#tibiapy.utils.parse_pagination">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_pagination</span><span class="p">(</span><span class="n">pagination_block</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">parse_pagination</span><span class="p">(</span><span class="n">pagination_block</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a pagination section in Tibia.com and extracts its information.</span>
 
 <span class="sd">    Parameters</span>

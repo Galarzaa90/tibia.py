@@ -49,15 +49,27 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.builders.highscores</span> <span class="kn">import</span> <span class="n">HighscoresBuilder</span>
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HighscoresBattlEyeType</span><span class="p">,</span> <span class="n">HighscoresCategory</span><span class="p">,</span> <span class="n">HighscoresProfession</span><span class="p">,</span> <span class="n">PvpTypeFilter</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">HighscoresBattlEyeType</span><span class="p">,</span>
+    <span class="n">HighscoresCategory</span><span class="p">,</span>
+    <span class="n">HighscoresProfession</span><span class="p">,</span>
+    <span class="n">PvpTypeFilter</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">HighscoresEntry</span><span class="p">,</span> <span class="n">LoyaltyHighscoresEntry</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">clean_text</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">,</span> <span class="n">parse_integer</span><span class="p">,</span> <span class="n">parse_pagination</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span> <span class="n">try_enum</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">clean_text</span><span class="p">,</span>
+    <span class="n">parse_form_data</span><span class="p">,</span>
+    <span class="n">parse_integer</span><span class="p">,</span>
+    <span class="n">parse_pagination</span><span class="p">,</span>
+    <span class="n">parse_tibiacom_content</span><span class="p">,</span>
+    <span class="n">try_enum</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">Highscores</span>
@@ -175,7 +187,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">available_worlds</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">available_options</span><span class="p">[</span><span class="s2">&quot;world&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">])</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_parse_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the information tables found in a highscores page.</span>
 
 <span class="sd">        Parameters</span>
@@ -185,7 +197,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        :class:`OrderedDict`[:class:`str`, :class:`bs4.Tag`]</span>
+<span class="sd">        :class:`Ordereddict`[:class:`str`, :class:`bs4.Tag`]</span>
 <span class="sd">            A dictionary containing all the table rows, with the table headers as keys.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>

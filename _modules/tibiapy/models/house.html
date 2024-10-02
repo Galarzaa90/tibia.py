@@ -45,10 +45,10 @@
   <h1>Source code for tibiapy.models.house</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models for the houses section.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">Sex</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">HouseWithId</span><span class="p">,</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">Sex</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">HouseWithId</span>
 <span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_character_url</span><span class="p">,</span> <span class="n">get_houses_section_url</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
@@ -152,11 +152,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of houses to show.&quot;&quot;&quot;</span>
     <span class="n">order</span><span class="p">:</span> <span class="n">HouseOrder</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The ordering to use for the results.&quot;&quot;&quot;</span>
-    <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">HouseEntry</span><span class="p">]</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">HouseEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The houses matching the filters.&quot;&quot;&quot;</span>
-    <span class="n">available_worlds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">available_worlds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of available worlds to choose from.&quot;&quot;&quot;</span>
-    <span class="n">available_towns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">available_towns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of available towns to choose from.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>

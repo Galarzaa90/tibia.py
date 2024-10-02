@@ -49,16 +49,34 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.builders</span> <span class="kn">import</span> <span class="n">CharacterBuilder</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Achievement</span><span class="p">,</span> <span class="n">Character</span><span class="p">,</span> <span class="n">AccountBadge</span><span class="p">,</span> <span class="n">AccountInformation</span><span class="p">,</span> <span class="n">OtherCharacter</span><span class="p">,</span> <span class="n">DeathParticipant</span><span class="p">,</span>
-                            <span class="n">Death</span><span class="p">,</span> <span class="n">GuildMembership</span><span class="p">,</span> <span class="n">CharacterHouse</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_rows</span><span class="p">,</span> <span class="n">parse_popup</span><span class="p">,</span> <span class="n">parse_tibia_date</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span>
-                           <span class="n">split_list</span><span class="p">,</span>
-                           <span class="n">try_enum</span><span class="p">,</span> <span class="n">parse_link_info</span><span class="p">,</span> <span class="n">clean_text</span><span class="p">,</span> <span class="n">parse_integer</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AccountBadge</span><span class="p">,</span>
+    <span class="n">AccountInformation</span><span class="p">,</span>
+    <span class="n">Achievement</span><span class="p">,</span>
+    <span class="n">Character</span><span class="p">,</span>
+    <span class="n">CharacterHouse</span><span class="p">,</span>
+    <span class="n">Death</span><span class="p">,</span>
+    <span class="n">DeathParticipant</span><span class="p">,</span>
+    <span class="n">GuildMembership</span><span class="p">,</span>
+    <span class="n">OtherCharacter</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">clean_text</span><span class="p">,</span>
+    <span class="n">get_rows</span><span class="p">,</span>
+    <span class="n">parse_integer</span><span class="p">,</span>
+    <span class="n">parse_link_info</span><span class="p">,</span>
+    <span class="n">parse_popup</span><span class="p">,</span>
+    <span class="n">parse_tibia_date</span><span class="p">,</span>
+    <span class="n">parse_tibia_datetime</span><span class="p">,</span>
+    <span class="n">parse_tibiacom_content</span><span class="p">,</span>
+    <span class="n">split_list</span><span class="p">,</span>
+    <span class="n">try_enum</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">bs4</span>
@@ -162,7 +180,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">account_information</span><span class="p">(</span><span class="n">AccountInformation</span><span class="p">(</span><span class="n">created</span><span class="o">=</span><span class="n">created</span><span class="p">,</span> <span class="n">loyalty_title</span><span class="o">=</span><span class="n">loyalty_title</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_achievements</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_parse_achievements</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s displayed achievements.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
@@ -178,7 +196,7 @@
             <span class="n">builder</span><span class="o">.</span><span class="n">add_achievement</span><span class="p">(</span><span class="n">Achievement</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">grade</span><span class="o">=</span><span class="n">grade</span><span class="p">,</span> <span class="n">is_secret</span><span class="o">=</span><span class="n">secret</span><span class="p">))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_account_badges</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_parse_account_badges</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s displayed badges.&quot;&quot;&quot;</span>
         <span class="n">row</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td &gt; span&quot;</span><span class="p">)</span>
@@ -192,7 +210,7 @@
             <span class="n">builder</span><span class="o">.</span><span class="n">add_account_badge</span><span class="p">(</span><span class="n">AccountBadge</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">icon_url</span><span class="o">=</span><span class="n">icon_url</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_character_information</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_parse_character_information</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s basic information and applies the found values.&quot;&quot;&quot;</span>
         <span class="n">field_actions</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">rv</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_name_field</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
@@ -276,7 +294,7 @@
         <span class="n">builder</span><span class="o">.</span><span class="n">guild_membership</span><span class="p">(</span><span class="n">GuildMembership</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">clean_text</span><span class="p">(</span><span class="n">guild_link</span><span class="p">),</span> <span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_deaths</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_parse_deaths</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s recent deaths.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
@@ -336,7 +354,7 @@
         <span class="k">return</span> <span class="n">DeathParticipant</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">is_player</span><span class="o">=</span><span class="n">player</span><span class="p">,</span> <span class="n">summon</span><span class="o">=</span><span class="n">summon</span><span class="p">,</span> <span class="n">is_traded</span><span class="o">=</span><span class="n">traded</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_other_characters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_parse_other_characters</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span> <span class="n">CharacterBuilder</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the character&#39;s other visible characters.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">cols_raw</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
@@ -372,7 +390,7 @@
             <span class="p">))</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">_parse_tables</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parsed_content</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the tables contained in a character&#39;s page and returns a mapping of their titles and rows.&quot;&quot;&quot;</span>
         <span class="n">tables</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;table[width=&quot;100%&quot;]&#39;</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>

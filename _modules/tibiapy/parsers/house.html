@@ -45,21 +45,29 @@
   <h1>Source code for tibiapy.parsers.house</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models related to the houses section in Tibia.com.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">bs4</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.builders.house</span> <span class="kn">import</span> <span class="n">HousesSectionBuilder</span><span class="p">,</span> <span class="n">HouseEntryBuilder</span><span class="p">,</span> <span class="n">HouseBuilder</span>
+<span class="kn">from</span> <span class="nn">tibiapy.builders.house</span> <span class="kn">import</span> <span class="n">HouseBuilder</span><span class="p">,</span> <span class="n">HouseEntryBuilder</span><span class="p">,</span> <span class="n">HousesSectionBuilder</span>
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">HouseOrder</span><span class="p">,</span> <span class="n">HouseStatus</span><span class="p">,</span> <span class="n">HouseType</span><span class="p">,</span> <span class="n">Sex</span>
 <span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">get_rows</span><span class="p">,</span> <span class="n">parse_tibia_datetime</span><span class="p">,</span> <span class="n">parse_tibia_money</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span><span class="p">,</span>
-                           <span class="n">parse_tibiacom_tables</span><span class="p">,</span>
-                           <span class="n">try_enum</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">clean_text</span><span class="p">,</span>
+    <span class="n">get_rows</span><span class="p">,</span>
+    <span class="n">parse_form_data</span><span class="p">,</span>
+    <span class="n">parse_tibia_datetime</span><span class="p">,</span>
+    <span class="n">parse_tibia_money</span><span class="p">,</span>
+    <span class="n">parse_tibiacom_content</span><span class="p">,</span>
+    <span class="n">parse_tibiacom_tables</span><span class="p">,</span>
+    <span class="n">try_enum</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">HousesSection</span><span class="p">,</span> <span class="n">House</span>
+    <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">House</span><span class="p">,</span> <span class="n">HousesSection</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;HousesSectionParser&quot;</span><span class="p">,</span>

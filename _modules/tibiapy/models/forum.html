@@ -45,14 +45,21 @@
   <h1>Source code for tibiapy.models.forum</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models related to the forums.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">ThreadStatus</span><span class="p">,</span> <span class="n">Vocation</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">GuildMembership</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.base</span> <span class="kn">import</span> <span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.pagination</span> <span class="kn">import</span> <span class="n">PaginatedWithUrl</span>
-<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_character_url</span><span class="p">,</span> <span class="n">get_cm_post_archive_url</span><span class="p">,</span> <span class="n">get_forum_announcement_url</span><span class="p">,</span> <span class="n">get_forum_board_url</span><span class="p">,</span>
-                          <span class="n">get_forum_post_url</span><span class="p">,</span> <span class="n">get_forum_section_url</span><span class="p">,</span> <span class="n">get_forum_thread_url</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_character_url</span><span class="p">,</span>
+    <span class="n">get_cm_post_archive_url</span><span class="p">,</span>
+    <span class="n">get_forum_announcement_url</span><span class="p">,</span>
+    <span class="n">get_forum_board_url</span><span class="p">,</span>
+    <span class="n">get_forum_post_url</span><span class="p">,</span>
+    <span class="n">get_forum_section_url</span><span class="p">,</span>
+    <span class="n">get_forum_thread_url</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;AnnouncementEntry&quot;</span><span class="p">,</span>
@@ -214,7 +221,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The start date of the displayed posts.&quot;&quot;&quot;</span>
     <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The end date of the displayed posts.&quot;&quot;&quot;</span>
-    <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CMPost</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">CMPost</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of posts for the selected range.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -353,7 +360,7 @@
 
     <span class="n">section_id</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The internal ID of the section.&quot;&quot;&quot;</span>
-    <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BoardEntry</span><span class="p">]</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">BoardEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The boards in the forum section.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -446,9 +453,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum age of the displayed threads, in days.</span>
 
 <span class="sd">    -1 means all threads will be shown.&quot;&quot;&quot;</span>
-    <span class="n">announcements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AnnouncementEntry</span><span class="p">]</span>
+    <span class="n">announcements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AnnouncementEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of announcements currently visible.&quot;&quot;&quot;</span>
-    <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">]</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of threads currently visible.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ForumBoard.get_page_url">
@@ -523,7 +530,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of the previous topic.&quot;&quot;&quot;</span>
     <span class="n">next_topic_number</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of the next topic.&quot;&quot;&quot;</span>
-    <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ForumPost</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ForumPost</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of posts the thread has.&quot;&quot;&quot;</span>
     <span class="n">golden_frame</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the thread has a golden frame or not.</span>

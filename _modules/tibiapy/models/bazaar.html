@@ -46,11 +46,22 @@
 <span></span><span class="sd">&quot;&quot;&quot;Models relatd to the character bazaar.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AuctionBattlEyeFilter</span><span class="p">,</span> <span class="n">AuctionOrderBy</span><span class="p">,</span> <span class="n">AuctionOrderDirection</span><span class="p">,</span> <span class="n">AuctionSearchType</span><span class="p">,</span>
-                           <span class="n">AuctionSkillFilter</span><span class="p">,</span> <span class="n">AuctionStatus</span><span class="p">,</span> <span class="n">AuctionVocationFilter</span><span class="p">,</span> <span class="n">BazaarType</span><span class="p">,</span> <span class="n">BidType</span><span class="p">,</span> <span class="n">PvpTypeFilter</span><span class="p">,</span>
-                           <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AuctionBattlEyeFilter</span><span class="p">,</span>
+    <span class="n">AuctionOrderBy</span><span class="p">,</span>
+    <span class="n">AuctionOrderDirection</span><span class="p">,</span>
+    <span class="n">AuctionSearchType</span><span class="p">,</span>
+    <span class="n">AuctionSkillFilter</span><span class="p">,</span>
+    <span class="n">AuctionStatus</span><span class="p">,</span>
+    <span class="n">AuctionVocationFilter</span><span class="p">,</span>
+    <span class="n">BazaarType</span><span class="p">,</span>
+    <span class="n">BidType</span><span class="p">,</span>
+    <span class="n">PvpTypeFilter</span><span class="p">,</span>
+    <span class="n">Sex</span><span class="p">,</span>
+    <span class="n">Vocation</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">tibiapy.models.pagination</span> <span class="kn">import</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">PaginatedWithUrl</span>
 
@@ -63,6 +74,7 @@
     <span class="s2">&quot;BlessingEntry&quot;</span><span class="p">,</span>
     <span class="s2">&quot;CharacterBazaar&quot;</span><span class="p">,</span>
     <span class="s2">&quot;CharmEntry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DisplayImage&quot;</span><span class="p">,</span>
     <span class="s2">&quot;FamiliarEntry&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Familiars&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ItemEntry&quot;</span><span class="p">,</span>
@@ -126,11 +138,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The search term to filter out auctions.&quot;&quot;&quot;</span>
     <span class="n">search_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionSearchType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of search to use. Defines the behaviour of :py:attr:`search_string`.&quot;&quot;&quot;</span>
-    <span class="n">available_worlds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">available_worlds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The list of available worlds to select to filter.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">query_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">query_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The query parameters representing this filter.&quot;&quot;&quot;</span>
         <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;filter_profession&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
@@ -472,7 +484,7 @@
 
     <span class="n">gem_type</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The type of gem.&quot;&quot;&quot;</span>
-    <span class="n">mods</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">mods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The mods or effects the gem has.&quot;&quot;&quot;</span></div>
 
 
@@ -498,7 +510,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of outfits the character has.&quot;&quot;&quot;</span>
     <span class="n">titles_count</span><span class="p">:</span> <span class="nb">int</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The number of titles the character has.&quot;&quot;&quot;</span>
-    <span class="n">skills</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SkillEntry</span><span class="p">]</span>
+    <span class="n">skills</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SkillEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The current skills of the character.&quot;&quot;&quot;</span>
     <span class="n">creation_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the character was created.&quot;&quot;&quot;</span>
@@ -554,29 +566,29 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The outfits the character has purchased from the store.&quot;&quot;&quot;</span>
     <span class="n">familiars</span><span class="p">:</span> <span class="n">Familiars</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The familiars the character has purchased or unlocked.&quot;&quot;&quot;</span>
-    <span class="n">blessings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BlessingEntry</span><span class="p">]</span>
+    <span class="n">blessings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">BlessingEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The blessings the character has.&quot;&quot;&quot;</span>
-    <span class="n">imbuements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">imbuements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The imbuements the character has unlocked access to.&quot;&quot;&quot;</span>
-    <span class="n">charms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CharmEntry</span><span class="p">]</span>
+    <span class="n">charms</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">CharmEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The charms the character has unlocked.&quot;&quot;&quot;</span>
-    <span class="n">completed_cyclopedia_map_areas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">completed_cyclopedia_map_areas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The cyclopedia map areas that the character has fully discovered.&quot;&quot;&quot;</span>
-    <span class="n">completed_quest_lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">completed_quest_lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The quest lines the character has fully completed.&quot;&quot;&quot;</span>
-    <span class="n">titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">titles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The titles the character has unlocked.&quot;&quot;&quot;</span>
-    <span class="n">achievements</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AchievementEntry</span><span class="p">]</span>
+    <span class="n">achievements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AchievementEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The achievements the character has unlocked.&quot;&quot;&quot;</span>
-    <span class="n">bestiary_progress</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]</span>
+    <span class="n">bestiary_progress</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The bestiary progress of the character.&quot;&quot;&quot;</span>
-    <span class="n">bosstiary_progress</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]</span>
+    <span class="n">bosstiary_progress</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The bosstiary progress of the character.&quot;&quot;&quot;</span>
-    <span class="n">revealed_gems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RevealedGem</span><span class="p">]</span>
+    <span class="n">revealed_gems</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">RevealedGem</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The gems that have been revealed by the character.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">completed_bestiary_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">completed_bestiary_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">BestiaryEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of completed bestiary entries.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bestiary_progress</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">is_completed</span><span class="p">]</span>
 
@@ -586,7 +598,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">regular_world_transfer_available_date</span> <span class="ow">is</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">skills_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SkillEntry</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">skills_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SkillEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;A mapping of skills by their name.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">skill</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">skill</span> <span class="k">for</span> <span class="n">skill</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">skills</span><span class="p">}</span></div>
 
@@ -611,9 +623,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The sex of the character.&quot;&quot;&quot;</span>
     <span class="n">outfit</span><span class="p">:</span> <span class="n">OutfitImage</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The current outfit selected by the user.&quot;&quot;&quot;</span>
-    <span class="n">displayed_items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ItemEntry</span><span class="p">]</span>
+    <span class="n">displayed_items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ItemEntry</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The items selected to be displayed.&quot;&quot;&quot;</span>
-    <span class="n">sales_arguments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SalesArgument</span><span class="p">]</span>
+    <span class="n">sales_arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SalesArgument</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The sale arguments selected for the auction.&quot;&quot;&quot;</span>
     <span class="n">auction_start</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The date when the auction started.&quot;&quot;&quot;</span>
