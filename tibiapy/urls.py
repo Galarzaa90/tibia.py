@@ -3,12 +3,23 @@ from __future__ import annotations
 
 import datetime
 import urllib.parse
-from typing import Optional, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 if TYPE_CHECKING:
-    from tibiapy.enums import (BazaarType, HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, HouseOrder,
-                               HouseStatus, HouseType, PvpTypeFilter, SpellGroup, SpellSorting, SpellType,
-                               SpellVocationFilter)
+    from tibiapy.enums import (
+        BazaarType,
+        HighscoresBattlEyeType,
+        HighscoresCategory,
+        HighscoresProfession,
+        HouseOrder,
+        HouseStatus,
+        HouseType,
+        PvpTypeFilter,
+        SpellGroup,
+        SpellSorting,
+        SpellType,
+        SpellVocationFilter,
+    )
     from tibiapy.models import AuctionFilters
 
 

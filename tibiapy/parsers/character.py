@@ -4,16 +4,34 @@ from __future__ import annotations
 import logging
 import re
 from collections import OrderedDict
-from typing import Callable, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, Optional
 
 from tibiapy.builders import CharacterBuilder
 from tibiapy.enums import Sex, Vocation
 from tibiapy.errors import InvalidContentError
-from tibiapy.models import (Achievement, Character, AccountBadge, AccountInformation, OtherCharacter, DeathParticipant,
-                            Death, GuildMembership, CharacterHouse)
-from tibiapy.utils import (get_rows, parse_popup, parse_tibia_date, parse_tibia_datetime, parse_tibiacom_content,
-                           split_list,
-                           try_enum, parse_link_info, clean_text, parse_integer)
+from tibiapy.models import (
+    AccountBadge,
+    AccountInformation,
+    Achievement,
+    Character,
+    CharacterHouse,
+    Death,
+    DeathParticipant,
+    GuildMembership,
+    OtherCharacter,
+)
+from tibiapy.utils import (
+    clean_text,
+    get_rows,
+    parse_integer,
+    parse_link_info,
+    parse_popup,
+    parse_tibia_date,
+    parse_tibia_datetime,
+    parse_tibiacom_content,
+    split_list,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     import bs4

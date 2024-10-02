@@ -1,6 +1,6 @@
 """Base models for paginated classes."""
-from abc import abstractmethod, ABC
-from typing import TypeVar, Generic, Optional
+from abc import ABC, abstractmethod
+from typing import Generic, Optional, TypeVar
 
 from tibiapy.models import BaseModel
 

@@ -1,20 +1,28 @@
 """Models related to the houses section in Tibia.com."""
 from __future__ import annotations
+
 import datetime
 import re
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import bs4
 
-from tibiapy.builders.house import HousesSectionBuilder, HouseEntryBuilder, HouseBuilder
+from tibiapy.builders.house import HouseBuilder, HouseEntryBuilder, HousesSectionBuilder
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.errors import InvalidContentError
-from tibiapy.utils import (clean_text, get_rows, parse_tibia_datetime, parse_tibia_money, parse_tibiacom_content,
-                           parse_tibiacom_tables,
-                           try_enum, parse_form_data)
+from tibiapy.utils import (
+    clean_text,
+    get_rows,
+    parse_form_data,
+    parse_tibia_datetime,
+    parse_tibia_money,
+    parse_tibiacom_content,
+    parse_tibiacom_tables,
+    try_enum,
+)
 
 if TYPE_CHECKING:
-    from tibiapy.models import HousesSection, House
+    from tibiapy.models import House, HousesSection
 
 __all__ = (
     "HousesSectionParser",

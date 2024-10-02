@@ -6,8 +6,15 @@ from tibiapy.models import Highscores
 
 if TYPE_CHECKING:
     import datetime
+
     from typing_extensions import Self
-    from tibiapy.enums import HighscoresCategory, HighscoresProfession, HighscoresBattlEyeType, PvpTypeFilter
+
+    from tibiapy.enums import (
+        HighscoresBattlEyeType,
+        HighscoresCategory,
+        HighscoresProfession,
+        PvpTypeFilter,
+    )
     from tibiapy.models import HighscoresEntry
 
 

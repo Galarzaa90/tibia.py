@@ -3,26 +3,65 @@ from __future__ import annotations
 import datetime
 import logging
 from contextlib import asynccontextmanager
-from typing import Optional, TypeVar
+from typing import Annotated, Optional, TypeVar
 
 import uvicorn
 from fastapi import Depends, FastAPI, Path, Query, Response
 from starlette import status
-from typing import Annotated
 
 import tibiapy
-from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
-                           AuctionSkillFilter, AuctionVocationFilter, HighscoresBattlEyeType, HighscoresCategory,
-                           HighscoresProfession, HouseOrder, HouseStatus, HouseType, NewsCategory, NewsType,
-                           PvpTypeFilter,
-                           SpellGroup, SpellSorting, SpellType, SpellVocationFilter)
-from tibiapy.models import (Auction, AuctionFilters, BoostableBosses, BossEntry, Character, CharacterBazaar, Creature,
-                            CreatureEntry, CreaturesSection, EventSchedule, FansitesSection, ForumBoard, ForumSection,
-                            ForumThread,
-                            Guild, GuildWars,
-                            GuildsSection, Highscores, House, HousesSection, KillStatistics, Leaderboard, News,
-                            NewsArchive, Spell,
-                            SpellsSection, TibiaResponse, World, WorldOverview)
+from tibiapy.enums import (
+    AuctionBattlEyeFilter,
+    AuctionOrderBy,
+    AuctionOrderDirection,
+    AuctionSearchType,
+    AuctionSkillFilter,
+    AuctionVocationFilter,
+    HighscoresBattlEyeType,
+    HighscoresCategory,
+    HighscoresProfession,
+    HouseOrder,
+    HouseStatus,
+    HouseType,
+    NewsCategory,
+    NewsType,
+    PvpTypeFilter,
+    SpellGroup,
+    SpellSorting,
+    SpellType,
+    SpellVocationFilter,
+)
+from tibiapy.models import (
+    Auction,
+    AuctionFilters,
+    BoostableBosses,
+    BossEntry,
+    Character,
+    CharacterBazaar,
+    Creature,
+    CreatureEntry,
+    CreaturesSection,
+    EventSchedule,
+    FansitesSection,
+    ForumBoard,
+    ForumSection,
+    ForumThread,
+    Guild,
+    GuildsSection,
+    GuildWars,
+    Highscores,
+    House,
+    HousesSection,
+    KillStatistics,
+    Leaderboard,
+    News,
+    NewsArchive,
+    Spell,
+    SpellsSection,
+    TibiaResponse,
+    World,
+    WorldOverview,
+)
 
 logging_formatter = logging.Formatter("[%(asctime)s][%(levelname)s] %(message)s")
 console_handler = logging.StreamHandler()

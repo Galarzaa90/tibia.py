@@ -6,9 +6,9 @@ from typing import Optional
 
 from pydantic import computed_field
 
+from tibiapy import urls
 from tibiapy.enums import Sex, Vocation
 from tibiapy.models.base import BaseCharacter, BaseGuild, BaseModel, HouseWithId
-from tibiapy import urls
 
 __all__ = (
     "AccountBadge",

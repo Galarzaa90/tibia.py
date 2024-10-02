@@ -3,15 +3,29 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from tibiapy.builders import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContentError
-from tibiapy.models import GuildEntry, GuildHouse, GuildInvite, GuildMember, GuildWarEntry, GuildsSection
-from tibiapy.utils import clean_text, parse_form_data, parse_link_info, parse_tibia_date, parse_tibiacom_content
+from tibiapy.models import (
+    GuildEntry,
+    GuildHouse,
+    GuildInvite,
+    GuildMember,
+    GuildsSection,
+    GuildWarEntry,
+)
+from tibiapy.utils import (
+    clean_text,
+    parse_form_data,
+    parse_link_info,
+    parse_tibia_date,
+    parse_tibiacom_content,
+)
 
 if TYPE_CHECKING:
     import bs4
+
     from tibiapy.models import Guild, GuildWars
 
 __all__ = (

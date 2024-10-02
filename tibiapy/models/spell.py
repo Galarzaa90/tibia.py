@@ -5,9 +5,9 @@ from typing import Optional
 
 from pydantic import computed_field
 
-from tibiapy.enums import SpellVocationFilter, SpellGroup, SpellType, SpellSorting
+from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
 from tibiapy.models import BaseModel
-from tibiapy.urls import get_spells_section_url, get_spell_url, get_static_file_url
+from tibiapy.urls import get_spell_url, get_spells_section_url, get_static_file_url
 
 __all__ = (
     "SpellsSection",

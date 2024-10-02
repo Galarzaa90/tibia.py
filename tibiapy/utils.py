@@ -5,8 +5,8 @@ import datetime
 import re
 import urllib.parse
 from collections import defaultdict
-from typing import Any, Callable, Optional, TypeVar, TypedDict, Union
 from collections.abc import Iterable
+from typing import Any, Callable, Optional, TypedDict, TypeVar, Union
 
 import bs4
 from pydantic import BaseModel

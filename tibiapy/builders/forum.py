@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 import datetime
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from tibiapy.models import AnnouncementEntry, ForumAuthor, ForumPost, ThreadEntry
-from tibiapy.models.forum import CMPostArchive, CMPost, ForumAnnouncement, ForumBoard, ForumThread
+from tibiapy.models.forum import (
+    CMPost,
+    CMPostArchive,
+    ForumAnnouncement,
+    ForumBoard,
+    ForumThread,
+)
 
 if TYPE_CHECKING:
     from typing_extensions import Self

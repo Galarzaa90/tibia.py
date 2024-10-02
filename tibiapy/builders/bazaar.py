@@ -1,17 +1,31 @@
 from __future__ import annotations
 
-
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from tibiapy.models import Auction, CharacterBazaar
 from tibiapy.models.bazaar import AuctionDetails, RevealedGem
 
 if TYPE_CHECKING:
     import datetime
+
     from typing_extensions import Self
-    from tibiapy.enums import BazaarType, Vocation, Sex, BidType, AuctionStatus
-    from tibiapy.models import (AuctionFilters, OutfitImage, ItemEntry, SalesArgument, SkillEntry, ItemSummary, Mounts,
-                                Outfits, Familiars, BlessingEntry, CharmEntry, AchievementEntry, BestiaryEntry)
+
+    from tibiapy.enums import AuctionStatus, BazaarType, BidType, Sex, Vocation
+    from tibiapy.models import (
+        AchievementEntry,
+        AuctionFilters,
+        BestiaryEntry,
+        BlessingEntry,
+        CharmEntry,
+        Familiars,
+        ItemEntry,
+        ItemSummary,
+        Mounts,
+        OutfitImage,
+        Outfits,
+        SalesArgument,
+        SkillEntry,
+    )
 
 
 class CharacterBazaarBuilder:

@@ -4,7 +4,7 @@ from typing import Any, Optional
 
 from tibiapy.models import BaseModel
 from tibiapy.models.pagination import PaginatedWithUrl
-from tibiapy.urls import get_leaderboards_url, get_character_url
+from tibiapy.urls import get_character_url, get_leaderboards_url
 
 __all__ = (
     "LeaderboardEntry",

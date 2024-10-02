@@ -9,10 +9,16 @@ import bs4
 from tibiapy.builders.news import NewsArchiveBuilder, NewsBuilder
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.errors import InvalidContentError
-from tibiapy.models.news import NewsArchive, News, NewsEntry
-from tibiapy.utils import (parse_tibia_date,
-                           parse_tibiacom_content, parse_tibiacom_tables,
-                           try_enum, parse_link_info, parse_form_data, clean_text)
+from tibiapy.models.news import News, NewsArchive, NewsEntry
+from tibiapy.utils import (
+    clean_text,
+    parse_form_data,
+    parse_link_info,
+    parse_tibia_date,
+    parse_tibiacom_content,
+    parse_tibiacom_tables,
+    try_enum,
+)
 
 __all__ = (
     "NewsParser",

@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-
 from typing import TYPE_CHECKING, Optional
 
 from typing_extensions import Self
 
-from tibiapy.models.house import HouseEntry, HousesSection, House
+from tibiapy.models.house import House, HouseEntry, HousesSection
 
 if TYPE_CHECKING:
     import datetime
-    from tibiapy.enums import HouseStatus, HouseType, HouseOrder, Sex
+
+    from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 
 
 class HousesSectionBuilder:

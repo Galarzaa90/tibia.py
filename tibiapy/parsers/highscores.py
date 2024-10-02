@@ -4,15 +4,27 @@ from __future__ import annotations
 import datetime
 import re
 from collections import OrderedDict
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import bs4
 
 from tibiapy.builders.highscores import HighscoresBuilder
-from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, PvpTypeFilter
+from tibiapy.enums import (
+    HighscoresBattlEyeType,
+    HighscoresCategory,
+    HighscoresProfession,
+    PvpTypeFilter,
+)
 from tibiapy.errors import InvalidContentError
 from tibiapy.models import HighscoresEntry, LoyaltyHighscoresEntry
-from tibiapy.utils import clean_text, parse_form_data, parse_integer, parse_pagination, parse_tibiacom_content, try_enum
+from tibiapy.utils import (
+    clean_text,
+    parse_form_data,
+    parse_integer,
+    parse_pagination,
+    parse_tibiacom_content,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     from tibiapy.models import Highscores

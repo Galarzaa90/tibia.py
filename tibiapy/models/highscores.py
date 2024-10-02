@@ -4,7 +4,13 @@ from typing import Optional
 
 from pydantic import SerializeAsAny
 
-from tibiapy.enums import HighscoresBattlEyeType, HighscoresCategory, HighscoresProfession, PvpTypeFilter, Vocation
+from tibiapy.enums import (
+    HighscoresBattlEyeType,
+    HighscoresCategory,
+    HighscoresProfession,
+    PvpTypeFilter,
+    Vocation,
+)
 from tibiapy.models import BaseCharacter, PaginatedWithUrl
 from tibiapy.urls import get_highscores_url
 

@@ -7,9 +7,18 @@ from typing import TYPE_CHECKING, Optional
 
 from tibiapy import errors
 from tibiapy.builders.leaderboard import LeaderboardBuilder
-from tibiapy.models.leaderboard import LeaderboardEntry, LeaderboardRotation, Leaderboard
-from tibiapy.utils import (parse_pagination, parse_tibia_datetime, parse_tibiacom_content, parse_form_data,
-                           parse_integer)
+from tibiapy.models.leaderboard import (
+    Leaderboard,
+    LeaderboardEntry,
+    LeaderboardRotation,
+)
+from tibiapy.utils import (
+    parse_form_data,
+    parse_integer,
+    parse_pagination,
+    parse_tibia_datetime,
+    parse_tibiacom_content,
+)
 
 if TYPE_CHECKING:
     from bs4 import Tag

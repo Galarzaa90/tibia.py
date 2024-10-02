@@ -3,9 +3,20 @@ import datetime
 from abc import ABC, abstractmethod
 from typing import Generic, Optional, TypeVar
 
-from tibiapy.enums import (AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType,
-                           AuctionSkillFilter, AuctionStatus, AuctionVocationFilter, BazaarType, BidType, PvpTypeFilter,
-                           Sex, Vocation)
+from tibiapy.enums import (
+    AuctionBattlEyeFilter,
+    AuctionOrderBy,
+    AuctionOrderDirection,
+    AuctionSearchType,
+    AuctionSkillFilter,
+    AuctionStatus,
+    AuctionVocationFilter,
+    BazaarType,
+    BidType,
+    PvpTypeFilter,
+    Sex,
+    Vocation,
+)
 from tibiapy.models import BaseModel
 from tibiapy.models.pagination import AjaxPaginator, PaginatedWithUrl
 
@@ -18,6 +29,7 @@ __all__ = (
     "BlessingEntry",
     "CharacterBazaar",
     "CharmEntry",
+    "DisplayImage",
     "FamiliarEntry",
     "Familiars",
     "ItemEntry",

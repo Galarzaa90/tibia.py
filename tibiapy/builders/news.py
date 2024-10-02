@@ -1,14 +1,16 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
 from collections.abc import Collection
+from typing import TYPE_CHECKING, Optional
 
-from tibiapy.models import NewsEntry, NewsArchive, News
+from tibiapy.models import News, NewsArchive, NewsEntry
 
 if TYPE_CHECKING:
     import datetime
+
     from typing_extensions import Self
-    from tibiapy.enums import NewsType, NewsCategory
+
+    from tibiapy.enums import NewsCategory, NewsType
 
 
 class NewsArchiveBuilder:

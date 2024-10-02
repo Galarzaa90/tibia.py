@@ -4,18 +4,47 @@ from __future__ import annotations
 import datetime
 import re
 import urllib.parse
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from tibiapy import InvalidContentError, errors
-from tibiapy.builders import CMPostArchiveBuilder, ForumAnnouncementBuilder, ForumBoardBuilder, ForumThreadBuilder
+from tibiapy.builders import (
+    CMPostArchiveBuilder,
+    ForumAnnouncementBuilder,
+    ForumBoardBuilder,
+    ForumThreadBuilder,
+)
 from tibiapy.enums import ThreadStatus, Vocation
-from tibiapy.models import (AnnouncementEntry, BoardEntry, CMPost, CMPostArchive, ForumAnnouncement, ForumAuthor,
-                            ForumBoard, ForumEmoticon, ForumPost, ForumSection, ForumThread, GuildMembership, LastPost,
-                            ThreadEntry)
-from tibiapy.utils import (clean_text, convert_line_breaks, get_rows, parse_form_data, parse_integer, parse_link_info,
-                           parse_pagination,
-                           parse_tables_map, parse_tibia_datetime, parse_tibia_forum_datetime, parse_tibiacom_content,
-                           split_list, try_enum)
+from tibiapy.models import (
+    AnnouncementEntry,
+    BoardEntry,
+    CMPost,
+    CMPostArchive,
+    ForumAnnouncement,
+    ForumAuthor,
+    ForumBoard,
+    ForumEmoticon,
+    ForumPost,
+    ForumSection,
+    ForumThread,
+    GuildMembership,
+    LastPost,
+    ThreadEntry,
+)
+from tibiapy.utils import (
+    clean_text,
+    convert_line_breaks,
+    get_rows,
+    parse_form_data,
+    parse_integer,
+    parse_link_info,
+    parse_pagination,
+    parse_tables_map,
+    parse_tibia_datetime,
+    parse_tibia_forum_datetime,
+    parse_tibiacom_content,
+    split_list,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     import bs4

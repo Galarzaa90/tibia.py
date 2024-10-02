@@ -4,15 +4,27 @@ from __future__ import annotations
 import os
 import re
 import urllib.parse
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import bs4
 
 from tibiapy import errors
-from tibiapy.builders.spell import RuneBuilder, SpellBuilder, SpellEntryBuilder, SpellSectionBuilder
+from tibiapy.builders.spell import (
+    RuneBuilder,
+    SpellBuilder,
+    SpellEntryBuilder,
+    SpellSectionBuilder,
+)
 from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
-from tibiapy.utils import (get_rows, parse_form_data, parse_integer, parse_link_info, parse_tibiacom_content,
-                           parse_tibiacom_tables, try_enum)
+from tibiapy.utils import (
+    get_rows,
+    parse_form_data,
+    parse_integer,
+    parse_link_info,
+    parse_tibiacom_content,
+    parse_tibiacom_tables,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     from tibiapy.models import Rune, Spell, SpellsSection

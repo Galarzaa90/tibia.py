@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from enum import Enum, Flag, IntEnum
-from typing import Any, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Optional
 
 from pydantic_core import core_schema
 from typing_extensions import Self

@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
-from tibiapy.models import SpellEntry, SpellsSection, Spell, Rune
+from tibiapy.models import Rune, Spell, SpellEntry, SpellsSection
 
 if TYPE_CHECKING:
     from typing_extensions import Self
-    from tibiapy.enums import SpellVocationFilter, SpellGroup, SpellSorting, SpellType
+
+    from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
 
 
 class SpellSectionBuilder:

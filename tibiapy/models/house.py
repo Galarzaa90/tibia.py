@@ -2,8 +2,8 @@
 import datetime
 from typing import Optional
 
-from tibiapy.enums import HouseStatus, HouseType, HouseOrder, Sex
-from tibiapy.models import HouseWithId, BaseModel
+from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
+from tibiapy.models import BaseModel, HouseWithId
 from tibiapy.urls import get_character_url, get_houses_section_url
 
 __all__ = (

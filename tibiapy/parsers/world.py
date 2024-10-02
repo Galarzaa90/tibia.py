@@ -5,18 +5,24 @@ import datetime
 import re
 from typing import TYPE_CHECKING, Optional
 
-from tibiapy.builders.world import (WorldBuilder, WorldEntryBuilder,
-                                    WorldOverviewBuilder)
-from tibiapy.enums import (BattlEyeType, PvpType,
-                           TransferType, WorldLocation)
+from tibiapy.builders.world import WorldBuilder, WorldEntryBuilder, WorldOverviewBuilder
+from tibiapy.enums import BattlEyeType, PvpType, TransferType, WorldLocation
 from tibiapy.errors import InvalidContentError
 from tibiapy.models import OnlineCharacter, WorldEntry
-from tibiapy.utils import (parse_integer, parse_tibia_datetime,
-                           parse_tibia_full_date, parse_tibiacom_content,
-                           try_enum, parse_tables_map, get_rows, clean_text)
+from tibiapy.utils import (
+    clean_text,
+    get_rows,
+    parse_integer,
+    parse_tables_map,
+    parse_tibia_datetime,
+    parse_tibia_full_date,
+    parse_tibiacom_content,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     import bs4
+
     from tibiapy.models import World, WorldOverview
 
 __all__ = (

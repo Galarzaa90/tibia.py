@@ -7,15 +7,58 @@ from typing import Optional
 import bs4
 
 from tibiapy import InvalidContentError
-from tibiapy.builders import AuctionBuilder, AuctionDetailsBuilder, CharacterBazaarBuilder
-from tibiapy.enums import AuctionBattlEyeFilter, AuctionOrderBy, AuctionOrderDirection, AuctionSearchType, \
-    AuctionSkillFilter, AuctionStatus, AuctionVocationFilter, BazaarType, BidType, PvpTypeFilter, Sex, Vocation
-from tibiapy.models import (AchievementEntry, AjaxPaginator, Auction, AuctionFilters, BestiaryEntry, BlessingEntry,
-                            CharacterBazaar, CharmEntry, FamiliarEntry, Familiars, ItemEntry, ItemSummary, MountEntry,
-                            Mounts, OutfitEntry, OutfitImage, Outfits, SalesArgument, SkillEntry)
+from tibiapy.builders import (
+    AuctionBuilder,
+    AuctionDetailsBuilder,
+    CharacterBazaarBuilder,
+)
+from tibiapy.enums import (
+    AuctionBattlEyeFilter,
+    AuctionOrderBy,
+    AuctionOrderDirection,
+    AuctionSearchType,
+    AuctionSkillFilter,
+    AuctionStatus,
+    AuctionVocationFilter,
+    BazaarType,
+    BidType,
+    PvpTypeFilter,
+    Sex,
+    Vocation,
+)
+from tibiapy.models import (
+    AchievementEntry,
+    AjaxPaginator,
+    Auction,
+    AuctionFilters,
+    BestiaryEntry,
+    BlessingEntry,
+    CharacterBazaar,
+    CharmEntry,
+    FamiliarEntry,
+    Familiars,
+    ItemEntry,
+    ItemSummary,
+    MountEntry,
+    Mounts,
+    OutfitEntry,
+    OutfitImage,
+    Outfits,
+    SalesArgument,
+    SkillEntry,
+)
 from tibiapy.models.bazaar import DisplayImage, RevealedGem
-from tibiapy.utils import (clean_text, convert_line_breaks, get_rows, parse_form_data, parse_integer, parse_pagination,
-                           parse_tibia_datetime, parse_tibiacom_content, try_enum)
+from tibiapy.utils import (
+    clean_text,
+    convert_line_breaks,
+    get_rows,
+    parse_form_data,
+    parse_integer,
+    parse_pagination,
+    parse_tibia_datetime,
+    parse_tibiacom_content,
+    try_enum,
+)
 
 CSS_CLASS_ICON = "div.CVIcon"
 

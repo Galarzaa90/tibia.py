@@ -8,8 +8,15 @@ import bs4
 
 from tibiapy.builders import CreatureBuilder
 from tibiapy.errors import InvalidContentError
-from tibiapy.models import CreatureEntry, CreaturesSection, BoostedCreatures, BossEntry, BoostableBosses, Creature
-from tibiapy.utils import parse_tibiacom_content, convert_line_breaks
+from tibiapy.models import (
+    BoostableBosses,
+    BoostedCreatures,
+    BossEntry,
+    Creature,
+    CreatureEntry,
+    CreaturesSection,
+)
+from tibiapy.utils import convert_line_breaks, parse_tibiacom_content
 
 __all__ = (
     "BoostableBossesParser",
