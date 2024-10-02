@@ -61,6 +61,7 @@
     <span class="n">Dict</span><span class="p">,</span>
     <span class="n">Generator</span><span class="p">,</span>
     <span class="n">Literal</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
     <span class="n">Set</span><span class="p">,</span>
     <span class="n">Tuple</span><span class="p">,</span>
     <span class="n">TypeVar</span><span class="p">,</span>
@@ -80,6 +81,7 @@
     <span class="n">_fields</span><span class="p">,</span>
     <span class="n">_forward_ref</span><span class="p">,</span>
     <span class="n">_generics</span><span class="p">,</span>
+    <span class="n">_import_utils</span><span class="p">,</span>
     <span class="n">_mock_val_ser</span><span class="p">,</span>
     <span class="n">_model_construction</span><span class="p">,</span>
     <span class="n">_repr</span><span class="p">,</span>
@@ -95,14 +97,6 @@
 <span class="kn">from</span> <span class="nn">.plugin._schema_validator</span> <span class="kn">import</span> <span class="n">PluggableSchemaValidator</span>
 <span class="kn">from</span> <span class="nn">.warnings</span> <span class="kn">import</span> <span class="n">PydanticDeprecatedSince20</span>
 
-<span class="c1"># Always define certain types that are needed to resolve method type hints/annotations</span>
-<span class="c1"># (even when not type checking) via typing.get_type_hints.</span>
-<span class="n">ModelT</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;ModelT&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;BaseModel&#39;</span><span class="p">)</span>
-<span class="n">TupleGenerator</span> <span class="o">=</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
-<span class="c1"># should be `set[int] | set[str] | dict[int, IncEx] | dict[str, IncEx] | None`, but mypy can&#39;t cope</span>
-<span class="n">IncEx</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>
-
-
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Signature</span>
     <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -112,7 +106,6 @@
     <span class="kn">from</span> <span class="nn">._internal._utils</span> <span class="kn">import</span> <span class="n">AbstractSetIntStr</span><span class="p">,</span> <span class="n">MappingIntStrAny</span>
     <span class="kn">from</span> <span class="nn">.deprecated.parse</span> <span class="kn">import</span> <span class="n">Protocol</span> <span class="k">as</span> <span class="n">DeprecatedParseProtocol</span>
     <span class="kn">from</span> <span class="nn">.fields</span> <span class="kn">import</span> <span class="n">ComputedFieldInfo</span><span class="p">,</span> <span class="n">FieldInfo</span><span class="p">,</span> <span class="n">ModelPrivateAttr</span>
-    <span class="kn">from</span> <span class="nn">.fields</span> <span class="kn">import</span> <span class="n">PrivateAttr</span> <span class="k">as</span> <span class="n">_PrivateAttr</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="c1"># See PyCharm issues https://youtrack.jetbrains.com/issue/PY-21915</span>
     <span class="c1"># and https://youtrack.jetbrains.com/issue/PY-51428</span>
@@ -120,21 +113,28 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="s1">&#39;BaseModel&#39;</span><span class="p">,</span> <span class="s1">&#39;create_model&#39;</span>
 
+<span class="c1"># Keep these type aliases available at runtime:</span>
+<span class="n">TupleGenerator</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="c1"># Keep this type alias in sync with the stub definition in `pydantic-core`:</span>
+<span class="n">IncEx</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
+    <span class="n">Set</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;IncEx&#39;</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]]],</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;IncEx&#39;</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]]]</span>
+<span class="p">]</span>
+
 <span class="n">_object_setattr</span> <span class="o">=</span> <span class="n">_model_construction</span><span class="o">.</span><span class="n">object_setattr</span>
 
 
 <span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_model_construction</span><span class="o">.</span><span class="n">ModelMetaclass</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.8/concepts/models/</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.9/concepts/models/</span>
 
 <span class="sd">    A base class for creating Pydantic models.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        __class_vars__: The names of classvars defined on the model.</span>
+<span class="sd">        __class_vars__: The names of the class variables defined on the model.</span>
 <span class="sd">        __private_attributes__: Metadata about the private attributes of the model.</span>
-<span class="sd">        __signature__: The signature for instantiating the model.</span>
+<span class="sd">        __signature__: The synthesized `__init__` [`Signature`][inspect.Signature] of the model.</span>
 
 <span class="sd">        __pydantic_complete__: Whether model building is completed, or if there are still undefined fields.</span>
-<span class="sd">        __pydantic_core_schema__: The pydantic-core schema used to build the SchemaValidator and SchemaSerializer.</span>
+<span class="sd">        __pydantic_core_schema__: The core schema of the model.</span>
 <span class="sd">        __pydantic_custom_init__: Whether the model has a custom `__init__` function.</span>
 <span class="sd">        __pydantic_decorators__: Metadata containing the decorators defined on the model.</span>
 <span class="sd">            This replaces `Model.__validators__` and `Model.__root_validators__` from Pydantic V1.</span>
@@ -142,68 +142,91 @@
 <span class="sd">            __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.</span>
 <span class="sd">        __pydantic_parent_namespace__: Parent namespace of the model, used for automatic rebuilding of models.</span>
 <span class="sd">        __pydantic_post_init__: The name of the post-init method for the model, if defined.</span>
-<span class="sd">        __pydantic_root_model__: Whether the model is a `RootModel`.</span>
-<span class="sd">        __pydantic_serializer__: The pydantic-core SchemaSerializer used to dump instances of the model.</span>
-<span class="sd">        __pydantic_validator__: The pydantic-core SchemaValidator used to validate instances of the model.</span>
+<span class="sd">        __pydantic_root_model__: Whether the model is a [`RootModel`][pydantic.root_model.RootModel].</span>
+<span class="sd">        __pydantic_serializer__: The `pydantic-core` `SchemaSerializer` used to dump instances of the model.</span>
+<span class="sd">        __pydantic_validator__: The `pydantic-core` `SchemaValidator` used to validate instances of the model.</span>
 
-<span class="sd">        __pydantic_extra__: An instance attribute with the values of extra fields from validation when</span>
-<span class="sd">            `model_config[&#39;extra&#39;] == &#39;allow&#39;`.</span>
-<span class="sd">        __pydantic_fields_set__: An instance attribute with the names of fields explicitly set.</span>
-<span class="sd">        __pydantic_private__: Instance attribute with the values of private attributes set on the model instance.</span>
+<span class="sd">        __pydantic_extra__: A dictionary containing extra values, if [`extra`][pydantic.config.ConfigDict.extra]</span>
+<span class="sd">            is set to `&#39;allow&#39;`.</span>
+<span class="sd">        __pydantic_fields_set__: The names of fields explicitly set during instantiation.</span>
+<span class="sd">        __pydantic_private__: Values of private attributes set on the model instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-        <span class="c1"># Here we provide annotations for the attributes of BaseModel.</span>
-        <span class="c1"># Many of these are populated by the metaclass, which is why this section is in a `TYPE_CHECKING` block.</span>
-        <span class="c1"># However, for the sake of easy review, we have included type annotations of all class and instance attributes</span>
-        <span class="c1"># of `BaseModel` here:</span>
+    <span class="c1"># Class attributes:</span>
+    <span class="c1"># `model_fields` and `__pydantic_decorators__` must be set for</span>
+    <span class="c1"># `GenerateSchema.model_schema` to work for a plain `BaseModel` annotation.</span>
 
-        <span class="c1"># Class attributes</span>
-        <span class="n">model_config</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ConfigDict</span><span class="p">]</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">model_config</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ConfigDict</span><span class="p">]</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-        <span class="n">model_fields</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FieldInfo</span><span class="p">]]</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Metadata about the fields defined on the model,</span>
-<span class="sd">        mapping of field names to [`FieldInfo`][pydantic.fields.FieldInfo].</span>
+    <span class="c1"># Because `dict` is in the local namespace of the `BaseModel` class, we use `Dict` for annotations.</span>
+    <span class="c1"># TODO v3 fallback to `dict` when the deprecated `dict` method gets removed.</span>
+    <span class="n">model_fields</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FieldInfo</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># noqa: UP006</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metadata about the fields defined on the model,</span>
+<span class="sd">    mapping of field names to [`FieldInfo`][pydantic.fields.FieldInfo] objects.</span>
 
-<span class="sd">        This replaces `Model.__fields__` from Pydantic V1.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    This replaces `Model.__fields__` from Pydantic V1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-        <span class="n">model_computed_fields</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ComputedFieldInfo</span><span class="p">]]</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A dictionary of computed field names and their corresponding `ComputedFieldInfo` objects.&quot;&quot;&quot;</span>
+    <span class="n">model_computed_fields</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ComputedFieldInfo</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># noqa: UP006</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary of computed field names and their corresponding `ComputedFieldInfo` objects.&quot;&quot;&quot;</span>
 
-        <span class="n">__class_vars__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
-        <span class="n">__private_attributes__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelPrivateAttr</span><span class="p">]]</span>
-        <span class="n">__signature__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Signature</span><span class="p">]</span>
+    <span class="n">__class_vars__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The names of the class variables defined on the model.&quot;&quot;&quot;</span>
 
-        <span class="n">__pydantic_complete__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
-        <span class="n">__pydantic_core_schema__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">CoreSchema</span><span class="p">]</span>
-        <span class="n">__pydantic_custom_init__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
-        <span class="n">__pydantic_decorators__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">_decorators</span><span class="o">.</span><span class="n">DecoratorInfos</span><span class="p">]</span>
-        <span class="n">__pydantic_generic_metadata__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">_generics</span><span class="o">.</span><span class="n">PydanticGenericMetadata</span><span class="p">]</span>
-        <span class="n">__pydantic_parent_namespace__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span>
-        <span class="n">__pydantic_post_init__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="kc">None</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;model_post_init&#39;</span><span class="p">]]</span>
-        <span class="n">__pydantic_root_model__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
-        <span class="n">__pydantic_serializer__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">SchemaSerializer</span><span class="p">]</span>
-        <span class="n">__pydantic_validator__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">SchemaValidator</span> <span class="o">|</span> <span class="n">PluggableSchemaValidator</span><span class="p">]</span>
+    <span class="n">__private_attributes__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelPrivateAttr</span><span class="p">]]</span>  <span class="c1"># noqa: UP006</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Metadata about the private attributes of the model.&quot;&quot;&quot;</span>
 
-        <span class="c1"># Instance attributes</span>
-        <span class="n">__pydantic_extra__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_PrivateAttr</span><span class="p">()</span>
-        <span class="n">__pydantic_fields_set__</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_PrivateAttr</span><span class="p">()</span>
-        <span class="n">__pydantic_private__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_PrivateAttr</span><span class="p">()</span>
+    <span class="n">__signature__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Signature</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The synthesized `__init__` [`Signature`][inspect.Signature] of the model.&quot;&quot;&quot;</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># `model_fields` and `__pydantic_decorators__` must be set for</span>
-        <span class="c1"># pydantic._internal._generate_schema.GenerateSchema.model_schema to work for a plain BaseModel annotation</span>
-        <span class="n">model_fields</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">model_computed_fields</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">__pydantic_complete__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether model building is completed, or if there are still undefined fields.&quot;&quot;&quot;</span>
 
-        <span class="n">__pydantic_decorators__</span> <span class="o">=</span> <span class="n">_decorators</span><span class="o">.</span><span class="n">DecoratorInfos</span><span class="p">()</span>
-        <span class="n">__pydantic_parent_namespace__</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1"># Prevent `BaseModel` from being instantiated directly:</span>
+    <span class="n">__pydantic_core_schema__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">CoreSchema</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The core schema of the model.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_custom_init__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the model has a custom `__init__` method.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_decorators__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">_decorators</span><span class="o">.</span><span class="n">DecoratorInfos</span><span class="p">]</span> <span class="o">=</span> <span class="n">_decorators</span><span class="o">.</span><span class="n">DecoratorInfos</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Metadata containing the decorators defined on the model.</span>
+<span class="sd">    This replaces `Model.__validators__` and `Model.__root_validators__` from Pydantic V1.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_generic_metadata__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">_generics</span><span class="o">.</span><span class="n">PydanticGenericMetadata</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Metadata for generic models; contains data used for a similar purpose to</span>
+<span class="sd">    __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_parent_namespace__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># noqa: UP006</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parent namespace of the model, used for automatic rebuilding of models.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_post_init__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="kc">None</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;model_post_init&#39;</span><span class="p">]]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the post-init method for the model, if defined.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_root_model__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the model is a [`RootModel`][pydantic.root_model.RootModel].&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_serializer__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">SchemaSerializer</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The `pydantic-core` `SchemaSerializer` used to dump instances of the model.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_validator__</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">SchemaValidator</span> <span class="o">|</span> <span class="n">PluggableSchemaValidator</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The `pydantic-core` `SchemaValidator` used to validate instances of the model.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_extra__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_model_construction</span><span class="o">.</span><span class="n">NoInitField</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary containing extra values, if [`extra`][pydantic.config.ConfigDict.extra] is set to `&#39;allow&#39;`.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_fields_set__</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model_construction</span><span class="o">.</span><span class="n">NoInitField</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The names of fields explicitly set during instantiation.&quot;&quot;&quot;</span>
+
+    <span class="n">__pydantic_private__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_model_construction</span><span class="o">.</span><span class="n">NoInitField</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Values of private attributes set on the model instance.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+        <span class="c1"># Prevent `BaseModel` from being instantiated directly</span>
+        <span class="c1"># (defined in an `if not TYPE_CHECKING` block for clarity and to avoid type checking errors):</span>
         <span class="n">__pydantic_core_schema__</span> <span class="o">=</span> <span class="n">_mock_val_ser</span><span class="o">.</span><span class="n">MockCoreSchema</span><span class="p">(</span>
             <span class="s1">&#39;Pydantic models should inherit from BaseModel, BaseModel cannot be instantiated directly&#39;</span><span class="p">,</span>
             <span class="n">code</span><span class="o">=</span><span class="s1">&#39;base-model-instantiated&#39;</span><span class="p">,</span>
@@ -221,11 +244,7 @@
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s1">&#39;__dict__&#39;</span><span class="p">,</span> <span class="s1">&#39;__pydantic_fields_set__&#39;</span><span class="p">,</span> <span class="s1">&#39;__pydantic_extra__&#39;</span><span class="p">,</span> <span class="s1">&#39;__pydantic_private__&#39;</span>
 
-    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">()</span>
-    <span class="n">__pydantic_complete__</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">__pydantic_root_model__</span> <span class="o">=</span> <span class="kc">False</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new model by parsing and validating input data from keyword arguments.</span>
 
 <span class="sd">        Raises [`ValidationError`][pydantic_core.ValidationError] if the input data cannot be</span>
@@ -235,7 +254,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># `__tracebackhide__` tells pytest and some other tools to omit this function from tracebacks</span>
         <span class="n">__tracebackhide__</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_validator__</span><span class="o">.</span><span class="n">validate_python</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">self_instance</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">validated_self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pydantic_validator__</span><span class="o">.</span><span class="n">validate_python</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">self_instance</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">validated_self</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s1">&#39;A custom validator is returning a value other than `self`.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s2">&quot;Returning anything other than `self` from a top level model validator isn&#39;t supported when validating via `__init__`.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s1">&#39;See the `model_validator` docs (https://docs.pydantic.dev/latest/concepts/validators/#model-validators) for more details.&#39;</span><span class="p">,</span>
+                <span class="n">category</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
 
     <span class="c1"># The following line sets a flag that we use to determine when `__init__` gets overridden by the user</span>
     <span class="fm">__init__</span><span class="o">.</span><span class="n">__pydantic_base_init__</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># pyright: ignore[reportFunctionMemberAccess]</span>
@@ -276,7 +302,9 @@
 <span class="sd">            an error if extra values are passed, but they will be ignored.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            _fields_set: The set of field names accepted for the Model instance.</span>
+<span class="sd">            _fields_set: A set of field names that were originally explicitly set during instantiation. If provided,</span>
+<span class="sd">                this is directly used for the [`model_fields_set`][pydantic.BaseModel.model_fields_set] attribute.</span>
+<span class="sd">                Otherwise, the field names from the `values` argument will be used.</span>
 <span class="sd">            values: Trusted or pre-validated data dictionary.</span>
 
 <span class="sd">        Returns:</span>
@@ -319,9 +347,7 @@
         <span class="k">if</span> <span class="n">_fields_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">_fields_set</span> <span class="o">=</span> <span class="n">fields_set</span>
 
-        <span class="n">_extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span> <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;allow&#39;</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="p">)</span>
+        <span class="n">_extra</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">values</span> <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;allow&#39;</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="n">_object_setattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;__dict__&#39;</span><span class="p">,</span> <span class="n">fields_values</span><span class="p">)</span>
         <span class="n">_object_setattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s1">&#39;__pydantic_fields_set__&#39;</span><span class="p">,</span> <span class="n">_fields_set</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__pydantic_root_model__</span><span class="p">:</span>
@@ -346,7 +372,7 @@
 <div class="viewcode-block" id="BaseModel.model_copy">
 <a class="viewcode-back" href="../../api.html#tibiapy.models.BaseModel.model_copy">[docs]</a>
     <span class="k">def</span> <span class="nf">model_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.8/concepts/serialization/#model_copy</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.9/concepts/serialization/#model_copy</span>
 
 <span class="sd">        Returns a copy of the model.</span>
 
@@ -380,8 +406,8 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="s1">&#39;python&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;python&#39;</span><span class="p">,</span>
-        <span class="n">include</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">exclude</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">by_alias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">exclude_unset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -391,7 +417,7 @@
         <span class="n">warnings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;warn&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">serialize_as_any</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.8/concepts/serialization/#modelmodel_dump</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.9/concepts/serialization/#modelmodel_dump</span>
 
 <span class="sd">        Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.</span>
 
@@ -436,8 +462,8 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">include</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">exclude</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">by_alias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">exclude_unset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -447,7 +473,7 @@
         <span class="n">warnings</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;warn&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">serialize_as_any</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.8/concepts/serialization/#modelmodel_dump_json</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.9/concepts/serialization/#modelmodel_dump_json</span>
 
 <span class="sd">        Generates a JSON representation of the model using Pydantic&#39;s `to_json` method.</span>
 
@@ -585,7 +611,9 @@
                 <span class="n">types_namespace</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_types_namespace</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">_parent_namespace_depth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">frame_parent_ns</span> <span class="o">=</span> <span class="n">_typing_extra</span><span class="o">.</span><span class="n">parent_frame_namespace</span><span class="p">(</span><span class="n">parent_depth</span><span class="o">=</span><span class="n">_parent_namespace_depth</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+                    <span class="n">frame_parent_ns</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">_typing_extra</span><span class="o">.</span><span class="n">parent_frame_namespace</span><span class="p">(</span><span class="n">parent_depth</span><span class="o">=</span><span class="n">_parent_namespace_depth</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+                    <span class="p">)</span>
                     <span class="n">cls_parent_ns</span> <span class="o">=</span> <span class="p">(</span>
                         <span class="n">_model_construction</span><span class="o">.</span><span class="n">unpack_lenient_weakvaluedict</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__pydantic_parent_namespace__</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
                     <span class="p">)</span>
@@ -596,7 +624,7 @@
                         <span class="bp">cls</span><span class="o">.</span><span class="n">__pydantic_parent_namespace__</span>
                     <span class="p">)</span>
 
-                <span class="n">types_namespace</span> <span class="o">=</span> <span class="n">_typing_extra</span><span class="o">.</span><span class="n">get_cls_types_namespace</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">types_namespace</span><span class="p">)</span>
+                <span class="n">types_namespace</span> <span class="o">=</span> <span class="n">_typing_extra</span><span class="o">.</span><span class="n">merge_cls_and_parent_ns</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">types_namespace</span><span class="p">)</span>
 
             <span class="c1"># manually override defer_build so complete_model_class doesn&#39;t skip building the model again</span>
             <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">cls</span><span class="o">.</span><span class="n">model_config</span><span class="p">,</span> <span class="s1">&#39;defer_build&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
@@ -651,7 +679,7 @@
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">context</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.8/concepts/json/#json-parsing</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.9/concepts/json/#json-parsing</span>
 
 <span class="sd">        Validate the given JSON data against the Pydantic model.</span>
 
@@ -664,7 +692,7 @@
 <span class="sd">            The validated Pydantic model.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: If `json_data` is not a JSON string.</span>
+<span class="sd">            ValidationError: If `json_data` is not a JSON string or the object could not be validated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># `__tracebackhide__` tells pytest and some other tools to omit this function from tracebacks</span>
         <span class="n">__tracebackhide__</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1074,8 +1102,7 @@
 <span class="sd">            ```py</span>
 <span class="sd">            from pydantic import BaseModel</span>
 
-<span class="sd">            class MyModel(BaseModel, extra=&#39;allow&#39;):</span>
-<span class="sd">                ...</span>
+<span class="sd">            class MyModel(BaseModel, extra=&#39;allow&#39;): ...</span>
 <span class="sd">            ```</span>
 
 <span class="sd">            However, this may be deceiving, since the _actual_ calls to `__init_subclass__` will not receive any</span>
@@ -1157,8 +1184,8 @@
     <span class="k">def</span> <span class="nf">dict</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">include</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">exclude</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">by_alias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">exclude_unset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">exclude_defaults</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1181,8 +1208,8 @@
     <span class="k">def</span> <span class="nf">json</span><span class="p">(</span>  <span class="c1"># noqa: D102</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">include</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">exclude</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">include</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exclude</span><span class="p">:</span> <span class="n">IncEx</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">by_alias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">exclude_unset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">exclude_defaults</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1541,6 +1568,9 @@
         <span class="k">return</span> <span class="n">copy_internals</span><span class="o">.</span><span class="n">_calculate_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
+<span class="n">ModelT</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;ModelT&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">BaseModel</span><span class="p">)</span>
+
+
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1584,7 +1614,7 @@
     <span class="vm">__slots__</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">field_definitions</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">ModelT</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.8/concepts/models/#dynamic-model-creation</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Usage docs: https://docs.pydantic.dev/2.9/concepts/models/#dynamic-model-creation</span>
 
 <span class="sd">    Dynamically creates and returns a new Pydantic model, in other words, `create_model` dynamically creates a</span>
 <span class="sd">    subclass of [`BaseModel`][pydantic.BaseModel].</span>
@@ -1598,7 +1628,7 @@
 <span class="sd">            if `None`, the value is taken from `sys._getframe(1)`</span>
 <span class="sd">        __validators__: A dictionary of methods that validate fields. The keys are the names of the validation methods to</span>
 <span class="sd">            be added to the model, and the values are the validation methods themselves. You can read more about functional</span>
-<span class="sd">            validators [here](https://docs.pydantic.dev/2.8/concepts/validators/#field-validators).</span>
+<span class="sd">            validators [here](https://docs.pydantic.dev/2.9/concepts/validators/#field-validators).</span>
 <span class="sd">        __cls_kwargs__: A dictionary of keyword arguments for class creation, such as `metaclass`.</span>
 <span class="sd">        __slots__: Deprecated. Should not be passed to `create_model`.</span>
 <span class="sd">        **field_definitions: Attributes of the new model. They should be passed in the format:</span>
@@ -1648,7 +1678,7 @@
             <span class="p">(</span><span class="n">f_annotation</span><span class="p">,</span> <span class="n">f_value</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">typing_extensions</span><span class="o">.</span><span class="n">get_args</span><span class="p">(</span>
                 <span class="n">f_def</span>
             <span class="p">)</span>  <span class="c1"># first two input are expected from Annotated, refer to https://docs.python.org/3/library/typing.html#typing.Annotated</span>
-            <span class="kn">from</span> <span class="nn">.fields</span> <span class="kn">import</span> <span class="n">FieldInfo</span>
+            <span class="n">FieldInfo</span> <span class="o">=</span> <span class="n">_import_utils</span><span class="o">.</span><span class="n">import_cached_field_info</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f_value</span><span class="p">,</span> <span class="n">FieldInfo</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">PydanticUserError</span><span class="p">(</span>
