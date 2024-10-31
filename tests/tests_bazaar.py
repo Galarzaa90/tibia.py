@@ -13,6 +13,7 @@ FILE_BAZAAR_CURRENT_ALL_FILTERS = "characterBazaar/bazaarCurrentAuctionsWithFilt
 FILE_BAZAAR_HISTORY = "characterBazaar/bazaarHistory.txt"
 FILE_AUCTION_FINISHED = "auction/auctionFinished.txt"
 FILE_AUCTION_UPGRADED_ITEMS = "auction/auctionWithUpgradedItems.txt"
+FILE_AUCTION_FRAGMENT_PROGRESS = "auction/auctionWithFragmentProgress.txt"
 FILE_AUCTION_NOT_FOUND = "auction/auctionNotFound.txt"
 
 
@@ -192,6 +193,13 @@ class TestBazaar(TestCommons):
         self.assertIsNone(auction.details)
 
     def test_auction_parser_from_content_with_upgraded_items(self):
+        auction = AuctionParser.from_content(self.load_resource(FILE_AUCTION_UPGRADED_ITEMS))
+
+        self.assertIsNotNone(auction)
+
+        self.assertEqual(2, auction.displayed_items[2].tier)
+
+    def test_auction_parser_from_content_with_fragment_progress(self):
         auction = AuctionParser.from_content(self.load_resource(FILE_AUCTION_UPGRADED_ITEMS))
 
         self.assertIsNotNone(auction)

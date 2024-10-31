@@ -145,6 +145,7 @@ ignore = [
     "ANN401", # Dynamically typed expressions ({name}) are disallowed in `other`
     "PLR0913", # Too many arguments in function definition
     "PLR2004", #  Magic value used in comparison, consider replacing `{number}` with a constant variable
+    "PLW2901", #  Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
 ]
 
 [tool.ruff.lint.per-file-ignores]

@@ -3,6 +3,8 @@ An API to parse Tibia.com content into object oriented data.
 
 No fetching is done by this module, you must provide the html content.
 
+
+
 [![PyPI](https://img.shields.io/pypi/v/tibia.py.svg)](https://pypi.python.org/pypi/tibia.py/)
 ![GitHub commits since latest release (branch)](https://img.shields.io/github/commits-since/Galarzaa90/tibia.py/latest/main)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tibia.py.svg)

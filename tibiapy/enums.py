@@ -77,7 +77,7 @@ class NumericEnum(IntEnum):
         return self.name.lower()
 
     @classmethod
-    def validate(cls, v: Any):
+    def validate(cls, v: Any) -> Self:
         e = try_enum(cls, v)
         if e is None:
             raise EnumValueError(cls, v)

@@ -36,7 +36,7 @@ class InvalidContentError(TibiapyError):
 
     """
 
-    def __init__(self, message: str, original=None):
+    def __init__(self, message: str, original: Exception = None):
         super().__init__(message)
         self.original = original
 
@@ -58,7 +58,7 @@ class NetworkError(TibiapyError):
 
     """
 
-    def __init__(self, message, original=None, fetching_time=0):
+    def __init__(self, message: str, original: Exception = None, fetching_time: float = 0.0):
         super().__init__(message)
         self.original = original
         self.fetching_time = fetching_time
@@ -95,11 +95,11 @@ class EnumValueError(ValueError):
         )
 
     @property
-    def names(self):
+    def names(self) -> str:
         """The valid names for the enum."""
         return ", ".join(e.name for e in self.enum)
 
     @property
-    def values(self):
+    def values(self) -> str:
         """The valid values for the enum."""
         return ", ".join(str(e.value) for e in self.enum)

@@ -1,4 +1,4 @@
-
+"""Module containing the parser for supported and promoted fansites."""
 import bs4
 
 from tibiapy import InvalidContentError

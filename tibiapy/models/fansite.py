@@ -1,3 +1,4 @@
+"""Models for supported and promoted fansites."""
 from typing import Optional
 
 from tibiapy.models import BaseModel
