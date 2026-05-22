@@ -12,10 +12,10 @@ include = [
 name = "tibia.py"
 dynamic = ["version", "dependencies", "optional-dependencies"]
 authors = [
-    { name = "Allan Galarza", email = "allan.galarza@gmail.com" }
+    { name = "Allan Galarza", email = "contact@galarzaa.com" }
 ]
 maintainers = [
-    { name = "Allan Galarza", email = "allan.galarza@gmail.com" }
+    { name = "Allan Galarza", email = "contact@galarzaa.com" }
 ]
 license = { text = 'Apache 2.0' }
 description = "API that parses website content into python data."

@@ -9,12 +9,12 @@ RUN pip install -r requirements.txt
 COPY requirements-server.txt .
 RUN pip install -r requirements-server.txt
 
-LABEL maintainer="Allan Galarza <allan.galarza@gmail.com>"
+LABEL maintainer="Allan Galarza <contact@galarzaa.com>"
 LABEL org.opencontainers.image.licenses="Apache 2.0"
-LABEL org.opencontainers.image.authors="Allan Galarza <allan.galarza@gmail.com>"
+LABEL org.opencontainers.image.authors="Allan Galarza <contact@galarzaa.com>"
 LABEL org.opencontainers.image.url="https://github.com/Galarzaa90/tibia.py"
 LABEL org.opencontainers.image.source="https://github.com/Galarzaa90/tibia.py"
-LABEL org.opencontainers.image.vendor="Allan Galarza <allan.galarza@gmail.com>"
+LABEL org.opencontainers.image.vendor="Allan Galarza <contact@galarzaa.com>"
 LABEL org.opencontainers.image.title="tibia.py"
 LABEL org.opencontainers.image.description="API that parses website content into python data."
 
