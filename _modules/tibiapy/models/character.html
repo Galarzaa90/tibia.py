@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tibiapy.models.character &#8212; Tibia.py 6.3.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
@@ -44,16 +44,16 @@
             
   <h1>Source code for tibiapy.models.character</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models related to characters.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">computed_field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">computed_field</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">urls</span>
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models.base</span> <span class="kn">import</span> <span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">BaseGuild</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">HouseWithId</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy</span><span class="w"> </span><span class="kn">import</span> <span class="n">urls</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sex</span><span class="p">,</span> <span class="n">Vocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCharacter</span><span class="p">,</span> <span class="n">BaseGuild</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">HouseWithId</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;AccountBadge&quot;</span><span class="p">,</span>
@@ -71,7 +71,7 @@
 
 <div class="viewcode-block" id="AccountBadge">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.AccountBadge">[docs]</a>
-<span class="k">class</span> <span class="nc">AccountBadge</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AccountBadge</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A displayed account badge in the character&#39;s information.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -85,7 +85,7 @@
 
 <div class="viewcode-block" id="AccountInformation">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.AccountInformation">[docs]</a>
-<span class="k">class</span> <span class="nc">AccountInformation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AccountInformation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the information of a character&#39;s account.</span>
 
 <span class="sd">    This is only visible if the character is not marked as hidden.</span>
@@ -102,7 +102,7 @@
 
 <div class="viewcode-block" id="Achievement">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Achievement">[docs]</a>
-<span class="k">class</span> <span class="nc">Achievement</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Achievement</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an achievement listed on a character&#39;s page.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -116,7 +116,7 @@
 
 <div class="viewcode-block" id="CharacterHouse">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.CharacterHouse">[docs]</a>
-<span class="k">class</span> <span class="nc">CharacterHouse</span><span class="p">(</span><span class="n">HouseWithId</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CharacterHouse</span><span class="p">(</span><span class="n">HouseWithId</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A house owned by a character.&quot;&quot;&quot;</span>
 
     <span class="n">town</span><span class="p">:</span> <span class="nb">str</span>
@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="DeathParticipant">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.DeathParticipant">[docs]</a>
-<span class="k">class</span> <span class="nc">DeathParticipant</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeathParticipant</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A creature or player that participated in a death, either as a killer o as an assistant.</span>
 
 <span class="sd">    A participant can be:</span>
@@ -148,7 +148,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;If the killer was traded after this death happened.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL of the character&#39;s information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">urls</span><span class="o">.</span><span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_player</span> <span class="k">else</span> <span class="kc">None</span></div>
 
@@ -156,7 +156,7 @@
 
 <div class="viewcode-block" id="Death">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Death">[docs]</a>
-<span class="k">class</span> <span class="nc">Death</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Death</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A character&#39;s death.&quot;&quot;&quot;</span>
 
     <span class="n">level</span><span class="p">:</span> <span class="nb">int</span>
@@ -169,12 +169,12 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The time at which the death occurred.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_by_player</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_by_player</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the kill involves other characters.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">is_player</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">killers</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">killer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeathParticipant</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">killer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeathParticipant</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The first killer in the list.</span>
 
 <span class="sd">        This is usually the killer that gave the killing blow.</span>
@@ -185,7 +185,7 @@
 
 <div class="viewcode-block" id="GuildMembership">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.GuildMembership">[docs]</a>
-<span class="k">class</span> <span class="nc">GuildMembership</span><span class="p">(</span><span class="n">BaseGuild</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GuildMembership</span><span class="p">(</span><span class="n">BaseGuild</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The guild information of a character.&quot;&quot;&quot;</span>
 
     <span class="n">rank</span><span class="p">:</span> <span class="nb">str</span>
@@ -197,7 +197,7 @@
 
 <div class="viewcode-block" id="OnlineCharacter">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.OnlineCharacter">[docs]</a>
-<span class="k">class</span> <span class="nc">OnlineCharacter</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OnlineCharacter</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An online character in the world&#39;s page.&quot;&quot;&quot;</span>
 
     <span class="n">vocation</span><span class="p">:</span> <span class="n">Vocation</span>
@@ -209,7 +209,7 @@
 
 <div class="viewcode-block" id="OtherCharacter">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.OtherCharacter">[docs]</a>
-<span class="k">class</span> <span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OtherCharacter</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A character listed in the characters section of a character&#39;s page.</span>
 
 <span class="sd">    These are only shown if the character is not hidden, and only characters that are not hidden are shown here.</span>
@@ -232,7 +232,7 @@
 
 <div class="viewcode-block" id="Character">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Character">[docs]</a>
-<span class="k">class</span> <span class="nc">Character</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Character</span><span class="p">(</span><span class="n">BaseCharacter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A full character from Tibia.com, obtained from its character page.&quot;&quot;&quot;</span>
 
     <span class="n">is_traded</span><span class="p">:</span> <span class="nb">bool</span>
@@ -293,33 +293,33 @@
     <span class="c1"># region Properties</span>
     <span class="nd">@computed_field</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_scheduled_for_deletion</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_scheduled_for_deletion</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the character is scheduled for deletion or not.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deletion_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guild_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">guild_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the guild the character belongs to, or :obj:`None`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guild_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">guild_rank</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">rank</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guild_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">guild_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The character&#39;s rank in the guild they belong to, or :obj:`None`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">urls</span><span class="o">.</span><span class="n">get_guild_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_membership</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@computed_field</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether this is a hidden character or not.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other_characters</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">married_to_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">married_to_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the husband/spouse information page on Tibia.com, if applicable.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">urls</span><span class="o">.</span><span class="n">get_character_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">married_to</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">married_to</span> <span class="k">else</span> <span class="kc">None</span></div>
 

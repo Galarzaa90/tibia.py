@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tibiapy.models.fansite &#8212; Tibia.py 6.3.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
@@ -44,9 +44,9 @@
             
   <h1>Source code for tibiapy.models.fansite</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models for supported and promoted fansites.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;FansiteContent&quot;</span><span class="p">,</span>
@@ -58,7 +58,7 @@
 
 <div class="viewcode-block" id="FansiteContent">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.FansiteContent">[docs]</a>
-<span class="k">class</span> <span class="nc">FansiteContent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FansiteContent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An icon to represent a category of content.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -70,7 +70,7 @@
 
 <div class="viewcode-block" id="FansiteSocialMedia">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.FansiteSocialMedia">[docs]</a>
-<span class="k">class</span> <span class="nc">FansiteSocialMedia</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FansiteSocialMedia</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An icon to represent available social media for the fansite.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -82,7 +82,7 @@
 
 <div class="viewcode-block" id="Fansite">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Fansite">[docs]</a>
-<span class="k">class</span> <span class="nc">Fansite</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Fansite</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a fansite in the fansite programme.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -108,7 +108,7 @@
 
 <div class="viewcode-block" id="FansitesSection">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.FansitesSection">[docs]</a>
-<span class="k">class</span> <span class="nc">FansitesSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FansitesSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The fansites section of Tibia.com.&quot;&quot;&quot;</span>
 
     <span class="n">promoted_fansites</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Fansite</span><span class="p">]</span>

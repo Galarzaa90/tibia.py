@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tibiapy.parsers.kill_statistics &#8212; Tibia.py 6.3.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
@@ -44,12 +44,12 @@
             
   <h1>Source code for tibiapy.parsers.kill_statistics</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models related to the kill statistics section in Tibia.com.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.builders.kill_statistics</span> <span class="kn">import</span> <span class="n">KillStatisticsBuilder</span>
-<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">InvalidContentError</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">RaceEntry</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="n">clean_text</span><span class="p">,</span> <span class="n">get_rows</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.builders.kill_statistics</span><span class="w"> </span><span class="kn">import</span> <span class="n">KillStatisticsBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidContentError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">KillStatistics</span><span class="p">,</span> <span class="n">RaceEntry</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_text</span><span class="p">,</span> <span class="n">get_rows</span><span class="p">,</span> <span class="n">parse_form_data</span><span class="p">,</span> <span class="n">parse_tibiacom_content</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;KillStatisticsParser&quot;</span><span class="p">,</span>
@@ -58,13 +58,13 @@
 
 <div class="viewcode-block" id="KillStatisticsParser">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.KillStatisticsParser">[docs]</a>
-<span class="k">class</span> <span class="nc">KillStatisticsParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KillStatisticsParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parser for kill statistics.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="KillStatisticsParser.from_content">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.KillStatisticsParser.from_content">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">KillStatistics</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">KillStatistics</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of the class from the HTML content of the kill statistics&#39; page.</span>
 
 <span class="sd">        Parameters</span>
@@ -115,7 +115,7 @@
 
             <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com kill statistics page.&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="k">raise</span> <span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to a Tibia.com kill statistics page.&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 </div>
 
 </pre></div>

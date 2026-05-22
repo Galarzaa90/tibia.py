@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tibiapy.models.spell &#8212; Tibia.py 6.3.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
@@ -44,15 +44,15 @@
             
   <h1>Source code for tibiapy.models.spell</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models related to the spells section in the library.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">computed_field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">computed_field</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellSorting</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellVocationFilter</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_spell_url</span><span class="p">,</span> <span class="n">get_spells_section_url</span><span class="p">,</span> <span class="n">get_static_file_url</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpellGroup</span><span class="p">,</span> <span class="n">SpellSorting</span><span class="p">,</span> <span class="n">SpellType</span><span class="p">,</span> <span class="n">SpellVocationFilter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_spell_url</span><span class="p">,</span> <span class="n">get_spells_section_url</span><span class="p">,</span> <span class="n">get_static_file_url</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;SpellsSection&quot;</span><span class="p">,</span>
@@ -64,7 +64,7 @@
 
 <div class="viewcode-block" id="Rune">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Rune">[docs]</a>
-<span class="k">class</span> <span class="nc">Rune</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Rune</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Information about runes created by spells.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -86,7 +86,7 @@
 
 <div class="viewcode-block" id="SpellEntry">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.SpellEntry">[docs]</a>
-<span class="k">class</span> <span class="nc">SpellEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpellEntry</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A spell listed on the spells section.&quot;&quot;&quot;</span>
 
     <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
@@ -109,13 +109,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the spell requires a premium account to learn and use it.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the spell.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_spell_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
 
     <span class="nd">@computed_field</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">image_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to this spell&#39;s image.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_static_file_url</span><span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;library&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">)</span></div>
 
@@ -123,7 +123,7 @@
 
 <div class="viewcode-block" id="Spell">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.Spell">[docs]</a>
-<span class="k">class</span> <span class="nc">Spell</span><span class="p">(</span><span class="n">SpellEntry</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Spell</span><span class="p">(</span><span class="n">SpellEntry</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A spell listed on the spells section.&quot;&quot;&quot;</span>
 
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
@@ -153,7 +153,7 @@
 
 <div class="viewcode-block" id="SpellsSection">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.SpellsSection">[docs]</a>
-<span class="k">class</span> <span class="nc">SpellsSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpellsSection</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The spells section in Tibia.com.&quot;&quot;&quot;</span>
 
     <span class="n">vocation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellVocationFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -171,7 +171,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The spells matching the selected filters.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The URL to the spells section in Tibia.com.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_spells_section_url</span><span class="p">(</span>
             <span class="n">vocation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vocation</span><span class="p">,</span>

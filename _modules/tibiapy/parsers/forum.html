@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tibiapy.parsers.forum &#8212; Tibia.py 6.3.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
@@ -44,22 +44,22 @@
             
   <h1>Source code for tibiapy.parsers.forum</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Events related to the forum section.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">urllib.parse</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy</span> <span class="kn">import</span> <span class="n">InvalidContentError</span><span class="p">,</span> <span class="n">errors</span>
-<span class="kn">from</span> <span class="nn">tibiapy.builders</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidContentError</span><span class="p">,</span> <span class="n">errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.builders</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CMPostArchiveBuilder</span><span class="p">,</span>
     <span class="n">ForumAnnouncementBuilder</span><span class="p">,</span>
     <span class="n">ForumBoardBuilder</span><span class="p">,</span>
     <span class="n">ForumThreadBuilder</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">ThreadStatus</span><span class="p">,</span> <span class="n">Vocation</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadStatus</span><span class="p">,</span> <span class="n">Vocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">AnnouncementEntry</span><span class="p">,</span>
     <span class="n">BoardEntry</span><span class="p">,</span>
     <span class="n">CMPost</span><span class="p">,</span>
@@ -75,7 +75,7 @@
     <span class="n">LastPost</span><span class="p">,</span>
     <span class="n">ThreadEntry</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tibiapy.utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">clean_text</span><span class="p">,</span>
     <span class="n">convert_line_breaks</span><span class="p">,</span>
     <span class="n">get_rows</span><span class="p">,</span>
@@ -92,7 +92,7 @@
 <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">bs4</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">bs4</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;CMPostArchiveParser&quot;</span><span class="p">,</span>
@@ -121,13 +121,13 @@
 
 <div class="viewcode-block" id="CMPostArchiveParser">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.CMPostArchiveParser">[docs]</a>
-<span class="k">class</span> <span class="nc">CMPostArchiveParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CMPostArchiveParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parser for the content of the CM Post Archive page in Tibia.com.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CMPostArchiveParser.from_content">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.CMPostArchiveParser.from_content">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CMPostArchive</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CMPostArchive</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the content of the CM Post Archive page from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -154,7 +154,7 @@
             <span class="n">start_date</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_selected_date</span><span class="p">(</span><span class="n">start_month_selector</span><span class="p">,</span> <span class="n">start_day_selector</span><span class="p">,</span> <span class="n">start_year_selector</span><span class="p">)</span>
             <span class="n">end_date</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_selected_date</span><span class="p">(</span><span class="n">end_month_selector</span><span class="p">,</span> <span class="n">end_day_selector</span><span class="p">,</span> <span class="n">end_year_selector</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to the CM Post Archive in Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidContentError</span><span class="p">(</span><span class="s2">&quot;content does not belong to the CM Post Archive in Tibia.com&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="n">builder</span> <span class="o">=</span> <span class="n">CMPostArchiveBuilder</span><span class="p">()</span><span class="o">.</span><span class="n">from_date</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">to_date</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;table.Table3&quot;</span><span class="p">)</span>
@@ -195,7 +195,7 @@
     <span class="c1"># region Private Methods</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_get_selected_date</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_selected_date</span><span class="p">(</span>
             <span class="bp">cls</span><span class="p">,</span>
             <span class="n">month_selector</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span>
             <span class="n">day_selector</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span>
@@ -232,13 +232,13 @@
 
 <div class="viewcode-block" id="ForumSectionParser">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.ForumSectionParser">[docs]</a>
-<span class="k">class</span> <span class="nc">ForumSectionParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ForumSectionParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parser for forum sections, such as world boards, trade boards, etcetera.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ForumSectionParser.from_content">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.ForumSectionParser.from_content">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumSection</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumSection</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a forum section from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -268,7 +268,7 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_board_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">board_row</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BoardEntry</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_board_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">board_row</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BoardEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a row containing a board and extracts its information.</span>
 
 <span class="sd">        Parameters</span>
@@ -313,13 +313,13 @@
 
 <div class="viewcode-block" id="ForumAnnouncementParser">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.ForumAnnouncementParser">[docs]</a>
-<span class="k">class</span> <span class="nc">ForumAnnouncementParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ForumAnnouncementParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parser for forum announcements posted by CipSoft.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ForumAnnouncementParser.from_content">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.ForumAnnouncementParser.from_content">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumAnnouncement</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumAnnouncement</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the content of an announcement&#39;s page from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -387,10 +387,10 @@
 
 
 
-<span class="k">class</span> <span class="nc">ForumAuthorParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ForumAuthorParser</span><span class="p">:</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_author_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">character_info_container</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumAuthor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_author_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">character_info_container</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumAuthor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the table containing the author&#39;s information.</span>
 
 <span class="sd">        Parameters</span>
@@ -458,13 +458,13 @@
 
 <div class="viewcode-block" id="ForumBoardParser">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.ForumBoardParser">[docs]</a>
-<span class="k">class</span> <span class="nc">ForumBoardParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ForumBoardParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A parser for forum boards from Tibia.com.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ForumBoardParser.from_content">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.ForumBoardParser.from_content">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumBoard</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumBoard</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the board&#39;s HTML content from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -548,7 +548,7 @@
     <span class="c1"># region Private Methods</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_thread_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">ResultSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_thread_row</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">ResultSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ThreadEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the thread row, containing a single thread.</span>
 
 <span class="sd">        Parameters</span>
@@ -636,13 +636,13 @@
 
 <div class="viewcode-block" id="ForumThreadParser">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.ForumThreadParser">[docs]</a>
-<span class="k">class</span> <span class="nc">ForumThreadParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ForumThreadParser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A parser for forum threads from Tibia.com.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ForumThreadParser.from_content">
 <a class="viewcode-back" href="../../../api.html#tibiapy.parsers.ForumThreadParser.from_content">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumThread</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ForumThread</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of the class from the html content of the thread&#39;s page.</span>
 
 <span class="sd">        Parameters</span>
@@ -730,7 +730,7 @@
     <span class="c1"># region Private Methods</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_post_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">post_table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumPost</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_post_table</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">post_table</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumPost</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the table containing a single posts, extracting its information.</span>
 
 <span class="sd">        Parameters</span>
@@ -809,10 +809,10 @@
     <span class="c1"># endregion</span>
 
 
-<span class="k">class</span> <span class="nc">LastPostParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LastPostParser</span><span class="p">:</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_parse_column</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">last_post_column</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LastPost</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_column</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">last_post_column</span><span class="p">:</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LastPost</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the column containing the last post information and extracts its data.</span>
 
 <span class="sd">        Parameters</span>

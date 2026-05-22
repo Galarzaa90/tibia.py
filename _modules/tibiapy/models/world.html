@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tibiapy.models.world &#8212; Tibia.py 6.3.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4183444b" />
@@ -44,15 +44,15 @@
             
   <h1>Source code for tibiapy.models.world</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Models related to game worlds.&quot;&quot;&quot;</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">computed_field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">computed_field</span>
 
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="n">BattlEyeType</span><span class="p">,</span> <span class="n">PvpType</span><span class="p">,</span> <span class="n">TransferType</span><span class="p">,</span> <span class="n">WorldLocation</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">OnlineCharacter</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models.base</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="n">get_world_url</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">BattlEyeType</span><span class="p">,</span> <span class="n">PvpType</span><span class="p">,</span> <span class="n">TransferType</span><span class="p">,</span> <span class="n">WorldLocation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnlineCharacter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_world_url</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;BaseWorld&quot;</span><span class="p">,</span>
@@ -64,7 +64,7 @@
 
 <div class="viewcode-block" id="BaseWorld">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.BaseWorld">[docs]</a>
-<span class="k">class</span> <span class="nc">BaseWorld</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseWorld</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all World classes.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -89,13 +89,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether the world is experimental or not.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;URL to the world&#39;s information page on Tibia.com.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_world_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="nd">@computed_field</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_battleye_protected</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_battleye_protected</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the server is currently protected with BattlEye or not.</span>
 
 <span class="sd">        .. versionchanged:: 4.0.0</span>
@@ -107,7 +107,7 @@
 
 <div class="viewcode-block" id="World">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.World">[docs]</a>
-<span class="k">class</span> <span class="nc">World</span><span class="p">(</span><span class="n">BaseWorld</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">World</span><span class="p">(</span><span class="n">BaseWorld</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a Tibia game server.&quot;&quot;&quot;</span>
 
     <span class="n">record_count</span><span class="p">:</span> <span class="nb">int</span>
@@ -122,12 +122,12 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of characters currently online in the server.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">creation_year</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">creation_year</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the year when the world was created.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">creation_month</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">creation_month</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the month when the world was created.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">creation_date</span> <span class="k">else</span> <span class="kc">None</span></div>
 
@@ -135,14 +135,14 @@
 
 <div class="viewcode-block" id="WorldEntry">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.WorldEntry">[docs]</a>
-<span class="k">class</span> <span class="nc">WorldEntry</span><span class="p">(</span><span class="n">BaseWorld</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WorldEntry</span><span class="p">(</span><span class="n">BaseWorld</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a game server listed in the World Overview section.&quot;&quot;&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="WorldOverview">
 <a class="viewcode-back" href="../../../api.html#tibiapy.models.WorldOverview">[docs]</a>
-<span class="k">class</span> <span class="nc">WorldOverview</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WorldOverview</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Container class for the World Overview section.&quot;&quot;&quot;</span>
 
     <span class="n">record_count</span><span class="p">:</span> <span class="nb">int</span>
@@ -154,7 +154,7 @@
 
     <span class="nd">@computed_field</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">total_online</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">total_online</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Total players online across all worlds.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">online_count</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">worlds</span><span class="p">)</span></div>
 

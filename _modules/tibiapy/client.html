@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>tibiapy.client &#8212; Tibia.py 6.3.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=4183444b" />
@@ -44,20 +44,20 @@
             
   <h1>Source code for tibiapy.client</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Asynchronous Tibia.com client.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span>
 
-<span class="kn">import</span> <span class="nn">aiohttp</span>
-<span class="kn">import</span> <span class="nn">aiohttp_socks</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">aiohttp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">aiohttp_socks</span>
 
-<span class="kn">import</span> <span class="nn">tibiapy</span>
-<span class="kn">from</span> <span class="nn">tibiapy.enums</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tibiapy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.enums</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BazaarType</span><span class="p">,</span>
     <span class="n">HighscoresBattlEyeType</span><span class="p">,</span>
     <span class="n">HighscoresCategory</span><span class="p">,</span>
@@ -73,9 +73,9 @@
     <span class="n">SpellType</span><span class="p">,</span>
     <span class="n">SpellVocationFilter</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tibiapy.errors</span> <span class="kn">import</span> <span class="n">ForbiddenError</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
-<span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="n">TibiaResponse</span>
-<span class="kn">from</span> <span class="nn">tibiapy.parsers</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForbiddenError</span><span class="p">,</span> <span class="n">NetworkError</span><span class="p">,</span> <span class="n">SiteMaintenanceError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">TibiaResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">AuctionParser</span><span class="p">,</span>
     <span class="n">BoostableBossesParser</span><span class="p">,</span>
     <span class="n">BoostedCreaturesParser</span><span class="p">,</span>
@@ -105,7 +105,7 @@
     <span class="n">WorldOverviewParser</span><span class="p">,</span>
     <span class="n">WorldParser</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tibiapy.urls</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.urls</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_auction_url</span><span class="p">,</span>
     <span class="n">get_bazaar_url</span><span class="p">,</span>
     <span class="n">get_boostable_bosses_url</span><span class="p">,</span>
@@ -141,7 +141,7 @@
 <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">tibiapy.models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.models</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
         <span class="n">AjaxPaginator</span><span class="p">,</span>
         <span class="n">Auction</span><span class="p">,</span>
         <span class="n">AuctionFilters</span><span class="p">,</span>
@@ -185,8 +185,8 @@
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;tibiapy&quot;</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">_RawResponse</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientResponse</span><span class="p">,</span> <span class="n">fetching_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_RawResponse</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientResponse</span><span class="p">,</span> <span class="n">fetching_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fetching_time</span> <span class="o">=</span> <span class="n">fetching_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span>
@@ -195,11 +195,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="k">if</span> <span class="n">age</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">age</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> timestamp=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="si">!r}</span><span class="s2"> fetching_time=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fetching_time</span><span class="si">!r}</span><span class="s2"> &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;cached=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="si">!r}</span><span class="s2"> age=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="n">parsing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
@@ -209,7 +209,7 @@
 
 <div class="viewcode-block" id="Client">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client">[docs]</a>
-<span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An asynchronous client that fetches information from Tibia.com.</span>
 
 <span class="sd">    The client uses a :class:`aiohttp.ClientSession` to request the information.</span>
@@ -234,7 +234,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -252,7 +252,7 @@
 
     <span class="c1"># region Private Methods</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_initialize_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proxy_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proxy_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the aiohttp session object.&quot;&quot;&quot;</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Tibia.py/</span><span class="si">{</span><span class="n">tibiapy</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> (+https://github.com/Galarzaa90/tibia.py)&quot;</span><span class="p">,</span>
@@ -267,7 +267,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_session_ready</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_handle_status</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fetching_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_status</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">fetching_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle error status codes, raising exceptions if necessary.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">400</span><span class="p">:</span>
             <span class="k">return</span>
@@ -277,7 +277,7 @@
 
         <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Request error, status code: </span><span class="si">{</span><span class="n">status_code</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fetching_time</span><span class="o">=</span><span class="n">fetching_time</span><span class="p">)</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_request</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_request</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -333,13 +333,13 @@
                 <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                 <span class="k">return</span> <span class="n">response</span>
         <span class="k">except</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aiohttp.ClientError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">except</span> <span class="n">aiohttp_socks</span><span class="o">.</span><span class="n">SocksConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aiohttp_socks.SocksConnectionError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aiohttp_socks.SocksConnectionError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">except</span> <span class="ne">UnicodeDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UnicodeDecodeError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">NetworkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;UnicodeDecodeError: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">init_time</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_fetch_all_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">paginator</span><span class="p">:</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">item_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_all_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">paginator</span><span class="p">:</span> <span class="n">AjaxPaginator</span><span class="p">,</span> <span class="n">item_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch all the pages of an auction paginator.</span>
 
 <span class="sd">        Parameters</span>
@@ -366,7 +366,7 @@
 
         <span class="n">paginator</span><span class="o">.</span><span class="n">is_fully_fetched</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_fetch_ajax_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">type_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_ajax_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">type_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch an ajax page from the paginated summaries in the auction section.</span>
 
 <span class="sd">        Parameters</span>
@@ -410,7 +410,7 @@
 
 <div class="viewcode-block" id="Client.fetch_boosted_creature">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_creature">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_creature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CreatureEntry</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_boosted_creature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CreatureEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted creature.</span>
 
 <span class="sd">        .. versionadded:: 2.1.0</span>
@@ -442,7 +442,7 @@
 
 <div class="viewcode-block" id="Client.fetch_boosted_creature_and_boss">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_creature_and_boss">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_creature_and_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">BoostedCreatures</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_boosted_creature_and_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">BoostedCreatures</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted creature and boss.</span>
 
 <span class="sd">        .. versionadded:: 5.3.0</span>
@@ -473,7 +473,7 @@
     <span class="c1"># region Bosses</span>
 <div class="viewcode-block" id="Client.fetch_boosted_boss">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boosted_boss">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boosted_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">BossEntry</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_boosted_boss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">BossEntry</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch today&#39;s boosted boss.</span>
 
 <span class="sd">        .. versionadded:: 5.3.0</span>
@@ -506,7 +506,7 @@
     <span class="c1"># region News</span>
 <div class="viewcode-block" id="Client.fetch_news_archive">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_news_archive">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news_archive</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_news_archive</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">from_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
             <span class="n">to_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -560,7 +560,7 @@
 
 <div class="viewcode-block" id="Client.fetch_news_archive_by_days">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_news_archive_by_days">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news_archive_by_days</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_news_archive_by_days</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
             <span class="n">categories</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="n">NewsCategory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -612,7 +612,7 @@
 
 <div class="viewcode-block" id="Client.fetch_news">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_news">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_news</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">news_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">News</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_news</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">news_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">News</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a news entry by its id from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -642,7 +642,7 @@
 
 <div class="viewcode-block" id="Client.fetch_event_schedule">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_event_schedule">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_event_schedule</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_event_schedule</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">month</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -691,7 +691,7 @@
 
 <div class="viewcode-block" id="Client.fetch_creatures">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_creatures">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_creatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CreaturesSection</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_creatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CreaturesSection</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the creatures from the library section.</span>
 
 <span class="sd">        .. versionadded:: 4.0.0</span>
@@ -721,7 +721,7 @@
 
 <div class="viewcode-block" id="Client.fetch_creature">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_creature">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_creature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Creature</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_creature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Creature</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a creature&#39;s information from the Tibia.com library.</span>
 
 <span class="sd">        .. versionadded:: 4.0.0</span>
@@ -753,7 +753,7 @@
 
 <div class="viewcode-block" id="Client.fetch_boostable_bosses">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_boostable_bosses">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_boostable_bosses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">BoostableBosses</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_boostable_bosses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">BoostableBosses</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the boostable bosses from the library section.</span>
 
 <span class="sd">        .. versionadded:: 4.0.0</span>
@@ -783,7 +783,7 @@
 
 <div class="viewcode-block" id="Client.fetch_spells">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_spells">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_spells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_spells</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                            <span class="n">vocation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellVocationFilter</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">group</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellGroup</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">spell_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SpellType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -829,7 +829,7 @@
 
 <div class="viewcode-block" id="Client.fetch_spell">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_spell">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_spell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Spell</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_spell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Spell</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a spell by its identifier.</span>
 
 <span class="sd">        Parameters</span>
@@ -863,7 +863,7 @@
 
 <div class="viewcode-block" id="Client.fetch_character">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_character">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_character</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Character</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_character</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Character</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a character by its name from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -893,7 +893,7 @@
 
 <div class="viewcode-block" id="Client.fetch_world_overview">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_overview">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_overview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">WorldOverview</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_world_overview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">WorldOverview</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the world overview information from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -921,7 +921,7 @@
 
 <div class="viewcode-block" id="Client.fetch_world">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">World</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">World</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a world from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -951,7 +951,7 @@
 
 <div class="viewcode-block" id="Client.fetch_highscores_page">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_highscores_page">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_highscores_page</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_highscores_page</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">world</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">category</span><span class="p">:</span> <span class="n">HighscoresCategory</span> <span class="o">=</span> <span class="n">HighscoresCategory</span><span class="o">.</span><span class="n">EXPERIENCE</span><span class="p">,</span>
@@ -1016,7 +1016,7 @@
 
 <div class="viewcode-block" id="Client.fetch_leaderboard">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_leaderboard">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_leaderboard</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_leaderboard</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">rotation</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1058,7 +1058,7 @@
 
 <div class="viewcode-block" id="Client.fetch_kill_statistics">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_kill_statistics">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_kill_statistics</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_kill_statistics</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="o">*</span><span class="p">,</span>
@@ -1093,7 +1093,7 @@
 
 <div class="viewcode-block" id="Client.fetch_houses_section">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_houses_section">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_houses_section</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_houses_section</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">town</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1144,7 +1144,7 @@
 
 <div class="viewcode-block" id="Client.fetch_house">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_house">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_house</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">house_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">House</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_house</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">house_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">House</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a house in a specific world by its id.</span>
 
 <span class="sd">        Parameters</span>
@@ -1176,7 +1176,7 @@
 
 <div class="viewcode-block" id="Client.fetch_world_guilds">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_world_guilds">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_world_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">GuildsSection</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_world_guilds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">GuildsSection</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the list of guilds in a world from Tibia.com.</span>
 
 <span class="sd">        If a world that does not exist is passed, the world attribute of the result will be :obj:`None`.</span>
@@ -1212,7 +1212,7 @@
 
 <div class="viewcode-block" id="Client.fetch_guild">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_guild">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Guild</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Guild</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a guild by its name from Tibia.com.</span>
 
 <span class="sd">        Parameters</span>
@@ -1242,7 +1242,7 @@
 
 <div class="viewcode-block" id="Client.fetch_guild_wars">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_guild_wars">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild_wars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">GuildWars</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_guild_wars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">GuildWars</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a guild&#39;s wars by its name from Tibia.com.</span>
 
 <span class="sd">        .. versionadded:: 3.0.0</span>
@@ -1277,7 +1277,7 @@
 
 <div class="viewcode-block" id="Client.fetch_fansites_section">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_fansites_section">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_fansites_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">FansitesSection</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_fansites_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">FansitesSection</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the fansites section from Tibia.com.</span>
 
 <span class="sd">        .. versionadded:: 6.2.0</span>
@@ -1310,7 +1310,7 @@
     <span class="c1"># region Forums</span>
 <div class="viewcode-block" id="Client.fetch_forum_section">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_section">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_section</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_section</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">section_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
             <span class="o">*</span><span class="p">,</span>
@@ -1345,7 +1345,7 @@
 
 <div class="viewcode-block" id="Client.fetch_forum_world_boards">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_world_boards">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_world_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_world_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s world boards.</span>
 
 <span class="sd">        .. versionadded:: 3.0.0</span>
@@ -1375,7 +1375,7 @@
 
 <div class="viewcode-block" id="Client.fetch_forum_trade_boards">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_trade_boards">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_trade_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_trade_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s trade boards.</span>
 
 <span class="sd">        .. versionadded:: 3.0.0</span>
@@ -1405,7 +1405,7 @@
 
 <div class="viewcode-block" id="Client.fetch_forum_community_boards">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_community_boards">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_community_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_community_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s community boards.</span>
 
 <span class="sd">        .. versionadded:: 3.0.0</span>
@@ -1435,7 +1435,7 @@
 
 <div class="viewcode-block" id="Client.fetch_forum_support_boards">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_support_boards">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_support_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_support_boards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumSection</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the forum&#39;s community boards.</span>
 
 <span class="sd">        .. versionadded:: 3.0.0</span>
@@ -1465,7 +1465,7 @@
 
 <div class="viewcode-block" id="Client.fetch_forum_board">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_board">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_board</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_board</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                                 <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumBoard</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum board with a given id.</span>
 
@@ -1504,7 +1504,7 @@
 
 <div class="viewcode-block" id="Client.fetch_forum_thread">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_thread">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                                  <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumThread</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum thread with a given id.</span>
 
@@ -1539,7 +1539,7 @@
 
 <div class="viewcode-block" id="Client.fetch_forum_post">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_post">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumThread</span><span class="p">]]:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">post_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ForumThread</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch a forum post with a given id.</span>
 
 <span class="sd">        The thread that contains the post will be returned, containing the desired post in</span>
@@ -1581,7 +1581,7 @@
 
 <div class="viewcode-block" id="Client.fetch_forum_announcement">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_forum_announcement">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_forum_announcement</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_forum_announcement</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">announcement_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
             <span class="o">*</span><span class="p">,</span>
@@ -1618,7 +1618,7 @@
 
 <div class="viewcode-block" id="Client.fetch_cm_post_archive">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_cm_post_archive">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_cm_post_archive</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_cm_post_archive</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">start_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
             <span class="n">end_date</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span>
@@ -1672,7 +1672,7 @@
     <span class="c1"># region Char Bazaar</span>
 <div class="viewcode-block" id="Client.fetch_current_auctions">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_current_auctions">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_current_auctions</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_current_auctions</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
             <span class="n">filters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionFilters</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1717,7 +1717,7 @@
 
 <div class="viewcode-block" id="Client.fetch_auction_history">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_auction_history">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_auction_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionFilters</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_auction_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AuctionFilters</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                                     <span class="n">test</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TibiaResponse</span><span class="p">[</span><span class="n">CharacterBazaar</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch the auction history of the bazaar.</span>
 
@@ -1757,7 +1757,7 @@
 
 <div class="viewcode-block" id="Client.fetch_auction">
 <a class="viewcode-back" href="../../api.html#tibiapy.Client.fetch_auction">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_auction</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_auction</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">auction_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
             <span class="o">*</span><span class="p">,</span>

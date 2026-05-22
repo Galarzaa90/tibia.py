@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Introduction &#8212; Tibia.py 6.3.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
     <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=4183444b" />
@@ -77,12 +77,12 @@ Dependencies are installed automatically when installing the package.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">tibiapy.urls</span></code> package contains many methods to get URLs for Tibia.com.</p>
 <p>With the URL, the HTML content can be fetched and then passed to the respective class from the available <a class="reference internal" href="api.html#api-parsers"><span class="std std-ref">Parsers</span></a>.</p>
 <p>This allows you to use any networking library (e.g. aiohttp, requests, httpx) to obtain the data, and use the library to parse it.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">tibiapy</span>
-<span class="kn">from</span> <span class="nn">tibiapy.parsers</span> <span class="kn">import</span> <span class="n">CharacterParser</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tibiapy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CharacterParser</span>
 
 <span class="c1"># Fetching a character using requests instead of aiohttp</span>
-<span class="k">def</span> <span class="nf">get_character</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_character</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">get_character_url</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
     <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
@@ -91,10 +91,10 @@ Dependencies are installed automatically when installing the package.</p>
 </pre></div>
 </div>
 <p>On the other hand, using the built-in asynchronous client you can do the fetching and parsing in one step:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">tibiapy</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tibiapy</span>
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
     <span class="n">character</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">fetch_character</span><span class="p">(</span><span class="s2">&quot;Galarzaa Fidera&quot;</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
