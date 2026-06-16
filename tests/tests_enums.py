@@ -1,6 +1,7 @@
 import tibiapy.enums
 from tests.tests_tibiapy import TestCommons
 from tibiapy.models import AuctionFilters
+from tibiapy.utils import try_enum
 
 
 class TestEnums(TestCommons):
@@ -30,3 +31,13 @@ class TestEnums(TestCommons):
         self.assertEqual(tibiapy.enums.HighscoresProfession.ALL,
                          tibiapy.enums.HighscoresProfession.from_name("anything"))
         self.assertIsNone(tibiapy.enums.HighscoresProfession.from_name("anything", all_fallback=False))
+
+    def test_vocation_includes_monk(self):
+        """Monk vocations must resolve, otherwise bazaar pages containing a Monk fail to parse."""
+        self.assertEqual(tibiapy.enums.Vocation.MONK, tibiapy.enums.Vocation("Monk"))
+        self.assertEqual(tibiapy.enums.Vocation.EXALTED_MONK, tibiapy.enums.Vocation("Exalted Monk"))
+        self.assertEqual(tibiapy.enums.Vocation.MONK, tibiapy.enums.Vocation.EXALTED_MONK.base)
+        # The bazaar parser resolves vocations through try_enum; "Monk" previously returned None.
+        self.assertEqual(tibiapy.enums.Vocation.MONK, try_enum(tibiapy.enums.Vocation, "Monk"))
+        self.assertEqual(tibiapy.enums.Vocation.EXALTED_MONK,
+                         try_enum(tibiapy.enums.Vocation, "Exalted Monk"))
