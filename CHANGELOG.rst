@@ -8,7 +8,7 @@ Changelog
 
 .. v6.4.0
 
-6.4.0 (unreleased)
+6.4.0 (2026-07-12)
 ==================
 - Add Monk vocation (``Vocation.MONK`` / ``Vocation.EXALTED_MONK``) and the matching ``AuctionVocationFilter``, ``HighscoresProfession`` and ``SpellVocationFilter`` entries.
 

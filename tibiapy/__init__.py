@@ -1,5 +1,5 @@
 """Tibia.com parsing and fetching library."""
-__version__ = "6.3.0"
+__version__ = "6.4.0"
 __author__ = "Allan Galarza"
 __license__ = "Apache-2.0 License"
 
