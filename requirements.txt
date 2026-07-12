@@ -1,5 +1,5 @@
 aiohttp-socks
-aiohttp>=3.8
+aiohttp>=3.8,<3.13
 beautifulsoup4>=4.0
 html5lib>=1.1
 lxml>=4.3.5
