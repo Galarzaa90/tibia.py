@@ -6,6 +6,12 @@ Changelog
     Due to this library relying on external content, older versions are not guaranteed to work.
     Try to always use the latest version.
 
+.. v6.4.0
+
+6.4.0 (unreleased)
+==================
+- Add Monk vocation (``Vocation.MONK`` / ``Vocation.EXALTED_MONK``) and the matching ``AuctionVocationFilter``, ``HighscoresProfession`` and ``SpellVocationFilter`` entries.
+
 .. v6.3.0
 
 6.3.0 (2024-04-05)

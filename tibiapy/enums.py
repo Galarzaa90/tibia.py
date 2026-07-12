@@ -212,6 +212,7 @@ class AuctionVocationFilter(NumericEnum):
     KNIGHT = 3
     PALADIN = 4
     SORCERER = 5
+    MONK = 6
 
 
 class AvailableForumSection(StringEnum):
@@ -322,6 +323,7 @@ class HighscoresProfession(NumericEnum):
     PALADINS = 3
     SORCERERS = 4
     DRUIDS = 5
+    MONKS = 6
 
     @classmethod
     def from_name(cls, name: str, all_fallback: bool = True) -> Optional[Self]:
@@ -479,6 +481,7 @@ class SpellVocationFilter(StringEnum):
     KNIGHT = "Knight"
     PALADIN = "Paladin"
     SORCERER = "Sorcerer"
+    MONK = "Monk"
 
 
 class ThreadStatus(Flag):
@@ -555,10 +558,12 @@ class Vocation(StringEnum):
     KNIGHT = "Knight"
     PALADIN = "Paladin"
     SORCERER = "Sorcerer"
+    MONK = "Monk"
     ELDER_DRUID = "Elder Druid"
     ELITE_KNIGHT = "Elite Knight"
     ROYAL_PALADIN = "Royal Paladin"
     MASTER_SORCERER = "Master Sorcerer"
+    EXALTED_MONK = "Exalted Monk"
 
     @property
     def base(self) -> Self:
@@ -571,6 +576,8 @@ class Vocation(StringEnum):
             return self.PALADIN
         if self == self.ELITE_KNIGHT:
             return self.KNIGHT
+        if self == self.EXALTED_MONK:
+            return self.MONK
         return self
 
 
