@@ -59,7 +59,7 @@
 <dt class="sig sig-object py" id="tibiapy.Client">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tibiapy.</span></span><span class="sig-name descname"><span class="pre">Client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proxy_url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tibiapy/client.html#Client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tibiapy.Client" title="Link to this definition">¶</a></dt>
 <dd><p>An asynchronous client that fetches information from Tibia.com.</p>
-<p>The client uses a <a class="reference external" href="https://docs.aiohttp.org/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> to request the information.
+<p>The client uses a <a class="reference external" href="https://docs.aiohttp.org/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a> to request the information.
 A single session is shared across all operations.</p>
 <p>If desired, a custom ClientSession instance may be passed, instead of creating a new one.</p>
 <div class="versionadded">
@@ -85,7 +85,7 @@ A single session is shared across all operations.</p>
 <dd><p>The client session that will be used for the requests. One will be created by default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.aiohttp.org/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.aiohttp.org/en/stable/client_reference.html#aiohttp.ClientSession" title="(in aiohttp v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1265,7 +1265,7 @@ parsing time.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -1626,6 +1626,11 @@ parsing time.</p>
 <span class="sig-name descname"><span class="pre">SORCERER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#tibiapy.enums.AuctionVocationFilter.SORCERER" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tibiapy.enums.AuctionVocationFilter.MONK">
+<span class="sig-name descname"><span class="pre">MONK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#tibiapy.enums.AuctionVocationFilter.MONK" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1907,6 +1912,11 @@ without bids.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="tibiapy.enums.HighscoresProfession.DRUIDS">
 <span class="sig-name descname"><span class="pre">DRUIDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#tibiapy.enums.HighscoresProfession.DRUIDS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tibiapy.enums.HighscoresProfession.MONKS">
+<span class="sig-name descname"><span class="pre">MONKS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#tibiapy.enums.HighscoresProfession.MONKS" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2268,6 +2278,11 @@ without bids.</p>
 <span class="sig-name descname"><span class="pre">SORCERER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Sorcerer'</span></em><a class="headerlink" href="#tibiapy.enums.SpellVocationFilter.SORCERER" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tibiapy.enums.SpellVocationFilter.MONK">
+<span class="sig-name descname"><span class="pre">MONK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Monk'</span></em><a class="headerlink" href="#tibiapy.enums.SpellVocationFilter.MONK" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -2391,6 +2406,11 @@ without bids.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="tibiapy.enums.Vocation.MONK">
+<span class="sig-name descname"><span class="pre">MONK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Monk'</span></em><a class="headerlink" href="#tibiapy.enums.Vocation.MONK" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="tibiapy.enums.Vocation.ELDER_DRUID">
 <span class="sig-name descname"><span class="pre">ELDER_DRUID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Elder</span> <span class="pre">Druid'</span></em><a class="headerlink" href="#tibiapy.enums.Vocation.ELDER_DRUID" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2408,6 +2428,11 @@ without bids.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="tibiapy.enums.Vocation.MASTER_SORCERER">
 <span class="sig-name descname"><span class="pre">MASTER_SORCERER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Master</span> <span class="pre">Sorcerer'</span></em><a class="headerlink" href="#tibiapy.enums.Vocation.MASTER_SORCERER" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tibiapy.enums.Vocation.EXALTED_MONK">
+<span class="sig-name descname"><span class="pre">EXALTED_MONK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Exalted</span> <span class="pre">Monk'</span></em><a class="headerlink" href="#tibiapy.enums.Vocation.EXALTED_MONK" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -2530,10 +2555,12 @@ without bids.</p>
 <span class="w">            </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -3034,7 +3061,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -3311,7 +3338,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -3399,7 +3426,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -3471,7 +3498,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -3556,7 +3583,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -3703,7 +3730,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -3802,7 +3829,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -3908,7 +3935,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -4025,7 +4052,7 @@ without bids.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -4242,7 +4269,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -4393,7 +4420,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -4640,10 +4667,12 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 <span class="w">                  </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -4686,7 +4715,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -4854,10 +4883,12 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 <span class="w">            </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -4880,7 +4911,7 @@ the <a class="reference internal" href="#tibiapy.models.World" title="tibiapy.mo
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -5024,7 +5055,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -5289,10 +5320,12 @@ previewed information in the guild list of the <a class="reference internal" hre
 <span class="w">                  </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -5338,7 +5371,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -5563,7 +5596,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -5659,7 +5692,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -5726,7 +5759,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -5799,10 +5832,12 @@ previewed information in the guild list of the <a class="reference internal" hre
 <span class="w">            </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -5834,7 +5869,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -6077,7 +6112,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -6247,7 +6282,7 @@ previewed information in the guild list of the <a class="reference internal" hre
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -6446,7 +6481,8 @@ war ended.</p>
 <span class="w">            </span><span class="s2">&quot;KNIGHTS&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;PALADINS&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;SORCERERS&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;DRUIDS&quot;</span>
+<span class="w">            </span><span class="s2">&quot;DRUIDS&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;MONKS&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -6522,10 +6558,12 @@ war ended.</p>
 <span class="w">                  </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -6573,7 +6611,7 @@ war ended.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -6743,10 +6781,12 @@ war ended.</p>
 <span class="w">            </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -6782,7 +6822,7 @@ war ended.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -6872,10 +6912,12 @@ war ended.</p>
 <span class="w">            </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -6917,7 +6959,7 @@ war ended.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -7182,7 +7224,7 @@ war ended.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -7476,7 +7518,7 @@ war ended.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -7749,7 +7791,7 @@ war ended.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -7999,7 +8041,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -8153,7 +8195,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -8232,7 +8274,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -8374,7 +8416,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -8592,7 +8634,7 @@ This is not an exact measure, it is rounded to hours or days.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -8759,10 +8801,12 @@ They cannot be replied to, and they show no view counts.</p>
 <span class="w">                        </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">                        </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">                        </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">                     </span><span class="p">],</span>
 <span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">                  </span><span class="p">},</span>
@@ -8872,7 +8916,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -9247,7 +9291,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -9537,10 +9581,12 @@ They cannot be replied to, and they show no view counts.</p>
 <span class="w">                        </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">                        </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">                        </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">                     </span><span class="p">],</span>
 <span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">                  </span><span class="p">},</span>
@@ -9665,7 +9711,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -9936,10 +9982,12 @@ They cannot be replied to, and they show no view counts.</p>
 <span class="w">                        </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">                        </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">                        </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">                     </span><span class="p">],</span>
 <span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">                  </span><span class="p">},</span>
@@ -10169,7 +10217,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -10372,7 +10420,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -10517,7 +10565,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -10762,7 +10810,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -10923,7 +10971,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -11046,10 +11094,12 @@ They cannot be replied to, and they show no view counts.</p>
 <span class="w">                  </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
@@ -11145,7 +11195,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -11266,7 +11316,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -11344,7 +11394,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -11537,7 +11587,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -11662,7 +11712,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -11792,7 +11842,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -11952,7 +12002,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -12086,7 +12136,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -12258,10 +12308,12 @@ They cannot be replied to, and they show no view counts.</p>
 <span class="w">                  </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">                  </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -12747,7 +12799,8 @@ They cannot be replied to, and they show no view counts.</p>
 <span class="w">                        </span><span class="s2">&quot;DRUID&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;KNIGHT&quot;</span><span class="p">,</span>
 <span class="w">                        </span><span class="s2">&quot;PALADIN&quot;</span><span class="p">,</span>
-<span class="w">                        </span><span class="s2">&quot;SORCERER&quot;</span>
+<span class="w">                        </span><span class="s2">&quot;SORCERER&quot;</span><span class="p">,</span>
+<span class="w">                        </span><span class="s2">&quot;MONK&quot;</span>
 <span class="w">                     </span><span class="p">],</span>
 <span class="w">                     </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">                  </span><span class="p">},</span>
@@ -13405,7 +13458,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -13533,10 +13586,12 @@ They cannot be replied to, and they show no view counts.</p>
 <span class="w">            </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Monk&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elder Druid&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Elite Knight&quot;</span><span class="p">,</span>
 <span class="w">            </span><span class="s2">&quot;Royal Paladin&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span>
+<span class="w">            </span><span class="s2">&quot;Master Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Exalted Monk&quot;</span>
 <span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Vocation&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
@@ -14459,7 +14514,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -15361,7 +15416,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -15748,7 +15803,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -15845,7 +15900,8 @@ They cannot be replied to, and they show no view counts.</p>
 <span class="w">                  </span><span class="s2">&quot;DRUID&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;KNIGHT&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;PALADIN&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="s2">&quot;SORCERER&quot;</span>
+<span class="w">                  </span><span class="s2">&quot;SORCERER&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;MONK&quot;</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
@@ -16024,7 +16080,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16179,7 +16235,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16251,7 +16307,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16310,7 +16366,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16375,7 +16431,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16472,7 +16528,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16565,7 +16621,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16643,7 +16699,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16764,7 +16820,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -16968,7 +17024,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17147,7 +17203,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17284,7 +17340,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17404,7 +17460,7 @@ They cannot be replied to, and they show no view counts.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17542,7 +17598,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17613,7 +17669,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17682,7 +17738,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17796,7 +17852,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17893,7 +17949,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -17994,7 +18050,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -18129,7 +18185,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -18270,7 +18326,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -18366,7 +18422,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -18467,7 +18523,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -18526,7 +18582,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -18576,7 +18632,8 @@ character features in the auction listing.</p>
 <span class="w">                  </span><span class="s2">&quot;Druid&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Knight&quot;</span><span class="p">,</span>
 <span class="w">                  </span><span class="s2">&quot;Paladin&quot;</span><span class="p">,</span>
-<span class="w">                  </span><span class="s2">&quot;Sorcerer&quot;</span>
+<span class="w">                  </span><span class="s2">&quot;Sorcerer&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s2">&quot;Monk&quot;</span>
 <span class="w">               </span><span class="p">],</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
 <span class="w">            </span><span class="p">},</span>
@@ -18758,7 +18815,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -19114,7 +19171,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -19363,7 +19420,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -19522,7 +19579,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -19777,7 +19834,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -19941,7 +19998,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20049,7 +20106,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20108,7 +20165,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20158,7 +20215,7 @@ character features in the auction listing.</p>
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20693,7 +20750,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20751,7 +20808,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20814,7 +20871,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20872,7 +20929,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20940,7 +20997,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -20998,7 +21055,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -21083,7 +21140,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -21148,7 +21205,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -21205,7 +21262,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -21347,7 +21404,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -21488,7 +21545,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -21572,7 +21629,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
@@ -21685,7 +21742,7 @@ See the [<cite>extra</cite> configuration value][pydantic.ConfigDict.extra] for 
 <dt class="field-odd">Config<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>populate_by_name</strong>: <em>bool = True</em></p></li>
-<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7fbbb0caf420&gt;</em></p></li>
+<li><p><strong>alias_generator</strong>: <em>function = &lt;function to_camel at 0x7f47587a4680&gt;</em></p></li>
 <li><p><strong>use_attribute_docstrings</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_alias</strong>: <em>bool = True</em></p></li>
 <li><p><strong>validate_by_name</strong>: <em>bool = True</em></p></li>
