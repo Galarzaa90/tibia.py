@@ -73,12 +73,12 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
 
         Parameters
         ----------
-        page: :class:`int`
+        page:
             The desired page.
 
         Returns
         -------
-        :class:`str`
+        :
             The URL to the desired page.
 
         Raises

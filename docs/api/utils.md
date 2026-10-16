@@ -1,0 +1,3 @@
+# Utility functions
+
+::: tibiapy.utils

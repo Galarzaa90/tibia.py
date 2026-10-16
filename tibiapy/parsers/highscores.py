@@ -44,7 +44,7 @@ class HighscoresParser:
 
     @classmethod
     def from_content(cls, content: str) -> Optional[Highscores]:
-        """Create an instance of the class from the html content of a highscores page.
+        """Create an instance of the class from the HTML content of a highscores page.
 
         Notes
         -----
@@ -58,6 +58,7 @@ class HighscoresParser:
 
         Returns
         -------
+        :
             The highscores results contained in the page.
 
         Raises
@@ -93,9 +94,9 @@ class HighscoresParser:
 
         Parameters
         ----------
-        builder: :class:`HighscoresBuilder`
+        builder:
             The builder where data will be stored to.
-        table: :class:`bs4.Tag`
+        table:
             The table containing the entries.
 
         """
@@ -121,9 +122,9 @@ class HighscoresParser:
 
         Parameters
         ----------
-        builder: :class:`HighscoresBuilder`
+        builder:
             The builder where data will be stored to.
-        form: :class:`bs4.Tag`
+        form:
             The table containing the filters.
 
         """
@@ -142,12 +143,12 @@ class HighscoresParser:
 
         Parameters
         ----------
-        parsed_content: :class:`bs4.BeautifulSoup`
-            A :class:`BeautifulSoup` object containing all the content.
+        parsed_content:
+            A `BeautifulSoup` object containing all the content.
 
         Returns
         -------
-        :class:`Ordereddict`[:class:`str`, :class:`bs4.Tag`]
+        :
             A dictionary containing all the table rows, with the table headers as keys.
 
         """
@@ -164,13 +165,13 @@ class HighscoresParser:
 
     @classmethod
     def _parse_entry(cls, builder: HighscoresBuilder, cols: bs4.ResultSet) -> None:
-        """Parse an entry's row and adds the result to py:attr:`entries`.
+        """Parse an entry's row and adds the result to `entries`.
 
         Parameters
         ----------
-        builder: :class:`HighscoresBuilder`
+        builder:
             The builder where data will be stored to.
-        cols: :class:`bs4.ResultSet`
+        cols:
             The list of columns for that entry.
 
         """

@@ -25,6 +25,7 @@ class FansitesSectionParser:
 
         Returns
         -------
+        :
             The fansites section.
 
         Raises

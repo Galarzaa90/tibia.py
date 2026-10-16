@@ -44,6 +44,7 @@ class LeaderboardParser:
 
         Returns
         -------
+        :
             The leaderboard, if found.
 
         """

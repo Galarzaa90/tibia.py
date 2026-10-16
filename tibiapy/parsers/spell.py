@@ -56,6 +56,7 @@ class SpellsSectionParser:
 
         Returns
         -------
+        :
             The spells contained and the filtering information.
 
         Raises
@@ -126,7 +127,8 @@ class SpellParser:
 
         Returns
         -------
-            The spell data. If the spell doesn't exist, this will be :obj:`None`.
+        :
+            The spell data. If the spell doesn't exist, this will be `None`.
 
         Raises
         ------
@@ -180,12 +182,12 @@ class SpellParser:
 
         Parameters
         ----------
-        table: :class:`bs4.Tag`
+        table:
             The table containing the rune information.
 
         Returns
         -------
-        :class:`Rune`
+        :
             The rune described in the table.
 
         """
@@ -205,9 +207,9 @@ class SpellParser:
 
         Parameters
         ----------
-        builder: :class:`SpellBuilder`
+        builder:
             The instance of the builder where data will be collected.
-        spell_table: :class:`bs4.Tag`
+        spell_table:
             The table containing the spell information.
 
         """
@@ -242,12 +244,12 @@ class SpellParser:
 
         Parameters
         ----------
-        table: :class:`bs4.Tag`
+        table:
             The table to get the attributes from.
 
         Returns
         -------
-        :class:`dict`
+        :
             The table attributes.
 
         """

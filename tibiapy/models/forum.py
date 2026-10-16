@@ -44,8 +44,8 @@ class BaseAnnouncement(BaseModel):
 
     The following implement this class:
 
-    - :class:`.ForumAnnouncement`
-    - :class:`.AnnouncementEntry`
+    - [ForumAnnouncement][tibiapy.models.ForumAnnouncement]
+    - [AnnouncementEntry][tibiapy.models.AnnouncementEntry]
     """
 
     announcement_id: int
@@ -70,8 +70,8 @@ class BaseBoard(BaseModel):
 
     The following implement this class:
 
-    - :class:`.ForumBoard`
-    - :class:`.BoardEntry`
+    - [ForumBoard][tibiapy.models.ForumBoard]
+    - [BoardEntry][tibiapy.models.BoardEntry]
     """
 
     board_id: int
@@ -92,9 +92,9 @@ class BasePost(BaseModel):
 
     The following implement this class:
 
-    - :class:`.CMPost`
-    - :class:`.ForumPost`
-    - :class:`.LastPost`
+    - [CMPost][tibiapy.models.CMPost]
+    - [ForumPost][tibiapy.models.ForumPost]
+    - [LastPost][tibiapy.models.LastPost]
     """
 
     post_id: int
@@ -117,8 +117,8 @@ class BaseThread(BaseModel):
 
     The following implement this class:
 
-    - :class:`.ThreadEntry`
-    - :class:`.ForumThread`
+    - [ThreadEntry][tibiapy.models.ThreadEntry]
+    - [ForumThread][tibiapy.models.ForumThread]
     """
 
     thread_id: int
@@ -126,7 +126,7 @@ class BaseThread(BaseModel):
 
     @property
     def url(self) -> str:
-        """:class:`str`: The URL to the thread in Tibia.com."""
+        """The URL to the thread in Tibia.com."""
         return get_forum_thread_url(self.thread_id)
 
     def __eq__(self, other: Any):
@@ -172,12 +172,12 @@ class CMPostArchive(PaginatedWithUrl[CMPost]):
 
         Parameters
         ----------
-        page: :class:`int`
+        page:
             The desired page.
 
         Returns
         -------
-        :class:`str`
+        :
             The URL to the desired page.
 
         """
@@ -371,12 +371,12 @@ class ForumBoard(PaginatedWithUrl[ThreadEntry], BaseBoard):
 
         Parameters
         ----------
-        page: :class:`int`
+        page:
             The desired page.
 
         Returns
         -------
-        :class:`str`
+        :
             The URL to the desired page.
 
         """
@@ -455,12 +455,12 @@ class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
 
         Parameters
         ----------
-        page: :class:`int`
+        page:
             The desired page.
 
         Returns
         -------
-        :class:`str`
+        :
             The URL to the desired page.
 
         """

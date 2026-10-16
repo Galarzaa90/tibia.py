@@ -50,10 +50,11 @@ class NewsArchiveParser:
         categories:
             The allowed categories to show. If left blank, all categories will be searched.
         types:
-            The allowed news types to show. if unused, all types will be searched.
+            The allowed news types to show. If unused, all types will be searched.
 
         Returns
         -------
+        :
             A dictionary with the required form data to search news in the archive.
 
         """
@@ -97,6 +98,7 @@ class NewsArchiveParser:
 
         Returns
         -------
+        :
             The news archive with the news found.
 
         Raises
@@ -186,6 +188,7 @@ class NewsParser:
 
         Returns
         -------
+        :
             The news article found in the page.
 
         Raises

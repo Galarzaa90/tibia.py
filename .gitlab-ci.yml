@@ -34,15 +34,14 @@ build:
 
 docs:
   stage: build
+  image: python:3.12-slim
   script:
     - pip install -U -e .[docs]
-    - apt-get update && apt-get install -y make
-    - cd docs
-    - make html
+    - zensical build
   artifacts:
     name: tibia.py-docs
     paths:
-      - docs/_build/
+      - site/
 
 coverage:
   stage: test
@@ -69,7 +68,7 @@ pages:
   script:
     - mkdir public
     - mv htmlcov/ public/coverage/
-    - mv docs/_build/html/* public/
+    - mv site/* public/
   artifacts:
     paths:
       - public

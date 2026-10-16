@@ -65,6 +65,7 @@ class HousesSectionParser:
 
         Returns
         -------
+        :
             The houses found in the page.
 
         Raises
@@ -129,9 +130,9 @@ class HousesSectionParser:
 
         Parameters
         ----------
-        builder: :class:`HouseEntryBuilder`
+        builder:
             The instance of the builder where data will be collected.
-        status: :class:`str`
+        status:
             The string containing the status.
 
         """
@@ -163,6 +164,7 @@ class HouseParser:
 
         Returns
         -------
+        :
             The house contained in the page, or None if the house doesn't exist.
 
         Raises
@@ -219,9 +221,9 @@ class HouseParser:
 
         Parameters
         ----------
-        builder: :class:`HouseBuilder`
+        builder:
             The instance of the builder where data will be collected.
-        status: :class:`str`
+        status:
             Plain text string containing the current renting state of the house.
 
         """

@@ -25,18 +25,21 @@ class InvalidContentError(TibiapyError):
     """Exception thrown when the provided content is unrelated for the calling function.
 
     This usually means that the content provided belongs to a different website or section of the website.
-    This serves as a way to differentiate those cases from a parsing that returned no results (e.g. Character not found)
+    This serves as a way to differentiate those cases from a parsing that returned no results (e.g., Character not found)
 
     In some cases this can mean that Tibia.com's format has changed and the library needs updating.
-
-    Attributes
-    ----------
-    original: :class:`Exception`
-        The original exception that caused this exception.
 
     """
 
     def __init__(self, message: str, original: Exception = None):
+        """Initializes a content error.
+
+        Attributes
+        ----------
+        original: Exception
+            The original exception that caused this exception.
+
+        """
         super().__init__(message)
         self.original = original
 
@@ -47,25 +50,26 @@ class InvalidContent(InvalidContentError):  # noqa: N818
 
 
 class NetworkError(TibiapyError):
-    """Exception thrown when there was a network error trying to fetch a resource from the web.
-
-    Attributes
-    ----------
-    original: :class:`Exception`
-        The original exception that caused this exception.
-    fetching_time: :class:`float`
-        The time between the request and the response.
-
-    """
+    """Exception thrown when there was a network error trying to fetch a resource from the web."""
 
     def __init__(self, message: str, original: Exception = None, fetching_time: float = 0.0):
+        """Initializes a network error.
+
+        Parameters
+        ----------
+        original:
+            The original exception that caused this exception.
+        fetching_time:
+            The time between the request and the response.
+
+        """
         super().__init__(message)
         self.original = original
         self.fetching_time = fetching_time
 
 
 class ForbiddenError(NetworkError):
-    """A subclass of :class:`NetworkError` thrown when Tibia.com returns a 403 status code.
+    """A subclass of `NetworkError` thrown when Tibia.com returns a 403 status code.
 
     Tibia.com returns a 403 status code when it detects that too many requests are being done.
     This has its own subclass to let the user decide to treat this differently than other network errors.
@@ -78,7 +82,7 @@ class Forbidden(ForbiddenError):  # noqa: N818
 
 
 class SiteMaintenanceError(NetworkError):
-    """A subclass of :class:`NetworkError` thrown when Tibia.com is down for maintenance.
+    """A subclass of `NetworkError` thrown when Tibia.com is down for maintenance.
 
     When Tibia.com is under maintenance, all sections of the website redirect to maintenance.tibia.com.
     """

@@ -76,6 +76,7 @@ class CharacterParser:
 
         Returns
         -------
+        :
             The character contained in the page, or None if the character doesn't exist
 
         Raises

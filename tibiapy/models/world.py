@@ -49,11 +49,7 @@ class BaseWorld(BaseModel):
     @computed_field
     @property
     def is_battleye_protected(self) -> bool:
-        """Whether the server is currently protected with BattlEye or not.
-
-        .. versionchanged:: 4.0.0
-            Now a calculated property instead of a field.
-        """
+        """Whether the server is currently protected with BattlEye or not."""
         return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
 
 

@@ -88,6 +88,7 @@ class CMPostArchiveParser:
 
         Returns
         -------
+        :
             The CM Post archive found in the page.
 
         Raises
@@ -155,16 +156,16 @@ class CMPostArchiveParser:
 
         Parameters
         ----------
-        month_selector: :class:`bs4.Tag`
+        month_selector:
             The month selector.
-        day_selector: :class:`bs4.Tag`
+        day_selector:
             The day selector.
-        year_selector: :class:`bs4.Tag`
+        year_selector:
             The year selector.
 
         Returns
         -------
-        :class:`datetime.date`
+        :
             The selected date.
 
         """
@@ -193,6 +194,7 @@ class ForumSectionParser:
 
         Returns
         -------
+        :
             The forum section found in the page.
 
         """
@@ -217,15 +219,15 @@ class ForumSectionParser:
 
         Parameters
         ----------
-        board_row: :class:`bs4.Tag`
+        board_row:
             The row's parsed content.
-        offset: :class:`int`
+        offset:
             Since the displayed dates do not contain information, it is neccessary to extract the used timezone from
             somewhere else and pass it to this method to adjust them accordingly.
 
         Returns
         -------
-        :class:`BoardEntry`
+        :
             The board contained in this row.
 
         """
@@ -271,7 +273,8 @@ class ForumAnnouncementParser:
 
         Returns
         -------
-            The announcement contained in the page or :obj:`None` if not found.
+        :
+            The announcement contained in the page or `None` if not found.
 
         Raises
         ------
@@ -332,12 +335,12 @@ class ForumAuthorParser:
 
         Parameters
         ----------
-        character_info_container: :class:`bs4.Tag`
-            The cotnainer with the character's information.
+        character_info_container:
+            The container with the character's information.
 
         Returns
         -------
-        :class:`ForumAuthor`
+        :
             The author's information.
 
         """
@@ -407,11 +410,12 @@ class ForumBoardParser:
 
         Returns
         -------
+        :
             The forum board contained.
 
         Raises
         ------
-        InvalidContent`
+        InvalidContent
             Content is not a board in Tibia.com
 
         """
@@ -485,12 +489,13 @@ class ForumBoardParser:
 
         Parameters
         ----------
-        columns: :class:`bs4.ResultSet`
+        columns:
             The list of columns the thread contains.
 
         Returns
         -------
-        :class:`ThreadEntry`
+        :
+            The thread contained in the row or `None` if not found.
 
         """
         # First Column: Thread's status
@@ -579,6 +584,7 @@ class ForumThreadParser:
 
         Returns
         -------
+        :
             The thread contained in the page, or None if the thread doesn't exist
 
         Raises
@@ -661,9 +667,9 @@ class ForumThreadParser:
 
         Parameters
         ----------
-        post_table: :class:`bs4.Tag`
+        post_table:
             The parsed HTML content of the table.
-        offset: :class:`int`
+        offset:
             The UTC offset used for the timestamps.
 
             Since the timestamps found in the post contain no timezone information, the offset is extracted from
@@ -671,7 +677,7 @@ class ForumThreadParser:
 
         Returns
         -------
-        :class:`ForumPost`
+        :
             The post contained in the table.
 
         """
@@ -742,14 +748,14 @@ class LastPostParser:
 
         Parameters
         ----------
-        last_post_column: :class:`bs4.Tag`:
+        last_post_column:
             The column containing the last post.
-        offset: :class:`int`
+        offset:
             Since the timestamps have no offset information, it may be passed to fill it out.
 
         Returns
         -------
-        Optional[:class:`LastPost`]:
+        :
             The last post described in the column, if any.
 
         """

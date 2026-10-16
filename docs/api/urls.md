@@ -1,0 +1,3 @@
+# URL functions
+
+::: tibiapy.urls

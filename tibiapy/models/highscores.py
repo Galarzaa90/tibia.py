@@ -35,7 +35,7 @@ class HighscoresEntry(BaseCharacter):
 class LoyaltyHighscoresEntry(HighscoresEntry):
     """Represents an entry for the highscores loyalty points category.
 
-    This is a subclass of :class:`HighscoresEntry`, adding an extra field for title.
+    This is a subclass of [HighscoresEntry][tibiapy.models.highscores.HighscoresEntry], adding an extra field for title.
     """
 
     title: str
@@ -46,17 +46,17 @@ class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
     """Represents the highscores of a world."""
 
     world: Optional[str] = None
-    """The world the highscores belong to. If this is :obj:`None`, the highscores shown are for all worlds."""
+    """The world the highscores belong to. If this is `None`, the highscores shown are for all worlds."""
     category: HighscoresCategory
     """The selected category to displays the highscores of."""
     vocation: HighscoresProfession
     """The selected vocation to filter out values."""
     battleye_filter: Optional[HighscoresBattlEyeType]
-    """The selected BattlEye filter. If :obj:`None`, all worlds will be displayed.
+    """The selected BattlEye filter. If `None`, all worlds will be displayed.
 
     Only applies for global highscores. Only characters from worlds matching BattlEye protection will be shown."""
     pvp_types_filter: set[PvpTypeFilter]
-    """The selected PvP types filter. If :obj:`None`, all world will be displayed.
+    """The selected PvP types filter. If `None`, all world will be displayed.
 
     Only applies for global highscores. Only characters from worlds with the matching PvP type will be shown."""
     last_updated: datetime.datetime
@@ -85,12 +85,12 @@ class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
 
         Parameters
         ----------
-        page: :class:`int`
+        page:
             The page to get the URL for.
 
         Returns
         -------
-        :class:`str`
+        :
             The URL to the page of the current highscores.
 
         Raises

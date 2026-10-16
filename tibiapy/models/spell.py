@@ -29,7 +29,7 @@ class Rune(BaseModel):
     exp_level: int
     """The experience level required to use the rune."""
     mana: Optional[int] = None
-    """The amount of mana needed to use the rune. It will be :obj:`None` if not applicable."""
+    """The amount of mana needed to use the rune. It will be `None` if not applicable."""
     magic_level: int
     """The magic level required to use the rune."""
     magic_type: Optional[str] = None
@@ -52,7 +52,7 @@ class SpellEntry(BaseModel):
     exp_level: Optional[int] = None
     """The required level to cast the spell. If obj:`None`, the spell is obtained through a Revelation Perk."""
     mana: Optional[int] = None
-    """The mana required to use the spell. If :obj:`None`, the mana cost is variable."""
+    """The mana required to use the spell. If `None`, the mana cost is variable."""
     price: int
     """The price in gold coins to learn the spell."""
     is_premium: bool
@@ -86,9 +86,9 @@ class Spell(SpellEntry):
     cooldown_group_secondary: Optional[int] = None
     """The secondary cooldown of this spell in seconds."""
     soul_points: Optional[int] = None
-    """The number of soul points consumed by this spell. It will be :obj:`None` if not applicable."""
+    """The number of soul points consumed by this spell. It will be `None` if not applicable."""
     amount: Optional[int] = None
-    """The amount of objects created by this spell. It will be :obj:`None` if not applicable."""
+    """The amount of objects created by this spell. It will be `None` if not applicable."""
     magic_type: Optional[str] = None
     """The type of magic of this spell. Influenced by specialized magic level attributes."""
     cities: list[str]
@@ -101,14 +101,14 @@ class SpellsSection(BaseModel):
     """The spells section in Tibia.com."""
 
     vocation: Optional[SpellVocationFilter] = None
-    """The selected vocation filter. If :obj:`None`, spells for any vocation will be shown."""
+    """The selected vocation filter. If `None`, spells for any vocation will be shown."""
     group: Optional[SpellGroup] = None
-    """The selected spell group to display. If :obj:`None`, spells for any group will be shown."""
+    """The selected spell group to display. If `None`, spells for any group will be shown."""
     spell_type: Optional[SpellType] = None
-    """The selected spell type to display. If :obj:`None`, spells for any type will be shown."""
+    """The selected spell type to display. If `None`, spells for any type will be shown."""
     is_premium: Optional[bool] = None
-    """The premium status to filter in. :obj:`True` to show only premium spells,
-        :obj:`False` to show free account spells and :obj:`None` will show any spells."""
+    """The premium status to filter in. `True` to show only premium spells,
+        `False` to show free account spells and `None` will show any spells."""
     sort_by: SpellSorting
     """The sorting order of the displayed spells."""
     entries: list[SpellEntry]

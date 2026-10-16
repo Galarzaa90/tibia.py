@@ -16,11 +16,11 @@ class EventEntry(BaseModel):
     start_date: Optional[datetime.date] = None
     """The day the event starts.
 
-    If the event is continuing from the previous month, this will be :obj:`None`."""
+    If the event is continuing from the previous month, this will be `None`."""
     end_date: Optional[datetime.date] = None
     """The day the event ends.
 
-    If the event is continuing on the next month, this will be :obj:`None`."""
+    If the event is continuing on the next month, this will be `None`."""
 
     color: Optional[str] = None
     """The displayed color of the event."""
@@ -60,12 +60,12 @@ class EventSchedule(BaseModel):
 
         Parameters
         ----------
-        date: :class:`datetime.date`
+        date:
             The date to check.
 
         Returns
         -------
-        :class:`list` of :class:`EventEntry`
+        :
             The events that are active during the desired_date, if any.
 
         Notes

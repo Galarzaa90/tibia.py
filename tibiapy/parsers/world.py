@@ -39,7 +39,7 @@ class WorldParser:
 
     @classmethod
     def from_content(cls, content: str) -> Optional[World]:
-        """Parse a Tibia.com response into a :class:`World`.
+        """Parse a Tibia.com response into a `World`.
 
         Parameters
         ----------
@@ -48,7 +48,8 @@ class WorldParser:
 
         Returns
         -------
-            The World described in the page, or :obj:`None`.
+        :
+            The World described in the page, or `None`.
 
         Raises
         ------
@@ -86,9 +87,9 @@ class WorldParser:
 
         Parameters
         ----------
-        builder: :class:`WorldBuilder`
+        builder:
             The instance of the builder where data will be collected.
-        world_info_table: :class:`bs4.Tag`
+        world_info_table:
             The table containing the world's information.
 
         """
@@ -138,9 +139,9 @@ class WorldParser:
 
         Parameters
         ----------
-        builder: :class:`WorldBuilder`
+        builder:
             The builder instance used to set the values.
-        battleye_string: :class:`str`
+        battleye_string:
             String containing the world's BattlEye Status.
 
         """
@@ -167,6 +168,7 @@ class WorldOverviewParser:
 
         Returns
         -------
+        :
             An instance of this class containing all the information.
 
         Raises
@@ -189,11 +191,11 @@ class WorldOverviewParser:
 
     @classmethod
     def _parse_worlds(cls, world_rows: list[bs4.Tag]) -> list[WorldEntry]:
-        """Parse the world columns and adds the results to :py:attr:`worlds`.
+        """Parse the world columns and adds the results to `worlds`.
 
         Parameters
         ----------
-        world_rows: :class:`list` of :class:`bs4.Tag`
+        world_rows:
             A list containing the rows of each world.
 
         """
@@ -246,7 +248,7 @@ class WorldOverviewParser:
 
         Parameters
         ----------
-        tables: :class:`map` of :class:`bs4.Tag`
+        tables:
             A mapping containing the tables with worlds.
 
         """

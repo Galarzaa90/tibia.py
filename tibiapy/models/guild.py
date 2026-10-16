@@ -148,7 +148,7 @@ class GuildsSection(BaseModel):
     """The guilds section in Tibia.com."""
 
     world: Optional[str] = None
-    """The name of the world. If :obj:`None`, the section belongs to a world that doesn't exist."""
+    """The name of the world. If `None`, the section belongs to a world that doesn't exist."""
     entries: list[GuildEntry] = []
     """The list of guilds in the world."""
     available_worlds: list[str]
@@ -180,7 +180,7 @@ class GuildWarEntry(BaseModel):
     guild_fee: int
     """The number of gold coins the guild will pay if they lose the war."""
     opponent_name: Optional[str] = None
-    """The name of the opposing guild. If the guild no longer exist, this will be :obj:`None`."""
+    """The name of the opposing guild. If the guild no longer exist, this will be `None`."""
     opponent_score: int
     """The number of kills the opposing guild has scored."""
     opponent_fee: int
@@ -201,7 +201,7 @@ class GuildWarEntry(BaseModel):
     winner: Optional[str] = None
     """The name of the guild that won.
 
-    Note that if the winning guild is disbanded, this may be :obj:`None`."""
+    Note that if the winning guild is disbanded, this may be `None`."""
     surrender: bool
     """Whether the losing guild surrendered or not."""
 

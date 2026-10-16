@@ -9,7 +9,7 @@ from collections.abc import Iterable
 from typing import Any, Callable, Optional, TypedDict, TypeVar, Union
 
 import bs4
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from tibiapy.errors import InvalidContentError
 
@@ -27,11 +27,11 @@ class FormData(BaseModel):
 
     This contains text fields, select fields and radios.
     """
-    values_multiple: dict[str, list[str]] = defaultdict(list)
+    values_multiple: dict[str, list[str]] = Field(default_factory=lambda: defaultdict(list))
     """The selected values in the form of inputs that allow multiple selections.
 
     This contains the values of check boxes."""
-    available_options: dict[str, dict[str, str]] = defaultdict(dict)
+    available_options: dict[str, dict[str, str]] = Field(default_factory=lambda: defaultdict(dict))
     """The available options in select fields, radios and check boxes."""
     action: Optional[str] = None
     """The form's action URL."""
@@ -44,11 +44,12 @@ def clean_text(tag: Union[bs4.PageElement, str]) -> str:
 
     Parameters
     ----------
-    tag: :class:`bs4.Tag`, :class:`str`
+    tag:
         The tax to get the clean content of. Strings are also accepted.
 
     Returns
     -------
+    :
         The tag's cleaned text content.
 
     """
@@ -57,11 +58,11 @@ def clean_text(tag: Union[bs4.PageElement, str]) -> str:
 
 
 def convert_line_breaks(element: bs4.Tag) -> None:
-    """Convert the <br> tags in a HTML elements to actual line breaks.
+    """Convert the `<br>` tags in a HTML elements to actual line breaks.
 
     Parameters
     ----------
-    element: :class:`bs4.Tag`
+    element:
         A BeautifulSoup object.
 
     """
@@ -76,11 +77,12 @@ def get_rows(table_tag: bs4.Tag) -> bs4.Resultset[bs4.Tag]:
 
     Parameters
     ----------
-    table_tag: :class:`bs4.Tag`
+    table_tag:
         The tag where row tags will be search in. Not necessarily a table tag.
 
     Returns
     -------
+    :
         A result set with all the found rows.
 
     """
@@ -94,11 +96,12 @@ def parse_form_data(form: bs4.Tag) -> FormData:
 
     Parameters
     ----------
-    form: :class:`bs4.Tag`
+    form:
         A form tag.
 
     Returns
     -------
+    :
         The values and data of the form.
 
     """
@@ -143,15 +146,15 @@ def parse_integer(number: str, default: Optional[int] = 0) -> int:
 
     Parameters
     ----------
-    number: :class:`str`
+    number:
         A string representing a number.
-    default: :class:`int`
+    default:
         The default value to use if the string is not numeric.
         By default, 0 is used.
 
     Returns
     -------
-    :class:`int`
+    :
         The represented integer, or the default value if invalid.
 
     """
@@ -180,12 +183,12 @@ def parse_link_info(link_tag: bs4.Tag) -> LinkInfo:
 
     Parameters
     ----------
-    link_tag: :class:`bs4.Tag`
+    link_tag:
         The link tag object.
 
     Returns
     -------
-    :class:`dict`:
+    :
         A dictionary containing the link's data.
 
     Examples
@@ -242,12 +245,12 @@ def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
 
     Parameters
     ----------
-    datetime_str: :class:`str`
+    datetime_str:
         The date and time as represented in Tibia.com
 
     Returns
     -------
-    :class:`datetime.datetime`, optional
+    :
         The represented datetime, in UTC (timezone aware).
 
     """
@@ -286,12 +289,12 @@ def parse_tibia_date(date_str: str) -> Optional[datetime.date]:
 
     Parameters
     ----------
-    date_str: :class:`str`
+    date_str:
         The date as represented in Tibia.com
 
     Returns
     -------
-    :class:`datetime.date`, optional
+    :
         The represented date, in UTC (timezone aware).
 
     """
@@ -311,9 +314,9 @@ def parse_tibia_forum_datetime(datetime_str: str, utc_offset: int = 1) -> dateti
 
     Parameters
     ----------
-    datetime_str: :class:`str`
+    datetime_str:
         The string containing the date and time.
-    utc_offset: :class:`int`
+    utc_offset:
         The UTC offset to apply to the parsed datetime.
 
         Since the timestamps contain no timezone information, it can be passed as an additional parameter.
@@ -322,7 +325,7 @@ def parse_tibia_forum_datetime(datetime_str: str, utc_offset: int = 1) -> dateti
 
     Returns
     -------
-    :class:`datetime.datetime`
+    :
         The represented datetime, in UTC (timezone aware).
 
     """
@@ -340,12 +343,12 @@ def parse_tibia_full_date(date_str: str) -> Optional[datetime.date]:
 
     Parameters
     ----------
-    date_str: :class:`str`
+    date_str:
         The date as represented in Tibia.com
 
     Returns
     -------
-    :class:`datetime.date`, optional
+    :
         The represented date, in UTC (timezone aware).
 
     """
@@ -361,12 +364,12 @@ def parse_number_words(text_num: str) -> int:
 
     Parameters
     ----------
-    text_num: :class:`str`
+    text_num:
         The text representation of a number.
 
     Returns
     -------
-    :class:`int`
+    :
         The number represented by the string.
 
     """
@@ -413,13 +416,13 @@ def try_datetime(obj: Union[str, datetime.datetime]) -> Optional[datetime.dateti
 
     Parameters
     ----------
-    obj: :class:`str`, :class:`dict`, :class:`datetime.datetime`
+    obj:
         The object to convert.
 
     Returns
     -------
-    :class:`datetime.datetime`, optional
-        The represented datetime, in UTC (timezone aware), or :obj:`None` if conversion wasn't possible.
+    :
+        The represented datetime, in UTC (timezone aware), or `None` if conversion wasn't possible.
 
     """
     if obj is None:
@@ -436,12 +439,12 @@ def try_date(obj: Union[str, datetime.datetime, datetime.date]) -> Optional[date
 
     Parameters
     ----------
-    obj: :class:`str`, :class:`datetime.datetime`, :class:`datetime.date`
+    obj:
         The object to convert.
 
     Returns
     -------
-    :class:`datetime.date`, optional
+    :
         The represented date, in UTC (timezone aware).
 
     """
@@ -487,18 +490,18 @@ def parse_tibiacom_content(
 
     Parameters
     ----------
-    content: :class:`str`
+    content:
         The raw HTML content from Tibia.com
-    html_class: :class:`str`
+    html_class:
         The HTML class of the parsed element. The default value is ``BoxContent``.
-    tag: :class:`str`
+    tag:
         The HTML tag select. The default value is ``div``.
-    builder: :class:`str`
+    builder:
         The builder to use. The default value is ``lxml``.
 
     Returns
     -------
-    :class:`bs4.BeautifulSoup`, optional
+    :
         The parsed content.
 
     """
@@ -513,12 +516,12 @@ def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> dict[str, bs4.Ta
 
     Parameters
     ----------
-    parsed_content: :class:`bs4.BeautifulSoup`
+    parsed_content:
         The content to find the tables in.
 
     Returns
     -------
-    :class:`dict`
+    :
         A dictionary mapping the container titles and the contained table.
 
     """
@@ -537,16 +540,16 @@ def try_enum(cls: type[T], val: Any, default: D = None) -> Union[T, D]:
 
     Parameters
     ----------
-    cls: :class:`Enum`
+    cls:
         The enum to convert to.
     val:
         The value to try to convert to Enum
-    default: optional
+    default:
         The value to return if no enum value is found.
 
     Returns
     -------
-    obj:
+    :
         The enum value if found, otherwise None.
 
     """
@@ -570,12 +573,12 @@ def parse_tibia_money(argument: str) -> int:
 
     Parameters
     ----------
-    argument: :class:`str`
+    argument:
         A numeric string using k as a prefix for thousands.
 
     Returns
     -------
-    :class:`int`:
+    :
         The value represented by the string.
 
     """
@@ -598,16 +601,16 @@ def split_list(items: str, separator: str = ",", last_separator: str = " and ") 
 
     Parameters
     ----------
-    items: :class:`str`
+    items:
         A string listing elements.
-    separator: :class:`str`
+    separator:
         The separator between each item. A comma by default.
-    last_separator: :class:`str`
+    last_separator:
         The separator used for the last item. ' and ' by default.
 
     Returns
     -------
-    :class:`list` of :class:`str`
+    :
         A list containing each one of the items.
 
     """
@@ -629,14 +632,14 @@ def parse_popup(popup_content: str) -> tuple[str, bs4.BeautifulSoup]:
 
     Parameters
     ----------
-    popup_content: :class:`str`
-        The raw content of the javascript function that creates the popup.
+    popup_content:
+        The raw content of the JavaScript function that creates the popup.
 
     Returns
     -------
-    :class:`str`
+    title:
         The popup's title.
-    :class:`bs4.BeautifulSoup`
+    parsed_html:
         The parsed HTML content of the popup.
 
     """
@@ -663,16 +666,16 @@ def parse_pagination(pagination_block: bs4.Tag) -> tuple[int, int, int]:
 
     Parameters
     ----------
-    pagination_block: :class:`bs4.Tag`
+    pagination_block:
         The HTML containing the pagination information.
 
     Returns
     -------
-    page : :class:`int`
+    page:
         The current page.
-    total_pages : :class:`int`
+    total_pages:
         The total number of pages.
-    results_count : :class:`int`
+    results_count:
         The total number of results.
 
     """

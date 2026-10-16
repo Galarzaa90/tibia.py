@@ -1,0 +1,125 @@
+[project]
+site_name = "Tibia.py"
+site_url = "https://tibiapy.readthedocs.io/"
+site_description = "Documentation for Tibia.py, a Python library for parsing Tibia.com."
+site_author = "Allan Galarza"
+copyright = """&copy; 2026 Allan Galarza<br>
+<a href="https://www.tibia.com">Tibia</a> is made by <a href="https://www.cipsoft.com/">CipSoft</a>. All Tibia content is copyrighted by <a href="https://www.cipsoft.com/">CipSoft GmbH</a>."""
+watch = ["tibiapy"]
+
+nav = [
+  { "Documentation" = [
+    { "Home" = "index.md" },
+    { "Introduction" = "introduction.md" },
+    { "Changelog" = "changelog.md" },
+  ] },
+  { "API Reference" = [
+    { "Overview" = "api/index.md" },
+    { "Client" = "api/client.md" },
+    { "Enumerations" = "api/enums.md" },
+    { "Models" = "api/models.md" },
+    { "Base Classes" = "api/base-classes.md" },
+    { "Parsers" = "api/parsers.md" },
+    { "Exceptions" = "api/errors.md" },
+    { "Utility functions" = "api/utils.md" },
+    { "URL functions" = "api/urls.md" },
+  ] },
+]
+
+[project.theme]
+variant = "modern"
+features = [
+  "content.code.copy",
+  "navigation.footer",
+  "navigation.instant",
+  "navigation.instant.progress",
+  "navigation.tabs",
+  "navigation.tabs.sticky",
+  "navigation.top",
+  "navigation.tracking",
+  "search.suggest",
+  "search.highlight",
+  "search.share",
+  "toc.follow",
+]
+
+# Palette toggle for automatic mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+primary = "amber"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+# Palette toggle for light mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "amber"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+# Palette toggle for dark mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "amber"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[project.repo]
+url = "https://github.com/Galarzaa90/tibia.py"
+name = "Galarzaa90/tibia.py"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/Galarzaa90/tibia.py"
+
+[[project.extra.social]]
+icon = "simple/pypi"
+link = "https://pypi.org/project/tibia.py/"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/docker"
+link = "https://hub.docker.com/r/galarzaa90/tibia.py"
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["."]
+inventories = [
+  "https://docs.python.org/3/objects.inv",
+  "https://aiohttp.readthedocs.io/en/stable/objects.inv",
+  "https://www.crummy.com/software/BeautifulSoup/bs4/doc/objects.inv",
+]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+allow_inspection = true
+extensions = [
+  { griffe_pydantic = { schema = true } },
+  "griffe_inherited_docstrings",
+  "docstring_inheritance.griffe",
+]
+find_stubs_package = false
+force_inspection = false
+preload_modules = []
+show_bases = true
+show_source = true
+annotations_path = "brief"
+docstring_style = "numpy"
+members_order = "source"
+separate_signature = true
+show_signature_annotations = true
+signature_crossrefs = true
+show_symbol_type_heading = true
+show_root_heading = true
+show_overloads = true
+heading_level = 3
+docstring_options = { ignore_init_summary = true }
+merge_init_into_class = true
+summary = true
+
+[project.markdown_extensions]
+admonition = {}
+pymdownx.details = {}
+pymdownx.superfences = {}
+[project.markdown_extensions.pymdownx.quotes]
+callouts = true
+[project.markdown_extensions.pymdownx.snippets]

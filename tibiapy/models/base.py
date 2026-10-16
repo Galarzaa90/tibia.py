@@ -35,16 +35,15 @@ class BaseModel(pydantic.BaseModel):
 class BaseCharacter(BaseModel):
     """Base class for all character classes.
 
-    The following implement this class:
+    The following classes implement this class:
 
-    - :class:`.Character`
-    - :class:`.GuildInvite`
-    - :class:`.GuildMember`
-    - :class:`.HighscoresEntry`
-    - :class:`.TournamentLeaderboardEntry`
-    - :class:`.OnlineCharacter`
-    - :class:`.OtherCharacter`
-    - :class:`.Auction`
+    - [Character][tibiapy.models.Character]
+    - [GuildInvite][tibiapy.models.GuildInvite]
+    - [GuildMember][tibiapy.models.GuildMember]
+    - [HighscoresEntry][tibiapy.models.HighscoresEntry]
+    - [OnlineCharacter][tibiapy.models.OnlineCharacter]
+    - [OtherCharacter][tibiapy.models.OtherCharacter]
+    - [Auction][tibiapy.models.Auction]
     """
 
     name: str
@@ -68,9 +67,9 @@ class BaseGuild(BaseModel):
 
     The following implement this class:
 
-    - :class:`.Guild`
-    - :class:`.GuildMembership`
-    - :class:`.GuildEntry`
+    - [Guild][tibiapy.models.Guild]
+    - [GuildMembership][tibiapy.models.GuildMembership]
+    - [GuildEntry][tibiapy.models.GuildEntry]
     """
 
     name: str
@@ -89,10 +88,7 @@ class BaseGuild(BaseModel):
 
     @property
     def url_wars(self) -> str:
-        """The URL to the guild's wars page on Tibia.com.
-
-        .. versionadded:: 3.0.0
-        """
+        """The URL to the guild's wars page on Tibia.com."""
         return tibiapy.urls.get_guild_wars_url(self.name)
 
 
@@ -101,10 +97,10 @@ class BaseHouse(BaseModel):
 
     The following implement this class:
 
-    - :class:`.House`
-    - :class:`.GuildHouse`
-    - :class:`.CharacterHouse`
-    - :class:`.HouseEntry`
+    - [House][tibiapy.models.House]
+    - [GuildHouse][tibiapy.models.GuildHouse]
+    - [CharacterHouse][tibiapy.models.CharacterHouse]
+    - [HouseEntry][tibiapy.models.HouseEntry]
     """
 
     name: str

@@ -107,21 +107,15 @@ class AuctionBattlEyeFilter(NumericEnum):
     NOT_PROTECTED = 3
     """Worlds without any BattlEye protection."""
     YELLOW = PROTECTED
-    """Alias for protected worlds.
-
-    .. versionadded:: 4.0.0
-    """
+    """Alias for protected worlds."""
     GREEN = INITIALLY_PROTECTED
-    """Alias for initially protected worlds.
-
-    .. versionadded:: 4.0.0
-    """
+    """Alias for initially protected worlds."""
 
 
 class AuctionOrderDirection(NumericEnum):
     """The possible ordering directions for auctions.
 
-    The field or value used for the ordering is defined by :class:`AuctionOrderBy`.
+    The field or value used for the ordering is defined by [AuctionOrderBy][tibiapy.enums.AuctionOrderBy]
     """
 
     HIGHEST_LATEST = 0
@@ -226,10 +220,7 @@ class AvailableForumSection(StringEnum):
 
 
 class BattlEyeType(NumericEnum):
-    """The possible BattlEye statuses a world can have.
-
-    .. versionadded:: 4.0.0
-    """
+    """The possible BattlEye statuses a world can have."""
 
     UNPROTECTED = 0
     """Worlds without any BattlEye protection."""
@@ -280,15 +271,9 @@ class HighscoresBattlEyeType(NumericEnum):
     UNPROTECTED = 0
     """Worlds without any BattlEye protection."""
     YELLOW = PROTECTED
-    """Alias for protected worlds.
-
-    .. versionadded:: 4.0.0
-    """
+    """Alias for protected worlds."""
     GREEN = INITIALLY_PROTECTED
-    """Alias for initially protected worlds.
-
-    .. versionadded:: 4.0.0
-    """
+    """Alias for initially protected worlds."""
 
 
 class HighscoresCategory(NumericEnum):
@@ -314,8 +299,7 @@ class HighscoresCategory(NumericEnum):
 class HighscoresProfession(NumericEnum):
     """The vocation filters available for Highscores.
 
-    The numeric values are what the highscores form accepts.
-    """
+    The numeric values are what the highscores form accepts."""
 
     ALL = 0
     NONE = 1
@@ -331,14 +315,14 @@ class HighscoresProfession(NumericEnum):
 
         Parameters
         ----------
-        name: :class:`str`
+        name:
             The name of the vocation.
-        all_fallback: :class:`bool`
-            Whether to return :py:attr:`ALL` if no match is found. Otherwise, :obj:`None` will be returned.
+        all_fallback:
+            Whether to return `ALL` if no match is found. Otherwise, `None` will be returned.
 
         Returns
         -------
-        HighscoresProfession, optional:
+        :
             The matching vocation filter.
 
         """
@@ -378,7 +362,7 @@ class HouseType(StringEnum):
 
     @property
     def plural(self) -> str:
-        """:class:`str`: The plural for the house type."""
+        """The plural for the house type."""
         return f"{self.value}s"
 
 
@@ -509,7 +493,7 @@ class ThreadStatus(Flag):
 
         Returns
         -------
-        :class:`str`
+        str
             The name of the icon used in Tibia.com
 
         """
@@ -525,12 +509,12 @@ class ThreadStatus(Flag):
 
         Parameters
         ----------
-        icon: :class:`str`
+        icon:
             The icon's filename.
 
         Returns
         -------
-        :class:`ThreadStatus`
+        ThreadStatus
             The combination of thread status founds.
 
         """
@@ -545,9 +529,12 @@ class ThreadStatus(Flag):
 class TransferType(StringEnum):
     """The possible special transfer restrictions a world may have."""
 
-    REGULAR = "regular"  #: No special transfer restrictions
-    BLOCKED = "blocked"  #: Can't transfer to this world, but can transfer out of this world.
-    LOCKED = "locked"  #: Can transfer to this world, but can't transfer out of this world.
+    REGULAR = "regular"  #:
+    """No special transfer restrictions"""
+    BLOCKED = "blocked"
+    """Can't transfer to this world, but can transfer out of this world."""
+    LOCKED = "locked"
+    """Can transfer to this world, but can't transfer out of this world."""
 
 
 class Vocation(StringEnum):

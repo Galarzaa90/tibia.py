@@ -94,7 +94,7 @@ class HousesSection(BaseModel):
     town: str
     """The town to show houses for."""
     status: Optional[HouseStatus] = None
-    """The status to show. If :obj:`None`, any status is shown."""
+    """The status to show. If `None`, any status is shown."""
     house_type: HouseType
     """The type of houses to show."""
     order: HouseOrder

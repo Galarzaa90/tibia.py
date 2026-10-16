@@ -164,7 +164,7 @@ class Character(BaseCharacter):
     is_traded: bool
     """If the character was traded in the last 6 months."""
     deletion_date: Optional[datetime.datetime] = None
-    """The date when the character will be deleted if it is scheduled for deletion. Will be :obj:`None` otherwise."""
+    """The date when the character will be deleted if it is scheduled for deletion. Will be `None` otherwise."""
     former_names: list[str]
     """Previous names of the character in the last 6 months.."""
     title: Optional[str] = None
@@ -186,13 +186,13 @@ class Character(BaseCharacter):
     residence: str
     """The current hometown of the character."""
     married_to: Optional[str] = None
-    """The name of the character's spouse. It will be :obj:`None` if not married."""
+    """The name of the character's spouse. It will be `None` if not married."""
     houses: list[CharacterHouse]
     """The houses currently owned by the character."""
     guild_membership: Optional[GuildMembership] = None
-    """The guild the character is a member of. It will be :obj:`None` if the character is not in a guild."""
+    """The guild the character is a member of. It will be `None` if the character is not in a guild."""
     last_login: Optional[datetime.datetime] = None
-    """The last time the character logged in. It will be :obj:`None` if the character has never logged in."""
+    """The last time the character logged in. It will be `None` if the character has never logged in."""
     position: Optional[str] = None
     """The position of the character (e.g. CipSoft Member), if any."""
     comment: Optional[str] = None
@@ -210,7 +210,7 @@ class Character(BaseCharacter):
 
     In some cases, there are more deaths in the last 30 days than what can be displayed."""
     account_information: Optional[AccountInformation] = None
-    """The character's account information. If the character is hidden, this will be :obj:`None`."""
+    """The character's account information. If the character is hidden, this will be `None`."""
     other_characters: list[OtherCharacter]
     """Other characters in the same account.
 
@@ -225,17 +225,17 @@ class Character(BaseCharacter):
 
     @property
     def guild_name(self) -> Optional[str]:
-        """The name of the guild the character belongs to, or :obj:`None`."""
+        """The name of the guild the character belongs to, or `None`."""
         return self.guild_membership.name if self.guild_membership else None
 
     @property
     def guild_rank(self) -> Optional[str]:
-        """The character's rank in the guild they belong to, or :obj:`None`."""
+        """The character's rank in the guild they belong to, or `None`."""
         return self.guild_membership.rank if self.guild_membership else None
 
     @property
     def guild_url(self) -> Optional[str]:
-        """The character's rank in the guild they belong to, or :obj:`None`."""
+        """The character's rank in the guild they belong to, or `None`."""
         return urls.get_guild_url(self.guild_membership.name) if self.guild_membership else None
 
     @computed_field

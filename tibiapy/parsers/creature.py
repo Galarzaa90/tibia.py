@@ -58,6 +58,7 @@ class BoostedCreaturesParser:
 
         Returns
         -------
+        :
             The boosted creature and boss.
 
         Raises
@@ -93,6 +94,7 @@ class BoostableBossesParser:
 
         Returns
         -------
+        :
             The Boostable Bosses section.
 
         Raises
@@ -139,6 +141,7 @@ class BoostableBossesParser:
 
         Returns
         -------
+        :
             The boosted boss of the day.
 
         Raises
@@ -164,6 +167,7 @@ class CreaturesSectionParser:
 
         Returns
         -------
+        :
             The boosted creature of the day.
 
         Raises
@@ -185,6 +189,7 @@ class CreaturesSectionParser:
 
         Returns
         -------
+        :
             The creatures section from Tibia.com.
 
         Raises
@@ -236,6 +241,7 @@ class CreatureParser:
 
         Returns
         -------
+        :
             The creature contained in the page.
 
         """
@@ -272,9 +278,9 @@ class CreatureParser:
 
         Parameters
         ----------
-        builder: :class:`CreatureBuilder`
+        builder:
             The builder where data will be stored to.
-        exp_text: :class:`str`
+        exp_text:
             The text containing experience.
 
         """
@@ -290,9 +296,9 @@ class CreatureParser:
 
         Parameters
         ----------
-        builder: :class:`CreatureBuilder`
+        builder:
             The builder where data will be stored to.
-        hp_text: :class:`str`
+        hp_text:
             The text containing hitpoints.
 
         """
@@ -336,7 +342,7 @@ class CreatureParser:
 
         Parameters
         ----------
-        text: :class:`str`
+        text:
             The text containing the elements.
 
         """

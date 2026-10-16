@@ -21,13 +21,12 @@ jobs:
         run: |
           pip install -U -e .[docs]
 
-      - name: Build Sphinx Documentation 📄
+      - name: Build Zensical Documentation 📄
         run: |
-          cd docs
-          make html
+          zensical build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
           branch: gh-pages
-          folder: docs/_build/html
+          folder: site

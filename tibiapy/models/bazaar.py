@@ -77,9 +77,9 @@ class AuctionFilters(BaseModel):
     skill: Optional[AuctionSkillFilter] = None
     """The skill to filter by its level range."""
     min_skill_level: Optional[int] = None
-    """The minimum skill level of the selected :attr:`skill` to display."""
+    """The minimum skill level of the selected [skill][tibiapy.models.bazaar.AuctionFilters.skill] to display."""
     max_skill_level: Optional[int] = None
-    """The maximum skill level of the selected :attr:`skill` to display."""
+    """The maximum skill level of the selected [skill][tibiapy.models.bazaar.AuctionFilters.skill] to display."""
     order_by: Optional[AuctionOrderBy] = None
     """The column or value to order by."""
     order: Optional[AuctionOrderDirection] = None
@@ -87,7 +87,7 @@ class AuctionFilters(BaseModel):
     search_string: Optional[str] = None
     """The search term to filter out auctions."""
     search_type: Optional[AuctionSearchType] = None
-    """The type of search to use. Defines the behaviour of :py:attr:`search_string`."""
+    """The type of search to use. Defines the behaviour of [search_string][tibiapy.models.bazaar.AuctionFilters.search_string]."""
     available_worlds: list[str] = []
     """The list of available worlds to select to filter."""
 
@@ -235,12 +235,12 @@ class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
 
         Parameters
         ----------
-        name: :class:`str`
+        name:
             The name of the entry, case-insensitive.
 
         Returns
         -------
-        :class:`object`:
+        :
             The entry matching the name.
 
         """
@@ -251,12 +251,12 @@ class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
 
         Parameters
         ----------
-        value: :class:`str`
+        value:
             The value to look for.
 
         Returns
         -------
-        :class:`list`
+        :
             A list of entries with names containing the search term.
 
         """
@@ -275,12 +275,12 @@ class ItemSummary(AuctionSummary[ItemEntry]):
 
         Parameters
         ----------
-        entry_id: :class:`int`
+        entry_id:
             The ID of the item.
 
         Returns
         -------
-        :class:`ItemEntry`
+        :
             The item matching the id.
 
         """
@@ -295,12 +295,12 @@ class Mounts(AuctionSummary[MountEntry]):
 
         Parameters
         ----------
-        entry_id: :class:`int`
+        entry_id:
             The ID of the mount.
 
         Returns
         -------
-        :class:`MountEntry`
+        :
             The mount matching the id.
 
         """
@@ -315,12 +315,12 @@ class Familiars(AuctionSummary[FamiliarEntry]):
 
         Parameters
         ----------
-        entry_id: :class:`int`
+        entry_id:
             The ID of the familiar.
 
         Returns
         -------
-        :class:`FamiliarEntry`
+        :
             The familiar matching the id.
 
         """
@@ -335,12 +335,12 @@ class Outfits(AuctionSummary[OutfitEntry]):
 
         Parameters
         ----------
-        entry_id: :class:`int`
+        entry_id:
             The ID of the outfit.
 
         Returns
         -------
-        :class:`OutfitEntry`
+        :
             The outfit matching the id.
 
         """
@@ -412,7 +412,7 @@ class AuctionDetails(BaseModel):
     """The number of achievement points of the character."""
     regular_world_transfer_available_date: Optional[datetime.datetime] = None
     """The date after regular world transfers will be available to purchase and use.
-    :obj:`None` indicates it is available immediately."""
+    `None` indicates it is available immediately."""
     charm_expansion: bool
     """Whether the character has a charm expansion or not."""
     available_charm_points: int
@@ -551,12 +551,12 @@ class CharacterBazaar(PaginatedWithUrl[Auction]):
 
         Parameters
         ----------
-        page: :class:`int`
+        page:
             The desired page.
 
         Returns
         -------
-        :class:`str`
+        :
             The URL to the desired page.
 
         """

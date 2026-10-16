@@ -25,6 +25,7 @@ class KillStatisticsParser:
 
         Returns
         -------
+        :
             The kill statistics contained in the page or None if it doesn't exist.
 
         Raises

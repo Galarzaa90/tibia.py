@@ -1,4 +1,7 @@
 include requirements.txt
+include requirements-linting.txt
+include requirements-server.txt
+include requirements-testing.txt
 include README.md
-include CHANGELOG.rst
+include CHANGELOG.md
 include LICENSE

@@ -31,6 +31,7 @@ class EventScheduleParser:
 
         Returns
         -------
+        :
             The event calendar contained in the page
 
         Raises

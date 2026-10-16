@@ -79,7 +79,8 @@ class GuildsSectionParser:
 
         Returns
         -------
-            List of guilds in the current world. :obj:`None` if it's the list of a world that doesn't exist.
+        :
+            List of guilds in the current world. `None` if it's the list of a world that doesn't exist.
 
         Raises
         ------
@@ -127,11 +128,12 @@ class GuildParser:
 
         Parameters
         ----------
-        content: :class:`str`
+        content:
             The HTML content of the page.
 
         Returns
         -------
+        :
             The guild contained in the page or None if it doesn't exist.
 
         Raises
@@ -175,11 +177,11 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        previous_rank: :class:`dict`[int, str]
+        previous_rank:
             The last rank present in the rows.
-        values: :class:`tuple` of :class:`str`
+        values:
             A list of row contents.
 
         """
@@ -201,9 +203,9 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        info_container: :class:`bs4.Tag`
+        info_container:
             The parsed content of the information container.
 
         """
@@ -218,9 +220,9 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        info_container: :class:`bs4.Tag`
+        info_container:
             The parsed content of the information container.
 
         """
@@ -234,9 +236,9 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        info_container: :class:`bs4.Tag`
+        info_container:
             The parsed content of the information container.
 
         """
@@ -250,9 +252,9 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        info_container: :class:`bs4.Tag`
+        info_container:
             The parsed content of the information container.
 
         """
@@ -272,9 +274,9 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        info_container: :class:`bs4.Tag`
+        info_container:
             The parsed content of the information container.
 
         """
@@ -291,14 +293,14 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        parsed_content: :class:`bs4.Tag`
+        parsed_content:
             The parsed content of the page.
 
         Returns
         -------
-        :class:`bool`
+        :
             Whether the logo was found or not.
 
         """
@@ -314,9 +316,9 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        parsed_content: :class:`bs4.Tag`
+        parsed_content:
             The parsed content of the guild's page
 
         """
@@ -337,9 +339,9 @@ class GuildParser:
 
         Parameters
         ----------
-        builder: :class:`GuildBuilder`
+        builder:
             The builder where data will be stored to.
-        values: tuple[:class:`str`]
+        values:
             A list of row contents.
 
         """
@@ -364,6 +366,7 @@ class GuildWarsParser:
 
         Returns
         -------
+        :
             The guild's war information.
 
         """
@@ -409,12 +412,12 @@ class GuildWarsParser:
 
         Parameters
         ----------
-        text: :class:`str`
+        text:
             The text describing the current war's information.
 
         Returns
         -------
-        :class:`GuildWarEntry`
+        :
             The guild's war entry for the current war.
 
         """
@@ -444,12 +447,12 @@ class GuildWarsParser:
 
         Parameters
         ----------
-        text: :class:`str`
+        text:
             The text describing the war's information.
 
         Returns
         -------
-        :class:`GuildWarEntry`
+        :
             The guild's war entry described in the text.
 
         """

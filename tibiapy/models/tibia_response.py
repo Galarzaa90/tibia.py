@@ -37,13 +37,13 @@ class TibiaResponse(BaseModel, Generic[T]):
     @computed_field
     @property
     def time_left(self) -> datetime.timedelta:
-        """:class:`datetime.timedelta`: The time left for the cache of this response to expire."""
+        """The time left for the cache of this response to expire."""
         return (datetime.timedelta(seconds=CACHE_LIMIT - self.age)
                 - (datetime.datetime.now(datetime.timezone.utc) - self.timestamp))
 
     @property
     def seconds_left(self) -> int:
-        """:class:`int`: The time left in seconds for this response's cache to expire."""
+        """The time left in seconds for this response's cache to expire."""
         return self.time_left.seconds
 
     @classmethod

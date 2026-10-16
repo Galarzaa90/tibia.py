@@ -17,12 +17,12 @@ __all__ = (
 class BaseNews(BaseModel):
     """Base class for all news classes.
 
-    Implements the :py:attr:`id` attribute and common properties.
+    Implements the [id][tibiapy.models.BaseNews.id] attribute and common properties.
 
     The following implement this class:
 
-    - :class:`.News`
-    - :class:`.NewsEntry`
+    - [News][tibiapy.models.News]
+    - [NewsEntry][tibiapy.models.NewsEntry]
     """
 
     id: int

@@ -90,7 +90,7 @@ class AuctionFiltersParser:
 
         Returns
         -------
-        :class:`.AuctionFilters`
+        :
             The currently applied filters.
 
         """
@@ -133,6 +133,7 @@ class CharacterBazaarParser:
 
         Returns
         -------
+        :
             The character bazaar with the entries found.
 
         """
@@ -190,7 +191,8 @@ class AuctionParser:
 
         Returns
         -------
-            The auction details if found, :obj:`None` otherwise.
+        :
+            The auction details if found, `None` otherwise.
 
         Raises
         ------
@@ -277,14 +279,14 @@ class AuctionParser:
 
         Parameters
         ----------
-        auction_row: :class:`bs4.Tag`
+        auction_row:
             The row containing the auction's information.
-        auction_id: :class:`int`
+        auction_id:
             The ID of the auction.
 
         Returns
         -------
-        :class:`Auction`
+        :
             The auction contained in the table.
 
         """
@@ -352,12 +354,12 @@ class AuctionParser:
 
         Parameters
         ----------
-        parsed_content: :class:`bs4.Tag`
+        parsed_content:
             The parsed content of the auction.
 
         Returns
         -------
-        :class:`dict`
+        :
             A dictionary of the tables, grouped by their id.
 
         """
@@ -370,12 +372,12 @@ class AuctionParser:
 
         Parameters
         ----------
-        table: :class:`bs4.Tag`
+        table:
             The table to be parsed.
 
         Returns
         -------
-        :class:`dict`
+        :
             A mapping containing the table's data.
 
         """
@@ -395,9 +397,9 @@ class AuctionParser:
 
         Parameters
         ----------
-        builder: :class:`AuctionDetailsBuilder`
+        builder:
             The builder where data will be stored to.
-        table: :class:`bs4.Tag`
+        table:
             The table containing the character's skill.
 
         """
@@ -418,9 +420,9 @@ class AuctionParser:
 
         Parameters
         ----------
-        builder: :class:`AuctionDetailsBuilder`
+        builder:
             The builder where data will be stored to.
-        table: :class:`bs4.Tag`
+        table:
             The table containing the character's blessings.
 
         """
@@ -441,12 +443,12 @@ class AuctionParser:
 
         Parameters
         ----------
-        table: :class:`bs4.Tag`
+        table:
             A table with a single column.
 
         Returns
         -------
-        :class:`list` of :class:`str`
+        :
             A list with the contents of each row.
 
         """
@@ -469,9 +471,9 @@ class AuctionParser:
 
         Parameters
         ----------
-        builder: :class:`AuctionDetailsBuilder`
+        builder:
             The builder where data will be stored to.
-        table: :class:`bs4.Tag`
+        table:
             The table containing the charms.
 
         """
@@ -495,9 +497,9 @@ class AuctionParser:
 
         Parameters
         ----------
-        builder: :class:`AuctionDetailsBuilder`
+        builder:
             The builder where data will be stored to.
-        table: :class:`bs4.Tag`
+        table:
             The table containing the achievements.
 
         """
@@ -521,11 +523,11 @@ class AuctionParser:
 
         Parameters
         ----------
-        builder: :class:`AuctionDetailsBuilder`
+        builder:
             The builder where data will be stored to.
-        table: :class:`bs4.Tag`
+        table:
             The table containing the bestiary information.
-        bosstiary: :class:`bool`
+        bosstiary:
             Whether this is a bosstiary table or a bestiary table.
 
         """
@@ -553,9 +555,9 @@ class AuctionParser:
 
         Parameters
         ----------
-        builder: :class:`AuctionDetailsBuilder`
+        builder:
             The builder where data will be stored to.
-        table: :class:`bs4.Tag`
+        table:
             The table with general information.
 
         """
