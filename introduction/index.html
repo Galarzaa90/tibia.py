@@ -1,0 +1,1598 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Tibia.py, a Python library for parsing Tibia.com.">
+      
+      
+        <meta name="author" content="Allan Galarza">
+      
+      
+        <link rel="canonical" href="https://tibiapy.readthedocs.io/introduction/">
+      
+      
+      
+        <link rel="prev" href="./..">
+      
+      
+        <link rel="next" href="../changelog/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.70">
+    
+    
+      
+        <title>Introduction - Tibia.py</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.e442bf79.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Tibia.py" class="md-header__button md-logo" aria-label="Tibia.py" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tibia.py
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introduction
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun-moon" viewBox="0 0 24 24"><path d="M12 2v2M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715M16 12a4 4 0 0 0-4-4M19 5l-1.256 1.256M20 12h2"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./.." class="md-tabs__link">
+          
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/" class="md-tabs__link">
+          
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Tibia.py" class="md-nav__button md-logo" aria-label="Tibia.py" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Tibia.py
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Documentation
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Documentation
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Introduction
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Introduction
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prerequisites
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Installation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Supported Sections
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Docker
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Changelog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API Reference
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  API Reference
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Client
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/enums/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Enumerations
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Models
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/base-classes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Base Classes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/parsers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parsers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Exceptions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utility functions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/urls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  URL functions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prerequisites
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Installation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usage
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Supported Sections
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Docker
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="introduction">Introduction</h1>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Tibia.py requires Python 3.6 or higher.
+Dependencies are installed automatically when installing the package.</p>
+<p>However, since it uses <code>lxml</code> for parsing, on Linux you may require to install libxml on your system.</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libxml2-dev<span class="w"> </span>libxslt-dev<span class="w"> </span>python-dev
+</code></pre></div>
+<p>Windows users are usually safe from this. For more information check out <a href="https://lxml.de/installation.html">lxml installation page</a>.</p>
+<h2 id="installation">Installation</h2>
+<p>Tibia.py can be installed from <a href="https://pypi.org/">PyPi</a> using:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>tibia.py
+</code></pre></div>
+<h2 id="usage">Usage</h2>
+<p>This library is composed of two parts, parsers and an asynchronous request client.</p>
+<p>The asynchronous client (<a class="autorefs autorefs-internal" title="            tibiapy.Client" href="../api/client/#tibiapy.Client"><code>tibiapy.Client</code></a>) contains methods to obtain information from Tibia.com.</p>
+<p>The parsing methods allow you to get Python objects given the HTML content of a page.</p>
+<p>The <code>tibiapy.urls</code> package contains many methods to get URLs for Tibia.com.</p>
+<p>With the URL, the HTML content can be fetched and then passed to the respective class from the available <a href="../api/parsers/">Parsers</a>.</p>
+<p>This allows you to use any networking library (e.g. aiohttp, requests, httpx) to obtain the data, and use the library to parse it.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tibiapy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tibiapy.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CharacterParser</span>
+
+<span class="c1"># Fetching a character using requests instead of aiohttp</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_character</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">get_character_url</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+    <span class="k">return</span> <span class="n">CharacterParser</span><span class="o">.</span><span class="n">from_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div>
+<p>On the other hand, using the built-in asynchronous client you can do the fetching and parsing in one step:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tibiapy</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">tibiapy</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+    <span class="n">character</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">fetch_character</span><span class="p">(</span><span class="s2">"Galarzaa Fidera"</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<h2 id="supported-sections">Supported Sections</h2>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Parsing</th>
+<th>Fetching</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.tibia.com/library/?subtopic=boostablebosses">Boostable Bosses</a> (List)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.BoostableBossesParser.from_content"><code>tibiapy.parsers.BoostableBossesParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_boostable_bosses
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_boostable_bosses"><code>Client.fetch_boostable_bosses</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=characters">Characters</a></td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.CharacterParser.from_content"><code>tibiapy.parsers.CharacterParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_character
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_character"><code>Client.fetch_character</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades">Character Bazaar</a> (Current)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.CharacterBazaarParser.from_content"><code>tibiapy.parsers.CharacterBazaarParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_current_auctions
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_current_auctions"><code>Client.fetch_current_auctions</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades">Character Bazaar</a> (History)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.CharacterBazaarParser.from_content"><code>tibiapy.parsers.CharacterBazaarParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_auction_history
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_auction_history"><code>Client.fetch_auction_history</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/charactertrade/?subtopic=currentcharactertrades">Character Bazaar</a> (Detail)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.AuctionParser.from_content"><code>tibiapy.parsers.AuctionParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_auction
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_auction"><code>Client.fetch_auction</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/forum/?subtopic=forum&amp;action=cm_post_archive">CM Post Archive</a></td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.CMPostArchiveParser.from_content"><code>tibiapy.parsers.CMPostArchiveParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_cm_post_archive
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_cm_post_archive"><code>Client.fetch_cm_post_archive</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/library/?subtopic=creatures">Creature Library</a> (List)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.CreaturesSectionParser.from_content"><code>tibiapy.parsers.CreaturesSectionParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_creatures
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_creatures"><code>Client.fetch_creatures</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/library/?subtopic=creatures">Creature Library</a> (Individual)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.CreatureParser.from_content"><code>tibiapy.parsers.CreatureParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_creature
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_creature"><code>Client.fetch_creature</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/news/?subtopic=eventcalendar">Event Schedule</a></td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.EventScheduleParser.from_content"><code>tibiapy.parsers.EventScheduleParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_event_schedule
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_event_schedule"><code>Client.fetch_event_schedule</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=guilds">Guilds</a> (Individual)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.GuildParser.from_content"><code>tibiapy.parsers.GuildParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_guild
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_guild"><code>Client.fetch_guild</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=guilds">Guilds</a> (List)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.GuildsSectionParser.from_content"><code>tibiapy.parsers.GuildsSectionParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_world_guilds
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_world_guilds"><code>Client.fetch_world_guilds</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=guilds">Guilds</a> (Wars)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.GuildWarsParser.from_content"><code>tibiapy.parsers.GuildWarsParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_guild_wars
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_guild_wars"><code>Client.fetch_guild_wars</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=fansites">Fansites</a></td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.FansitesSectionParser.from_content"><code>tibiapy.parsers.FansitesSectionParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_fansites_section
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_fansites_section"><code>Client.fetch_fansites_section</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=forum">Forums</a> (Section)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.ForumSectionParser.from_content"><code>tibiapy.parsers.ForumSectionParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_forum_world_boards
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_forum_world_boards"><code>Client.fetch_forum_world_boards</code></a><br><a class="autorefs autorefs-internal" title="            fetch_forum_trade_boards
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_forum_trade_boards"><code>Client.fetch_forum_trade_boards</code></a><br><a class="autorefs autorefs-internal" title="            fetch_forum_community_boards
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_forum_community_boards"><code>Client.fetch_forum_community_boards</code></a><br><a class="autorefs autorefs-internal" title="            fetch_forum_support_boards
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_forum_support_boards"><code>Client.fetch_forum_support_boards</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=forum">Forums</a> (Board)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.ForumBoardParser.from_content"><code>tibiapy.parsers.ForumBoardParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_forum_board
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_forum_board"><code>Client.fetch_forum_board</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=forum">Forums</a> (Announcement)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.ForumAnnouncementParser.from_content"><code>tibiapy.parsers.ForumAnnouncementParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_forum_announcement
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_forum_announcement"><code>Client.fetch_forum_announcement</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=forum">Forums</a> (Thread)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.ForumThreadParser.from_content"><code>tibiapy.parsers.ForumThreadParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_forum_thread
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_forum_thread"><code>Client.fetch_forum_thread</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=highscores">Highscores</a></td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.HighscoresParser.from_content"><code>tibiapy.parsers.HighscoresParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_highscores_page
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_highscores_page"><code>Client.fetch_highscores_page</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=houses">Houses</a> (Individual)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.HouseParser.from_content"><code>tibiapy.parsers.HouseParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_house
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_house"><code>Client.fetch_house</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=houses">Houses</a> (List)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.HousesSectionParser.from_content"><code>tibiapy.parsers.HousesSectionParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_houses_section
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_houses_section"><code>Client.fetch_houses_section</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=killstatistics">Kill Statistics</a> (List)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.KillStatisticsParser.from_content"><code>tibiapy.parsers.KillStatisticsParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_kill_statistics
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_kill_statistics"><code>Client.fetch_kill_statistics</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=leaderboards">Leaderboards</a></td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.LeaderboardParser.from_content"><code>tibiapy.parsers.LeaderboardParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_leaderboard
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_leaderboard"><code>Client.fetch_leaderboard</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/news/?subtopic=newsarchive">News</a> (Individual)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.NewsParser.from_content"><code>tibiapy.parsers.NewsParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_news
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_news"><code>Client.fetch_news</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/news/?subtopic=newsarchive">News</a> (List)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.NewsArchiveParser.from_content"><code>tibiapy.parsers.NewsArchiveParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_news_archive
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_news_archive"><code>Client.fetch_news_archive</code></a><br><a class="autorefs autorefs-internal" title="            fetch_news_archive_by_days
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_news_archive_by_days"><code>Client.fetch_news_archive_by_days</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/library/?subtopic=spells">Spell Library</a> (List)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.SpellsSectionParser.from_content"><code>tibiapy.parsers.SpellsSectionParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_spells
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_spells"><code>Client.fetch_spells</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/library/?subtopic=spells">Spell Library</a> (Individual)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.SpellParser.from_content"><code>tibiapy.parsers.SpellParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_spell
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_spell"><code>Client.fetch_spell</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=worlds">Worlds</a> (Individual)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.WorldParser.from_content"><code>tibiapy.parsers.WorldParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_world
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_world"><code>Client.fetch_world</code></a></td>
+</tr>
+<tr>
+<td><a href="https://www.tibia.com/community/?subtopic=worlds">Worlds</a> (List)</td>
+<td><a class="autorefs autorefs-internal" title="            from_content
+
+
+  
+      classmethod
+  " href="../api/parsers/#tibiapy.parsers.WorldOverviewParser.from_content"><code>tibiapy.parsers.WorldOverviewParser.from_content</code></a></td>
+<td><a class="autorefs autorefs-internal" title="            fetch_world_overview
+
+
+  
+      async
+  " href="../api/client/#tibiapy.Client.fetch_world_overview"><code>Client.fetch_world_overview</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="docker">Docker</h2>
+<p>A ready to use HTTP server is also available as a Docker image, allowing you to integrate tibia.py in projects using other languages other than Python.</p>
+<p>The image can be pulled from <a href="https://hub.docker.com/r/galarzaa90/tibia.py">Docker Hub</a>:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>pull<span class="w"> </span>galarzaa90/tibia.py
+</code></pre></div>
+<p>Alternatively, the image can be built from the root of the project's source.</p>
+<p>To run the image:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--rm<span class="w"> </span>-ti<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>galarzaa90/tibia.py
+</code></pre></div>
+<p>API documentation will be available at: <code>http://localhost:8000/docs</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="./.." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../changelog/" class="md-footer__link md-footer__link--next" aria-label="Next: Changelog">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Changelog
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2026 Allan Galarza<br>
+<a href="https://www.tibia.com">Tibia</a> is made by <a href="https://www.cipsoft.com/">CipSoft</a>. All Tibia content is copyrighted by <a href="https://www.cipsoft.com/">CipSoft GmbH</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Galarzaa90/tibia.py" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/tibia.py/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>PyPI</title><path d="M23.922 13.58v3.912L20.55 18.72l-.078.055.052.037 3.45-1.256.026-.036v-3.997l-.053-.036-.025.092zm-.301-7.962-3.04 1.107v3.912l3.339-1.215V5.509zm.299 7.839V9.544l-3.336 1.215v3.913zm-3.45 1.253V10.8l-3.3 1.2v3.913zm-3.436 5.286v-3.912l-3.313 1.206v3.912zm.136-3.939v3.868l3.314-1.206V14.85zm2.093 1.882c-.367.134-.663-.074-.663-.463s.296-.814.663-.947c.365-.133.662.075.662.464s-.297.814-.662.946m-6.038-8.624.365-.132-3.285-1.197-3.323 1.21.102.037 3.184 1.16zm7.282 1.349V6.751L17.17 7.965v3.913zm-3.449 1.254V8.005l-3.302 1.202v3.912zm-3.415-2.672-3.336 1.215v3.913l3.336-1.215zm-6.736 3.919 3.322 1.209v-3.913L6.907 9.252zm3.433-5.292 3.281 1.193V5.198l-3.28-1.193zm10.167-5.158L17.19 3.922v3.913l3.317-1.207zM16.95 3.903 13.724 2.73l-3.269 1.19 3.225 1.174zm-1.585.703-1.624.592v3.868l3.317-1.207V3.991zm-.391 2.778c-.367.134-.662-.074-.662-.464s.295-.813.662-.946c.366-.133.663.074.663.464s-.297.813-.663.946M10.229 18.41v-3.914l-3.322-1.209V17.2zm3.449-1.228v-3.913l-3.371 1.227v3.913zm.078-.028 3.3-1.2V12.04l-3.3 1.2zm-.078 4.063-3.371 1.227v-3.912h-.078v3.912l-3.322-1.209v-3.913l-.053-.058-.025-.06-3.336-1.21v-3.948l.034.013 3.287 1.196.015-.078-3.261-1.187 3.26-1.187v-.109L3.876 9.62l-.307-.112 3.26-1.188v.877l.079-.055V6.769l3.257 1.185.058-.061L7.084 6.75l-.102-.037 3.24-1.179v-.083L6.854 6.677v.018l-.025.018v1.523L3.44 9.47v.02l-.025.017v4.007l-3.39 1.233v.019L0 14.784v3.995l.025.037 3.4 1.237.008-.006.007.01 3.4 1.238.008-.006.006.01 3.4 1.237.014-.009.012.01 3.45-1.256.026-.037zM3.493 9.563l3.257 1.185-3.257 1.187V9.562zM3.4 19.96.078 18.752v-3.913l2.361.86.96.349zm.015-3.99-3.08-1.12-.182-.066 3.262-1.187zm3.399 5.231-3.321-1.209V16.08l3.321 1.209zM23.791 5.434l-3.21-1.17v2.338zm-3.404-2.791-3.24-1.18-3.27 1.19 3.247 1.182z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/r/galarzaa90/tibia.py" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["content.code.copy","navigation.footer","navigation.instant","navigation.instant.progress","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.suggest","search.highlight","search.share","toc.follow"],"redirect":null,"search":"../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a2388154.min.js"></script>
+      
+    
+  </body>
+</html>

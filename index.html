@@ -1,434 +1,1019 @@
-<!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<!doctype html>
+<html lang="en" class="no-js">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <title>Tibia.py &#8212; Tibia.py 6.4.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
-    <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=4183444b" />
-    <script src="_static/documentation_options.js?v=0eb1ae0c"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/custom.js?v=49006cea"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction" href="intro.html" />
-   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
-
-  </head><body>
-  
-  
-  <div class="indexwrapper">
-  
-
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="intro.html" title="Introduction"
-             accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">Tibia.py 6.4.0 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Tibia.py</a></li> 
-      </ul>
-    </div>  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <section id="tibia-py">
-<h1>Tibia.py<a class="headerlink" href="#tibia-py" title="Link to this heading">¶</a></h1>
-<p>Tibia.py is a library for parsing HTML content from <a class="reference external" href="https://www.tibia.com/news/?subtopic=latestnews">Tibia.com</a>. into Python objects.</p>
-<p><strong>Features:</strong></p>
-<ul class="simple">
-<li><p>Converts data into well-structured Python objects.</p></li>
-<li><p>Type consistent attributes.</p></li>
-<li><p>All objects can be converted to JSON strings.</p></li>
-<li><p>Asynchronous requests using <a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a>.</p></li>
-<li><p>Standalone parsing methods, allowing to use any network library of your choice.</p></li>
-<li><p>Support for characters, guilds, houses and worlds.</p></li>
-</ul>
-<section id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#prerequisites">Prerequisites</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#usage">Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#supported-sections">Supported Sections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intro.html#docker">Docker</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#client">Client</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.Client"><code class="docutils literal notranslate"><span class="pre">Client</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.TibiaResponse"><code class="docutils literal notranslate"><span class="pre">TibiaResponse</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#enumerations">Enumerations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.AuctionBattlEyeFilter"><code class="docutils literal notranslate"><span class="pre">AuctionBattlEyeFilter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.AuctionOrderBy"><code class="docutils literal notranslate"><span class="pre">AuctionOrderBy</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.AuctionOrderDirection"><code class="docutils literal notranslate"><span class="pre">AuctionOrderDirection</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.AuctionSearchType"><code class="docutils literal notranslate"><span class="pre">AuctionSearchType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.AuctionSkillFilter"><code class="docutils literal notranslate"><span class="pre">AuctionSkillFilter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.AuctionStatus"><code class="docutils literal notranslate"><span class="pre">AuctionStatus</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.AuctionVocationFilter"><code class="docutils literal notranslate"><span class="pre">AuctionVocationFilter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.AvailableForumSection"><code class="docutils literal notranslate"><span class="pre">AvailableForumSection</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.BattlEyeType"><code class="docutils literal notranslate"><span class="pre">BattlEyeType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.BazaarType"><code class="docutils literal notranslate"><span class="pre">BazaarType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.BidType"><code class="docutils literal notranslate"><span class="pre">BidType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.HighscoresBattlEyeType"><code class="docutils literal notranslate"><span class="pre">HighscoresBattlEyeType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.HighscoresCategory"><code class="docutils literal notranslate"><span class="pre">HighscoresCategory</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.HighscoresProfession"><code class="docutils literal notranslate"><span class="pre">HighscoresProfession</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.HouseOrder"><code class="docutils literal notranslate"><span class="pre">HouseOrder</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.HouseStatus"><code class="docutils literal notranslate"><span class="pre">HouseStatus</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.HouseType"><code class="docutils literal notranslate"><span class="pre">HouseType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.NewsCategory"><code class="docutils literal notranslate"><span class="pre">NewsCategory</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.NewsType"><code class="docutils literal notranslate"><span class="pre">NewsType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.PvpType"><code class="docutils literal notranslate"><span class="pre">PvpType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.PvpTypeFilter"><code class="docutils literal notranslate"><span class="pre">PvpTypeFilter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.Sex"><code class="docutils literal notranslate"><span class="pre">Sex</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.SpellGroup"><code class="docutils literal notranslate"><span class="pre">SpellGroup</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.SpellSorting"><code class="docutils literal notranslate"><span class="pre">SpellSorting</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.SpellType"><code class="docutils literal notranslate"><span class="pre">SpellType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.SpellVocationFilter"><code class="docutils literal notranslate"><span class="pre">SpellVocationFilter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.ThreadStatus"><code class="docutils literal notranslate"><span class="pre">ThreadStatus</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.TransferType"><code class="docutils literal notranslate"><span class="pre">TransferType</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.Vocation"><code class="docutils literal notranslate"><span class="pre">Vocation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.enums.WorldLocation"><code class="docutils literal notranslate"><span class="pre">WorldLocation</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#models">Models</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#characters">Characters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#worlds">Worlds</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#guilds">Guilds</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#highscores">Highscores</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#houses">Houses</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#leaderboard">Leaderboard</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#forums">Forums</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#news">News</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#bazaar">Bazaar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#kill-statistics">Kill Statistics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#library">Library</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id1">Library</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#base-classes">Base Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseAnnouncement"><code class="docutils literal notranslate"><span class="pre">BaseAnnouncement</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseBoard"><code class="docutils literal notranslate"><span class="pre">BaseBoard</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseCharacter"><code class="docutils literal notranslate"><span class="pre">BaseCharacter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseGuild"><code class="docutils literal notranslate"><span class="pre">BaseGuild</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseHouse"><code class="docutils literal notranslate"><span class="pre">BaseHouse</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.HouseWithId"><code class="docutils literal notranslate"><span class="pre">HouseWithId</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseNews"><code class="docutils literal notranslate"><span class="pre">BaseNews</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BasePost"><code class="docutils literal notranslate"><span class="pre">BasePost</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseThread"><code class="docutils literal notranslate"><span class="pre">BaseThread</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.BaseWorld"><code class="docutils literal notranslate"><span class="pre">BaseWorld</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.pagination.Paginated"><code class="docutils literal notranslate"><span class="pre">Paginated</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.pagination.PaginatedWithUrl"><code class="docutils literal notranslate"><span class="pre">PaginatedWithUrl</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.models.pagination.AjaxPaginator"><code class="docutils literal notranslate"><span class="pre">AjaxPaginator</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#parsers">Parsers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.AuctionParser"><code class="docutils literal notranslate"><span class="pre">AuctionParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.CharacterBazaarParser"><code class="docutils literal notranslate"><span class="pre">CharacterBazaarParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.CharacterParser"><code class="docutils literal notranslate"><span class="pre">CharacterParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.BoostableBossesParser"><code class="docutils literal notranslate"><span class="pre">BoostableBossesParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.BoostedCreaturesParser"><code class="docutils literal notranslate"><span class="pre">BoostedCreaturesParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.CreatureParser"><code class="docutils literal notranslate"><span class="pre">CreatureParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.CreaturesSectionParser"><code class="docutils literal notranslate"><span class="pre">CreaturesSectionParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.EventScheduleParser"><code class="docutils literal notranslate"><span class="pre">EventScheduleParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.CMPostArchiveParser"><code class="docutils literal notranslate"><span class="pre">CMPostArchiveParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.FansitesSectionParser"><code class="docutils literal notranslate"><span class="pre">FansitesSectionParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.ForumAnnouncementParser"><code class="docutils literal notranslate"><span class="pre">ForumAnnouncementParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.ForumBoardParser"><code class="docutils literal notranslate"><span class="pre">ForumBoardParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.ForumSectionParser"><code class="docutils literal notranslate"><span class="pre">ForumSectionParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.ForumThreadParser"><code class="docutils literal notranslate"><span class="pre">ForumThreadParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.GuildParser"><code class="docutils literal notranslate"><span class="pre">GuildParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.GuildsSectionParser"><code class="docutils literal notranslate"><span class="pre">GuildsSectionParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.GuildWarsParser"><code class="docutils literal notranslate"><span class="pre">GuildWarsParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.HighscoresParser"><code class="docutils literal notranslate"><span class="pre">HighscoresParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.HousesSectionParser"><code class="docutils literal notranslate"><span class="pre">HousesSectionParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.HouseParser"><code class="docutils literal notranslate"><span class="pre">HouseParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.KillStatisticsParser"><code class="docutils literal notranslate"><span class="pre">KillStatisticsParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.LeaderboardParser"><code class="docutils literal notranslate"><span class="pre">LeaderboardParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.NewsArchiveParser"><code class="docutils literal notranslate"><span class="pre">NewsArchiveParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.NewsParser"><code class="docutils literal notranslate"><span class="pre">NewsParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.SpellsSectionParser"><code class="docutils literal notranslate"><span class="pre">SpellsSectionParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.SpellParser"><code class="docutils literal notranslate"><span class="pre">SpellParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.WorldParser"><code class="docutils literal notranslate"><span class="pre">WorldParser</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.parsers.WorldOverviewParser"><code class="docutils literal notranslate"><span class="pre">WorldOverviewParser</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#exceptions">Exceptions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.TibiapyException"><code class="docutils literal notranslate"><span class="pre">TibiapyException</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.InvalidContent"><code class="docutils literal notranslate"><span class="pre">InvalidContent</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.NetworkError"><code class="docutils literal notranslate"><span class="pre">NetworkError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.SiteMaintenanceError"><code class="docutils literal notranslate"><span class="pre">SiteMaintenanceError</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.Forbidden"><code class="docutils literal notranslate"><span class="pre">Forbidden</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-tibiapy.utils">Utility functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.FormData"><code class="docutils literal notranslate"><span class="pre">FormData</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.clean_text"><code class="docutils literal notranslate"><span class="pre">clean_text()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.convert_line_breaks"><code class="docutils literal notranslate"><span class="pre">convert_line_breaks()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.get_rows"><code class="docutils literal notranslate"><span class="pre">get_rows()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_form_data"><code class="docutils literal notranslate"><span class="pre">parse_form_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_integer"><code class="docutils literal notranslate"><span class="pre">parse_integer()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.LinkInfo"><code class="docutils literal notranslate"><span class="pre">LinkInfo</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_link_info"><code class="docutils literal notranslate"><span class="pre">parse_link_info()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_tibia_datetime"><code class="docutils literal notranslate"><span class="pre">parse_tibia_datetime()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_tibia_date"><code class="docutils literal notranslate"><span class="pre">parse_tibia_date()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_tibia_forum_datetime"><code class="docutils literal notranslate"><span class="pre">parse_tibia_forum_datetime()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_tibia_full_date"><code class="docutils literal notranslate"><span class="pre">parse_tibia_full_date()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_number_words"><code class="docutils literal notranslate"><span class="pre">parse_number_words()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.try_datetime"><code class="docutils literal notranslate"><span class="pre">try_datetime()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.try_date"><code class="docutils literal notranslate"><span class="pre">try_date()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_tables_map"><code class="docutils literal notranslate"><span class="pre">parse_tables_map()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_tibiacom_content"><code class="docutils literal notranslate"><span class="pre">parse_tibiacom_content()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_tibiacom_tables"><code class="docutils literal notranslate"><span class="pre">parse_tibiacom_tables()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.try_enum"><code class="docutils literal notranslate"><span class="pre">try_enum()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_tibia_money"><code class="docutils literal notranslate"><span class="pre">parse_tibia_money()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.split_list"><code class="docutils literal notranslate"><span class="pre">split_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_popup"><code class="docutils literal notranslate"><span class="pre">parse_popup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.parse_pagination"><code class="docutils literal notranslate"><span class="pre">parse_pagination()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.utils.take_while"><code class="docutils literal notranslate"><span class="pre">take_while()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#module-tibiapy.urls">URL functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_tibia_url"><code class="docutils literal notranslate"><span class="pre">get_tibia_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_static_file_url"><code class="docutils literal notranslate"><span class="pre">get_static_file_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_character_url"><code class="docutils literal notranslate"><span class="pre">get_character_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_world_guilds_url"><code class="docutils literal notranslate"><span class="pre">get_world_guilds_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_guild_url"><code class="docutils literal notranslate"><span class="pre">get_guild_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_guild_wars_url"><code class="docutils literal notranslate"><span class="pre">get_guild_wars_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_house_url"><code class="docutils literal notranslate"><span class="pre">get_house_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_fansites_url"><code class="docutils literal notranslate"><span class="pre">get_fansites_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_world_overview_url"><code class="docutils literal notranslate"><span class="pre">get_world_overview_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_world_url"><code class="docutils literal notranslate"><span class="pre">get_world_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_news_archive_url"><code class="docutils literal notranslate"><span class="pre">get_news_archive_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_news_url"><code class="docutils literal notranslate"><span class="pre">get_news_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_forum_section_url"><code class="docutils literal notranslate"><span class="pre">get_forum_section_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_forum_section_url_by_name"><code class="docutils literal notranslate"><span class="pre">get_forum_section_url_by_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_world_boards_url"><code class="docutils literal notranslate"><span class="pre">get_world_boards_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_trade_boards_url"><code class="docutils literal notranslate"><span class="pre">get_trade_boards_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_community_boards_url"><code class="docutils literal notranslate"><span class="pre">get_community_boards_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_support_boards_url"><code class="docutils literal notranslate"><span class="pre">get_support_boards_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_forum_board_url"><code class="docutils literal notranslate"><span class="pre">get_forum_board_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_forum_announcement_url"><code class="docutils literal notranslate"><span class="pre">get_forum_announcement_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_forum_thread_url"><code class="docutils literal notranslate"><span class="pre">get_forum_thread_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_forum_post_url"><code class="docutils literal notranslate"><span class="pre">get_forum_post_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_highscores_url"><code class="docutils literal notranslate"><span class="pre">get_highscores_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_kill_statistics_url"><code class="docutils literal notranslate"><span class="pre">get_kill_statistics_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_event_schedule_url"><code class="docutils literal notranslate"><span class="pre">get_event_schedule_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_houses_section_url"><code class="docutils literal notranslate"><span class="pre">get_houses_section_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_auction_url"><code class="docutils literal notranslate"><span class="pre">get_auction_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_bazaar_url"><code class="docutils literal notranslate"><span class="pre">get_bazaar_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_cm_post_archive_url"><code class="docutils literal notranslate"><span class="pre">get_cm_post_archive_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_leaderboards_url"><code class="docutils literal notranslate"><span class="pre">get_leaderboards_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_creatures_section_url"><code class="docutils literal notranslate"><span class="pre">get_creatures_section_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_creature_url"><code class="docutils literal notranslate"><span class="pre">get_creature_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_boostable_bosses_url"><code class="docutils literal notranslate"><span class="pre">get_boostable_bosses_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_spells_section_url"><code class="docutils literal notranslate"><span class="pre">get_spells_section_url()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#tibiapy.urls.get_spell_url"><code class="docutils literal notranslate"><span class="pre">get_spell_url()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">6.4.0 (2026-07-12)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">6.3.0 (2024-04-05)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">6.2.0 (2024-03-31)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">6.1.0 (2024-01-15)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">6.0.4 (2023-10-01)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">6.0.3 (2023-10-01)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">6.0.2 (2023-08-27)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">6.0.1 (2023-08-25)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">6.0.0 (2023-08-24)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">5.6.0 (2023-02-17)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">5.5.2 (2022-09-02)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">5.5.1 (2022-08-02)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">5.5.0 (2022-07-27)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">5.4.0 (2022-07-23)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">5.3.0 (2022-07-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">5.2.1 (2022-03-01)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id19">5.2.0 (2021-12-31)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">5.1.0 (2021-09-16)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">5.0.1 (2021-08-26)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">5.0.0 (2021-08-06)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id23">4.1.7 (2021-06-30)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id24">4.1.6 (2021-06-28)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id25">4.1.5 (2021-06-25)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id26">4.1.4 (2021-06-17)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id27">4.1.3 (2021-05-12)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id28">4.1.2 (2021-04-27)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id29">4.1.1 (2021-04-19)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">4.1.0 (2021-03-30)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id31">4.0.0 (2021-03-10)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id32">3.7.1 (2021-02-15)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id33">3.7.0 (2021-02-09)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id34">3.6.5 (2021-01-27)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id35">3.6.4 (2021-01-26)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id36">3.6.3 (2021-01-14)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id37">3.6.2 (2021-01-01)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id38">3.6.1 (2020-12-28)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id39">3.6.0 (2020-12-12)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id40">3.5.7 (2020-12-04)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id41">3.5.6 (2020-11-10)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id42">3.5.5 (2020-10-03)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id43">3.5.4 (2020-09-24)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id44">3.5.3 (2020-09-24)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id45">3.5.2 (2020-09-23)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id46">3.5.1 (2020-09-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id47">3.5.0 (2020-09-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id48">3.4.0 (2020-09-19)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id49">3.3.0 (2020-09-09)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id50">3.2.2 (2020-08-27)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id51">3.2.1 (2020-08-25)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id52">3.2.0 (2020-08-10)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id53">3.1.0 (2020-07-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id54">3.0.3 (2020-07-28)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id55">3.0.2 (2020-07-14)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id56">3.0.1 (2020-07-14)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id57">3.0.0 (2020-07-13)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-5-1">2.5.1 (2020-05-27)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-5-0">2.5.0 (2020-05-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-4-3">2.4.3 (2020-04-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-4-2">2.4.2 (2020-02-26)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-4-1">2.4.1 (2019-11-20)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-4-0">2.4.0 (2019-11-20)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-3-4">2.3.4 (2019-11-14)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-3-3">2.3.3 (2019-11-04)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-3-2">2.3.2 (2019-10-17)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-3-1">2.3.1 (2019-10-06)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-3-0">2.3.0 (2019-09-16)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-2-6">2.2.6 (2019-09-01)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-2-5">2.2.5 (2019-08-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-2-4">2.2.4 (2019-08-20)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-2-3">2.2.3 (2019-08-17)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-2-2">2.2.2 (2019-08-17)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-2-1">2.2.1 (2019-08-10)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-2-0">2.2.0 (2019-08-08)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-1-0">2.1.0 (2019-06-17)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-0-1">2.0.1 (2019-06-04)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-0-0">2.0.0 (2019-06-03)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-1-3">1.1.3 (2019-01-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-1-2">1.1.2 (2019-01-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-1-1">1.1.1 (2019-01-09)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-1-0">1.1.0 (2019-01-09)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-0-0">1.0.0 (2018-12-23)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#v0-1-0">0.1.0 (2018-08-17)</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
-</section>
-</section>
-
-
-            <div class="clearer"></div>
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">Tibia.py</a></h1>
-
-
-
-
-
-
-<p>
-<iframe src="https://ghbtns.com/github-btn.html?user=Galarzaa90&repo=tibia.py&type=star&count=true&size=large&v=2"
-  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
-</p>
-
-
-
-
-
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Tibia.py, a Python library for parsing Tibia.com.">
+      
+      
+        <meta name="author" content="Allan Galarza">
+      
+      
+        <link rel="canonical" href="https://tibiapy.readthedocs.io/">
+      
+      
+      
+      
+        <link rel="next" href="./introduction/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="./assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.70">
+    
+    
+      
+        <title>Home - Tibia.py</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="./assets/stylesheets/modern/main.e442bf79.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="./assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
 
 
     
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
 
-<p>
-<a class="badge" href="https://codecov.io/github/Galarzaa90/tibia.py">
-    <img
-    alt="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
-    src="https://codecov.io/github/Galarzaa90/tibia.py/coverage.svg?branch=master"
-    />
-</a>
-</p>
-<h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="intro.html" title="next chapter">Introduction</a></li>
-  </ul></li>
-</ul>
-</div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
     </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
 
+  
 
-<h3 class="donation">Donate/support</h3>
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="" title="Tibia.py" class="md-header__button md-logo" aria-label="Tibia.py" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
 
-
-
-<p>
-<a class="badge" href="https://beerpay.io/Galarzaa90/tibia.py">
-<img src="https://img.shields.io/badge/donate-%E2%9D%A4%C2%A0-ff69b4.svg?style=flat" alt="Donate">
-</a>
-</p>
-
-
-
-
-
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tibia.py
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
         </div>
       </div>
-      <div class="clearer"></div>
     </div>
-  <div class="footer">
-    &copy; Copyright 2024, Allan Galarza.
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7.
-  </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
   
-  </div>
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun-moon" viewBox="0 0 24 24"><path d="M12 2v2M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715M16 12a4 4 0 0 0-4-4M19 5l-1.256 1.256M20 12h2"/></svg>
+      </label>
+    
   
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="" class="md-tabs__link">
+          
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="./api/" class="md-tabs__link">
+          
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="" title="Tibia.py" class="md-nav__button md-logo" aria-label="Tibia.py" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Tibia.py
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Documentation
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Documentation
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Features
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Where to start
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Introduction
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Changelog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API Reference
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  API Reference
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Client
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/enums/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Enumerations
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Models
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/base-classes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Base Classes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/parsers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parsers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Exceptions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utility functions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./api/urls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  URL functions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Features
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Where to start
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="tibiapy">Tibia.py</h1>
+<p>Tibia.py is a library for parsing HTML content from <a href="https://www.tibia.com/news/?subtopic=latestnews">Tibia.com</a> into Python objects.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Converts data into well-structured Python objects.</li>
+<li>Provides type-consistent attributes.</li>
+<li>Converts all objects to JSON strings.</li>
+<li>Supports asynchronous requests using <a href="https://aiohttp.readthedocs.io/en/stable/">aiohttp</a>.</li>
+<li>Provides standalone parsing methods, allowing you to use any networking library.</li>
+<li>Supports characters, guilds, houses, worlds, and other Tibia.com sections.</li>
+</ul>
+<h2 id="where-to-start">Where to start</h2>
+<p>Read the <a href="introduction/">introduction</a> to install Tibia.py and make your first request, or browse the <a href="api/">API reference</a> generated directly from the source with mkdocstrings.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+        
+          
+          <a href="./introduction/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Introduction
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2026 Allan Galarza<br>
+<a href="https://www.tibia.com">Tibia</a> is made by <a href="https://www.cipsoft.com/">CipSoft</a>. All Tibia content is copyrighted by <a href="https://www.cipsoft.com/">CipSoft GmbH</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Galarzaa90/tibia.py" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/tibia.py/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>PyPI</title><path d="M23.922 13.58v3.912L20.55 18.72l-.078.055.052.037 3.45-1.256.026-.036v-3.997l-.053-.036-.025.092zm-.301-7.962-3.04 1.107v3.912l3.339-1.215V5.509zm.299 7.839V9.544l-3.336 1.215v3.913zm-3.45 1.253V10.8l-3.3 1.2v3.913zm-3.436 5.286v-3.912l-3.313 1.206v3.912zm.136-3.939v3.868l3.314-1.206V14.85zm2.093 1.882c-.367.134-.663-.074-.663-.463s.296-.814.663-.947c.365-.133.662.075.662.464s-.297.814-.662.946m-6.038-8.624.365-.132-3.285-1.197-3.323 1.21.102.037 3.184 1.16zm7.282 1.349V6.751L17.17 7.965v3.913zm-3.449 1.254V8.005l-3.302 1.202v3.912zm-3.415-2.672-3.336 1.215v3.913l3.336-1.215zm-6.736 3.919 3.322 1.209v-3.913L6.907 9.252zm3.433-5.292 3.281 1.193V5.198l-3.28-1.193zm10.167-5.158L17.19 3.922v3.913l3.317-1.207zM16.95 3.903 13.724 2.73l-3.269 1.19 3.225 1.174zm-1.585.703-1.624.592v3.868l3.317-1.207V3.991zm-.391 2.778c-.367.134-.662-.074-.662-.464s.295-.813.662-.946c.366-.133.663.074.663.464s-.297.813-.663.946M10.229 18.41v-3.914l-3.322-1.209V17.2zm3.449-1.228v-3.913l-3.371 1.227v3.913zm.078-.028 3.3-1.2V12.04l-3.3 1.2zm-.078 4.063-3.371 1.227v-3.912h-.078v3.912l-3.322-1.209v-3.913l-.053-.058-.025-.06-3.336-1.21v-3.948l.034.013 3.287 1.196.015-.078-3.261-1.187 3.26-1.187v-.109L3.876 9.62l-.307-.112 3.26-1.188v.877l.079-.055V6.769l3.257 1.185.058-.061L7.084 6.75l-.102-.037 3.24-1.179v-.083L6.854 6.677v.018l-.025.018v1.523L3.44 9.47v.02l-.025.017v4.007l-3.39 1.233v.019L0 14.784v3.995l.025.037 3.4 1.237.008-.006.007.01 3.4 1.238.008-.006.006.01 3.4 1.237.014-.009.012.01 3.45-1.256.026-.037zM3.493 9.563l3.257 1.185-3.257 1.187V9.562zM3.4 19.96.078 18.752v-3.913l2.361.86.96.349zm.015-3.99-3.08-1.12-.182-.066 3.262-1.187zm3.399 5.231-3.321-1.209V16.08l3.321 1.209zM23.791 5.434l-3.21-1.17v2.338zm-3.404-2.791-3.24-1.18-3.27 1.19 3.247 1.182z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/r/galarzaa90/tibia.py" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":".","features":["content.code.copy","navigation.footer","navigation.instant","navigation.instant.progress","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.suggest","search.highlight","search.share","toc.follow"],"redirect":null,"search":"./assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="./assets/javascripts/bundle.a2388154.min.js"></script>
+      
+    
   </body>
 </html>

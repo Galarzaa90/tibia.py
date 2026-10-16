@@ -1,0 +1,7238 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Tibia.py, a Python library for parsing Tibia.com.">
+      
+      
+        <meta name="author" content="Allan Galarza">
+      
+      
+        <link rel="canonical" href="https://tibiapy.readthedocs.io/api/enums/">
+      
+      
+      
+        <link rel="prev" href="../client/">
+      
+      
+        <link rel="next" href="../models/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.70">
+    
+    
+      
+        <title>Enumerations - Tibia.py</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.e442bf79.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Tibia.py" class="md-header__button md-logo" aria-label="Tibia.py" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tibia.py
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Enumerations
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun-moon" viewBox="0 0 24 24"><path d="M12 2v2M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715M16 12a4 4 0 0 0-4-4M19 5l-1.256 1.256M20 12h2"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../.." class="md-tabs__link">
+          
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Tibia.py" class="md-nav__button md-logo" aria-label="Tibia.py" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Tibia.py
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Documentation
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Documentation
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Introduction
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Changelog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API Reference
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  API Reference
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Client
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Enumerations
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Enumerations
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tibiapy.enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        enums
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="enums">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionBattlEyeFilter
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionBattlEyeFilter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.INITIALLY_PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        INITIALLY_PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.NOT_PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        NOT_PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.YELLOW" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        YELLOW
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.GREEN" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GREEN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderDirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionOrderDirection
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionOrderDirection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderDirection.HIGHEST_LATEST" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HIGHEST_LATEST
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderDirection.LOWEST_EARLIEST" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        LOWEST_EARLIEST
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionOrderBy
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionOrderBy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy.BID" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BID
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy.END_DATE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        END_DATE
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy.LEVEL" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        LEVEL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy.START_DATE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        START_DATE
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.PvpTypeFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PvpTypeFilter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSearchType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionSearchType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionSearchType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSearchType.ITEM_DEFAULT" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ITEM_DEFAULT
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSearchType.ITEM_WILDCARD" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ITEM_WILDCARD
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSearchType.CHARACTER_NAME" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CHARACTER_NAME
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionStatus
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionStatus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.IN_PROGRESS" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        IN_PROGRESS
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.CURRENTLY_PROCESSED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CURRENTLY_PROCESSED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.PENDING_TRANSFER" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PENDING_TRANSFER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.CANCELLED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CANCELLED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.FINISHED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        FINISHED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSkillFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionSkillFilter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionVocationFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionVocationFilter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AvailableForumSection" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AvailableForumSection
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BattlEyeType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BattlEyeType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.UNPROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        UNPROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.INITIALLY_PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        INITIALLY_PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.YELLOW" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        YELLOW
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.GREEN" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GREEN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BazaarType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BazaarType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BazaarType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BazaarType.subtopic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        subtopic
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BidType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BidType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BidType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BidType.MINIMUM" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        MINIMUM
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BidType.CURRENT" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CURRENT
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BidType.WINNING" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        WINNING
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HighscoresBattlEyeType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HighscoresBattlEyeType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.ANY_WORLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ANY_WORLD
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.INITIALLY_PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        INITIALLY_PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.UNPROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        UNPROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.YELLOW" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        YELLOW
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.GREEN" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GREEN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresCategory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HighscoresCategory
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresProfession" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HighscoresProfession
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HighscoresProfession">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresProfession.from_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        from_name
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HouseOrder" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HouseOrder
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HouseStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HouseStatus
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HouseType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HouseType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HouseType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HouseType.plural" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        plural
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsCategory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        NewsCategory
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NewsCategory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsCategory.filter_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        filter_name
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsCategory.big_icon_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        big_icon_url
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsCategory.small_icon_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        small_icon_url
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        NewsType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NewsType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsType.filter_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        filter_name
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsType.filter_value" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        filter_value
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.PvpType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PvpType
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.Sex" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Sex
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.SpellGroup" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SpellGroup
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.SpellSorting" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SpellSorting
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.SpellType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SpellType
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.SpellVocationFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SpellVocationFilter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.ThreadStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ThreadStatus
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ThreadStatus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.ThreadStatus.get_icon_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        get_icon_name
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.ThreadStatus.from_icon" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        from_icon
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.TransferType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        TransferType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TransferType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.TransferType.REGULAR" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        REGULAR
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.TransferType.BLOCKED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BLOCKED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.TransferType.LOCKED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        LOCKED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.Vocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vocation
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.Vocation.base" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        base
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.WorldLocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        WorldLocation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Models
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../base-classes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Base Classes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parsers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parsers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Exceptions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utility functions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../urls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  URL functions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tibiapy.enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        enums
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="enums">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionBattlEyeFilter
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionBattlEyeFilter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.INITIALLY_PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        INITIALLY_PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.NOT_PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        NOT_PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.YELLOW" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        YELLOW
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionBattlEyeFilter.GREEN" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GREEN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderDirection" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionOrderDirection
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionOrderDirection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderDirection.HIGHEST_LATEST" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HIGHEST_LATEST
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderDirection.LOWEST_EARLIEST" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        LOWEST_EARLIEST
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionOrderBy
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionOrderBy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy.BID" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BID
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy.END_DATE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        END_DATE
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy.LEVEL" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        LEVEL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionOrderBy.START_DATE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        START_DATE
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.PvpTypeFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PvpTypeFilter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSearchType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionSearchType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionSearchType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSearchType.ITEM_DEFAULT" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ITEM_DEFAULT
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSearchType.ITEM_WILDCARD" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ITEM_WILDCARD
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSearchType.CHARACTER_NAME" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CHARACTER_NAME
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionStatus
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AuctionStatus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.IN_PROGRESS" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        IN_PROGRESS
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.CURRENTLY_PROCESSED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CURRENTLY_PROCESSED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.PENDING_TRANSFER" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PENDING_TRANSFER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.CANCELLED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CANCELLED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionStatus.FINISHED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        FINISHED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionSkillFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionSkillFilter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AuctionVocationFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AuctionVocationFilter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.AvailableForumSection" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        AvailableForumSection
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BattlEyeType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BattlEyeType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.UNPROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        UNPROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.INITIALLY_PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        INITIALLY_PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.YELLOW" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        YELLOW
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BattlEyeType.GREEN" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GREEN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BazaarType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BazaarType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BazaarType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BazaarType.subtopic" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        subtopic
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BidType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BidType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BidType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BidType.MINIMUM" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        MINIMUM
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BidType.CURRENT" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CURRENT
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.BidType.WINNING" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        WINNING
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HighscoresBattlEyeType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HighscoresBattlEyeType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.ANY_WORLD" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ANY_WORLD
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.INITIALLY_PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        INITIALLY_PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.PROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.UNPROTECTED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        UNPROTECTED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.YELLOW" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        YELLOW
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresBattlEyeType.GREEN" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        GREEN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresCategory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HighscoresCategory
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresProfession" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HighscoresProfession
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HighscoresProfession">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HighscoresProfession.from_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        from_name
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HouseOrder" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HouseOrder
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HouseStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HouseStatus
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HouseType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HouseType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HouseType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.HouseType.plural" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        plural
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsCategory" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        NewsCategory
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NewsCategory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsCategory.filter_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        filter_name
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsCategory.big_icon_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        big_icon_url
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsCategory.small_icon_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        small_icon_url
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        NewsType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NewsType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsType.filter_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        filter_name
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.NewsType.filter_value" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        filter_value
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.PvpType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        PvpType
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.Sex" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Sex
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.SpellGroup" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SpellGroup
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.SpellSorting" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SpellSorting
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.SpellType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SpellType
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.SpellVocationFilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SpellVocationFilter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.ThreadStatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ThreadStatus
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ThreadStatus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.ThreadStatus.get_icon_name" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        get_icon_name
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.ThreadStatus.from_icon" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        from_icon
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.TransferType" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        TransferType
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TransferType">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.TransferType.REGULAR" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        REGULAR
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.TransferType.BLOCKED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        BLOCKED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.TransferType.LOCKED" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        LOCKED
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.Vocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vocation
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.Vocation.base" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        base
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tibiapy.enums.WorldLocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        WorldLocation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="enumerations">Enumerations</h1>
+<p>Enumerations are provided for various values in order to avoid depending on strings.</p>
+<p>Many of these enumerations correspond to available options in forms in Tibia.com</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h3 id="tibiapy.enums" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-module"></code>            <span class="doc doc-object-name doc-module-name">tibiapy.enums</span>
+
+
+</h3>
+
+    <div class="doc doc-contents first">
+
+        <p>Enumerations used by models throughout the library.</p>
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Classes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            AuctionBattlEyeFilter (tibiapy.enums.AuctionBattlEyeFilter)" href="./#tibiapy.enums.AuctionBattlEyeFilter">AuctionBattlEyeFilter</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible BattlEye filters that can be used for auctions.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            AuctionOrderDirection (tibiapy.enums.AuctionOrderDirection)" href="./#tibiapy.enums.AuctionOrderDirection">AuctionOrderDirection</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible ordering directions for auctions.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            AuctionOrderBy (tibiapy.enums.AuctionOrderBy)" href="./#tibiapy.enums.AuctionOrderBy">AuctionOrderBy</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible values to order the auctions by.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            PvpTypeFilter (tibiapy.enums.PvpTypeFilter)" href="./#tibiapy.enums.PvpTypeFilter">PvpTypeFilter</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible PVP filters that can be used for auctions.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            AuctionSearchType (tibiapy.enums.AuctionSearchType)" href="./#tibiapy.enums.AuctionSearchType">AuctionSearchType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible search types.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            AuctionStatus (tibiapy.enums.AuctionStatus)" href="./#tibiapy.enums.AuctionStatus">AuctionStatus</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible values an auction might have.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            AuctionSkillFilter (tibiapy.enums.AuctionSkillFilter)" href="./#tibiapy.enums.AuctionSkillFilter">AuctionSkillFilter</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The different skill filters for auctions.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            AuctionVocationFilter (tibiapy.enums.AuctionVocationFilter)" href="./#tibiapy.enums.AuctionVocationFilter">AuctionVocationFilter</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible vocation filters for auctions.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            AvailableForumSection (tibiapy.enums.AvailableForumSection)" href="./#tibiapy.enums.AvailableForumSection">AvailableForumSection</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The available forum sections and their URL query parameter values.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            BattlEyeType (tibiapy.enums.BattlEyeType)" href="./#tibiapy.enums.BattlEyeType">BattlEyeType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible BattlEye statuses a world can have.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            BazaarType (tibiapy.enums.BazaarType)" href="./#tibiapy.enums.BazaarType">BazaarType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible bazaar types.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            BidType (tibiapy.enums.BidType)" href="./#tibiapy.enums.BidType">BidType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible bid types for an auction.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            HighscoresBattlEyeType (tibiapy.enums.HighscoresBattlEyeType)" href="./#tibiapy.enums.HighscoresBattlEyeType">HighscoresBattlEyeType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible BattlEye filters that can be used for highscores.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            HighscoresCategory (tibiapy.enums.HighscoresCategory)" href="./#tibiapy.enums.HighscoresCategory">HighscoresCategory</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The different highscores categories.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            HighscoresProfession (tibiapy.enums.HighscoresProfession)" href="./#tibiapy.enums.HighscoresProfession">HighscoresProfession</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The vocation filters available for Highscores.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            HouseOrder (tibiapy.enums.HouseOrder)" href="./#tibiapy.enums.HouseOrder">HouseOrder</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible ordering methods for house lists in Tibia.com.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            HouseStatus (tibiapy.enums.HouseStatus)" href="./#tibiapy.enums.HouseStatus">HouseStatus</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>Renting statuses of a house.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            HouseType (tibiapy.enums.HouseType)" href="./#tibiapy.enums.HouseType">HouseType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The types of house available.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            NewsCategory (tibiapy.enums.NewsCategory)" href="./#tibiapy.enums.NewsCategory">NewsCategory</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The different news categories.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            NewsType (tibiapy.enums.NewsType)" href="./#tibiapy.enums.NewsType">NewsType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The different types of new entries.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            PvpType (tibiapy.enums.PvpType)" href="./#tibiapy.enums.PvpType">PvpType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible PvP types a World can have.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            Sex (tibiapy.enums.Sex)" href="./#tibiapy.enums.Sex">Sex</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>Possible character sexes.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            SpellGroup (tibiapy.enums.SpellGroup)" href="./#tibiapy.enums.SpellGroup">SpellGroup</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible cooldown groups.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            SpellSorting (tibiapy.enums.SpellSorting)" href="./#tibiapy.enums.SpellSorting">SpellSorting</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The different sorting options for the spells section.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            SpellType (tibiapy.enums.SpellType)" href="./#tibiapy.enums.SpellType">SpellType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible spell types.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            SpellVocationFilter (tibiapy.enums.SpellVocationFilter)" href="./#tibiapy.enums.SpellVocationFilter">SpellVocationFilter</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible vocation types to filter out spells.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            ThreadStatus (tibiapy.enums.ThreadStatus)" href="./#tibiapy.enums.ThreadStatus">ThreadStatus</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible status a thread can have.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            TransferType (tibiapy.enums.TransferType)" href="./#tibiapy.enums.TransferType">TransferType</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible special transfer restrictions a world may have.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            Vocation (tibiapy.enums.Vocation)" href="./#tibiapy.enums.Vocation">Vocation</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible vocation types.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            WorldLocation (tibiapy.enums.WorldLocation)" href="./#tibiapy.enums.WorldLocation">WorldLocation</a></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>The possible physical locations for servers.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.AuctionBattlEyeFilter" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AuctionBattlEyeFilter</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The possible BattlEye filters that can be used for auctions.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            INITIALLY_PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionBattlEyeFilter.INITIALLY_PROTECTED)" href="./#tibiapy.enums.AuctionBattlEyeFilter.INITIALLY_PROTECTED">INITIALLY_PROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds protected from the beginning, represented by a green symbol.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionBattlEyeFilter.PROTECTED)" href="./#tibiapy.enums.AuctionBattlEyeFilter.PROTECTED">PROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds protected after the world was created, represented by a yellow symbol.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            NOT_PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionBattlEyeFilter.NOT_PROTECTED)" href="./#tibiapy.enums.AuctionBattlEyeFilter.NOT_PROTECTED">NOT_PROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds without any BattlEye protection.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            YELLOW
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionBattlEyeFilter.YELLOW)" href="./#tibiapy.enums.AuctionBattlEyeFilter.YELLOW">YELLOW</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Alias for protected worlds.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            GREEN
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionBattlEyeFilter.GREEN)" href="./#tibiapy.enums.AuctionBattlEyeFilter.GREEN">GREEN</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Alias for initially protected worlds.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionBattlEyeFilter.INITIALLY_PROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">INITIALLY_PROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">INITIALLY_PROTECTED</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds protected from the beginning, represented by a green symbol.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionBattlEyeFilter.PROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">PROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">PROTECTED</span> <span class="o">=</span> <span class="mi">2</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds protected after the world was created, represented by a yellow symbol.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionBattlEyeFilter.NOT_PROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">NOT_PROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">NOT_PROTECTED</span> <span class="o">=</span> <span class="mi">3</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds without any BattlEye protection.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionBattlEyeFilter.YELLOW" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">YELLOW</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">YELLOW</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionBattlEyeFilter.PROTECTED)" href="./#tibiapy.enums.AuctionBattlEyeFilter.PROTECTED">PROTECTED</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Alias for protected worlds.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionBattlEyeFilter.GREEN" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">GREEN</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">GREEN</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            INITIALLY_PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionBattlEyeFilter.INITIALLY_PROTECTED)" href="./#tibiapy.enums.AuctionBattlEyeFilter.INITIALLY_PROTECTED">INITIALLY_PROTECTED</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Alias for initially protected worlds.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.AuctionOrderDirection" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AuctionOrderDirection</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The possible ordering directions for auctions.</p>
+<p>The field or value used for the ordering is defined by <a class="autorefs autorefs-internal" title="            AuctionOrderBy" href="./#tibiapy.enums.AuctionOrderBy">AuctionOrderBy</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            HIGHEST_LATEST
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionOrderDirection.HIGHEST_LATEST)" href="./#tibiapy.enums.AuctionOrderDirection.HIGHEST_LATEST">HIGHEST_LATEST</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Order by the highest or latest value.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            LOWEST_EARLIEST
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionOrderDirection.LOWEST_EARLIEST)" href="./#tibiapy.enums.AuctionOrderDirection.LOWEST_EARLIEST">LOWEST_EARLIEST</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Order by the lowest or earliest value.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionOrderDirection.HIGHEST_LATEST" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">HIGHEST_LATEST</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">HIGHEST_LATEST</span> <span class="o">=</span> <span class="mi">0</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Order by the highest or latest value.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionOrderDirection.LOWEST_EARLIEST" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">LOWEST_EARLIEST</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">LOWEST_EARLIEST</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Order by the lowest or earliest value.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.AuctionOrderBy" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AuctionOrderBy</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The possible values to order the auctions by.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            BID
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionOrderBy.BID)" href="./#tibiapy.enums.AuctionOrderBy.BID">BID</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The currently displayed bid for the auction.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            END_DATE
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionOrderBy.END_DATE)" href="./#tibiapy.enums.AuctionOrderBy.END_DATE">END_DATE</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The end date of the auction.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            LEVEL
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionOrderBy.LEVEL)" href="./#tibiapy.enums.AuctionOrderBy.LEVEL">LEVEL</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The experience level of the auctioned character.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            START_DATE
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionOrderBy.START_DATE)" href="./#tibiapy.enums.AuctionOrderBy.START_DATE">START_DATE</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The start date of the auction.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionOrderBy.BID" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">BID</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">BID</span> <span class="o">=</span> <span class="mi">100</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The currently displayed bid for the auction.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionOrderBy.END_DATE" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">END_DATE</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">END_DATE</span> <span class="o">=</span> <span class="mi">101</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The end date of the auction.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionOrderBy.LEVEL" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">LEVEL</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">LEVEL</span> <span class="o">=</span> <span class="mi">102</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The experience level of the auctioned character.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionOrderBy.START_DATE" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">START_DATE</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">START_DATE</span> <span class="o">=</span> <span class="mi">103</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The start date of the auction.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.PvpTypeFilter" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">PvpTypeFilter</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The possible PVP filters that can be used for auctions.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.AuctionSearchType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AuctionSearchType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The possible search types.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            ITEM_DEFAULT
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionSearchType.ITEM_DEFAULT)" href="./#tibiapy.enums.AuctionSearchType.ITEM_DEFAULT">ITEM_DEFAULT</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Searches everything that includes the words on the search string.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            ITEM_WILDCARD
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionSearchType.ITEM_WILDCARD)" href="./#tibiapy.enums.AuctionSearchType.ITEM_WILDCARD">ITEM_WILDCARD</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Searches everything that includes the search string</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            CHARACTER_NAME
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionSearchType.CHARACTER_NAME)" href="./#tibiapy.enums.AuctionSearchType.CHARACTER_NAME">CHARACTER_NAME</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Searches a character's name.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionSearchType.ITEM_DEFAULT" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">ITEM_DEFAULT</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">ITEM_DEFAULT</span> <span class="o">=</span> <span class="mi">0</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Searches everything that includes the words on the search string.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionSearchType.ITEM_WILDCARD" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">ITEM_WILDCARD</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">ITEM_WILDCARD</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Searches everything that includes the search string</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionSearchType.CHARACTER_NAME" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">CHARACTER_NAME</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">CHARACTER_NAME</span> <span class="o">=</span> <span class="mi">2</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Searches a character's name.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.AuctionStatus" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AuctionStatus</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible values an auction might have.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            IN_PROGRESS
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionStatus.IN_PROGRESS)" href="./#tibiapy.enums.AuctionStatus.IN_PROGRESS">IN_PROGRESS</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The auction is currently active.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            CURRENTLY_PROCESSED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionStatus.CURRENTLY_PROCESSED)" href="./#tibiapy.enums.AuctionStatus.CURRENTLY_PROCESSED">CURRENTLY_PROCESSED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The auction ended with a winner, but payment hasn't been received yet.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            PENDING_TRANSFER
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionStatus.PENDING_TRANSFER)" href="./#tibiapy.enums.AuctionStatus.PENDING_TRANSFER">PENDING_TRANSFER</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The auction was finished and was paid, but the character hasn't been transferred to the new owner yet.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            CANCELLED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionStatus.CANCELLED)" href="./#tibiapy.enums.AuctionStatus.CANCELLED">CANCELLED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The auction was cancelled as no payment was received in time.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            FINISHED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.AuctionStatus.FINISHED)" href="./#tibiapy.enums.AuctionStatus.FINISHED">FINISHED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The auction either finished with no bids or the character was transferred to the new owner already.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionStatus.IN_PROGRESS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">IN_PROGRESS</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">IN_PROGRESS</span> <span class="o">=</span> <span class="s1">'in progress'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The auction is currently active.</p>
+
+
+<details class="note" open>
+  <summary>Notes</summary>
+  <p>This status doesn't exist in Tibia.com explicitly. It is given to all ongoing auctions.</p>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionStatus.CURRENTLY_PROCESSED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">CURRENTLY_PROCESSED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">CURRENTLY_PROCESSED</span> <span class="o">=</span> <span class="s1">'currently processed'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The auction ended with a winner, but payment hasn't been received yet.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionStatus.PENDING_TRANSFER" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">PENDING_TRANSFER</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">PENDING_TRANSFER</span> <span class="o">=</span> <span class="s1">'will be transferred at the next server save'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The auction was finished and was paid, but the character hasn't been transferred to the new owner yet.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionStatus.CANCELLED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">CANCELLED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">CANCELLED</span> <span class="o">=</span> <span class="s1">'cancelled'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The auction was cancelled as no payment was received in time.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.AuctionStatus.FINISHED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">FINISHED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">FINISHED</span> <span class="o">=</span> <span class="s1">'finished'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The auction either finished with no bids or the character was transferred to the new owner already.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.AuctionSkillFilter" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AuctionSkillFilter</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The different skill filters for auctions.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.AuctionVocationFilter" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AuctionVocationFilter</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The possible vocation filters for auctions.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.AvailableForumSection" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AvailableForumSection</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The available forum sections and their URL query parameter values.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.BattlEyeType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BattlEyeType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The possible BattlEye statuses a world can have.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            UNPROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BattlEyeType.UNPROTECTED)" href="./#tibiapy.enums.BattlEyeType.UNPROTECTED">UNPROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds without any BattlEye protection.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BattlEyeType.PROTECTED)" href="./#tibiapy.enums.BattlEyeType.PROTECTED">PROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds protected after the world was created, represented by a yellow symbol.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            INITIALLY_PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BattlEyeType.INITIALLY_PROTECTED)" href="./#tibiapy.enums.BattlEyeType.INITIALLY_PROTECTED">INITIALLY_PROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds protected from the beginning, represented by a green symbol.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            YELLOW
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BattlEyeType.YELLOW)" href="./#tibiapy.enums.BattlEyeType.YELLOW">YELLOW</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Alias for protected worlds.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            GREEN
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BattlEyeType.GREEN)" href="./#tibiapy.enums.BattlEyeType.GREEN">GREEN</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Alias for initially protected worlds.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BattlEyeType.UNPROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">UNPROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">UNPROTECTED</span> <span class="o">=</span> <span class="mi">0</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds without any BattlEye protection.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BattlEyeType.PROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">PROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">PROTECTED</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds protected after the world was created, represented by a yellow symbol.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BattlEyeType.INITIALLY_PROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">INITIALLY_PROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">INITIALLY_PROTECTED</span> <span class="o">=</span> <span class="mi">2</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds protected from the beginning, represented by a green symbol.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BattlEyeType.YELLOW" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">YELLOW</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">YELLOW</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BattlEyeType.PROTECTED)" href="./#tibiapy.enums.BattlEyeType.PROTECTED">PROTECTED</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Alias for protected worlds.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BattlEyeType.GREEN" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">GREEN</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">GREEN</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            INITIALLY_PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BattlEyeType.INITIALLY_PROTECTED)" href="./#tibiapy.enums.BattlEyeType.INITIALLY_PROTECTED">INITIALLY_PROTECTED</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Alias for initially protected worlds.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.BazaarType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BazaarType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible bazaar types.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            subtopic
+
+
+  
+      property
+   (tibiapy.enums.BazaarType.subtopic)" href="./#tibiapy.enums.BazaarType.subtopic">subtopic</a></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The subtopic argument for this Bazaar type.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BazaarType.subtopic" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">subtopic</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">subtopic</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The subtopic argument for this Bazaar type.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.BidType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BidType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible bid types for an auction.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            MINIMUM
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BidType.MINIMUM)" href="./#tibiapy.enums.BidType.MINIMUM">MINIMUM</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The minimum bid set by the auction author, meaning the auction hasn't received any bids or it finished</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            CURRENT
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BidType.CURRENT)" href="./#tibiapy.enums.BidType.CURRENT">CURRENT</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The current maximum bid, meaning the auction has received at least one bid.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            WINNING
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.BidType.WINNING)" href="./#tibiapy.enums.BidType.WINNING">WINNING</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The bid that won the auction.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BidType.MINIMUM" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">MINIMUM</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">MINIMUM</span> <span class="o">=</span> <span class="s1">'Minimum Bid'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The minimum bid set by the auction author, meaning the auction hasn't received any bids or it finished
+without bids.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BidType.CURRENT" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">CURRENT</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">CURRENT</span> <span class="o">=</span> <span class="s1">'Current Bid'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The current maximum bid, meaning the auction has received at least one bid.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.BidType.WINNING" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">WINNING</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">WINNING</span> <span class="o">=</span> <span class="s1">'Winning Bid'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The bid that won the auction.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.HighscoresBattlEyeType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">HighscoresBattlEyeType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The possible BattlEye filters that can be used for highscores.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            ANY_WORLD
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.HighscoresBattlEyeType.ANY_WORLD)" href="./#tibiapy.enums.HighscoresBattlEyeType.ANY_WORLD">ANY_WORLD</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Show all worlds.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            INITIALLY_PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.HighscoresBattlEyeType.INITIALLY_PROTECTED)" href="./#tibiapy.enums.HighscoresBattlEyeType.INITIALLY_PROTECTED">INITIALLY_PROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds protected from the beginning, represented by a green symbol.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.HighscoresBattlEyeType.PROTECTED)" href="./#tibiapy.enums.HighscoresBattlEyeType.PROTECTED">PROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds protected after the world was created, represented by a yellow symbol.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            UNPROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.HighscoresBattlEyeType.UNPROTECTED)" href="./#tibiapy.enums.HighscoresBattlEyeType.UNPROTECTED">UNPROTECTED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Worlds without any BattlEye protection.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            YELLOW
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.HighscoresBattlEyeType.YELLOW)" href="./#tibiapy.enums.HighscoresBattlEyeType.YELLOW">YELLOW</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Alias for protected worlds.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            GREEN
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.HighscoresBattlEyeType.GREEN)" href="./#tibiapy.enums.HighscoresBattlEyeType.GREEN">GREEN</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Alias for initially protected worlds.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.HighscoresBattlEyeType.ANY_WORLD" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">ANY_WORLD</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">ANY_WORLD</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Show all worlds.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.HighscoresBattlEyeType.INITIALLY_PROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">INITIALLY_PROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">INITIALLY_PROTECTED</span> <span class="o">=</span> <span class="mi">2</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds protected from the beginning, represented by a green symbol.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.HighscoresBattlEyeType.PROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">PROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">PROTECTED</span> <span class="o">=</span> <span class="mi">1</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds protected after the world was created, represented by a yellow symbol.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.HighscoresBattlEyeType.UNPROTECTED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">UNPROTECTED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">UNPROTECTED</span> <span class="o">=</span> <span class="mi">0</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Worlds without any BattlEye protection.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.HighscoresBattlEyeType.YELLOW" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">YELLOW</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">YELLOW</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.HighscoresBattlEyeType.PROTECTED)" href="./#tibiapy.enums.HighscoresBattlEyeType.PROTECTED">PROTECTED</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Alias for protected worlds.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.HighscoresBattlEyeType.GREEN" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">GREEN</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">GREEN</span> <span class="o">=</span> <span class="n"><a class="autorefs autorefs-internal" title="            INITIALLY_PROTECTED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.HighscoresBattlEyeType.INITIALLY_PROTECTED)" href="./#tibiapy.enums.HighscoresBattlEyeType.INITIALLY_PROTECTED">INITIALLY_PROTECTED</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Alias for initially protected worlds.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.HighscoresCategory" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">HighscoresCategory</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The different highscores categories.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.HighscoresProfession" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">HighscoresProfession</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.NumericEnum">NumericEnum</span></code></p>
+
+
+
+        <p>The vocation filters available for Highscores.</p>
+<p>The numeric values are what the highscores form accepts.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Methods:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+            <tr class="doc-section-item">
+              <td><code><a class="autorefs autorefs-internal" title="            from_name
+
+
+  
+      classmethod
+   (tibiapy.enums.HighscoresProfession.from_name)" href="./#tibiapy.enums.HighscoresProfession.from_name">from_name</a></code></td>
+              <td>
+                <div class="doc-md-description">
+                  <p>Get a vocation filter from a vocation's name.</p>
+                </div>
+              </td>
+            </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="tibiapy.enums.HighscoresProfession.from_name" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">from_name</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span><span class="p">,</span> <span class="n">all_fallback</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><span title="typing_extensions.Self">Self</span></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Get a vocation filter from a vocation's name.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>name</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the vocation.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>all_fallback</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether to return <code>ALL</code> if no match is found. Otherwise, <code>None</code> will be returned.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<span title="typing_extensions.Self">Self</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The matching vocation filter.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>tibiapy/enums.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">from_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">all_fallback</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Get a vocation filter from a vocation's name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name:</span>
+<span class="sd">        The name of the vocation.</span>
+<span class="sd">    all_fallback:</span>
+<span class="sd">        Whether to return `ALL` if no match is found. Otherwise, `None` will be returned.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :</span>
+<span class="sd">        The matching vocation filter.</span>
+
+<span class="sd">    """</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">vocation</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>  <span class="c1"># type: HighscoresProfession</span>
+        <span class="k">if</span> <span class="n">vocation</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">vocation</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">vocation</span> <span class="o">!=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ALL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">vocation</span>
+
+    <span class="k">if</span> <span class="n">all_fallback</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"ALL"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ALL</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.HouseOrder" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">HouseOrder</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible ordering methods for house lists in Tibia.com.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.HouseStatus" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">HouseStatus</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>Renting statuses of a house.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.HouseType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">HouseType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The types of house available.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            plural
+
+
+  
+      property
+   (tibiapy.enums.HouseType.plural)" href="./#tibiapy.enums.HouseType.plural">plural</a></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The plural for the house type.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.HouseType.plural" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">plural</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">plural</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The plural for the house type.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.NewsCategory" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">NewsCategory</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The different news categories.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            filter_name
+
+
+  
+      property
+   (tibiapy.enums.NewsCategory.filter_name)" href="./#tibiapy.enums.NewsCategory.filter_name">filter_name</a></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the filter parameter for this value.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            big_icon_url
+
+
+  
+      property
+   (tibiapy.enums.NewsCategory.big_icon_url)" href="./#tibiapy.enums.NewsCategory.big_icon_url">big_icon_url</a></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The URL to the big icon representing this category.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            small_icon_url
+
+
+  
+      property
+   (tibiapy.enums.NewsCategory.small_icon_url)" href="./#tibiapy.enums.NewsCategory.small_icon_url">small_icon_url</a></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The URL to the small icon representing this category.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.NewsCategory.filter_name" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">filter_name</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">filter_name</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The name of the filter parameter for this value.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.NewsCategory.big_icon_url" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">big_icon_url</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">big_icon_url</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The URL to the big icon representing this category.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.NewsCategory.small_icon_url" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">small_icon_url</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">small_icon_url</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The URL to the small icon representing this category.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.NewsType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">NewsType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The different types of new entries.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            filter_name
+
+
+  
+      property
+   (tibiapy.enums.NewsType.filter_name)" href="./#tibiapy.enums.NewsType.filter_name">filter_name</a></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The filter parameter name for this value.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            filter_value
+
+
+  
+      property
+   (tibiapy.enums.NewsType.filter_value)" href="./#tibiapy.enums.NewsType.filter_value">filter_value</a></code></td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The filter parameter value for this value.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.NewsType.filter_name" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">filter_name</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">filter_name</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The filter parameter name for this value.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.NewsType.filter_value" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">filter_value</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">filter_value</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The filter parameter value for this value.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.PvpType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">PvpType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible PvP types a World can have.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.Sex" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Sex</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>Possible character sexes.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.SpellGroup" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SpellGroup</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible cooldown groups.</p>
+<p>Note that secondary groups are not enumerated.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.SpellSorting" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SpellSorting</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The different sorting options for the spells section.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.SpellType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SpellType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible spell types.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.SpellVocationFilter" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SpellVocationFilter</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible vocation types to filter out spells.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.ThreadStatus" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ThreadStatus</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-external" title="enum.Flag" href="https://docs.python.org/3/library/enum.html#enum.Flag">Flag</a></code></p>
+
+
+
+        <p>The possible status a thread can have.</p>
+<p>Threads can have a combination of multiple status. The numeric values are arbitrary.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Methods:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+            <tr class="doc-section-item">
+              <td><code><a class="autorefs autorefs-internal" title="            get_icon_name (tibiapy.enums.ThreadStatus.get_icon_name)" href="./#tibiapy.enums.ThreadStatus.get_icon_name">get_icon_name</a></code></td>
+              <td>
+                <div class="doc-md-description">
+                  <p>Generate an icon name, following the same ordering used in Tibia.com.</p>
+                </div>
+              </td>
+            </tr>
+            <tr class="doc-section-item">
+              <td><code><a class="autorefs autorefs-internal" title="            from_icon
+
+
+  
+      classmethod
+   (tibiapy.enums.ThreadStatus.from_icon)" href="./#tibiapy.enums.ThreadStatus.from_icon">from_icon</a></code></td>
+              <td>
+                <div class="doc-md-description">
+                  <p>Get the flag combination, based from the icon's name present in the thread status.</p>
+                </div>
+              </td>
+            </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="tibiapy.enums.ThreadStatus.get_icon_name" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_icon_name</span>
+
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_icon_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" title="typing.Optional" href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span><span class="p">]</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Generate an icon name, following the same ordering used in Tibia.com.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The name of the icon used in Tibia.com</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>tibiapy/enums.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_icon_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Generate an icon name, following the same ordering used in Tibia.com.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The name of the icon used in Tibia.com</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">joined_str</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"logo_</span><span class="si">{</span><span class="n">joined_str</span><span class="si">}</span><span class="s2">.gif"</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h5 id="tibiapy.enums.ThreadStatus.from_icon" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">from_icon</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_icon</span><span class="p">(</span><span class="n">icon</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing_extensions.Self">Self</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Get the flag combination, based from the icon's name present in the thread status.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>icon</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The icon's filename.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="            ThreadStatus (tibiapy.enums.ThreadStatus)" href="./#tibiapy.enums.ThreadStatus">ThreadStatus</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The combination of thread status founds.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>tibiapy/enums.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">from_icon</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">icon</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Get the flag combination, based from the icon's name present in the thread status.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    icon:</span>
+<span class="sd">        The icon's filename.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ThreadStatus</span>
+<span class="sd">        The combination of thread status founds.</span>
+
+<span class="sd">    """</span>
+    <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">icon</span><span class="p">:</span>
+            <span class="n">flags</span> <span class="o">+=</span> <span class="n">entry</span><span class="o">.</span><span class="n">value</span>
+    <span class="c1"># noinspection PyArgumentList</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.TransferType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TransferType</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible special transfer restrictions a world may have.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            REGULAR
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.TransferType.REGULAR)" href="./#tibiapy.enums.TransferType.REGULAR">REGULAR</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>No special transfer restrictions</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            BLOCKED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.TransferType.BLOCKED)" href="./#tibiapy.enums.TransferType.BLOCKED">BLOCKED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Can't transfer to this world, but can transfer out of this world.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            LOCKED
+
+
+  
+      class-attribute
+      instance-attribute
+   (tibiapy.enums.TransferType.LOCKED)" href="./#tibiapy.enums.TransferType.LOCKED">LOCKED</a></code></td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Can transfer to this world, but can't transfer out of this world.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.TransferType.REGULAR" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">REGULAR</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">REGULAR</span> <span class="o">=</span> <span class="s1">'regular'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>No special transfer restrictions</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.TransferType.BLOCKED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">BLOCKED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">BLOCKED</span> <span class="o">=</span> <span class="s1">'blocked'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Can't transfer to this world, but can transfer out of this world.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.TransferType.LOCKED" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">LOCKED</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">LOCKED</span> <span class="o">=</span> <span class="s1">'locked'</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Can transfer to this world, but can't transfer out of this world.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.Vocation" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Vocation</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible vocation types.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><span class="doc-section-title">Attributes:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code><a class="autorefs autorefs-internal" title="            base
+
+
+  
+      property
+   (tibiapy.enums.Vocation.base)" href="./#tibiapy.enums.Vocation.base">base</a></code></td>
+            <td>
+                  <code><span title="typing_extensions.Self">Self</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The base vocation of this vocation if promoted. If not promoted, the same value is returned.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h5 id="tibiapy.enums.Vocation.base" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">base</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h5>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">base</span><span class="p">:</span> <span class="n"><span title="typing_extensions.Self">Self</span></span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>The base vocation of this vocation if promoted. If not promoted, the same value is returned.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="tibiapy.enums.WorldLocation" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">WorldLocation</span>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="tibiapy.enums.StringEnum">StringEnum</span></code></p>
+
+
+
+        <p>The possible physical locations for servers.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../client/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Client">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Client
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../models/" class="md-footer__link md-footer__link--next" aria-label="Next: Models">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Models
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2026 Allan Galarza<br>
+<a href="https://www.tibia.com">Tibia</a> is made by <a href="https://www.cipsoft.com/">CipSoft</a>. All Tibia content is copyrighted by <a href="https://www.cipsoft.com/">CipSoft GmbH</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Galarzaa90/tibia.py" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/tibia.py/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>PyPI</title><path d="M23.922 13.58v3.912L20.55 18.72l-.078.055.052.037 3.45-1.256.026-.036v-3.997l-.053-.036-.025.092zm-.301-7.962-3.04 1.107v3.912l3.339-1.215V5.509zm.299 7.839V9.544l-3.336 1.215v3.913zm-3.45 1.253V10.8l-3.3 1.2v3.913zm-3.436 5.286v-3.912l-3.313 1.206v3.912zm.136-3.939v3.868l3.314-1.206V14.85zm2.093 1.882c-.367.134-.663-.074-.663-.463s.296-.814.663-.947c.365-.133.662.075.662.464s-.297.814-.662.946m-6.038-8.624.365-.132-3.285-1.197-3.323 1.21.102.037 3.184 1.16zm7.282 1.349V6.751L17.17 7.965v3.913zm-3.449 1.254V8.005l-3.302 1.202v3.912zm-3.415-2.672-3.336 1.215v3.913l3.336-1.215zm-6.736 3.919 3.322 1.209v-3.913L6.907 9.252zm3.433-5.292 3.281 1.193V5.198l-3.28-1.193zm10.167-5.158L17.19 3.922v3.913l3.317-1.207zM16.95 3.903 13.724 2.73l-3.269 1.19 3.225 1.174zm-1.585.703-1.624.592v3.868l3.317-1.207V3.991zm-.391 2.778c-.367.134-.662-.074-.662-.464s.295-.813.662-.946c.366-.133.663.074.663.464s-.297.813-.663.946M10.229 18.41v-3.914l-3.322-1.209V17.2zm3.449-1.228v-3.913l-3.371 1.227v3.913zm.078-.028 3.3-1.2V12.04l-3.3 1.2zm-.078 4.063-3.371 1.227v-3.912h-.078v3.912l-3.322-1.209v-3.913l-.053-.058-.025-.06-3.336-1.21v-3.948l.034.013 3.287 1.196.015-.078-3.261-1.187 3.26-1.187v-.109L3.876 9.62l-.307-.112 3.26-1.188v.877l.079-.055V6.769l3.257 1.185.058-.061L7.084 6.75l-.102-.037 3.24-1.179v-.083L6.854 6.677v.018l-.025.018v1.523L3.44 9.47v.02l-.025.017v4.007l-3.39 1.233v.019L0 14.784v3.995l.025.037 3.4 1.237.008-.006.007.01 3.4 1.238.008-.006.006.01 3.4 1.237.014-.009.012.01 3.45-1.256.026-.037zM3.493 9.563l3.257 1.185-3.257 1.187V9.562zM3.4 19.96.078 18.752v-3.913l2.361.86.96.349zm.015-3.99-3.08-1.12-.182-.066 3.262-1.187zm3.399 5.231-3.321-1.209V16.08l3.321 1.209zM23.791 5.434l-3.21-1.17v2.338zm-3.404-2.791-3.24-1.18-3.27 1.19 3.247 1.182z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/r/galarzaa90/tibia.py" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["content.code.copy","navigation.footer","navigation.instant","navigation.instant.progress","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.suggest","search.highlight","search.share","toc.follow"],"redirect":null,"search":"../../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a2388154.min.js"></script>
+      
+    
+  </body>
+</html>

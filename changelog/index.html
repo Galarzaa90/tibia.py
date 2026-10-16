@@ -1,0 +1,3497 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for Tibia.py, a Python library for parsing Tibia.com.">
+      
+      
+        <meta name="author" content="Allan Galarza">
+      
+      
+        <link rel="canonical" href="https://tibiapy.readthedocs.io/changelog/">
+      
+      
+      
+        <link rel="prev" href="../introduction/">
+      
+      
+        <link rel="next" href="../api/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.70">
+    
+    
+      
+        <title>Changelog - Tibia.py</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.e442bf79.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Tibia.py" class="md-header__button md-logo" aria-label="Tibia.py" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tibia.py
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun-moon" viewBox="0 0 24 24"><path d="M12 2v2M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715M16 12a4 4 0 0 0-4-4M19 5l-1.256 1.256M20 12h2"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./.." class="md-tabs__link">
+          
+  
+  Documentation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+      
+    
+    
+    
+      <li class="md-tabs__item">
+        <a href="../api/" class="md-tabs__link">
+          
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Tibia.py" class="md-nav__button md-logo" aria-label="Tibia.py" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 5v16M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/></svg>
+
+    </a>
+    Tibia.py
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Documentation
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_1">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Documentation
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Introduction
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Changelog
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Changelog
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#640-2026-07-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.4.0 (2026-07-12)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#630-2024-04-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.3.0 (2024-04-05)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#620-2024-03-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.2.0 (2024-03-31)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#610-2024-01-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.1.0 (2024-01-15)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#604-2023-10-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.4 (2023-10-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#603-2023-10-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.3 (2023-10-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#602-2023-08-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.2 (2023-08-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#601-2023-08-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.1 (2023-08-25)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#600-2023-08-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.0 (2023-08-24)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#560-2023-02-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.6.0 (2023-02-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#552-2022-09-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.5.2 (2022-09-02)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#551-2022-08-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.5.1 (2022-08-02)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#550-2022-07-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.5.0 (2022-07-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#540-2022-07-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.4.0 (2022-07-23)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#530-2022-07-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.3.0 (2022-07-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#521-2022-03-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.2.1 (2022-03-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#520-2021-12-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.2.0 (2021-12-31)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-2021-09-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1.0 (2021-09-16)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#501-2021-08-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.0.1 (2021-08-26)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-2021-08-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.0.0 (2021-08-06)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#417-2021-06-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.7 (2021-06-30)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#416-2021-06-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.6 (2021-06-28)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#415-2021-06-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.5 (2021-06-25)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#414-2021-06-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.4 (2021-06-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#413-2021-05-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.3 (2021-05-12)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#412-2021-04-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.2 (2021-04-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#411-2021-04-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.1 (2021-04-19)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-2021-03-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.0 (2021-03-30)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-2021-03-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.0.0 (2021-03-10)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#371-2021-02-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.7.1 (2021-02-15)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#370-2021-02-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.7.0 (2021-02-09)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#365-2021-01-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.5 (2021-01-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#364-2021-01-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.4 (2021-01-26)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#363-2021-01-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.3 (2021-01-14)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#362-2021-01-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.2 (2021-01-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#361-2020-12-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.1 (2020-12-28)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#360-2020-12-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.0 (2020-12-12)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#357-2020-12-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.7 (2020-12-04)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#356-2020-11-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.6 (2020-11-10)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#355-2020-10-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.5 (2020-10-03)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#354-2020-09-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.4 (2020-09-24)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#353-2020-09-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.3 (2020-09-24)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#352-2020-09-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.2 (2020-09-23)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#351-2020-09-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.1 (2020-09-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#350-2020-09-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.0 (2020-09-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#340-2020-09-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.4.0 (2020-09-19)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#330-2020-09-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.3.0 (2020-09-09)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#322-2020-08-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.2.2 (2020-08-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#321-2020-08-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.2.1 (2020-08-25)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#320-2020-08-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.2.0 (2020-08-10)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#310-2020-07-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.1.0 (2020-07-29)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#303-2020-07-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.0.3 (2020-07-28)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#302-2020-07-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.0.2 (2020-07-14)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#301-2020-07-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.0.1 (2020-07-14)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#300-2020-07-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.0.0 (2020-07-13)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#251-2020-05-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.5.1 (2020-05-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#250-2020-05-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.5.0 (2020-05-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#243-2020-04-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4.3 (2020-04-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#242-2020-02-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4.2 (2020-02-26)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#241-2019-11-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4.1 (2019-11-20)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#240-2019-11-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4.0 (2019-11-20)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#234-2019-11-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.4 (2019-11-14)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#233-2019-11-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.3 (2019-11-04)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#232-2019-10-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.2 (2019-10-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#231-2019-10-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.1 (2019-10-06)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#230-2019-09-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.0 (2019-09-16)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#226-2019-09-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.6 (2019-09-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#225-2019-08-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.5 (2019-08-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#224-2019-08-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.4 (2019-08-20)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#223-2019-08-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.3 (2019-08-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#222-2019-08-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.2 (2019-08-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#221-2019-08-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.1 (2019-08-10)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#220-2019-08-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.0 (2019-08-08)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#210-2019-06-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.1.0 (2019-06-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#201-2019-06-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.0.1 (2019-06-04)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#200-2019-06-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.0.0 (2019-06-03)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-2019-01-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.1.3 (2019-01-29)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-2019-01-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.1.2 (2019-01-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-2019-01-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.1.1 (2019-01-09)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110-2019-01-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.1.0 (2019-01-09)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#100-2018-12-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.0.0 (2018-12-23)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2018-08-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        0.1.0 (2018-08-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API Reference
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  API Reference
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Client
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/enums/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Enumerations
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Models
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/base-classes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Base Classes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/parsers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Parsers
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Exceptions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Utility functions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/urls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  URL functions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#640-2026-07-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.4.0 (2026-07-12)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#630-2024-04-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.3.0 (2024-04-05)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#620-2024-03-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.2.0 (2024-03-31)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#610-2024-01-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.1.0 (2024-01-15)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#604-2023-10-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.4 (2023-10-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#603-2023-10-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.3 (2023-10-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#602-2023-08-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.2 (2023-08-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#601-2023-08-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.1 (2023-08-25)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#600-2023-08-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6.0.0 (2023-08-24)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#560-2023-02-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.6.0 (2023-02-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#552-2022-09-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.5.2 (2022-09-02)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#551-2022-08-02" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.5.1 (2022-08-02)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#550-2022-07-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.5.0 (2022-07-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#540-2022-07-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.4.0 (2022-07-23)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#530-2022-07-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.3.0 (2022-07-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#521-2022-03-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.2.1 (2022-03-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#520-2021-12-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.2.0 (2021-12-31)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#510-2021-09-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.1.0 (2021-09-16)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#501-2021-08-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.0.1 (2021-08-26)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-2021-08-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5.0.0 (2021-08-06)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#417-2021-06-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.7 (2021-06-30)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#416-2021-06-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.6 (2021-06-28)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#415-2021-06-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.5 (2021-06-25)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#414-2021-06-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.4 (2021-06-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#413-2021-05-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.3 (2021-05-12)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#412-2021-04-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.2 (2021-04-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#411-2021-04-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.1 (2021-04-19)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-2021-03-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.1.0 (2021-03-30)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-2021-03-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4.0.0 (2021-03-10)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#371-2021-02-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.7.1 (2021-02-15)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#370-2021-02-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.7.0 (2021-02-09)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#365-2021-01-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.5 (2021-01-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#364-2021-01-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.4 (2021-01-26)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#363-2021-01-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.3 (2021-01-14)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#362-2021-01-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.2 (2021-01-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#361-2020-12-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.1 (2020-12-28)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#360-2020-12-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.6.0 (2020-12-12)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#357-2020-12-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.7 (2020-12-04)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#356-2020-11-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.6 (2020-11-10)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#355-2020-10-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.5 (2020-10-03)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#354-2020-09-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.4 (2020-09-24)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#353-2020-09-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.3 (2020-09-24)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#352-2020-09-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.2 (2020-09-23)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#351-2020-09-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.1 (2020-09-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#350-2020-09-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.5.0 (2020-09-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#340-2020-09-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.4.0 (2020-09-19)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#330-2020-09-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.3.0 (2020-09-09)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#322-2020-08-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.2.2 (2020-08-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#321-2020-08-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.2.1 (2020-08-25)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#320-2020-08-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.2.0 (2020-08-10)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#310-2020-07-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.1.0 (2020-07-29)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#303-2020-07-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.0.3 (2020-07-28)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#302-2020-07-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.0.2 (2020-07-14)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#301-2020-07-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.0.1 (2020-07-14)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#300-2020-07-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3.0.0 (2020-07-13)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#251-2020-05-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.5.1 (2020-05-27)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#250-2020-05-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.5.0 (2020-05-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#243-2020-04-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4.3 (2020-04-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#242-2020-02-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4.2 (2020-02-26)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#241-2019-11-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4.1 (2019-11-20)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#240-2019-11-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.4.0 (2019-11-20)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#234-2019-11-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.4 (2019-11-14)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#233-2019-11-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.3 (2019-11-04)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#232-2019-10-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.2 (2019-10-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#231-2019-10-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.1 (2019-10-06)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#230-2019-09-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.3.0 (2019-09-16)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#226-2019-09-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.6 (2019-09-01)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#225-2019-08-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.5 (2019-08-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#224-2019-08-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.4 (2019-08-20)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#223-2019-08-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.3 (2019-08-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#222-2019-08-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.2 (2019-08-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#221-2019-08-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.1 (2019-08-10)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#220-2019-08-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.2.0 (2019-08-08)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#210-2019-06-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.1.0 (2019-06-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#201-2019-06-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.0.1 (2019-06-04)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#200-2019-06-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2.0.0 (2019-06-03)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-2019-01-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.1.3 (2019-01-29)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-2019-01-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.1.2 (2019-01-22)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-2019-01-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.1.1 (2019-01-09)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110-2019-01-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.1.0 (2019-01-09)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#100-2018-12-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1.0.0 (2018-12-23)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2018-08-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        0.1.0 (2018-08-17)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="changelog">Changelog</h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Due to this library relying on external content, older versions are not guaranteed to work.
+Try to always use the latest version.</p>
+</div>
+<h2 id="640-2026-07-12">6.4.0 (2026-07-12)</h2>
+<ul>
+<li>Add Monk vocation (<code>Vocation.MONK</code> / <code>Vocation.EXALTED_MONK</code>) and the matching <code>AuctionVocationFilter</code>, <code>HighscoresProfession</code> and <code>SpellVocationFilter</code> entries.</li>
+</ul>
+<h2 id="630-2024-04-05">6.3.0 (2024-04-05)</h2>
+<ul>
+<li>Add Ocenia world location.</li>
+</ul>
+<h2 id="620-2024-03-31">6.2.0 (2024-03-31)</h2>
+<ul>
+<li>Add support for parsing the fansites section.</li>
+</ul>
+<h2 id="610-2024-01-15">6.1.0 (2024-01-15)</h2>
+<ul>
+<li>Add revealed gems to auction details.</li>
+<li>Fixed <code>get_highscores</code> not handling null values in parameters.</li>
+<li>Fixed house parsing not handing guildhalls properly.</li>
+<li>Fixed houses missing "paid until" date.</li>
+</ul>
+<h2 id="604-2023-10-01">6.0.4 (2023-10-01)</h2>
+<ul>
+<li>Fixed pypi packaging issue.</li>
+</ul>
+<h2 id="603-2023-10-01">6.0.3 (2023-10-01)</h2>
+<ul>
+<li>Fixed bazaar filters not being set correctly for some values.</li>
+</ul>
+<h2 id="602-2023-08-27">6.0.2 (2023-08-27)</h2>
+<ul>
+<li>Fixed transfer recipient not being set in houses.</li>
+<li>Fixed highest bid and time left not being set in houses in the houses section.</li>
+</ul>
+<h2 id="601-2023-08-25">6.0.1 (2023-08-25)</h2>
+<ul>
+<li>Fix spells not sold in any cities (revelation perks) having a single "cities" entry <code>none</code> instead of being empty.</li>
+</ul>
+<h2 id="600-2023-08-24">6.0.0 (2023-08-24)</h2>
+<ul>
+<li>🚨 Python 3.7 and below no longer supported.</li>
+<li>All models are now Pydantic models, for better data validation, serialization and deserialization.</li>
+<li>Models no longer contain methods to parse content, these have been moved to dedicated parser classes.</li>
+<li>🚨 The location of models inside the module changed, so all imports need to be modified.</li>
+<li>Model changes:<ul>
+<li><code>Character</code>:<ul>
+<li><code>account_status</code> field replaced with <code>is_premium</code>.</li>
+<li><code>traded</code> field renamed to <code>is_traded</code>.</li>
+<li><code>deleted</code> property renamed to <code>is_scheduled_for_deletion</code>.</li>
+<li><code>hidden</code> property renamed to <code>is_hidden</code>.</li>
+</ul>
+</li>
+<li><code>Achievement</code>:<ul>
+<li><code>secret</code> field renamed to <code>is_secret</code></li>
+</ul>
+</li>
+<li><code>CharacterHouse</code>:<ul>
+<li><code>owner</code> field removed.</li>
+<li><code>status</code> field removed.</li>
+<li><code>type</code> field removed.</li>
+<li><code>paid_until_date</code> field renamed tp <code>paid_until</code>.</li>
+<li>Removed <code>owner</code>, <code>status</code> and <code>type</code> from <code>CharacterHouse</code>.</li>
+</ul>
+</li>
+<li><code>Killer</code>:<ul>
+<li>Model name renamed to <code>DeathParticipant</code>.</li>
+<li><code>player</code> field renamed to <code>is_player</code>.</li>
+<li><code>traded</code> field renamed to <code>is_traded</code>.</li>
+</ul>
+</li>
+<li><code>Death</code>:<ul>
+<li><code>by_player</code> property renamed to <code>is_by_player</code></li>
+<li><code>name</code> field removed.</li>
+</ul>
+</li>
+<li><code>OtherCharacter</code>:<ul>
+<li><code>online</code> field renamed to <code>is_online</code>.</li>
+<li><code>deleted</code> field renamed to <code>is_deleted</code>.</li>
+<li><code>traded</code> field renamed to <code>is_traded</code>.</li>
+<li><code>main</code> field renamed to <code>is_main</code>.</li>
+</ul>
+</li>
+<li><code>WorldEntry</code> / <code>World</code>:<ul>
+<li><code>online</code> field renamed to <code>is_online</code></li>
+<li><code>battleye_date</code> field renamed to <code>battleye_since</code></li>
+<li><code>premium_only</code> field renamed to <code>is_premium_only</code></li>
+<li><code>experimental</code> field renamed to <code>is_experimental</code></li>
+<li><code>battleye_protected</code> property renamed to <code>is_battleye_protected</code></li>
+</ul>
+</li>
+<li><code>OnlineCharacter</code>:<ul>
+<li><code>world</code> field removed.</li>
+</ul>
+</li>
+<li><code>SpellsSection</code>:<ul>
+<li><code>premium</code> field renamed to <code>is_premium</code></li>
+</ul>
+</li>
+<li><code>SpellEntry</code>/<code>Spell</code>:<ul>
+<li><code>premium</code> field renamed to <code>is_premium</code></li>
+</ul>
+</li>
+<li><code>News</code>/<code>NewsEntry</code>:<ul>
+<li><code>category_icon</code> field removed. Can be accessed through <code>category.big_icon_url</code> and <code>category.small_icon_url</code>.</li>
+<li><code>date</code> field renamed to <code>published_on</code></li>
+</ul>
+</li>
+<li><code>NewsArchive</code>:<ul>
+<li><code>start_date</code> field renamed to <code>from_date</code>.</li>
+<li><code>end_date</code> field renamed to <code>to_date</code>.</li>
+<li><code>types</code> field is now of type <code>set</code>.</li>
+<li><code>categories</code> field is now of type <code>set</code>.</li>
+</ul>
+</li>
+<li><code>NewsCategory</code> (enum)<ul>
+<li>Added <code>big_icon_url</code> and <code>small_icon_url</code> properties.</li>
+</ul>
+</li>
+<li><code>Leaderboard</code>:<ul>
+<li><code>current</code> field renamed to <code>is_current</code>.</li>
+<li><code>page</code> field renamed to <code>current_page</code>.</li>
+<li><code>last_update</code> field removed.</li>
+<li><code>last_updated</code>field added, a datetime of when was the last update.</li>
+</ul>
+</li>
+<li><code>LeaderboardEntry</code>:<ul>
+<li><code>name</code> field might be <code>None</code> if characte is deleted.</li>
+</ul>
+</li>
+<li><code>Highscores</code>:<ul>
+<li><code>.page</code> field renamed to <code>current_page</code>.</li>
+<li><code>last_updated</code> field is now a <code>datetime</code> instead of a <code>timedelta</code>.</li>
+</ul>
+</li>
+<li><code>GuildMember</code>:<ul>
+<li><code>joined</code> field renamed to <code>joined_on</code>.</li>
+<li><code>online</code> field renamed to <code>is_online</code>.</li>
+</ul>
+</li>
+<li><code>GuildInvite</code>:<ul>
+<li><code>date</code> field renamed to <code>invited_on</code>.</li>
+</ul>
+</li>
+<li><code>GuildHouse</code>:<ul>
+<li><code>paid_until_date</code> field renamed tp <code>paid_until</code>.</li>
+<li><code>owner</code> field removed.</li>
+<li><code>world</code> field removed.</li>
+<li><code>status</code> field removed.</li>
+<li><code>type</code> field removed.</li>
+</ul>
+</li>
+<li><code>ForumBoard</code>:<ul>
+<li><code>threads</code> field renamed to <code>entries</code>.</li>
+<li><code>page</code> field renamed to <code>current_page</code>.</li>
+<li><code>section_id</code> field added.</li>
+<li><code>results_count</code> field added.</li>
+</ul>
+</li>
+<li><code>ForumThread</code>:<ul>
+<li><code>posts</code> field renamed to <code>entries</code>.</li>
+<li><code>board_id</code> field added.</li>
+<li><code>section_id</code> field added.</li>
+<li><code>results_count</code> field added.</li>
+<li><code>previous_topic_number</code> may be <code>None</code> instead of <code>0</code>.</li>
+<li><code>next_topic_number</code> may be <code>None</code> instead of <code>0</code>.</li>
+</ul>
+</li>
+<li><code>LastPost</code>.<ul>
+<li><code>date</code> field renamed to <code>posted_on</code>.</li>
+<li><code>deleted</code> field renamed to <code>is_author_deleted</code>.</li>
+<li><code>traded</code> field renamed to <code>is_author_traded</code>.</li>
+</ul>
+</li>
+<li><code>CMPostArchive</code>:<ul>
+<li><code>start_date</code> field renamed to <code>from_date</code></li>
+<li><code>end_date</code> field renamed to <code>to_date</code></li>
+<li><code>page</code> field renamed to <code>current_page</code></li>
+<li><code>posts</code> field renamed to <code>entries</code></li>
+</ul>
+</li>
+<li><code>CMPost</code>:<ul>
+<li><code>date</code> field renamed to <code>posted_on</code></li>
+</ul>
+</li>
+<li><code>Auction</code> renamed to <code>AuctionDetails</code> and is no longer a subclass of <code>AuctionEntry</code>.</li>
+<li><code>AuctionEntry</code> renamed to <code>Auction</code>.</li>
+<li><code>CharacterBazaar</code>:<ul>
+<li><code>page</code> field renamed to <code>current_page</code>.</li>
+</ul>
+</li>
+<li><code>BestiaryEntry</code>:<ul>
+<li><code>completed</code> property renamed to <code>is_completed</code>.</li>
+</ul>
+</li>
+<li>Renamed <code>DisplayImage</code> to <code>ItemEntry</code>.</li>
+<li>Renamed <code>DisplayMount</code> to <code>MountEntry</code>.</li>
+<li>Renamed <code>DisplayOutfit</code> to <code>OutfitEntry</code>.</li>
+<li>Renamed <code>DisplayFamiliar</code> to <code>FamiliarEntry</code>.</li>
+<li>Renamed <code>page</code> to <code>current_page</code>, <code>results</code> to <code>results_count</code>, and <code>fully_fetched</code> to <code>is_fully_fetched</code> in <code>ItemSummary</code>, <code>Mounts</code>, <code>Familiars</code> and <code>Outfits</code>.</li>
+<li>Added <code>thread_starter_deleted</code> to <code>ThreadEntry</code>.</li>
+</ul>
+</li>
+<li>Renamed <code>Category</code> to <code>HighscoresCategory</code>.</li>
+<li>Renamed <code>BattlEyeTypeFilter</code> to <code>AuctionBattlEyeFilter</code>.</li>
+<li>Renamed <code>VocationFilter</code> to <code>HighscoresProfession</code>.</li>
+<li>Renamed <code>BattlEyeHighscoresFilter</code> to <code>HighscoresBattlEyeType</code>.</li>
+<li>Renamed <code>VocationAuctionFilter</code> to <code>AuctionVocationFilter</code>.</li>
+<li>Renamed <code>VocationSpellFilter</code> to <code>SpellVocationFilter</code>.</li>
+<li>Renamed <code>SkillFilter</code> to <code>AuctionSkillFilter</code>.</li>
+<li>Added <code>ForumSection</code> model and its respective parser, to fetch a list of board entries.</li>
+<li>Removed <code>get_url</code> class methods from all models, replaced by functions in the urls package.</li>
+<li>Fixed <code>Character</code> account badges not being parsed properly.</li>
+</ul>
+<h2 id="560-2023-02-17">5.6.0 (2023-02-17)</h2>
+<ul>
+<li>Added <code>tier</code> to items in auctions.</li>
+</ul>
+<h2 id="552-2022-09-02">5.5.2 (2022-09-02)</h2>
+<ul>
+<li>Fixed Houses section not parsing due to a change in the filters table.</li>
+<li>Fixed status parameter not generating the correct URL in the houses section.</li>
+</ul>
+<h2 id="551-2022-08-02">5.5.1 (2022-08-02)</h2>
+<ul>
+<li>Adjusted parsing to support the changes related to mobile devices introduced on the day of this release. The following sections were affected:<ul>
+<li>Highscores</li>
+<li>News</li>
+<li>Forums</li>
+<li>Spells</li>
+</ul>
+</li>
+</ul>
+<h2 id="550-2022-07-27">5.5.0 (2022-07-27)</h2>
+<ul>
+<li>Added <code>BOSS_POINTS</code> to <code>Category</code> in highscores.</li>
+</ul>
+<h2 id="540-2022-07-23">5.4.0 (2022-07-23)</h2>
+<ul>
+<li>Added <code>boss_points</code> and <code>bosstiary_progress</code> to auctions.</li>
+</ul>
+<h2 id="530-2022-07-22">5.3.0 (2022-07-22)</h2>
+<ul>
+<li>Added support for Boostable Bosses.</li>
+</ul>
+<h2 id="521-2022-03-01">5.2.1 (2022-03-01)</h2>
+<ul>
+<li>Fixed bug in news ticker with a <code>div</code> tag failing to parse.</li>
+<li>Updated code to detect the discussion thread link.</li>
+</ul>
+<h2 id="520-2021-12-31">5.2.0 (2021-12-31)</h2>
+<ul>
+<li>Added <code>exalted_dust</code> and <code>exalted_dust_limit</code> attributes to auctions.</li>
+</ul>
+<h2 id="510-2021-09-16">5.1.0 (2021-09-16)</h2>
+<ul>
+<li>Added <code>traded</code> attribute to death killers, to indicate that the killer was traded after the death occurred.</li>
+<li>Properly handle deaths caused by summons of traded characters.</li>
+</ul>
+<h2 id="501-2021-08-26">5.0.1 (2021-08-26)</h2>
+<ul>
+<li>Fixed many sections not being parsed correctly due to changes to Tibia.com.<ul>
+<li>Houses list</li>
+<li>News list</li>
+<li>Spells section</li>
+<li>Forums section</li>
+</ul>
+</li>
+<li>Fixed character's houses failing to parse due to a bug in the display in Tibia.com.<ul>
+<li>Temporarily disabling this attribute.</li>
+</ul>
+</li>
+</ul>
+<h2 id="500-2021-08-06">5.0.0 (2021-08-06)</h2>
+<ul>
+<li>Added parsing for Tibia Drome leaderboards, new <code>Leaderboard</code> class.<ul>
+<li>Auxiliary classes <code>LeaderboardEntry</code> and <code>LeaderboardRotation</code> were added as well.</li>
+<li>New <code>Client</code> method: <code>fetch_leaderboards</code>.</li>
+</ul>
+</li>
+<li>Added parsing for Spells library, new <code>SpellsSection</code> class.<ul>
+<li>Auxiliary  classes <code>Spell</code> and <code>SpellEntry</code>.</li>
+<li>New <code>Client</code> methods: <code>fetch_spell</code> and <code>fetch_spells</code></li>
+</ul>
+</li>
+<li>Fix last page of highscores having <code>0</code> as page value.</li>
+<li>Using the <code>Client</code> class, you can now fetch and parse content from the test version of www.tibia.com when available.<ul>
+<li>Note that if the test website has changes, parsing might not be possible.</li>
+<li>Internal URL attributes might still point to the regular website.</li>
+</ul>
+</li>
+<li>New <code>HousesSection</code> class, including the house filtering attributes.</li>
+<li>New <code>NewsArchive</code> class, including the news filtering attributes.</li>
+<li>New <code>GuildsSection</code> class, to replace the lists of <code>GuildEntry</code></li>
+<li>Many "ListedObject" classes were renamed to "ObjectEntry", for details check the breaking changes below.</li>
+<li>Fixed bug with other characters not being parsed.</li>
+<li>Added <code>traded</code> attribute to <code>LastPost</code> class.</li>
+<li>Added <code>thread_starter_traded</code> attribute to <code>ThreadEntry</code></li>
+</ul>
+<p><strong>Breaking Changes</strong>:</p>
+<ul>
+<li>Python 3.7 or higher is now required.</li>
+<li>House classes no longer have <code>get_list_url</code> and <code>list_from_content</code> methods.</li>
+<li><code>Client.fetch_world_houses</code> now returns a <code>HousesSection</code> instance in its data attribute, instead of a list of <code>ListedHouses</code>.</li>
+<li><code>ListedHouse.highest_bid</code> attribute now may be <code>None</code> if the house's auction has not yet started.</li>
+<li><code>ListedHouse</code> class renamed to <code>HouseEntry</code>.</li>
+<li>Removed deprecated property <code>AuctionFilters.item</code>.</li>
+<li><code>Client.fetch_news_archive</code>, <code>Client.fetch_recent_news</code> now returns an instance of <code>NewsArchive</code> in the <code>data</code> attribute.</li>
+<li><code>ListedNews</code> class renamed to <code>NewsEntry</code>.</li>
+<li><code>News</code> and <code>NewsEntry</code> no longer have a <code>get_list_url</code> method.</li>
+<li><code>ListedBoard</code> class renamed to <code>BoardEntry</code>.</li>
+<li><code>ListedThread</code> class renamed to <code>ThreadEntry</code>.</li>
+<li><code>ListedAnnouncement</code> class renamed to <code>AnnouncementEntry</code>.</li>
+<li><code>ListedWorld</code> class renamed to <code>WorldEntry</code>.</li>
+<li><code>ListedAuction</code> class renamed to <code>AuctionEntry</code>.</li>
+<li><code>AuctionDetails</code> class renamed to <code>Auction</code>.</li>
+<li><code>ListedGuild</code> class renamed to <code>GuildEntry</code>.</li>
+<li><code>ListedTournament</code> class renamed to <code>TournamentEntry</code>.</li>
+<li><code>Creature</code> class renamed to <code>CreatureEntry</code>.</li>
+<li><code>CreatureDetail</code> class renamed to <code>Creature</code>.</li>
+<li><code>Guild</code> and <code>GuildEntry</code> class no longer have a <code>get_list_url</code> method.</li>
+<li>Renamed <code>begin_date</code> parameter to <code>start_date</code> in <code>fetch_news_archive</code>.</li>
+<li>Renamed <code>race</code> attribute of <code>CreatureEntry</code> and <code>Creature</code> to <code>identifier</code>, method parameters renamed as well.</li>
+<li><code>CreaturesSection.from_boosted_creature_header</code> renamed to <code>CreaturesSection.boosted_creature_from_header</code>.</li>
+</ul>
+<h2 id="417-2021-06-30">4.1.7 (2021-06-30)</h2>
+<ul>
+<li>Fixed titles being parsed as part of the name for guild members with symbols in their name.</li>
+</ul>
+<h2 id="416-2021-06-28">4.1.6 (2021-06-28)</h2>
+<ul>
+<li>Fixed worlds not being parsed correctly again due to tournament worlds order changing. After this fix,
+  the order should not matter anymore.</li>
+</ul>
+<h2 id="415-2021-06-25">4.1.5 (2021-06-25)</h2>
+<ul>
+<li>Fixed parsing bug on characters, returning an incorrect exception when a character doesn't exist.</li>
+</ul>
+<h2 id="414-2021-06-17">4.1.4 (2021-06-17)</h2>
+<ul>
+<li>Fixed worlds not being parsed correctly due to tournament worlds order changing.</li>
+</ul>
+<h2 id="413-2021-05-12">4.1.3 (2021-05-12)</h2>
+<ul>
+<li>Fixed house transfer date not being parsed properly.</li>
+</ul>
+<h2 id="412-2021-04-27">4.1.2 (2021-04-27)</h2>
+<ul>
+<li>Fixed parsing errors for forum posts that contained a copy of the signature separator in the signature.</li>
+</ul>
+<h2 id="411-2021-04-19">4.1.1 (2021-04-19)</h2>
+<ul>
+<li>Fixed bug with extraneous character in some item descriptions, causing auction to give a parsing error.</li>
+</ul>
+<h2 id="410-2021-03-30">4.1.0 (2021-03-30)</h2>
+<ul>
+<li>Added <code>prey_wildcards</code> attribute to <code>AuctionDetails</code>.</li>
+<li>Added <code>filters</code> parameter to <code>CharacterBazaar.get_auctions_history_url</code> and <code>Client.fetch_auction_history</code>.</li>
+</ul>
+<h2 id="400-2021-03-10">4.0.0 (2021-03-10)</h2>
+<ul>
+<li>Breaking change: Removed <code>BoostedCreature</code> class, replaced by <code>Creature</code> class.<ul>
+<li>Attributes should be compatible, <code>image_url</code> is a property of <code>Creature</code>, calculated from its <code>race</code> attribute.</li>
+</ul>
+</li>
+<li>Added parsing and fetching for the Creature library section.<ul>
+<li>Added <code>CreatureSection</code>, <code>Creature</code>, and <code>CreatureDetail</code> classes.</li>
+</ul>
+</li>
+<li>Added <code>traded</code> attribute to <code>ForumAuthor</code>. Indicates if the author was a traded character.<ul>
+<li>Previously, it would mark the author as a deleted character and its name would include <code>(traded)</code>.</li>
+</ul>
+</li>
+<li>Fixed a bug with <code>ForumBoards</code> not parsing due to the cookies dialog that was added.</li>
+<li>Added <code>battleye_type</code> attribute to <code>ListedWorld</code> and <code>World</code> classes. Indicates the type of BattlEye protection the world has.<ul>
+<li><code>battleye_protected</code> is now a property instead of an attribute.</li>
+</ul>
+</li>
+<li>Added <code>YELLOW</code> and <code>GREEN</code> aliases to all BattlEye related enums.</li>
+<li>Fixed wrong timezone being used for forum related dates.</li>
+</ul>
+<h2 id="371-2021-02-15">3.7.1 (2021-02-15)</h2>
+<ul>
+<li>Adjusted highscores parsing for upcoming Tibia.com changes.</li>
+</ul>
+<h2 id="370-2021-02-09">3.7.0 (2021-02-09)</h2>
+<ul>
+<li>Parse familiars from auctions</li>
+<li>Updated the way tooltips in auctions are parsed, the format changed, resulting in the previous code not working anymore.</li>
+<li>Results count in bazaar pages are now properly parsed when there are comma thousand separators.</li>
+<li>Item amounts are now more accurate instead of being based from their indicator (which was grouping them in thousands)</li>
+</ul>
+<h2 id="365-2021-01-27">3.6.5 (2021-01-27)</h2>
+<ul>
+<li>Fixed auction history parsing breaking due to the cookie consent dialog.</li>
+</ul>
+<h2 id="364-2021-01-26">3.6.4 (2021-01-26)</h2>
+<ul>
+<li>Fixed world list parsing breaking due to the cookie consent dialog.</li>
+</ul>
+<h2 id="363-2021-01-14">3.6.3 (2021-01-14)</h2>
+<ul>
+<li>Fixed bug in guild names being parsed with Non-Breaking spaces instead of a regular space.</li>
+</ul>
+<h2 id="362-2021-01-01">3.6.2 (2021-01-01)</h2>
+<ul>
+<li>Fixed bug in Event Calendar parsing.</li>
+</ul>
+<h2 id="361-2020-12-28">3.6.1 (2020-12-28)</h2>
+<ul>
+<li>Fixed guild information being parsed incorrectly for characters in guilds containing "of the" in their name.</li>
+</ul>
+<h2 id="360-2020-12-12">3.6.0 (2020-12-12)</h2>
+<ul>
+<li>Added support for the new filtering options in Highscores<ul>
+<li>Added <code>battleye_filter</code> and <code>pvp_types_filter</code> attributes.</li>
+</ul>
+</li>
+<li>Added <code>get_page_url()</code> instance method to <code>Highscores</code> class.</li>
+<li>Added <code>previous_page_url</code> and <code>next_page_url</code> properties.</li>
+</ul>
+<h2 id="357-2020-12-04">3.5.7 (2020-12-04)</h2>
+<ul>
+<li>Fixed bug in Event Calendar parsing.</li>
+</ul>
+<h2 id="356-2020-11-10">3.5.6 (2020-11-10)</h2>
+<ul>
+<li>Updated the URL used to fetch additional auction pages (items, mounts, outfits).</li>
+</ul>
+<h2 id="355-2020-10-03">3.5.5 (2020-10-03)</h2>
+<ul>
+<li>Fixed charm expansion not being parsed correctly in auctions.</li>
+</ul>
+<h2 id="354-2020-09-24">3.5.4 (2020-09-24)</h2>
+<ul>
+<li>Fetching auctions while skipping details is now faster.</li>
+<li>Fixed bug in tournaments parsing.</li>
+</ul>
+<h2 id="353-2020-09-24">3.5.3 (2020-09-24)</h2>
+<ul>
+<li>Fixed bug with ascending ordering (lowest / earliest) not being passed to the request URL.</li>
+</ul>
+<h2 id="352-2020-09-23">3.5.2 (2020-09-23)</h2>
+<ul>
+<li>Fixed bug with auctions with more than 10 charms failing to parse.</li>
+</ul>
+<h2 id="351-2020-09-22">3.5.1 (2020-09-22)</h2>
+<ul>
+<li>Fixed bug with recently traded characters in "other characters" section not being properly parsed.</li>
+</ul>
+<h2 id="350-2020-09-22">3.5.0 (2020-09-22)</h2>
+<ul>
+<li>Added support for the new filtering options added to current auctions:<ul>
+<li>Added new enumeration: <code>AuctionSearchType</code></li>
+<li>Renamed <code>AuctionFilters</code> attribute <code>item</code> to <code>search_string</code>.
+  Property alias kept for backwards compatibility.</li>
+<li>Added new attribute <code>AuctionFilters.search_type</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="340-2020-09-19">3.4.0 (2020-09-19)</h2>
+<ul>
+<li>Added option to only parse the listed information of an auction, to skip the rest of the parsing.</li>
+<li>Fixed wrong type hint in <code>ListedAuction</code> for <code>status</code>.</li>
+</ul>
+<h2 id="330-2020-09-09">3.3.0 (2020-09-09)</h2>
+<ul>
+<li>Added support for the Character Bazaar<ul>
+<li>Added classes: <code>CharacterBazaar</code>, <code>ListedAuction</code> and <code>AuctionDetails</code> and many auxiliary classes.</li>
+</ul>
+</li>
+<li>Client methods throw a <code>SiteMaintenanceError</code> when Tibia.com is under maintenance, to be able to tell apart from
+  other network errors.</li>
+</ul>
+<h2 id="322-2020-08-27">3.2.2 (2020-08-27)</h2>
+<ul>
+<li>Properly parse the name of recently traded characters.<ul>
+<li>Added <code>traded</code> attribute to <code>Character</code> and <code>OtherCharacter</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="321-2020-08-25">3.2.1 (2020-08-25)</h2>
+<ul>
+<li>Fixed bug when parsing "other characters" from Tibia.com due to an unannounced change in the website.</li>
+</ul>
+<h2 id="320-2020-08-10">3.2.0 (2020-08-10)</h2>
+<ul>
+<li>Added support for the new rules and score set added for the most recent Tournament.<ul>
+<li>Added <code>ScoreSet.creature_kills</code></li>
+<li>Added <code>ScoreSet.area_discovery</code></li>
+<li>Added <code>ScoreSet.skill_gain_loss</code></li>
+<li>Added <code>RuleSet.shared_xp_bonus</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="310-2020-07-29">3.1.0 (2020-07-29)</h2>
+<ul>
+<li>Added <code>fetch_forum_post</code> method to fetch a forum post directly.</li>
+<li>Fixed bug with forum posts made by tournament characters.</li>
+</ul>
+<h2 id="303-2020-07-28">3.0.3 (2020-07-28)</h2>
+<ul>
+<li>Fixed bug with character title being parsed incorrectly when the character has no title selected and a single unlocked title.</li>
+</ul>
+<h2 id="302-2020-07-14">3.0.2 (2020-07-14)</h2>
+<ul>
+<li>Fixed values being mapped incorrectly for highscores.</li>
+<li><code>ExpHighscoresEntry</code> is now removed.</li>
+</ul>
+<h2 id="301-2020-07-14">3.0.1 (2020-07-14)</h2>
+<ul>
+<li><code>Highscores.world</code> is now <code>None</code> when the highscores are for all worlds.</li>
+</ul>
+<h2 id="300-2020-07-13">3.0.0 (2020-07-13)</h2>
+<ul>
+<li>The <code>Client</code> class' methods now return their responses wrapped in a <code>TibiaResponse</code> object.
+  This contains information about Tibia.com's cache.</li>
+<li>Added parsing for Guild wars.<ul>
+<li>Added class <code>GuildWars</code></li>
+<li>Added class <code>GuildWarsEntry</code></li>
+<li>Added <code>url_wars</code> property and <code>get_url_wars</code> class method to all Guild classes.</li>
+<li>Added <code>active_war</code> attribute to <code>Guild</code>.</li>
+</ul>
+</li>
+<li>Added parsing for the Tibia forums: Boards, Threads, Posts, Announcements<ul>
+<li>Added classes <code>ForumBoard</code> and <code>ListedBoard</code></li>
+<li>Added classes <code>ForumThread</code> and <code>ListedThread</code></li>
+<li>Added classes <code>ForumAnnouncement</code> and <code>ListedAnnouncement</code></li>
+<li>Added classes <code>ForumPost</code></li>
+<li>Added auxiliary classes <code>LastPost</code>,  <code>ForumAuthor</code> and <code>ThreadStatus</code>.</li>
+<li>Added property <code>thread_url</code> to <code>News</code>.</li>
+</ul>
+</li>
+<li>Updated highscores for Summer Update 2020:<ul>
+<li><code>page</code> and <code>total_pages</code> are now fields instead of properties.</li>
+<li>Added <code>last_updated</code> field.</li>
+<li>Added <code>Category.GOSHNARS_TAINT</code> and <code>Category.CHARM_POINTS</code>.</li>
+<li>Added <code>VocationFilter.NONE</code>.</li>
+</ul>
+</li>
+<li>Removed deprecated property <code>house</code> from <code>Character</code>, use <code>houses</code> instead.</li>
+<li>Removed support for Python 3.5.</li>
+<li>Changed the hierarchy of base classes. Base classes no longer implement <code>Serializable</code>, <code>Serializable</code> is now
+  directly implemented by most classes.</li>
+<li>Removed TibiaData functionality.</li>
+</ul>
+<p><a id="v2.5.1"></a></p>
+<h2 id="251-2020-05-27">2.5.1 (2020-05-27)</h2>
+<ul>
+<li>Fixed bed count not being parsed on houses.</li>
+</ul>
+<p><a id="v2.5.0"></a></p>
+<h2 id="250-2020-05-22">2.5.0 (2020-05-22)</h2>
+<ul>
+<li>Added parsing of Tournaments and Tournament Leaderboards.</li>
+<li>Fixed parsing errors with characters that had deaths by killers with "and" in their name.</li>
+</ul>
+<p><a id="v2.4.3"></a></p>
+<h2 id="243-2020-04-22">2.4.3 (2020-04-22)</h2>
+<ul>
+<li>Fixed an error when trying to parse a character with more deaths than what can be displayed in Tibia.com<ul>
+<li><code>Character.deaths_truncated</code> field was added to keep track of this case.</li>
+</ul>
+</li>
+</ul>
+<p><a id="v2.4.2"></a></p>
+<h2 id="242-2020-02-26">2.4.2 (2020-02-26)</h2>
+<ul>
+<li>Fixed exception when attempting to parse highscores with no results (e.g. a new world on its first day).</li>
+</ul>
+<p><a id="v2.4.1"></a></p>
+<h2 id="241-2019-11-20">2.4.1 (2019-11-20)</h2>
+<ul>
+<li>Fixed incorrect argument name (house) in <code>Character</code> constructor.</li>
+</ul>
+<p><a id="v2.4.0"></a></p>
+<h2 id="240-2019-11-20">2.4.0 (2019-11-20)</h2>
+<ul>
+<li>Added support for multiple houses per character. Accessible on <code>Character.houses</code> field.</li>
+<li><code>Character.house</code> is now deprecated. It will contain the character's first house or <code>None</code>.</li>
+</ul>
+<p><a id="v2.3.4"></a></p>
+<h2 id="234-2019-11-14">2.3.4 (2019-11-14)</h2>
+<ul>
+<li>Fixed bug with deaths not being parsed when a killer had <code>and</code> in their name.</li>
+</ul>
+<p><a id="v2.3.3"></a></p>
+<h2 id="233-2019-11-04">2.3.3 (2019-11-04)</h2>
+<ul>
+<li>Fixed bug with world parsing when there are more than 1000 players online.</li>
+</ul>
+<p><a id="v2.3.2"></a></p>
+<h2 id="232-2019-10-17">2.3.2 (2019-10-17)</h2>
+<ul>
+<li>Fixed incorrect highscores URL.</li>
+</ul>
+<p><a id="v2.3.1"></a></p>
+<h2 id="231-2019-10-06">2.3.1 (2019-10-06)</h2>
+<ul>
+<li>Fixed a bug with deaths not being parsed when a killer in assists had <code>and</code> in their name.</li>
+</ul>
+<p><a id="v2.3.0"></a></p>
+<h2 id="230-2019-09-16">2.3.0 (2019-09-16)</h2>
+<ul>
+<li>Added proxy option to client.</li>
+</ul>
+<p><a id="v2.2.6"></a></p>
+<h2 id="226-2019-09-01">2.2.6 (2019-09-01)</h2>
+<ul>
+<li>Fixed bug with account badges parsing failing when no badges were selected.</li>
+</ul>
+<p><a id="v2.2.5"></a></p>
+<h2 id="225-2019-08-22">2.2.5 (2019-08-22)</h2>
+<ul>
+<li>Fixed account badges parsing due to changes on the layout by CipSoft.</li>
+</ul>
+<p><a id="v2.2.4"></a></p>
+<h2 id="224-2019-08-20">2.2.4 (2019-08-20)</h2>
+<ul>
+<li>Disabled client compression for POST requests.</li>
+</ul>
+<p><a id="v2.2.3"></a></p>
+<h2 id="223-2019-08-17">2.2.3 (2019-08-17)</h2>
+<ul>
+<li>Enabled client side compression</li>
+</ul>
+<p><a id="v2.2.2"></a></p>
+<h2 id="222-2019-08-17">2.2.2 (2019-08-17)</h2>
+<ul>
+<li>Fixed killed by players and players kill stats being inverted for <code>KillStatistics</code></li>
+</ul>
+<p><a id="v2.2.1"></a></p>
+<h2 id="221-2019-08-10">2.2.1 (2019-08-10)</h2>
+<ul>
+<li>Fixed bug with character parsing failing when the guild rank is <code>(member)</code>.</li>
+</ul>
+<p><a id="v2.2.0"></a></p>
+<h2 id="220-2019-08-08">2.2.0 (2019-08-08)</h2>
+<ul>
+<li>Added support for account badges and character titles.</li>
+</ul>
+<p><a id="v2.1.0"></a></p>
+<h2 id="210-2019-06-17">2.1.0 (2019-06-17)</h2>
+<ul>
+<li>Added ways to sort and filter House list results like in Tibia.com.</li>
+<li>Added support to get the Boosted Creature of the day.</li>
+</ul>
+<p><a id="v2.0.1"></a></p>
+<h2 id="201-2019-06-04">2.0.1 (2019-06-04)</h2>
+<ul>
+<li>Replaced references to <code>secure.tibia.com</code> with <code>www.tibia.com</code> as the former always redirects to the front page.</li>
+</ul>
+<p><a id="v2.0.0"></a></p>
+<h2 id="200-2019-06-03">2.0.0 (2019-06-03)</h2>
+<ul>
+<li>Added asynchronous client to fetch and parse Tibia.com sections.</li>
+<li>Added news parsing.</li>
+<li>Added kill statistics parsing.</li>
+<li>Added support for tournament worlds.</li>
+<li>Added support for house prices with 'k' suffixes.</li>
+</ul>
+<p><a id="v1.1.3"></a></p>
+<h2 id="113-2019-01-29">1.1.3 (2019-01-29)</h2>
+<ul>
+<li>Fixed incorrect parsing of deaths with summons involved when parsing characters from TibiaData.</li>
+</ul>
+<p><a id="v1.1.2"></a></p>
+<h2 id="112-2019-01-22">1.1.2 (2019-01-22)</h2>
+<ul>
+<li>Fixed TibiaData URLs of tibia characters with special characters in their names. (e.g Himmelhüpferin)</li>
+</ul>
+<p><a id="v1.1.1"></a></p>
+<h2 id="111-2019-01-09">1.1.1 (2019-01-09)</h2>
+<ul>
+<li>Fixed character houses having attributes mixed up.</li>
+</ul>
+<p><a id="v1.1.0"></a></p>
+<h2 id="110-2019-01-09">1.1.0 (2019-01-09)</h2>
+<ul>
+<li>Parsing Highscores from Tibia.com and TibiaData.</li>
+<li>Some strings from TibiaData had unpredictable trailing whitespaces,
+  all leading and trailing whitespaces are removed.</li>
+<li>Added type hints to many variables and methods.</li>
+</ul>
+<p><a id="v1.0.0"></a></p>
+<h2 id="100-2018-12-23">1.0.0 (2018-12-23)</h2>
+<ul>
+<li>Added support for TibiaData JSON parsing. To have interoperability
+    between Tibia.com and TibiaData.</li>
+<li>Added support for parsing Houses, House lists, World and World list</li>
+<li>Added support for many missing attributes in Character and Guilds.</li>
+<li>All objects are now serializable to JSON strings.</li>
+</ul>
+<p><a id="v0.1.0"></a></p>
+<h2 id="010-2018-08-17">0.1.0 (2018-08-17)</h2>
+<p>Initial release:</p>
+<ul>
+<li>
+<p>Parses content from tibia.com</p>
+<ul>
+<li>Character pages</li>
+<li>Guild pages</li>
+<li>Guild list pages</li>
+</ul>
+</li>
+<li>
+<p>Parses content into JSON format strings.</p>
+</li>
+<li>Parses content into Python objects.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../introduction/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Introduction
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../api/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2026 Allan Galarza<br>
+<a href="https://www.tibia.com">Tibia</a> is made by <a href="https://www.cipsoft.com/">CipSoft</a>. All Tibia content is copyrighted by <a href="https://www.cipsoft.com/">CipSoft GmbH</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Galarzaa90/tibia.py" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/tibia.py/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>PyPI</title><path d="M23.922 13.58v3.912L20.55 18.72l-.078.055.052.037 3.45-1.256.026-.036v-3.997l-.053-.036-.025.092zm-.301-7.962-3.04 1.107v3.912l3.339-1.215V5.509zm.299 7.839V9.544l-3.336 1.215v3.913zm-3.45 1.253V10.8l-3.3 1.2v3.913zm-3.436 5.286v-3.912l-3.313 1.206v3.912zm.136-3.939v3.868l3.314-1.206V14.85zm2.093 1.882c-.367.134-.663-.074-.663-.463s.296-.814.663-.947c.365-.133.662.075.662.464s-.297.814-.662.946m-6.038-8.624.365-.132-3.285-1.197-3.323 1.21.102.037 3.184 1.16zm7.282 1.349V6.751L17.17 7.965v3.913zm-3.449 1.254V8.005l-3.302 1.202v3.912zm-3.415-2.672-3.336 1.215v3.913l3.336-1.215zm-6.736 3.919 3.322 1.209v-3.913L6.907 9.252zm3.433-5.292 3.281 1.193V5.198l-3.28-1.193zm10.167-5.158L17.19 3.922v3.913l3.317-1.207zM16.95 3.903 13.724 2.73l-3.269 1.19 3.225 1.174zm-1.585.703-1.624.592v3.868l3.317-1.207V3.991zm-.391 2.778c-.367.134-.662-.074-.662-.464s.295-.813.662-.946c.366-.133.663.074.663.464s-.297.813-.663.946M10.229 18.41v-3.914l-3.322-1.209V17.2zm3.449-1.228v-3.913l-3.371 1.227v3.913zm.078-.028 3.3-1.2V12.04l-3.3 1.2zm-.078 4.063-3.371 1.227v-3.912h-.078v3.912l-3.322-1.209v-3.913l-.053-.058-.025-.06-3.336-1.21v-3.948l.034.013 3.287 1.196.015-.078-3.261-1.187 3.26-1.187v-.109L3.876 9.62l-.307-.112 3.26-1.188v.877l.079-.055V6.769l3.257 1.185.058-.061L7.084 6.75l-.102-.037 3.24-1.179v-.083L6.854 6.677v.018l-.025.018v1.523L3.44 9.47v.02l-.025.017v4.007l-3.39 1.233v.019L0 14.784v3.995l.025.037 3.4 1.237.008-.006.007.01 3.4 1.238.008-.006.006.01 3.4 1.237.014-.009.012.01 3.45-1.256.026-.037zM3.493 9.563l3.257 1.185-3.257 1.187V9.562zM3.4 19.96.078 18.752v-3.913l2.361.86.96.349zm.015-3.99-3.08-1.12-.182-.066 3.262-1.187zm3.399 5.231-3.321-1.209V16.08l3.321 1.209zM23.791 5.434l-3.21-1.17v2.338zm-3.404-2.791-3.24-1.18-3.27 1.19 3.247 1.182z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hub.docker.com/r/galarzaa90/tibia.py" target="_blank" rel="noopener" title="hub.docker.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      
+<div class="md-progress" data-md-component="progress" role="progressbar" aria-label="Loading"></div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["content.code.copy","navigation.footer","navigation.instant","navigation.instant.progress","navigation.tabs","navigation.tabs.sticky","navigation.top","navigation.tracking","search.suggest","search.highlight","search.share","toc.follow"],"redirect":null,"search":"../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a2388154.min.js"></script>
+      
+    
+  </body>
+</html>
