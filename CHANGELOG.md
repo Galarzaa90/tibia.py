@@ -5,6 +5,14 @@
 > Try to always use the latest version.
 
 
+## Unreleased
+
+- Python 3.11 is now the minimum supported version.
+- `AuctionFilters.query_params` now returns all parameter values as strings.
+- `GuildsSection.url` and `GuildWars.url` now return `None` when the world or guild name is missing.
+- `BaseWorld.is_battleye_protected` now consistently returns a boolean, including `False` for unprotected worlds.
+
+
 ## 6.4.0 (2026-07-12)
 
 - Add Monk vocation (`Vocation.MONK` / `Vocation.EXALTED_MONK`) and the matching `AuctionVocationFilter`, `HighscoresProfession` and `SpellVocationFilter` entries.

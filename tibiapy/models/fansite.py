@@ -1,6 +1,4 @@
 """Models for supported and promoted fansites."""
-from typing import Optional
-
 from tibiapy.models import BaseModel
 
 __all__ = (
@@ -48,7 +46,7 @@ class Fansite(BaseModel):
     """A list of the languages the site is available in."""
     specials: list[str]
     """A description of features or highligts."""
-    fansite_item_image_url: Optional[str]
+    fansite_item_image_url: str | None
     """The URL to the fansite item's icon, if available."""
 
 

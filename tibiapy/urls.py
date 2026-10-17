@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import urllib.parse
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from tibiapy.enums import (
@@ -26,10 +26,10 @@ if TYPE_CHECKING:
 def get_tibia_url(
         section: str,
         subtopic: str = None,
-        *args: tuple[str, Union[str, int]],
+        *args: tuple[str, str | int],
         anchor: str = None,
         test: bool = False,
-        **kwargs: Union[str, int],
+        **kwargs: str | int,
 ) -> str:
     """Build a URL to Tibia.com with the given parameters.
 
@@ -696,7 +696,7 @@ def get_boostable_bosses_url() -> str:
     return get_tibia_url("library", "boostablebosses")
 
 
-def _to_yes_no(value: Optional[bool]) -> Optional[str]:
+def _to_yes_no(value: bool | None) -> str | None:
     if value is None:
         return None
 

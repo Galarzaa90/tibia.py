@@ -2,7 +2,6 @@
 import os
 import re
 import urllib.parse
-from typing import Optional
 
 import bs4
 
@@ -231,7 +230,7 @@ class CreatureParser:
     _valid_elements = ("ice", "fire", "earth", "poison", "death", "holy", "physical", "energy")
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[Creature]:
+    def from_content(cls, content: str) -> Creature | None:
         """Create an instance of the class from the html content of the creature library's page.
 
         Parameters

@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import datetime
-from typing import Optional
 
 from pydantic import computed_field
 
@@ -43,9 +42,9 @@ class AccountInformation(BaseModel):
 
     created: datetime.datetime
     """The date when the account was created."""
-    position: Optional[str] = None
+    position: str | None = None
     """The special position of this account, if any."""
-    loyalty_title: Optional[str] = None
+    loyalty_title: str | None = None
     """The loyalty title of the account, if any"""
 
 
@@ -83,13 +82,13 @@ class DeathParticipant(BaseModel):
     """The name of the killer. In the case of summons, the name belongs to the owner."""
     is_player: bool
     """Whether the killer is a player or not."""
-    summon: Optional[str] = None
+    summon: str | None = None
     """The name of the summoned creature, if applicable."""
     is_traded: bool = False
     """If the killer was traded after this death happened."""
 
     @property
-    def url(self) -> Optional[str]:
+    def url(self) -> str | None:
         """The URL of the character's information page on Tibia.com, if applicable."""
         return urls.get_character_url(self.name) if self.is_player else None
 
@@ -112,7 +111,7 @@ class Death(BaseModel):
         return any(k.is_player for k in self.killers)
 
     @property
-    def killer(self) -> DeathParticipant:
+    def killer(self) -> DeathParticipant | None:
         """The first killer in the list.
 
         This is usually the killer that gave the killing blow.
@@ -125,7 +124,7 @@ class GuildMembership(BaseGuild):
 
     rank: str
     """The name of the rank the member has."""
-    title: Optional[str] = None
+    title: str | None = None
     """The title of the member in the guild. This is only available for characters in the forums section."""
 
 
@@ -154,7 +153,7 @@ class OtherCharacter(BaseCharacter):
     """Whether the character has been traded recently or not."""
     is_main: bool
     """Whether this is the main character or not."""
-    position: Optional[str] = None
+    position: str | None = None
     """The character's official position, if any."""
 
 
@@ -163,11 +162,11 @@ class Character(BaseCharacter):
 
     is_traded: bool
     """If the character was traded in the last 6 months."""
-    deletion_date: Optional[datetime.datetime] = None
+    deletion_date: datetime.datetime | None = None
     """The date when the character will be deleted if it is scheduled for deletion. Will be `None` otherwise."""
     former_names: list[str]
     """Previous names of the character in the last 6 months.."""
-    title: Optional[str] = None
+    title: str | None = None
     """The character's selected title, if any."""
     unlocked_titles: int = 0
     """The number of titles the character has unlocked."""
@@ -181,21 +180,21 @@ class Character(BaseCharacter):
     """The total of achievement points the character has."""
     world: str
     """The character's current world."""
-    former_world: Optional[str] = None
+    former_world: str | None = None
     """The previous world the character was in, in the last 6 months."""
     residence: str
     """The current hometown of the character."""
-    married_to: Optional[str] = None
+    married_to: str | None = None
     """The name of the character's spouse. It will be `None` if not married."""
     houses: list[CharacterHouse]
     """The houses currently owned by the character."""
-    guild_membership: Optional[GuildMembership] = None
+    guild_membership: GuildMembership | None = None
     """The guild the character is a member of. It will be `None` if the character is not in a guild."""
-    last_login: Optional[datetime.datetime] = None
+    last_login: datetime.datetime | None = None
     """The last time the character logged in. It will be `None` if the character has never logged in."""
-    position: Optional[str] = None
+    position: str | None = None
     """The position of the character (e.g. CipSoft Member), if any."""
-    comment: Optional[str] = None
+    comment: str | None = None
     """The displayed comment."""
     is_premium: bool
     """Whether the character's account is Premium or Free."""
@@ -209,7 +208,7 @@ class Character(BaseCharacter):
     """Whether the character's deaths are truncated or not.
 
     In some cases, there are more deaths in the last 30 days than what can be displayed."""
-    account_information: Optional[AccountInformation] = None
+    account_information: AccountInformation | None = None
     """The character's account information. If the character is hidden, this will be `None`."""
     other_characters: list[OtherCharacter]
     """Other characters in the same account.
@@ -224,17 +223,17 @@ class Character(BaseCharacter):
         return self.deletion_date is not None
 
     @property
-    def guild_name(self) -> Optional[str]:
+    def guild_name(self) -> str | None:
         """The name of the guild the character belongs to, or `None`."""
         return self.guild_membership.name if self.guild_membership else None
 
     @property
-    def guild_rank(self) -> Optional[str]:
+    def guild_rank(self) -> str | None:
         """The character's rank in the guild they belong to, or `None`."""
         return self.guild_membership.rank if self.guild_membership else None
 
     @property
-    def guild_url(self) -> Optional[str]:
+    def guild_url(self) -> str | None:
         """The character's rank in the guild they belong to, or `None`."""
         return urls.get_guild_url(self.guild_membership.name) if self.guild_membership else None
 
@@ -245,7 +244,7 @@ class Character(BaseCharacter):
         return len(self.other_characters) == 0
 
     @property
-    def married_to_url(self) -> Optional[str]:
+    def married_to_url(self) -> str | None:
         """The URL to the husband/spouse information page on Tibia.com, if applicable."""
         return urls.get_character_url(self.married_to) if self.married_to else None
     # endregion

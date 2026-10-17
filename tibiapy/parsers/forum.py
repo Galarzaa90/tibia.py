@@ -4,7 +4,7 @@ from __future__ import annotations
 import datetime
 import re
 import urllib.parse
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy import InvalidContentError, errors
 from tibiapy.builders import (
@@ -151,7 +151,7 @@ class CMPostArchiveParser:
             month_selector: bs4.Tag,
             day_selector: bs4.Tag,
             year_selector: bs4.Tag,
-    ) -> Optional[datetime.date]:
+    ) -> datetime.date | None:
         """Get the date made from the selected options in the selectors.
 
         Parameters
@@ -214,7 +214,7 @@ class ForumSectionParser:
         return ForumSection(section_id=int(section_id), entries=boards)
 
     @classmethod
-    def _parse_board_row(cls, board_row: bs4.Tag, offset: int = 1) -> Optional[BoardEntry]:
+    def _parse_board_row(cls, board_row: bs4.Tag, offset: int = 1) -> BoardEntry | None:
         """Parse a row containing a board and extracts its information.
 
         Parameters
@@ -260,7 +260,7 @@ class ForumAnnouncementParser:
     """Parser for forum announcements posted by CipSoft."""
 
     @classmethod
-    def from_content(cls, content: str, announcement_id: int = 0) -> Optional[ForumAnnouncement]:
+    def from_content(cls, content: str, announcement_id: int = 0) -> ForumAnnouncement | None:
         """Parse the content of an announcement's page from Tibia.com.
 
         Parameters
@@ -400,7 +400,7 @@ class ForumBoardParser:
     """A parser for forum boards from Tibia.com."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[ForumBoard]:
+    def from_content(cls, content: str) -> ForumBoard | None:
         """Parse the board's HTML content from Tibia.com.
 
         Parameters
@@ -484,7 +484,7 @@ class ForumBoardParser:
     # region Private Methods
 
     @classmethod
-    def _parse_thread_row(cls, columns: bs4.ResultSet) -> Optional[ThreadEntry]:
+    def _parse_thread_row(cls, columns: bs4.ResultSet) -> ThreadEntry | None:
         """Parse the thread row, containing a single thread.
 
         Parameters
@@ -574,7 +574,7 @@ class ForumThreadParser:
     """A parser for forum threads from Tibia.com."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[ForumThread]:
+    def from_content(cls, content: str) -> ForumThread | None:
         """Create an instance of the class from the html content of the thread's page.
 
         Parameters
@@ -743,7 +743,7 @@ class ForumThreadParser:
 class LastPostParser:
 
     @classmethod
-    def _parse_column(cls, last_post_column: bs4.Tag, offset: int = 1) -> Optional[LastPost]:
+    def _parse_column(cls, last_post_column: bs4.Tag, offset: int = 1) -> LastPost | None:
         """Parse the column containing the last post information and extracts its data.
 
         Parameters

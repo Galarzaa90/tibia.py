@@ -2,7 +2,6 @@
 import logging
 import re
 import urllib.parse
-from typing import Optional
 
 import bs4
 
@@ -172,7 +171,7 @@ class AuctionParser:
     """Parser for Tibia.com character auctions."""
 
     @classmethod
-    def from_content(cls, content: str, auction_id: int = 0, skip_details: bool = False) -> Optional[Auction]:
+    def from_content(cls, content: str, auction_id: int = 0, skip_details: bool = False) -> Auction | None:
         """Parse an auction detail page from Tibia.com and extracts its data.
 
         Parameters
@@ -679,7 +678,7 @@ class AuctionParser:
         return summary
 
     @classmethod
-    def _parse_displayed_item(cls, item_box: bs4.Tag) -> Optional[ItemEntry]:
+    def _parse_displayed_item(cls, item_box: bs4.Tag) -> ItemEntry | None:
         title_text = item_box["title"]
         img_tag = item_box.select_one("img")
         if not img_tag:
@@ -703,7 +702,7 @@ class AuctionParser:
                          tier=tier)
 
     @classmethod
-    def _parse_displayed_mount(cls, item_box: bs4.Tag) -> Optional[MountEntry]:
+    def _parse_displayed_mount(cls, item_box: bs4.Tag) -> MountEntry | None:
         description = item_box["title"]
         img_tag = item_box.select_one("img")
         if not img_tag:
@@ -716,7 +715,7 @@ class AuctionParser:
         return mount
 
     @classmethod
-    def _parse_displayed_outfit(cls, item_box: bs4.Tag) -> Optional[OutfitEntry]:
+    def _parse_displayed_outfit(cls, item_box: bs4.Tag) -> OutfitEntry | None:
         description = item_box["title"]
         img_tag = item_box.select_one("img")
         if not img_tag:
@@ -732,7 +731,7 @@ class AuctionParser:
         return outfit
 
     @classmethod
-    def _parse_displayed_familiar(cls, item_box: bs4.Tag) -> Optional[FamiliarEntry]:
+    def _parse_displayed_familiar(cls, item_box: bs4.Tag) -> FamiliarEntry | None:
         description = item_box["title"]
         img_tag = item_box.select_one("img")
         if not img_tag:

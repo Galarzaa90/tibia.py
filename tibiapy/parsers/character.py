@@ -4,7 +4,9 @@ from __future__ import annotations
 import logging
 import re
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Callable, Optional
+from typing import TYPE_CHECKING
+
+from collections.abc import Callable
 
 from tibiapy.builders import CharacterBuilder
 from tibiapy.enums import Sex, Vocation
@@ -66,7 +68,7 @@ class CharacterParser:
     """A parser for characters from Tibia.com."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[Character]:
+    def from_content(cls, content: str) -> Character | None:
         """Create an instance of the class from the html content of the character's page.
 
         Parameters

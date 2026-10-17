@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.models.leaderboard import Leaderboard, LeaderboardEntry
 
 if TYPE_CHECKING:
     import datetime
 
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.models.leaderboard import LeaderboardRotation
 
@@ -48,7 +48,7 @@ class LeaderboardBuilder:
         self._entries.append(entry)
         return self
 
-    def last_updated(self, last_updated: Optional[datetime.datetime]) -> Self:
+    def last_updated(self, last_updated: datetime.datetime | None) -> Self:
         self._last_updated = last_updated
         return self
 

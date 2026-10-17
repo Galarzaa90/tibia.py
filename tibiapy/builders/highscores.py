@@ -7,7 +7,7 @@ from tibiapy.models import Highscores
 if TYPE_CHECKING:
     import datetime
 
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.enums import (
         HighscoresBattlEyeType,

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.models import Rune, Spell, SpellEntry, SpellsSection
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
 
@@ -19,19 +19,19 @@ class SpellSectionBuilder:
         self._sort_by = None
         self._entries = []
 
-    def vocation(self, vocation: Optional[SpellVocationFilter]) -> Self:
+    def vocation(self, vocation: SpellVocationFilter | None) -> Self:
         self._vocation = vocation
         return self
 
-    def group(self, group: Optional[SpellGroup]) -> Self:
+    def group(self, group: SpellGroup | None) -> Self:
         self._group = group
         return self
 
-    def spell_type(self, spell_type: Optional[SpellVocationFilter]) -> Self:
+    def spell_type(self, spell_type: SpellVocationFilter | None) -> Self:
         self._spell_type = spell_type
         return self
 
-    def premium(self, premium: Optional[bool]) -> Self:
+    def premium(self, premium: bool | None) -> Self:
         self._premium = premium
         return self
 
@@ -94,7 +94,7 @@ class SpellEntryBuilder:
         self._exp_level = exp_level
         return self
 
-    def mana(self, mana: Optional[int]) -> Self:
+    def mana(self, mana: int | None) -> Self:
         self._mana = mana
         return self
 
@@ -148,11 +148,11 @@ class SpellBuilder(SpellEntryBuilder):
         self._cooldown = cooldown
         return self
 
-    def cooldown_group(self, cooldown_group: Optional[int]) -> Self:
+    def cooldown_group(self, cooldown_group: int | None) -> Self:
         self._cooldown_group = cooldown_group
         return self
 
-    def cooldown_group_secondary(self, cooldown_group_secondary: Optional[int]) -> Self:
+    def cooldown_group_secondary(self, cooldown_group_secondary: int | None) -> Self:
         self._cooldown_group_secondary = cooldown_group_secondary
         return self
 
@@ -168,7 +168,7 @@ class SpellBuilder(SpellEntryBuilder):
         self._amount = amount
         return self
 
-    def magic_type(self, magic_type: Optional[int]) -> Self:
+    def magic_type(self, magic_type: int | None) -> Self:
         self._magic_type = magic_type
         return self
 
@@ -231,7 +231,7 @@ class RuneBuilder:
         self._exp_level = exp_level
         return self
 
-    def mana(self, mana: Optional[int]) -> Self:
+    def mana(self, mana: int | None) -> Self:
         self._mana = mana
         return self
 
@@ -239,7 +239,7 @@ class RuneBuilder:
         self._magic_level = magic_level
         return self
 
-    def magic_type(self, magic_type: Optional[str]) -> Self:
+    def magic_type(self, magic_type: str | None) -> Self:
         self._magic_type = magic_type
         return self
 

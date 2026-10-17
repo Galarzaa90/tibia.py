@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 import re
 import urllib.parse
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import bs4
 
@@ -117,7 +117,7 @@ class SpellParser:
     """Parses Tibia.com from a spell's information page."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[Spell]:
+    def from_content(cls, content: str) -> Spell | None:
         """Parse the content of a spells page.
 
         Parameters

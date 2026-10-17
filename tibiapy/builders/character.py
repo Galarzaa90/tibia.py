@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.models import Character
 
 if TYPE_CHECKING:
     import datetime
 
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.enums import Sex, Vocation
     from tibiapy.models import (
@@ -59,7 +59,7 @@ class CharacterBuilder:
         self._traded = traded
         return self
 
-    def deletion_date(self, deletion_date: Optional[datetime.datetime]) -> Self:
+    def deletion_date(self, deletion_date: datetime.datetime | None) -> Self:
         self._deletion_date = deletion_date
         return self
 
@@ -67,7 +67,7 @@ class CharacterBuilder:
         self._former_names = former_names
         return self
 
-    def title(self, title: Optional[str]) -> Self:
+    def title(self, title: str | None) -> Self:
         self._title = title
         return self
 
@@ -95,7 +95,7 @@ class CharacterBuilder:
         self._world = world
         return self
 
-    def former_world(self, former_world: Optional[str]) -> Self:
+    def former_world(self, former_world: str | None) -> Self:
         self._former_world = former_world
         return self
 
@@ -103,7 +103,7 @@ class CharacterBuilder:
         self._residence = residence
         return self
 
-    def married_to(self, married_to: Optional[str]) -> Self:
+    def married_to(self, married_to: str | None) -> Self:
         self._married_to = married_to
         return self
 
@@ -115,19 +115,19 @@ class CharacterBuilder:
         self._houses.append(house)
         return self
 
-    def guild_membership(self, guild_membership: Optional[GuildMembership]) -> Self:
+    def guild_membership(self, guild_membership: GuildMembership | None) -> Self:
         self._guild_membership = guild_membership
         return self
 
-    def last_login(self, last_login: Optional[datetime.datetime]) -> Self:
+    def last_login(self, last_login: datetime.datetime | None) -> Self:
         self._last_login = last_login
         return self
 
-    def position(self, position: Optional[str]) -> Self:
+    def position(self, position: str | None) -> Self:
         self._position = position
         return self
 
-    def comment(self, comment: Optional[str]) -> Self:
+    def comment(self, comment: str | None) -> Self:
         self._comment = comment
         return self
 
@@ -163,7 +163,7 @@ class CharacterBuilder:
         self._deaths_truncated = deaths_truncated
         return self
 
-    def account_information(self, account_information: Optional[AccountInformation]) -> Self:
+    def account_information(self, account_information: AccountInformation | None) -> Self:
         self._account_information = account_information
         return self
 

@@ -2,7 +2,6 @@
 import datetime
 import re
 import urllib.parse
-from typing import Optional, Union
 
 import bs4
 
@@ -38,7 +37,7 @@ class NewsArchiveParser:
             end_date: datetime.date,
             categories: set[NewsCategory] = None,
             types: set[NewsType] = None,
-    ) -> dict[str, Union[str, int]]:
+    ) -> dict[str, str | int]:
         """Get the form data attributes to search news with specific parameters.
 
         Parameters
@@ -171,7 +170,7 @@ class NewsParser:
     """Parser for news articles from Tibia.com."""
 
     @classmethod
-    def from_content(cls, content: str, news_id: int = 0) -> Optional[News]:
+    def from_content(cls, content: str, news_id: int = 0) -> News | None:
         """Get a news entry by its HTML content from Tibia.com.
 
         Notes

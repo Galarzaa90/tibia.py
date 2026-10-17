@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.models import Auction, CharacterBazaar
 from tibiapy.models.bazaar import AuctionDetails, RevealedGem
@@ -8,7 +8,7 @@ from tibiapy.models.bazaar import AuctionDetails, RevealedGem
 if TYPE_CHECKING:
     import datetime
 
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.enums import AuctionStatus, BazaarType, BidType, Sex, Vocation
     from tibiapy.models import (
@@ -280,7 +280,7 @@ class AuctionDetailsBuilder:
 
     def regular_world_transfer_available_date(
             self,
-            regular_world_transfer_available_date: Optional[datetime.datetime],
+            regular_world_transfer_available_date: datetime.datetime | None,
     ) -> Self:
         self._regular_world_transfer_available_date = regular_world_transfer_available_date
         return self

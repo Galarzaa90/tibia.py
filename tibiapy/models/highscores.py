@@ -1,6 +1,5 @@
 """Models for highscores."""
 import datetime
-from typing import Optional
 
 from pydantic import SerializeAsAny
 
@@ -45,13 +44,13 @@ class LoyaltyHighscoresEntry(HighscoresEntry):
 class Highscores(PaginatedWithUrl[SerializeAsAny[HighscoresEntry]]):
     """Represents the highscores of a world."""
 
-    world: Optional[str] = None
+    world: str | None = None
     """The world the highscores belong to. If this is `None`, the highscores shown are for all worlds."""
     category: HighscoresCategory
     """The selected category to displays the highscores of."""
     vocation: HighscoresProfession
     """The selected vocation to filter out values."""
-    battleye_filter: Optional[HighscoresBattlEyeType]
+    battleye_filter: HighscoresBattlEyeType | None
     """The selected BattlEye filter. If `None`, all worlds will be displayed.
 
     Only applies for global highscores. Only characters from worlds matching BattlEye protection will be shown."""

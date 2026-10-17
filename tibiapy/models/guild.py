@@ -1,7 +1,6 @@
 """Models for guilds and members."""
 import datetime
 from collections import OrderedDict, defaultdict
-from typing import Optional
 
 from pydantic import computed_field
 
@@ -28,7 +27,7 @@ class GuildMember(BaseCharacter):
 
     rank: str
     """The rank the member belongs to"""
-    title: Optional[str] = None
+    title: str | None = None
     """The member's title."""
     level: int
     """The member's level."""
@@ -62,7 +61,7 @@ class Guild(BaseGuild):
 
     logo_url: str
     """The URL to the guild's logo."""
-    description: Optional[str] = None
+    description: str | None = None
     """The description of the guild."""
     world: str
     """The world this guild belongs to."""
@@ -70,17 +69,17 @@ class Guild(BaseGuild):
     """The day the guild was founded."""
     active: bool
     """Whether the guild is active or still in formation."""
-    guildhall: Optional[GuildHouse] = None
+    guildhall: GuildHouse | None = None
     """The guild's guildhall if any."""
     open_applications: bool = False
     """Whether applications are open or not."""
     active_war: bool
     """Whether the guild is currently in an active war or not."""
-    disband_date: Optional[datetime.date] = None
+    disband_date: datetime.date | None = None
     """The date when the guild will be disbanded if the condition hasn't been meet."""
-    disband_condition: Optional[str] = None
+    disband_condition: str | None = None
     """The reason why the guild will get disbanded."""
-    homepage: Optional[str] = None
+    homepage: str | None = None
     """The guild's homepage, if any."""
     members: list[GuildMember]
     """List of guild members."""
@@ -136,7 +135,7 @@ class GuildEntry(BaseGuild):
 
     logo_url: str
     """The URL to the guild's logo."""
-    description: Optional[str] = None
+    description: str | None = None
     """The description of the guild."""
     world: str
     """The world this guild belongs to."""
@@ -147,7 +146,7 @@ class GuildEntry(BaseGuild):
 class GuildsSection(BaseModel):
     """The guilds section in Tibia.com."""
 
-    world: Optional[str] = None
+    world: str | None = None
     """The name of the world. If `None`, the section belongs to a world that doesn't exist."""
     entries: list[GuildEntry] = []
     """The list of guilds in the world."""
@@ -165,9 +164,9 @@ class GuildsSection(BaseModel):
         return [g for g in self.entries if not g.active]
 
     @property
-    def url(self) -> str:
+    def url(self) -> str | None:
         """Get the URL to this guild section."""
-        return get_world_guilds_url(self.world)
+        return get_world_guilds_url(self.world) if self.world else None
 
 
 class GuildWarEntry(BaseModel):
@@ -179,26 +178,26 @@ class GuildWarEntry(BaseModel):
     """The number of kills the guild has scored."""
     guild_fee: int
     """The number of gold coins the guild will pay if they lose the war."""
-    opponent_name: Optional[str] = None
+    opponent_name: str | None = None
     """The name of the opposing guild. If the guild no longer exist, this will be `None`."""
     opponent_score: int
     """The number of kills the opposing guild has scored."""
     opponent_fee: int
     """The number of gold coins the opposing guild will pay if they lose the war."""
-    start_date: Optional[datetime.date] = None
+    start_date: datetime.date | None = None
     """The date when the war started.
 
     When a war is in progress, the start date is not visible."""
     score_limit: int
     """The number of kills needed to win the war."""
-    duration: Optional[datetime.timedelta] = None
+    duration: datetime.timedelta | None = None
     """The set duration of the war.
 
     When a war is in progress, the duration is not visible."""
-    end_date: Optional[datetime.date] = None
+    end_date: datetime.date | None = None
     """The deadline for the war to finish if the score is not reached for wars in progress, or the date when the
      war ended."""
-    winner: Optional[str] = None
+    winner: str | None = None
     """The name of the guild that won.
 
     Note that if the winning guild is disbanded, this may be `None`."""
@@ -211,7 +210,7 @@ class GuildWarEntry(BaseModel):
         return get_guild_url(self.guild_name)
 
     @property
-    def opponent_guild_url(self) -> Optional[str]:
+    def opponent_guild_url(self) -> str | None:
         """The URL to the opposing guild's information page on Tibia.com."""
         return get_guild_url(self.opponent_name) if self.opponent_name else None
 
@@ -219,14 +218,14 @@ class GuildWarEntry(BaseModel):
 class GuildWars(BaseModel):
     """Represents a guild's wars."""
 
-    name: Optional[str] = None
+    name: str | None = None
     """The name of the guild."""
-    is_current: Optional[GuildWarEntry] = None
+    is_current: GuildWarEntry | None = None
     """The current war the guild is involved in."""
     history: list[GuildWarEntry]
     """The previous wars the guild has been involved in."""
 
     @property
-    def url(self) -> str:
+    def url(self) -> str | None:
         """The URL of this guild's war page on Tibia.com."""
-        return get_guild_wars_url(self.name)
+        return get_guild_wars_url(self.name) if self.name else None

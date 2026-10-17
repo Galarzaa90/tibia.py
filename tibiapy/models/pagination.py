@@ -1,6 +1,6 @@
 """Base models for paginated classes."""
 from abc import ABC, abstractmethod
-from typing import Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
 from tibiapy.models import BaseModel
 
@@ -30,12 +30,12 @@ class PaginatedWithUrl(Paginated[T], Generic[T], ABC):
     """An entity made of multiple pages with URLs."""
 
     @property
-    def next_page_url(self) -> Optional[str]:
+    def next_page_url(self) -> str | None:
         """The URL to the next page of the results, if available."""
         return None if self.current_page == self.total_pages else self.get_page_url(self.current_page + 1)
 
     @property
-    def previous_page_url(self) -> Optional[str]:
+    def previous_page_url(self) -> str | None:
         """The URL to the previous page of the results, if available."""
         return None if self.current_page == 1 else self.get_page_url(self.current_page - 1)
 

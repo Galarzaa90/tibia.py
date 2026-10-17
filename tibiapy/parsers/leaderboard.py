@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy import errors
 from tibiapy.builders.leaderboard import LeaderboardBuilder
@@ -34,7 +34,7 @@ class LeaderboardParser:
     """Parser for leaderboards."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[Leaderboard]:
+    def from_content(cls, content: str) -> Leaderboard | None:
         """Parse the content of the leaderboards page.
 
         Parameters
@@ -48,7 +48,7 @@ class LeaderboardParser:
             The leaderboard, if found.
 
         """
-        now = datetime.datetime.now(datetime.timezone.utc)
+        now = datetime.datetime.now(datetime.UTC)
         try:
             parsed_content = parse_tibiacom_content(content)
             tables = parsed_content.select("table.TableContent")

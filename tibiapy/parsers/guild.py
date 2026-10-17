@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.builders import GuildBuilder, GuildWarEntryBuilder, GuildWarsBuilder
 from tibiapy.errors import InvalidContentError
@@ -69,7 +69,7 @@ class GuildsSectionParser:
     """Parser for the guild sections in Tibia.com."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[GuildsSection]:
+    def from_content(cls, content: str) -> GuildsSection | None:
         """Get a list of guilds from the HTML content of the world guilds' page.
 
         Parameters
@@ -123,7 +123,7 @@ class GuildParser:
     """Parser for guild pages in Tibia.com."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[Guild]:
+    def from_content(cls, content: str) -> Guild | None:
         """Create an instance of the class from the HTML content of the guild's page.
 
         Parameters

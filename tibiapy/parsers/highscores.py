@@ -4,7 +4,7 @@ from __future__ import annotations
 import datetime
 import re
 from collections import OrderedDict
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import bs4
 
@@ -43,7 +43,7 @@ class HighscoresParser:
     _ENTRIES_PER_PAGE = 50
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[Highscores]:
+    def from_content(cls, content: str) -> Highscores | None:
         """Create an instance of the class from the HTML content of a highscores page.
 
         Notes
@@ -81,7 +81,7 @@ class HighscoresParser:
         if last_update_container := parsed_content.select_one("span.RightArea"):
             m = numeric_pattern.search(last_update_container.text)
             last_update = datetime.timedelta(minutes=int(m.group(1))) if m else datetime.timedelta()
-            builder.last_updated(datetime.datetime.now(tz=datetime.timezone.utc) - last_update)
+            builder.last_updated(datetime.datetime.now(tz=datetime.UTC) - last_update)
 
         entries_table = tables.get("Highscores")
         cls._parse_entries_table(builder, entries_table)

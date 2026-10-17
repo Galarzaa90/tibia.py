@@ -1,6 +1,6 @@
 """Models related to the forums."""
 import datetime
-from typing import Any, Optional
+from typing import Any
 
 from tibiapy.enums import ThreadStatus, Vocation
 from tibiapy.models import GuildMembership
@@ -221,19 +221,19 @@ class ForumAuthor(BaseCharacter):
 
     name: str
     """The name of the character, author of the post."""
-    level: Optional[int] = None
+    level: int | None = None
     """The level of the character."""
-    world: Optional[str] = None
+    world: str | None = None
     """The world the character belongs to."""
-    position: Optional[str] = None
+    position: str | None = None
     """The character's position, if any."""
-    title: Optional[str] = None
+    title: str | None = None
     """The character's selected title, if any."""
-    vocation: Optional[Vocation] = None
+    vocation: Vocation | None = None
     """The vocation of the character."""
-    guild: Optional[GuildMembership] = None
+    guild: GuildMembership | None = None
     """The guild the author belongs to, if any."""
-    posts: Optional[int] = None
+    posts: int | None = None
     """The number of posts this character has made."""
     is_author_deleted: bool = False
     """Whether the author is deleted or not."""
@@ -268,7 +268,7 @@ class BoardEntry(BaseBoard):
     """The number of posts in this board."""
     threads: int
     """The number of threads in this board."""
-    last_post: Optional[LastPost] = None
+    last_post: LastPost | None = None
     """The information of the last post made in this board."""
 
 
@@ -303,13 +303,13 @@ class ThreadEntry(BaseThread):
     """The number of replies."""
     views: int
     """The number of views."""
-    last_post: Optional[LastPost] = None
+    last_post: LastPost | None = None
     """The information of the last post made in this board."""
     status: ThreadStatus
     """The status of the thread."""
     status_icon: str
     """The URL of the icon displayed as status."""
-    emoticon: Optional[ForumEmoticon] = None
+    emoticon: ForumEmoticon | None = None
     """The emoticon used for the thread."""
     total_pages: int
     """The number of pages the thread has."""
@@ -391,21 +391,21 @@ class ForumPost(BasePost):
 
     author: ForumAuthor
     """The author of the post."""
-    emoticon: Optional[ForumEmoticon] = None
+    emoticon: ForumEmoticon | None = None
     """The emoticon selected for the post."""
-    title: Optional[str] = None
+    title: str | None = None
     """The title of the post."""
     content: str
     """The content of the post."""
-    signature: Optional[str] = None
+    signature: str | None = None
     """The signature of the post."""
     post_id: int
     """The id of the post."""
     posted_date: datetime.datetime
     """The date when the post was made."""
-    edited_date: Optional[datetime.datetime] = None
+    edited_date: datetime.datetime | None = None
     """The date when the post was last edited, if applicable."""
-    edited_by: Optional[str] = None
+    edited_by: str | None = None
     """The character that edited the post.
 
     This is usually the same author, but in some occasions staff members edit the posts of others."""
@@ -425,9 +425,9 @@ class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
     """The board section this thread belongs to."""
     section_id: int
     """The ID of the board section this thread belongs to."""
-    previous_topic_number: Optional[int] = None
+    previous_topic_number: int | None = None
     """The number of the previous topic."""
-    next_topic_number: Optional[int] = None
+    next_topic_number: int | None = None
     """The number of the next topic."""
     entries: list[ForumPost] = []
     """The list of posts the thread has."""
@@ -435,18 +435,18 @@ class ForumThread(PaginatedWithUrl[ForumPost], BaseThread):
     """Whether the thread has a golden frame or not.
 
     In the Proposals board,a golden frame means the thread has a reply by a staff member."""
-    anchored_post: Optional[ForumPost] = None
+    anchored_post: ForumPost | None = None
     """The post where the page is anchored to, if any.
 
     When a post is fetched directly, the thread that contains it is displayed, anchored to the specific post."""
 
     @property
-    def previous_thread_url(self) -> str:
+    def previous_thread_url(self) -> str | None:
         """The URL to the previous topic of the board, if there's any."""
         return get_forum_thread_url(self.previous_topic_number) if self.previous_topic_number else None
 
     @property
-    def next_thread_url(self) -> str:
+    def next_thread_url(self) -> str | None:
         """The URL to the next topic of the board, if there's any."""
         return get_forum_thread_url(self.next_topic_number) if self.next_topic_number else None
 

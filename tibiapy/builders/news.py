@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 from collections.abc import Collection
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.models import News, NewsArchive, NewsEntry
 
 if TYPE_CHECKING:
     import datetime
 
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.enums import NewsCategory, NewsType
 
@@ -92,7 +92,7 @@ class NewsBuilder:
         self._content = content
         return self
 
-    def thread_id(self, thread_id: Optional[int]) -> Self:
+    def thread_id(self, thread_id: int | None) -> Self:
         self._thread_id = thread_id
         return self
 

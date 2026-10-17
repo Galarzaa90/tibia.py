@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.enums import BattlEyeType, TransferType
 from tibiapy.models import World, WorldEntry, WorldOverview
@@ -8,7 +8,7 @@ from tibiapy.models import World, WorldEntry, WorldOverview
 if TYPE_CHECKING:
     import datetime
 
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.enums import PvpType, WorldLocation
     from tibiapy.models import OnlineCharacter
@@ -61,7 +61,7 @@ class WorldEntryBuilder:
         self._transfer_type = transfer_type
         return self
 
-    def battleye_since(self, battleye_since: Optional[datetime.datetime]) -> Self:
+    def battleye_since(self, battleye_since: datetime.datetime | None) -> Self:
         self._battleye_since = battleye_since
         return self
 
@@ -101,7 +101,7 @@ class WorldBuilder(WorldEntryBuilder):
         self._record_count = record_count
         return self
 
-    def record_date(self, record_date: Optional[datetime.datetime]) -> Self:
+    def record_date(self, record_date: datetime.datetime | None) -> Self:
         self._record_date = record_date
         return self
 

@@ -1,5 +1,4 @@
 """Models related to the kill statistics section in Tibia.com."""
-from typing import Optional
 
 from tibiapy.builders.kill_statistics import KillStatisticsBuilder
 from tibiapy.errors import InvalidContentError
@@ -15,7 +14,7 @@ class KillStatisticsParser:
     """Parser for kill statistics."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[KillStatistics]:
+    def from_content(cls, content: str) -> KillStatistics | None:
         """Create an instance of the class from the HTML content of the kill statistics' page.
 
         Parameters

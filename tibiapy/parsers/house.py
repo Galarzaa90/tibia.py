@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 import bs4
 
@@ -154,7 +154,7 @@ class HouseParser:
 
     # region Public methods
     @classmethod
-    def from_content(cls, content: str) -> Optional[House]:
+    def from_content(cls, content: str) -> House | None:
         """Parse a Tibia.com response into a House object.
 
         Parameters

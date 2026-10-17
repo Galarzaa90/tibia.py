@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime
 import logging
 from contextlib import asynccontextmanager
-from typing import Annotated, Optional, TypeVar
+from typing import Annotated, TypeVar
 
 import uvicorn
 from fastapi import Depends, FastAPI, Path, Query, Response
@@ -112,7 +112,7 @@ CATEGORIES_DESCRIPTION = "The categories of news to display. Leave empty to show
 async def get_news_article(
         response: Response,
         news_id: int = Path(..., description="The ID of the news entry to see."),
-) -> TibiaResponse[Optional[News]]:
+) -> TibiaResponse[News | None]:
     return handle_response(response, await app.state.client.fetch_news(news_id=news_id))
 
 
@@ -186,7 +186,7 @@ async def get_creatures() -> TibiaResponse[CreaturesSection]:
 
 
 @app.get("/library/creatures/{identifier}", tags=["Library"])
-async def get_creature(identifier: str = Path(...)) -> TibiaResponse[Optional[Creature]]:
+async def get_creature(identifier: str = Path(...)) -> TibiaResponse[Creature | None]:
     return await app.state.client.fetch_creature(identifier)
 
 
@@ -198,7 +198,7 @@ async def get_bosses() -> TibiaResponse[BoostableBosses]:
 @app.get("/library/spells", tags=["Library"])
 async def get_spells(
         response: Response,
-        vocation: Optional[SpellVocationFilter] = Query(None,
+        vocation: SpellVocationFilter | None = Query(None,
                                                         description="Only show spells that this vocation can learn."),
         group: SpellGroup = Query(None, description="Only show spells in this group."),
         type: SpellType = Query(None, description="Only show spells of this type."),
@@ -226,7 +226,7 @@ async def get_spell(
         identifier: str = Path(...,
                                description="The spell's identifier. "
                                            "This is usually the spell's name in lowercase and no spaces."),
-) -> TibiaResponse[Optional[Spell]]:
+) -> TibiaResponse[Spell | None]:
     return handle_response(response, await app.state.client.fetch_spell(identifier))
 
 
@@ -238,7 +238,7 @@ async def get_spell(
 @app.get("/characters/{name}", tags=["Community"])
 async def get_character(
         name: str = Path(...),
-) -> TibiaResponse[Optional[Character]]:
+) -> TibiaResponse[Character | None]:
     return await app.state.client.fetch_character(name)
 
 
@@ -251,28 +251,28 @@ async def get_worlds(response: Response) -> TibiaResponse[WorldOverview]:
 async def get_world(
         response: Response,
         name: str = Path(..., description="The name of the world."),
-) -> TibiaResponse[Optional[World]]:
+) -> TibiaResponse[World | None]:
     return handle_response(response, await app.state.client.fetch_world(name))
 
 
 @app.get("/guilds/{name}", tags=["Community"])
 async def get_guild(
         name: str = Path(...),
-) -> TibiaResponse[Optional[Guild]]:
+) -> TibiaResponse[Guild | None]:
     return await app.state.client.fetch_guild(name)
 
 
 @app.get("/guilds/{name}/wars", tags=["Community"])
 async def get_guild_wars(
         name: str = Path(...),
-) -> TibiaResponse[Optional[GuildWars]]:
+) -> TibiaResponse[GuildWars | None]:
     return await app.state.client.fetch_guild_wars(name)
 
 
 @app.get("/worlds/{world}/guilds", tags=["Community"])
 async def get_world_guilds(
         world: str = Path(...),
-) -> TibiaResponse[Optional[GuildsSection]]:
+) -> TibiaResponse[GuildsSection | None]:
     return await app.state.client.fetch_world_guilds(world)
 
 
@@ -298,7 +298,7 @@ async def get_house(
         response: Response,
         world: str = Path(..., description="The world where the house is located."),
         house_id: int = Path(..., alias="houseId", description="The ID of the house."),
-) -> TibiaResponse[Optional[House]]:
+) -> TibiaResponse[House | None]:
     return handle_response(response, await app.state.client.fetch_house(house_id, world))
 
 
@@ -309,7 +309,7 @@ async def get_houses_section(
         status: HouseStatus = Query(None, description="The house status to filter houses by. Empty will show any."),
         order: HouseOrder = Query(None, description="The field or value to order results by."),
         house_type: HouseType = Query(None, alias="type", description="The type of house to show."),
-) -> TibiaResponse[Optional[HousesSection]]:
+) -> TibiaResponse[HousesSection | None]:
     return await app.state.client.fetch_houses_section(world, town, status=status, order=order, house_type=house_type)
 
 
@@ -317,7 +317,7 @@ async def get_houses_section(
 @app.get("/killstatistics/{world}", tags=["Community"])
 async def get_kill_statistics(
         world: str = Path(...),
-) -> TibiaResponse[Optional[KillStatistics]]:
+) -> TibiaResponse[KillStatistics | None]:
     return await app.state.client.fetch_kill_statistics(world)
 
 
@@ -329,7 +329,7 @@ async def get_leaderboard(
         rotation_id: int = Query(None, alias="rotationId",
                                  description="The ID of the rotation to see, leave empty to see latest.\n"
                                              "Note that it's only possible to see the current and previous rotations."),
-) -> TibiaResponse[Optional[Leaderboard]]:
+) -> TibiaResponse[Leaderboard | None]:
     """Show the latest Tibiadrome rotation's leaderboard."""
     return handle_response(
         response,
@@ -375,7 +375,7 @@ async def get_support_boards() -> TibiaResponse[ForumSection]:
 @app.get("/forums/sections/{section_id}", tags=["Forums"])
 async def get_forum_section(
         section_id: int = Path(...),
-) -> TibiaResponse[Optional[ForumSection]]:
+) -> TibiaResponse[ForumSection | None]:
     return await app.state.client.fetch_forum_section(section_id)
 
 
@@ -384,7 +384,7 @@ async def get_forum_board(
         board_id: int = Path(...),
         page: int = Query(1),
         age: int = Query(30),
-) -> TibiaResponse[Optional[ForumBoard]]:
+) -> TibiaResponse[ForumBoard | None]:
     return await app.state.client.fetch_forum_board(board_id=board_id, page=page, age=age)
 
 
@@ -392,7 +392,7 @@ async def get_forum_board(
 async def get_forum_thread(
         thread_id: int = Path(...),
         page: int = Query(1),
-) -> TibiaResponse[Optional[ForumThread]]:
+) -> TibiaResponse[ForumThread | None]:
     return await app.state.client.fetch_forum_thread(thread_id=thread_id, page=page)
 
 
@@ -469,7 +469,7 @@ async def get_auction(
         fetch_mounts: bool = Query(False, description="Whether to fetch additional mounts pages (if available)."),
         fetch_outfits: bool = Query(False, description="Whether to fetch additional outfits pages (if available)."),
         fetch_familiars: bool = Query(False, description="Whether to fetch additional familiars pages (if available)."),
-) -> TibiaResponse[Optional[Auction]]:
+) -> TibiaResponse[Auction | None]:
     return await app.state.client.fetch_auction(auction_id, skip_details=skip_details, fetch_items=fetch_items,
                                                 fetch_mounts=fetch_mounts, fetch_outfits=fetch_outfits,
                                                 fetch_familiars=fetch_familiars)

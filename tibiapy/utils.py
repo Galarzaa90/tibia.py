@@ -6,7 +6,9 @@ import re
 import urllib.parse
 from collections import defaultdict
 from collections.abc import Iterable
-from typing import Any, Callable, Optional, TypedDict, TypeVar, Union
+from typing import Any, TypedDict, TypeVar
+
+from collections.abc import Callable
 
 import bs4
 from pydantic import BaseModel, Field
@@ -33,13 +35,13 @@ class FormData(BaseModel):
     This contains the values of check boxes."""
     available_options: dict[str, dict[str, str]] = Field(default_factory=lambda: defaultdict(dict))
     """The available options in select fields, radios and check boxes."""
-    action: Optional[str] = None
+    action: str | None = None
     """The form's action URL."""
-    method: Optional[str] = None
+    method: str | None = None
     """The form's method."""
 
 
-def clean_text(tag: Union[bs4.PageElement, str]) -> str:
+def clean_text(tag: bs4.PageElement | str) -> str:
     """Get the tag's text, removing non-breaking, leading and trailing spaces.
 
     Parameters
@@ -141,7 +143,7 @@ def parse_form_data(form: bs4.Tag) -> FormData:
     return form_data
 
 
-def parse_integer(number: str, default: Optional[int] = 0) -> int:
+def parse_integer(number: str, default: int | None = 0) -> int:
     """Parse a string representing an integer, ignoring commas or periods.
 
     Parameters
@@ -173,7 +175,7 @@ class LinkInfo(TypedDict):
 
     text: str
     url: str
-    query: dict[str, Union[list[str], str]]
+    query: dict[str, list[str] | str]
 
 
 def parse_link_info(link_tag: bs4.Tag) -> LinkInfo:
@@ -235,7 +237,7 @@ def parse_link_info(link_tag: bs4.Tag) -> LinkInfo:
     return info
 
 
-def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
+def parse_tibia_datetime(datetime_str: str) -> datetime.datetime | None:
     """Parse date and time from the format used in Tibia.com.
 
     Accepted format:
@@ -265,7 +267,7 @@ def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
             t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M:%S")  # noqa: DTZ007
         except ValueError:
             t = datetime.datetime.strptime(datetime_str[:-4].strip(), "%b %d %Y %H:%M")  # noqa: DTZ007
-        t = t.replace(tzinfo=datetime.timezone.utc)
+        t = t.replace(tzinfo=datetime.UTC)
         # Getting the offset
         if tz == "CET":
             utc_offset = 1
@@ -275,12 +277,12 @@ def parse_tibia_datetime(datetime_str: str) -> Optional[datetime.datetime]:
             return None
         # Add/subtract hours to get the real time
         t = t - datetime.timedelta(hours=utc_offset)
-        return t.replace(tzinfo=datetime.timezone.utc)
+        return t.replace(tzinfo=datetime.UTC)
     except (ValueError, AttributeError):
         return None
 
 
-def parse_tibia_date(date_str: str) -> Optional[datetime.date]:
+def parse_tibia_date(date_str: str) -> datetime.date | None:
     """Parse a date from the format used in Tibia.com.
 
     Accepted format:
@@ -329,12 +331,12 @@ def parse_tibia_forum_datetime(datetime_str: str, utc_offset: int = 1) -> dateti
         The represented datetime, in UTC (timezone aware).
 
     """
-    t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S").astimezone(datetime.timezone.utc)
+    t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S").astimezone(datetime.UTC)
     # Add/subtract hours to get the real time
     return t - datetime.timedelta(hours=utc_offset)
 
 
-def parse_tibia_full_date(date_str: str) -> Optional[datetime.date]:
+def parse_tibia_full_date(date_str: str) -> datetime.date | None:
     """Parse a date in the fuller format used in Tibia.com.
 
     Accepted format:
@@ -353,7 +355,7 @@ def parse_tibia_full_date(date_str: str) -> Optional[datetime.date]:
 
     """
     try:
-        t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y").astimezone(datetime.timezone.utc)
+        t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y").astimezone(datetime.UTC)
         return t.date()
     except (ValueError, AttributeError):
         return None
@@ -408,7 +410,7 @@ def parse_number_words(text_num: str) -> int:
     return result + current
 
 
-def try_datetime(obj: Union[str, datetime.datetime]) -> Optional[datetime.datetime]:
+def try_datetime(obj: str | datetime.datetime) -> datetime.datetime | None:
     """Attempt to convert an object into a datetime.
 
     If the date format is known, it's recommended to use the corresponding function
@@ -431,7 +433,7 @@ def try_datetime(obj: Union[str, datetime.datetime]) -> Optional[datetime.dateti
     return obj if isinstance(obj, datetime.datetime) else parse_tibia_datetime(obj)
 
 
-def try_date(obj: Union[str, datetime.datetime, datetime.date]) -> Optional[datetime.date]:
+def try_date(obj: str | datetime.datetime | datetime.date) -> datetime.date | None:
     """Attempt to convert an object into a date.
 
     If the date format is known, it's recommended to use the corresponding function
@@ -535,7 +537,7 @@ def parse_tibiacom_tables(parsed_content: bs4.BeautifulSoup) -> dict[str, bs4.Ta
     return tables
 
 
-def try_enum(cls: type[T], val: Any, default: D = None) -> Union[T, D]:
+def try_enum(cls: type[T], val: Any, default: D = None) -> T | D:
     """Attempt to convert a value into their enum value.
 
     Parameters

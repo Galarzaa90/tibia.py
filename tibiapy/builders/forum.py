@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.models import AnnouncementEntry, ForumAuthor, ForumPost, ThreadEntry
 from tibiapy.models.forum import (
@@ -13,7 +13,7 @@ from tibiapy.models.forum import (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
 
 class CMPostArchiveBuilder:
@@ -279,11 +279,11 @@ class ForumThreadBuilder:
         self._section_id = section_id
         return self
 
-    def previous_topic_number(self, previous_topic_number: Optional[int]) -> Self:
+    def previous_topic_number(self, previous_topic_number: int | None) -> Self:
         self._previous_topic_number = previous_topic_number
         return self
 
-    def next_topic_number(self, next_topic_number: Optional[int]) -> Self:
+    def next_topic_number(self, next_topic_number: int | None) -> Self:
         self._next_topic_number = next_topic_number
         return self
 
@@ -303,7 +303,7 @@ class ForumThreadBuilder:
         self._golden_frame = golden_frame
         return self
 
-    def anchored_post(self, anchored_post: Optional[ForumPost]) -> Self:
+    def anchored_post(self, anchored_post: ForumPost | None) -> Self:
         self._anchored_post = anchored_post
         return self
 

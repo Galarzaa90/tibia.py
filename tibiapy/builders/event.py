@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from tibiapy.models.event import EventSchedule
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.models.event import EventEntry
 

@@ -1,6 +1,6 @@
 """Models related to the event schedule calendar."""
 import datetime
-from typing import Any, Optional
+from typing import Any
 
 from tibiapy.models import BaseModel
 from tibiapy.urls import get_event_schedule_url
@@ -13,23 +13,23 @@ class EventEntry(BaseModel):
     """The title of the event."""
     description: str
     """The description of the event."""
-    start_date: Optional[datetime.date] = None
+    start_date: datetime.date | None = None
     """The day the event starts.
 
     If the event is continuing from the previous month, this will be `None`."""
-    end_date: Optional[datetime.date] = None
+    end_date: datetime.date | None = None
     """The day the event ends.
 
     If the event is continuing on the next month, this will be `None`."""
 
-    color: Optional[str] = None
+    color: str | None = None
     """The displayed color of the event."""
 
     def __eq__(self, other: Any):
         return self.title == other.title
 
     @property
-    def duration(self) -> int:
+    def duration(self) -> int | None:
         """The number of days this event will be active for."""
         return (self.end_date - self.start_date + datetime.timedelta(days=1)).days if (
                 self.end_date and self.start_date
@@ -74,7 +74,7 @@ class EventSchedule(BaseModel):
 
         """
 
-        def is_between(start: Optional[datetime.date], end: Optional[datetime.date], desired_date: datetime.date):
+        def is_between(start: datetime.date | None, end: datetime.date | None, desired_date: datetime.date):
             start = start or datetime.date.min
             end = end or datetime.date.max
             return start <= desired_date <= end

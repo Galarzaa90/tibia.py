@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 from enum import Enum, Flag, IntEnum
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from pydantic_core import core_schema
-from typing_extensions import Self
+from typing import Self
 
 from tibiapy.errors import EnumValueError
 from tibiapy.utils import try_enum
@@ -310,7 +310,7 @@ class HighscoresProfession(NumericEnum):
     MONKS = 6
 
     @classmethod
-    def from_name(cls, name: str, all_fallback: bool = True) -> Optional[Self]:
+    def from_name(cls, name: str, all_fallback: bool = True) -> Self | None:
         """Get a vocation filter from a vocation's name.
 
         Parameters
@@ -488,7 +488,7 @@ class ThreadStatus(Flag):
             if entry in self and entry is not self.NONE:
                 yield entry
 
-    def get_icon_name(self) -> Optional[str]:
+    def get_icon_name(self) -> str | None:
         """Generate an icon name, following the same ordering used in Tibia.com.
 
         Returns

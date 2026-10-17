@@ -3,7 +3,7 @@ import datetime
 from typing import Generic, TypeVar
 
 from pydantic import computed_field
-from typing_extensions import Self
+from typing import Self
 
 from tibiapy.models.base import BaseModel
 
@@ -39,7 +39,7 @@ class TibiaResponse(BaseModel, Generic[T]):
     def time_left(self) -> datetime.timedelta:
         """The time left for the cache of this response to expire."""
         return (datetime.timedelta(seconds=CACHE_LIMIT - self.age)
-                - (datetime.datetime.now(datetime.timezone.utc) - self.timestamp))
+                - (datetime.datetime.now(datetime.UTC) - self.timestamp))
 
     @property
     def seconds_left(self) -> int:
@@ -47,7 +47,7 @@ class TibiaResponse(BaseModel, Generic[T]):
         return self.time_left.seconds
 
     @classmethod
-    def from_raw(cls, raw_response, data: T, parsing_time: float = None) -> Self:
+    def from_raw(cls, raw_response, data: T, parsing_time: float | None = None) -> Self:
         """Build an instance from a raw response."""
         return cls(
             timestamp=raw_response.timestamp,

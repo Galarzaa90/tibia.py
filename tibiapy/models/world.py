@@ -1,6 +1,5 @@
 """Models related to game worlds."""
 import datetime
-from typing import Optional
 
 from pydantic import computed_field
 
@@ -34,7 +33,7 @@ class BaseWorld(BaseModel):
     """The type of transfer restrictions this world has."""
     is_premium_only: bool
     """Whether only premium account players are allowed to play in this server."""
-    battleye_since: Optional[datetime.date] = None
+    battleye_since: datetime.date | None = None
     """The date when BattlEye was added to this world."""
     battleye_type: BattlEyeType
     """The type of BattlEye protection this world has."""
@@ -50,7 +49,7 @@ class BaseWorld(BaseModel):
     @property
     def is_battleye_protected(self) -> bool:
         """Whether the server is currently protected with BattlEye or not."""
-        return self.battleye_type and self.battleye_type != BattlEyeType.UNPROTECTED
+        return self.battleye_type is not None and self.battleye_type != BattlEyeType.UNPROTECTED
 
 
 class World(BaseWorld):
@@ -58,7 +57,7 @@ class World(BaseWorld):
 
     record_count: int
     """The server's online players record. Will be 0 if the world has never been online."""
-    record_date: Optional[datetime.datetime]
+    record_date: datetime.datetime | None
     """The date when the online record was achieved. Will be None if the world has never been online."""
     creation_date: str
     """The month and year the world was created. In YYYY-MM format."""
@@ -70,12 +69,12 @@ class World(BaseWorld):
     @property
     def creation_year(self) -> int:
         """Returns the year when the world was created."""
-        return int(self.creation_date.split("-")[0]) if self.creation_date else None
+        return int(self.creation_date.split("-")[0])
 
     @property
     def creation_month(self) -> int:
         """Returns the month when the world was created."""
-        return int(self.creation_date.split("-")[1]) if self.creation_date else None
+        return int(self.creation_date.split("-")[1])
 
 
 class WorldEntry(BaseWorld):

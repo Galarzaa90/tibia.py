@@ -1,6 +1,6 @@
 """Models related to the leaderboards."""
 import datetime
-from typing import Any, Optional
+from typing import Any
 
 from tibiapy.models import BaseModel
 from tibiapy.models.pagination import PaginatedWithUrl
@@ -16,7 +16,7 @@ __all__ = (
 class LeaderboardEntry(BaseModel):
     """Represents a character in the Tibiadrome leaderboards."""
 
-    name: Optional[str] = None
+    name: str | None = None
     """The name of the character in the leaderboard. If ``None``, the character has been deleted."""
     rank: int
     """The rank of this entry."""
@@ -24,7 +24,7 @@ class LeaderboardEntry(BaseModel):
     """The Tibia Drome level of this entry."""
 
     @property
-    def url(self) -> Optional[str]:
+    def url(self) -> str | None:
         """The URL of the character, if available."""
         return get_character_url(self.name) if self.name else None
 
@@ -57,7 +57,7 @@ class Leaderboard(PaginatedWithUrl[LeaderboardEntry]):
     """The rotation this leaderboards' entries are for."""
     available_rotations: list[LeaderboardRotation]
     """The available rotations for selection."""
-    last_updated: Optional[datetime.datetime] = None
+    last_updated: datetime.datetime | None = None
     """The time when the shown leaderboards were last updated. The resolution is 1 minute.
 
     Only available for the latest resolution.

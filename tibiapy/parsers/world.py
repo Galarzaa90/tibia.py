@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import datetime
 import re
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.builders.world import WorldBuilder, WorldEntryBuilder, WorldOverviewBuilder
 from tibiapy.enums import BattlEyeType, PvpType, TransferType, WorldLocation
@@ -38,7 +38,7 @@ class WorldParser:
     """Parses Tibia.com content into worlds."""
 
     @classmethod
-    def from_content(cls, content: str) -> Optional[World]:
+    def from_content(cls, content: str) -> World | None:
         """Parse a Tibia.com response into a `World`.
 
         Parameters
@@ -129,7 +129,7 @@ class WorldParser:
 
     @classmethod
     def _parse_creation_date(cls, builder: WorldBuilder, value: str) -> None:
-        parsed_date = datetime.datetime.strptime(value, "%B %Y").astimezone(datetime.timezone.utc)
+        parsed_date = datetime.datetime.strptime(value, "%B %Y").astimezone(datetime.UTC)
         year, month = parsed_date.year, parsed_date.month
         builder.creation_date(f"{year:d}-{month:02d}")
 

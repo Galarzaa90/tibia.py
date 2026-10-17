@@ -6,7 +6,9 @@ import datetime
 import json
 import logging
 import time
-from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
+
+from collections.abc import Callable
 
 import aiohttp
 import aiohttp_socks
@@ -142,7 +144,7 @@ log = logging.getLogger("tibiapy")
 
 class _RawResponse:
     def __init__(self, response: aiohttp.ClientResponse, fetching_time: float):
-        self.timestamp = datetime.datetime.now(datetime.timezone.utc)
+        self.timestamp = datetime.datetime.now(datetime.UTC)
         self.fetching_time = fetching_time
         self.url = response.url
         self.cached = response.headers.get("CF-Cache-Status") == "HIT"
@@ -529,7 +531,7 @@ class Client:
         begin = end - datetime.timedelta(days=days)
         return await self.fetch_news_archive(begin, end, categories, types, test=test)
 
-    async def fetch_news(self, news_id: int, *, test: bool = False) -> TibiaResponse[Optional[News]]:
+    async def fetch_news(self, news_id: int, *, test: bool = False) -> TibiaResponse[News | None]:
         """Fetch a news entry by its id from Tibia.com.
 
         Parameters
@@ -625,7 +627,7 @@ class Client:
         response = await self._request("GET", get_creatures_section_url(), test=test)
         return response.parse(CreaturesSectionParser.from_content)
 
-    async def fetch_creature(self, identifier: str, *, test: bool = False) -> TibiaResponse[Optional[Creature]]:
+    async def fetch_creature(self, identifier: str, *, test: bool = False) -> TibiaResponse[Creature | None]:
         """Fetch a creature's information from the Tibia.com library.
 
         Parameters
@@ -678,11 +680,11 @@ class Client:
         return response.parse(BoostableBossesParser.from_content)
 
     async def fetch_spells(self, *,
-                           vocation: Optional[SpellVocationFilter] = None,
-                           group: Optional[SpellGroup] = None,
-                           spell_type: Optional[SpellType] = None,
-                           is_premium: Optional[bool] = None,
-                           sort: Optional[SpellSorting] = None,
+                           vocation: SpellVocationFilter | None = None,
+                           group: SpellGroup | None = None,
+                           spell_type: SpellType | None = None,
+                           is_premium: bool | None = None,
+                           sort: SpellSorting | None = None,
                            test: bool = False) -> TibiaResponse[SpellsSection]:
         """Fetch the spells section.
 
@@ -720,7 +722,7 @@ class Client:
                                                                      sort=sort), test=test)
         return response.parse(SpellsSectionParser.from_content)
 
-    async def fetch_spell(self, identifier: str, *, test: bool = False) -> TibiaResponse[Optional[Spell]]:
+    async def fetch_spell(self, identifier: str, *, test: bool = False) -> TibiaResponse[Spell | None]:
         """Fetch a spell by its identifier.
 
         Parameters
@@ -751,7 +753,7 @@ class Client:
 
     # region Community
 
-    async def fetch_character(self, name: str, *, test: bool = False) -> TibiaResponse[Optional[Character]]:
+    async def fetch_character(self, name: str, *, test: bool = False) -> TibiaResponse[Character | None]:
         """Fetch a character by its name from Tibia.com.
 
         Parameters
@@ -803,7 +805,7 @@ class Client:
         response = await self._request("GET", get_world_overview_url(), test=test)
         return response.parse(WorldOverviewParser.from_content)
 
-    async def fetch_world(self, name: str, *, test: bool = False) -> TibiaResponse[Optional[World]]:
+    async def fetch_world(self, name: str, *, test: bool = False) -> TibiaResponse[World | None]:
         """Fetch a world from Tibia.com.
 
         Parameters
@@ -836,11 +838,11 @@ class Client:
             category: HighscoresCategory = HighscoresCategory.EXPERIENCE,
             vocation: HighscoresProfession = HighscoresProfession.ALL,
             page: int = 1,
-            battleye_type: Optional[HighscoresBattlEyeType] = None,
+            battleye_type: HighscoresBattlEyeType | None = None,
             pvp_types: set[PvpTypeFilter] = None,
             *,
             test: bool = False,
-    ) -> TibiaResponse[Optional[Highscores]]:
+    ) -> TibiaResponse[Highscores | None]:
         """Fetch a single highscores page from Tibia.com.
 
         Notes
@@ -898,7 +900,7 @@ class Client:
             rotation: int = None,
             page: int = 1,
             *, test: bool = False,
-    ) -> TibiaResponse[Optional[Leaderboard]]:
+    ) -> TibiaResponse[Leaderboard | None]:
         """Fetch the leaderboards for a specific world and rotation.
 
         Parameters
@@ -934,7 +936,7 @@ class Client:
             world: str,
             *,
             test: bool = False,
-    ) -> TibiaResponse[Optional[KillStatistics]]:
+    ) -> TibiaResponse[KillStatistics | None]:
         """Fetch the kill statistics of a world from Tibia.com.
 
         Parameters
@@ -966,8 +968,8 @@ class Client:
             world: str,
             town: str,
             house_type: HouseType = HouseType.HOUSE,
-            status: Optional[HouseStatus] = None,
-            order: Optional[HouseOrder] = None,
+            status: HouseStatus | None = None,
+            order: HouseOrder | None = None,
             *,
             test: bool = False,
     ) -> TibiaResponse[HousesSection]:
@@ -1006,7 +1008,7 @@ class Client:
                                                                      status=status, order=order), test=test)
         return response.parse(HousesSectionParser.from_content)
 
-    async def fetch_house(self, house_id: int, world: str, *, test: bool = False) -> TibiaResponse[Optional[House]]:
+    async def fetch_house(self, house_id: int, world: str, *, test: bool = False) -> TibiaResponse[House | None]:
         """Fetch a house in a specific world by its id.
 
         Parameters
@@ -1065,7 +1067,7 @@ class Client:
         response = await self._request("GET", get_world_guilds_url(world), test=test)
         return response.parse(GuildsSectionParser.from_content)
 
-    async def fetch_guild(self, name: str, *, test: bool = False) -> TibiaResponse[Optional[Guild]]:
+    async def fetch_guild(self, name: str, *, test: bool = False) -> TibiaResponse[Guild | None]:
         """Fetch a guild by its name from Tibia.com.
 
         Parameters
@@ -1092,7 +1094,7 @@ class Client:
         response = await self._request("GET", get_guild_url(name), test=test)
         return response.parse(GuildParser.from_content)
 
-    async def fetch_guild_wars(self, name: str, *, test: bool = False) -> TibiaResponse[Optional[GuildWars]]:
+    async def fetch_guild_wars(self, name: str, *, test: bool = False) -> TibiaResponse[GuildWars | None]:
         """Fetch a guild's wars by its name from Tibia.com.
 
         Parameters
@@ -1155,7 +1157,7 @@ class Client:
             section_id: int,
             *,
             test: bool = False,
-    ) -> TibiaResponse[Optional[ForumSection]]:
+    ) -> TibiaResponse[ForumSection | None]:
         """Fetch a forum's section by its ID.
 
         Parameters
@@ -1182,7 +1184,7 @@ class Client:
         response = await self._request("GET", get_forum_section_url(section_id), test=test)
         return response.parse(ForumSectionParser.from_content)
 
-    async def fetch_forum_world_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_world_boards(self, *, test: bool = False) -> TibiaResponse[ForumSection | None]:
         """Fetch the forum's world boards.
 
         Parameters
@@ -1207,7 +1209,7 @@ class Client:
         response = await self._request("GET", get_world_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
-    async def fetch_forum_trade_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_trade_boards(self, *, test: bool = False) -> TibiaResponse[ForumSection | None]:
         """Fetch the forum's trade boards.
 
         Parameters
@@ -1232,7 +1234,7 @@ class Client:
         response = await self._request("GET", get_trade_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
-    async def fetch_forum_community_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_community_boards(self, *, test: bool = False) -> TibiaResponse[ForumSection | None]:
         """Fetch the forum's community boards.
 
         Parameters
@@ -1257,7 +1259,7 @@ class Client:
         response = await self._request("GET", get_community_boards_url(), test=test)
         return response.parse(ForumSectionParser.from_content)
 
-    async def fetch_forum_support_boards(self, *, test: bool = False) -> TibiaResponse[Optional[ForumSection]]:
+    async def fetch_forum_support_boards(self, *, test: bool = False) -> TibiaResponse[ForumSection | None]:
         """Fetch the forum's community boards.
 
         Parameters
@@ -1283,7 +1285,7 @@ class Client:
         return response.parse(ForumSectionParser.from_content)
 
     async def fetch_forum_board(self, board_id: int, page: int = 1, age: int = None, *,
-                                test: bool = False) -> TibiaResponse[Optional[ForumBoard]]:
+                                test: bool = False) -> TibiaResponse[ForumBoard | None]:
         """Fetch a forum board with a given id.
 
         Parameters
@@ -1317,7 +1319,7 @@ class Client:
         return response.parse(ForumBoardParser.from_content)
 
     async def fetch_forum_thread(self, thread_id: int, page: int = 1, *,
-                                 test: bool = False) -> TibiaResponse[Optional[ForumThread]]:
+                                 test: bool = False) -> TibiaResponse[ForumThread | None]:
         """Fetch a forum thread with a given id.
 
         Parameters
@@ -1346,7 +1348,7 @@ class Client:
         response = await self._request("GET", get_forum_thread_url(thread_id, page), test=test)
         return response.parse(ForumThreadParser.from_content)
 
-    async def fetch_forum_post(self, post_id: int, *, test: bool = False) -> TibiaResponse[Optional[ForumThread]]:
+    async def fetch_forum_post(self, post_id: int, *, test: bool = False) -> TibiaResponse[ForumThread | None]:
         """Fetch a forum post with a given id.
 
         The thread that contains the post will be returned, containing the desired post in
@@ -1388,7 +1390,7 @@ class Client:
             announcement_id: int,
             *,
             test: bool = False,
-    ) -> TibiaResponse[Optional[ForumAnnouncement]]:
+    ) -> TibiaResponse[ForumAnnouncement | None]:
         """Fetch a forum announcement.
 
         Parameters
@@ -1467,7 +1469,7 @@ class Client:
     async def fetch_current_auctions(
             self,
             page: int = 1,
-            filters: Optional[AuctionFilters] = None,
+            filters: AuctionFilters | None = None,
             *,
             test: bool = False,
     ) -> TibiaResponse[CharacterBazaar]:
@@ -1504,7 +1506,7 @@ class Client:
         response = await self._request("GET", get_bazaar_url(BazaarType.CURRENT, page, filters), test=test)
         return response.parse(CharacterBazaarParser.from_content)
 
-    async def fetch_auction_history(self, page: int = 1, filters: Optional[AuctionFilters] = None, *,
+    async def fetch_auction_history(self, page: int = 1, filters: AuctionFilters | None = None, *,
                                     test: bool = False) -> TibiaResponse[CharacterBazaar]:
         """Fetch the auction history of the bazaar.
 
@@ -1549,7 +1551,7 @@ class Client:
             fetch_familiars: bool = False,
             skip_details: bool = False,
             test: bool = False,
-    ) -> TibiaResponse[Optional[Auction]]:
+    ) -> TibiaResponse[Auction | None]:
         """Fetch an auction by its ID.
 
         Parameters

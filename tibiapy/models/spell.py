@@ -1,8 +1,6 @@
 """Models related to the spells section in the library."""
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic import computed_field
 
 from tibiapy.enums import SpellGroup, SpellSorting, SpellType, SpellVocationFilter
@@ -28,11 +26,11 @@ class Rune(BaseModel):
     """The cooldown group of the rune."""
     exp_level: int
     """The experience level required to use the rune."""
-    mana: Optional[int] = None
+    mana: int | None = None
     """The amount of mana needed to use the rune. It will be `None` if not applicable."""
     magic_level: int
     """The magic level required to use the rune."""
-    magic_type: Optional[str] = None
+    magic_type: str | None = None
     """The type of magic of this rune. Influenced by specialized magic level attributes."""
 
 
@@ -49,9 +47,9 @@ class SpellEntry(BaseModel):
     """The cooldown group of the spell."""
     spell_type: SpellType
     """The type of the spell"""
-    exp_level: Optional[int] = None
+    exp_level: int | None = None
     """The required level to cast the spell. If obj:`None`, the spell is obtained through a Revelation Perk."""
-    mana: Optional[int] = None
+    mana: int | None = None
     """The mana required to use the spell. If `None`, the mana cost is variable."""
     price: int
     """The price in gold coins to learn the spell."""
@@ -79,34 +77,34 @@ class Spell(SpellEntry):
     """The vocations that can use this spell."""
     cooldown: int
     """The individual cooldown of this spell in seconds."""
-    cooldown_group: Optional[int] = None
+    cooldown_group: int | None = None
     """The group cooldown of this spell in seconds."""
-    group_secondary: Optional[str] = None
+    group_secondary: str | None = None
     """The secondary cooldown group of this spell, if any."""
-    cooldown_group_secondary: Optional[int] = None
+    cooldown_group_secondary: int | None = None
     """The secondary cooldown of this spell in seconds."""
-    soul_points: Optional[int] = None
+    soul_points: int | None = None
     """The number of soul points consumed by this spell. It will be `None` if not applicable."""
-    amount: Optional[int] = None
+    amount: int | None = None
     """The amount of objects created by this spell. It will be `None` if not applicable."""
-    magic_type: Optional[str] = None
+    magic_type: str | None = None
     """The type of magic of this spell. Influenced by specialized magic level attributes."""
     cities: list[str]
     """The cities where this spell can be learned."""
-    rune: Optional[Rune] = None
+    rune: Rune | None = None
     """Information of the rune created by this spell, if applicable."""
 
 
 class SpellsSection(BaseModel):
     """The spells section in Tibia.com."""
 
-    vocation: Optional[SpellVocationFilter] = None
+    vocation: SpellVocationFilter | None = None
     """The selected vocation filter. If `None`, spells for any vocation will be shown."""
-    group: Optional[SpellGroup] = None
+    group: SpellGroup | None = None
     """The selected spell group to display. If `None`, spells for any group will be shown."""
-    spell_type: Optional[SpellType] = None
+    spell_type: SpellType | None = None
     """The selected spell type to display. If `None`, spells for any type will be shown."""
-    is_premium: Optional[bool] = None
+    is_premium: bool | None = None
     """The premium status to filter in. `True` to show only premium spells,
         `False` to show free account spells and `None` will show any spells."""
     sort_by: SpellSorting

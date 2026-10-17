@@ -1,6 +1,4 @@
 """Models for creatures."""
-from typing import Optional
-
 from pydantic import computed_field
 
 from tibiapy.models import BaseModel
@@ -72,7 +70,7 @@ class Creature(CreatureEntry):
     """The elements this creature is strong against."""
     loot: str
     """Some of the items this creature drops."""
-    mana_cost: Optional[int]
+    mana_cost: int | None
     """The mana neccessary to summon or convince this creature."""
     summonable: bool
     """Whether this creature can be summoned or not."""

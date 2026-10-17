@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from tibiapy.models import Guild, GuildEntry, GuildWarEntry, GuildWars
 
 if TYPE_CHECKING:
     import datetime
 
-    from typing_extensions import Self
+    from typing import Self
 
     from tibiapy.models import GuildHouse, GuildInvite, GuildMember
 
@@ -27,7 +27,7 @@ class _BaseGuildBuilder:
         self._logo_url = logo_url
         return self
 
-    def description(self, description: Optional[str]) -> Self:
+    def description(self, description: str | None) -> Self:
         self._description = description
         return self
 
@@ -102,15 +102,15 @@ class GuildBuilder(_BaseGuildBuilder):
         self._active_war = active_war
         return self
 
-    def disband_date(self, disband_date: Optional[datetime.date]) -> Self:
+    def disband_date(self, disband_date: datetime.date | None) -> Self:
         self._disband_date = disband_date
         return self
 
-    def disband_condition(self, disband_condition: Optional[str]) -> Self:
+    def disband_condition(self, disband_condition: str | None) -> Self:
         self._disband_condition = disband_condition
         return self
 
-    def homepage(self, homepage: Optional[str]) -> Self:
+    def homepage(self, homepage: str | None) -> Self:
         self._homepage = homepage
         return self
 
@@ -160,7 +160,7 @@ class GuildWarsBuilder:
         self._name = name
         return self
 
-    def current(self, current: Optional[GuildWarEntry]) -> Self:
+    def current(self, current: GuildWarEntry | None) -> Self:
         self._current = current
         return self
 
@@ -203,7 +203,7 @@ class GuildWarEntryBuilder:
         self._guild_fee = guild_fee
         return self
 
-    def opponent_name(self, opponent_name: Optional[str]) -> Self:
+    def opponent_name(self, opponent_name: str | None) -> Self:
         self._opponent_name = opponent_name
         return self
 
@@ -215,7 +215,7 @@ class GuildWarEntryBuilder:
         self._opponent_fee = opponent_fee
         return self
 
-    def start_date(self, start_date: Optional[datetime.date]) -> Self:
+    def start_date(self, start_date: datetime.date | None) -> Self:
         self._start_date = start_date
         return self
 
@@ -223,15 +223,15 @@ class GuildWarEntryBuilder:
         self._score_limit = score_limit
         return self
 
-    def duration(self, duration: Optional[datetime.timedelta]) -> Self:
+    def duration(self, duration: datetime.timedelta | None) -> Self:
         self._duration = duration
         return self
 
-    def end_date(self, end_date: Optional[datetime.date]) -> Self:
+    def end_date(self, end_date: datetime.date | None) -> Self:
         self._end_date = end_date
         return self
 
-    def winner(self, winner: Optional[str]) -> Self:
+    def winner(self, winner: str | None) -> Self:
         self._winner = winner
         return self
 

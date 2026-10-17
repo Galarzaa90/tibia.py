@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
-from typing_extensions import Self
+from typing import Self
 
 from tibiapy.models.house import House, HouseEntry, HousesSection
 
@@ -122,11 +122,11 @@ class HouseEntryBuilder(_HouseWithIdBuilder):
         self._rent = rent
         return self
 
-    def time_left(self, time_left: Optional[datetime.timedelta]) -> Self:
+    def time_left(self, time_left: datetime.timedelta | None) -> Self:
         self._time_left = time_left
         return self
 
-    def highest_bid(self, highest_bid: Optional[int]) -> Self:
+    def highest_bid(self, highest_bid: int | None) -> Self:
         self._highest_bid = highest_bid
         return self
 
@@ -189,7 +189,7 @@ class HouseBuilder(_HouseWithIdBuilder):
         self._size = size
         return self
 
-    def owner(self, owner: Optional[str]) -> Self:
+    def owner(self, owner: str | None) -> Self:
         self._owner = owner
         return self
 
@@ -197,35 +197,35 @@ class HouseBuilder(_HouseWithIdBuilder):
         self._owner_sex = owner_sex
         return self
 
-    def paid_until(self, paid_until: Optional[datetime.datetime]) -> Self:
+    def paid_until(self, paid_until: datetime.datetime | None) -> Self:
         self._paid_until = paid_until
         return self
 
-    def transfer_date(self, transfer_date: Optional[datetime.datetime]) -> Self:
+    def transfer_date(self, transfer_date: datetime.datetime | None) -> Self:
         self._transfer_date = transfer_date
         return self
 
-    def transfer_recipient(self, transfer_recipient: Optional[str]) -> Self:
+    def transfer_recipient(self, transfer_recipient: str | None) -> Self:
         self._transfer_recipient = transfer_recipient
         return self
 
-    def transfer_price(self, transfer_price: Optional[int]) -> Self:
+    def transfer_price(self, transfer_price: int | None) -> Self:
         self._transfer_price = transfer_price
         return self
 
-    def transfer_accepted(self, transfer_accepted: Optional[bool]) -> Self:
+    def transfer_accepted(self, transfer_accepted: bool | None) -> Self:
         self._transfer_accepted = transfer_accepted
         return self
 
-    def highest_bid(self, highest_bid: Optional[int]) -> Self:
+    def highest_bid(self, highest_bid: int | None) -> Self:
         self._highest_bid = highest_bid
         return self
 
-    def highest_bidder(self, highest_bidder: Optional[str]) -> Self:
+    def highest_bidder(self, highest_bidder: str | None) -> Self:
         self._highest_bidder = highest_bidder
         return self
 
-    def auction_end(self, auction_end: Optional[datetime.datetime]) -> Self:
+    def auction_end(self, auction_end: datetime.datetime | None) -> Self:
         self._auction_end = auction_end
         return self
 

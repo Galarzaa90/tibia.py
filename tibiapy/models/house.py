@@ -1,6 +1,5 @@
 """Models for the houses section."""
 import datetime
-from typing import Optional
 
 from tibiapy.enums import HouseOrder, HouseStatus, HouseType, Sex
 from tibiapy.models import BaseModel, HouseWithId
@@ -27,10 +26,10 @@ class HouseEntry(HouseWithId):
     """The size of the house in SQM."""
     rent: int
     """The monthly cost of the house, in gold coins."""
-    time_left: Optional[datetime.timedelta] = None
+    time_left: datetime.timedelta | None = None
     """The number of days or hours left until the bid ends, if it has started.
         This is not an exact measure, it is rounded to hours or days."""
-    highest_bid: Optional[int] = None
+    highest_bid: int | None = None
     """The highest bid so far, if the auction has started."""
 
 
@@ -49,39 +48,39 @@ class House(HouseWithId):
     """The number of SQM the house has."""
     rent: int
     """The monthly cost paid for the house, in gold coins."""
-    owner: Optional[str] = None
+    owner: str | None = None
     """The current owner of the house, if any."""
-    owner_sex: Optional[Sex] = None
+    owner_sex: Sex | None = None
     """The sex of the owner of the house, if applicable."""
-    paid_until: Optional[datetime.datetime] = None
+    paid_until: datetime.datetime | None = None
     """The date the last paid rent is due."""
-    transfer_date: Optional[datetime.datetime] = None
+    transfer_date: datetime.datetime | None = None
     """The date when the owner will move out of the house, if applicable."""
-    transfer_recipient: Optional[str] = None
+    transfer_recipient: str | None = None
     """The character who will receive the house when the owner moves, if applicable."""
-    transfer_price: Optional[int] = None
+    transfer_price: int | None = None
     """The price that will be paid from the transferee to the owner for the house transfer."""
-    transfer_accepted: Optional[bool] = None
+    transfer_accepted: bool | None = None
     """Whether the house transfer has already been accepted or not."""
-    highest_bid: Optional[int] = None
+    highest_bid: int | None = None
     """The currently highest bid on the house if it is being auctioned."""
-    highest_bidder: Optional[str] = None
+    highest_bidder: str | None = None
     """The character that holds the highest bid."""
-    auction_end: Optional[datetime.datetime] = None
+    auction_end: datetime.datetime | None = None
     """The date when the auction will end."""
 
     @property
-    def owner_url(self) -> Optional[str]:
+    def owner_url(self) -> str | None:
         """The URL to the Tibia.com page of the house's owner, if applicable."""
         return get_character_url(self.owner) if self.owner is not None else None
 
     @property
-    def transferee_url(self) -> Optional[str]:
+    def transferee_url(self) -> str | None:
         """The URL to the Tibia.com page of the character receiving the house, if applicable."""
         return get_character_url(self.transfer_recipient) if self.transfer_recipient is not None else None
 
     @property
-    def highest_bidder_url(self) -> Optional[str]:
+    def highest_bidder_url(self) -> str | None:
         """The URL to the Tibia.com page of the character with the highest bid, if applicable."""
         return get_character_url(self.highest_bidder) if self.highest_bidder is not None else None
 
@@ -93,7 +92,7 @@ class HousesSection(BaseModel):
     """The selected world to show houses for."""
     town: str
     """The town to show houses for."""
-    status: Optional[HouseStatus] = None
+    status: HouseStatus | None = None
     """The status to show. If `None`, any status is shown."""
     house_type: HouseType
     """The type of houses to show."""

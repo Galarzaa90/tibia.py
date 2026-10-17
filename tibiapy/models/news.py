@@ -1,6 +1,5 @@
 """Models related to the news section in Tibia.com."""
 import datetime
-from typing import Optional
 
 from tibiapy.enums import NewsCategory, NewsType
 from tibiapy.models import BaseModel
@@ -49,11 +48,11 @@ class News(BaseNews):
     """The date when the news were published."""
     content: str
     """The raw html content of the entry."""
-    thread_id: Optional[int] = None
+    thread_id: int | None = None
     """The thread id of the designated discussion thread for this entry."""
 
     @property
-    def thread_url(self) -> str:
+    def thread_url(self) -> str | None:
         """The URL to the thread discussing this news entry, if any."""
         return get_news_url(self.thread_id) if self.thread_id else None
 

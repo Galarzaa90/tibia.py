@@ -1,7 +1,7 @@
 """Models relatd to the character bazaar."""
 import datetime
 from abc import ABC, abstractmethod
-from typing import Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
 from tibiapy.enums import (
     AuctionBattlEyeFilter,
@@ -62,31 +62,31 @@ class AuctionFilters(BaseModel):
     All attributes are optional.
     """
 
-    world: Optional[str] = None
+    world: str | None = None
     """The character's world to show characters for."""
-    pvp_type: Optional[PvpTypeFilter] = None
+    pvp_type: PvpTypeFilter | None = None
     """The PvP type of the character's worlds to show."""
-    battleye: Optional[AuctionBattlEyeFilter] = None
+    battleye: AuctionBattlEyeFilter | None = None
     """The type of BattlEye protection of the character's worlds to show."""
-    vocation: Optional[AuctionVocationFilter] = None
+    vocation: AuctionVocationFilter | None = None
     """The character vocation to show results for."""
-    min_level: Optional[int] = None
+    min_level: int | None = None
     """The minimum level to display."""
-    max_level: Optional[int] = None
+    max_level: int | None = None
     """The maximum level to display."""
-    skill: Optional[AuctionSkillFilter] = None
+    skill: AuctionSkillFilter | None = None
     """The skill to filter by its level range."""
-    min_skill_level: Optional[int] = None
+    min_skill_level: int | None = None
     """The minimum skill level of the selected [skill][tibiapy.models.bazaar.AuctionFilters.skill] to display."""
-    max_skill_level: Optional[int] = None
+    max_skill_level: int | None = None
     """The maximum skill level of the selected [skill][tibiapy.models.bazaar.AuctionFilters.skill] to display."""
-    order_by: Optional[AuctionOrderBy] = None
+    order_by: AuctionOrderBy | None = None
     """The column or value to order by."""
-    order: Optional[AuctionOrderDirection] = None
+    order: AuctionOrderDirection | None = None
     """The ordering direction for the results."""
-    search_string: Optional[str] = None
+    search_string: str | None = None
     """The search term to filter out auctions."""
-    search_type: Optional[AuctionSearchType] = None
+    search_type: AuctionSearchType | None = None
     """The type of search to use. Defines the behaviour of [search_string][tibiapy.models.bazaar.AuctionFilters.search_string]."""
     available_worlds: list[str] = []
     """The list of available worlds to select to filter."""
@@ -109,7 +109,7 @@ class AuctionFilters(BaseModel):
             "searchstring": self.search_string,
             "searchtype": self.search_type.value if self.search_type is not None else None,
         }
-        return {k: v for k, v in params.items() if v is not None}
+        return {k: str(v) for k, v in params.items() if v is not None}
 
 
 class BestiaryEntry(BaseModel):
@@ -172,7 +172,7 @@ class ItemEntry(DisplayImage):
     """The URL to the item's image."""
     name: str
     """The item's name."""
-    description: Optional[str] = None
+    description: str | None = None
     """The item's description, if any."""
     count: int = 1
     """The item's count."""
@@ -270,7 +270,7 @@ class AuctionSummary(AjaxPaginator[T], Generic[T], ABC):
 class ItemSummary(AuctionSummary[ItemEntry]):
     """Items in a character's inventory and depot."""
 
-    def get_by_id(self, entry_id: int) -> Optional[ItemEntry]:
+    def get_by_id(self, entry_id: int) -> ItemEntry | None:
         """Get an item by its item id.
 
         Parameters
@@ -290,7 +290,7 @@ class ItemSummary(AuctionSummary[ItemEntry]):
 class Mounts(AuctionSummary[MountEntry]):
     """The mounts the character has unlocked or purchased."""
 
-    def get_by_id(self, entry_id: int) -> Optional[MountEntry]:
+    def get_by_id(self, entry_id: int) -> MountEntry | None:
         """Get a mount by its mount id.
 
         Parameters
@@ -310,7 +310,7 @@ class Mounts(AuctionSummary[MountEntry]):
 class Familiars(AuctionSummary[FamiliarEntry]):
     """The familiars the character has unlocked or purchased."""
 
-    def get_by_id(self, entry_id: int) -> Optional[FamiliarEntry]:
+    def get_by_id(self, entry_id: int) -> FamiliarEntry | None:
         """Get a familiar by its familiar id.
 
         Parameters
@@ -330,7 +330,7 @@ class Familiars(AuctionSummary[FamiliarEntry]):
 class Outfits(AuctionSummary[OutfitEntry]):
     """The outfits the character has unlocked or purchased."""
 
-    def get_by_id(self, entry_id: int) -> Optional[OutfitEntry]:
+    def get_by_id(self, entry_id: int) -> OutfitEntry | None:
         """Get an outfit by its outfit id.
 
         Parameters
@@ -410,7 +410,7 @@ class AuctionDetails(BaseModel):
     """The total amount of gold the character has."""
     achievement_points: int
     """The number of achievement points of the character."""
-    regular_world_transfer_available_date: Optional[datetime.datetime] = None
+    regular_world_transfer_available_date: datetime.datetime | None = None
     """The date after regular world transfers will be available to purchase and use.
     `None` indicates it is available immediately."""
     charm_expansion: bool
@@ -524,7 +524,7 @@ class Auction(BaseModel):
     """The type of the auction's bid."""
     status: AuctionStatus
     """The current status of the auction."""
-    details: Optional[AuctionDetails] = None
+    details: AuctionDetails | None = None
     """The auction's details."""
 
     @property
@@ -543,7 +543,7 @@ class CharacterBazaar(PaginatedWithUrl[Auction]):
 
     type: BazaarType
     """The type of auctions being displayed, either current or auction history."""
-    filters: Optional[AuctionFilters] = None
+    filters: AuctionFilters | None = None
     """The currently set filtering options."""
 
     def get_page_url(self, page: int) -> str:
