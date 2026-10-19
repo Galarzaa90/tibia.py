@@ -8529,7 +8529,7 @@ the id may be passed to assign.</p>
                <span class="o">.</span><span class="n">announcement_id</span><span class="p">(</span><span class="n">announcement_id</span><span class="p">))</span>
 
     <span class="n">times_container</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"div.ForumContentFooterLeft"</span><span class="p">)</span>
-    <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">times_container</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s2">"CEST"</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="s2">"CEST"</span> <span class="ow">in</span> <span class="n">times_container</span><span class="o">.</span><span class="n">text</span> <span class="k">else</span> <span class="mi">1</span>
 
     <span class="n">post_container</span> <span class="o">=</span> <span class="n">parsed_content</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"div.ForumPost"</span><span class="p">)</span>
     <span class="n">character_info_container</span> <span class="o">=</span> <span class="n">post_container</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"div.PostCharacterText"</span><span class="p">)</span>
@@ -8816,7 +8816,8 @@ the id may be passed to assign.</p>
 <span class="normal">477</span>
 <span class="normal">478</span>
 <span class="normal">479</span>
-<span class="normal">480</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">480</span>
+<span class="normal">481</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumBoard</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Parse the board's HTML content from Tibia.com.</span>
 
@@ -8868,9 +8869,10 @@ the id may be passed to assign.</p>
     <span class="n">builder</span><span class="o">.</span><span class="n">total_pages</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
 
     <span class="o">*</span><span class="n">thread_rows</span><span class="p">,</span> <span class="n">times_row</span> <span class="o">=</span> <span class="n">get_rows</span><span class="p">(</span><span class="n">tables</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="s2">"CEST"</span> <span class="ow">in</span> <span class="n">times_row</span><span class="o">.</span><span class="n">text</span> <span class="k">else</span> <span class="mi">1</span>
     <span class="k">for</span> <span class="n">thread_row</span> <span class="ow">in</span> <span class="n">thread_rows</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="n">thread_row</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"td"</span><span class="p">)</span>
-        <span class="n">entry</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_thread_row</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_thread_row</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
         <span class="k">if</span> <span class="s2">"ClassifiedProposal"</span> <span class="ow">in</span> <span class="n">thread_row</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"class"</span><span class="p">):</span>
             <span class="n">entry</span><span class="o">.</span><span class="n">golden_frame</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -9087,10 +9089,7 @@ the id may be passed to assign.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>tibiapy/parsers/forum.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">576</span>
-<span class="normal">577</span>
-<span class="normal">578</span>
-<span class="normal">579</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">579</span>
 <span class="normal">580</span>
 <span class="normal">581</span>
 <span class="normal">582</span>
@@ -9169,7 +9168,10 @@ the id may be passed to assign.</p>
 <span class="normal">655</span>
 <span class="normal">656</span>
 <span class="normal">657</span>
-<span class="normal">658</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_content</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForumThread</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Create an instance of the class from the html content of the thread's page.</span>
 
@@ -9244,7 +9246,7 @@ the id may be passed to assign.</p>
         <span class="n">builder</span><span class="o">.</span><span class="n">next_topic_number</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">next_link</span><span class="p">[</span><span class="s2">"query"</span><span class="p">][</span><span class="s2">"threadid"</span><span class="p">]))</span>
 
     <span class="n">times_container</span> <span class="o">=</span> <span class="n">posts_table</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"div.ForumContentFooterLeft"</span><span class="p">)</span>
-    <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">times_container</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s2">"CEST"</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="s2">"CEST"</span> <span class="ow">in</span> <span class="n">times_container</span><span class="o">.</span><span class="n">text</span> <span class="k">else</span> <span class="mi">1</span>
 
     <span class="n">post_containers</span> <span class="o">=</span> <span class="n">posts_table</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"div.PostBody"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">post_container</span> <span class="ow">in</span> <span class="n">post_containers</span><span class="p">:</span>

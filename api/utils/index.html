@@ -3392,9 +3392,9 @@ Empty parameters are omitted.</p>
 <span class="sd">        The represented datetime, in UTC (timezone aware).</span>
 
 <span class="sd">    """</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">"</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M:%S"</span><span class="p">)</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
-    <span class="c1"># Add/subtract hours to get the real time</span>
-    <span class="k">return</span> <span class="n">t</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">utc_offset</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datetime_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">"</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M:%S"</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">utc_offset</span><span class="p">))</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
