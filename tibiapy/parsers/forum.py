@@ -308,7 +308,7 @@ class ForumAnnouncementParser:
                    .announcement_id(announcement_id))
 
         times_container = parsed_content.select_one("div.ForumContentFooterLeft")
-        offset = 2 if times_container.text == "CEST" else 1
+        offset = 2 if "CEST" in times_container.text else 1
 
         post_container = parsed_content.select_one("div.ForumPost")
         character_info_container = post_container.select_one("div.PostCharacterText")
@@ -451,9 +451,10 @@ class ForumBoardParser:
         builder.total_pages(total)
 
         *thread_rows, times_row = get_rows(tables[-1])
+        offset = 2 if "CEST" in times_row.text else 1
         for thread_row in thread_rows[1:]:
             columns = thread_row.select("td")
-            entry = cls._parse_thread_row(columns)
+            entry = cls._parse_thread_row(columns, offset)
             if "ClassifiedProposal" in thread_row.attrs.get("class"):
                 entry.golden_frame = True
 
@@ -484,13 +485,15 @@ class ForumBoardParser:
     # region Private Methods
 
     @classmethod
-    def _parse_thread_row(cls, columns: bs4.ResultSet) -> ThreadEntry | None:
+    def _parse_thread_row(cls, columns: bs4.ResultSet, offset: int = 1) -> ThreadEntry | None:
         """Parse the thread row, containing a single thread.
 
         Parameters
         ----------
         columns:
             The list of columns the thread contains.
+        offset:
+            The UTC offset used for the last-post timestamp.
 
         Returns
         -------
@@ -544,7 +547,7 @@ class ForumBoardParser:
         views = parse_integer(views_column.text)
         # Seventh Column: Last post information
         last_post_column = columns[6]
-        last_post = LastPostParser._parse_column(last_post_column)
+        last_post = LastPostParser._parse_column(last_post_column, offset)
 
         author_link = columns[3].select_one("a")
         traded = False
@@ -648,7 +651,7 @@ class ForumThreadParser:
             builder.next_topic_number(int(next_link["query"]["threadid"]))
 
         times_container = posts_table.select_one("div.ForumContentFooterLeft")
-        offset = 2 if times_container.text == "CEST" else 1
+        offset = 2 if "CEST" in times_container.text else 1
 
         post_containers = posts_table.select("div.PostBody")
         for post_container in post_containers:

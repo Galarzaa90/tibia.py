@@ -331,9 +331,9 @@ def parse_tibia_forum_datetime(datetime_str: str, utc_offset: int = 1) -> dateti
         The represented datetime, in UTC (timezone aware).
 
     """
-    t = datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S").astimezone(datetime.UTC)
-    # Add/subtract hours to get the real time
-    return t - datetime.timedelta(hours=utc_offset)
+    return datetime.datetime.strptime(datetime_str.strip(), "%d.%m.%Y %H:%M:%S").replace(
+        tzinfo=datetime.timezone(datetime.timedelta(hours=utc_offset))
+    ).astimezone(datetime.UTC)
 
 
 def parse_tibia_full_date(date_str: str) -> datetime.date | None:

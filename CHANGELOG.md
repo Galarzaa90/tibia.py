@@ -11,6 +11,7 @@
 - `AuctionFilters.query_params` now returns all parameter values as strings.
 - `GuildsSection.url` and `GuildWars.url` now return `None` when the world or guild name is missing.
 - `BaseWorld.is_battleye_protected` now consistently returns a boolean, including `False` for unprotected worlds.
+- Fix incorrect timezones being used for forum-related timestamps.
 
 
 ## 6.4.0 (2026-07-12)
