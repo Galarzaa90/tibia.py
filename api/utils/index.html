@@ -3467,7 +3467,7 @@ Empty parameters are omitted.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The represented date, in UTC (timezone aware).</p>
+                <p>The represented calendar date, without timezone conversion.</p>
               </div>
             </td>
           </tr>
@@ -3514,11 +3514,11 @@ Empty parameters are omitted.</p>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    :</span>
-<span class="sd">        The represented date, in UTC (timezone aware).</span>
+<span class="sd">        The represented calendar date, without timezone conversion.</span>
 
 <span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">"%B </span><span class="si">%d</span><span class="s2">, %Y"</span><span class="p">)</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">"%B </span><span class="si">%d</span><span class="s2">, %Y"</span><span class="p">)</span>  <span class="c1"># noqa: DTZ007</span>
         <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
