@@ -351,11 +351,11 @@ def parse_tibia_full_date(date_str: str) -> datetime.date | None:
     Returns
     -------
     :
-        The represented date, in UTC (timezone aware).
+        The represented calendar date, without timezone conversion.
 
     """
     try:
-        t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y").astimezone(datetime.UTC)
+        t = datetime.datetime.strptime(date_str.strip(), "%B %d, %Y")  # noqa: DTZ007
         return t.date()
     except (ValueError, AttributeError):
         return None

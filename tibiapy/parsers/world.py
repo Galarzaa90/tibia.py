@@ -129,7 +129,7 @@ class WorldParser:
 
     @classmethod
     def _parse_creation_date(cls, builder: WorldBuilder, value: str) -> None:
-        parsed_date = datetime.datetime.strptime(value, "%B %Y").astimezone(datetime.UTC)
+        parsed_date = datetime.datetime.strptime(value, "%B %Y")  # noqa: DTZ007
         year, month = parsed_date.year, parsed_date.month
         builder.creation_date(f"{year:d}-{month:02d}")
 
