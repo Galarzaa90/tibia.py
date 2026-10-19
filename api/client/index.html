@@ -10738,7 +10738,7 @@ This usually means that Tibia.com is rate-limiting the client because of too man
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Whether to fetch all the character's outfits. By default, only the first page is fetched.</p>
+                <p>Whether to fetch all the character's familiars. By default, only the first page is fetched.</p>
               </div>
             </td>
             <td>
@@ -10960,7 +10960,7 @@ This usually means that Tibia.com is rate-limiting the client because of too man
 <span class="sd">    fetch_outfits:</span>
 <span class="sd">        Whether to fetch all the character's outfits. By default, only the first page is fetched.</span>
 <span class="sd">    fetch_familiars:</span>
-<span class="sd">        Whether to fetch all the character's outfits. By default, only the first page is fetched.</span>
+<span class="sd">        Whether to fetch all the character's familiars. By default, only the first page is fetched.</span>
 <span class="sd">    skip_details:</span>
 <span class="sd">        Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.</span>
 
@@ -11008,7 +11008,7 @@ This usually means that Tibia.com is rate-limiting the client because of too man
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_all_pages</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">auction</span><span class="o">.</span><span class="n">details</span><span class="o">.</span><span class="n">store_outfits</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">fetch_familiars</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_all_pages</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">auction</span><span class="o">.</span><span class="n">details</span><span class="o">.</span><span class="n">outfits</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_all_pages</span><span class="p">(</span><span class="n">auction_id</span><span class="p">,</span> <span class="n">auction</span><span class="o">.</span><span class="n">details</span><span class="o">.</span><span class="n">familiars</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">tibia_response</span>
 </code></pre></div></td></tr></table></div>
