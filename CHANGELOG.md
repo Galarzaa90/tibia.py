@@ -14,6 +14,9 @@
 - Fix incorrect timezones being used for forum-related timestamps.
 - Fix host timezone conversions shifting calendar dates and world creation months backwards.
 - Fix `Client.fetch_auction(fetch_familiars=True)` fetching the outfits paginator instead of familiars.
+- Fix auction blessing counts being parsed as zero.
+- Identify auction detail blocks by their title to support blocks without an ID, such as Fragment Progress.
+- Fix auction parsing failing on Revealed Gems placeholder and additional-entry rows.
 
 
 ## 6.4.0 (2026-07-12)

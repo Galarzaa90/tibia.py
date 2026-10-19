@@ -105,7 +105,7 @@ class TestBazaar(TestCommons):
         self.assertEqual(7_890, auction.details.mana)
         self.assertEqual(10_870, auction.details.capacity)
         self.assertEqual(637, auction.details.speed)
-        self.assertEqual(0, auction.details.blessings_count)
+        self.assertEqual(7, auction.details.blessings_count)
         self.assertEqual(21, auction.details.mounts_count)
         self.assertEqual(22, auction.details.outfits_count)
         self.assertEqual(15, auction.details.titles_count)

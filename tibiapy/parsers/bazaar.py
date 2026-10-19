@@ -216,23 +216,23 @@ class AuctionParser:
         if "General" in details_tables:
             cls._parse_general_table(builder, details_tables["General"])
 
-        if "ItemSummary" in details_tables:
-            builder.items(cls._parse_items_table(details_tables["ItemSummary"]))
+        if "Item Summary" in details_tables:
+            builder.items(cls._parse_items_table(details_tables["Item Summary"]))
 
-        if "StoreItemSummary" in details_tables:
-            builder.store_items(cls._parse_items_table(details_tables["StoreItemSummary"]))
+        if "Store Item Summary" in details_tables:
+            builder.store_items(cls._parse_items_table(details_tables["Store Item Summary"]))
 
         if "Mounts" in details_tables:
             builder.mounts(cls._parse_mounts_table(details_tables["Mounts"]))
 
-        if "StoreMounts" in details_tables:
-            builder.store_mounts(cls._parse_mounts_table(details_tables["StoreMounts"]))
+        if "Store Mounts" in details_tables:
+            builder.store_mounts(cls._parse_mounts_table(details_tables["Store Mounts"]))
 
         if "Outfits" in details_tables:
             builder.outfits(cls._parse_outfits_table(details_tables["Outfits"]))
 
-        if "StoreOutfits" in details_tables:
-            builder.store_outfits(cls._parse_outfits_table(details_tables["StoreOutfits"]))
+        if "Store Outfits" in details_tables:
+            builder.store_outfits(cls._parse_outfits_table(details_tables["Store Outfits"]))
 
         if "Familiars" in details_tables:
             builder.familiars(cls._parse_familiars_table(details_tables["Familiars"]))
@@ -246,13 +246,13 @@ class AuctionParser:
         if "Charms" in details_tables:
             cls._parse_charms_table(builder, details_tables["Charms"])
 
-        if "CompletedCyclopediaMapAreas" in details_tables:
+        if "Completed Cyclopedia Map Areas" in details_tables:
             builder.completed_cyclopedia_map_areas(
-                cls._parse_single_column_table(details_tables["CompletedCyclopediaMapAreas"]),
+                cls._parse_single_column_table(details_tables["Completed Cyclopedia Map Areas"]),
             )
 
-        if "CompletedQuestLines" in details_tables:
-            builder.completed_quest_lines(cls._parse_single_column_table(details_tables["CompletedQuestLines"]))
+        if "Completed Quest Lines" in details_tables:
+            builder.completed_quest_lines(cls._parse_single_column_table(details_tables["Completed Quest Lines"]))
 
         if "Titles" in details_tables:
             builder.titles(cls._parse_single_column_table(details_tables["Titles"]))
@@ -260,14 +260,14 @@ class AuctionParser:
         if "Achievements" in details_tables:
             cls._parse_achievements_table(builder, details_tables["Achievements"])
 
-        if "BestiaryProgress" in details_tables:
-            cls._parse_bestiary_table(builder, details_tables["BestiaryProgress"])
+        if "Bestiary Progress" in details_tables:
+            cls._parse_bestiary_table(builder, details_tables["Bestiary Progress"])
 
-        if "BosstiaryProgress" in details_tables:
-            cls._parse_bestiary_table(builder, details_tables["BosstiaryProgress"], True)
+        if "Bosstiary Progress" in details_tables:
+            cls._parse_bestiary_table(builder, details_tables["Bosstiary Progress"], True)
 
-        if "RevealedGems" in details_tables:
-            cls._parse_revealed_gems_table(builder, details_tables["RevealedGems"])
+        if "Revealed Gems" in details_tables:
+            cls._parse_revealed_gems_table(builder, details_tables["Revealed Gems"])
 
         auction.details = builder.build()
         return auction
@@ -300,7 +300,7 @@ class AuctionParser:
             name = char_name_container.text
 
         builder = AuctionBuilder().name(name).auction_id(auction_id)
-        char_name_container.replaceWith("")
+        char_name_container.replace_with("")
         if m := char_info_regex.search(header_container.text):
             builder.level(int(m.group(1)))
             builder.vocation(try_enum(Vocation, m.group(2).strip()))
@@ -359,11 +359,21 @@ class AuctionParser:
         Returns
         -------
         :
-            A dictionary of the tables, grouped by their id.
+            A dictionary of the tables, keyed by their visible title. Blocks without a usable title are skipped.
 
         """
         details_tables = parsed_content.select("div.CharacterDetailsBlock")
-        return {table["id"]: table for table in details_tables}
+        tables = {}
+        for table in details_tables:
+            title_tag = table.select_one(".CaptionContainer .Text")
+            if title_tag is None:
+                continue
+
+            title = title_tag.get_text(" ", strip=True)
+            if title:
+                tables[title] = table
+
+        return tables
 
     @classmethod
     def _parse_data_table(cls, table: bs4.Tag) -> dict[str, str]:
@@ -569,7 +579,7 @@ class AuctionParser:
         builder.mounts_count(parse_integer(general_stats.get("mounts", "0")))
         builder.outfits_count(parse_integer(general_stats.get("outfits", "0")))
         builder.titles_count(parse_integer(general_stats.get("titles", "0")))
-        builder.blessings_count(parse_integer(re.sub(r"/d+", "", general_stats.get("blessings", "0"))))
+        builder.blessings_count(parse_integer(general_stats.get("blessings", "0").split("/", 1)[0]))
 
         cls._parse_skills_table(builder, content_containers[1])
 
@@ -751,6 +761,9 @@ class AuctionParser:
         _, *rows = get_rows(table_content)
         for row in rows:
             gem_tag = row.select_one("div.Gem")
+            if not gem_tag:
+                continue
+
             gem_type = gem_tag["title"]
             effects = [t.text for t in row.select("span")]
             builder.add_revealed_gem(RevealedGem(
