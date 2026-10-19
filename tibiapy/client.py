@@ -1565,7 +1565,7 @@ class Client:
         fetch_outfits:
             Whether to fetch all the character's outfits. By default, only the first page is fetched.
         fetch_familiars:
-            Whether to fetch all the character's outfits. By default, only the first page is fetched.
+            Whether to fetch all the character's familiars. By default, only the first page is fetched.
         skip_details:
             Whether to skip parsing the entire auction and only parse the information shown in lists. False by default.
 
@@ -1613,7 +1613,7 @@ class Client:
                 await self._fetch_all_pages(auction_id, auction.details.store_outfits, 5, test=test)
 
             if fetch_familiars:
-                await self._fetch_all_pages(auction_id, auction.details.outfits, 6, test=test)
+                await self._fetch_all_pages(auction_id, auction.details.familiars, 6, test=test)
 
         return tibia_response
 
