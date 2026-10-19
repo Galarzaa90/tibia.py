@@ -4162,23 +4162,23 @@ parsing time.</p>
     <span class="k">if</span> <span class="s2">"General"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_general_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"General"</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="s2">"ItemSummary"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
-        <span class="n">builder</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_items_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"ItemSummary"</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s2">"Item Summary"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_items_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Item Summary"</span><span class="p">]))</span>
 
-    <span class="k">if</span> <span class="s2">"StoreItemSummary"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
-        <span class="n">builder</span><span class="o">.</span><span class="n">store_items</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_items_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"StoreItemSummary"</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s2">"Store Item Summary"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">store_items</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_items_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Store Item Summary"</span><span class="p">]))</span>
 
     <span class="k">if</span> <span class="s2">"Mounts"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">mounts</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_mounts_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Mounts"</span><span class="p">]))</span>
 
-    <span class="k">if</span> <span class="s2">"StoreMounts"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
-        <span class="n">builder</span><span class="o">.</span><span class="n">store_mounts</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_mounts_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"StoreMounts"</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s2">"Store Mounts"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">store_mounts</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_mounts_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Store Mounts"</span><span class="p">]))</span>
 
     <span class="k">if</span> <span class="s2">"Outfits"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">outfits</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_outfits_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Outfits"</span><span class="p">]))</span>
 
-    <span class="k">if</span> <span class="s2">"StoreOutfits"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
-        <span class="n">builder</span><span class="o">.</span><span class="n">store_outfits</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_outfits_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"StoreOutfits"</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s2">"Store Outfits"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">store_outfits</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_outfits_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Store Outfits"</span><span class="p">]))</span>
 
     <span class="k">if</span> <span class="s2">"Familiars"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">familiars</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_familiars_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Familiars"</span><span class="p">]))</span>
@@ -4192,13 +4192,13 @@ parsing time.</p>
     <span class="k">if</span> <span class="s2">"Charms"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_charms_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"Charms"</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="s2">"CompletedCyclopediaMapAreas"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"Completed Cyclopedia Map Areas"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">completed_cyclopedia_map_areas</span><span class="p">(</span>
-            <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_single_column_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"CompletedCyclopediaMapAreas"</span><span class="p">]),</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_single_column_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Completed Cyclopedia Map Areas"</span><span class="p">]),</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">"CompletedQuestLines"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
-        <span class="n">builder</span><span class="o">.</span><span class="n">completed_quest_lines</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_single_column_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"CompletedQuestLines"</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s2">"Completed Quest Lines"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">completed_quest_lines</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_single_column_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Completed Quest Lines"</span><span class="p">]))</span>
 
     <span class="k">if</span> <span class="s2">"Titles"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
         <span class="n">builder</span><span class="o">.</span><span class="n">titles</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_parse_single_column_table</span><span class="p">(</span><span class="n">details_tables</span><span class="p">[</span><span class="s2">"Titles"</span><span class="p">]))</span>
@@ -4206,14 +4206,14 @@ parsing time.</p>
     <span class="k">if</span> <span class="s2">"Achievements"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_achievements_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"Achievements"</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="s2">"BestiaryProgress"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_bestiary_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"BestiaryProgress"</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">"Bestiary Progress"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_bestiary_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"Bestiary Progress"</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="s2">"BosstiaryProgress"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_bestiary_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"BosstiaryProgress"</span><span class="p">],</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"Bosstiary Progress"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_bestiary_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"Bosstiary Progress"</span><span class="p">],</span> <span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">"RevealedGems"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
-        <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_revealed_gems_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"RevealedGems"</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">"Revealed Gems"</span> <span class="ow">in</span> <span class="n">details_tables</span><span class="p">:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_parse_revealed_gems_table</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">details_tables</span><span class="p">[</span><span class="s2">"Revealed Gems"</span><span class="p">])</span>
 
     <span class="n">auction</span><span class="o">.</span><span class="n">details</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">auction</span>
